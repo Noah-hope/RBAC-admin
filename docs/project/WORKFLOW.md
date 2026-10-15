@@ -22,7 +22,7 @@
 
 ## 2. 界面原型设计
 
-技术：Vue 3 + TypeScript + Tailwind CSS，使用仓库内 `frontend-design` skill。界面说明与原型交付归入 `docs/02-ui-design/`；当前只保留该阶段目录，开始原型时再在其下建立可运行工程，并记录启动方式。后续正式前后端工程目录另行确定。
+技术：Vue 3 + TypeScript + Tailwind CSS，使用仓库内 `frontend-design` skill。界面说明与原型交付归入 `docs/02-ui-design/`，可运行工程位于其下 `prototype/`，启动方式见阶段 README。后续正式前后端工程目录另行确定。
 
 交付：页面清单、导航、角色视角、交互流程、表单校验、加载/空/错误/无权限等状态及模拟数据说明。重点区分申请、OA 批准和实际执行结果，展示公司/部门子树/系统管理范围与后台身份，区分离岗关闭来源、一般撤销申请和全局停用。
 
@@ -56,7 +56,7 @@ Apifox 作为接口协作与调试工具，Git 保存可审查的契约版本；
 
 后续正式业务逻辑实现使用已安装的 `test-driven-development` skill，来源为 [obra/superpowers](https://github.com/obra/superpowers/tree/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/test-driven-development)。项目入口：`.agents/skills/test-driven-development/SKILL.md`。开始模块实现时读取该文件，编写或修改测试时同时读取同目录 `writing-good-tests.md`。技能不限定编程语言或测试框架，示例不视为技术选型。
 
-2026-10-15 已将四个项目技能及配套文件复制到 `.agents/skills/`，随 Git 分发；TDD 同时保留固定上游版本的 MIT 许可证。优先读取仓库内技能，不依赖某台机器的全局安装路径。来源与文件摘要见 [SKILLS.md](SKILLS.md)。当前仍处于需求与原型交接阶段，未开始正式业务逻辑实现，也未产生模块测试结果。
+2026-10-15 已将四个项目技能及配套文件复制到 `.agents/skills/`，随 Git 分发；TDD 同时保留固定上游版本的 MIT 许可证。优先读取仓库内技能，不依赖某台机器的全局安装路径。来源与文件摘要见 [SKILLS.md](SKILLS.md)。当前界面原型首版已实现，待用户评审；未开始正式业务逻辑实现，也未产生正式模块的 TDD 测试结果。
 
 每个模块采用以下循环：
 
@@ -82,4 +82,4 @@ Apifox 作为接口协作与调试工具，Git 保存可审查的契约版本；
 
 团队共享记忆统一维护在 `docs/`：`project/MEMORY.md` 保存当前状态及交接，`project/DECISIONS.md` 保存已确认决策，本文件保存流程；各阶段目录保存交付物。根目录 `AGENTS.md` 是工作入口，`README.md` 是项目导航，不另建第二份状态或任务记忆。
 
-当前只采用 `.agents/skills/` 和 `docs/project/`、`docs/01-requirements/`～`05-detailed-design/`。未来阶段的 `.gitkeep` 仅用于 Git 保留目录，不代表已完成交付；暂不创建 `tasks/`、`frontend/`、`backend/`、`prototype/` 或 `.github/`。目录及迁移说明见 [LAYOUT.md](LAYOUT.md)。
+当前只采用 `.agents/skills/` 和 `docs/project/`、`docs/01-requirements/`～`05-detailed-design/`。API、数据库及详细设计阶段的 `.gitkeep` 仅用于 Git 保留目录，不代表已完成交付；暂不创建根目录 `tasks/`、`frontend/`、`backend/`、`prototype/` 或 `.github/`；界面原型源码放在本阶段目录内部。目录及迁移说明见 [LAYOUT.md](LAYOUT.md)。

@@ -42,7 +42,7 @@ python docs/01-requirements/sync_usecase_folders.py
 
 前者更新图源、简表及副本，后者只同步副本。需要导出图片时仅为前者增加 `--previews`。
 
-`02-ui-design/`～`05-detailed-design/` 目前仅保留 `.gitkeep`，便于 Git 跟踪空目录。当前不创建 `tasks/`、`frontend/`、`backend/`、`prototype/` 或 `.github/`。进入界面阶段时将原型与说明放入 `docs/02-ui-design/`；正式代码布局到实现阶段再确定。
+界面原型现位于 `02-ui-design/prototype/`，设计说明、启动及验证文档在 `02-ui-design/`。`03-api/`～`05-detailed-design/` 目前仅保留 `.gitkeep`，便于 Git 跟踪空目录。当前不创建根目录 `tasks/`、`frontend/`、`backend/`、`prototype/` 或 `.github/`；正式代码布局到实现阶段再确定。
 
 ## 验证记录
 

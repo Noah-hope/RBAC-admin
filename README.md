@@ -29,6 +29,7 @@
 - [需求总览与统一规则](docs/01-requirements/usecases-v1/用例说明.md)：2026-10-15 功能权限修订，保留 UC-01～UC-11。
 - [按用例分类阅读](docs/01-requirements/按用例分类/README.md)：详细说明、简表和图的同步阅读副本。
 - [导入说明](docs/project/IMPORT.md)：资料来源、校验方式及导入边界。
+- [前端界面原型](docs/02-ui-design/README.md)：页面、启动方式和原型验证。
 - [项目技能](docs/project/SKILLS.md)：仓库内四个技能的入口、来源、版本和文件摘要。
 
 ## 当前目录
@@ -52,7 +53,7 @@ rbac-admin/
     └── 05-detailed-design/
 ```
 
-后续四个阶段当前只保留目录，内部交付在对应阶段产生。目录约定及迁移说明见 [LAYOUT.md](docs/project/LAYOUT.md)。
+界面阶段已有可运行交互原型，位于 `docs/02-ui-design/prototype/`，待用户评审。API、数据库及详细设计阶段当前只保留目录，交付在对应阶段产生。目录约定及迁移说明见 [LAYOUT.md](docs/project/LAYOUT.md)。
 
 ## 规定的项目流程
 
