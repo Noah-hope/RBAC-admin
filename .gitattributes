@@ -1,0 +1,10 @@
+# Preserve imported document bytes and synchronization hashes across checkouts.
+* -text
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.xlsx binary
+*.zip binary

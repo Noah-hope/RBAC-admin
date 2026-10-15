@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" agent="official drawio skill XML workflow" modified="2026-10-15T00:00:00.000Z">
+  <diagram id="uc-07" name="UC-07 配置管理员及管理范围">
+    <mxGraphModel dx="1420" dy="2301" page="1" pageWidth="1420" pageHeight="2301" grid="1" gridSize="10" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="frame" value="sd UC-07" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;shape=umlFrame;whiteSpace=wrap;align=left;verticalAlign=top;fillColor=none;strokeColor=#60748b;container=0;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="30" y="135" width="1360" height="1911" />
+        </mxCell>
+        <mxCell id="title" value="UC-07 配置管理员及管理范围" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=left;fontSize=26;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="20" width="1340" height="60" />
+        </mxCell>
+        <mxCell id="subtitle" value="需求分析时序图 · 2026-10-15 · 中文业务消息；不固定数据库字段类型或 API 地址" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=left;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="87" width="1340" height="40" />
+        </mxCell>
+        <mxCell id="admin" value="权限中心总管理员" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;shape=umlLifeline;perimeter=lifelinePerimeter;size=60;align=center;verticalAlign=top;spacingTop=15;whiteSpace=wrap;fillColor=#eef5ff;strokeColor=#526b86;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="135" y="180" width="210" height="1846" />
+        </mxCell>
+        <mxCell id="center" value="权限中心" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;shape=umlLifeline;perimeter=lifelinePerimeter;size=60;align=center;verticalAlign=top;spacingTop=15;whiteSpace=wrap;fillColor=#eef5ff;strokeColor=#526b86;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="785" y="180" width="210" height="1846" />
+        </mxCell>
+        <mxCell id="fragment0" value="opt" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;shape=umlFrame;align=left;verticalAlign=top;fillColor=none;strokeColor=#8191a4;container=0;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="55" y="536" width="1310" height="229" />
+        </mxCell>
+        <mxCell id="guard0_0" value="[拟新增专员没有后台账号]" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=left;fillColor=none;strokeColor=none;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="73" y="606" width="1274" height="29" />
+        </mxCell>
+        <mxCell id="fragment1" value="alt" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;shape=umlFrame;align=left;verticalAlign=top;fillColor=none;strokeColor=#8191a4;container=0;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="55" y="1143" width="1310" height="838" />
+        </mxCell>
+        <mxCell id="guard1_0" value="[条件不合法或版本冲突]" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=left;fillColor=none;strokeColor=none;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="73" y="1213" width="1274" height="29" />
+        </mxCell>
+        <mxCell id="guard1_1" value="[条件合法]" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=left;fillColor=none;strokeColor=none;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="73" y="1391" width="1274" height="29" />
+        </mxCell>
+        <mxCell id="divider1_1" edge="1" parent="1" style="html=1;endArrow=none;startArrow=none;dashed=1;strokeColor=#8191a4;">
+          <mxGeometry as="geometry" relative="1">
+            <mxPoint as="sourcePoint" x="55" y="1373" />
+            <mxPoint as="targetPoint" x="1365" y="1373" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fragment2" value="alt" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;shape=umlFrame;align=left;verticalAlign=top;fillColor=none;strokeColor=#8191a4;container=0;pointerEvents=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="73" y="1537" width="1274" height="394" />
+        </mxCell>
+        <mxCell id="guard2_0" value="[写入失败]" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=left;fillColor=none;strokeColor=none;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="91" y="1607" width="1238" height="29" />
+        </mxCell>
+        <mxCell id="guard2_1" value="[全部提交成功]" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=left;fillColor=none;strokeColor=none;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="91" y="1785" width="1238" height="29" />
+        </mxCell>
+        <mxCell id="divider2_1" edge="1" parent="1" style="html=1;endArrow=none;startArrow=none;dashed=1;strokeColor=#8191a4;">
+          <mxGeometry as="geometry" relative="1">
+            <mxPoint as="sourcePoint" x="73" y="1767" />
+            <mxPoint as="targetPoint" x="1347" y="1767" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message0" source="admin" target="center" edge="1" parent="1" style="html=1;edgeStyle=none;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=block;endFill=1;exitX=0.5;entryX=0.5;exitY=0.06879739978331528;entryY=0.06879739978331528;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="label0" value="1. 读取公司配置（公司标识）" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="265" y="276" width="595" height="24" />
+        </mxCell>
+        <mxCell id="message1" source="center" target="center" edge="1" parent="1" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=block;endFill=1;exitX=0.5;entryX=0.5;exitY=0.11321776814734562;entryY=0.13488624052004333;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="label1" value="2. 校验总管理员资格，读取名单、共同系统范围及版本" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=left;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="915" y="358" width="410" height="24" />
+        </mxCell>
+        <mxCell id="message2" source="center" target="admin" edge="1" parent="1" style="html=1;edgeStyle=none;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=open;endFill=0;dashed=1;exitX=0.5;entryX=0.5;exitY=0.1657638136511376;entryY=0.1657638136511376;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="label2" value="3. 返回当前专员、系统范围与候选人员" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="265" y="455" width="595" height="24" />
+        </mxCell>
+        <mxCell id="annotation3" value="ref UC-09 账号创建子流程：创建账号不自动任命" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;shape=umlFrame;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="118" y="655" width="1184" height="60" />
+        </mxCell>
+        <mxCell id="message4" source="admin" target="center" edge="1" parent="1" style="html=1;edgeStyle=none;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=block;endFill=1;exitX=0.5;entryX=0.5;exitY=0.3531960996749729;entryY=0.3531960996749729;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="label4" value="4. 预览配置（最终名单、系统集合、原因）" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="265" y="801" width="595" height="24" />
+        </mxCell>
+        <mxCell id="message5" source="center" target="admin" edge="1" parent="1" style="html=1;edgeStyle=none;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=open;endFill=0;dashed=1;exitX=0.5;entryX=0.5;exitY=0.39761646803900325;entryY=0.39761646803900325;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="label5" value="5. 返回任免、系统增减与待处理申请影响" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="265" y="883" width="595" height="24" />
+        </mxCell>
+        <mxCell id="message6" source="admin" target="center" edge="1" parent="1" style="html=1;edgeStyle=none;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=block;endFill=1;exitX=0.5;entryX=0.5;exitY=0.4420368364030336;entryY=0.4420368364030336;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="label6" value="6. 确认保存（最终配置、基础版本、请求编号）" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="265" y="965" width="595" height="24" />
+        </mxCell>
+        <mxCell id="message7" source="center" target="center" edge="1" parent="1" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=block;endFill=1;exitX=0.5;entryX=0.5;exitY=0.48645720476706394;entryY=0.5081256771397616;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="label7" value="7. 复核总管理员、人员任职、系统、重复项与人数" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=left;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="915" y="1047" width="410" height="24" />
+        </mxCell>
+        <mxCell id="message8" source="center" target="admin" edge="1" parent="1" style="html=1;edgeStyle=none;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=open;endFill=0;dashed=1;exitX=0.5;entryX=0.5;exitY=0.6034669555796316;entryY=0.6034669555796316;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="label8" value="8. 拒绝保存，重新读取并修正" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="265" y="1263" width="595" height="24" />
+        </mxCell>
+        <mxCell id="message9" source="center" target="center" edge="1" parent="1" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=block;endFill=1;exitX=0.5;entryX=0.5;exitY=0.6998916576381365;entryY=0.7215601300108342;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="label9" value="9. 整体保存任命、范围、版本和审计" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=left;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="915" y="1441" width="410" height="24" />
+        </mxCell>
+        <mxCell id="message10" source="center" target="admin" edge="1" parent="1" style="html=1;edgeStyle=none;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=open;endFill=0;dashed=1;exitX=0.5;entryX=0.5;exitY=0.8169014084507042;entryY=0.8169014084507042;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="label10" value="10. 返回服务错误，原名单与范围保留" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="265" y="1657" width="595" height="24" />
+        </mxCell>
+        <mxCell id="message11" source="center" target="admin" edge="1" parent="1" style="html=1;edgeStyle=none;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=open;endFill=0;dashed=1;exitX=0.5;entryX=0.5;exitY=0.9133261105092091;entryY=0.9133261105092091;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="label11" value="11. 返回直接生效的新名单与共同范围" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="265" y="1835" width="595" height="24" />
+        </mxCell>
+        <mxCell id="note0" value="不经过 OA，不逐个指定角色；同公司专员共享范围内角色管理。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;rounded=0;whiteSpace=wrap;align=left;spacing=12;fillColor=#fff8e8;strokeColor=#c4a34f;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="55" y="2056" width="1310" height="50" />
+        </mxCell>
+        <mxCell id="note1" value="任命不授予外部业务权限；员工停用使任命失效，恢复后由总管理员重新任命。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;rounded=0;whiteSpace=wrap;align=left;spacing=12;fillColor=#fff8e8;strokeColor=#c4a34f;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="55" y="2126" width="1310" height="50" />
+        </mxCell>
+        <mxCell id="legend" value="实线实心箭头：请求／处理消息；虚线空心箭头：返回。alt 互斥，opt 可选，loop 重复，ref 引用。OA 回调为后续独立请求，不展开实现级激活条跨度。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=left;whiteSpace=wrap;fillColor=none;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="40" y="2211" width="1340" height="65" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

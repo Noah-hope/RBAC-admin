@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="820" viewBox="0 0 1100 820">
+<rect width="100%" height="100%" fill="white"/>
+<g font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" fill="#17324d">
+<rect x="310.0" y="125.0" width="485.0" height="585.0" fill="white" stroke="#64748b" stroke-width="2"/>
+<text x="552.5" y="157.0" font-size="19" text-anchor="middle">集中权限管理系统</text>
+<polyline points="147.0,320.0 355.0,225.0" fill="none" stroke="#64748b" stroke-width="1.4"/>
+<polyline points="147.0,320.0 355.0,343.0" fill="none" stroke="#64748b" stroke-width="1.4"/>
+<text x="47.0" y="47.0" font-size="25" text-anchor="start">04 业务系统权限查询与校验</text>
+<text x="47.0" y="90.0" font-size="15" text-anchor="start">第一期 RBAC0 · 2026-10-13 · 最终用例需求基线</text>
+<ellipse cx="552.5" cy="225.0" rx="197.5" ry="38.0" fill="#eef5ff" stroke="#32649a" stroke-width="2"/>
+<text x="552.5" y="219.0" font-size="18" text-anchor="middle">UC-05</text><text x="552.5" y="243.0" font-size="18" text-anchor="middle">查询员工有效权限</text>
+<ellipse cx="552.5" cy="343.0" rx="197.5" ry="38.0" fill="#eef5ff" stroke="#32649a" stroke-width="2"/>
+<text x="552.5" y="337.0" font-size="18" text-anchor="middle">UC-06</text><text x="552.5" y="361.0" font-size="18" text-anchor="middle">检查员工指定操作权限</text>
+<g stroke="#17324d" stroke-width="2" fill="white"><circle cx="121.0" cy="287.0" r="12"/><path d="M 121.0 299.0 V 332.0 M 95.0 313.0 H 147.0 M 121.0 332.0 L 95.0 365.0 M 121.0 332.0 L 147.0 365.0" fill="none"/></g>
+<text x="121.0" y="390.0" font-size="17" text-anchor="middle">业务系统</text><text x="121.0" y="414.0" font-size="17" text-anchor="middle">（可信服务端）</text>
+<rect x="35.0" y="726.0" width="1030.0" height="75.0" fill="#fff8e8" stroke="#d7b76a"/>
+<text x="47.0" y="757.5" font-size="15" text-anchor="start">按员工＋当前公司＋业务系统查询，仅合并同公司同系统角色，进入资格也按此计算。</text><text x="47.0" y="781.5" font-size="15" text-anchor="start">业务系统实施公司数据隔离及 SELF 过滤；一期只演示简单 HTTP 调用。</text>
+</g></svg>

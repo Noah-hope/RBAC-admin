@@ -1,0 +1,1991 @@
+{
+  "imported_on": "2026-10-15",
+  "source_root": "D:\\NoahProject\\codexProject\\ooad\\docs",
+  "target_root": "docs",
+  "baseline_date": "2026-10-13",
+  "file_count": 396,
+  "total_bytes": null,
+  "algorithm": "SHA-256",
+  "files": [
+    {
+      "path": "docs/按用例分类/同步清单.json",
+      "bytes": 80572,
+      "sha256": "00828d4bacc96f030331ec6b12c0b66ade8e8a6350a84794ef1fe6340dc25919"
+    },
+    {
+      "path": "docs/按用例分类/README.md",
+      "bytes": 2131,
+      "sha256": "2e5c1e07b816dd674017068a31dc9946fd76c1df1acb801d69a801b8da28d3ca"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/01-overview.png",
+      "bytes": 200516,
+      "sha256": "94cb869e1929f021086967e2b69052c42b0e367fccf4d8a4ba50b6aa7431503b"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/01-overview.svg",
+      "bytes": 7444,
+      "sha256": "19b36c199b7bae6f8e16ebed1400f789b7f36560b6ada660bb2255938c499e84"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/02-role-config.png",
+      "bytes": 64088,
+      "sha256": "d3038c608f0e16520c59dd6597c409aaf4bea0346f42b8873fa587e1b81bbbca"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/02-role-config.svg",
+      "bytes": 2932,
+      "sha256": "6327babc4be1d6d13928e1ebe9cf93962a94b242faf17b96c57c8d057308c06c"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/课程简表.drawio",
+      "bytes": 17046,
+      "sha256": "793eb8b4869e076e1afa4c84bd3da443fc088ab34647ff38a48a757305091cae"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/课程简表.md",
+      "bytes": 2012,
+      "sha256": "3c5c7214d901cd69f835f935e89150c6ca49203a429bafb6527320484235c3bb"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/课程简表.png",
+      "bytes": 201970,
+      "sha256": "b27b4429815917feb7a3b0ef0d7ca6abbc59401080797295e37e7523cb02b45d"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/相关用例图.drawio",
+      "bytes": 18375,
+      "sha256": "603df8cd027acf785b3e544a4b25cf8dd1f117a2e21fabd5fcde9c858494b737"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/预览.html",
+      "bytes": 1314,
+      "sha256": "6cac2170d82fa219d80ee0e8f2905dc8523322df1c68ff38d997a2629bb99500"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/P2_第一层分区.drawio",
+      "bytes": 9492,
+      "sha256": "735c913ad65ce19a5e6ef9c2eaddd1a0f9c56d32b41f216252ab5b34e53a1672"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/P2_第一层预览.png",
+      "bytes": 178635,
+      "sha256": "3cb6785ae89e677977280f70cf2e050f7aa011eb033f75822c106918aeedf91d"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/P2_第一层预览.svg",
+      "bytes": 7949,
+      "sha256": "297bb6c3631c3a8d76971eab9ccecb34c204cd089a9489d2f861444890b4eec4"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/README.md",
+      "bytes": 1821,
+      "sha256": "5cb5fb8f6aa16590d2a3ca717bdd6ca97d0be1e8f08c43ebded98ab1ba51c4c9"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/UC-01_活动图预览.png",
+      "bytes": 239504,
+      "sha256": "b02a77c336bc77a012c35dfe5a07fad2d359e936a3b7655642aeb9375648bcb6"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/UC-01_流程图预览.png",
+      "bytes": 285772,
+      "sha256": "042c0094a2e81b3164c12bea6b6603775967e79a1fa5fe7419dd3ab05819df1d"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/UC-01_时序图预览.png",
+      "bytes": 173625,
+      "sha256": "336e88aa1018b302878ac95f64a193f9133adee6c78acaf2fac079859b318a50"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/UC-01_维护业务系统与权限目录_活动图.drawio",
+      "bytes": 25201,
+      "sha256": "f3b514e4d3298bb00f2db0c8b469869ae691f7fedc0e4f8ad5caf7209eb78cbc"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/UC-01_维护业务系统与权限目录_流程图.drawio",
+      "bytes": 22218,
+      "sha256": "e80c001628863d9ad59ac95f87ad6e2bc4d39ddbe538149ca249c13e42aba0d3"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/UC-01_维护业务系统与权限目录_时序图.drawio",
+      "bytes": 16857,
+      "sha256": "fabedf70c039daebe711ed022ed7b7b3d65b450fa80cbd9f6ca811958d845e39"
+    },
+    {
+      "path": "docs/按用例分类/UC-01_维护业务系统与权限目录/UC-01_维护业务系统与权限目录.md",
+      "bytes": 20399,
+      "sha256": "655342dde231c018dbc34a85c35712cea5200a189935bf678f34d176cd24403d"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/01-overview.png",
+      "bytes": 200516,
+      "sha256": "94cb869e1929f021086967e2b69052c42b0e367fccf4d8a4ba50b6aa7431503b"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/01-overview.svg",
+      "bytes": 7444,
+      "sha256": "19b36c199b7bae6f8e16ebed1400f789b7f36560b6ada660bb2255938c499e84"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/02-role-config.png",
+      "bytes": 64088,
+      "sha256": "d3038c608f0e16520c59dd6597c409aaf4bea0346f42b8873fa587e1b81bbbca"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/02-role-config.svg",
+      "bytes": 2932,
+      "sha256": "6327babc4be1d6d13928e1ebe9cf93962a94b242faf17b96c57c8d057308c06c"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/课程简表.drawio",
+      "bytes": 19151,
+      "sha256": "854f8d28d8cf65bffc3d0960a6b1d39b15cc0cccbccc254fa3f7255d1e92f127"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/课程简表.md",
+      "bytes": 2544,
+      "sha256": "49992dc89bbef8592c4e80712433a8dce6581d2632a07886c19a214df9278f1c"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/课程简表.png",
+      "bytes": 240884,
+      "sha256": "d9b662a3922e9297ef7f6e863c9a8f3c044ec1be323a919b192ec74dd1e7d312"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/相关用例图.drawio",
+      "bytes": 18375,
+      "sha256": "603df8cd027acf785b3e544a4b25cf8dd1f117a2e21fabd5fcde9c858494b737"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/预览.html",
+      "bytes": 1302,
+      "sha256": "b38c861a6f06355ef2c136ce10b334988c6678415f03decde99542dbaad0d03e"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/P4_第一层分区.drawio",
+      "bytes": 15483,
+      "sha256": "addb8cb6154fa0ef6ebcf9acae0735ad576ef604a205290d017eb14328db94cb"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/P4_第一层预览.png",
+      "bytes": 276062,
+      "sha256": "8f134268ee70300b6fac336f9e3979125e42b0f2a445347bd93660c4585e27e6"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/P4_第一层预览.svg",
+      "bytes": 13412,
+      "sha256": "e0cde105c9b27a551f51c0b230cccd71649e0eec0b031366057d40f055990003"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/README.md",
+      "bytes": 1761,
+      "sha256": "42be9d66e3b9533d1051f443c4ff19096e23655acf2b699396b9655e26e59584"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/UC-02_创建角色并配置权限_活动图.drawio",
+      "bytes": 30846,
+      "sha256": "1373741c959638a73fe68a54e3e57a10613e7d4c9b40ee7090341b599aab9c4a"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/UC-02_创建角色并配置权限_流程图.drawio",
+      "bytes": 22694,
+      "sha256": "e365884ee031d1fed3b684aa556e71baaeb808f7efb3ea4d2adc631c1d249dbf"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/UC-02_创建角色并配置权限_时序图.drawio",
+      "bytes": 21312,
+      "sha256": "24cc4a6cf68f9bb423f906c2a8241bf9d72f252e602d3e4d64e5a36a8b7d582f"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/UC-02_创建角色并配置权限.md",
+      "bytes": 32846,
+      "sha256": "4720af4d037f51b9bbc521ff4e614f782833c0e1f42d4fb6c561dd7ea85553c6"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/UC-02_活动图预览.png",
+      "bytes": 407131,
+      "sha256": "b5663bb095ecf185d2cfdcd4966ea174454d0c5c80e718d87cd1f5c47beed229"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/UC-02_流程图预览.png",
+      "bytes": 295074,
+      "sha256": "53ff2e18ea4a6c9c3f2f8f6ca033cb6366a4e6169118abd84b98a571bc50d1ac"
+    },
+    {
+      "path": "docs/按用例分类/UC-02_创建角色并配置权限/UC-02_时序图预览.png",
+      "bytes": 238005,
+      "sha256": "9fc80d1e2bd7a78688842f5eef70ed4e8a9f1bc0cb91d465c5c8c23f851be9b9"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/01-overview.png",
+      "bytes": 200516,
+      "sha256": "94cb869e1929f021086967e2b69052c42b0e367fccf4d8a4ba50b6aa7431503b"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/01-overview.svg",
+      "bytes": 7444,
+      "sha256": "19b36c199b7bae6f8e16ebed1400f789b7f36560b6ada660bb2255938c499e84"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/03-assignment.png",
+      "bytes": 92757,
+      "sha256": "34501c821a876432f1c755035cc0471b3ffeb009ea31a919b715f8a559c7859d"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/03-assignment.svg",
+      "bytes": 3852,
+      "sha256": "bd829bf3777c38298c931f8c5c2a5bbe287f956fd2aa58cc478640fc106b0776"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/课程简表.drawio",
+      "bytes": 18106,
+      "sha256": "da41942f58a3dfc63633d085f14e686ad752a8062829e51f5f266a9887d2adef"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/课程简表.md",
+      "bytes": 2287,
+      "sha256": "924696da429f4319475ef5c9cda788cb921f50fa3123b552bec9dfa20460a090"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/课程简表.png",
+      "bytes": 218275,
+      "sha256": "540edc446c46f1e91c6182ff4131f8139c20df15406dcf0d333b253807b16719"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/相关用例图.drawio",
+      "bytes": 20183,
+      "sha256": "6127d7f830d3303f965fd2667fa0f4d848b32384f3df5697f99c2dd657495ea3"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/预览.html",
+      "bytes": 1287,
+      "sha256": "05d0d58a10ff125f20dc7cd7cfa6d24fdf264f8c3fa3ae9f986574d0d733d799"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/P4_第一层分区.drawio",
+      "bytes": 15483,
+      "sha256": "addb8cb6154fa0ef6ebcf9acae0735ad576ef604a205290d017eb14328db94cb"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/P4_第一层预览.png",
+      "bytes": 276062,
+      "sha256": "8f134268ee70300b6fac336f9e3979125e42b0f2a445347bd93660c4585e27e6"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/P4_第一层预览.svg",
+      "bytes": 13412,
+      "sha256": "e0cde105c9b27a551f51c0b230cccd71649e0eec0b031366057d40f055990003"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/README.md",
+      "bytes": 1701,
+      "sha256": "e6563c8ff78bb743c1cb2e4e312e7801abc6b6f644f1aa9cb583e35912c8f259"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/UC-03_活动图预览.png",
+      "bytes": 351624,
+      "sha256": "0a6213cbd2c16556d0244583d529bcfd5e05f53a0f27d64250db09d96ba50df8"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/UC-03_流程图预览.png",
+      "bytes": 261685,
+      "sha256": "fde4bc40e83a8c67a5c35c95de1bd3fa6060a0ae3790b5b91ec58383f9ac888f"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/UC-03_时序图预览.png",
+      "bytes": 198916,
+      "sha256": "ca0066cea0d0f959e7bb72a4124d7e2e2ec3a95b6955a7561ea81b7dde6248ef"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/UC-03_为员工分配角色_活动图.drawio",
+      "bytes": 29138,
+      "sha256": "ad267d509f28411b967a8c4e3b3a727e87e0fa7fb9120d7b7b9f8800760a3aa3"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/UC-03_为员工分配角色_流程图.drawio",
+      "bytes": 21908,
+      "sha256": "25454bba5e0d145a7b444919526bfc73440c0a7d0a597c92861a663c5c8b2411"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/UC-03_为员工分配角色_时序图.drawio",
+      "bytes": 18205,
+      "sha256": "2c37bfae4e5c363e74bf35db510e7f2bbc7aedcdd7dc4db8478dae6b845ac520"
+    },
+    {
+      "path": "docs/按用例分类/UC-03_为员工分配角色/UC-03_为员工分配角色.md",
+      "bytes": 26294,
+      "sha256": "f5c3d43890185fa3298303fd9e5367c245c3679fb64277c5c537c0dd90ab7b35"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/01-overview.png",
+      "bytes": 200516,
+      "sha256": "94cb869e1929f021086967e2b69052c42b0e367fccf4d8a4ba50b6aa7431503b"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/01-overview.svg",
+      "bytes": 7444,
+      "sha256": "19b36c199b7bae6f8e16ebed1400f789b7f36560b6ada660bb2255938c499e84"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/03-assignment.png",
+      "bytes": 92757,
+      "sha256": "34501c821a876432f1c755035cc0471b3ffeb009ea31a919b715f8a559c7859d"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/03-assignment.svg",
+      "bytes": 3852,
+      "sha256": "bd829bf3777c38298c931f8c5c2a5bbe287f956fd2aa58cc478640fc106b0776"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/课程简表.drawio",
+      "bytes": 17878,
+      "sha256": "8054abac23f298c29080a69e512b4509ccf4757c75f2ec55898d9a624f3584ff"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/课程简表.md",
+      "bytes": 2059,
+      "sha256": "e39058afcbf6aeabc234149d555f682260eee350c5e471bc53ffe6d83a93b98f"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/课程简表.png",
+      "bytes": 208542,
+      "sha256": "1656c1d696ef8db80e22fe5a03ef75a311389d09f4580004f5fcfbdc7ec52db6"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/相关用例图.drawio",
+      "bytes": 20183,
+      "sha256": "6127d7f830d3303f965fd2667fa0f4d848b32384f3df5697f99c2dd657495ea3"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/预览.html",
+      "bytes": 1281,
+      "sha256": "a9808115d5ebd78865470562a310bbf56cd49654c93c8c6d26820ae142503388"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/P4_第一层分区.drawio",
+      "bytes": 15483,
+      "sha256": "addb8cb6154fa0ef6ebcf9acae0735ad576ef604a205290d017eb14328db94cb"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/P4_第一层预览.png",
+      "bytes": 276062,
+      "sha256": "8f134268ee70300b6fac336f9e3979125e42b0f2a445347bd93660c4585e27e6"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/P4_第一层预览.svg",
+      "bytes": 13412,
+      "sha256": "e0cde105c9b27a551f51c0b230cccd71649e0eec0b031366057d40f055990003"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/README.md",
+      "bytes": 1671,
+      "sha256": "e751cf155927683e728e6372699a8d760146f66bf75385b253c2100f09c329ea"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/UC-04_撤销员工角色_活动图.drawio",
+      "bytes": 30008,
+      "sha256": "8b0345fffe5390c3222aef568c10283f522e32b981a3865a13808328535c52c4"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/UC-04_撤销员工角色_流程图.drawio",
+      "bytes": 22612,
+      "sha256": "b25e3a22a2c81aaeffc10c17f79ab1fa14ef760483b7455d8b856eaff3688251"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/UC-04_撤销员工角色_时序图.drawio",
+      "bytes": 18137,
+      "sha256": "ce267e537f1545c6875ceda3a36f936b5ad2d824f29afb9ce5fb5b1658b0e8a2"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/UC-04_撤销员工角色.md",
+      "bytes": 21142,
+      "sha256": "1cc00f15a4c7edfde6e91588921a488e21cb3fa3473cda593edd8585e9dcc822"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/UC-04_活动图预览.png",
+      "bytes": 367198,
+      "sha256": "809102f492a8f9abd145537bb951f350bc767a9a2f9cf5a3612cbd479dd2367f"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/UC-04_流程图预览.png",
+      "bytes": 271170,
+      "sha256": "ae513e336607844f200a5bb21cde78def685a1d73ea08b1a417c1888b7d1d140"
+    },
+    {
+      "path": "docs/按用例分类/UC-04_撤销员工角色/UC-04_时序图预览.png",
+      "bytes": 199601,
+      "sha256": "6be35f08adefca0c8f9bd17f30959252f6721601fd19de1c2942522de57516c3"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/01-overview.png",
+      "bytes": 200516,
+      "sha256": "94cb869e1929f021086967e2b69052c42b0e367fccf4d8a4ba50b6aa7431503b"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/01-overview.svg",
+      "bytes": 7444,
+      "sha256": "19b36c199b7bae6f8e16ebed1400f789b7f36560b6ada660bb2255938c499e84"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/04-runtime.png",
+      "bytes": 54701,
+      "sha256": "e45ceb8c19b0ebbf205c8cd0cb231a868f1f0aa331a37c6ef5d8c7230131797a"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/04-runtime.svg",
+      "bytes": 2216,
+      "sha256": "5da8902c0c5c9abb163e6170afe148fccc8e5a1d5992b459d3576b93ae8e332f"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/课程简表.drawio",
+      "bytes": 15615,
+      "sha256": "e78ee0f0471c4180f672f4ae5c957a738622eac08d0c4b395be8d689a2092eba"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/课程简表.md",
+      "bytes": 2153,
+      "sha256": "6cc9528d86954fd881e50853d7075a19209bc3101335891e28d5c11e85d57276"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/课程简表.png",
+      "bytes": 208553,
+      "sha256": "d5276130b213b50e4b2ce086b29dfed9b4d8bacb705fad467a4d714c05521d7f"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/相关用例图.drawio",
+      "bytes": 16977,
+      "sha256": "ad86a44c17a1f667efcaa1906f46354740ca880c001e3b1203e0f077010b29c2"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/预览.html",
+      "bytes": 1284,
+      "sha256": "7fca0bc4f741667c3c5b7ccf37fb9fd3917dddc6363b4ea92c915aa0e44b428a"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/P6_第一层分区.drawio",
+      "bytes": 10023,
+      "sha256": "a7a9c38cee529c42c33c682f65f7d1a36369e320b0298d990ec95adaccf17d80"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/P6_第一层预览.png",
+      "bytes": 200621,
+      "sha256": "72b8664f14f648222cbafa8fce47c9a486fad293b49b4a0cee29fa98d4ae275a"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/P6_第一层预览.svg",
+      "bytes": 8581,
+      "sha256": "465f4c22f3cd40e2265449219424b40907622e4056a4b00b347e4ea467af3085"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/README.md",
+      "bytes": 1731,
+      "sha256": "695a1e9fdec4c0836a4784b961ec8dda5a2e73e1e544cf86d7a92d414536b306"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/UC-05_查询员工有效权限_活动图.drawio",
+      "bytes": 23775,
+      "sha256": "122bc9fa0231dcc5e4c066018f009b63f3d7d6fcf9c5fd597cc10717cfe4730d"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/UC-05_查询员工有效权限_流程图.drawio",
+      "bytes": 19997,
+      "sha256": "b0511fae86ebada1bcc546a81ae3012c74d2fcc54d04cfabc11b5a022315eecc"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/UC-05_查询员工有效权限_时序图.drawio",
+      "bytes": 12555,
+      "sha256": "0d23dd1c39703642d2c596260cd360e4cb54f536f35b22ed3d562e6bddfbfd88"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/UC-05_查询员工有效权限.md",
+      "bytes": 20503,
+      "sha256": "f14f75c7cbd95ef0d47626426055082994c395fdbb848b97856a5bfc231b19fb"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/UC-05_活动图预览.png",
+      "bytes": 301462,
+      "sha256": "f733563f302d8bf22c28d5e2e65618ae8f0ce2faab78df101543b9591659e300"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/UC-05_流程图预览.png",
+      "bytes": 265377,
+      "sha256": "7e3556cf15b89b6a54b8759b7d6dd4df26c3f2c1d651006290cfcdcd045de00d"
+    },
+    {
+      "path": "docs/按用例分类/UC-05_查询员工有效权限/UC-05_时序图预览.png",
+      "bytes": 148730,
+      "sha256": "d837afcf315b9bff553e2586f4f17b2725a9a3c467e6f150fdf16816684269fe"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/01-overview.png",
+      "bytes": 200516,
+      "sha256": "94cb869e1929f021086967e2b69052c42b0e367fccf4d8a4ba50b6aa7431503b"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/01-overview.svg",
+      "bytes": 7444,
+      "sha256": "19b36c199b7bae6f8e16ebed1400f789b7f36560b6ada660bb2255938c499e84"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/04-runtime.png",
+      "bytes": 54701,
+      "sha256": "e45ceb8c19b0ebbf205c8cd0cb231a868f1f0aa331a37c6ef5d8c7230131797a"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/04-runtime.svg",
+      "bytes": 2216,
+      "sha256": "5da8902c0c5c9abb163e6170afe148fccc8e5a1d5992b459d3576b93ae8e332f"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/课程简表.drawio",
+      "bytes": 15525,
+      "sha256": "fc50f436cb16d7e844cd3a20943642402cb78574a866d1fa4377f810a5ff5385"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/课程简表.md",
+      "bytes": 2063,
+      "sha256": "65adb29205f49189b1011bcc11da9f3a711e44fd0a6e08eefc7a95194e75719e"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/课程简表.png",
+      "bytes": 206071,
+      "sha256": "f5bbaad1edcc18ad5d65d5d2c4cf86aadfd70b7f9ddf2822eaef331e74946c93"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/相关用例图.drawio",
+      "bytes": 16977,
+      "sha256": "ad86a44c17a1f667efcaa1906f46354740ca880c001e3b1203e0f077010b29c2"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/预览.html",
+      "bytes": 1296,
+      "sha256": "b6f39d2e7fb553e686290883ed215dc7648305a0b20c3e2193668626cfa0b190"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/P6_第一层分区.drawio",
+      "bytes": 10023,
+      "sha256": "a7a9c38cee529c42c33c682f65f7d1a36369e320b0298d990ec95adaccf17d80"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/P6_第一层预览.png",
+      "bytes": 200621,
+      "sha256": "72b8664f14f648222cbafa8fce47c9a486fad293b49b4a0cee29fa98d4ae275a"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/P6_第一层预览.svg",
+      "bytes": 8581,
+      "sha256": "465f4c22f3cd40e2265449219424b40907622e4056a4b00b347e4ea467af3085"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/README.md",
+      "bytes": 1791,
+      "sha256": "bde8424d7c0214d496de764a8861e11737bb598d2091695c7fbd323a291bd6ca"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/UC-06_活动图预览.png",
+      "bytes": 287865,
+      "sha256": "cf45693ca880b91dc4b13a9d99c9356ae6b48668906023b03b51f55eab80ca00"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/UC-06_检查员工指定操作权限_活动图.drawio",
+      "bytes": 25283,
+      "sha256": "21cdaf312729b9254ee6c8b31a3c9ec769ddb9307ee55c0c10af34bfec0d4567"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/UC-06_检查员工指定操作权限_流程图.drawio",
+      "bytes": 20933,
+      "sha256": "d40b6ad439428e9b58e16d801f200677bed22725345fccd98cadcdf309449545"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/UC-06_检查员工指定操作权限_时序图.drawio",
+      "bytes": 17390,
+      "sha256": "644b29c1794046ee5fed6dd515e0217faf1565e98aef33aa1d1d7e0fdd7c246d"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/UC-06_检查员工指定操作权限.md",
+      "bytes": 17719,
+      "sha256": "746e00c10f475d3b6b31afbdbc27cd5e6810a084c772f7f42059c4fa0c817190"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/UC-06_流程图预览.png",
+      "bytes": 259226,
+      "sha256": "9b5cd2299523d71967753efb8f56d4bea8c2f8e1d89c647ea61ea717a726c929"
+    },
+    {
+      "path": "docs/按用例分类/UC-06_检查员工指定操作权限/UC-06_时序图预览.png",
+      "bytes": 168066,
+      "sha256": "983b6c167ef97715866ee6909308e34e84233e173fa93ee0b11a276ee6b69a79"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/01-overview.png",
+      "bytes": 200516,
+      "sha256": "94cb869e1929f021086967e2b69052c42b0e367fccf4d8a4ba50b6aa7431503b"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/01-overview.svg",
+      "bytes": 7444,
+      "sha256": "19b36c199b7bae6f8e16ebed1400f789b7f36560b6ada660bb2255938c499e84"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/02-role-config.png",
+      "bytes": 64088,
+      "sha256": "d3038c608f0e16520c59dd6597c409aaf4bea0346f42b8873fa587e1b81bbbca"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/02-role-config.svg",
+      "bytes": 2932,
+      "sha256": "6327babc4be1d6d13928e1ebe9cf93962a94b242faf17b96c57c8d057308c06c"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/课程简表.drawio",
+      "bytes": 16980,
+      "sha256": "4013cf23d585c6a1d9b7c6b18a7ab683bd6f739c4b558918938309d4273c1aee"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/课程简表.md",
+      "bytes": 1947,
+      "sha256": "18d383267cdd0ce674338a3ba141ca25df0e60bfdf6e6b46ad4c94711e2f872f"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/课程简表.png",
+      "bytes": 189137,
+      "sha256": "0728b0a662f7db98e3571ed5ed7bfcf98976a0932392fa42af436bd6fc2c8c67"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/相关用例图.drawio",
+      "bytes": 18375,
+      "sha256": "603df8cd027acf785b3e544a4b25cf8dd1f117a2e21fabd5fcde9c858494b737"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/预览.html",
+      "bytes": 1308,
+      "sha256": "7e56efdd552e515c504a7f8c9d39bea6973ac7351da7013949aa7398d6238dc3"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/P1_第一层分区.drawio",
+      "bytes": 12219,
+      "sha256": "470855d8f2f545d35b2ba76f0ef2fe271cfd6461c6cc2238bb518b76f8578f65"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/P1_第一层预览.png",
+      "bytes": 220687,
+      "sha256": "914fd15218146f7a34d0131276e75d981a0ca69a2b4de5d336b0bc714e523ab7"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/P1_第一层预览.svg",
+      "bytes": 10309,
+      "sha256": "6cad4fd85f051257307e5b1e82b720c442f3e42c06d564c8504630447c9ec111"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/README.md",
+      "bytes": 1791,
+      "sha256": "42669177c9fa26d347c27264a7086db993f18b3f94707869bc34229a95ad2667"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/UC-07_活动图预览.png",
+      "bytes": 300390,
+      "sha256": "27d5ac9696a5119319c8ba93570ea815941bd0ff3ca1f97e9565bf6402fce450"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/UC-07_流程图预览.png",
+      "bytes": 251877,
+      "sha256": "552053a6c2c658276ae0f7bd0d5a8cc38775beca2243c068f0601f03f913b87c"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/UC-07_配置管理员及管理范围_活动图.drawio",
+      "bytes": 26094,
+      "sha256": "83deb628e43d1bfea728fae016b98076739abb131ae533737883e698ab267d39"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/UC-07_配置管理员及管理范围_流程图.drawio",
+      "bytes": 20813,
+      "sha256": "503e689815473b66b923b66ebe81b1d4638aa2d68a07dc5b490e319a567563dc"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/UC-07_配置管理员及管理范围_时序图.drawio",
+      "bytes": 15676,
+      "sha256": "ebdf85fb058e1cd99c6e459090926e40ffdc7a7f7c16bfeb52dfc80a2350f27c"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/UC-07_配置管理员及管理范围.md",
+      "bytes": 18548,
+      "sha256": "5619694e819f684fbbf255ff81b529ed02415df9b2b77560925eb2d83d5a21eb"
+    },
+    {
+      "path": "docs/按用例分类/UC-07_配置管理员及管理范围/UC-07_时序图预览.png",
+      "bytes": 162681,
+      "sha256": "f127298844f8b0164fe22ccf7e1fcc6314e622cffaaae0fa6ddc424a40bc6112"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/01-overview.png",
+      "bytes": 200516,
+      "sha256": "94cb869e1929f021086967e2b69052c42b0e367fccf4d8a4ba50b6aa7431503b"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/01-overview.svg",
+      "bytes": 7444,
+      "sha256": "19b36c199b7bae6f8e16ebed1400f789b7f36560b6ada660bb2255938c499e84"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/03-assignment.png",
+      "bytes": 92757,
+      "sha256": "34501c821a876432f1c755035cc0471b3ffeb009ea31a919b715f8a559c7859d"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/03-assignment.svg",
+      "bytes": 3852,
+      "sha256": "bd829bf3777c38298c931f8c5c2a5bbe287f956fd2aa58cc478640fc106b0776"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/课程简表.drawio",
+      "bytes": 16049,
+      "sha256": "ece023bd65ccefc706b65580ee381b1222256f236ea308aa0862b2249dea8c8f"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/课程简表.md",
+      "bytes": 1801,
+      "sha256": "df96e7bca710e48d80a60f1d49e18f07e7b562c6c38d0ef8d2e780f942910b94"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/课程简表.png",
+      "bytes": 180185,
+      "sha256": "2990b6bb26d4f126a7c02c3a18e0588cf453b90725a18bd714f7f9223fbb5506"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/相关用例图.drawio",
+      "bytes": 20183,
+      "sha256": "6127d7f830d3303f965fd2667fa0f4d848b32384f3df5697f99c2dd657495ea3"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/预览.html",
+      "bytes": 1293,
+      "sha256": "0ec1500e8f66a3f06590d43b3a66f41dfe98533f15db61a64de5f7184448fac2"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/P7_第一层分区.drawio",
+      "bytes": 8521,
+      "sha256": "b0d9af602f6da955a02735984973d09f0d2f6db30b1802172491b2970f3841c2"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/P7_第一层预览.png",
+      "bytes": 159277,
+      "sha256": "0dae19f65e3c2c7f986c88c055fc7f5c874c50bd4524704940ebe9dd7b2f931b"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/P7_第一层预览.svg",
+      "bytes": 6795,
+      "sha256": "4b5aa790c8f22d70cef0c158ca3b69878ed6a82b7225e90a1bafa6f3d7383adc"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/README.md",
+      "bytes": 1731,
+      "sha256": "c38d7b9c5271817a39a3d58b68f70116e93cc734f55624a50f6134a4453ae345"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/UC-08_查询授权审计记录_活动图.drawio",
+      "bytes": 27049,
+      "sha256": "71a5bfa8aa3322b85b1c35c9928382abfb8a84ac9980e7d3b14dab42ef813c29"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/UC-08_查询授权审计记录_流程图.drawio",
+      "bytes": 21732,
+      "sha256": "be42c8f7b07a20147ce26596500d74e28a2d76f7858df687a9056e0f16e3775f"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/UC-08_查询授权审计记录_时序图.drawio",
+      "bytes": 13818,
+      "sha256": "a5f774bba7ce883c6a5bd456080479bfc9aa8191662e39627ecd4f9773cada46"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/UC-08_查询授权审计记录.md",
+      "bytes": 16384,
+      "sha256": "02e516043994f47c6112015a851a1fced95c27e49099c195a65515f4fd93784c"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/UC-08_活动图预览.png",
+      "bytes": 273017,
+      "sha256": "2a4012744190d76cbfade015379e071c534028135b67764274a153b6cf91f42f"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/UC-08_流程图预览.png",
+      "bytes": 239464,
+      "sha256": "4d03e4ba50b7ccd9fdc6a2234c5504b895a288b39a81dd1ef153994d89c559f9"
+    },
+    {
+      "path": "docs/按用例分类/UC-08_查询授权审计记录/UC-08_时序图预览.png",
+      "bytes": 143488,
+      "sha256": "7173a428574af15dd678b8c3496d74841608f3154b9687b2876813292a2c55c5"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/01-overview.png",
+      "bytes": 200516,
+      "sha256": "94cb869e1929f021086967e2b69052c42b0e367fccf4d8a4ba50b6aa7431503b"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/01-overview.svg",
+      "bytes": 7444,
+      "sha256": "19b36c199b7bae6f8e16ebed1400f789b7f36560b6ada660bb2255938c499e84"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/课程简表.drawio",
+      "bytes": 17131,
+      "sha256": "1a0f26634961d3f08391e6fcf7e6dca083aa5499f6d8427ee25fe3d3e9bcc318"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/课程简表.md",
+      "bytes": 2097,
+      "sha256": "ac4d718e904ac73025b72c0f76757c6f6fc15dcb677e439afdff2c49dd1e7a4b"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/课程简表.png",
+      "bytes": 199048,
+      "sha256": "894d5af776f80e5790eae9e9399729c19cf106c84f9356b56c0d00cfe801c578"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/相关用例图.drawio",
+      "bytes": 13361,
+      "sha256": "5e034aa85d2a50f30d30e098624790b8cb4e6dacdeada0a0faf205e257180ee9"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/预览.html",
+      "bytes": 2804,
+      "sha256": "34fd6b97ded47d7428f8589c6f883f72477e6147d5e0da486d91c5b55d296853"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/P1_第一层分区.drawio",
+      "bytes": 12219,
+      "sha256": "470855d8f2f545d35b2ba76f0ef2fe271cfd6461c6cc2238bb518b76f8578f65"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/P1_第一层预览.png",
+      "bytes": 220687,
+      "sha256": "914fd15218146f7a34d0131276e75d981a0ca69a2b4de5d336b0bc714e523ab7"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/P1_第一层预览.svg",
+      "bytes": 10309,
+      "sha256": "6cad4fd85f051257307e5b1e82b720c442f3e42c06d564c8504630447c9ec111"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/README.md",
+      "bytes": 1731,
+      "sha256": "c8a856548ac7b0f86f032fb12dcd0f889bf31d5aa22133da6579071307089926"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/UC-09_管理员登录与退出_活动图.drawio",
+      "bytes": 76514,
+      "sha256": "8fda243835d3c4962d3fb977bd5e268808eaffc43d4c5de980c0ab431b88170c"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/UC-09_管理员登录与退出_流程图.drawio",
+      "bytes": 62202,
+      "sha256": "8c77edbc1f32e783168a8d0c602e59d855e25437a50b529a2f7f1ac612c406c5"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/UC-09_管理员登录与退出_时序图.drawio",
+      "bytes": 49658,
+      "sha256": "77e6d5bb2f1d6bfc61c2fa80a1535e32f6972905ea541bf88d8e22683b5ace88"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/UC-09_管理员登录与退出.md",
+      "bytes": 18112,
+      "sha256": "5355ec138f0d23b962ce7f70d25ba7136683c626ec89d70cd74a0e840b32e976"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/UC-09_活动图预览.png",
+      "bytes": 308704,
+      "sha256": "e82c815cad722516afc66d050bdc3ff51d0ebc8a2282cc9f7e900768655b67f3"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/UC-09_流程图预览.png",
+      "bytes": 280329,
+      "sha256": "187559cf8e7347e877339fc68d7635bc11b1ca18ec8511308d56cbac040f3085"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/UC-09_时序图预览.png",
+      "bytes": 173396,
+      "sha256": "ffd8ac2df5a49175cc7f767e1854c937086d2913074642d23f5411f3c9bdbbab"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/UC-09-密码修改_活动图预览.png",
+      "bytes": 135448,
+      "sha256": "6ff04fe7a3c0c69a4fd4e70c8706a503eddd5dc9735f3a1daa591b19376cb898"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/UC-09-密码修改_流程图预览.png",
+      "bytes": 125213,
+      "sha256": "d6dffc42ba058af6df042734e397a74bd856224e830bb0556c21937dc558cb5e"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/UC-09-密码修改_时序图预览.png",
+      "bytes": 113387,
+      "sha256": "43ce0f775b4f3288420dcbc5c6f6b29a90efda67f7a3419793ba89c7e566abf1"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/UC-09-密码重置_活动图预览.png",
+      "bytes": 127935,
+      "sha256": "e8cf187db9e209198d61f8b4d8192b5644dc1acc4e79efec423230e535ba5b76"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/UC-09-密码重置_流程图预览.png",
+      "bytes": 118446,
+      "sha256": "2d59ec9d91ce5b9282cec52e6b21d02c59d8f5043e264b277786011dbef3d018"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/UC-09-密码重置_时序图预览.png",
+      "bytes": 102717,
+      "sha256": "eec7ce0545758325995027fdd2d2f31d882006533854238baaa82eae6dd620f1"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/UC-09-账号创建_活动图预览.png",
+      "bytes": 200802,
+      "sha256": "55774325fe764c8b49c9bcc6270bf4127203eb6fb657fc59756b625cc25fab25"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/UC-09-账号创建_流程图预览.png",
+      "bytes": 179706,
+      "sha256": "d1cb3325855e6b5cd0893ac2c98ed523b90936b8f325fa21a67482ddea2989bf"
+    },
+    {
+      "path": "docs/按用例分类/UC-09_管理员登录与退出/UC-09-账号创建_时序图预览.png",
+      "bytes": 135978,
+      "sha256": "373d40912a92371534582f72d2b30d94c3510f57e890a81828ae0fc29014e4aa"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/01-overview.png",
+      "bytes": 200516,
+      "sha256": "94cb869e1929f021086967e2b69052c42b0e367fccf4d8a4ba50b6aa7431503b"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/01-overview.svg",
+      "bytes": 7444,
+      "sha256": "19b36c199b7bae6f8e16ebed1400f789b7f36560b6ada660bb2255938c499e84"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/课程简表.drawio",
+      "bytes": 17266,
+      "sha256": "23f29075f37ab13f5638524dfedaf688ab2e1ff7b6a2d88997399364f0c3123d"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/课程简表.md",
+      "bytes": 2229,
+      "sha256": "f36308840e0f36151c211d976fc1252fe36e29633f1253f9a89f34c55dbc4f86"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/课程简表.png",
+      "bytes": 219164,
+      "sha256": "a00b672f070f8be49736b758dcd8311eef7dba4339df2522c17fc59ccb854738"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/相关用例图.drawio",
+      "bytes": 13361,
+      "sha256": "5e034aa85d2a50f30d30e098624790b8cb4e6dacdeada0a0faf205e257180ee9"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/预览.html",
+      "bytes": 1193,
+      "sha256": "225b686d3315ecc8dc405ae69f2291327b6c0b7ebd52b89ca223df2f7d654598"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/P3_第一层分区.drawio",
+      "bytes": 14812,
+      "sha256": "b490ad77891294248a21de37fd53522751f9e9ba2e5caa56e4a2213b5d6c219a"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/P3_第一层预览.png",
+      "bytes": 262660,
+      "sha256": "37416899f51b516dde002a4f099d833ea5d14b11957f06e6f5b2a4d6994a7517"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/P3_第一层预览.svg",
+      "bytes": 12591,
+      "sha256": "78613574093ceac90fc392c15fab10e15ddc9658ed5876b3b85832df41b0a174"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/README.md",
+      "bytes": 1806,
+      "sha256": "73b24206e8d20051e3b46ad984ad22feeb839ac316c1df6bebd9c273d15feeda"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/UC-10_导入／同步员工组织信息_流程图.drawio",
+      "bytes": 26069,
+      "sha256": "ccf4845c3edec72bf10d0840ce9c903db6001454a2bb0c9dbd20ebab56f84ca6"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/UC-10_导入／同步员工组织信息_时序图.drawio",
+      "bytes": 17308,
+      "sha256": "20572b158f72d26a556532c57751006aec959f8116c0bb91b041fd4798a444e1"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/UC-10_导入同步员工组织信息_活动图.drawio",
+      "bytes": 31741,
+      "sha256": "939828a5a63cd1ba7adf2b26863815d0b55f2841d57ac4d817d8a8ba62fbfed4"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/UC-10_导入同步员工组织信息.md",
+      "bytes": 19456,
+      "sha256": "fc11395365f6aa5461ef82655ba073d5b8cac733d1f84d079c4438346dfdf9eb"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/UC-10_活动图预览.png",
+      "bytes": 410930,
+      "sha256": "41f554e01733e6805968dce7922491d817736e741624bceb8d7ce375e15cfadd"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/UC-10_流程图预览.png",
+      "bytes": 366275,
+      "sha256": "a5e144e4bd1b2ccd2678559b5decb6c4c12c39f00b973bbaac4fdd36f8510991"
+    },
+    {
+      "path": "docs/按用例分类/UC-10_导入／同步员工组织信息/UC-10_时序图预览.png",
+      "bytes": 197847,
+      "sha256": "2ad39bfb5c93c585549e55b92d8cda153ccdd14df1dc7e8cb72dd4b234fefc1d"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/01-overview.png",
+      "bytes": 200516,
+      "sha256": "94cb869e1929f021086967e2b69052c42b0e367fccf4d8a4ba50b6aa7431503b"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/01-overview.svg",
+      "bytes": 7444,
+      "sha256": "19b36c199b7bae6f8e16ebed1400f789b7f36560b6ada660bb2255938c499e84"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/03-assignment.png",
+      "bytes": 92757,
+      "sha256": "34501c821a876432f1c755035cc0471b3ffeb009ea31a919b715f8a559c7859d"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/03-assignment.svg",
+      "bytes": 3852,
+      "sha256": "bd829bf3777c38298c931f8c5c2a5bbe287f956fd2aa58cc478640fc106b0776"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/课程简表.drawio",
+      "bytes": 17223,
+      "sha256": "292832f2ebf54d0b8ad342ca47edb4191cc0febc5b9747030b41041f62758718"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/课程简表.md",
+      "bytes": 2188,
+      "sha256": "407b296471a25cd2ee0fef9621543d94564f381430432c9b5e91a0b9631954a4"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/课程简表.png",
+      "bytes": 219960,
+      "sha256": "5ba03d4c06ed3b07e6780f41589b7191273f83b17857e3e50e2b5aa5db6d4b0c"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/相关用例图.drawio",
+      "bytes": 20183,
+      "sha256": "6127d7f830d3303f965fd2667fa0f4d848b32384f3df5697f99c2dd657495ea3"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/预览.html",
+      "bytes": 1504,
+      "sha256": "e53031f090b19fedfa11657d6d60fef2864898252afcc0596c2bee1c1a48461d"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/P5_第一层分区.drawio",
+      "bytes": 12722,
+      "sha256": "4f2314616e11693244fff484e4c697a7f71c2ebbce1242c372f1bfe7dfccd0fb"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/P5_第一层预览.png",
+      "bytes": 246864,
+      "sha256": "ec56a5a3ad0005de36d56cf53a26583765071fa5a68daf966f5ee572899cf6f2"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/P5_第一层预览.svg",
+      "bytes": 10935,
+      "sha256": "34eb971e96adfae3b9075f9752947021fe1892fc1dcb15492967423979642614"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/README.md",
+      "bytes": 1881,
+      "sha256": "1db7be3a10fa023abac0542d7c37e5a8cec8d909db07399455f55fe3b9c0a51e"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/UC-11_活动图预览.png",
+      "bytes": 433543,
+      "sha256": "88bb18474007d8579d371f802e99a80aef85f9a90885d7aef333918a39f54a1a"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/UC-11_接收审批结果并执行权限变更_活动图.drawio",
+      "bytes": 35914,
+      "sha256": "6ee64a6dafe860771d7128f3ec937dc5e71e45371c0d4046df9f0d70cf0aaeec"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/UC-11_接收审批结果并执行权限变更_流程图.drawio",
+      "bytes": 29130,
+      "sha256": "1aec286caa2e5498700246fec8d263a98f5356cc415dac125093f189e871f392"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/UC-11_接收审批结果并执行权限变更_时序图.drawio",
+      "bytes": 32992,
+      "sha256": "1606d0fc641b77ab4d374fd774bc0bf87231b9130e54a58583ab91f4624a7947"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/UC-11_接收审批结果并执行权限变更.md",
+      "bytes": 20643,
+      "sha256": "828087cb75195f256cd72b3741fcb207a63718a1ee5856bea542230cbe236d2e"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/UC-11_流程图预览.png",
+      "bytes": 389991,
+      "sha256": "ec9651ae59f96ae8c9ea60293354b766f9c9557ec8c1b554f1d6a93ee3ff9e59"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/UC-11_时序图预览.png",
+      "bytes": 174588,
+      "sha256": "f252c369fbbc08ffde7fc7352549ca1900205d9809bd38d33aea107ed7742d5b"
+    },
+    {
+      "path": "docs/按用例分类/UC-11_接收审批结果并执行权限变更/UC-11-自动执行_时序图预览.png",
+      "bytes": 210461,
+      "sha256": "097b058529acb96f113ba5f0f534b7545a7a85335ec645fa9c5cf86a63ea105d"
+    },
+    {
+      "path": "docs/activities-v1/全部活动图预览.html",
+      "bytes": 3460,
+      "sha256": "ecf62cccd990dc8a7e67eedfeffcba20a8453907b383eebc37ba16da18e39802"
+    },
+    {
+      "path": "docs/activities-v1/权限管理系统_全部活动图.drawio",
+      "bytes": 360253,
+      "sha256": "24deffdc1859a48d22ac7751151bf8aef558429c94e5e60927ed3722b1c7031d"
+    },
+    {
+      "path": "docs/activities-v1/generate_all.py",
+      "bytes": 18334,
+      "sha256": "e8604ba516ecd7df2a3f3fcc4e6a83ec1fec5b0a5905fc2bee1de3ba5bb9175c"
+    },
+    {
+      "path": "docs/activities-v1/generate_uc02.py",
+      "bytes": 426,
+      "sha256": "3309e7b5397221b5c5ac5f309ffad9acb664eaa332979e5614dc00e5d01a134c"
+    },
+    {
+      "path": "docs/activities-v1/README.md",
+      "bytes": 2839,
+      "sha256": "c2c56d1087cd83c36d69a14e46c25969a30f61fbd0601284033bf5db5e714a17"
+    },
+    {
+      "path": "docs/activities-v1/UC-01_活动图预览.png",
+      "bytes": 239504,
+      "sha256": "b02a77c336bc77a012c35dfe5a07fad2d359e936a3b7655642aeb9375648bcb6"
+    },
+    {
+      "path": "docs/activities-v1/UC-01_维护业务系统与权限目录_活动图.drawio",
+      "bytes": 25201,
+      "sha256": "f3b514e4d3298bb00f2db0c8b469869ae691f7fedc0e4f8ad5caf7209eb78cbc"
+    },
+    {
+      "path": "docs/activities-v1/UC-02_创建角色并配置权限_活动图.drawio",
+      "bytes": 30846,
+      "sha256": "1373741c959638a73fe68a54e3e57a10613e7d4c9b40ee7090341b599aab9c4a"
+    },
+    {
+      "path": "docs/activities-v1/UC-02_活动图预览.png",
+      "bytes": 407131,
+      "sha256": "b5663bb095ecf185d2cfdcd4966ea174454d0c5c80e718d87cd1f5c47beed229"
+    },
+    {
+      "path": "docs/activities-v1/UC-03_活动图预览.png",
+      "bytes": 351624,
+      "sha256": "0a6213cbd2c16556d0244583d529bcfd5e05f53a0f27d64250db09d96ba50df8"
+    },
+    {
+      "path": "docs/activities-v1/UC-03_为员工分配角色_活动图.drawio",
+      "bytes": 29138,
+      "sha256": "ad267d509f28411b967a8c4e3b3a727e87e0fa7fb9120d7b7b9f8800760a3aa3"
+    },
+    {
+      "path": "docs/activities-v1/UC-04_撤销员工角色_活动图.drawio",
+      "bytes": 30008,
+      "sha256": "8b0345fffe5390c3222aef568c10283f522e32b981a3865a13808328535c52c4"
+    },
+    {
+      "path": "docs/activities-v1/UC-04_活动图预览.png",
+      "bytes": 367198,
+      "sha256": "809102f492a8f9abd145537bb951f350bc767a9a2f9cf5a3612cbd479dd2367f"
+    },
+    {
+      "path": "docs/activities-v1/UC-05_查询员工有效权限_活动图.drawio",
+      "bytes": 23775,
+      "sha256": "122bc9fa0231dcc5e4c066018f009b63f3d7d6fcf9c5fd597cc10717cfe4730d"
+    },
+    {
+      "path": "docs/activities-v1/UC-05_活动图预览.png",
+      "bytes": 301462,
+      "sha256": "f733563f302d8bf22c28d5e2e65618ae8f0ce2faab78df101543b9591659e300"
+    },
+    {
+      "path": "docs/activities-v1/UC-06_活动图预览.png",
+      "bytes": 287865,
+      "sha256": "cf45693ca880b91dc4b13a9d99c9356ae6b48668906023b03b51f55eab80ca00"
+    },
+    {
+      "path": "docs/activities-v1/UC-06_检查员工指定操作权限_活动图.drawio",
+      "bytes": 25283,
+      "sha256": "21cdaf312729b9254ee6c8b31a3c9ec769ddb9307ee55c0c10af34bfec0d4567"
+    },
+    {
+      "path": "docs/activities-v1/UC-07_活动图预览.png",
+      "bytes": 300390,
+      "sha256": "27d5ac9696a5119319c8ba93570ea815941bd0ff3ca1f97e9565bf6402fce450"
+    },
+    {
+      "path": "docs/activities-v1/UC-07_配置管理员及管理范围_活动图.drawio",
+      "bytes": 26094,
+      "sha256": "83deb628e43d1bfea728fae016b98076739abb131ae533737883e698ab267d39"
+    },
+    {
+      "path": "docs/activities-v1/UC-08_查询授权审计记录_活动图.drawio",
+      "bytes": 27049,
+      "sha256": "71a5bfa8aa3322b85b1c35c9928382abfb8a84ac9980e7d3b14dab42ef813c29"
+    },
+    {
+      "path": "docs/activities-v1/UC-08_活动图预览.png",
+      "bytes": 273017,
+      "sha256": "2a4012744190d76cbfade015379e071c534028135b67764274a153b6cf91f42f"
+    },
+    {
+      "path": "docs/activities-v1/UC-09_管理员登录与退出_活动图.drawio",
+      "bytes": 76514,
+      "sha256": "8fda243835d3c4962d3fb977bd5e268808eaffc43d4c5de980c0ab431b88170c"
+    },
+    {
+      "path": "docs/activities-v1/UC-09_活动图预览.png",
+      "bytes": 308704,
+      "sha256": "e82c815cad722516afc66d050bdc3ff51d0ebc8a2282cc9f7e900768655b67f3"
+    },
+    {
+      "path": "docs/activities-v1/UC-09-密码修改_活动图预览.png",
+      "bytes": 135448,
+      "sha256": "6ff04fe7a3c0c69a4fd4e70c8706a503eddd5dc9735f3a1daa591b19376cb898"
+    },
+    {
+      "path": "docs/activities-v1/UC-09-密码重置_活动图预览.png",
+      "bytes": 127935,
+      "sha256": "e8cf187db9e209198d61f8b4d8192b5644dc1acc4e79efec423230e535ba5b76"
+    },
+    {
+      "path": "docs/activities-v1/UC-09-账号创建_活动图预览.png",
+      "bytes": 200802,
+      "sha256": "55774325fe764c8b49c9bcc6270bf4127203eb6fb657fc59756b625cc25fab25"
+    },
+    {
+      "path": "docs/activities-v1/UC-10_导入同步员工组织信息_活动图.drawio",
+      "bytes": 31741,
+      "sha256": "939828a5a63cd1ba7adf2b26863815d0b55f2841d57ac4d817d8a8ba62fbfed4"
+    },
+    {
+      "path": "docs/activities-v1/UC-10_活动图预览.png",
+      "bytes": 410930,
+      "sha256": "41f554e01733e6805968dce7922491d817736e741624bceb8d7ce375e15cfadd"
+    },
+    {
+      "path": "docs/activities-v1/UC-11_活动图预览.png",
+      "bytes": 433543,
+      "sha256": "88bb18474007d8579d371f802e99a80aef85f9a90885d7aef333918a39f54a1a"
+    },
+    {
+      "path": "docs/activities-v1/UC-11_接收审批结果并执行权限变更_活动图.drawio",
+      "bytes": 35914,
+      "sha256": "6ee64a6dafe860771d7128f3ec937dc5e71e45371c0d4046df9f0d70cf0aaeec"
+    },
+    {
+      "path": "docs/dataflows-v1/第一层边界平衡检查.json",
+      "bytes": 4723,
+      "sha256": "e4317f8a2ae30905d620da063bf265d6a50342a57489cdbcdba018fbbe0ef348"
+    },
+    {
+      "path": "docs/dataflows-v1/第一层数据流分析.md",
+      "bytes": 9889,
+      "sha256": "ea2e313a7abbc3a660ee0ae0688181d61c8a926a3151452865a377be1407f29e"
+    },
+    {
+      "path": "docs/dataflows-v1/第一层数据流图_分区阅读.drawio",
+      "bytes": 82706,
+      "sha256": "aa1e77373c329d364f43222e3db26bb6c69901bcb9aec9675f55fa955ba5ed5d"
+    },
+    {
+      "path": "docs/dataflows-v1/第一层数据流图预览.html",
+      "bytes": 1901,
+      "sha256": "546b85cb1aceb96c4380d11f67988a3d7a0ae28374ee69521ad209a34b513ad2"
+    },
+    {
+      "path": "docs/dataflows-v1/第一层数据流图预览.png",
+      "bytes": 1335497,
+      "sha256": "c795b60fbc8e1a379816f9ce0ed115502e1a1fefc4daf825cba0c90d0ed8acad"
+    },
+    {
+      "path": "docs/dataflows-v1/第一层数据流图预览.svg",
+      "bytes": 67040,
+      "sha256": "7873a753bdeb02538fe417b600fdd82771133e5f40f02a271cd0301f502f8060"
+    },
+    {
+      "path": "docs/dataflows-v1/顶层数据流分析.md",
+      "bytes": 7803,
+      "sha256": "f7389741cc86d1b8c383fc50c484b881a1a01c3a44079ed9d572dacb82de00a9"
+    },
+    {
+      "path": "docs/dataflows-v1/顶层数据流图预览.png",
+      "bytes": 304391,
+      "sha256": "356b4869a809afe222fcc043fdccc440e77ef7be50fc69d4617afe4bf806eb27"
+    },
+    {
+      "path": "docs/dataflows-v1/顶层数据流图预览.svg",
+      "bytes": 11789,
+      "sha256": "e5a32b377dd672a4841391c694bb8d8377e0d22b1c8fa11fabbe133c6bc96fe1"
+    },
+    {
+      "path": "docs/dataflows-v1/权限管理系统_第一层数据流图.drawio",
+      "bytes": 75561,
+      "sha256": "418d3b0aadaf01156ce9fa7310f63c617a7e1b8096150e4bbdeca6d945e32ef0"
+    },
+    {
+      "path": "docs/dataflows-v1/权限管理系统_顶层数据流图.drawio",
+      "bytes": 11953,
+      "sha256": "8a73e66001bb5d4867a03356a269fbc00e01671cee6d41c0b4f5a592648f88e4"
+    },
+    {
+      "path": "docs/dataflows-v1/generate_context.py",
+      "bytes": 8830,
+      "sha256": "63a6a76bb287b33ab4b42e61e8b309198b342bf7cd4446ee61d031bc325f791c"
+    },
+    {
+      "path": "docs/dataflows-v1/generate_level1.py",
+      "bytes": 15036,
+      "sha256": "95231962ee4c68a62940138a912ffca235e91a385d04e3d2bf6a1c1f4f61f06d"
+    },
+    {
+      "path": "docs/dataflows-v1/P1_第一层分区.drawio",
+      "bytes": 12219,
+      "sha256": "470855d8f2f545d35b2ba76f0ef2fe271cfd6461c6cc2238bb518b76f8578f65"
+    },
+    {
+      "path": "docs/dataflows-v1/P1_第一层预览.png",
+      "bytes": 220687,
+      "sha256": "914fd15218146f7a34d0131276e75d981a0ca69a2b4de5d336b0bc714e523ab7"
+    },
+    {
+      "path": "docs/dataflows-v1/P1_第一层预览.svg",
+      "bytes": 10309,
+      "sha256": "6cad4fd85f051257307e5b1e82b720c442f3e42c06d564c8504630447c9ec111"
+    },
+    {
+      "path": "docs/dataflows-v1/P2_第一层分区.drawio",
+      "bytes": 9492,
+      "sha256": "735c913ad65ce19a5e6ef9c2eaddd1a0f9c56d32b41f216252ab5b34e53a1672"
+    },
+    {
+      "path": "docs/dataflows-v1/P2_第一层预览.png",
+      "bytes": 178635,
+      "sha256": "3cb6785ae89e677977280f70cf2e050f7aa011eb033f75822c106918aeedf91d"
+    },
+    {
+      "path": "docs/dataflows-v1/P2_第一层预览.svg",
+      "bytes": 7949,
+      "sha256": "297bb6c3631c3a8d76971eab9ccecb34c204cd089a9489d2f861444890b4eec4"
+    },
+    {
+      "path": "docs/dataflows-v1/P3_第一层分区.drawio",
+      "bytes": 14812,
+      "sha256": "b490ad77891294248a21de37fd53522751f9e9ba2e5caa56e4a2213b5d6c219a"
+    },
+    {
+      "path": "docs/dataflows-v1/P3_第一层预览.png",
+      "bytes": 262660,
+      "sha256": "37416899f51b516dde002a4f099d833ea5d14b11957f06e6f5b2a4d6994a7517"
+    },
+    {
+      "path": "docs/dataflows-v1/P3_第一层预览.svg",
+      "bytes": 12591,
+      "sha256": "78613574093ceac90fc392c15fab10e15ddc9658ed5876b3b85832df41b0a174"
+    },
+    {
+      "path": "docs/dataflows-v1/P4_第一层分区.drawio",
+      "bytes": 15483,
+      "sha256": "addb8cb6154fa0ef6ebcf9acae0735ad576ef604a205290d017eb14328db94cb"
+    },
+    {
+      "path": "docs/dataflows-v1/P4_第一层预览.png",
+      "bytes": 276062,
+      "sha256": "8f134268ee70300b6fac336f9e3979125e42b0f2a445347bd93660c4585e27e6"
+    },
+    {
+      "path": "docs/dataflows-v1/P4_第一层预览.svg",
+      "bytes": 13412,
+      "sha256": "e0cde105c9b27a551f51c0b230cccd71649e0eec0b031366057d40f055990003"
+    },
+    {
+      "path": "docs/dataflows-v1/P5_第一层分区.drawio",
+      "bytes": 12722,
+      "sha256": "4f2314616e11693244fff484e4c697a7f71c2ebbce1242c372f1bfe7dfccd0fb"
+    },
+    {
+      "path": "docs/dataflows-v1/P5_第一层预览.png",
+      "bytes": 246864,
+      "sha256": "ec56a5a3ad0005de36d56cf53a26583765071fa5a68daf966f5ee572899cf6f2"
+    },
+    {
+      "path": "docs/dataflows-v1/P5_第一层预览.svg",
+      "bytes": 10935,
+      "sha256": "34eb971e96adfae3b9075f9752947021fe1892fc1dcb15492967423979642614"
+    },
+    {
+      "path": "docs/dataflows-v1/P6_第一层分区.drawio",
+      "bytes": 10023,
+      "sha256": "a7a9c38cee529c42c33c682f65f7d1a36369e320b0298d990ec95adaccf17d80"
+    },
+    {
+      "path": "docs/dataflows-v1/P6_第一层预览.png",
+      "bytes": 200621,
+      "sha256": "72b8664f14f648222cbafa8fce47c9a486fad293b49b4a0cee29fa98d4ae275a"
+    },
+    {
+      "path": "docs/dataflows-v1/P6_第一层预览.svg",
+      "bytes": 8581,
+      "sha256": "465f4c22f3cd40e2265449219424b40907622e4056a4b00b347e4ea467af3085"
+    },
+    {
+      "path": "docs/dataflows-v1/P7_第一层分区.drawio",
+      "bytes": 8521,
+      "sha256": "b0d9af602f6da955a02735984973d09f0d2f6db30b1802172491b2970f3841c2"
+    },
+    {
+      "path": "docs/dataflows-v1/P7_第一层预览.png",
+      "bytes": 159277,
+      "sha256": "0dae19f65e3c2c7f986c88c055fc7f5c874c50bd4524704940ebe9dd7b2f931b"
+    },
+    {
+      "path": "docs/dataflows-v1/P7_第一层预览.svg",
+      "bytes": 6795,
+      "sha256": "4b5aa790c8f22d70cef0c158ca3b69878ed6a82b7225e90a1bafa6f3d7383adc"
+    },
+    {
+      "path": "docs/dataflows-v1/README.md",
+      "bytes": 2509,
+      "sha256": "11a59bd99b410c12d9bec6e2ba38ce871f91ee1231d5452978873a999fd34e0a"
+    },
+    {
+      "path": "docs/flows-v1/全部流程图预览.html",
+      "bytes": 3451,
+      "sha256": "7ed318b19939de8a0e7db0eba6660b12afb95fd7273ca286c79780052e0be8a7"
+    },
+    {
+      "path": "docs/flows-v1/权限管理系统_全部流程图.drawio",
+      "bytes": 288688,
+      "sha256": "763f17b62d0a0f3cfee9b960a2063e2aa8934afcd2bdd934522420bc1bfc6a9a"
+    },
+    {
+      "path": "docs/flows-v1/generate_all.py",
+      "bytes": 35801,
+      "sha256": "45b2d4022deb9d51b80a4c337b393632d46da3077abfe2b84f6f9c9491b38133"
+    },
+    {
+      "path": "docs/flows-v1/generate_uc01.py",
+      "bytes": 9340,
+      "sha256": "8325b8b317d1338605caf781641ffdd4cad8b4e58902006afc4320394ea9e06a"
+    },
+    {
+      "path": "docs/flows-v1/README.md",
+      "bytes": 4496,
+      "sha256": "15d2ff8714a71e0975d59149cb397d459a42daa3a06547c67cac0edd369c90b5"
+    },
+    {
+      "path": "docs/flows-v1/repair_uc01.cjs",
+      "bytes": 852,
+      "sha256": "7232a698c54e9e41b166ae93a822949737912abb9e23a9c54122745299d6d37c"
+    },
+    {
+      "path": "docs/flows-v1/UC-01_流程图预览.png",
+      "bytes": 285772,
+      "sha256": "042c0094a2e81b3164c12bea6b6603775967e79a1fa5fe7419dd3ab05819df1d"
+    },
+    {
+      "path": "docs/flows-v1/UC-01_维护业务系统与权限目录_流程图.drawio",
+      "bytes": 22218,
+      "sha256": "e80c001628863d9ad59ac95f87ad6e2bc4d39ddbe538149ca249c13e42aba0d3"
+    },
+    {
+      "path": "docs/flows-v1/UC-02_创建角色并配置权限_流程图.drawio",
+      "bytes": 22694,
+      "sha256": "e365884ee031d1fed3b684aa556e71baaeb808f7efb3ea4d2adc631c1d249dbf"
+    },
+    {
+      "path": "docs/flows-v1/UC-02_流程图预览.png",
+      "bytes": 295074,
+      "sha256": "53ff2e18ea4a6c9c3f2f8f6ca033cb6366a4e6169118abd84b98a571bc50d1ac"
+    },
+    {
+      "path": "docs/flows-v1/UC-03_流程图预览.png",
+      "bytes": 261685,
+      "sha256": "fde4bc40e83a8c67a5c35c95de1bd3fa6060a0ae3790b5b91ec58383f9ac888f"
+    },
+    {
+      "path": "docs/flows-v1/UC-03_为员工分配角色_流程图.drawio",
+      "bytes": 21908,
+      "sha256": "25454bba5e0d145a7b444919526bfc73440c0a7d0a597c92861a663c5c8b2411"
+    },
+    {
+      "path": "docs/flows-v1/UC-04_撤销员工角色_流程图.drawio",
+      "bytes": 22612,
+      "sha256": "b25e3a22a2c81aaeffc10c17f79ab1fa14ef760483b7455d8b856eaff3688251"
+    },
+    {
+      "path": "docs/flows-v1/UC-04_流程图预览.png",
+      "bytes": 271170,
+      "sha256": "ae513e336607844f200a5bb21cde78def685a1d73ea08b1a417c1888b7d1d140"
+    },
+    {
+      "path": "docs/flows-v1/UC-05_查询员工有效权限_流程图.drawio",
+      "bytes": 19997,
+      "sha256": "b0511fae86ebada1bcc546a81ae3012c74d2fcc54d04cfabc11b5a022315eecc"
+    },
+    {
+      "path": "docs/flows-v1/UC-05_流程图预览.png",
+      "bytes": 265377,
+      "sha256": "7e3556cf15b89b6a54b8759b7d6dd4df26c3f2c1d651006290cfcdcd045de00d"
+    },
+    {
+      "path": "docs/flows-v1/UC-06_检查员工指定操作权限_流程图.drawio",
+      "bytes": 20933,
+      "sha256": "d40b6ad439428e9b58e16d801f200677bed22725345fccd98cadcdf309449545"
+    },
+    {
+      "path": "docs/flows-v1/UC-06_流程图预览.png",
+      "bytes": 259226,
+      "sha256": "9b5cd2299523d71967753efb8f56d4bea8c2f8e1d89c647ea61ea717a726c929"
+    },
+    {
+      "path": "docs/flows-v1/UC-07_流程图预览.png",
+      "bytes": 251877,
+      "sha256": "552053a6c2c658276ae0f7bd0d5a8cc38775beca2243c068f0601f03f913b87c"
+    },
+    {
+      "path": "docs/flows-v1/UC-07_配置管理员及管理范围_流程图.drawio",
+      "bytes": 20813,
+      "sha256": "503e689815473b66b923b66ebe81b1d4638aa2d68a07dc5b490e319a567563dc"
+    },
+    {
+      "path": "docs/flows-v1/UC-08_查询授权审计记录_流程图.drawio",
+      "bytes": 21732,
+      "sha256": "be42c8f7b07a20147ce26596500d74e28a2d76f7858df687a9056e0f16e3775f"
+    },
+    {
+      "path": "docs/flows-v1/UC-08_流程图预览.png",
+      "bytes": 239464,
+      "sha256": "4d03e4ba50b7ccd9fdc6a2234c5504b895a288b39a81dd1ef153994d89c559f9"
+    },
+    {
+      "path": "docs/flows-v1/UC-09_管理员登录与退出_流程图.drawio",
+      "bytes": 62202,
+      "sha256": "8c77edbc1f32e783168a8d0c602e59d855e25437a50b529a2f7f1ac612c406c5"
+    },
+    {
+      "path": "docs/flows-v1/UC-09_流程图预览.png",
+      "bytes": 280329,
+      "sha256": "187559cf8e7347e877339fc68d7635bc11b1ca18ec8511308d56cbac040f3085"
+    },
+    {
+      "path": "docs/flows-v1/UC-09-密码修改_流程图预览.png",
+      "bytes": 125213,
+      "sha256": "d6dffc42ba058af6df042734e397a74bd856224e830bb0556c21937dc558cb5e"
+    },
+    {
+      "path": "docs/flows-v1/UC-09-密码重置_流程图预览.png",
+      "bytes": 118446,
+      "sha256": "2d59ec9d91ce5b9282cec52e6b21d02c59d8f5043e264b277786011dbef3d018"
+    },
+    {
+      "path": "docs/flows-v1/UC-09-账号创建_流程图预览.png",
+      "bytes": 179706,
+      "sha256": "d1cb3325855e6b5cd0893ac2c98ed523b90936b8f325fa21a67482ddea2989bf"
+    },
+    {
+      "path": "docs/flows-v1/UC-10_导入／同步员工组织信息_流程图.drawio",
+      "bytes": 26069,
+      "sha256": "ccf4845c3edec72bf10d0840ce9c903db6001454a2bb0c9dbd20ebab56f84ca6"
+    },
+    {
+      "path": "docs/flows-v1/UC-10_流程图预览.png",
+      "bytes": 366275,
+      "sha256": "a5e144e4bd1b2ccd2678559b5decb6c4c12c39f00b973bbaac4fdd36f8510991"
+    },
+    {
+      "path": "docs/flows-v1/UC-11_接收审批结果并执行权限变更_流程图.drawio",
+      "bytes": 29130,
+      "sha256": "1aec286caa2e5498700246fec8d263a98f5356cc415dac125093f189e871f392"
+    },
+    {
+      "path": "docs/flows-v1/UC-11_流程图预览.png",
+      "bytes": 389991,
+      "sha256": "ec9651ae59f96ae8c9ea60293354b766f9c9557ec8c1b554f1d6a93ee3ff9e59"
+    },
+    {
+      "path": "docs/README.md",
+      "bytes": 3860,
+      "sha256": "1f4dc6846543720be0f3c393c1e68c652fda0f7626ca1e4c10795bae29143073"
+    },
+    {
+      "path": "docs/sequences-v1/全部时序图预览.html",
+      "bytes": 3786,
+      "sha256": "ec914ae7b818cd3364332948aaec47ccf72620648477dfd21f1c114d60f910db"
+    },
+    {
+      "path": "docs/sequences-v1/权限管理系统_全部时序图.drawio",
+      "bytes": 232288,
+      "sha256": "81b637eaf61b8d5f272c61df6ac30ed7e537ac92ffb86e973297e91997e528aa"
+    },
+    {
+      "path": "docs/sequences-v1/图与用例对应.json",
+      "bytes": 2050,
+      "sha256": "1faaf7b33557b739ce92826db8706b7a2ba4b23fb345be09846ac7ff6ad474b8"
+    },
+    {
+      "path": "docs/sequences-v1/generate_sequences.py",
+      "bytes": 34685,
+      "sha256": "88ffe3efffcdf4c44f1b951a70212bfd20c7240a6d3114c861dc1ebbe6c5f75b"
+    },
+    {
+      "path": "docs/sequences-v1/README.md",
+      "bytes": 4172,
+      "sha256": "7e2cbc227d2013514c36ffb52f352f85925702f28297a3482fe3bdf09d0d162b"
+    },
+    {
+      "path": "docs/sequences-v1/UC-01_时序图预览.png",
+      "bytes": 173625,
+      "sha256": "336e88aa1018b302878ac95f64a193f9133adee6c78acaf2fac079859b318a50"
+    },
+    {
+      "path": "docs/sequences-v1/UC-01_维护业务系统与权限目录_时序图.drawio",
+      "bytes": 16857,
+      "sha256": "fabedf70c039daebe711ed022ed7b7b3d65b450fa80cbd9f6ca811958d845e39"
+    },
+    {
+      "path": "docs/sequences-v1/UC-02_创建角色并配置权限_时序图.drawio",
+      "bytes": 21312,
+      "sha256": "24cc4a6cf68f9bb423f906c2a8241bf9d72f252e602d3e4d64e5a36a8b7d582f"
+    },
+    {
+      "path": "docs/sequences-v1/UC-02_时序图预览.png",
+      "bytes": 238005,
+      "sha256": "9fc80d1e2bd7a78688842f5eef70ed4e8a9f1bc0cb91d465c5c8c23f851be9b9"
+    },
+    {
+      "path": "docs/sequences-v1/UC-03_时序图预览.png",
+      "bytes": 198916,
+      "sha256": "ca0066cea0d0f959e7bb72a4124d7e2e2ec3a95b6955a7561ea81b7dde6248ef"
+    },
+    {
+      "path": "docs/sequences-v1/UC-03_为员工分配角色_时序图.drawio",
+      "bytes": 18205,
+      "sha256": "2c37bfae4e5c363e74bf35db510e7f2bbc7aedcdd7dc4db8478dae6b845ac520"
+    },
+    {
+      "path": "docs/sequences-v1/UC-04_撤销员工角色_时序图.drawio",
+      "bytes": 18137,
+      "sha256": "ce267e537f1545c6875ceda3a36f936b5ad2d824f29afb9ce5fb5b1658b0e8a2"
+    },
+    {
+      "path": "docs/sequences-v1/UC-04_时序图预览.png",
+      "bytes": 199601,
+      "sha256": "6be35f08adefca0c8f9bd17f30959252f6721601fd19de1c2942522de57516c3"
+    },
+    {
+      "path": "docs/sequences-v1/UC-05_查询员工有效权限_时序图.drawio",
+      "bytes": 12555,
+      "sha256": "0d23dd1c39703642d2c596260cd360e4cb54f536f35b22ed3d562e6bddfbfd88"
+    },
+    {
+      "path": "docs/sequences-v1/UC-05_时序图预览.png",
+      "bytes": 148730,
+      "sha256": "d837afcf315b9bff553e2586f4f17b2725a9a3c467e6f150fdf16816684269fe"
+    },
+    {
+      "path": "docs/sequences-v1/UC-06_检查员工指定操作权限_时序图.drawio",
+      "bytes": 17390,
+      "sha256": "644b29c1794046ee5fed6dd515e0217faf1565e98aef33aa1d1d7e0fdd7c246d"
+    },
+    {
+      "path": "docs/sequences-v1/UC-06_时序图预览.png",
+      "bytes": 168066,
+      "sha256": "983b6c167ef97715866ee6909308e34e84233e173fa93ee0b11a276ee6b69a79"
+    },
+    {
+      "path": "docs/sequences-v1/UC-07_配置管理员及管理范围_时序图.drawio",
+      "bytes": 15676,
+      "sha256": "ebdf85fb058e1cd99c6e459090926e40ffdc7a7f7c16bfeb52dfc80a2350f27c"
+    },
+    {
+      "path": "docs/sequences-v1/UC-07_时序图预览.png",
+      "bytes": 162681,
+      "sha256": "f127298844f8b0164fe22ccf7e1fcc6314e622cffaaae0fa6ddc424a40bc6112"
+    },
+    {
+      "path": "docs/sequences-v1/UC-08_查询授权审计记录_时序图.drawio",
+      "bytes": 13818,
+      "sha256": "a5f774bba7ce883c6a5bd456080479bfc9aa8191662e39627ecd4f9773cada46"
+    },
+    {
+      "path": "docs/sequences-v1/UC-08_时序图预览.png",
+      "bytes": 143488,
+      "sha256": "7173a428574af15dd678b8c3496d74841608f3154b9687b2876813292a2c55c5"
+    },
+    {
+      "path": "docs/sequences-v1/UC-09_管理员登录与退出_时序图.drawio",
+      "bytes": 49658,
+      "sha256": "77e6d5bb2f1d6bfc61c2fa80a1535e32f6972905ea541bf88d8e22683b5ace88"
+    },
+    {
+      "path": "docs/sequences-v1/UC-09_时序图预览.png",
+      "bytes": 173396,
+      "sha256": "ffd8ac2df5a49175cc7f767e1854c937086d2913074642d23f5411f3c9bdbbab"
+    },
+    {
+      "path": "docs/sequences-v1/UC-09-密码修改_时序图预览.png",
+      "bytes": 113387,
+      "sha256": "43ce0f775b4f3288420dcbc5c6f6b29a90efda67f7a3419793ba89c7e566abf1"
+    },
+    {
+      "path": "docs/sequences-v1/UC-09-密码重置_时序图预览.png",
+      "bytes": 102717,
+      "sha256": "eec7ce0545758325995027fdd2d2f31d882006533854238baaa82eae6dd620f1"
+    },
+    {
+      "path": "docs/sequences-v1/UC-09-账号创建_时序图预览.png",
+      "bytes": 135978,
+      "sha256": "373d40912a92371534582f72d2b30d94c3510f57e890a81828ae0fc29014e4aa"
+    },
+    {
+      "path": "docs/sequences-v1/UC-10_导入／同步员工组织信息_时序图.drawio",
+      "bytes": 17308,
+      "sha256": "20572b158f72d26a556532c57751006aec959f8116c0bb91b041fd4798a444e1"
+    },
+    {
+      "path": "docs/sequences-v1/UC-10_时序图预览.png",
+      "bytes": 197847,
+      "sha256": "2ad39bfb5c93c585549e55b92d8cda153ccdd14df1dc7e8cb72dd4b234fefc1d"
+    },
+    {
+      "path": "docs/sequences-v1/UC-11_接收审批结果并执行权限变更_时序图.drawio",
+      "bytes": 32992,
+      "sha256": "1606d0fc641b77ab4d374fd774bc0bf87231b9130e54a58583ab91f4624a7947"
+    },
+    {
+      "path": "docs/sequences-v1/UC-11_时序图预览.png",
+      "bytes": 174588,
+      "sha256": "f252c369fbbc08ffde7fc7352549ca1900205d9809bd38d33aea107ed7742d5b"
+    },
+    {
+      "path": "docs/sequences-v1/UC-11-自动执行_时序图预览.png",
+      "bytes": 210461,
+      "sha256": "097b058529acb96f113ba5f0f534b7545a7a85335ec645fa9c5cf86a63ea105d"
+    },
+    {
+      "path": "docs/sync_usecase_folders.py",
+      "bytes": 8876,
+      "sha256": "9dd18ba9e02b500e92e20920516398acf74abf91abc471dececa8f0feb7658ee"
+    },
+    {
+      "path": "docs/usecase-tables-v1/课程格式用例说明.md",
+      "bytes": 24036,
+      "sha256": "055c745ad2f64f00c9fde862ee78c7c393cdae58909e714df98e5143b4cc2a79"
+    },
+    {
+      "path": "docs/usecase-tables-v1/权限管理系统_课程格式用例说明.drawio",
+      "bytes": 187995,
+      "sha256": "1d135a97bdc48907578494a9643100bd3aeee105d770eecc420367c04cf318c6"
+    },
+    {
+      "path": "docs/usecase-tables-v1/预览.html",
+      "bytes": 2578,
+      "sha256": "8456e8acf52d5ec37af12860469917a200269c958fcfb019137de2988d6c7a01"
+    },
+    {
+      "path": "docs/usecase-tables-v1/generate_tables.py",
+      "bytes": 26971,
+      "sha256": "42fb598c364a389887065046792f90818eeac33bae1248e16d1c19b45d21e6e6"
+    },
+    {
+      "path": "docs/usecase-tables-v1/README.md",
+      "bytes": 4740,
+      "sha256": "23f9be81b0095e8af7cd7ffee89ba03e52a0969b1715cd25181be9542795dfb9"
+    },
+    {
+      "path": "docs/usecase-tables-v1/UC-01.png",
+      "bytes": 201970,
+      "sha256": "b27b4429815917feb7a3b0ef0d7ca6abbc59401080797295e37e7523cb02b45d"
+    },
+    {
+      "path": "docs/usecase-tables-v1/UC-02.png",
+      "bytes": 240884,
+      "sha256": "d9b662a3922e9297ef7f6e863c9a8f3c044ec1be323a919b192ec74dd1e7d312"
+    },
+    {
+      "path": "docs/usecase-tables-v1/UC-03.png",
+      "bytes": 218275,
+      "sha256": "540edc446c46f1e91c6182ff4131f8139c20df15406dcf0d333b253807b16719"
+    },
+    {
+      "path": "docs/usecase-tables-v1/UC-04.png",
+      "bytes": 208542,
+      "sha256": "1656c1d696ef8db80e22fe5a03ef75a311389d09f4580004f5fcfbdc7ec52db6"
+    },
+    {
+      "path": "docs/usecase-tables-v1/UC-05.png",
+      "bytes": 208553,
+      "sha256": "d5276130b213b50e4b2ce086b29dfed9b4d8bacb705fad467a4d714c05521d7f"
+    },
+    {
+      "path": "docs/usecase-tables-v1/UC-06.png",
+      "bytes": 206071,
+      "sha256": "f5bbaad1edcc18ad5d65d5d2c4cf86aadfd70b7f9ddf2822eaef331e74946c93"
+    },
+    {
+      "path": "docs/usecase-tables-v1/UC-07.png",
+      "bytes": 189137,
+      "sha256": "0728b0a662f7db98e3571ed5ed7bfcf98976a0932392fa42af436bd6fc2c8c67"
+    },
+    {
+      "path": "docs/usecase-tables-v1/UC-08.png",
+      "bytes": 180185,
+      "sha256": "2990b6bb26d4f126a7c02c3a18e0588cf453b90725a18bd714f7f9223fbb5506"
+    },
+    {
+      "path": "docs/usecase-tables-v1/UC-09.png",
+      "bytes": 199048,
+      "sha256": "894d5af776f80e5790eae9e9399729c19cf106c84f9356b56c0d00cfe801c578"
+    },
+    {
+      "path": "docs/usecase-tables-v1/UC-10.png",
+      "bytes": 219164,
+      "sha256": "a00b672f070f8be49736b758dcd8311eef7dba4339df2522c17fc59ccb854738"
+    },
+    {
+      "path": "docs/usecase-tables-v1/UC-11.png",
+      "bytes": 219960,
+      "sha256": "5ba03d4c06ed3b07e6780f41589b7191273f83b17857e3e50e2b5aa5db6d4b0c"
+    },
+    {
+      "path": "docs/usecases-v1/01-overview.png",
+      "bytes": 200516,
+      "sha256": "94cb869e1929f021086967e2b69052c42b0e367fccf4d8a4ba50b6aa7431503b"
+    },
+    {
+      "path": "docs/usecases-v1/01-overview.svg",
+      "bytes": 7444,
+      "sha256": "19b36c199b7bae6f8e16ebed1400f789b7f36560b6ada660bb2255938c499e84"
+    },
+    {
+      "path": "docs/usecases-v1/02-role-config.png",
+      "bytes": 64088,
+      "sha256": "d3038c608f0e16520c59dd6597c409aaf4bea0346f42b8873fa587e1b81bbbca"
+    },
+    {
+      "path": "docs/usecases-v1/02-role-config.svg",
+      "bytes": 2932,
+      "sha256": "6327babc4be1d6d13928e1ebe9cf93962a94b242faf17b96c57c8d057308c06c"
+    },
+    {
+      "path": "docs/usecases-v1/03-assignment.png",
+      "bytes": 92757,
+      "sha256": "34501c821a876432f1c755035cc0471b3ffeb009ea31a919b715f8a559c7859d"
+    },
+    {
+      "path": "docs/usecases-v1/03-assignment.svg",
+      "bytes": 3852,
+      "sha256": "bd829bf3777c38298c931f8c5c2a5bbe287f956fd2aa58cc478640fc106b0776"
+    },
+    {
+      "path": "docs/usecases-v1/04-runtime.png",
+      "bytes": 54701,
+      "sha256": "e45ceb8c19b0ebbf205c8cd0cb231a868f1f0aa331a37c6ef5d8c7230131797a"
+    },
+    {
+      "path": "docs/usecases-v1/04-runtime.svg",
+      "bytes": 2216,
+      "sha256": "5da8902c0c5c9abb163e6170afe148fccc8e5a1d5992b459d3576b93ae8e332f"
+    },
+    {
+      "path": "docs/usecases-v1/权限管理系统_用例图.drawio",
+      "bytes": 29078,
+      "sha256": "24c8edc7383798d28a91e70e24e3eb4fed444a7fba0b15993ab9066075b8467b"
+    },
+    {
+      "path": "docs/usecases-v1/用例说明.md",
+      "bytes": 37423,
+      "sha256": "da7b37af682efa12fca81360bfb1d663ab2687ff37bb52c4a8340e4ba8f03aaa"
+    },
+    {
+      "path": "docs/usecases-v1/generate_diagrams.py",
+      "bytes": 12419,
+      "sha256": "d8d420d43906fe05a64499d375f7218dfddcf986939dfbdcbdc8ae7c93aef9d9"
+    },
+    {
+      "path": "docs/usecases-v1/README.md",
+      "bytes": 3422,
+      "sha256": "52c1a598b5aae6feea03060414f80f29427d2cb518e544b4a77d468f1e426b58"
+    },
+    {
+      "path": "docs/usecases-v1/UC-01_维护业务系统与权限目录.md",
+      "bytes": 20629,
+      "sha256": "340879ccdf0fe52150b1d24b3859e69c03a02d4652eb29a1fe777f353f8cea49"
+    },
+    {
+      "path": "docs/usecases-v1/UC-02_创建角色并配置权限.md",
+      "bytes": 33171,
+      "sha256": "d371e3e0bf022a66278fb1939fec715bcea8bbf01d6219949e50620af98716eb"
+    },
+    {
+      "path": "docs/usecases-v1/UC-03_为员工分配角色.md",
+      "bytes": 26531,
+      "sha256": "041ea2b20e189e703010170df486388f96afcc7c9720a7e90fed4d857c462e89"
+    },
+    {
+      "path": "docs/usecases-v1/UC-04_撤销员工角色.md",
+      "bytes": 21381,
+      "sha256": "ffcfe66f7728a566587f5b3790b67412280beaa25c714054516a567a0daf5bd2"
+    },
+    {
+      "path": "docs/usecases-v1/UC-05_查询员工有效权限.md",
+      "bytes": 20674,
+      "sha256": "7efbe4150498726b024159b4263936c9f607f3e1e45be2f54c6fe902fb2096e2"
+    },
+    {
+      "path": "docs/usecases-v1/UC-06_检查员工指定操作权限.md",
+      "bytes": 17906,
+      "sha256": "efc2b7c5d5c8105fcd943c578c9133e05dd9e82f1d6ab85508f072821861a7b9"
+    },
+    {
+      "path": "docs/usecases-v1/UC-07_配置管理员及管理范围.md",
+      "bytes": 18769,
+      "sha256": "dde2543343cabb3b5fed6212a74dded77459aee32d353a708a25ab79fea95761"
+    },
+    {
+      "path": "docs/usecases-v1/UC-08_查询授权审计记录.md",
+      "bytes": 16587,
+      "sha256": "bd806b6478a3a0fd8336733de598652ee9341abc2a1d27b393b01ca92a39bb65"
+    },
+    {
+      "path": "docs/usecases-v1/UC-09_管理员登录与退出.md",
+      "bytes": 18327,
+      "sha256": "4f585398e8c1899ef76cac1ae256401baaa4c76bf2b9d48f2bc1db276aecb513"
+    },
+    {
+      "path": "docs/usecases-v1/UC-10_导入同步员工组织信息.md",
+      "bytes": 19663,
+      "sha256": "fc08e7e674d36226be5b5b353a11a277098bb005de692367f8d21506dcdf4762"
+    },
+    {
+      "path": "docs/usecases-v1/UC-11_接收审批结果并执行权限变更.md",
+      "bytes": 20866,
+      "sha256": "8d382942face6c66e94adb633cd143b2a219d62dc69bf9785477744884d5e7e8"
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" agent="OOAD use case tables" version="24.7.17">
+  <diagram id="UC-10" name="UC-10 导入／同步员工组织信息">
+    <mxGraphModel dx="1200" dy="1600" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1100" pageHeight="1052" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="集中权限管理系统 · 用例说明" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=23;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=none;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="15" width="1044" height="42" />
+        </mxCell>
+        <mxCell id="r0c0" value="用例编号：UC-10" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="70" width="522.0" height="42" />
+        </mxCell>
+        <mxCell id="r0c1" value="用例名称：导入／同步员工组织信息" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="550.0" y="70" width="522.0" height="42" />
+        </mxCell>
+        <mxCell id="r1c0" value="级别：用户目标" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#d8e3f3;strokeColor=#333333;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="112" width="1044" height="42" />
+        </mxCell>
+        <mxCell id="r2c0" value="包：基础组织与员工资料" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="154" width="1044" height="42" />
+        </mxCell>
+        <mxCell id="r3c0" value="参与者：权限中心总管理员；数据来源：HR 系统（一期文件／模拟数据）" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="196" width="1044" height="42" />
+        </mxCell>
+        <mxCell id="r4c0" value="描述：导入或更新公司、部门、岗位、员工及任职资料，供授权管理使用。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="238" width="1044" height="42" />
+        </mxCell>
+        <mxCell id="r5c0" value="触发事件：首次初始化，或收到员工、组织和任职的更新资料。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="280" width="1044" height="42" />
+        </mxCell>
+        <mxCell id="r6c0" value="前置条件：总管理员已登录，已取得来源明确的资料及字段映射。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="322" width="1044" height="42" />
+        </mxCell>
+        <mxCell id="r7c0" value="主成功场景" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#e2e2e2;strokeColor=#333333;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="364" width="680" height="42" />
+        </mxCell>
+        <mxCell id="r7c1" value="信息" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#e2e2e2;strokeColor=#333333;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="708" y="364" width="364" height="42" />
+        </mxCell>
+        <mxCell id="r8c0" value="1. 总管理员选择来源文件、数据类型和工作表。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="406" width="680" height="42" />
+        </mxCell>
+        <mxCell id="r8c1" value="数据来源、文件、组织／员工／任职类型" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="708" y="406" width="364" height="42" />
+        </mxCell>
+        <mxCell id="r9c0" value="2. 总管理员核对字段与组织映射，发起预检。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="448" width="680" height="42" />
+        </mxCell>
+        <mxCell id="r9c1" value="唯一标识、字段映射、组织对应关系" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="708" y="448" width="364" height="42" />
+        </mxCell>
+        <mxCell id="r10c0" value="3. 系统展示问题、计划变更及影响。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="490" width="680" height="42" />
+        </mxCell>
+        <mxCell id="r10c1" value="问题行、新增／更新、停用和任职变化" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="708" y="490" width="364" height="42" />
+        </mxCell>
+        <mxCell id="r11c0" value="4. 总管理员确认预检通过的批次。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="532" width="680" height="42" />
+        </mxCell>
+        <mxCell id="r11c1" value="确定的导入内容、影响确认" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="708" y="532" width="364" height="42" />
+        </mxCell>
+        <mxCell id="r12c0" value="5. 系统导入资料并记录结果。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="574" width="680" height="42" />
+        </mxCell>
+        <mxCell id="r12c1" value="批次、实际新增／更新结果" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="708" y="574" width="364" height="42" />
+        </mxCell>
+        <mxCell id="r13c0" value="6. 总管理员查看执行报告。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="616" width="680" height="42" />
+        </mxCell>
+        <mxCell id="r13c1" value="成功／失败、数量及原因" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="708" y="616" width="364" height="42" />
+        </mxCell>
+        <mxCell id="r14c0" value="扩展场景（编号对应主成功场景步骤）" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#e2e2e2;strokeColor=#333333;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="658" width="680" height="42" />
+        </mxCell>
+        <mxCell id="r14c1" value="信息" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#e2e2e2;strokeColor=#333333;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="708" y="658" width="364" height="42" />
+        </mxCell>
+        <mxCell id="r15c0" value="3a. 格式错误、身份或组织映射有歧义：修正后重新预检。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="700" width="680" height="42" />
+        </mxCell>
+        <mxCell id="r15c1" value="问题行、字段说明" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="708" y="700" width="364" height="42" />
+        </mxCell>
+        <mxCell id="r16c0" value="3b. 同员工多项合法任职：保留兼岗；完全重复资料不重复新增。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="742" width="680" height="42" />
+        </mxCell>
+        <mxCell id="r16c1" value="任职列表、重复提示" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="708" y="742" width="364" height="42" />
+        </mxCell>
+        <mxCell id="r17c0" value="3c. 已有角色、授权或历史引用的部门子树跨公司迁移：阻止本次变更。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="784" width="680" height="42" />
+        </mxCell>
+        <mxCell id="r17c1" value="受影响部门、原因" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="708" y="784" width="364" height="42" />
+        </mxCell>
+        <mxCell id="r18c0" value="4a. 预检后内容或目标发生变化：重新预检确认。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="826" width="680" height="42" />
+        </mxCell>
+        <mxCell id="r18c1" value="变化提示" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="708" y="826" width="364" height="42" />
+        </mxCell>
+        <mxCell id="r19c0" value="5a. 相同批次已执行：返回原结果；执行失败则整批不生效。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="868" width="680" height="42" />
+        </mxCell>
+        <mxCell id="r19c1" value="批次结果或失败原因" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="708" y="868" width="364" height="42" />
+        </mxCell>
+        <mxCell id="r20c0" value="其他：不经 OA，不自动建后台账号、任命、分角色或授予进入权限；漏行不等于离职。全局停用使全部业务授权及专员任命失效；任职条件丧失只使相关授权／任命失效。历史保留，恢复不自动授予，分别重新走 UC-03／07。提供明确人员变更模板、内部稳定 ID 及来源映射。一期不要求真实 HR 接口。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="910" width="1044" height="94" />
+        </mxCell>
+        <mxCell id="footer" value="UC-10 · 课程简表 V1.1 · 2026-10-13 · 详细规则见 usecases-v1 对应文档" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=13;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=none;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="1011" width="1044" height="30" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

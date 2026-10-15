@@ -1,0 +1,92 @@
+[
+  {
+    "usecase": "UC-01",
+    "page": "UC-01",
+    "source": "UC-01_维护业务系统与权限目录.md",
+    "messages": 13
+  },
+  {
+    "usecase": "UC-02",
+    "page": "UC-02",
+    "source": "UC-02_创建角色并配置权限.md",
+    "messages": 19
+  },
+  {
+    "usecase": "UC-03",
+    "page": "UC-03",
+    "source": "UC-03_为员工分配角色.md",
+    "messages": 16
+  },
+  {
+    "usecase": "UC-04",
+    "page": "UC-04",
+    "source": "UC-04_撤销员工角色.md",
+    "messages": 16
+  },
+  {
+    "usecase": "UC-05",
+    "page": "UC-05",
+    "source": "UC-05_查询员工有效权限.md",
+    "messages": 8
+  },
+  {
+    "usecase": "UC-06",
+    "page": "UC-06",
+    "source": "UC-06_检查员工指定操作权限.md",
+    "messages": 11
+  },
+  {
+    "usecase": "UC-07",
+    "page": "UC-07",
+    "source": "UC-07_配置管理员及管理范围.md",
+    "messages": 11
+  },
+  {
+    "usecase": "UC-08",
+    "page": "UC-08",
+    "source": "UC-08_查询授权审计记录.md",
+    "messages": 9
+  },
+  {
+    "usecase": "UC-09",
+    "page": "UC-09",
+    "source": "UC-09_管理员登录与退出.md",
+    "messages": 12
+  },
+  {
+    "usecase": "UC-09",
+    "page": "UC-09-账号创建",
+    "source": "UC-09_管理员登录与退出.md",
+    "messages": 9
+  },
+  {
+    "usecase": "UC-09",
+    "page": "UC-09-密码修改",
+    "source": "UC-09_管理员登录与退出.md",
+    "messages": 7
+  },
+  {
+    "usecase": "UC-09",
+    "page": "UC-09-密码重置",
+    "source": "UC-09_管理员登录与退出.md",
+    "messages": 6
+  },
+  {
+    "usecase": "UC-10",
+    "page": "UC-10",
+    "source": "UC-10_导入同步员工组织信息.md",
+    "messages": 11
+  },
+  {
+    "usecase": "UC-11",
+    "page": "UC-11",
+    "source": "UC-11_接收审批结果并执行权限变更.md",
+    "messages": 8
+  },
+  {
+    "usecase": "UC-11",
+    "page": "UC-11-自动执行",
+    "source": "UC-11_接收审批结果并执行权限变更.md",
+    "messages": 13
+  }
+]

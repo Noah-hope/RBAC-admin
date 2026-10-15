@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="1598" viewBox="0 0 1100 1598">
+<rect width="100%" height="100%" fill="white"/>
+<g font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif" fill="#17324d">
+<rect x="310.0" y="170.0" width="485.0" height="1363.0" fill="white" stroke="#64748b" stroke-width="2"/>
+<text x="552.5" y="158.0" font-size="19" text-anchor="middle">集中权限管理系统</text>
+<polyline points="132.0,415.0 355.0,225.0" fill="none" stroke="#64748b" stroke-width="1.4"/>
+<polyline points="132.0,415.0 355.0,343.0" fill="none" stroke="#64748b" stroke-width="1.4"/>
+<polyline points="132.0,415.0 355.0,461.0" fill="none" stroke="#64748b" stroke-width="1.4"/>
+<polyline points="132.0,415.0 355.0,579.0" fill="none" stroke="#64748b" stroke-width="1.4"/>
+<polyline points="132.0,415.0 355.0,698.0" fill="none" stroke="#64748b" stroke-width="1.4"/>
+<polyline points="132.0,415.0 353.0,837.0" fill="none" stroke="#64748b" stroke-width="1.4"/>
+<polyline points="132.0,415.0 355.0,958.0" fill="none" stroke="#64748b" stroke-width="1.4"/>
+<polyline points="132.0,415.0 360.0,1072.0" fill="none" stroke="#64748b" stroke-width="1.4"/>
+<polyline points="92.0,781.0 355.0,461.0" fill="none" stroke="#FF0000" stroke-width="1.4"/>
+<polyline points="92.0,781.0 355.0,579.0" fill="none" stroke="#FF0000" stroke-width="1.4"/>
+<polyline points="92.0,781.0 353.0,837.0" fill="none" stroke="#FF0000" stroke-width="1.4"/>
+<polyline points="92.0,781.0 355.0,958.0" fill="none" stroke="#FF0000" stroke-width="1.4"/>
+<polyline points="970.0,1205.0 755.0,1178.0" fill="none" stroke="#15871A" stroke-width="1.4"/>
+<polyline points="970.0,1205.0 755.0,1292.0" fill="none" stroke="#15871A" stroke-width="1.4"/>
+<polyline points="950.0,1025.0 755.0,1072.0" fill="none" stroke="#64748b" stroke-width="1.4"/>
+<polyline points="950.0,1375.0 750.0,1405.0" fill="none" stroke="#64748b" stroke-width="1.4"/>
+<polyline points="92.0,781.0 355.0,343.0" fill="none" stroke="#FF0000" stroke-width="1.4"/>
+<text x="47.0" y="47.0" font-size="25" text-anchor="start">01 系统总体用例图</text>
+<text x="47.0" y="90.0" font-size="15" text-anchor="start">第一期 RBAC0 · 2026-10-13 · 最终用例需求基线</text>
+<ellipse cx="552.5" cy="225.0" rx="197.5" ry="38.0" fill="#eef5ff" stroke="#32649a" stroke-width="2"/>
+<text x="552.5" y="219.0" font-size="18" text-anchor="middle">UC-01</text><text x="552.5" y="243.0" font-size="18" text-anchor="middle">维护业务系统与权限目录</text>
+<ellipse cx="552.5" cy="343.0" rx="197.5" ry="38.0" fill="#eef5ff" stroke="#32649a" stroke-width="2"/>
+<text x="552.5" y="337.0" font-size="18" text-anchor="middle">UC-02</text><text x="552.5" y="361.0" font-size="18" text-anchor="middle">创建角色并配置权限</text>
+<ellipse cx="552.5" cy="461.0" rx="197.5" ry="38.0" fill="#eef5ff" stroke="#32649a" stroke-width="2"/>
+<text x="552.5" y="455.0" font-size="18" text-anchor="middle">UC-03</text><text x="552.5" y="479.0" font-size="18" text-anchor="middle">为员工分配角色</text>
+<ellipse cx="552.5" cy="579.0" rx="197.5" ry="38.0" fill="#eef5ff" stroke="#32649a" stroke-width="2"/>
+<text x="552.5" y="573.0" font-size="18" text-anchor="middle">UC-04</text><text x="552.5" y="597.0" font-size="18" text-anchor="middle">撤销员工角色</text>
+<ellipse cx="557.5" cy="1178.0" rx="197.5" ry="38.0" fill="#eef5ff" stroke="#32649a" stroke-width="2"/>
+<text x="557.5" y="1172.0" font-size="18" text-anchor="middle">UC-05</text><text x="557.5" y="1196.0" font-size="18" text-anchor="middle">查询员工有效权限</text>
+<ellipse cx="557.5" cy="1292.0" rx="197.5" ry="38.0" fill="#eef5ff" stroke="#32649a" stroke-width="2"/>
+<text x="557.5" y="1286.0" font-size="18" text-anchor="middle">UC-06</text><text x="557.5" y="1310.0" font-size="18" text-anchor="middle">检查员工指定操作权限</text>
+<ellipse cx="552.5" cy="698.0" rx="197.5" ry="38.0" fill="#eef5ff" stroke="#32649a" stroke-width="2"/>
+<text x="552.5" y="692.0" font-size="18" text-anchor="middle">UC-07</text><text x="552.5" y="716.0" font-size="18" text-anchor="middle">配置管理员及管理范围</text>
+<ellipse cx="550.5" cy="837.0" rx="197.5" ry="38.0" fill="#eef5ff" stroke="#32649a" stroke-width="2"/>
+<text x="550.5" y="831.0" font-size="18" text-anchor="middle">UC-08</text><text x="550.5" y="855.0" font-size="18" text-anchor="middle">查询授权审计记录</text>
+<ellipse cx="552.5" cy="958.0" rx="197.5" ry="38.0" fill="#eef5ff" stroke="#32649a" stroke-width="2"/>
+<text x="552.5" y="952.0" font-size="18" text-anchor="middle">UC-09</text><text x="552.5" y="976.0" font-size="18" text-anchor="middle">管理员登录与退出</text>
+<ellipse cx="557.5" cy="1072.0" rx="197.5" ry="38.0" fill="#eef5ff" stroke="#32649a" stroke-width="2"/>
+<text x="557.5" y="1066.0" font-size="18" text-anchor="middle">UC-10</text><text x="557.5" y="1090.0" font-size="18" text-anchor="middle">导入／同步员工组织信息</text>
+<ellipse cx="552.5" cy="1405.0" rx="197.5" ry="38.0" fill="#eef5ff" stroke="#32649a" stroke-width="2"/>
+<text x="552.5" y="1399.0" font-size="18" text-anchor="middle">UC-11</text><text x="552.5" y="1423.0" font-size="18" text-anchor="middle">接收审批结果并执行权限变更</text>
+<g stroke="#17324d" stroke-width="2" fill="white"><circle cx="106.0" cy="382.0" r="12"/><path d="M 106.0 394.0 V 427.0 M 80.0 408.0 H 132.0 M 106.0 427.0 L 80.0 460.0 M 106.0 427.0 L 132.0 460.0" fill="none"/></g>
+<text x="106.0" y="485.0" font-size="17" text-anchor="middle">权限中心总管理员</text>
+<g stroke="#FF0000" stroke-width="2" fill="white"><circle cx="66.0" cy="748.0" r="12"/><path d="M 66.0 760.0 V 793.0 M 40.0 774.0 H 92.0 M 66.0 793.0 L 40.0 826.0 M 66.0 793.0 L 92.0 826.0" fill="none"/></g>
+<text x="66.0" y="851.0" font-size="16" text-anchor="middle">公司权限</text><text x="66.0" y="875.0" font-size="16" text-anchor="middle">管理专员</text>
+<g stroke="#15871A" stroke-width="2" fill="white"><circle cx="996.0" cy="1172.0" r="12"/><path d="M 996.0 1184.0 V 1217.0 M 970.0 1198.0 H 1022.0 M 996.0 1217.0 L 970.0 1250.0 M 996.0 1217.0 L 1022.0 1250.0" fill="none"/></g>
+<text x="996.0" y="1275.0" font-size="17" text-anchor="middle">业务系统</text>
+<g stroke="#17324d" stroke-width="2" fill="white"><circle cx="976.0" cy="992.0" r="12"/><path d="M 976.0 1004.0 V 1037.0 M 950.0 1018.0 H 1002.0 M 976.0 1037.0 L 950.0 1070.0 M 976.0 1037.0 L 1002.0 1070.0" fill="none"/></g>
+<text x="976.0" y="1095.0" font-size="17" text-anchor="middle">人力资源管理系统</text><text x="976.0" y="1119.0" font-size="17" text-anchor="middle">（HR）</text>
+<g stroke="#17324d" stroke-width="2" fill="white"><circle cx="976.0" cy="1342.0" r="12"/><path d="M 976.0 1354.0 V 1387.0 M 950.0 1368.0 H 1002.0 M 976.0 1387.0 L 950.0 1420.0 M 976.0 1387.0 L 1002.0 1420.0" fill="none"/></g>
+<text x="976.0" y="1445.0" font-size="17" text-anchor="middle">OA 协同办公系统</text>
+<rect x="35.0" y="1504.0" width="1030.0" height="75.0" fill="#fff8e8" stroke="#d7b76a"/>
+<text x="47.0" y="1535.5" font-size="15" text-anchor="start">总管理员管全部公司及系统；公司专员共享本公司获准范围；UC-02～04 经 OA 批准执行。</text><text x="47.0" y="1559.5" font-size="15" text-anchor="start">一期 RBAC0；外部仅简单 HTTP 调用演示；代表性数据，后续补齐。</text>
+</g></svg>
