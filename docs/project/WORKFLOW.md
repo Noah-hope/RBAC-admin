@@ -6,7 +6,7 @@
 
 方法：`grill-me` → `grilling`。已有 2026-10-13 用例基线按用户说明作为已完成的需求分析导入，不重新假设业务规则。
 
-2026-10-15 用户已明确当前 RBAC 系统只管理功能权限，现以 V1.2 功能权限、部门范围及员工启停修订为准；后续原型、契约、数据结构和测试均不引入业务数据权限，详见 [FUNCTION_PERMISSIONS.md](FUNCTION_PERMISSIONS.md) 与[管理范围与人员权限规则](../usecases-v1/管理范围与人员权限规则.md)。
+2026-10-15 用户已明确当前 RBAC 系统只管理功能权限，现以 V1.2 功能权限、部门范围及员工启停修订为准；后续原型、契约、数据结构和测试均不引入业务数据权限，详见 [FUNCTION_PERMISSIONS.md](FUNCTION_PERMISSIONS.md) 与[管理范围与人员权限规则](../01-requirements/usecases-v1/管理范围与人员权限规则.md)。
 
 新增或变化需求采用分轮访谈：先读取现有资料，列出当前可决策的问题和建议，根据用户回答推进依赖问题，记录确认结果后更新需求。涉及实际访谈时遵循对应 skill。
 
@@ -16,7 +16,7 @@
 
 ## 2. 界面原型设计
 
-技术：Vue 3 + TypeScript + Tailwind CSS。原型源码计划放在 `prototype/`，说明放在 `docs/prototype/`，开始该阶段时创建。
+技术：Vue 3 + TypeScript + Tailwind CSS，使用仓库内 `frontend-design` skill。界面说明与原型交付归入 `docs/02-ui-design/`；当前只保留该阶段目录，开始原型时再在其下建立可运行工程，并记录启动方式。后续正式前后端工程目录另行确定。
 
 交付：页面清单、导航、角色视角、交互流程、表单校验、加载/空/错误/无权限等状态及模拟数据说明。重点区分申请、OA 批准和实际执行结果，展示公司/部门子树/系统管理范围与后台身份，区分离岗关闭来源、一般撤销申请和全局停用。
 
@@ -26,7 +26,7 @@
 
 工具：Apifox + Apifox MCP。开始前检查连接能力、目标项目标识及访问范围，凭据通过本地环境提供。
 
-交付计划放在 `docs/api/`：接口契约、认证与授权、请求/响应与错误、分页、幂等、版本/并发、审批结果接收和执行状态，以及用例与页面映射。保留可供 Apifox 导入/导出的 OpenAPI 契约及模拟示例。
+交付计划放在 `docs/03-api/`：接口契约、认证与授权、请求/响应与错误、分页、幂等、版本/并发、审批结果接收和执行状态，以及用例与页面映射。保留可供 Apifox 导入/导出的 OpenAPI 契约及模拟示例。
 
 Apifox 作为接口协作与调试工具，Git 保存可审查的契约版本；记录同步方向、时间和对应 Git 提交。每次接口变更同时更新契约及受影响原型，避免两处各自演进。
 
@@ -36,19 +36,19 @@ Apifox 作为接口协作与调试工具，Git 保存可审查的契约版本；
 
 依据需求及 API 契约开展，不直接把需求图中的逻辑存储翻译为物理表。
 
-交付计划放在 `docs/database/`：ER 模型、数据字典、主外键、唯一性与检查约束、索引、历史保留、版本、幂等、事务边界及迁移说明。
+交付计划放在 `docs/04-database/`：ER 模型、数据字典、主外键、唯一性与检查约束、索引、历史保留、版本、幂等、事务边界及迁移说明。
 
 覆盖组织与兼岗、后台身份和任命、公司/部门/系统管理范围、独立授权来源与周期、角色权限、员工授权、审批与执行、审计等业务概念。数据库产品、主键策略和具体表结构在本阶段明确；初始化不预先选型。
 
 ## 5. 详细设计与 TDD 实现
 
-设计说明计划放在 `docs/design/`，在业务实现前完成对应模块设计。
+设计说明计划放在 `docs/05-detailed-design/`，在业务实现前完成对应模块设计。
 
 先按用例分解业务步骤、状态转换、职责、输入输出、异常、事务和审计，明确模块依赖与实现顺序。建立“UC / 验收行为 → 页面 → API → 数据结构 → 模块 → 测试”的追踪关系。
 
-后续正式业务逻辑实现使用已安装的 `test-driven-development` skill，来源为 [obra/superpowers](https://github.com/obra/superpowers/tree/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/test-driven-development)。本机入口：`D:\software\codex-data\skills\test-driven-development\SKILL.md`。开始模块实现时读取该文件，编写或修改测试时同时读取同目录 `writing-good-tests.md`。技能不限定编程语言或测试框架，示例不视为技术选型。
+后续正式业务逻辑实现使用已安装的 `test-driven-development` skill，来源为 [obra/superpowers](https://github.com/obra/superpowers/tree/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/test-driven-development)。项目入口：`.agents/skills/test-driven-development/SKILL.md`。开始模块实现时读取该文件，编写或修改测试时同时读取同目录 `writing-good-tests.md`。技能不限定编程语言或测试框架，示例不视为技术选型。
 
-2026-10-15 已下载并核验两个技能文件，下一轮可发现。该安装位于本机全局技能目录，不随本项目 Git 分发；新环境应从上述固定版本安装并检查可读性。当前仍处于需求与原型交接阶段，未开始正式业务逻辑实现，也未产生模块测试结果。
+2026-10-15 已将四个项目技能及配套文件复制到 `.agents/skills/`，随 Git 分发；TDD 同时保留固定上游版本的 MIT 许可证。优先读取仓库内技能，不依赖某台机器的全局安装路径。来源与文件摘要见 [SKILLS.md](SKILLS.md)。当前仍处于需求与原型交接阶段，未开始正式业务逻辑实现，也未产生模块测试结果。
 
 每个模块采用以下循环：
 
@@ -68,4 +68,10 @@ Apifox 作为接口协作与调试工具，Git 保存可审查的契约版本；
 
 ## 文档预览成本
 
-日常更新正文与可编辑图源，运行 `python docs/refresh_requirements.py` 生成配套文档与阅读副本，不写 PNG/SVG。需要评审或交付图片时显式加 `--previews`；保留旧图片并通过版本提示区分。完整规则见 [PREVIEWS.md](PREVIEWS.md)。
+日常更新正文与可编辑图源，运行 `python docs/01-requirements/refresh_requirements.py` 生成配套文档与阅读副本，不写 PNG/SVG。需要评审或交付图片时显式加 `--previews`；保留旧图片并通过版本提示区分。完整规则见 [PREVIEWS.md](PREVIEWS.md)。
+
+## 团队共享记忆与目录
+
+团队共享记忆统一维护在 `docs/`：`project/MEMORY.md` 保存当前状态及交接，`project/DECISIONS.md` 保存已确认决策，本文件保存流程；各阶段目录保存交付物。根目录 `AGENTS.md` 是工作入口，`README.md` 是项目导航，不另建第二份状态或任务记忆。
+
+当前只采用 `.agents/skills/` 和 `docs/project/`、`docs/01-requirements/`～`05-detailed-design/`。未来阶段的 `.gitkeep` 仅用于 Git 保留目录，不代表已完成交付；暂不创建 `tasks/`、`frontend/`、`backend/`、`prototype/` 或 `.github/`。目录及迁移说明见 [LAYOUT.md](LAYOUT.md)。

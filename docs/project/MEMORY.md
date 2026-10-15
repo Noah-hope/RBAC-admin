@@ -6,7 +6,7 @@
 
 - 项目根目录：`D:\NoahProject\rbac-admin`；本地 Git 分支 `main`，尚未配置远程。
 - 已导入 `D:\NoahProject\codexProject\ooad\docs` 的 396 个文件，39,073,839 字节；首次导入 SHA-256 全部一致。原目录未修改，导入清单保留为历史快照。
-- 当前需求基线：V1.2，2026-10-15；在 V1.1 仅功能权限修订上完成 grill 复核，补齐部门范围、员工关权、账号与 OA 状态规则。**可进入界面原型阶段**，不代表原型、API、数据库或业务功能已实现。
+- 当前需求基线：V1.2，2026-10-15；在 V1.1 仅功能权限修订上完成 grill 复核，补齐部门范围、员工关权、账号与 OA 状态规则。**可进入界面原型阶段**，不代表原型、API、数据库或业务功能已实现。团队共享记忆统一由本仓库 `docs/` 维护。
 
 | 阶段 | 状态 | 交接 |
 | --- | --- | --- |
@@ -19,7 +19,7 @@
 
 ## 已确认需求
 
-权威依据：[管理范围与人员权限规则](../usecases-v1/管理范围与人员权限规则.md)、需求总览及 UC-01～11。
+权威依据：[管理范围与人员权限规则](../01-requirements/usecases-v1/管理范围与人员权限规则.md)、需求总览及 UC-01～11。
 
 - 仅功能权限，RBAC0；无业务数据范围、角色继承、直接用户授权或显式拒绝。公司/部门表达管理边界、任职及授权来源。
 - 总管理员指定权限管理员的公司、管理根部门及系统；包含下级部门但不跨公司，同范围协作，不再整公司共享管理资格。
@@ -34,7 +34,7 @@
 
 用户已选择 **PNG 按需生成**。正文/图源 V1.2，现有 PNG/SVG 保留 V1.1；README 和 HTML 已标明旧图可能包含已替代规则。新增子流程尚无图片。
 
-日常运行 `python docs/refresh_requirements.py`，更新图源、课程简表、索引和阅读副本，不写图片。评审/交付显式运行 `python docs/refresh_requirements.py --previews`，完整成功后更新预览版本。只同步副本可用 `python docs/sync_usecase_folders.py`，不得绕过手工修改保护。详见 [PREVIEWS.md](PREVIEWS.md)。
+日常运行 `python docs/01-requirements/refresh_requirements.py`，更新图源、课程简表、索引和阅读副本，不写图片。评审/交付显式运行 `python docs/01-requirements/refresh_requirements.py --previews`，完整成功后更新预览版本。只同步副本可用 `python docs/01-requirements/sync_usecase_folders.py`，不得绕过手工修改保护。详见 [PREVIEWS.md](PREVIEWS.md)。
 
 ## 验证与限制
 
@@ -42,14 +42,16 @@
 
 图源未经 draw.io Desktop 人工导入验收；本轮未导出 V1.2 图片。不存在业务代码，因此未运行应用测试。V1.1 历史验证见 [FUNCTION_PERMISSIONS.md](FUNCTION_PERMISSIONS.md)。
 
+2026-10-15 目录迁移验证：400 个需求文件全部定位到新目录，11 个正式详细用例正文、114 个 drawio 文件、196 个 PNG/SVG 与迁移前逐字节一致；229 个图页结构及 617 个本地链接通过检查。迁移后的默认刷新成功，227 个阅读副本摘要一致，重复同步不改写相同文件；四个仓库技能共 9 个配套文件的摘要通过核对。历史导入清单未改写，后续四阶段目录仅含 `.gitkeep`，未开始原型或业务实现。
+
 ## 下一步
 
-工具准备（2026-10-15）：按用户要求，已通过 `skill-installer` 安装 Anthropic 官方 [`frontend-design`](https://github.com/anthropics/skills/tree/main/skills/frontend-design)，位置 `D:\software\codex-data\skills\frontend-design`；已核验 `SKILL.md` 的名称及 `LICENSE.txt` 存在。下一轮可用，供界面设计使用；项目 Vue 3 + TypeScript + Tailwind CSS 约束保持有效，原型尚未开始。
+工具准备（2026-10-15）：`grill-me`、`grilling`、`frontend-design`、`test-driven-development` 均已作为项目副本纳入 `.agents/skills/`，随 Git 共享，保留原文件和配套元数据。`grill-me` 委托 `grilling`；后续正式逻辑仍使用先失败测试、再实现和重构。来源、版本和摘要见 [SKILLS.md](SKILLS.md)，不再依赖本机全局技能安装路径。未开始业务实现、未运行应用测试。
 
-TDD 工具准备（2026-10-15）：按用户要求，通过 `skill-installer` 安装 [`test-driven-development`](https://github.com/obra/superpowers/tree/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/test-driven-development)，上游版本 `bb92a77741419a4ab5f06e711a283343f1ada0c3`，位置 `D:\software\codex-data\skills\test-driven-development`。已核验 `SKILL.md` 和 `writing-good-tests.md`；下一轮可发现。后续正式业务逻辑使用“先编写并运行失败测试 → 最小实现 → 通过验证 → 重构”，测试聚焦业务结果与边界。本轮仅安装和同步规则，未开始业务实现、未运行应用测试；完整记录见 `WORKFLOW.md`。
+目录整理（2026-10-15）：原需求资料与维护脚本整体迁入 `docs/01-requirements/`，需求内部分类保持原样。`docs/02-ui-design/`～`05-detailed-design/` 当前仅用 `.gitkeep` 保留；未创建额外工程目录。原始导入清单不改写，源项目不修改；详见 [LAYOUT.md](LAYOUT.md)。
 
 1. 进入原型阶段：页面关联 UC，覆盖部门/系统范围、员工授权来源、三类关权操作、后台账号与 OA 投递/审批/执行状态，模拟数据明确标注。
 2. 清单“全部”、空白 I340、“系统管理后台”和本人限定来源差异仍需映射核对；不猜测授权，不阻止通用原型设计。
 3. API 阶段前接入 Apifox MCP、选定项目及契约同步方式；当前尚无可调用连接。
-4. 正式逻辑实现时读取已安装的 `test-driven-development` 及测试编写参考文件，记录失败原因与通过证据；新环境先重新安装并核验。
+4. 正式逻辑实现时读取仓库内 `test-driven-development` 及测试编写参考文件，记录失败原因与通过证据；新环境先核验项目技能文件。
 5. 后端、数据库、测试框架、组件库和远程 Git 在对应阶段确定。

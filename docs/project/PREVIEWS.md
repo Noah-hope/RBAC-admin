@@ -7,10 +7,10 @@
 先修改正式详细用例及受影响的生成器/图源，再在项目根目录运行：
 
 ```powershell
-python docs/refresh_requirements.py
+python docs/01-requirements/refresh_requirements.py
 ```
 
-该命令更新可编辑图、课程简表、预览入口和按用例阅读副本，执行生成器已有结构检查，**不写入 PNG/SVG**。原始用例图保留手工布局，只更新明确需要调整的文字。若仅修改正文而无生成器变化，可运行 `python docs/sync_usecase_folders.py`。
+该命令更新可编辑图、课程简表、预览入口和按用例阅读副本，执行生成器已有结构检查，**不写入 PNG/SVG**。原始用例图保留手工布局，只更新明确需要调整的文字。若仅修改正文而无生成器变化，可运行 `python docs/01-requirements/sync_usecase_folders.py`。
 
 副本同步器检测手工修改后会停止；先将有效修改合并回正式文件。相同内容不重复写入。
 
@@ -19,10 +19,10 @@ python docs/refresh_requirements.py
 需要当前图片时显式运行：
 
 ```powershell
-python docs/refresh_requirements.py --previews
+python docs/01-requirements/refresh_requirements.py --previews
 ```
 
-只有全部图生成成功，才将 `docs/preview-status.json` 的预览版本更新为图源版本，再同步副本。完整刷新会重绘全部 PNG/SVG；不在每次需求改动时执行。单个生成器也默认不导出图片，完整交付以统一命令为准。
+只有全部图生成成功，才将 `docs/01-requirements/preview-status.json` 的预览版本更新为图源版本，再同步副本。完整刷新会重绘全部 PNG/SVG；不在每次需求改动时执行。单个生成器也默认不导出图片，完整交付以统一命令为准。
 
 ## 版本与阅读
 

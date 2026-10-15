@@ -2,11 +2,11 @@
 
 项目本地目录：`D:\NoahProject\rbac-admin`。
 
-当前状态：已初始化 Git，已导入需求、完成 V1.2 需求复核并建立项目流程和共享记忆，可进入界面原型阶段；尚未开始界面原型、API、数据库及业务代码实现。
+项目团队共享记忆统一维护在 `docs/`；当前阶段、已完成事项及待办见[项目共享记忆](docs/project/MEMORY.md)。
 
 当前业务范围：**仅管理功能权限**。员工经角色获得系统进入及查看、编辑、新增等操作权限；不设计业务数据权限。需求于 2026-10-15 按用户要求修订，说明见[变更记录](docs/project/FUNCTION_PERMISSIONS.md)。
 
-权限管理员按公司、部门子树及系统范围管理；员工离岗关权直接生效。规则见[管理范围与人员权限](docs/usecases-v1/管理范围与人员权限规则.md)。PNG/SVG 按需生成，现有 V1.1 预览已标记，详见[预览维护规则](docs/project/PREVIEWS.md)。
+权限管理员按公司、部门子树及系统范围管理；员工离岗关权直接生效。规则见[管理范围与人员权限](docs/01-requirements/usecases-v1/管理范围与人员权限规则.md)。PNG/SVG 按需生成，现有 V1.1 预览已标记，详见[预览维护规则](docs/project/PREVIEWS.md)。
 
 ## 阅读入口
 
@@ -14,15 +14,40 @@
 - [项目共享记忆](docs/project/MEMORY.md)：当前阶段、事实、待办和交接入口。
 - [开发流程](docs/project/WORKFLOW.md)：五个阶段及 TDD 执行要求。
 - [决策记录](docs/project/DECISIONS.md)：用户已确定的约束与后续变更依据。
-- [需求资料总入口](docs/README.md)：已完成的需求分析及配套图。
-- [需求总览与统一规则](docs/usecases-v1/用例说明.md)：2026-10-15 功能权限修订，保留 UC-01～UC-11。
-- [按用例分类阅读](docs/按用例分类/README.md)：详细说明、简表和图的同步阅读副本。
+- [团队文档总入口](docs/README.md)：共享记忆及五个阶段的资料导航。
+- [需求资料](docs/01-requirements/README.md)：正式需求分析及配套图。
+- [需求总览与统一规则](docs/01-requirements/usecases-v1/用例说明.md)：2026-10-15 功能权限修订，保留 UC-01～UC-11。
+- [按用例分类阅读](docs/01-requirements/按用例分类/README.md)：详细说明、简表和图的同步阅读副本。
 - [导入说明](docs/project/IMPORT.md)：资料来源、校验方式及导入边界。
+- [项目技能](docs/project/SKILLS.md)：仓库内四个技能的入口、来源、版本和文件摘要。
+
+## 当前目录
+
+```text
+rbac-admin/
+├── AGENTS.md
+├── README.md
+├── .agents/skills/
+│   ├── grill-me/
+│   ├── grilling/
+│   ├── frontend-design/
+│   └── test-driven-development/
+└── docs/
+    ├── README.md
+    ├── project/
+    ├── 01-requirements/
+    ├── 02-ui-design/
+    ├── 03-api/
+    ├── 04-database/
+    └── 05-detailed-design/
+```
+
+后续四个阶段当前只保留目录，内部交付在对应阶段产生。目录约定及迁移说明见 [LAYOUT.md](docs/project/LAYOUT.md)。
 
 ## 规定的项目流程
 
 1. 需求分析：使用 `grill-me`（实际调用 `grilling`）。本项目已有需求分析作为起点，新增或变更需求再按该方式澄清。
-2. 界面原型设计：使用 Vue 3 + TypeScript + Tailwind CSS。
+2. 界面原型设计：使用 `frontend-design`，Vue 3 + TypeScript + Tailwind CSS。
 3. API 设计：使用 Apifox，并通过 Apifox MCP 协作，契约同时纳入 Git。
 4. 数据库设计：依据已确定的需求与接口契约设计。
 5. 详细设计与实现：先生成设计文档、分解业务流程和模块，再使用 TDD skill，逐模块执行“失败测试 → 最小实现 → 重构”。
@@ -31,6 +56,6 @@
 
 ## Git 共享记忆
 
-项目规则、阶段状态、设计决策、需求和测试证据写入仓库，与对应改动一起提交。其他协作者或新的会话从 `AGENTS.md` 和共享记忆恢复上下文。
+阶段状态、待办、设计决策、需求和验证证据统一写入 `docs/`，与对应改动一起提交。其他协作者或新的会话从 `AGENTS.md` 进入并读取 `docs/project/`，不另建根目录状态文件。`.agents/skills/` 仅保存技能，不作为项目事实记忆。
 
 当前仅建立本地仓库；远程地址尚未配置。

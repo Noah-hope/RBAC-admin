@@ -1,0 +1,82 @@
+{
+  "recorded_on": "2026-10-15",
+  "skills": [
+    {
+      "name": "grill-me",
+      "kind": "existing-local-snapshot",
+      "source": "D:/software/codex-data/skills/grill-me",
+      "ref": null,
+      "files": [
+        {
+          "path": ".agents/skills/grill-me/agents/openai.yaml",
+          "bytes": 137,
+          "sha256": "c061e39c3e0f9d865fb1b97556d485704af2a8a58f4b8221a8917a5c2074a32b"
+        },
+        {
+          "path": ".agents/skills/grill-me/SKILL.md",
+          "bytes": 157,
+          "sha256": "caaf8b8de1684f96e26b28f3c29189db5c89cce4b73e1c93d86164f66ef88637"
+        }
+      ]
+    },
+    {
+      "name": "grilling",
+      "kind": "existing-local-snapshot",
+      "source": "D:/software/codex-data/skills/grilling",
+      "ref": null,
+      "files": [
+        {
+          "path": ".agents/skills/grilling/agents/openai.yaml",
+          "bytes": 113,
+          "sha256": "1411d7df7d99b7e621a1ff8283c8133cc2464be63d064e52d8ce169c6800ee9b"
+        },
+        {
+          "path": ".agents/skills/grilling/SKILL.md",
+          "bytes": 2049,
+          "sha256": "befdff1e27a1dfe2a294d5871169ac1afe16d983911daa4f32627514a48c1e15"
+        }
+      ]
+    },
+    {
+      "name": "frontend-design",
+      "kind": "existing-installation-snapshot",
+      "source": "https://github.com/anthropics/skills/tree/main/skills/frontend-design",
+      "ref": null,
+      "files": [
+        {
+          "path": ".agents/skills/frontend-design/LICENSE.txt",
+          "bytes": 10174,
+          "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+        },
+        {
+          "path": ".agents/skills/frontend-design/SKILL.md",
+          "bytes": 9390,
+          "sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3"
+        }
+      ]
+    },
+    {
+      "name": "test-driven-development",
+      "kind": "pinned-upstream",
+      "source": "https://github.com/obra/superpowers/tree/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/test-driven-development",
+      "ref": "bb92a77741419a4ab5f06e711a283343f1ada0c3",
+      "files": [
+        {
+          "path": ".agents/skills/test-driven-development/LICENSE",
+          "bytes": 1070,
+          "sha256": "a37e0e9697144819e1d965176ac4ae5bc3fa02d11e7812036bbcadf6dafe2400"
+        },
+        {
+          "path": ".agents/skills/test-driven-development/SKILL.md",
+          "bytes": 9578,
+          "sha256": "64b03fce4aee5a97a93160cea8111f3ba13a17b7c001db4bd5836d67fd10705d"
+        },
+        {
+          "path": ".agents/skills/test-driven-development/writing-good-tests.md",
+          "bytes": 8268,
+          "sha256": "51471c853306ff92ca8bb41dcaea05f31c0e46b03651f8f3c99754b7172f4ae1"
+        }
+      ]
+    }
+  ]
+}
