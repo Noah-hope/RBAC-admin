@@ -1,6 +1,9 @@
 """Native UML activities, straight control edges, local auxiliary PNG previews.
 Reads current flow definitions without running their output code; never reads history.
 """
+import sys
+GENERATE_PREVIEWS = '--previews' in sys.argv
+
 from pathlib import Path
 import copy, html, json, math
 import xml.etree.ElementTree as ET
@@ -25,7 +28,7 @@ f.a('save','同一事务保存目录、版本与成功审计')
 f.d('stored','全部提交成功？').b('stored',['整体回滚，不显示成功'])
 f.a('result','显示保存结果及对象启停状态',tone='green')
 f.note('目录维护不自动授权；新系统有唯一 SYSTEM_ACCESS，不绑定菜单。\n已引用目录不直接物理删除；不跨系统迁移。\n菜单绑定同功能的查看／进入页面权限；编辑不推导查看。')
-f.note('范围缩减不得直接破坏已生效配置，须先按 UC-02 调整。\n停用与重新启用只过滤尚有效关联，已失效／已撤销授权不复活。')
+f.note('目录修改不得破坏已生效功能引用，须先按 UC-02 调整。\n停用与重新启用只过滤尚有效关联，已失效／已撤销授权不复活。')
 cases[1] = [f]
 
 ADMIN = {1:{'access','select','edit','preview','confirm'},
@@ -50,7 +53,7 @@ def build(num, flow):
                  3:('valid','根据整批拒绝的问题提示\n重新选择员工与角色配对'),
                  4:('valid','根据拒绝或冲突提示\n重新查询并选择目标关系'),
                  8:('valid','根据参数问题提示修正条件\n重新发起查询')}
-    if num in corrections:
+    if num in corrections and flow.key==f'UC-{num:02d}':
         source,label=corrections[num]
         next(b for b in flow.branches if b['source']==source)['labels']=[label]
     if num==2:
@@ -60,15 +63,15 @@ def build(num, flow):
     if num==9 and flow.key!='UC-09':
         ADMIN[9]={'access','edit'}
         if '密码修改' in flow.key: ADMIN[9].add('result')
-    if num in (2,3,4):
+    if num in (2,3,4) and flow.key==f'UC-{num:02d}':
         at=next(i for i,s in enumerate(flow.steps) if s['id']=='execute')
         flow.steps[at:at]=[dict(id='oa-approve',label='按外部 OA 流程审批固定方案\n本项目不展开内部审批步骤',kind='action',tone='blue'),
                          dict(id='oa-deliver',label='交付可信最终批准／驳回结果',kind='action',tone='blue')]
         flow.steps[at+2]['label']='调用 UC-11：接收结果、复核并自动执行\n批准不等于已生效，显示实际执行状态'
     lane_names=([('caller','受信业务系统后端'),('center','权限中心')] if num in (5,6) else
                 [('oa','外部 OA 系统'),('center','权限中心：接收与自动执行')] if num==11 else
-                [('admin','管理员\n总管理员／获准公司专员' if num in (2,3,4,8) else '管理员\n总管理员' if num in (1,7,10) or flow.key.endswith('账号创建') or flow.key.endswith('密码重置') else '后台账号本人'),('center','权限中心')])
-    if num in (2,3,4): lane_names.append(('oa','外部 OA 系统'))
+                [('admin','管理员\n总管理员／获准权限管理员' if num in (2,3,4,8) else '管理员\n总管理员' if num in (1,7,10) or flow.key.endswith('账号创建') or flow.key.endswith('密码重置') or flow.key.endswith('账号启停') else '后台账号本人'),('center','权限中心')])
+    if num in (2,3,4) and flow.key==f'UC-{num:02d}': lane_names.append(('oa','外部 OA 系统'))
     loops=[b for b in flow.branches if b['target']]
     lw=980+max(0,len(loops)-1)*300
     mainx=lw-205; altx=lw-565
@@ -239,7 +242,7 @@ def render(page):
     for i,note in enumerate(page['notes']):
         vertex('note'+str(i),note,40,note_y,width-80,185,'rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;')
         d.rectangle((40,note_y,width-40,note_y+185),fill='#fff8e8',outline='#c4a34f');text(note,40,note_y,width-80,185,17,False);note_y+=200
-    im.save(OUT/(page['key']+'_活动图预览.png'))
+    if GENERATE_PREVIEWS: im.save(OUT/(page['key']+'_活动图预览.png'))
     return diagram
 
 def container():return ET.Element('mxfile',host='app.diagrams.net',agent='official drawio skill XML activity workflow',modified='2026-10-15T00:00:00.000Z')
@@ -263,7 +266,7 @@ def main():
             connected.update((e.get('source'),e.get('target')))
         graph={c.get('id') for c in cells if c.get('vertex')=='1' and c.get('parent') not in ('0','1') and not c.get('id').endswith('-inner')}
         assert graph<=connected,(diagram.get('name'),graph-connected)
-    head='<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>全部 UML 活动图</title><style>body{font:16px Microsoft YaHei;background:#f2f4f7;color:#23384f;margin:24px}section{background:white;margin:24px 0;padding:20px}img{max-width:100%;height:auto}nav{display:flex;gap:16px;flex-wrap:wrap}</style><h1>权限管理系统 UML 活动图</h1><p>11 个用例、14 页。直线控制流；图片是本地辅助预览，可点击原图放大。编辑请使用 drawio 文件。</p><nav>'
+    head='<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>全部 UML 活动图</title><style>body{font:16px Microsoft YaHei;background:#f2f4f7;color:#23384f;margin:24px}section{background:white;margin:24px 0;padding:20px}img{max-width:100%;height:auto}nav{display:flex;gap:16px;flex-wrap:wrap}</style><h1>权限管理系统 UML 活动图</h1><p>11 个用例、17 页。直线控制流；图片是本地辅助预览，可点击原图放大。编辑请使用 drawio 文件。</p><nav>'
     contents=[head]+[f'<a href="#{p["key"]}">{p["key"]}</a>' for p in cards]+['</nav>']
     for p in cards:
         img=p['key']+'_活动图预览.png';contents.append(f'<section id="{p["key"]}"><h2>{html.escape(p["key"]+" "+p["title"])}</h2><a href="{img}"><img loading="lazy" src="{img}"></a></section>')
@@ -271,3 +274,9 @@ def main():
     print(json.dumps(dict(usecases=11,pages=len(cards),straight_edges=sum(len(p['edges']) for p in cards),validation='unique IDs, endpoints, connected nodes, straight segments avoid unrelated node boxes, text bounds passed'),ensure_ascii=False))
 
 if __name__=='__main__':main()
+
+# Keep auxiliary preview versions explicit even when invoked directly.
+import sys as _preview_sys
+_preview_sys.path.insert(0, str(OUT.parent))
+from preview_support import annotate_indexes as _annotate_indexes
+_annotate_indexes()

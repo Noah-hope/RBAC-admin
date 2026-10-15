@@ -11,7 +11,7 @@
         <mxCell id="subtitle" value="责任泳道 · 直线控制流 · [条件] 表示分支；终点仅结束本次活动，不取消后台恢复任务" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;text;strokeColor=none;fillColor=none;align=left;">
           <mxGeometry as="geometry" x="30" y="80" width="1960" height="45" />
         </mxCell>
-        <mxCell id="lane-admin" value="管理员&lt;br&gt;总管理员／获准公司专员" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;swimlane;horizontal=1;startSize=75;container=1;collapsible=0;fillColor=#eef5ff;swimlaneFillColor=#ffffff;strokeColor=#8a9caf;">
+        <mxCell id="lane-admin" value="管理员&lt;br&gt;总管理员／获准权限管理员" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;swimlane;horizontal=1;startSize=75;container=1;collapsible=0;fillColor=#eef5ff;swimlaneFillColor=#ffffff;strokeColor=#8a9caf;">
           <mxGeometry as="geometry" x="30" y="150" width="980" height="3104.0" />
         </mxCell>
         <mxCell id="lane-center" value="权限中心" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;swimlane;horizontal=1;startSize=75;container=1;collapsible=0;fillColor=#eef5ff;swimlaneFillColor=#ffffff;strokeColor=#8a9caf;">

@@ -4,6 +4,7 @@ Refuses to overwrite locally edited generated files. Never reads history.
 from pathlib import Path
 import copy, hashlib, html, json, os, re
 import xml.etree.ElementTree as E
+from preview_support import notice
 
 DOCS=Path(__file__).resolve().parent
 OUT=DOCS/'按用例分类'
@@ -77,22 +78,25 @@ def main():
             source_links.append(f'- [{label}原始目录说明]({rel(DOCS/dirname/"README.md",folder)})')
         readme=[f'# {code} {titles[n]}','',
           '本目录按用例归集当前文件，便于阅读和交付。由 `docs/sync_usecase_folders.py` 同步生成；业务规则仍以按类型目录中的详细用例为准。','',
+          notice(),'',
           '## 用例文件','',f'- [详细用例说明]({source.name})','- [课程展示简表](课程简表.md)','- [本用例图片预览](预览.html)','',
           '以下图文件可以在 draw.io 中编辑；如需修改正式设计，请修改原始文件后同步本目录，避免两份文件各自变化。','']
         readme += [f'- [{p.name}]({p.name})' for p in local if p.suffix=='.drawio']
-        readme += ['',f'数据流图对应处理过程 **{process}**，可能同时服务其他用例；相关用例图保留共享图页，不把共享过程误当成本用例独占。UC-09 的账号子流程和 UC-11 的自动执行子流程随对应图与预览一并归集。','',
+        readme += ['',f'数据流图对应处理过程 **{process}**，可能同时服务其他用例；相关用例图保留共享图页，不把共享过程误当成本用例独占。离岗关权、账号启停、全局员工启停及自动执行子流程随对应图归集，图片按需生成。','',
           '## 共通规则与原始文件','',f'- [需求总览与统一规则]({rel(DOCS/"usecases-v1/用例说明.md",folder)})',
+          f'- [管理范围与人员权限规则]({rel(DOCS/"usecases-v1/管理范围与人员权限规则.md",folder)})',
           f'- [顶层及第一层数据流分析]({rel(DOCS/"dataflows-v1/README.md",folder)})']+source_links
         put(folder/'README.md','\n'.join(readme).encode(),kind='index')
         preview=['<!doctype html><html lang="zh-CN"><meta charset="utf-8">',f'<title>{html.escape(code+" "+titles[n])}</title>',
           '<style>body{font:17px Microsoft YaHei;margin:24px;background:#f2f4f7;color:#213b58}section{padding:20px;background:white;margin:24px 0}img{max-width:100%;height:auto}</style>',f'<h1>{html.escape(code+" "+titles[n])}</h1><p>点击图片放大；正式修改请同步原始文件。</p>']
+        preview.append('<aside role="note">'+html.escape(notice())+'</aside>')
         for p in local:
             if p.suffix=='.png':preview.append(f'<section><h2>{html.escape(p.stem)}</h2><a href="{html.escape(p.name)}"><img loading="lazy" src="{html.escape(p.name)}"></a></section>')
         put(folder/'预览.html','\n'.join(preview+['</html>']).encode(),kind='preview-index')
     index=['# 按用例分类的需求与设计资料','',
       '本目录是现有按类型目录的同步阅读副本，包含 11 个按“用例编号_用例名”命名的文件夹。每个文件夹归集详细说明、课程简表、相关用例图、流程图、时序图、活动图、对应第一层数据流图和预览。','',
       '共享的总体规则、顶层数据流分析、完整图及生成脚本继续保留在原目录，通过每个文件夹的 README 访问。','',
-      '| 编号 | 用例文件夹 |','| --- | --- |']
+      notice(),'', '| 编号 | 用例文件夹 |','| --- | --- |']
     index += [f'| UC-{n:02d} | [{folders[n].name}]({folders[n].name}/README.md) |' for n in sorted(folders)]
     index += ['', '## 修改与同步','',
       '正式修改以原有按类型目录为准，完成修改后在项目根目录运行：','', '```powershell','python docs/sync_usecase_folders.py','```','',
@@ -103,8 +107,13 @@ def main():
     for dest,data in writes.items():
         if dest.exists() and dest.read_bytes()!=data:
             assert oldhash.get(rel(dest,OUT))==digest(dest.read_bytes()),f'归集文件有手工改动，请先合并：{dest}'
-    for dest,data in writes.items():dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(data)
-    MANIFEST.write_text(json.dumps(dict(folder_count=11,files=records),ensure_ascii=False,indent=2),encoding='utf-8')
+    for dest,data in writes.items():
+        if not dest.exists() or dest.read_bytes()!=data:
+            dest.parent.mkdir(parents=True,exist_ok=True)
+            dest.write_bytes(data)
+    manifest_data=json.dumps(dict(folder_count=11,files=records),ensure_ascii=False,indent=2).encode('utf-8')
+    if not MANIFEST.exists() or MANIFEST.read_bytes()!=manifest_data:
+        MANIFEST.write_bytes(manifest_data)
     for dest,data in writes.items():assert dest.read_bytes()==data
     print(json.dumps(dict(usecases=11,files=len(writes),folder=str(OUT),source_files='unchanged'),ensure_ascii=False))
 

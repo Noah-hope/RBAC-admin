@@ -24,6 +24,12 @@
     "messages": 16
   },
   {
+    "usecase": "UC-04",
+    "page": "UC-04-离岗关权",
+    "source": "UC-04_撤销员工角色.md",
+    "messages": 9
+  },
+  {
     "usecase": "UC-05",
     "page": "UC-05",
     "source": "UC-05_查询员工有效权限.md",
@@ -72,10 +78,22 @@
     "messages": 6
   },
   {
+    "usecase": "UC-09",
+    "page": "UC-09-账号启停",
+    "source": "UC-09_管理员登录与退出.md",
+    "messages": 7
+  },
+  {
     "usecase": "UC-10",
     "page": "UC-10",
     "source": "UC-10_导入同步员工组织信息.md",
     "messages": 11
+  },
+  {
+    "usecase": "UC-10",
+    "page": "UC-10-全局员工启停",
+    "source": "UC-10_导入同步员工组织信息.md",
+    "messages": 7
   },
   {
     "usecase": "UC-11",

@@ -14,7 +14,7 @@
         <mxCell id="subtitle" value="需求分析时序图 · 2026-10-15 · 中文业务消息；不固定数据库字段类型或 API 地址" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=left;fillColor=none;strokeColor=none;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="40" y="87" width="1340" height="40" />
         </mxCell>
-        <mxCell id="admin" value="总管理员／公司专员" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;shape=umlLifeline;perimeter=lifelinePerimeter;size=60;align=center;verticalAlign=top;spacingTop=15;whiteSpace=wrap;fillColor=#eef5ff;strokeColor=#526b86;strokeWidth=1.5;" vertex="1" parent="1">
+        <mxCell id="admin" value="总管理员／权限管理员" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;shape=umlLifeline;perimeter=lifelinePerimeter;size=60;align=center;verticalAlign=top;spacingTop=15;whiteSpace=wrap;fillColor=#eef5ff;strokeColor=#526b86;strokeWidth=1.5;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="75" y="180" width="210" height="2371" />
         </mxCell>
         <mxCell id="center" value="权限中心" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;shape=umlLifeline;perimeter=lifelinePerimeter;size=60;align=center;verticalAlign=top;spacingTop=15;whiteSpace=wrap;fillColor=#eef5ff;strokeColor=#526b86;strokeWidth=1.5;" vertex="1" parent="1">
@@ -131,7 +131,7 @@
         <mxCell id="message14" source="center" target="admin" edge="1" parent="1" style="html=1;edgeStyle=none;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=open;endFill=0;dashed=1;exitX=0.5;entryX=0.5;exitY=0.7351328553353016;entryY=0.7351328553353016;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="label14" value="15. 返回待审批状态，旧有效配置不变" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+        <mxCell id="label14" value="15. 返回 OA 投递、审批及执行状态，旧配置不变" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="205" y="1892" width="465" height="24" />
         </mxCell>
         <mxCell id="annotation15" value="外部审批期间：不展开 OA 内部流转；管理员无需一直等待页面返回" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;rounded=0;whiteSpace=wrap;spacing=10;fillColor=#fff8e8;strokeColor=#c4a34f;" vertex="1" parent="1">

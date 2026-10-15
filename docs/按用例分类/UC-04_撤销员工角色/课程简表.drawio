@@ -20,7 +20,7 @@
         <mxCell id="r2c0" value="包：员工授权" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="154" width="1044" height="42" />
         </mxCell>
-        <mxCell id="r3c0" value="参与者：权限中心总管理员、公司权限管理专员；协作：OA 系统" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+        <mxCell id="r3c0" value="参与者：权限中心总管理员、权限管理员；协作：OA 系统" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="196" width="1044" height="42" />
         </mxCell>
         <mxCell id="r4c0" value="描述：撤销指定员工与角色的授权关系，保留其他有效来源的权限。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
@@ -44,7 +44,7 @@
         <mxCell id="r8c1" value="员工、公司、系统、授权来源" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="708" y="406" width="364" height="42" />
         </mxCell>
-        <mxCell id="r9c0" value="2. 系统展示可撤销关系，包括本组织的历史授权。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+        <mxCell id="r9c0" value="2. 系统展示范围内仍有效的可撤销关系，失效历史只读。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="448" width="680" height="42" />
         </mxCell>
         <mxCell id="r9c1" value="角色关联、状态、来源组织" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
@@ -116,10 +116,10 @@
         <mxCell id="r20c1" value="失败状态" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="708" y="910" width="364" height="42" />
         </mxCell>
-        <mxCell id="r21c0" value="其他：撤销关联不删除角色、不停用员工、不影响其他员工；重合权限仍由剩余角色提供。员工已调离或停用时，失效关系作为历史／无变化项；旧回调不得影响重新授予。提交撤销申请本身不改变有效授权。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+        <mxCell id="r21c0" value="其他：撤销关联不删除角色、不停用员工、不影响其他员工；重合权限仍由剩余角色提供。员工来源已关闭或失效时，关系作为只读历史／无变化项；旧回调不得影响重新授予。一般撤销提交不改变授权；离岗关闭原部门来源立即生效并审计，不经 OA，其他来源保留。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="952" width="1044" height="68" />
         </mxCell>
-        <mxCell id="footer" value="UC-04 · 课程简表 V1.1 · 2026-10-15 · 详细规则见 usecases-v1 对应文档" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=13;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=none;fontStyle=0;" vertex="1" parent="1">
+        <mxCell id="footer" value="UC-04 · 课程简表 V1.2 · 2026-10-15 · 详细规则见 usecases-v1 对应文档" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=13;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=none;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="1027" width="1044" height="30" />
         </mxCell>
       </root>

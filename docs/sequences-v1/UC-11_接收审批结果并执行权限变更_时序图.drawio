@@ -280,10 +280,10 @@
         <mxCell id="note0" value="自动执行器为权限中心内部职责，不是新增外部系统；只有批准或可重试方案进入此流程。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;rounded=0;whiteSpace=wrap;align=left;spacing=12;fillColor=#fff8e8;strokeColor=#c4a34f;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="55" y="2209" width="1310" height="50" />
         </mxCell>
-        <mxCell id="note1" value="总管理员原申请按全局资格，专员原申请按当前公司范围。申请人离任／公司无专员不单独阻止执行。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;rounded=0;whiteSpace=wrap;align=left;spacing=12;fillColor=#fff8e8;strokeColor=#c4a34f;" vertex="1" parent="1">
+        <mxCell id="note1" value="总管理员原申请按全局资格，权限管理员原申请按当前公司、部门及系统范围。申请人离任／公司无权限管理员不单独阻止执行。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;rounded=0;whiteSpace=wrap;align=left;spacing=12;fillColor=#fff8e8;strokeColor=#c4a34f;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="55" y="2279" width="1310" height="50" />
         </mxCell>
-        <mxCell id="note2" value="UC-03 必须检查员工任职及失效后的版本；UC-04 检查具体关系，不因员工已调离阻止历史清理。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;rounded=0;whiteSpace=wrap;align=left;spacing=12;fillColor=#fff8e8;strokeColor=#c4a34f;" vertex="1" parent="1">
+        <mxCell id="note2" value="UC-03 必须检查员工任职及失效后的版本；UC-04 检查具体关系，仍有效的来源可一般撤销，失效历史只读。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;rounded=0;whiteSpace=wrap;align=left;spacing=12;fillColor=#fff8e8;strokeColor=#c4a34f;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="55" y="2349" width="1310" height="50" />
         </mxCell>
         <mxCell id="legend" value="实线实心箭头：请求／处理消息；虚线空心箭头：返回。alt 互斥，opt 可选，loop 重复，ref 引用。OA 回调为后续独立请求，不展开实现级激活条跨度。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=left;whiteSpace=wrap;fillColor=none;strokeColor=none;fontSize=14;" vertex="1" parent="1">

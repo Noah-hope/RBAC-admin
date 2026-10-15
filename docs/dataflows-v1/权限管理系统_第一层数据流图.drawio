@@ -14,7 +14,7 @@
         <mxCell id="P1_heading" value="1.0 管理身份与管理范围  ｜  UC-07、09" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;text;strokeColor=none;fillColor=none;fontSize=23;">
           <mxGeometry as="geometry" x="30" y="150" width="2940" height="70" />
         </mxCell>
-        <mxCell id="F01.1" source="P1_global" target="P1" value="F01.1 后台账号、会话与专员范围请求" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.19791666666666666;entryX=0.0;entryY=0.22137404580152673;exitPerimeter=0;entryPerimeter=0;" contextFlow="F01">
+        <mxCell id="F01.1" source="P1_global" target="P1" value="F01.1 后台账号、会话与权限管理员范围请求" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.19791666666666666;entryX=0.0;entryY=0.22137404580152673;exitPerimeter=0;entryPerimeter=0;" contextFlow="F01">
           <mxGeometry as="geometry" relative="1">
             <mxPoint as="offset" x="0" y="-18" />
           </mxGeometry>
@@ -75,7 +75,7 @@
         <mxCell id="P1_global" value="权限中心总管理员&lt;br&gt;（同名实体重复引用）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=0;fillColor=#f1f5f9;strokeColor=#71869a;" logicalId="global">
           <mxGeometry as="geometry" x="50" y="552.5" width="340" height="240" />
         </mxCell>
-        <mxCell id="P1_specialist" value="公司权限管理专员&lt;br&gt;（同名实体重复引用）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=0;fillColor=#f1f5f9;strokeColor=#71869a;" logicalId="specialist">
+        <mxCell id="P1_specialist" value="权限管理员&lt;br&gt;（同名实体重复引用）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=0;fillColor=#f1f5f9;strokeColor=#71869a;" logicalId="specialist">
           <mxGeometry as="geometry" x="50" y="1197.5" width="340" height="240" />
         </mxCell>
         <mxCell id="P1_D1" value="D1  身份、会话与管理范围&lt;br&gt;（同编号为同一逻辑存储）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;shape=partialRectangle;left=0;right=0;top=1;bottom=1;fillColor=#fff3d6;strokeColor=#9f7b2a;" logicalId="D1">
@@ -160,10 +160,10 @@
         <mxCell id="P2_D7" value="D7  授权及管理审计&lt;br&gt;（同编号为同一逻辑存储）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;shape=partialRectangle;left=0;right=0;top=1;bottom=1;fillColor=#fff3d6;strokeColor=#9f7b2a;" logicalId="D7">
           <mxGeometry as="geometry" x="2350" y="2800" width="570" height="140" />
         </mxCell>
-        <mxCell id="P3_heading" value="3.0 导入组织人员并处理失效  ｜  UC-10" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;text;strokeColor=none;fillColor=none;fontSize=23;">
+        <mxCell id="P3_heading" value="3.0 维护人员状态并处理失效  ｜  UC-10" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;text;strokeColor=none;fillColor=none;fontSize=23;">
           <mxGeometry as="geometry" x="30" y="3110" width="2940" height="70" />
         </mxCell>
-        <mxCell id="F01.3" source="P3_global" target="P3" value="F01.3 导入指令、来源映射与执行确认" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.19791666666666666;entryX=0.0;entryY=0.22549019607843138;exitPerimeter=0;entryPerimeter=0;" contextFlow="F01">
+        <mxCell id="F01.3" source="P3_global" target="P3" value="F01.3 导入、映射及全局员工启停" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.19791666666666666;entryX=0.0;entryY=0.22549019607843138;exitPerimeter=0;entryPerimeter=0;" contextFlow="F01">
           <mxGeometry as="geometry" relative="1">
             <mxPoint as="offset" x="0" y="-18" />
           </mxGeometry>
@@ -178,7 +178,7 @@
             <mxPoint as="offset" x="0" y="-18" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="P3_D1_r" source="P3_D1" target="P3" value="总管理员资格及专员任命" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.03594771241830065;exitPerimeter=0;entryPerimeter=0;">
+        <mxCell id="P3_D1_r" source="P3_D1" target="P3" value="总管理员资格及权限管理员任命" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.03594771241830065;exitPerimeter=0;entryPerimeter=0;">
           <mxGeometry as="geometry" relative="1">
             <mxPoint as="offset" x="0" y="-18" />
           </mxGeometry>
@@ -223,7 +223,7 @@
             <mxPoint as="offset" x="0" y="-18" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="P3_D8_w" source="P3" target="P3_D8" value="预检报告、批次结果与影响" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.8006535947712419;entryX=0.0;entryY=0.75;exitPerimeter=0;entryPerimeter=0;">
+        <mxCell id="P3_D8_w" source="P3" target="P3_D8" value="预检报告、批次/全局状态结果与影响" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.8006535947712419;entryX=0.0;entryY=0.75;exitPerimeter=0;entryPerimeter=0;">
           <mxGeometry as="geometry" relative="1">
             <mxPoint as="offset" x="0" y="-18" />
           </mxGeometry>
@@ -238,7 +238,7 @@
             <mxPoint as="offset" x="0" y="-18" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="P3" value="3.0&lt;br&gt;导入组织人员并处理失效" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=1;arcSize=10;fillColor=#b9d7ff;strokeColor=#1c4e8a;fontSize=27;" logicalId="P3">
+        <mxCell id="P3" value="3.0&lt;br&gt;维护人员状态并处理失效" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=1;arcSize=10;fillColor=#b9d7ff;strokeColor=#1c4e8a;fontSize=27;" logicalId="P3">
           <mxGeometry as="geometry" x="1040" y="3270" width="460" height="1530" />
         </mxCell>
         <mxCell id="P3_global" value="权限中心总管理员&lt;br&gt;（同名实体重复引用）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=0;fillColor=#f1f5f9;strokeColor=#71869a;" logicalId="global">
@@ -268,7 +268,7 @@
         <mxCell id="P3_D7" value="D7  授权及管理审计&lt;br&gt;（同编号为同一逻辑存储）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;shape=partialRectangle;left=0;right=0;top=1;bottom=1;fillColor=#fff3d6;strokeColor=#9f7b2a;" logicalId="D7">
           <mxGeometry as="geometry" x="2350" y="4610" width="570" height="140" />
         </mxCell>
-        <mxCell id="P4_heading" value="4.0 办理角色与员工授权申请  ｜  UC-02、03、04" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;text;strokeColor=none;fillColor=none;fontSize=23;">
+        <mxCell id="P4_heading" value="4.0 办理授权申请与离岗关权  ｜  UC-02、03、04" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;text;strokeColor=none;fillColor=none;fontSize=23;">
           <mxGeometry as="geometry" x="30" y="4920" width="2940" height="70" />
         </mxCell>
         <mxCell id="F01.4" source="P4_global" target="P4" value="F01.4 角色／分配／撤销方案与配置查询" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.19791666666666666;entryX=0.0;entryY=0.1432461873638344;exitPerimeter=0;entryPerimeter=0;" contextFlow="F01">
@@ -281,7 +281,7 @@
             <mxPoint as="offset" x="0" y="-18" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="F03.2" source="P4_specialist" target="P4" value="F03.2 本公司范围内的方案与配置查询" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.19791666666666666;entryX=0.0;entryY=0.4722222222222222;exitPerimeter=0;entryPerimeter=0;" contextFlow="F03">
+        <mxCell id="F03.2" source="P4_specialist" target="P4" value="F03.2 范围内方案、查询及离岗关权" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.19791666666666666;entryX=0.0;entryY=0.4722222222222222;exitPerimeter=0;entryPerimeter=0;" contextFlow="F03">
           <mxGeometry as="geometry" relative="1">
             <mxPoint as="offset" x="0" y="-18" />
           </mxGeometry>
@@ -326,17 +326,22 @@
             <mxPoint as="offset" x="0" y="-18" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="P4_D5_r" source="P4_D5" target="P4" value="已有授权、目标关系与版本" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.6111111111111112;exitPerimeter=0;entryPerimeter=0;">
+        <mxCell id="P4_D5_r" source="P4_D5" target="P4" value="来源部门、授权关系与周期" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.6111111111111112;exitPerimeter=0;entryPerimeter=0;">
           <mxGeometry as="geometry" relative="1">
             <mxPoint as="offset" x="0" y="-18" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="P4_D6_r" source="P4_D6" target="P4" value="方案、冲突与实际执行状态" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.7549019607843137;exitPerimeter=0;entryPerimeter=0;">
+        <mxCell id="P4_D5_w" source="P4" target="P4_D5" value="关闭来源的失效状态及周期" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.6568627450980392;entryX=0.0;entryY=0.75;exitPerimeter=0;entryPerimeter=0;">
           <mxGeometry as="geometry" relative="1">
             <mxPoint as="offset" x="0" y="-18" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="P4_D6_w" source="P4" target="P4_D6" value="固定方案、摘要、版本与 OA 关联" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.8006535947712419;entryX=0.0;entryY=0.75;exitPerimeter=0;entryPerimeter=0;">
+        <mxCell id="P4_D6_r" source="P4_D6" target="P4" value="方案、冲突及来源周期依据" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.7549019607843137;exitPerimeter=0;entryPerimeter=0;">
+          <mxGeometry as="geometry" relative="1">
+            <mxPoint as="offset" x="0" y="-18" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="P4_D6_w" source="P4" target="P4_D6" value="固定方案、OA 投递及失效依据" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.8006535947712419;entryX=0.0;entryY=0.75;exitPerimeter=0;entryPerimeter=0;">
           <mxGeometry as="geometry" relative="1">
             <mxPoint as="offset" x="0" y="-18" />
           </mxGeometry>
@@ -346,13 +351,13 @@
             <mxPoint as="offset" x="0" y="-18" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="P4" value="4.0&lt;br&gt;办理角色与员工授权申请" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=1;arcSize=10;fillColor=#b9d7ff;strokeColor=#1c4e8a;fontSize=27;" logicalId="P4">
+        <mxCell id="P4" value="4.0&lt;br&gt;办理授权申请与离岗关权" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=1;arcSize=10;fillColor=#b9d7ff;strokeColor=#1c4e8a;fontSize=27;" logicalId="P4">
           <mxGeometry as="geometry" x="1040" y="5080" width="460" height="1530" />
         </mxCell>
         <mxCell id="P4_global" value="权限中心总管理员&lt;br&gt;（同名实体重复引用）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=0;fillColor=#f1f5f9;strokeColor=#71869a;" logicalId="global">
           <mxGeometry as="geometry" x="50" y="5251.666666666667" width="340" height="240" />
         </mxCell>
-        <mxCell id="P4_specialist" value="公司权限管理专员&lt;br&gt;（同名实体重复引用）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=0;fillColor=#f1f5f9;strokeColor=#71869a;" logicalId="specialist">
+        <mxCell id="P4_specialist" value="权限管理员&lt;br&gt;（同名实体重复引用）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=0;fillColor=#f1f5f9;strokeColor=#71869a;" logicalId="specialist">
           <mxGeometry as="geometry" x="50" y="5755.0" width="340" height="240" />
         </mxCell>
         <mxCell id="P4_oa" value="OA 系统&lt;br&gt;（同名实体重复引用）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=0;fillColor=#f1f5f9;strokeColor=#71869a;" logicalId="oa">
@@ -417,7 +422,7 @@
             <mxPoint as="offset" x="0" y="-18" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="P5_D5_r" source="P5_D5" target="P5" value="目标授权及关系版本" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.6111111111111112;exitPerimeter=0;entryPerimeter=0;">
+        <mxCell id="P5_D5_r" source="P5_D5" target="P5" value="来源部门、授权周期及关系版本" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;rounded=0;curved=0;endArrow=block;endFill=1;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=20;labelBackgroundColor=#ffffff;exitX=0.0;exitY=0.25;entryX=1.0;entryY=0.6111111111111112;exitPerimeter=0;entryPerimeter=0;">
           <mxGeometry as="geometry" relative="1">
             <mxPoint as="offset" x="0" y="-18" />
           </mxGeometry>
@@ -580,7 +585,7 @@
         <mxCell id="P7_global" value="权限中心总管理员&lt;br&gt;（同名实体重复引用）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=0;fillColor=#f1f5f9;strokeColor=#71869a;" logicalId="global">
           <mxGeometry as="geometry" x="50" y="10410.0" width="340" height="240" />
         </mxCell>
-        <mxCell id="P7_specialist" value="公司权限管理专员&lt;br&gt;（同名实体重复引用）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=0;fillColor=#f1f5f9;strokeColor=#71869a;" logicalId="specialist">
+        <mxCell id="P7_specialist" value="权限管理员&lt;br&gt;（同名实体重复引用）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=0;fillColor=#f1f5f9;strokeColor=#71869a;" logicalId="specialist">
           <mxGeometry as="geometry" x="50" y="10810.0" width="340" height="240" />
         </mxCell>
         <mxCell id="P7_D1" value="D1  身份、会话与管理范围&lt;br&gt;（同编号为同一逻辑存储）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;shape=partialRectangle;left=0;right=0;top=1;bottom=1;fillColor=#fff3d6;strokeColor=#9f7b2a;" logicalId="D1">

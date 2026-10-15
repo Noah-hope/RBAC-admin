@@ -8,7 +8,7 @@
         <mxCell id="title" value="UC-03 为员工分配角色" style="text;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;fillColor=none;strokeColor=none;align=left;fontSize=28;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="40" y="20" width="1320" height="60" />
         </mxCell>
-        <mxCell id="subtitle" value="最终需求基线 · 2026-10-15 · 总管理员／公司权限管理专员；外部 OA；UC-11 执行" style="text;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;fillColor=none;strokeColor=none;align=left;fontSize=16;" vertex="1" parent="1">
+        <mxCell id="subtitle" value="最终需求基线 · 2026-10-15 · 总管理员／权限管理员；外部 OA；UC-11 执行" style="text;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;fillColor=none;strokeColor=none;align=left;fontSize=16;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="40" y="90" width="1320" height="50" />
         </mxCell>
         <mxCell id="start" value="开始" style="ellipse;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;" vertex="1" parent="1">

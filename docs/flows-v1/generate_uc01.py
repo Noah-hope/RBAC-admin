@@ -1,6 +1,9 @@
 """Create UC-01 as editable draw.io XML using the official drawio skill workflow.
 The PNG is an auxiliary local rendering, not a draw.io Desktop export.
 """
+import sys
+GENERATE_PREVIEWS = '--previews' in sys.argv
+
 from pathlib import Path
 import html, json, xml.etree.ElementTree as ET
 from PIL import Image, ImageDraw, ImageFont
@@ -123,8 +126,14 @@ for n in nodes:
     for i,line in enumerate(lines):
         xx=x+16 if n['kind'] in ('text','note') else x+(w-f.getlength(line))/2
         d.text((xx,top+i*lineheight),line,font=f,fill='#1e3449')
-im.save(OUT/'UC-01_流程图预览.png')
+if GENERATE_PREVIEWS: im.save(OUT/'UC-01_流程图预览.png')
 assert len({n['id'] for n in nodes})==len(nodes)
 assert all(e['a'] in lookup and e['b'] in lookup for e in edges)
 ET.parse(FILE)
 print(json.dumps({'file':str(FILE),'nodes':len(nodes),'edges':len(edges),'validation':'XML/IDs/references/text bounds valid'},ensure_ascii=False))
+
+# Keep auxiliary preview versions explicit even when invoked directly.
+import sys as _preview_sys
+_preview_sys.path.insert(0, str(OUT.parent))
+from preview_support import annotate_indexes as _annotate_indexes
+_annotate_indexes()

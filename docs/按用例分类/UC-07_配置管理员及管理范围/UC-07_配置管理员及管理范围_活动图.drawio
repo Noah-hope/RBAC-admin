@@ -1,21 +1,21 @@
 <?xml version='1.0' encoding='utf-8'?>
 <mxfile host="app.diagrams.net" agent="official drawio skill XML activity workflow" modified="2026-10-15T00:00:00.000Z">
   <diagram id="uc-07-activity" name="UC-07 配置管理员及管理范围">
-    <mxGraphModel page="1" pageWidth="2620" pageHeight="4089" grid="1" gridSize="10">
+    <mxGraphModel page="1" pageWidth="2020" pageHeight="3510" grid="1" gridSize="10">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="title" value="UC-07 配置管理员及管理范围 · UML 活动图" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;text;strokeColor=none;fillColor=none;fontSize=28;align=left;">
-          <mxGeometry as="geometry" x="30" y="15" width="2560" height="60" />
+          <mxGeometry as="geometry" x="30" y="15" width="1960" height="60" />
         </mxCell>
         <mxCell id="subtitle" value="责任泳道 · 直线控制流 · [条件] 表示分支；终点仅结束本次活动，不取消后台恢复任务" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;text;strokeColor=none;fillColor=none;align=left;">
-          <mxGeometry as="geometry" x="30" y="80" width="2560" height="45" />
+          <mxGeometry as="geometry" x="30" y="80" width="1960" height="45" />
         </mxCell>
         <mxCell id="lane-admin" value="管理员&lt;br&gt;总管理员" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;swimlane;horizontal=1;startSize=75;container=1;collapsible=0;fillColor=#eef5ff;swimlaneFillColor=#ffffff;strokeColor=#8a9caf;">
-          <mxGeometry as="geometry" x="30" y="150" width="1280" height="3269.0" />
+          <mxGeometry as="geometry" x="30" y="150" width="980" height="2690.0" />
         </mxCell>
         <mxCell id="lane-center" value="权限中心" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;swimlane;horizontal=1;startSize=75;container=1;collapsible=0;fillColor=#eef5ff;swimlaneFillColor=#ffffff;strokeColor=#8a9caf;">
-          <mxGeometry as="geometry" x="1310" y="150" width="1280" height="3269.0" />
+          <mxGeometry as="geometry" x="1010" y="150" width="980" height="2690.0" />
         </mxCell>
         <mxCell id="edge0" source="auth" target="auth-alt-0" value="[否]" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
@@ -23,10 +23,10 @@
         <mxCell id="edge1" source="auth-alt-0" target="auth-end" value="" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="edge2" source="accounts" target="accounts-alt-0" value="[否]" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitPerimeter=1;entryPerimeter=1;">
+        <mxCell id="edge2" source="valid" target="valid-alt-0" value="[否]" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="edge3" source="accounts-alt-0" target="merge-0" value="[修正后]" edge="1" parent="lane-admin" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0;entryX=0.5;entryY=1;exitPerimeter=1;entryPerimeter=1;">
+        <mxCell id="edge3" source="valid-alt-0" target="merge-0" value="[修正后]" edge="1" parent="lane-admin" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0;entryX=0.5;entryY=1;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
         <mxCell id="edge4" source="confirm" target="confirm-alt-0" value="[否]" edge="1" parent="lane-admin" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitPerimeter=1;entryPerimeter=1;">
@@ -35,155 +35,128 @@
         <mxCell id="edge5" source="confirm-alt-0" target="confirm-end" value="" edge="1" parent="lane-admin" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="edge6" source="valid" target="valid-alt-0" value="[否]" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitPerimeter=1;entryPerimeter=1;">
+        <mxCell id="edge6" source="stored" target="stored-alt-0" value="[否]" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="edge7" source="valid-alt-0" target="merge-1" value="[修正后]" edge="1" parent="lane-admin" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0;entryX=0.5;entryY=1;exitPerimeter=1;entryPerimeter=1;">
+        <mxCell id="edge7" source="stored-alt-0" target="stored-end" value="" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="edge8" source="stored" target="stored-alt-0" value="[否]" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;exitPerimeter=1;entryPerimeter=1;">
+        <mxCell id="edge8" source="start" target="access" value="" edge="1" parent="lane-admin" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="edge9" source="stored-alt-0" target="stored-end" value="" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
+        <mxCell id="edge9" source="access" target="auth" value="" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=1;exitY=0.75;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="edge10" source="start" target="access" value="" edge="1" parent="lane-admin" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
+        <mxCell id="edge10" source="auth" target="read" value="[是]" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="edge11" source="access" target="auth" value="" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=1;exitY=0.75;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
+        <mxCell id="edge11" source="read" target="merge-0" value="" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0;exitY=0.75;entryX=1;entryY=0.5;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="edge12" source="auth" target="read" value="[是]" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
+        <mxCell id="edge12" source="merge-0" target="edit" value="" edge="1" parent="lane-admin" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.25;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="edge13" source="read" target="merge-0" value="" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0;exitY=0.75;entryX=1;entryY=0.5;exitPerimeter=1;entryPerimeter=1;">
+        <mxCell id="edge13" source="edit" target="valid" value="" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=1;exitY=0.75;entryX=0;entryY=0.5;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="edge14" source="merge-0" target="merge-1" value="" edge="1" parent="lane-admin" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitPerimeter=1;entryPerimeter=1;">
+        <mxCell id="edge14" source="valid" target="preview" value="[是]" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="edge15" source="merge-1" target="edit" value="" edge="1" parent="lane-admin" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.25;exitPerimeter=1;entryPerimeter=1;">
+        <mxCell id="edge15" source="preview" target="confirm" value="" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0;exitY=0.75;entryX=1;entryY=0.5;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="edge16" source="edit" target="accounts" value="" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=1;exitY=0.75;entryX=0;entryY=0.5;exitPerimeter=1;entryPerimeter=1;">
+        <mxCell id="edge16" source="confirm" target="save" value="[是]" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.25;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="edge17" source="accounts" target="preview" value="[是]" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
+        <mxCell id="edge17" source="save" target="stored" value="" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="edge18" source="preview" target="confirm" value="" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0;exitY=0.75;entryX=1;entryY=0.5;exitPerimeter=1;entryPerimeter=1;">
+        <mxCell id="edge18" source="stored" target="result" value="[是]" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="edge19" source="confirm" target="check" value="[是]" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.25;exitPerimeter=1;entryPerimeter=1;">
-          <mxGeometry as="geometry" relative="1" />
-        </mxCell>
-        <mxCell id="edge20" source="check" target="valid" value="" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
-          <mxGeometry as="geometry" relative="1" />
-        </mxCell>
-        <mxCell id="edge21" source="valid" target="save" value="[是]" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
-          <mxGeometry as="geometry" relative="1" />
-        </mxCell>
-        <mxCell id="edge22" source="save" target="stored" value="" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
-          <mxGeometry as="geometry" relative="1" />
-        </mxCell>
-        <mxCell id="edge23" source="stored" target="result" value="[是]" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
-          <mxGeometry as="geometry" relative="1" />
-        </mxCell>
-        <mxCell id="edge24" source="result" target="end" value="" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
+        <mxCell id="edge19" source="result" target="end" value="" edge="1" parent="lane-center" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=open;endFill=0;endSize=10;strokeColor=#536b84;strokeWidth=1.7;fontFamily=Microsoft YaHei;fontSize=17;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.5;entryY=0;exitPerimeter=1;entryPerimeter=1;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
         <mxCell id="start" value="" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#23384f;strokeColor=#23384f;strokeWidth=2;">
-          <mxGeometry as="geometry" x="1063.0" y="115" width="24" height="24" />
+          <mxGeometry as="geometry" x="763.0" y="115" width="24" height="24" />
         </mxCell>
-        <mxCell id="access" value="打开管理员配置，选择目标公司" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
-          <mxGeometry as="geometry" x="915.0" y="205" width="320" height="76" />
+        <mxCell id="access" value="打开权限管理员与范围配置" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+          <mxGeometry as="geometry" x="615.0" y="205" width="320" height="76" />
         </mxCell>
         <mxCell id="auth" value="总管理员会话及资格有效？" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
-          <mxGeometry as="geometry" x="930.0" y="391" width="290" height="110" />
+          <mxGeometry as="geometry" x="630.0" y="391" width="290" height="110" />
         </mxCell>
-        <mxCell id="auth-alt-0" value="拒绝配置管理员及管理范围" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#fff1f0;strokeColor=#b9534e;spacing=8;">
-          <mxGeometry as="geometry" x="555.0" y="408.0" width="320" height="76" />
+        <mxCell id="auth-alt-0" value="拒绝配置管理员范围" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#fff1f0;strokeColor=#b9534e;spacing=8;">
+          <mxGeometry as="geometry" x="255.0" y="408.0" width="320" height="76" />
         </mxCell>
         <mxCell id="auth-end" value="" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#ffffff;strokeColor=#23384f;strokeWidth=2;">
-          <mxGeometry as="geometry" x="703.0" y="554.0" width="24" height="24" />
+          <mxGeometry as="geometry" x="403.0" y="554.0" width="24" height="24" />
         </mxCell>
         <mxCell id="auth-end-inner" value="" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#23384f;strokeColor=#23384f;">
-          <mxGeometry as="geometry" x="708.0" y="559.0" width="14" height="14" />
+          <mxGeometry as="geometry" x="408.0" y="559.0" width="14" height="14" />
         </mxCell>
-        <mxCell id="read" value="读取公司部门、专员名单&lt;br&gt;共同系统范围及配置版本" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
-          <mxGeometry as="geometry" x="915.0" y="688.0" width="320" height="82" />
+        <mxCell id="read" value="读取公司、管理根部门、系统及任命版本" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+          <mxGeometry as="geometry" x="615.0" y="688.0" width="320" height="82" />
         </mxCell>
         <mxCell id="merge-0" value="" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
           <mxGeometry as="geometry" x="178.0" y="880.0" width="24" height="24" />
         </mxCell>
-        <mxCell id="merge-1" value="" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
-          <mxGeometry as="geometry" x="478.0" y="955.0" width="24" height="24" />
+        <mxCell id="edit" value="选择部门子树、可管理系统及管理员名单" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+          <mxGeometry as="geometry" x="615.0" y="955.0" width="320" height="82" />
         </mxCell>
-        <mxCell id="edit" value="选择允许管理的系统&lt;br&gt;新增、移除或替换公司专员" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
-          <mxGeometry as="geometry" x="915.0" y="1030.0" width="320" height="82" />
+        <mxCell id="valid" value="部门归属、任职、账号与任命去重合法？" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+          <mxGeometry as="geometry" x="630.0" y="1147.0" width="290" height="110" />
         </mxCell>
-        <mxCell id="accounts" value="拟新增人员已有后台账号？" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
-          <mxGeometry as="geometry" x="930.0" y="1222.0" width="290" height="110" />
+        <mxCell id="valid-alt-0" value="拒绝非法或重复任命，修正配置" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#fff8e8;strokeColor=#bc9036;spacing=8;">
+          <mxGeometry as="geometry" x="30.0" y="1164.0" width="320" height="76" />
         </mxCell>
-        <mxCell id="accounts-alt-0" value="由总管理员按 UC-09 创建账号&lt;br&gt;创建成功不等于已任命" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#fff8e8;strokeColor=#bc9036;spacing=8;">
-          <mxGeometry as="geometry" x="30.0" y="1239.0" width="320" height="82" />
+        <mxCell id="preview" value="预览部门/系统变更及待执行申请影响" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+          <mxGeometry as="geometry" x="615.0" y="1420.0" width="320" height="82" />
         </mxCell>
-        <mxCell id="preview" value="预览任免、系统变化与待处理申请影响&lt;br&gt;填写原因" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
-          <mxGeometry as="geometry" x="915.0" y="1501.0" width="320" height="109" />
+        <mxCell id="confirm" value="确认保存范围与任命？" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+          <mxGeometry as="geometry" x="630.0" y="1612.0" width="290" height="110" />
         </mxCell>
-        <mxCell id="confirm" value="确认保存配置？" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
-          <mxGeometry as="geometry" x="930.0" y="1720.0" width="290" height="110" />
-        </mxCell>
-        <mxCell id="confirm-alt-0" value="取消本次未提交更改" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#fff8e8;strokeColor=#bc9036;spacing=8;">
-          <mxGeometry as="geometry" x="555.0" y="1737.0" width="320" height="76" />
+        <mxCell id="confirm-alt-0" value="取消未提交配置，原范围保留" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#fff8e8;strokeColor=#bc9036;spacing=8;">
+          <mxGeometry as="geometry" x="255.0" y="1629.0" width="320" height="76" />
         </mxCell>
         <mxCell id="confirm-end" value="" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#ffffff;strokeColor=#23384f;strokeWidth=2;">
-          <mxGeometry as="geometry" x="703.0" y="1883.0" width="24" height="24" />
+          <mxGeometry as="geometry" x="403.0" y="1775.0" width="24" height="24" />
         </mxCell>
         <mxCell id="confirm-end-inner" value="" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#23384f;strokeColor=#23384f;">
-          <mxGeometry as="geometry" x="708.0" y="1888.0" width="14" height="14" />
+          <mxGeometry as="geometry" x="408.0" y="1780.0" width="14" height="14" />
         </mxCell>
-        <mxCell id="check" value="复核总管理员资格、员工任职、系统&lt;br&gt;最终人数、重复项及配置版本" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
-          <mxGeometry as="geometry" x="915.0" y="2017.0" width="320" height="82" />
+        <mxCell id="save" value="复核版本，原子保存范围、任命与审计" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+          <mxGeometry as="geometry" x="615.0" y="1909.0" width="320" height="82" />
         </mxCell>
-        <mxCell id="valid" value="最终配置满足全部约束？" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
-          <mxGeometry as="geometry" x="930.0" y="2209.0" width="290" height="110" />
+        <mxCell id="stored" value="全部提交成功？" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+          <mxGeometry as="geometry" x="630.0" y="2101.0" width="290" height="110" />
         </mxCell>
-        <mxCell id="valid-alt-0" value="显示问题或版本冲突&lt;br&gt;重新读取并修正" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#fff8e8;strokeColor=#bc9036;spacing=8;">
-          <mxGeometry as="geometry" x="330.0" y="2226.0" width="320" height="82" />
-        </mxCell>
-        <mxCell id="save" value="整体保存名单、系统范围、版本与审计" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
-          <mxGeometry as="geometry" x="915.0" y="2488.0" width="320" height="82" />
-        </mxCell>
-        <mxCell id="stored" value="全部保存成功？" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
-          <mxGeometry as="geometry" x="930.0" y="2680.0" width="290" height="110" />
-        </mxCell>
-        <mxCell id="stored-alt-0" value="本次事务回滚，旧名单和范围不变" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#fff1f0;strokeColor=#b9534e;spacing=8;">
-          <mxGeometry as="geometry" x="555.0" y="2697.0" width="320" height="76" />
+        <mxCell id="stored-alt-0" value="整体回滚，不部分改变范围" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#fff1f0;strokeColor=#b9534e;spacing=8;">
+          <mxGeometry as="geometry" x="255.0" y="2118.0" width="320" height="76" />
         </mxCell>
         <mxCell id="stored-end" value="" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#ffffff;strokeColor=#23384f;strokeWidth=2;">
-          <mxGeometry as="geometry" x="703.0" y="2843.0" width="24" height="24" />
+          <mxGeometry as="geometry" x="403.0" y="2264.0" width="24" height="24" />
         </mxCell>
         <mxCell id="stored-end-inner" value="" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#23384f;strokeColor=#23384f;">
-          <mxGeometry as="geometry" x="708.0" y="2848.0" width="14" height="14" />
+          <mxGeometry as="geometry" x="408.0" y="2269.0" width="14" height="14" />
         </mxCell>
-        <mxCell id="result" value="显示直接生效的新范围&lt;br&gt;后续管理请求使用最新资格" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#ecf7ef;strokeColor=#44855e;spacing=8;">
-          <mxGeometry as="geometry" x="915.0" y="2977.0" width="320" height="82" />
+        <mxCell id="result" value="范围直接生效，后续请求按最新资格检查" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#ecf7ef;strokeColor=#44855e;spacing=8;">
+          <mxGeometry as="geometry" x="615.0" y="2398.0" width="320" height="82" />
         </mxCell>
         <mxCell id="end" value="" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#ffffff;strokeColor=#23384f;strokeWidth=2;">
-          <mxGeometry as="geometry" x="1063.0" y="3169.0" width="24" height="24" />
+          <mxGeometry as="geometry" x="763.0" y="2590.0" width="24" height="24" />
         </mxCell>
         <mxCell id="end-inner" value="" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#23384f;strokeColor=#23384f;">
-          <mxGeometry as="geometry" x="1068.0" y="3174.0" width="14" height="14" />
+          <mxGeometry as="geometry" x="768.0" y="2595.0" width="14" height="14" />
         </mxCell>
-        <mxCell id="note0" value="人员与共享范围&lt;br&gt;每公司通常 1～3 名专员，可暂为零&lt;br&gt;同公司共享角色管理，不逐个指定角色&lt;br&gt;总公司范围不自动包含其他分公司" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
-          <mxGeometry as="geometry" x="40" y="3444.0" width="2540" height="185" />
+        <mxCell id="note0" value="指定范围&lt;br&gt;包含根部门及下级，不跨公司&lt;br&gt;同范围管理员协作，不因同公司就共享&lt;br&gt;不预设旧版公司人数限制" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+          <mxGeometry as="geometry" x="40" y="2865.0" width="1940" height="185" />
         </mxCell>
-        <mxCell id="note1" value="资格与业务授权分离&lt;br&gt;任命不授予外部系统进入或功能权限&lt;br&gt;取消任命不撤销仍有效的业务角色&lt;br&gt;员工全局停用使任命失效&lt;br&gt;恢复员工需总管理员重新任命" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
-          <mxGeometry as="geometry" x="40" y="3644.0" width="2540" height="185" />
+        <mxCell id="note1" value="角色边界&lt;br&gt;公司级共享角色仅总管理员维护&lt;br&gt;部门管理员可申请分配共享角色&lt;br&gt;部门角色适用仍要求直接任职" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+          <mxGeometry as="geometry" x="40" y="3065.0" width="1940" height="185" />
         </mxCell>
-        <mxCell id="note2" value="系统范围缩小&lt;br&gt;已有业务授权不自动撤销&lt;br&gt;公司专员原申请执行时仍复核当前公司范围&lt;br&gt;总管理员原申请按全局资格复核&lt;br&gt;处理人身份不能改变原申请依据" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
-          <mxGeometry as="geometry" x="40" y="3844.0" width="2540" height="185" />
+        <mxCell id="note2" value="资格与来源&lt;br&gt;取消管理员任命不自动撤员工角色&lt;br&gt;员工来源关闭立即失效，不等待 OA&lt;br&gt;全局员工启停仅总管理员，组织不启停" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+          <mxGeometry as="geometry" x="40" y="3265.0" width="1940" height="185" />
         </mxCell>
       </root>
     </mxGraphModel>

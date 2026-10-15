@@ -1,4 +1,7 @@
 """Refresh SVG/PNG auxiliary previews from current drawio without changing its layout."""
+import sys
+GENERATE_PREVIEWS = '--previews' in sys.argv
+
 from pathlib import Path
 from html import escape
 import json
@@ -52,7 +55,7 @@ def render_png(svg_text, output):
             draw.text((number('x'),number('y')),element.text or '',font=font,fill=fill or '#17324d',anchor=anchor)
         for child in element:paint(child,style)
     paint(svg)
-    im.save(output)
+    if GENERATE_PREVIEWS: im.save(output)
 CASES = {
     'UC-01': '维护业务系统与权限目录', 'UC-02': '创建角色并配置权限',
     'UC-03': '为员工分配角色', 'UC-04': '撤销员工角色',
@@ -195,8 +198,8 @@ for page in pages:
         elif kind=='note':
             svg.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="#fff8e8" stroke="#d7b76a"/>');svg.append(text(n,15,anchor='start'))
     svg.append('</g></svg>')
-    (OUT/(page['slug']+'.svg')).write_text('\n'.join(svg),encoding='utf-8')
-    render_png('\n'.join(svg),OUT/(page['slug']+'.png'))
+    if GENERATE_PREVIEWS: (OUT/(page['slug']+'.svg')).write_text('\n'.join(svg),encoding='utf-8')
+    if GENERATE_PREVIEWS: render_png('\n'.join(svg),OUT/(page['slug']+'.png'))
 E.indent(mx,space='  ')
 dest=OUT/'权限管理系统_用例图.drawio'
 if existing_tree is not None:
@@ -213,3 +216,9 @@ for page in E.parse(dest).getroot().findall('diagram'):
             assert c.find('./mxGeometry/Array[@as="points"]') is None
 assert len(pages)==4
 print(json.dumps({'file':str(dest),'pages':[p['name'] for p in pages],'use_cases':len(CASES),'validation':'XML and edge references valid'},ensure_ascii=False))
+
+# Keep auxiliary preview versions explicit even when invoked directly.
+import sys as _preview_sys
+_preview_sys.path.insert(0, str(OUT.parent))
+from preview_support import annotate_indexes as _annotate_indexes
+_annotate_indexes()

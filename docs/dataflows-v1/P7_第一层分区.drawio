@@ -55,7 +55,7 @@
         <mxCell id="P7_global" value="权限中心总管理员&lt;br&gt;（同名实体重复引用）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=0;fillColor=#f1f5f9;strokeColor=#71869a;" logicalId="global">
           <mxGeometry as="geometry" x="50" y="430.0" width="340" height="240" />
         </mxCell>
-        <mxCell id="P7_specialist" value="公司权限管理专员&lt;br&gt;（同名实体重复引用）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=0;fillColor=#f1f5f9;strokeColor=#71869a;" logicalId="specialist">
+        <mxCell id="P7_specialist" value="权限管理员&lt;br&gt;（同名实体重复引用）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;rounded=0;fillColor=#f1f5f9;strokeColor=#71869a;" logicalId="specialist">
           <mxGeometry as="geometry" x="50" y="830.0" width="340" height="240" />
         </mxCell>
         <mxCell id="P7_D1" value="D1  身份、会话与管理范围&lt;br&gt;（同编号为同一逻辑存储）" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=22;fontColor=#213b58;align=center;verticalAlign=middle;strokeWidth=2;spacing=12;shape=partialRectangle;left=0;right=0;top=1;bottom=1;fillColor=#fff3d6;strokeColor=#9f7b2a;" logicalId="D1">

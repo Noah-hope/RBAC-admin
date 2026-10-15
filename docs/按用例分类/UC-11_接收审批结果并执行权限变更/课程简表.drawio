@@ -110,10 +110,10 @@
         <mxCell id="r19c1" value="失败／待恢复状态" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="708" y="894" width="364" height="42" />
         </mxCell>
-        <mxCell id="r20c0" value="其他：仅承接 UC-02～04，不实现 OA 内部审批。原申请人离任或公司暂时无专员不单独阻止执行；总管理员原申请按全局资格，专员原申请按公司范围复核。已批准方案不提供人为取消入口。批准不等于已生效。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+        <mxCell id="r20c0" value="其他：仅承接 UC-02～04，不实现 OA 内部审批。原申请人离任或公司暂时无权限管理员不单独阻止执行；总管理员原申请按全局资格，权限管理员原申请按公司、部门及系统范围复核。已批准方案不提供人为取消入口。批准不等于已生效。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="936" width="1044" height="68" />
         </mxCell>
-        <mxCell id="footer" value="UC-11 · 课程简表 V1.1 · 2026-10-15 · 详细规则见 usecases-v1 对应文档" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=13;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=none;fontStyle=0;" vertex="1" parent="1">
+        <mxCell id="footer" value="UC-11 · 课程简表 V1.2 · 2026-10-15 · 详细规则见 usecases-v1 对应文档" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=13;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=none;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="1011" width="1044" height="30" />
         </mxCell>
       </root>

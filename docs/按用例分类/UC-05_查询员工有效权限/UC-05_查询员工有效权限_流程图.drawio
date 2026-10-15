@@ -29,7 +29,7 @@
         <mxCell id="read" value="读取员工、公司及当前任职状态" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="375" y="629.5" width="390" height="75" />
         </mxCell>
-        <mxCell id="eligible" value="员工／公司有效且有该公司有效任职？" style="rhombus;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;" vertex="1" parent="1">
+        <mxCell id="eligible" value="员工有效、公司存在且有该公司有效任职？" style="rhombus;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="390" y="779.5" width="360" height="125" />
         </mxCell>
         <mxCell id="eligible_alt_0" value="canAccessSystem=false&lt;br&gt;菜单=[]，操作=[]" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#fff8e8;strokeColor=#bc9036;strokeWidth=1.5;" vertex="1" parent="1">

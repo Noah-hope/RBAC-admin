@@ -1,6 +1,9 @@
 """Level-one DFD: one complete graph plus seven same-level reading panels.
 Repeated external entities / stores have identical logical IDs, not new stores.
 """
+import sys
+GENERATE_PREVIEWS = '--previews' in sys.argv
+
 from pathlib import Path
 import copy, html, json, math
 import xml.etree.ElementTree as E
@@ -9,14 +12,14 @@ from PIL import Image, ImageDraw, ImageFont
 OUT=Path(__file__).resolve().parent
 FONT='C:/Windows/Fonts/msyh.ttc'
 W=3000
-ENT={'global':'权限中心总管理员','specialist':'公司权限管理专员','hr':'HR／人员组织数据来源','oa':'OA 系统','business':'业务系统后端'}
+ENT={'global':'权限中心总管理员','specialist':'权限管理员','hr':'HR／人员组织数据来源','oa':'OA 系统','business':'业务系统后端'}
 STORES={'D1':'身份、会话与管理范围','D2':'组织、员工与任职','D3':'系统、菜单与操作目录',
         'D4':'角色与角色权限','D5':'员工角色授权','D6':'变更申请、审批与执行记录',
         'D7':'授权及管理审计','D8':'导入批次与报告','D9':'运行与调用日志'}
 # Store tuple: logical ID, read data (store -> process), write data (process -> store).
 PROCS=[
  ('P1','1.0','管理身份与管理范围','UC-07、09',[
-  ('global',[('F01.1','in','后台账号、会话与专员范围请求'),('F02.1','out','身份、范围与账号办理结果')]),
+  ('global',[('F01.1','in','后台账号、会话与权限管理员范围请求'),('F02.1','out','身份、范围与账号办理结果')]),
   ('specialist',[('F03.1','in','登录、本人改密与退出请求'),('F04.1','out','身份、当前范围与会话结果')])],[
   ('D1','账号、会话、任命与当前范围','账号、凭据版本、会话及任免范围'),
   ('D2','员工状态、公司及有效任职',''),('D3','拟配置的系统及有效状态',''),
@@ -26,27 +29,27 @@ PROCS=[
   ('global',[('F01.2','in','目录维护、影响查询与保存请求'),('F02.2','out','目录、影响预览与保存结果')])],[
   ('D1','当前会话、总管理员资格',''),('D3','功能目录及当前版本','系统、菜单、操作、绑定与版本'),
   ('D4','目录引用与角色权限',''),('D5','受影响的员工授权来源',''),('D7','','目录变更及成功审计')]),
- ('P3','3.0','导入组织人员并处理失效','UC-10',[
-  ('global',[('F01.3','in','导入指令、来源映射与执行确认'),('F02.3','out','预检、影响与实际批次报告')]),
+ ('P3','3.0','维护人员状态并处理失效','UC-10',[
+  ('global',[('F01.3','in','导入、映射及全局员工启停'),('F02.3','out','预检、影响与实际批次报告')]),
   ('hr',[('F05','in','组织、岗位、员工、任职及明确变更')])],[
-  ('D1','总管理员资格及专员任命','不满足任职条件的任命失效记录'),
+  ('D1','总管理员资格及权限管理员任命','不满足任职条件的任命失效记录'),
   ('D2','原人员任职与来源映射','组织、员工、任职、映射及版本'),
   ('D4','角色组织归属与适用条件',''),('D5','原授权关系及有效性','不满足条件的授权失效记录'),
   ('D6','组织历史引用与固定申请依据',''),
-  ('D8','批次、固定内容与防重依据','预检报告、批次结果与影响'),('D7','组织历史引用','人员变更及失效审计')]),
- ('P4','4.0','办理角色与员工授权申请','UC-02、03、04',[
+  ('D8','批次、固定内容与防重依据','预检报告、批次/全局状态结果与影响'),('D7','组织历史引用','人员变更及失效审计')]),
+ ('P4','4.0','办理授权申请与离岗关权','UC-02、03、04',[
   ('global',[('F01.4','in','角色／分配／撤销方案与配置查询'),('F02.4','out','配置、差异、提交及实际申请状态')]),
-  ('specialist',[('F03.2','in','本公司范围内的方案与配置查询'),('F04.2','out','范围内配置、差异及实际申请状态')]),
+  ('specialist',[('F03.2','in','范围内方案、查询及离岗关权'),('F04.2','out','范围内配置、差异及实际申请状态')]),
   ('oa',[('F06','out','固定申请、编号、版本及关联信息'),('F07.1','in','外部审批申请关联信息')])],[
   ('D1','当前管理范围及原资格来源',''),('D2','员工状态、有效任职与组织',''),
   ('D3','有效系统、功能操作及归属',''),('D4','角色、权限、归属及版本','不可分配的角色草稿变更记录'),
-  ('D5','已有授权、目标关系与版本',''),('D6','方案、冲突与实际执行状态','固定方案、摘要、版本与 OA 关联'),
+  ('D5','来源部门、授权关系与周期','关闭来源的失效状态及周期'),('D6','方案、冲突及来源周期依据','固定方案、OA 投递及失效依据'),
   ('D7','','草稿、提交及方案办理审计')]),
  ('P5','5.0','接收审批并执行权限变更','UC-11',[
   ('oa',[('F07.2','in','可信最终批准／驳回及申请依据'),('F08','out','结果接收、拒绝、重复及执行状态')])],[
   ('D1','OA 调用身份及原资格对应范围',''),('D2','当前身份、任职与适用条件',''),
   ('D3','系统、功能权限状态与归属',''),('D4','角色及当前配置版本','批准执行后的角色权限及激活版本'),
-  ('D5','目标授权及关系版本','批准执行后的授予／撤销与版本'),
+  ('D5','来源部门、授权周期及关系版本','批准执行后的授予／撤销与版本'),
   ('D6','固定方案、最终结果与重试依据','接收结果、执行／失败／失效状态'),
   ('D7','','接收、执行及实际成功审计')]),
  ('P6','6.0','查询与校验有效访问权限','UC-05、06',[
@@ -148,8 +151,8 @@ def draw(pages,path,preview_name):
   for n in page['nodes']:vertex(n['id'],n['label'],n['x'],n['y']+ybase,n['w'],n['h'],n['kind'],n['logical'])
   ybase+=page['height']
  E.indent(mx,space='  ');E.ElementTree(mx).write(path,encoding='utf-8',xml_declaration=True)
- E.ElementTree(svg).write(OUT/(preview_name+'.svg'),encoding='utf-8',xml_declaration=True)
- im.save(OUT/(preview_name+'.png'))
+ if GENERATE_PREVIEWS: E.ElementTree(svg).write(OUT/(preview_name+'.svg'),encoding='utf-8',xml_declaration=True)
+ if GENERATE_PREVIEWS: im.save(OUT/(preview_name+'.png'))
  return dia
 
 def main():
@@ -181,3 +184,9 @@ def main():
  print(json.dumps(dict(processes=7,logical_stores=9,boundary_flows=len(balance),context_balance='F01-F10 passed',preview_panels=7),ensure_ascii=False))
 
 if __name__=='__main__':main()
+
+# Keep auxiliary preview versions explicit even when invoked directly.
+import sys as _preview_sys
+_preview_sys.path.insert(0, str(OUT.parent))
+from preview_support import annotate_indexes as _annotate_indexes
+_annotate_indexes()

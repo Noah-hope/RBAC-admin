@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <mxfile host="app.diagrams.net" agent="OOAD use case tables" version="24.7.17">
   <diagram id="UC-09" name="UC-09 管理员登录与退出">
-    <mxGraphModel dx="1200" dy="1600" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1100" pageHeight="1052" math="0" shadow="0">
+    <mxGraphModel dx="1200" dy="1600" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1100" pageHeight="1078" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -20,7 +20,7 @@
         <mxCell id="r2c0" value="包：后台访问" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="154" width="1044" height="42" />
         </mxCell>
-        <mxCell id="r3c0" value="参与者：权限中心总管理员、公司权限管理专员" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+        <mxCell id="r3c0" value="参与者：权限中心总管理员、权限管理员" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="196" width="1044" height="42" />
         </mxCell>
         <mxCell id="r4c0" value="描述：管理员登录和退出权限中心后台；配套支持账号建立及密码维护。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
@@ -50,7 +50,7 @@
         <mxCell id="r9c1" value="账号／员工状态、管理资格" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="708" y="448" width="364" height="42" />
         </mxCell>
-        <mxCell id="r10c0" value="3. 系统显示登录成功及当前管理范围。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+        <mxCell id="r10c0" value="3. 系统显示登录成功及当前公司、部门和系统范围。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="490" width="680" height="42" />
         </mxCell>
         <mxCell id="r10c1" value="管理员身份、公司和系统范围" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
@@ -110,11 +110,11 @@
         <mxCell id="r19c1" value="退出结果" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="708" y="868" width="364" height="42" />
         </mxCell>
-        <mxCell id="r20c0" value="其他：仅本平台账号，不负责外部系统登录；无自由注册，不经 OA。配套：总管理员为有效员工创建唯一账号及临时密码，再由 UC-07 任命；可重置专员密码并使旧登录失效。账号创建／密码重置不自动授予管理或业务权限。员工停用使任命失效；恢复后须重新任命，旧登录不能恢复资格。服务故障不作为密码错误。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
-          <mxGeometry as="geometry" x="28" y="910" width="1044" height="94" />
+        <mxCell id="r20c0" value="其他：仅本平台账号，不负责外部系统登录；无自由注册，不经 OA。配套：总管理员为有效员工创建唯一账号及临时密码，再由 UC-07 任命；可重置权限管理员密码并使旧登录失效。账号创建／密码重置不自动授予管理或业务权限。员工停用使任命失效；恢复后须重新任命，旧登录不能恢复资格。服务故障不作为密码错误。 总管理员另可创建、启停后台账号和重置密码；账号启停不改变员工业务权限，旧会话不复活。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="910" width="1044" height="120" />
         </mxCell>
-        <mxCell id="footer" value="UC-09 · 课程简表 V1.1 · 2026-10-15 · 详细规则见 usecases-v1 对应文档" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=13;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=none;fontStyle=0;" vertex="1" parent="1">
-          <mxGeometry as="geometry" x="28" y="1011" width="1044" height="30" />
+        <mxCell id="footer" value="UC-09 · 课程简表 V1.2 · 2026-10-15 · 详细规则见 usecases-v1 对应文档" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=13;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=none;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="28" y="1037" width="1044" height="30" />
         </mxCell>
       </root>
     </mxGraphModel>

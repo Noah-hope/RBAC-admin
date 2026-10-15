@@ -1,6 +1,9 @@
 """Generate UC-02..11 and a combined editable draw.io file; never overwrite UC-01.
 Uses native XML per the installed official drawio skill. PNGs are local previews.
 """
+import sys
+GENERATE_PREVIEWS = '--previews' in sys.argv
+
 from pathlib import Path
 import copy, html, json, re
 import xml.etree.ElementTree as ET
@@ -83,9 +86,9 @@ def case(n,actors):
     title=p.read_text(encoding='utf-8').splitlines()[0].split(' ',2)[2]
     f=Flow(f'UC-{n:02d}',title,actors);cases[n]=[f];return f
 
-f=case(2,'总管理员／公司权限管理专员；外部 OA；UC-11 执行')
+f=case(2,'总管理员／权限管理员；外部 OA；UC-11 执行')
 f.a('access','进入角色管理，核对当前公司和系统')
-f.d('auth','具有目标范围内的配置申请资格？').b('auth',['拒绝角色配置申请'])
+f.d('auth','角色类别及部门/系统配置资格有效？').b('auth',['拒绝角色配置申请'])
 f.a('role','选择已有角色；新角色校验编码唯一\n保存待配置草稿及创建审计')
 f.a('edit','配置系统进入权限及功能操作\n可增删权限，填写原因')
 f.d('valid','归属、权限状态、非空配置及版本合法？').b('valid',['显示规则错误或版本冲突\n重新读取并修正配置'],target='role',tone='amber')
@@ -97,12 +100,12 @@ f.d('stored','方案与提交审计保存成功？').b('stored',['本次提交�
 f.a('oa','提交／关联外部 OA，显示待审批\n当前有效配置不变')
 f.a('execute','外部返回可信最终结果\n转 UC-11 接收、复核与自动执行')
 f.a('result','管理员查看实际申请／执行状态\n首次配置执行成功才激活角色',tone='green')
-f.note('角色归属\n一个公司＋一个系统，可限定直接任职部门\n岗位不自动绑定角色\n同公司专员共同管理角色，不按申请人隔离')
+f.note('角色归属\n一个公司＋一个系统，可限定直接任职部门\n岗位不自动绑定角色\n公司共享角色仅总管理员维护\n部门角色按指定范围协作')
 f.note('草稿与当前配置\n新角色草稿不可分配；允许仅保存草稿\n未提交的新角色草稿可按规则删除\n已有角色修改待审批时旧配置继续有效\n一个角色仅一份未结束配置方案')
 f.note('功能权限\n目录登记查看、编辑等独立操作\n角色仅选择是否授予，不配置数据范围\n角色可只含进入权限或只含功能权限\n正式配置不得为空')
 f.note('OA 与执行\n驳回后复制新方案修改并重新审批\n批准不等于已执行，失败显示待恢复\n原申请人离任不单独阻止合法方案执行\n本平台不实现 OA 内部审批流程')
 
-f=case(3,'总管理员／公司权限管理专员；外部 OA；UC-11 执行')
+f=case(3,'总管理员／权限管理员；外部 OA；UC-11 执行')
 f.a('access','选择目标公司并进入员工授权')
 f.d('auth','会话与公司／系统管理范围有效？').b('auth',['拒绝本次分配申请'])
 f.a('edit','选择员工和已生效角色\n明确员工—角色配对，填写原因')
@@ -120,7 +123,7 @@ f.note('任职条件\n公司级角色要求本公司有效任职\n部门级角�
 f.note('多角色\n只新增指定配对，不覆盖已有其他角色\n同公司、同系统角色权限取并集\n进入资格和功能也必须来自该公司、系统')
 f.note('申请与失效\n同一目标关系的未结束申请禁止重叠\n角色或授权资格版本变化时旧批准不能强行执行\n失效后需新申请，不能复活旧记录\n批量一项不合法则整批不执行')
 
-f=case(4,'总管理员／公司权限管理专员；外部 OA；UC-11 执行')
+f=case(4,'总管理员／权限管理员；外部 OA；UC-11 执行')
 f.a('access','查询可管理的员工角色关系及来源')
 f.d('auth','会话及对应来源的撤权资格有效？').b('auth',['拒绝撤销申请，不披露越范围关系'])
 f.a('edit','选择明确的授权关系，填写撤销原因')
@@ -128,7 +131,7 @@ f.a('dedupe','排除已撤销／已失效的无变化项\n保留历史，定位�
 f.d('changed','仍有实际需要撤销的关系？').b('changed',['显示历史／无变化，不提交 OA'],tone='amber')
 f.a('preview','预览撤销明细与可见范围内影响\n提示其他角色可能提供重合权限')
 f.d('confirm','确认提交撤销申请？').b('confirm',['取消本次未提交修改'],tone='amber')
-f.a('check','复核原来源范围、全部目标关系及版本')
+f.a('check','复核来源公司/部门/系统、关系与周期版本')
 f.d('valid','全部目标关系合法且未发生冲突？').b('valid',['整批拒绝，重新查询并选择'],target='edit',tone='amber')
 f.a('freeze','固定撤销清单并保存方案与提交记录')
 f.d('stored','本次提交保存成功？').b('stored',['提交回滚，原授权不变'])
@@ -136,14 +139,14 @@ f.a('oa','交由 OA，显示待审批\n不因提交立即撤销有效关系')
 f.a('execute','最终结果转 UC-11\n批准后复核并整体撤销指定关系')
 f.a('result','显示实际执行结果\n权限按剩余有效来源重新计算',tone='green')
 f.note('撤销边界\n不删除角色、不修改角色权限、不停用员工\n不影响其他员工或其他角色的重合权限\n相同操作仍有有效来源则继续保留')
-f.note('历史与重新授予\n员工已调离／停用不阻止管理本公司历史\n已失效关系无需 OA 才能失去权限\n旧撤销审批不能误撤后来重新授予的新关系')
+f.note('历史与重新授予\n只读查看获准来源历史；仍有效来源才可一般撤销\n已失效关系无需 OA 才能失去权限\n旧撤销审批不能误撤后来重新授予的新关系')
 f.note('审批等待\n待审批只说明本次撤销尚未执行\n其他合法变更仍可能使原授权失效\n驳回不执行；变更后的实际状态照常有效')
 
 f=case(5,'受信业务系统后端；员工已由业务系统认证')
 f.a('access','提交服务凭据、员工、当前公司及系统')
 f.d('valid','参数、服务身份与系统绑定合法？').b('valid',['返回调用错误，不返回正常授权结果'])
 f.a('read','读取员工、公司及当前任职状态')
-f.d('eligible','员工／公司有效且有该公司有效任职？').b('eligible',['canAccessSystem=false\n菜单=[]，操作=[]'],tone='amber')
+f.d('eligible','员工有效、公司存在且有该公司有效任职？').b('eligible',['canAccessSystem=false\n菜单=[]，操作=[]'],tone='amber')
 f.a('roles','一致读取当前公司、系统的有效角色\n排除失效关系、未生效角色及无效目录')
 f.d('entry','具备该公司、该系统进入资格？').b('entry',['canAccessSystem=false\n菜单=[]，操作=[]'],tone='amber')
 f.a('merge','合并功能操作集合并去重\n不跨公司／系统合并授权来源')
@@ -171,24 +174,22 @@ f.note('功能权限查询边界\n不接收业务记录或数据过滤条件\n�
 f.note('SYSTEM_ACCESS\n进入权限直接检查，不递归要求进入资格\n只判断有无权限，不返回数据范围\n进入权限也按当前公司、系统计算')
 f.note('异常路径\n未知／停用操作属于无权限\n服务身份错误、系统调用不合法返回调用错误\n数据库故障／权限数据损坏返回服务错误\n所有服务故障终止本次调用，不默认允许')
 
-f=case(7,'权限中心总管理员；保存直接生效，不经过 OA')
-f.a('access','打开管理员配置，选择目标公司')
-f.d('auth','总管理员会话及资格有效？').b('auth',['拒绝配置管理员及管理范围'])
-f.a('read','读取公司部门、专员名单\n共同系统范围及配置版本')
-f.a('edit','选择允许管理的系统\n新增、移除或替换公司专员')
-f.d('accounts','拟新增人员已有后台账号？').b('accounts',['由总管理员按 UC-09 创建账号\n创建成功不等于已任命'],target='edit',tone='amber')
-f.a('preview','预览任免、系统变化与待处理申请影响\n填写原因')
-f.d('confirm','确认保存配置？').b('confirm',['取消本次未提交更改'],tone='amber')
-f.a('check','复核总管理员资格、员工任职、系统\n最终人数、重复项及配置版本')
-f.d('valid','最终配置满足全部约束？').b('valid',['显示问题或版本冲突\n重新读取并修正'],target='edit',tone='amber')
-f.a('save','整体保存名单、系统范围、版本与审计')
-f.d('stored','全部保存成功？').b('stored',['本次事务回滚，旧名单和范围不变'])
-f.a('result','显示直接生效的新范围\n后续管理请求使用最新资格',tone='green')
-f.note('人员与共享范围\n每公司通常 1～3 名专员，可暂为零\n同公司共享角色管理，不逐个指定角色\n总公司范围不自动包含其他分公司')
-f.note('资格与业务授权分离\n任命不授予外部系统进入或功能权限\n取消任命不撤销仍有效的业务角色\n员工全局停用使任命失效\n恢复员工需总管理员重新任命')
-f.note('系统范围缩小\n已有业务授权不自动撤销\n公司专员原申请执行时仍复核当前公司范围\n总管理员原申请按全局资格复核\n处理人身份不能改变原申请依据')
+f=case(7,'总管理员；明确公司、部门子树及系统范围')
+f.a('access','打开权限管理员与范围配置')
+f.d('auth','总管理员会话及资格有效？').b('auth',['拒绝配置管理员范围'])
+f.a('read','读取公司、管理根部门、系统及任命版本')
+f.a('edit','选择部门子树、可管理系统及管理员名单')
+f.d('valid','部门归属、任职、账号与任命去重合法？').b('valid',['拒绝非法或重复任命，修正配置'],target='edit',tone='amber')
+f.a('preview','预览部门/系统变更及待执行申请影响')
+f.d('confirm','确认保存范围与任命？').b('confirm',['取消未提交配置，原范围保留'],tone='amber')
+f.a('save','复核版本，原子保存范围、任命与审计')
+f.d('stored','全部提交成功？').b('stored',['整体回滚，不部分改变范围'])
+f.a('result','范围直接生效，后续请求按最新资格检查',tone='green')
+f.note('指定范围\n包含根部门及下级，不跨公司\n同范围管理员协作，不因同公司就共享\n不预设旧版公司人数限制')
+f.note('角色边界\n公司级共享角色仅总管理员维护\n部门管理员可申请分配共享角色\n部门角色适用仍要求直接任职')
+f.note('资格与来源\n取消管理员任命不自动撤员工角色\n员工来源关闭立即失效，不等待 OA\n全局员工启停仅总管理员，组织不启停')
 
-f=case(8,'总管理员／公司权限管理专员；只读查询')
+f=case(8,'总管理员／权限管理员；只读查询')
 f.a('access','打开授权审计并填写筛选／分页条件')
 f.d('auth','会话、查询资格和请求范围有效？').b('auth',['拒绝越范围查询，不披露目标内容'])
 f.d('valid','筛选时间、字段及分页参数合法？').b('valid',['提示参数问题，修正后查询'],target='access',tone='amber')
@@ -218,10 +219,10 @@ f.d('current','本次管理请求仍满足资格及范围？').b('current',['拒
 f.d('logout','管理员选择退出？').b('logout',['继续使用有效会话'],target='use',tone='blue')
 f.a('result','撤销当前会话，清理客户端状态\n返回登录页；重复退出保持已退出',tone='green')
 f.note('后台与员工\n导入员工不自动创建后台账号\n只有账号没有有效任命不能进入管理后台\n成功登录不授予外部业务系统权限')
-f.note('停用与恢复\n员工停用使业务授权及专员任命失效\n恢复身份不恢复旧任命，需 UC-07 重新任命\n后台账号停用不等于员工全局停用')
+f.note('停用与恢复\n员工停用使业务授权及权限管理员任命失效\n恢复身份不恢复旧任命，需 UC-07 重新任命\n后台账号停用不等于员工全局停用')
 f.note('会话与密码\n普通退出只结束当前会话\n改密／重置使所有旧会话失效\n临时密码改密前不能访问管理接口\n配套创建、改密、重置见其他页签')
 
-f=Flow('UC-09-账号创建','创建专员后台账号','总管理员；UC-09 配套子流程，不新增正式用例编号')
+f=Flow('UC-09-账号创建','创建权限管理员后台账号','总管理员；UC-09 配套子流程，不新增正式用例编号')
 cases[9].append(f)
 f.a('access','总管理员选择目标员工')
 f.d('auth','总管理员资格及目标员工有效？').b('auth',['拒绝创建账号'])
@@ -231,8 +232,8 @@ f.d('valid','唯一性、字段及密码策略符合要求？').b('valid',['提�
 f.a('save','复核后整体保存账号、员工关联\n密码哈希、强制改密标记与审计')
 f.d('stored','全部保存成功？').b('stored',['整体回滚，不产生半完成账号'])
 f.a('result','返回账号标识及未任命提示\n总管理员安全交付临时密码',tone='green')
-f.a('appoint','另按 UC-07 保存专员任命\n任命有效后才能登录')
-f.note('账号不等于资格\n创建账号不授予总管理员、专员或业务权限\n一员工至多一个后台账号，多公司任命复用\n任命失败时已创建账号保留，但没有新增资格')
+f.a('appoint','另按 UC-07 保存权限管理员任命\n任命有效后才能登录')
+f.note('账号不等于资格\n创建账号不授予总管理员、权限管理员或业务权限\n一员工至多一个后台账号，多公司任命复用\n任命失败时已创建账号保留，但没有新增资格')
 f.note('保密\n响应、日志与审计不返回密码或哈希\n没有自由注册，也不经过 OA\n重复同内容请求返回原结果')
 
 f=Flow('UC-09-密码修改','修改临时／本人密码','账号本人；UC-09 配套子流程，不新增正式用例编号')
@@ -244,10 +245,10 @@ f.d('stored','相关本地写入全部成功？').b('stored',['保存失败，�
 f.a('result','返回登录页，使用新密码重新登录',tone='green')
 f.note('边界\n本人改密和首次／重置后改密沿用同一规则\n改密不授予或恢复后台任命及业务授权\n临时密码只允许改密和退出')
 
-f=Flow('UC-09-密码重置','总管理员重置专员密码','总管理员；UC-09 配套子流程，不新增正式用例编号')
+f=Flow('UC-09-密码重置','总管理员重置权限管理员密码','总管理员；UC-09 配套子流程，不新增正式用例编号')
 cases[9].append(f)
-f.a('access','选择目标专员账号\n填写新临时密码与原因')
-f.d('valid','总管理员资格及目标账号合法？').b('valid',['拒绝重置，专员不能重置他人密码'])
+f.a('access','选择目标权限管理员账号\n填写新临时密码与原因')
+f.d('valid','总管理员资格及目标账号合法？').b('valid',['拒绝重置，权限管理员不能重置他人密码'])
 f.a('save','整体更新密码哈希、强制改密标记\n凭据版本与操作记录')
 f.d('stored','全部保存成功？').b('stored',['本次写入回滚，不返回重置成功'])
 f.a('result','全部旧会话失效\n安全交付临时密码，下次登录先改密',tone='green')
@@ -271,8 +272,8 @@ f.d('stored','本次批次全部提交成功？').b('stored',['全部回滚，�
 f.a('result','返回实际数量、批次编号和失效影响\nUC-05／06／09 使用最新有效状态',tone='green')
 f.note('来源识别\n总表与公司分表是重复视图，不重复导入\n不以姓名／手机号识别员工\n组织更名不改变稳定 ID／编码\n用户名变化须明确旧新对应')
 f.note('明确变更\n新增任职、结束任职、停用、恢复须明确\n文件缺行不推断离职或删除\n兼岗独立保存，不覆盖其他任职\n有历史引用的部门子树不能直接跨公司迁移')
-f.note('持续任职条件\n公司级角色要求本公司有效任职\n部门级角色要求该部门直接有效任职\n岗位变化但条件仍满足时原授权保留\n有其他适用兼岗时不使该授权失效')
-f.note('恢复不复活授权\n恢复员工仅恢复身份可用状态\n失效业务角色按 UC-03 重新经 OA 申请\n失效专员由总管理员按 UC-07 重新任命\n人员导入不自动授予新角色或创建后台账号')
+f.note('持续任职条件\n公司级角色要求本公司有效任职\n部门级角色要求该部门直接有效任职\n岗位更名不单独失效；来源关闭后不恢复\n其他部门的独立有效来源不受误伤')
+f.note('恢复不复活授权\n恢复员工仅恢复身份可用状态\n失效业务角色按 UC-03 重新经 OA 申请\n失效权限管理员由总管理员按 UC-07 重新任命\n人员导入不自动授予新角色或创建后台账号')
 
 f=case(11,'外部 OA；权限中心接收器与自动执行器')
 f.a('access','接收 OA 最终结果及关联申请信息')
@@ -289,10 +290,48 @@ f.a('execute','在受并发控制的本地事务中\n按 UC-02／03／04 执行�
 f.a('audit','同事务保存执行状态、目标版本\n与成功审计，全部成功才提交')
 f.d('stored','业务与成功审计全部提交成功？').b('stored',['整体回滚，不显示已生效\n保留批准依据和失败／待恢复状态','故障恢复后服务端自动重试\n仍复核原依据、全部条件与版本'],target='check',tone='amber')
 f.a('result','记录执行成功，返回接收及执行状态\n后续权限查询使用实际已提交数据',tone='green')
-f.note('批准与执行分开\n接收结果先独立持久化，执行失败不丢批准依据\n同一批准可恢复处理，不要求重新审批\n普通专员不能将未批准方案标成批准')
-f.note('原资格来源\n总管理员原申请按全局资格复核\n公司专员原申请按公司当前获准范围复核\n原申请人离任或公司暂无专员不单独阻止执行\n不要求人工接手，不提供任意取消已批准方案')
-f.note('按申请类型执行\nUC-02：角色配置与权限功能归属、基础版本\nUC-03：员工适用任职及授权资格版本\nUC-04：准确关系与版本，不因调离拒绝历史清理\n任一批量项不合法则整批不执行')
+f.note('批准与执行分开\n接收结果先独立持久化，执行失败不丢批准依据\n同一批准可恢复处理，不要求重新审批\n普通权限管理员不能将未批准方案标成批准')
+f.note('原资格来源\n总管理员原申请按全局资格复核\n权限管理员原申请按原公司、部门及系统范围复核\n原申请人离任或公司暂无权限管理员不单独阻止执行\n不要求人工接手，不提供任意取消已批准方案')
+f.note('按申请类型执行\nUC-02：角色配置与权限功能归属、基础版本\nUC-03：员工适用任职及授权资格版本\nUC-04：准确关系与版本，只撤仍有效的指定来源；失效历史只读\n任一批量项不合法则整批不执行')
 f.note('防止旧授权复活\n角色扩大不能借旧批准授予新权限\n停用／任职失效后的旧授予不能恢复权限\n旧撤销不能误撤后续重新授予的新关系\n相同已结束结果幂等返回；冲突结果拒绝')
+
+
+f=Flow('UC-04-离岗关权','关闭原部门来源权限（UC-04 配套）','总管理员／获准部门权限管理员；不等待 OA')
+cases[4].append(f)
+f.a('access','选择员工、原来源部门及获准系统')
+f.d('auth','当前范围覆盖全部来源公司/部门/系统？').b('auth',['拒绝越范围关权，不改变全局员工身份'])
+f.a('edit','填写离职/调离原因，请求影响预览')
+f.a('preview','读取来源周期、有效关系及旧待执行分配')
+f.d('valid','目标来源及版本仍一致？').b('valid',['冲突，重新读取后办理'],target='access',tone='amber')
+f.d('confirm','确认立即关闭原部门来源权限？').b('confirm',['取消本次办理，授权不变'],tone='amber')
+f.a('save','同事务更新来源周期、关系与旧申请失效\n保存原因、关闭事件及审计')
+f.d('stored','来源与审计全部提交成功？').b('stored',['整体回滚，不显示已关权'])
+f.a('result','立即生效，不发送 OA\n其他有效来源保留，旧批准不能复活',tone='green')
+f.note('独立来源\n同一公司共享角色可有 A/B 两部门来源\n关闭 A 不修改角色或 B 来源\n尚无有效关联时也更新来源周期')
+f.note('恢复与新授权\n不全局停用员工，不编辑全局 HR 资料\n新部门或回原部门均需新 OA 申请\n一般角色撤销仍走原 OA 流程')
+
+f=Flow('UC-09-账号启停','后台账号启停（UC-09 配套）','仅总管理员；不经过 OA')
+cases[9].append(f)
+f.a('access','选择目标后台账号及启用/停用动作')
+f.d('auth','总管理员有效且目标非自身总管理员？').b('auth',['拒绝无资格或自锁操作'])
+f.a('edit','填写原因，查看员工与任命及会话影响')
+f.d('valid','目标账号及基础版本仍合法？').b('valid',['冲突，重新读取后办理'],target='access',tone='amber')
+f.a('save','原子保存账号状态、会话失效依据与审计')
+f.d('stored','全部提交成功？').b('stored',['整体回滚'])
+f.a('result','停用拒绝全部旧会话；启用须重新登录\n不自动授予任命、角色或恢复员工',tone='green')
+
+f=Flow('UC-10-全局员工启停','全局员工启停（UC-10 配套）','仅总管理员；不经过 OA')
+cases[10].append(f)
+f.a('access','选择员工及全局停用/恢复动作')
+f.d('auth','总管理员有效且操作不会造成自身自锁？').b('auth',['拒绝，部门管理员只能范围内离岗关权'])
+f.a('edit','填写原因，预览所有来源与任命影响')
+f.d('valid','员工及版本合法且已明确全局影响？').b('valid',['拒绝或冲突，重新读取'],target='access',tone='amber')
+f.d('confirm','确认全局员工状态变更？').b('confirm',['取消，状态和权限不变'],tone='amber')
+f.a('save','同事务更新状态及全部来源周期\n停用使授权、任命、旧分配失效并审计')
+f.d('stored','全部写入成功？').b('stored',['整体回滚，不部分停用'])
+f.a('result','停用后拒绝全部业务及后台访问\n恢复仅恢复身份，旧授权和任命不复活',tone='green')
+f.note('全局与部门分开\n部门管理员无全局员工启停能力\n公司/部门本身无启停操作\n新角色授权需有效任职及新 OA 申请')
+
 
 def make_xml(page):
     diagram=ET.Element('diagram',id=page['key'].lower(),name=page['key']+' '+page['title'])
@@ -354,7 +393,7 @@ def preview(page,path):
         for i,line in enumerate(lines):
             xx=x+16 if n['kind'] in ('text','note') else x+(w-font.getlength(line))/2
             d.text((xx,top+i*lineheight),line,font=font,fill='#1e3449')
-    im.save(path)
+    if GENERATE_PREVIEWS: im.save(path)
 
 def container():return ET.Element('mxfile',host='app.diagrams.net',agent='drawio official skill XML workflow',modified='2026-10-15T00:00:00.000Z')
 def write_xml(root,path):ET.indent(root,space='  ');ET.ElementTree(root).write(path,encoding='utf-8',xml_declaration=True)
@@ -368,7 +407,7 @@ for n,flows in cases.items():
     mx=container()
     for flow in flows:
         page=flow.build();diagram=make_xml(page);mx.append(diagram);combined.append(copy.deepcopy(diagram));pages.append(page)
-        preview(page,OUT/(flow.key+'_流程图预览.png'))
+        if GENERATE_PREVIEWS: preview(page,OUT/(flow.key+'_流程图预览.png'))
     title=flows[0].title
     write_xml(mx,OUT/(f'UC-{n:02d}_{title}_流程图.drawio'))
 write_xml(combined,OUT/'权限管理系统_全部流程图.drawio')
@@ -395,4 +434,10 @@ index=['<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>权限管
 index.extend(f'<a href="#{key}">{key}</a>' for key,title,img in cards);index.append('</nav></header><main>')
 for key,title,img in cards:index.append(f'<section id="{key}"><h2>{html.escape(key+" "+title)}</h2><img loading="lazy" src="{html.escape(img)}" alt="{html.escape(title)}"></section>')
 index.append('</main></html>');(OUT/'全部流程图预览.html').write_text('\n'.join(index),encoding='utf-8')
-print(json.dumps({'use_cases':11,'pages':len(combined.findall('diagram')),'individual_drawio_files':11,'combined':str(OUT/'权限管理系统_全部流程图.drawio'),'validation':'XML, IDs, edge references, connected flow nodes and preview text bounds passed'},ensure_ascii=False))
+print(json.dumps({'use_cases':11,'pages':len(combined.findall('diagram')),'individual_drawio_files':11,'combined':str(OUT/'权限管理系统_全部流程图.drawio'),'validation':'XML, IDs, edge references, connected flow nodes passed; preview bounds checked only with --previews'},ensure_ascii=False))
+
+# Keep auxiliary preview versions explicit even when invoked directly.
+import sys as _preview_sys
+_preview_sys.path.insert(0, str(OUT.parent))
+from preview_support import annotate_indexes as _annotate_indexes
+_annotate_indexes()

@@ -1,4 +1,7 @@
 """Editable context DFD and local PNG/SVG previews, based on current use cases."""
+import sys
+GENERATE_PREVIEWS = '--previews' in sys.argv
+
 from pathlib import Path
 import html, json, math
 import xml.etree.ElementTree as ET
@@ -10,7 +13,7 @@ FONT='C:/Windows/Fonts/msyh.ttc'
 NODES={
  'center':(900,550,500,700,'0\n集中权限管理系统'),
  'global':(70,300,300,300,'权限中心总管理员'),
- 'specialist':(70,1120,300,300,'公司权限管理专员'),
+ 'specialist':(70,1120,300,300,'权限管理员'),
  'hr':(1010,130,280,125,'HR 系统\n人员组织数据来源'),
  'oa':(1900,300,300,420,'OA 系统'),
  'business':(1900,1120,300,300,'业务系统后端'),
@@ -19,8 +22,8 @@ NODES={
 FLOWS=[
  ('F01','global','center','后台身份与管理请求\n目录／角色／授权／账号与范围\n导入指令、映射及审计查询', (370,340),(900,600),(0,0)),
  ('F02','center','global','身份与全局管理范围\n配置数据、办理状态\n导入报告及审计记录',(900,780),(370,550),(0,0)),
- ('F03','specialist','center','后台身份与本公司管理请求\n角色配置／分配／撤销申请\n范围内查询及本人账号操作',(370,1160),(900,1080),(0,0)),
- ('F04','center','specialist','身份与本公司管理范围\n范围内配置、申请执行状态\n及授权审计记录',(900,1200),(370,1370),(0,0)),
+ ('F03','specialist','center','后台身份与获准部门管理请求\n角色／授权申请及离岗关权\n范围内查询及本人账号操作',(370,1160),(900,1080),(0,0)),
+ ('F04','center','specialist','身份与获准部门/系统范围\n范围内配置、申请执行状态\n及授权审计记录',(900,1200),(370,1370),(0,0)),
  ('F05','hr','center','组织、岗位、员工、任职数据\n及明确的人员变更数据',(1150,255),(1150,550),(250,-90)),
  ('F06','center','oa','固定权限变更申请\n角色配置／分配／撤销方案\n申请编号、版本及关联信息',(1400,600),(1900,340),(0,0)),
  ('F07','oa','center','外部审批关联信息\n最终批准／驳回结果',(1900,510),(1400,820),(0,0)),
@@ -84,14 +87,14 @@ def main():
   rect(x,y,w,h,fill,stroke,central);text(label,x,y,w,h,30 if central else 23)
  notes=[('读图与层级','矩形：外部实体；圆角矩形：整体处理过程。\n本图不展开数据库、内部模块和审批步骤。\n此处“顶层”指上下文图，第一层分解另画。'),
         ('一期外部对接','HR 以文件／模拟数据提供资料，管理员上传确认。\nOA 模拟外部审批；结果接收不等于权限已生效。\n业务系统使用简单、真实的 HTTP 调用演示。'),
-        ('边界与有效权限','普通员工不直接操作权限管理后台。\n权限中心只管理功能权限，不设计数据权限。\n没有权限与调用失败／服务故障分别返回。')]
+        ('边界与有效权限','普通员工不登录权限管理后台。\n权限中心只管理功能权限，不设计数据权限。\n没有权限与调用失败／服务故障分别返回。')]
  for i,(heading,body) in enumerate(notes):
   x=45+i*745;label=heading+'\n'+body
   vertex('note'+str(i),label,x,1580,710,175,'rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;fontSize=20;align=left;spacing=14;')
   rect(x,1580,710,175,'#fff8e8','#c4a34f');text(label,x+8,1580,694,175,20,False)
  ET.indent(mx,space='  ');ET.ElementTree(mx).write(OUT/'权限管理系统_顶层数据流图.drawio',encoding='utf-8',xml_declaration=True)
- ET.ElementTree(svg).write(OUT/'顶层数据流图预览.svg',encoding='utf-8',xml_declaration=True)
- im.save(OUT/'顶层数据流图预览.png')
+ if GENERATE_PREVIEWS: ET.ElementTree(svg).write(OUT/'顶层数据流图预览.svg',encoding='utf-8',xml_declaration=True)
+ if GENERATE_PREVIEWS: im.save(OUT/'顶层数据流图预览.png')
  # Check the context graph, not only XML syntax.
  cells=root.findall('mxCell');ids={c.get('id') for c in cells};assert len(ids)==len(cells)
  assert len(NODES)==6 and len(FLOWS)==10
@@ -104,3 +107,9 @@ def main():
  print(json.dumps(dict(processes=1,external_entities=5,data_flows=10,validation='XML, IDs, edge references, context boundary and text bounds passed'),ensure_ascii=False))
 
 if __name__=='__main__':main()
+
+# Keep auxiliary preview versions explicit even when invoked directly.
+import sys as _preview_sys
+_preview_sys.path.insert(0, str(OUT.parent))
+from preview_support import annotate_indexes as _annotate_indexes
+_annotate_indexes()

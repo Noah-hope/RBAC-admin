@@ -11,7 +11,7 @@
         <mxCell id="subtitle" value="责任泳道 · 直线控制流 · [条件] 表示分支；终点仅结束本次活动，不取消后台恢复任务" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;text;strokeColor=none;fillColor=none;align=left;">
           <mxGeometry as="geometry" x="30" y="80" width="2940" height="45" />
         </mxCell>
-        <mxCell id="lane-admin" value="管理员&lt;br&gt;总管理员／获准公司专员" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;swimlane;horizontal=1;startSize=75;container=1;collapsible=0;fillColor=#eef5ff;swimlaneFillColor=#ffffff;strokeColor=#8a9caf;">
+        <mxCell id="lane-admin" value="管理员&lt;br&gt;总管理员／获准权限管理员" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;swimlane;horizontal=1;startSize=75;container=1;collapsible=0;fillColor=#eef5ff;swimlaneFillColor=#ffffff;strokeColor=#8a9caf;">
           <mxGeometry as="geometry" x="30" y="150" width="980" height="4007.0" />
         </mxCell>
         <mxCell id="lane-center" value="权限中心" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;swimlane;horizontal=1;startSize=75;container=1;collapsible=0;fillColor=#eef5ff;swimlaneFillColor=#ffffff;strokeColor=#8a9caf;">
@@ -110,7 +110,7 @@
         <mxCell id="access" value="进入角色管理，核对当前公司和系统" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
           <mxGeometry as="geometry" x="615.0" y="205" width="320" height="76" />
         </mxCell>
-        <mxCell id="auth" value="具有目标范围内的配置申请资格？" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+        <mxCell id="auth" value="角色类别及部门/系统配置资格有效？" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
           <mxGeometry as="geometry" x="630.0" y="391" width="290" height="110" />
         </mxCell>
         <mxCell id="auth-alt-0" value="拒绝角色配置申请" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#fff1f0;strokeColor=#b9534e;spacing=8;">
@@ -203,7 +203,7 @@
         <mxCell id="end-inner" value="" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#23384f;strokeColor=#23384f;">
           <mxGeometry as="geometry" x="768.0" y="3912.0" width="14" height="14" />
         </mxCell>
-        <mxCell id="note0" value="角色归属&lt;br&gt;一个公司＋一个系统，可限定直接任职部门&lt;br&gt;岗位不自动绑定角色&lt;br&gt;同公司专员共同管理角色，不按申请人隔离" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note0" value="角色归属&lt;br&gt;一个公司＋一个系统，可限定直接任职部门&lt;br&gt;岗位不自动绑定角色&lt;br&gt;公司共享角色仅总管理员维护&lt;br&gt;部门角色按指定范围协作" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="4182.0" width="2920" height="185" />
         </mxCell>
         <mxCell id="note1" value="草稿与当前配置&lt;br&gt;新角色草稿不可分配；允许仅保存草稿&lt;br&gt;未提交的新角色草稿可按规则删除&lt;br&gt;已有角色修改待审批时旧配置继续有效&lt;br&gt;一个角色仅一份未结束配置方案" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">

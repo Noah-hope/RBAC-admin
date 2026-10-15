@@ -10,7 +10,7 @@
       "process": "1.0",
       "entity": "global",
       "direction": "in",
-      "data": "后台账号、会话与专员范围请求"
+      "data": "后台账号、会话与权限管理员范围请求"
     },
     {
       "context": "F02",
@@ -58,7 +58,7 @@
       "process": "3.0",
       "entity": "global",
       "direction": "in",
-      "data": "导入指令、来源映射与执行确认"
+      "data": "导入、映射及全局员工启停"
     },
     {
       "context": "F02",
@@ -98,7 +98,7 @@
       "process": "4.0",
       "entity": "specialist",
       "direction": "in",
-      "data": "本公司范围内的方案与配置查询"
+      "data": "范围内方案、查询及离岗关权"
     },
     {
       "context": "F04",

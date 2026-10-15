@@ -239,13 +239,13 @@
         <mxCell id="end-inner" value="" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#23384f;strokeColor=#23384f;">
           <mxGeometry as="geometry" x="768.0" y="3998.0" width="14" height="14" />
         </mxCell>
-        <mxCell id="note0" value="批准与执行分开&lt;br&gt;接收结果先独立持久化，执行失败不丢批准依据&lt;br&gt;同一批准可恢复处理，不要求重新审批&lt;br&gt;普通专员不能将未批准方案标成批准" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note0" value="批准与执行分开&lt;br&gt;接收结果先独立持久化，执行失败不丢批准依据&lt;br&gt;同一批准可恢复处理，不要求重新审批&lt;br&gt;普通权限管理员不能将未批准方案标成批准" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="4268.0" width="1940" height="185" />
         </mxCell>
-        <mxCell id="note1" value="原资格来源&lt;br&gt;总管理员原申请按全局资格复核&lt;br&gt;公司专员原申请按公司当前获准范围复核&lt;br&gt;原申请人离任或公司暂无专员不单独阻止执行&lt;br&gt;不要求人工接手，不提供任意取消已批准方案" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note1" value="原资格来源&lt;br&gt;总管理员原申请按全局资格复核&lt;br&gt;权限管理员原申请按原公司、部门及系统范围复核&lt;br&gt;原申请人离任或公司暂无权限管理员不单独阻止执行&lt;br&gt;不要求人工接手，不提供任意取消已批准方案" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="4468.0" width="1940" height="185" />
         </mxCell>
-        <mxCell id="note2" value="按申请类型执行&lt;br&gt;UC-02：角色配置与权限功能归属、基础版本&lt;br&gt;UC-03：员工适用任职及授权资格版本&lt;br&gt;UC-04：准确关系与版本，不因调离拒绝历史清理&lt;br&gt;任一批量项不合法则整批不执行" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note2" value="按申请类型执行&lt;br&gt;UC-02：角色配置与权限功能归属、基础版本&lt;br&gt;UC-03：员工适用任职及授权资格版本&lt;br&gt;UC-04：准确关系与版本，只撤仍有效的指定来源；失效历史只读&lt;br&gt;任一批量项不合法则整批不执行" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="4668.0" width="1940" height="185" />
         </mxCell>
         <mxCell id="note3" value="防止旧授权复活&lt;br&gt;角色扩大不能借旧批准授予新权限&lt;br&gt;停用／任职失效后的旧授予不能恢复权限&lt;br&gt;旧撤销不能误撤后续重新授予的新关系&lt;br&gt;相同已结束结果幂等返回；冲突结果拒绝" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">

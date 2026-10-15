@@ -2,6 +2,9 @@
 No database column types, API routes, Java classes, or external OA internals implied.
 PNG previews are local auxiliary renders of the same message model.
 """
+import sys
+GENERATE_PREVIEWS = '--previews' in sys.argv
+
 from pathlib import Path
 import copy,html,json,re
 import xml.etree.ElementTree as ET
@@ -28,7 +31,7 @@ def case(n,actors,events,notes=(),key=None,title=None):
     cases.setdefault(n,[]).append(c);return c
 
 ADMIN=[('admin','管理员'),('center','权限中心')]
-OA=[('admin','总管理员／公司专员'),('center','权限中心'),('oa','外部 OA 系统')]
+OA=[('admin','总管理员／权限管理员'),('center','权限中心'),('oa','外部 OA 系统')]
 BUSINESS=[('business','业务系统后端'),('center','权限中心')]
 
 case(1,[('admin','权限中心总管理员'),('center','权限中心')],[
@@ -52,7 +55,7 @@ case(2,OA,[
  S('center','复核资格与单一未结束方案，保存固定内容及原资格来源'),
  F('alt',('[不合法／无变化／保存失败]',[R('center','admin','返回拒绝／无变化／服务错误，不新增审批')]),('[提交成功]',[
  M('center','oa','提交或关联审批（申请编号、固定内容、版本、摘要）'),
- R('oa','center','返回外部审批关联信息'),R('center','admin','返回待审批状态，旧有效配置不变'),
+ R('oa','center','返回外部审批关联信息'),R('center','admin','返回 OA 投递、审批及执行状态，旧配置不变'),
  N('外部审批期间：不展开 OA 内部流转；管理员无需一直等待页面返回'),
  M('oa','center','后续最终结果回调（申请／审批编号、结果、内容依据）'),REF('ref UC-11：验证结果、记录状态；批准后复核并自动执行'),
  R('center','oa','返回接收／执行状态'),M('admin','center','查询方案状态（申请编号）'),R('center','admin','返回驳回／待执行／失败／执行成功等实际状态')
@@ -61,12 +64,12 @@ case(2,OA,[
 case(3,OA,[
  M('admin','center','查询可分配员工及角色（当前公司、系统）'),S('center','校验管理范围、员工任职和角色可分配性'),
  R('center','admin','返回员工任职、已有授权及范围内角色'),
- M('admin','center','预览新增（明确员工—角色配对、原因）'),S('center','逐条检查范围与适用任职，排除相同有效关系'),
+ M('admin','center','预览新增（员工、角色、来源部门、周期与原因）'),S('center','逐条检查范围、来源部门及周期，仅排除同来源有效重复'),
  R('center','admin','返回实际新增清单、角色权限摘要及版本'),
  M('admin','center','确认提交（新增清单、角色／关系版本、请求编号）'),
  F('alt',('[越权／条件不符／无变化／保存失败]',[R('center','admin','整批拒绝／无变化／服务错误，原授权保留')]),('[提交成功]',[
  S('center','保存固定配对、原资格来源、版本及提交记录'),M('center','oa','提交／关联固定分配方案'),R('oa','center','返回审批关联信息'),
- R('center','admin','返回待审批；尚未新增授权'),N('审批结束后独立交付结果；原有授权按当前有效性规则计算'),
+ R('center','admin','返回 OA 投递/审批状态；尚未新增授权'),N('审批结束后独立交付结果；原有授权按当前有效性规则计算'),
  M('oa','center','后续回调：交付固定分配方案最终结果'),REF('ref UC-11：批准后复核适用任职、角色／授权版本；整体新增'),
  R('center','oa','返回实际处理状态'),M('admin','center','查询分配结果'),R('center','admin','返回实际生效或未生效状态')
  ]))],['部门角色只适用直接任职；公司级角色要求本公司任职，岗位不自动绑定角色。','已失效历史不阻止重新申请；新授权不能被旧批准或旧撤销回调改变。'])
@@ -78,10 +81,10 @@ case(4,OA,[
  R('center','admin','返回实际撤销清单及其他来源可能保留权限的提示'),
  M('admin','center','确认提交（关系、版本、来源、请求编号）'),
  F('alt',('[不合法／无变化／提交失败]',[R('center','admin','返回拒绝／无变化／服务错误，原授权不变')]),('[提交成功]',[
- S('center','保存固定撤销清单、原资格来源及提交记录'),M('center','oa','提交／关联固定撤销方案'),R('oa','center','返回审批关联信息'),R('center','admin','返回待审批；提交本身不撤销关系'),
+ S('center','保存固定撤销清单、原资格来源及提交记录'),M('center','oa','提交／关联固定撤销方案'),R('oa','center','返回审批关联信息'),R('center','admin','返回 OA 投递/审批状态；尚未撤销关系'),
  N('等待期间其他合法变更仍可能使原授权失效'),M('oa','center','后续回调：交付撤销方案最终结果'),REF('ref UC-11：批准后复核关系与版本，整体撤销指定关联'),
  R('center','oa','返回接收／执行状态'),M('admin','center','查询撤销结果'),R('center','admin','返回实际撤销状态及可披露结果')
- ]))],['撤销不删除角色，不停用员工，不影响其他角色仍提供的重合权限。','已调离／停用不阻止历史清理；已失效项无需再经 OA 才能失去权限。'])
+ ]))],['撤销不删除角色，不停用员工，不影响其他角色仍提供的重合权限。','失效历史只读，不再次 OA；仍有效的指定来源可一般撤销。离岗关权不经 OA。'])
 
 case(5,BUSINESS,[
  M('business','center','查询有效权限（服务身份、员工、当前公司、系统）'),
@@ -107,15 +110,15 @@ case(6,BUSINESS,[
  ])),S('business','按结果拦截对应功能；执行自身业务校验')],['权限中心只返回有无功能权限，不读取业务记录，不返回数据范围。','认证／服务故障与正常无权限分开；不能故障默认放行。'])
 
 case(7,[('admin','权限中心总管理员'),('center','权限中心')],[
- M('admin','center','读取公司配置（公司标识）'),S('center','校验总管理员资格，读取名单、共同系统范围及版本'),
- R('center','admin','返回当前专员、系统范围与候选人员'),
- F('opt',('[拟新增专员没有后台账号]',[REF('ref UC-09 账号创建子流程：创建账号不自动任命')])),
- M('admin','center','预览配置（最终名单、系统集合、原因）'),R('center','admin','返回任免、系统增减与待处理申请影响'),
- M('admin','center','确认保存（最终配置、基础版本、请求编号）'),S('center','复核总管理员、人员任职、系统、重复项与人数'),
+ M('admin','center','读取范围配置（公司、管理根部门）'),S('center','校验总管理员资格，读取名单、指定部门及系统范围及版本'),
+ R('center','admin','返回当前权限管理员、系统范围与候选人员'),
+ F('opt',('[拟新增权限管理员没有后台账号]',[REF('ref UC-09 账号创建子流程：创建账号不自动任命')])),
+ M('admin','center','预览配置（公司、根部门、系统集合、最终名单、原因）'),R('center','admin','返回任免、系统增减与待处理申请影响'),
+ M('admin','center','确认保存（最终配置、基础版本、请求编号）'),S('center','复核总管理员、部门边界、任职、账号、系统及版本'),
  F('alt',('[条件不合法或版本冲突]',[R('center','admin','拒绝保存，重新读取并修正')]),('[条件合法]',[
  S('center','整体保存任命、范围、版本和审计'),
- F('alt',('[写入失败]',[R('center','admin','返回服务错误，原名单与范围保留')]),('[全部提交成功]',[R('center','admin','返回直接生效的新名单与共同范围')]))
- ]))],['不经过 OA，不逐个指定角色；同公司专员共享范围内角色管理。','任命不授予外部业务权限；员工停用使任命失效，恢复后由总管理员重新任命。'])
+ F('alt',('[写入失败]',[R('center','admin','返回服务错误，原名单与范围保留')]),('[全部提交成功]',[R('center','admin','返回直接生效的新名单与获准部门及系统范围')]))
+ ]))],['不经过 OA，不逐个指定角色；同范围管理员共享范围内角色管理。','任命不授予外部业务权限；员工停用使任命失效，恢复后由总管理员重新任命。'])
 
 case(8,ADMIN,[
  M('admin','center','查询审计（时间、公司、系统、目标、事件、分页）'),S('center','校验当前管理资格，强制附加最新范围'),
@@ -143,9 +146,9 @@ case(9,[('admin','权限中心总管理员'),('center','权限中心')],[
  F('alt',('[已有账号]',[R('center','admin','返回可复用账号，不重复创建或改绑')]),('[尚无账号]',[
  M('admin','center','创建账号（登录名、临时密码、确认值、原因、请求编号）'),S('center','复核唯一性、密码规则及总管理员资格'),
  F('alt',('[不合法／写入失败]',[R('center','admin','返回拒绝／服务错误，不产生半完成账号')]),('[全部成功]',[
- S('center','整体保存账号、员工关联、哈希、强制改密标记与审计'),R('center','admin','返回账号标识与未任命提示'),S('admin','安全交付临时密码，不写入公开资料'),REF('ref UC-07：另行保存专员任命')
+ S('center','整体保存账号、员工关联、哈希、强制改密标记与审计'),R('center','admin','返回账号标识与未任命提示'),S('admin','安全交付临时密码，不写入公开资料'),REF('ref UC-07：另行保存权限管理员任命')
  ]))
- ]))],['创建账号不授予总管理员、专员资格或业务权限；任命失败不删除已创建账号。'],key='UC-09-账号创建',title='创建专员后台账号（UC-09 配套）')
+ ]))],['创建账号不授予总管理员、权限管理员资格或业务权限；任命失败不删除已创建账号。'],key='UC-09-账号创建',title='创建权限管理员后台账号（UC-09 配套）')
 
 case(9,ADMIN,[
  M('admin','center','修改密码（当前会话、原密码、新密码、确认值）'),S('center','检查会话、身份、原密码和新密码规则'),
@@ -155,10 +158,10 @@ case(9,ADMIN,[
  ]))],['临时密码修改与普通本人改密沿用同一规则；改密不授予或恢复角色／任命。'],key='UC-09-密码修改',title='修改临时／本人密码（UC-09 配套）')
 
 case(9,[('admin','权限中心总管理员'),('center','权限中心')],[
- M('admin','center','重置专员密码（目标账号、新临时密码、原因）'),S('center','检查总管理员资格及目标账号，校验新密码'),
+ M('admin','center','重置权限管理员密码（目标账号、新临时密码、原因）'),S('center','检查总管理员资格及目标账号，校验新密码'),
  F('alt',('[无资格／不合法／写入失败]',[R('center','admin','拒绝或返回服务错误，不返回成功')]),('[全部成功]',[
  S('center','整体更新哈希、强制改密标记、凭据版本与审计'),S('center','使目标账号全部旧会话失效'),R('center','admin','返回重置成功，提示安全交付临时密码')
- ]))],['不查询原密码，不恢复停用账号或失效任命；下次登录强制改密，不经过 OA。'],key='UC-09-密码重置',title='重置专员密码（UC-09 配套）')
+ ]))],['不查询原密码，不恢复停用账号或失效任命；下次登录强制改密，不经过 OA。'],key='UC-09-密码重置',title='重置权限管理员密码（UC-09 配套）')
 
 case(10,[('admin','权限中心总管理员'),('center','权限中心')],[
  M('admin','center','预检资料（文件／数据、类型、来源、映射、明确变更动作）'),
@@ -197,7 +200,7 @@ case(11,[('worker','自动执行器\n（权限中心内部）'),('center','权�
  F('alt',('[业务／成功审计写入失败]',[S('center','整体回滚；独立记录失败或保留已批准待执行依据'),R('center','worker','返回失败／待恢复，不显示生效'),
  F('loop',('[短暂故障恢复后；原方案仍合法]',[M('worker','center','自动重试同一固定方案；重新进行全部复核'),R('center','worker','返回实际成功／仍待恢复／已失效状态')]))]),('[全部提交成功]',[
  S('center','标记实际执行成功，重复结果关联原成功记录'),R('center','worker','返回已执行及实际变更结果')]))
- ]))],['自动执行器为权限中心内部职责，不是新增外部系统；只有批准或可重试方案进入此流程。','总管理员原申请按全局资格，专员原申请按当前公司范围。申请人离任／公司无专员不单独阻止执行。','UC-03 必须检查员工任职及失效后的版本；UC-04 检查具体关系，不因员工已调离阻止历史清理。'],key='UC-11-自动执行',title='批准后自动执行与失败恢复（UC-11 配套）')
+ ]))],['自动执行器为权限中心内部职责，不是新增外部系统；只有批准或可重试方案进入此流程。','总管理员原申请按全局资格，权限管理员原申请按当前公司、部门及系统范围。申请人离任／公司无权限管理员不单独阻止执行。','UC-03 必须检查员工任职及失效后的版本；UC-04 检查具体关系，仍有效的来源可一般撤销，失效历史只读。'],key='UC-11-自动执行',title='批准后自动执行与失败恢复（UC-11 配套）')
 
 def wrap(text,font,width):
     out=[]
@@ -341,16 +344,40 @@ def render(p,file):
         for i,line in enumerate(n['lines']):d.text((67,n['y']+12+i*25),line,font=f,fill='#23384f')
     legend='实线实心箭头：请求／处理消息；虚线：返回。alt 互斥，opt 可选，loop 重复，ref 引用；OA 回调是后续独立请求。'
     d.text((40,p['height']-70),legend,font=ImageFont.truetype(FONT_PATH,14),fill='#526b86')
-    im.save(file)
+    if GENERATE_PREVIEWS: im.save(file)
 
 def container():return ET.Element('mxfile',host='app.diagrams.net',agent='official drawio skill XML workflow',modified='2026-10-15T00:00:00.000Z')
 def write(root,file):ET.indent(root,space='  ');ET.ElementTree(root).write(file,encoding='utf-8',xml_declaration=True)
+
+case(4,[('admin','总管理员／范围内部门权限管理员'),('center','权限中心')],[
+ M('admin','center','预览离岗关权（员工、来源部门、系统、原因）'),
+ S('center','检查当前范围，读取来源周期、授权及待执行分配'),R('center','admin','返回仅范围内影响，不泄露其他来源'),
+ M('admin','center','确认立即关闭原部门权限（固定来源与版本）'),
+ F('alt',('[资格/版本不符]',[R('center','admin','拒绝/冲突，不改变权限')]),('[合法]',[
+ S('center','同事务更新来源周期、关系及旧申请失效，保存审计'),
+ F('alt',('[写入失败]',[S('center','整体回滚'),R('center','admin','失败，不显示已关权')]),('[提交成功]',[R('center','admin','立即生效，其他独立来源保留')]))
+ ]))],['不发送 OA；一般撤销仍经 OA。公司级角色同样按来源关闭，不修改共享角色。','即使没有有效关联，也留下关闭周期；迟到批准或员工返回原部门不能恢复旧来源。'],key='UC-04-离岗关权',title='关闭原部门来源权限（UC-04 配套）')
+
+case(9,[('admin','权限中心总管理员'),('center','权限中心')],[
+ M('admin','center','预览账号启停（账号、动作、原因）'),S('center','校验总管理员及目标，阻止自身自锁'),R('center','admin','返回状态、关联员工及会话影响'),
+ M('admin','center','确认账号启停（版本、请求编号）'),S('center','复核并原子保存账号、会话失效依据与审计'),
+ F('alt',('[失败]',[R('center','admin','拒绝/回滚，不部分修改')]),('[成功]',[R('center','admin','返回实际状态，启用不复活旧会话或授予任命')]))
+ ],['普通员工不登录平台；账号启停和员工全局启停不同，不改变业务授权。'],key='UC-09-账号启停',title='后台账号启停（UC-09 配套）')
+
+case(10,[('admin','权限中心总管理员'),('center','权限中心')],[
+ M('admin','center','预览员工全局停用/恢复（员工、动作、原因）'),S('center','校验总管理员，读取所有来源及任命影响'),R('center','admin','返回全局影响与版本，提示恢复不复权'),
+ M('admin','center','明确确认全局员工状态变更'),
+ S('center','复核资格/版本；同事务保存员工状态、来源周期、失效及审计'),
+ F('alt',('[失败]',[R('center','admin','整体拒绝/回滚')]),('[成功]',[R('center','admin','返回实际全局状态；恢复仅恢复身份')]))
+ ],['不等待 OA；部门管理员无此权限，部门离岗关权仅影响获准来源。','不设计组织启停；旧批准不能在员工恢复后复权。'],key='UC-10-全局员工启停',title='全局员工启停（UC-10 配套）')
+
+
 allxml=container();pages=[]
 for n,items in cases.items():
     mx=container()
     for c in items:
         p=layout(c);page=xml_page(p);mx.append(page);allxml.append(copy.deepcopy(page));pages.append(p)
-        render(p,OUT/(c['key']+'_时序图预览.png'))
+        if GENERATE_PREVIEWS: render(p,OUT/(c['key']+'_时序图预览.png'))
     write(mx,OUT/(f'UC-{n:02d}_'+items[0]['title']+'_时序图.drawio'))
 write(allxml,OUT/'权限管理系统_全部时序图.drawio')
 
@@ -377,3 +404,9 @@ for p in pages:
 cards.append('</main></html>');(OUT/'全部时序图预览.html').write_text('\n'.join(cards),encoding='utf-8')
 (OUT/'图与用例对应.json').write_text(json.dumps([{'usecase':f'UC-{p["c"]["n"]:02d}','page':p['c']['key'],'source':p['c']['source'],'messages':len(p['messages'])} for p in pages],ensure_ascii=False,indent=2),encoding='utf-8')
 print(json.dumps({'usecases':len(cases),'pages':len(pages),'individual_files':len(cases),'messages':sum(len(p['messages']) for p in pages),'validation':'XML, IDs, message endpoints and page bounds passed'},ensure_ascii=False))
+
+# Keep auxiliary preview versions explicit even when invoked directly.
+import sys as _preview_sys
+_preview_sys.path.insert(0, str(OUT.parent))
+from preview_support import annotate_indexes as _annotate_indexes
+_annotate_indexes()

@@ -179,7 +179,7 @@
         <mxCell id="note0" value="目录维护不自动授权；新系统有唯一 SYSTEM_ACCESS，不绑定菜单。&lt;br&gt;已引用目录不直接物理删除；不跨系统迁移。&lt;br&gt;菜单绑定同功能的查看／进入页面权限；编辑不推导查看。" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="3336.0" width="1940" height="185" />
         </mxCell>
-        <mxCell id="note1" value="范围缩减不得直接破坏已生效配置，须先按 UC-02 调整。&lt;br&gt;停用与重新启用只过滤尚有效关联，已失效／已撤销授权不复活。" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note1" value="目录修改不得破坏已生效功能引用，须先按 UC-02 调整。&lt;br&gt;停用与重新启用只过滤尚有效关联，已失效／已撤销授权不复活。" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="3536.0" width="1940" height="185" />
         </mxCell>
       </root>

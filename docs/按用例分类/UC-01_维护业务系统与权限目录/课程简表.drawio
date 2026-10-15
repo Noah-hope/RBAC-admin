@@ -113,7 +113,7 @@
         <mxCell id="r20c0" value="其他：无需 OA 审批。每系统有独立进入权限，登记不等于授予；新增目录不自动授权。清单中含义不明的项目须核对，不猜测“全部”。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="936" width="1044" height="68" />
         </mxCell>
-        <mxCell id="footer" value="UC-01 · 课程简表 V1.1 · 2026-10-15 · 详细规则见 usecases-v1 对应文档" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=13;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=none;fontStyle=0;" vertex="1" parent="1">
+        <mxCell id="footer" value="UC-01 · 课程简表 V1.2 · 2026-10-15 · 详细规则见 usecases-v1 对应文档" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=13;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=none;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="1011" width="1044" height="30" />
         </mxCell>
       </root>
