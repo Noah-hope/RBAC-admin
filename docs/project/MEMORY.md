@@ -15,7 +15,7 @@
 | 2. 界面原型 | 待开始 | Vue 3 + TypeScript + Tailwind CSS |
 | 3. API 设计 | 待开始 | Apifox + Apifox MCP，连接待准备 |
 | 4. 数据库设计 | 待开始 | 产品及结构未确定 |
-| 5. 详细设计与 TDD | 待开始 | 先设计和分解，再失败测试、模块实现；TDD skill 待准备 |
+| 5. 详细设计与 TDD | 待开始 | 先设计和分解，再失败测试、模块实现；`test-driven-development` 已安装 |
 
 ## 已确认需求
 
@@ -46,8 +46,10 @@
 
 工具准备（2026-10-15）：按用户要求，已通过 `skill-installer` 安装 Anthropic 官方 [`frontend-design`](https://github.com/anthropics/skills/tree/main/skills/frontend-design)，位置 `D:\software\codex-data\skills\frontend-design`；已核验 `SKILL.md` 的名称及 `LICENSE.txt` 存在。下一轮可用，供界面设计使用；项目 Vue 3 + TypeScript + Tailwind CSS 约束保持有效，原型尚未开始。
 
+TDD 工具准备（2026-10-15）：按用户要求，通过 `skill-installer` 安装 [`test-driven-development`](https://github.com/obra/superpowers/tree/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/test-driven-development)，上游版本 `bb92a77741419a4ab5f06e711a283343f1ada0c3`，位置 `D:\software\codex-data\skills\test-driven-development`。已核验 `SKILL.md` 和 `writing-good-tests.md`；下一轮可发现。后续正式业务逻辑使用“先编写并运行失败测试 → 最小实现 → 通过验证 → 重构”，测试聚焦业务结果与边界。本轮仅安装和同步规则，未开始业务实现、未运行应用测试；完整记录见 `WORKFLOW.md`。
+
 1. 进入原型阶段：页面关联 UC，覆盖部门/系统范围、员工授权来源、三类关权操作、后台账号与 OA 投递/审批/执行状态，模拟数据明确标注。
 2. 清单“全部”、空白 I340、“系统管理后台”和本人限定来源差异仍需映射核对；不猜测授权，不阻止通用原型设计。
 3. API 阶段前接入 Apifox MCP、选定项目及契约同步方式；当前尚无可调用连接。
-4. 实现阶段前定位/安装 TDD skill；当前未找到，不以手写规则冒充。
+4. 正式逻辑实现时读取已安装的 `test-driven-development` 及测试编写参考文件，记录失败原因与通过证据；新环境先重新安装并核验。
 5. 后端、数据库、测试框架、组件库和远程 Git 在对应阶段确定。

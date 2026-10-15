@@ -18,7 +18,7 @@
 
 完整阶段交付要求见 `docs/project/WORKFLOW.md`。当前初始化、导入及 V1.2 需求复核完成，可进入界面原型；原型及后续阶段待开始，不因目录或文档存在就宣布后续阶段完成。尚未选定的技术不自行记为既定方案。
 
-进入依赖某个 skill/MCP 的实际阶段前，检查其可用性。当前环境未找到 TDD skill，未发现可调用的 Apifox MCP；这两项保留为待办，不假装已启用，也不以手写规则冒充已安装的 skill。
+进入依赖某个 skill/MCP 的实际阶段前，检查其可用性。TDD 已安装为 `test-driven-development`，入口为 `D:\software\codex-data\skills\test-driven-development\SKILL.md`；后续正式业务逻辑的新功能、缺陷修复及行为变更使用该技能，编写或修改测试时同时读取其 `writing-good-tests.md`。开始实现前重新检查技能可读性。当前仍未发现可调用的 Apifox MCP，保留为待办，不假装已启用。
 
 ## 当前需求的权威来源
 

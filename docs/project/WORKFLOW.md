@@ -46,7 +46,9 @@ Apifox 作为接口协作与调试工具，Git 保存可审查的契约版本；
 
 先按用例分解业务步骤、状态转换、职责、输入输出、异常、事务和审计，明确模块依赖与实现顺序。建立“UC / 验收行为 → 页面 → API → 数据结构 → 模块 → 测试”的追踪关系。
 
-实际实现使用 TDD skill。当前未找到该 skill，进入实现阶段前需定位或安装并读取；本文描述的流程约束不等于该 skill 已可用。
+后续正式业务逻辑实现使用已安装的 `test-driven-development` skill，来源为 [obra/superpowers](https://github.com/obra/superpowers/tree/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/test-driven-development)。本机入口：`D:\software\codex-data\skills\test-driven-development\SKILL.md`。开始模块实现时读取该文件，编写或修改测试时同时读取同目录 `writing-good-tests.md`。技能不限定编程语言或测试框架，示例不视为技术选型。
+
+2026-10-15 已下载并核验两个技能文件，下一轮可发现。该安装位于本机全局技能目录，不随本项目 Git 分发；新环境应从上述固定版本安装并检查可读性。当前仍处于需求与原型交接阶段，未开始正式业务逻辑实现，也未产生模块测试结果。
 
 每个模块采用以下循环：
 
