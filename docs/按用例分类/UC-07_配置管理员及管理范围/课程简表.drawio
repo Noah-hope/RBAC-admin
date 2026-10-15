@@ -113,7 +113,7 @@
         <mxCell id="r20c0" value="其他：不经过 OA。每公司通常1～3人，同公司专员共享范围内角色；不按创建者分配管理权。公司边界不跨其他公司节点。任免或缩小范围不自动删除业务授权，不自动授予系统进入权限。员工停用使任命失效，恢复后总管理员重新任命。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="910" width="1044" height="68" />
         </mxCell>
-        <mxCell id="footer" value="UC-07 · 课程简表 V1.1 · 2026-10-13 · 详细规则见 usecases-v1 对应文档" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=13;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=none;fontStyle=0;" vertex="1" parent="1">
+        <mxCell id="footer" value="UC-07 · 课程简表 V1.1 · 2026-10-15 · 详细规则见 usecases-v1 对应文档" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=13;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=none;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="985" width="1044" height="30" />
         </mxCell>
       </root>

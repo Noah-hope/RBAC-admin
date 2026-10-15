@@ -71,13 +71,13 @@
         <mxCell id="message2" source="center" target="admin" edge="1" parent="1" style="html=1;edgeStyle=none;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=open;endFill=0;dashed=1;exitX=0.5;entryX=0.5;exitY=0.15732647814910025;entryY=0.15732647814910025;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="label2" value="3. 返回系统、目录、操作及支持范围" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+        <mxCell id="label2" value="3. 返回系统、目录及功能操作" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="265" y="455" width="595" height="24" />
         </mxCell>
         <mxCell id="message3" source="admin" target="center" edge="1" parent="1" style="html=1;edgeStyle=none;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=block;endFill=1;exitX=0.5;entryX=0.5;exitY=0.1994858611825193;entryY=0.1994858611825193;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="label3" value="4. 提交预览（目录变更、可见条件、支持范围）" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+        <mxCell id="label3" value="4. 提交预览（目录变更、可见条件、操作归属）" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="265" y="537" width="595" height="24" />
         </mxCell>
         <mxCell id="message4" source="center" target="center" edge="1" parent="1" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=block;endFill=1;exitX=0.5;entryX=0.5;exitY=0.2416452442159383;entryY=0.2622107969151671;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
@@ -137,7 +137,7 @@
         <mxCell id="note0" value="直接维护目录不经过 OA；新增目录不自动授予角色或员工权限。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;rounded=0;whiteSpace=wrap;align=left;spacing=12;fillColor=#fff8e8;strokeColor=#c4a34f;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="55" y="2155" width="1310" height="50" />
         </mxCell>
-        <mxCell id="note1" value="SYSTEM_ACCESS 每系统唯一，scope 不适用；目录启用不恢复已失效／撤销授权。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;rounded=0;whiteSpace=wrap;align=left;spacing=12;fillColor=#fff8e8;strokeColor=#c4a34f;" vertex="1" parent="1">
+        <mxCell id="note1" value="SYSTEM_ACCESS 每系统唯一，不配置数据范围；目录启用不恢复已失效／撤销授权。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;rounded=0;whiteSpace=wrap;align=left;spacing=12;fillColor=#fff8e8;strokeColor=#c4a34f;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="55" y="2225" width="1310" height="50" />
         </mxCell>
         <mxCell id="legend" value="实线实心箭头：请求／处理消息；虚线空心箭头：返回。alt 互斥，opt 可选，loop 重复，ref 引用。OA 回调为后续独立请求，不展开实现级激活条跨度。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=left;whiteSpace=wrap;fillColor=none;strokeColor=none;fontSize=14;" vertex="1" parent="1">

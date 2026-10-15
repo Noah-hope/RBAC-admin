@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
 <mxfile host="app.diagrams.net" agent="official drawio skill XML activity workflow" modified="2026-10-15T00:00:00.000Z">
   <diagram id="uc-01-activity" name="UC-01 维护业务系统与权限目录">
     <mxGraphModel page="1" pageWidth="2020" pageHeight="3781" grid="1" gridSize="10">
@@ -112,10 +113,10 @@
         <mxCell id="merge-0" value="" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
           <mxGeometry as="geometry" x="178.0" y="874.0" width="24" height="24" />
         </mxCell>
-        <mxCell id="edit" value="维护系统、菜单、操作、支持范围&lt;br&gt;菜单可见条件及启停状态" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+        <mxCell id="edit" value="维护系统、菜单、功能操作&lt;br&gt;菜单可见条件及启停状态" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
           <mxGeometry as="geometry" x="615.0" y="949.0" width="320" height="82" />
         </mxCell>
-        <mxCell id="valid" value="编码、归属、层级、范围及绑定合法？" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+        <mxCell id="valid" value="编码、归属、层级、权限状态及绑定合法？" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
           <mxGeometry as="geometry" x="630.0" y="1141.0" width="290" height="110" />
         </mxCell>
         <mxCell id="valid-alt-0" value="显示问题字段与原因&lt;br&gt;修正本次输入" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#fff8e8;strokeColor=#bc9036;spacing=8;">
@@ -175,7 +176,7 @@
         <mxCell id="end-inner" value="" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#23384f;strokeColor=#23384f;">
           <mxGeometry as="geometry" x="768.0" y="3066.0" width="14" height="14" />
         </mxCell>
-        <mxCell id="note0" value="目录维护不自动授权；新系统有唯一 SYSTEM_ACCESS，scope=null，不绑定菜单。&lt;br&gt;已引用目录不直接物理删除；不跨系统迁移。&lt;br&gt;菜单绑定同功能的查看／进入页面权限；编辑不推导查看。" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note0" value="目录维护不自动授权；新系统有唯一 SYSTEM_ACCESS，不绑定菜单。&lt;br&gt;已引用目录不直接物理删除；不跨系统迁移。&lt;br&gt;菜单绑定同功能的查看／进入页面权限；编辑不推导查看。" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="3336.0" width="1940" height="185" />
         </mxCell>
         <mxCell id="note1" value="范围缩减不得直接破坏已生效配置，须先按 UC-02 调整。&lt;br&gt;停用与重新启用只过滤尚有效关联，已失效／已撤销授权不复活。" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">

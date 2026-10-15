@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<mxfile host="app.diagrams.net" agent="drawio official skill XML workflow" modified="2026-10-13T00:00:00.000Z">
+<mxfile host="app.diagrams.net" agent="drawio official skill XML workflow" modified="2026-10-15T00:00:00.000Z">
   <diagram id="uc01-directory" name="UC-01 目录维护流程">
     <mxGraphModel dx="1280" dy="2260" grid="1" gridSize="10" page="1" pageWidth="1280" pageHeight="2260" adaptiveColors="auto" math="0" shadow="0">
       <root>
@@ -8,7 +8,7 @@
         <mxCell id="title" value="UC-01 维护业务系统与权限目录" style="text;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;fillColor=none;strokeColor=none;align=left;fontSize=28;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="40" y="20" width="1200" height="50" />
         </mxCell>
-        <mxCell id="subtitle" value="最终需求基线 · 2026-10-13 · 发起者：权限中心总管理员 · 不经过 OA" style="text;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;fillColor=none;strokeColor=none;align=left;fontSize=16;" vertex="1" parent="1">
+        <mxCell id="subtitle" value="最终需求基线 · 2026-10-15 · 发起者：权限中心总管理员 · 不经过 OA" style="text;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;fillColor=none;strokeColor=none;align=left;fontSize=16;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="40" y="78" width="1200" height="35" />
         </mxCell>
         <mxCell id="start" value="开始" style="ellipse;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;" vertex="1" parent="1">
@@ -29,7 +29,7 @@
         <mxCell id="select" value="选择已有系统或登记新系统" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="360" y="510" width="360" height="70" />
         </mxCell>
-        <mxCell id="edit" value="维护本次需要变更的内容&lt;br&gt;系统、导航／功能菜单、操作、可见条件&lt;br&gt;操作支持范围、启停状态" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;" vertex="1" parent="1">
+        <mxCell id="edit" value="维护本次需要变更的内容&lt;br&gt;系统、导航／功能菜单、操作、可见条件&lt;br&gt;功能归属、启停状态" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="360" y="625" width="360" height="110" />
         </mxCell>
         <mxCell id="valid" value="本次内容预检通过？" style="rhombus;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;" vertex="1" parent="1">
@@ -83,7 +83,7 @@
         <mxCell id="rule-a" value="目录校验&lt;br&gt;编码唯一、字段完整、同系统归属&lt;br&gt;父子无循环，禁止跨系统迁移&lt;br&gt;已引用目录不直接物理删除" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#fff8e8;strokeColor=#bc9036;strokeWidth=1.5;align=left;fontSize=16;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="815" y="580" width="410" height="155" />
         </mxCell>
-        <mxCell id="rule-b" value="权限与菜单校验&lt;br&gt;操作配置必须属于支持范围&lt;br&gt;有明确本人语义才支持 SELF&lt;br&gt;启用功能菜单须绑定本功能&lt;br&gt;有效的查看／进入页面权限" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#fff8e8;strokeColor=#bc9036;strokeWidth=1.5;align=left;fontSize=16;" vertex="1" parent="1">
+        <mxCell id="rule-b" value="权限与菜单校验&lt;br&gt;操作必须属于本系统有效功能&lt;br&gt;角色只配置是否授予&lt;br&gt;启用功能菜单须绑定本功能&lt;br&gt;有效的查看／进入页面权限" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#fff8e8;strokeColor=#bc9036;strokeWidth=1.5;align=left;fontSize=16;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="815" y="795" width="410" height="180" />
         </mxCell>
         <mxCell id="rule-c" value="影响预览&lt;br&gt;停用导航目录会影响有效子树&lt;br&gt;重新启用只恢复尚有效的关联&lt;br&gt;已撤销／已失效授权不恢复" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#fff8e8;strokeColor=#bc9036;strokeWidth=1.5;align=left;fontSize=16;" vertex="1" parent="1">
@@ -92,7 +92,7 @@
         <mxCell id="rule-d" value="提交与失败处理&lt;br&gt;版本冲突：重新读取、核对后办理&lt;br&gt;资格失效：停止办理&lt;br&gt;其他规则错误：修改后重新办理&lt;br&gt;失败不得产生部分目录或半完成绑定" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#fff8e8;strokeColor=#bc9036;strokeWidth=1.5;align=left;fontSize=16;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="815" y="1405" width="410" height="175" />
         </mxCell>
-        <mxCell id="rule-e" value="目录维护与授权分开&lt;br&gt;新系统有唯一 SYSTEM_ACCESS&lt;br&gt;不绑定菜单、不使用 SELF／ALL&lt;br&gt;新增目录不自动授予角色或员工&lt;br&gt;角色授权另走 UC-02／03 与 OA" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#fff8e8;strokeColor=#bc9036;strokeWidth=1.5;align=left;fontSize=16;" vertex="1" parent="1">
+        <mxCell id="rule-e" value="目录维护与授权分开&lt;br&gt;新系统有唯一 SYSTEM_ACCESS&lt;br&gt;不绑定菜单、不自动授予功能操作&lt;br&gt;新增目录不自动授予角色或员工&lt;br&gt;角色授权另走 UC-02／03 与 OA" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#fff8e8;strokeColor=#bc9036;strokeWidth=1.5;align=left;fontSize=16;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="815" y="1835" width="410" height="175" />
         </mxCell>
         <mxCell id="footer" value="说明：一次保存可只维护部分目录，不要求一次录入全部系统；新功能可先停用保存，合法绑定后再启用。" style="text;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;fillColor=none;strokeColor=none;align=left;fontSize=16;" vertex="1" parent="1">

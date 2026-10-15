@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<mxfile host="app.diagrams.net" agent="drawio official skill XML workflow" modified="2026-10-13T00:00:00.000Z">
+<mxfile host="app.diagrams.net" agent="drawio official skill XML workflow" modified="2026-10-15T00:00:00.000Z">
   <diagram id="uc-02" name="UC-02 创建角色并配置权限">
     <mxGraphModel dx="1400" dy="2853" grid="1" gridSize="10" page="1" pageWidth="1400" pageHeight="2853" adaptiveColors="auto" math="0" shadow="0">
       <root>
@@ -8,7 +8,7 @@
         <mxCell id="title" value="UC-02 创建角色并配置权限" style="text;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;fillColor=none;strokeColor=none;align=left;fontSize=28;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="40" y="20" width="1320" height="60" />
         </mxCell>
-        <mxCell id="subtitle" value="最终需求基线 · 2026-10-13 · 总管理员／公司权限管理专员；外部 OA；UC-11 执行" style="text;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;fillColor=none;strokeColor=none;align=left;fontSize=16;" vertex="1" parent="1">
+        <mxCell id="subtitle" value="最终需求基线 · 2026-10-15 · 总管理员／公司权限管理专员；外部 OA；UC-11 执行" style="text;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;fillColor=none;strokeColor=none;align=left;fontSize=16;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="40" y="90" width="1320" height="50" />
         </mxCell>
         <mxCell id="start" value="开始" style="ellipse;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;" vertex="1" parent="1">
@@ -29,10 +29,10 @@
         <mxCell id="role" value="选择已有角色；新角色校验编码唯一&lt;br&gt;保存待配置草稿及创建审计" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="375" y="629.5" width="390" height="75" />
         </mxCell>
-        <mxCell id="edit" value="配置系统进入权限、操作及合法范围&lt;br&gt;可增删权限，填写原因" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;" vertex="1" parent="1">
+        <mxCell id="edit" value="配置系统进入权限及功能操作&lt;br&gt;可增删权限，填写原因" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="375" y="779.5" width="390" height="75" />
         </mxCell>
-        <mxCell id="valid" value="归属、支持范围、非空配置及版本合法？" style="rhombus;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;" vertex="1" parent="1">
+        <mxCell id="valid" value="归属、权限状态、非空配置及版本合法？" style="rhombus;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#eef5ff;strokeColor=#32649a;strokeWidth=1.5;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="390" y="929.5" width="360" height="125" />
         </mxCell>
         <mxCell id="valid_alt_0" value="显示规则错误或版本冲突&lt;br&gt;重新读取并修正配置" style="rounded=1;arcSize=12;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#fff8e8;strokeColor=#bc9036;strokeWidth=1.5;" vertex="1" parent="1">
@@ -89,7 +89,7 @@
         <mxCell id="note1" value="草稿与当前配置&lt;br&gt;新角色草稿不可分配；允许仅保存草稿&lt;br&gt;未提交的新角色草稿可按规则删除&lt;br&gt;已有角色修改待审批时旧配置继续有效&lt;br&gt;一个角色仅一份未结束配置方案" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#fff8e8;strokeColor=#bc9036;strokeWidth=1.5;align=left;fontSize=16;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="870" y="447" width="460" height="147" />
         </mxCell>
-        <mxCell id="note2" value="权限范围&lt;br&gt;功能操作只能选择目录支持的 SELF／ALL&lt;br&gt;SYSTEM_ACCESS 的 scope=null&lt;br&gt;角色可只含进入权限或只含功能权限&lt;br&gt;正式配置不得为空" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#fff8e8;strokeColor=#bc9036;strokeWidth=1.5;align=left;fontSize=16;" vertex="1" parent="1">
+        <mxCell id="note2" value="功能权限&lt;br&gt;目录登记查看、编辑等独立操作&lt;br&gt;角色仅选择是否授予，不配置数据范围&lt;br&gt;角色可只含进入权限或只含功能权限&lt;br&gt;正式配置不得为空" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#fff8e8;strokeColor=#bc9036;strokeWidth=1.5;align=left;fontSize=16;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="870" y="659" width="460" height="147" />
         </mxCell>
         <mxCell id="note3" value="OA 与执行&lt;br&gt;驳回后复制新方案修改并重新审批&lt;br&gt;批准不等于已执行，失败显示待恢复&lt;br&gt;原申请人离任不单独阻止合法方案执行&lt;br&gt;本平台不实现 OA 内部审批流程" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#fff8e8;strokeColor=#bc9036;strokeWidth=1.5;align=left;fontSize=16;" vertex="1" parent="1">

@@ -154,7 +154,7 @@
       "process": "6.0",
       "entity": "business",
       "direction": "out",
-      "data": "进入资格、菜单、操作／范围或错误"
+      "data": "进入资格、菜单、功能操作／检查结果或错误"
     },
     {
       "context": "F01",

@@ -33,20 +33,20 @@ BUSINESS=[('business','业务系统后端'),('center','权限中心')]
 
 case(1,[('admin','权限中心总管理员'),('center','权限中心')],[
  M('admin','center','请求目录维护（目标系统）'),S('center','校验总管理员资格，读取当前目录与版本'),
- R('center','admin','返回系统、目录、操作及支持范围'),
- M('admin','center','提交预览（目录变更、可见条件、支持范围）'),
+ R('center','admin','返回系统、目录及功能操作'),
+ M('admin','center','提交预览（目录变更、可见条件、操作归属）'),
  S('center','校验编码、归属、层级及引用；计算变更影响'),
  F('alt',('[预检不合法]',[R('center','admin','返回问题字段与原因，修正后重新预览')]),('[预检通过]',[R('center','admin','返回差异及停用／恢复影响')])),
  F('opt',('[预检通过且管理员确认保存]',[
  M('admin','center','确认保存（固定变更、基础版本、原因、请求编号）'),S('center','复核资格、版本、全部目录规则'),
  F('alt',('[复核或写入失败]',[S('center','拒绝保存或整体回滚，原目录保持不变'),R('center','admin','返回规则／冲突／服务错误，不显示成功')]),('[全部成功]',[S('center','整体保存目录、版本和成功审计'),R('center','admin','返回保存结果及当前启停状态')]))
- ]))],['直接维护目录不经过 OA；新增目录不自动授予角色或员工权限。','SYSTEM_ACCESS 每系统唯一，scope 不适用；目录启用不恢复已失效／撤销授权。'])
+ ]))],['直接维护目录不经过 OA；新增目录不自动授予角色或员工权限。','SYSTEM_ACCESS 每系统唯一，不配置数据范围；目录启用不恢复已失效／撤销授权。'])
 
 case(2,OA,[
  M('admin','center','进入角色配置（公司、组织、系统、角色）'),S('center','校验全局／公司申请资格及对应范围'),
  F('opt',('[需要新建角色]',[M('admin','center','保存角色草稿（名称、唯一编码、组织、系统）'),S('center','校验并保存未生效角色草稿及创建审计'),R('center','admin','返回角色／草稿编号及版本，提示不可分配')])),
  R('center','admin','返回当前配置与本系统可配置权限'),
- M('admin','center','预览配置（权限变更、功能范围、原因）'),S('center','校验支持范围、同系统归属、非空配置及版本'),
+ M('admin','center','预览配置（功能权限变更、原因）'),S('center','校验权限状态、同系统归属、非空配置及版本'),
  R('center','admin','返回差异及受影响员工摘要'),
  M('admin','center','确认提交（角色、固定方案、版本、请求编号）'),
  S('center','复核资格与单一未结束方案，保存固定内容及原资格来源'),
@@ -89,8 +89,8 @@ case(5,BUSINESS,[
  F('alt',('[调用不合法]',[R('center','business','返回参数／认证／系统调用错误')]),('[可进行授权计算]',[
  S('center','一致读取该公司、系统的有效角色与进入资格'),
  F('alt',('[员工不可用／无当前公司任职／无进入资格]',[R('center','business','canAccessSystem=false；菜单与操作为空')]),('[具有进入资格]',[
- S('center','按操作去重合并范围；生成菜单及必要导航祖先'),
- R('center','business','canAccessSystem=true；菜单、操作及各操作范围'),S('business','映射业务入口；实施公司数据隔离及 SELF 过滤')
+ S('center','合并功能操作并去重；生成菜单及必要导航祖先'),
+ R('center','business','canAccessSystem=true；菜单及功能操作集合'),S('business','映射业务入口；执行功能访问拦截')
  ]))
  ]))],['有进入资格但无功能授权时，返回 true 和空菜单／操作。编辑不自动包含查看。','所有读取／计算故障返回服务错误，不能伪装成功空权限；权限只代表本次读取状态。'])
 
@@ -98,13 +98,13 @@ case(6,BUSINESS,[
  M('business','center','检查权限（服务身份、员工、当前公司、系统、权限编码）'),
  S('center','校验调用身份与系统绑定；检查员工／公司任职与目标权限'),
  F('alt',('[调用不合法]',[R('center','business','返回调用错误；不能据此放行')]),('[合法调用]',[
- F('alt',('[员工／任职／权限无效]',[R('center','business','hasPermission=false，scope=null')]),('[对象有效]',[
- F('alt',('[检查 SYSTEM_ACCESS]',[S('center','直接判断该公司、系统进入来源'),R('center','business','返回 hasPermission；scope=null')]),('[检查功能操作]',[
+ F('alt',('[员工／任职／权限无效]',[R('center','business','hasPermission=false')]),('[对象有效]',[
+ F('alt',('[检查 SYSTEM_ACCESS]',[S('center','直接判断该公司、系统进入来源'),R('center','business','返回 hasPermission')]),('[检查功能操作]',[
  S('center','先检查同公司、同系统进入资格，再检查操作有效来源'),
- F('alt',('[缺少进入资格或操作来源]',[R('center','business','hasPermission=false，scope=null')]),('[均满足]',[S('center','只合并该操作范围：SELF＋ALL＝ALL'),R('center','business','hasPermission=true，scope=SELF 或 ALL')]))
+ F('alt',('[缺少进入资格或操作来源]',[R('center','business','hasPermission=false')]),('[均满足]',[S('center','检查是否存在该操作的有效授权来源'),R('center','business','hasPermission=true')]))
  ]))
  ]))
- ])),S('business','按结果拦截；实施公司隔离、本人判断及自身业务规则')],['权限中心不读取具体业务记录，不判断某一条记录的归属。SYSTEM_ACCESS 的 null 不是 ALL。','认证／服务故障与正常无权限分开；不能故障默认放行。'])
+ ])),S('business','按结果拦截对应功能；执行自身业务校验')],['权限中心只返回有无功能权限，不读取业务记录，不返回数据范围。','认证／服务故障与正常无权限分开；不能故障默认放行。'])
 
 case(7,[('admin','权限中心总管理员'),('center','权限中心')],[
  M('admin','center','读取公司配置（公司标识）'),S('center','校验总管理员资格，读取名单、共同系统范围及版本'),
@@ -190,7 +190,7 @@ case(11,[('oa','外部 OA 系统'),('center','权限中心')],[
 
 case(11,[('worker','自动执行器\n（权限中心内部）'),('center','权限中心执行处理')],[
  M('worker','center','处理已批准／可重试方案（申请编号）'),S('center','读取固定申请及提交时原资格来源'),
- S('center','复核对应范围、目标条件、支持范围、角色／授权版本'),
+ S('center','复核对应范围、目标条件、功能归属、角色／授权版本'),
  F('alt',('[实际条件或版本已不合法]',[S('center','标记申请失效，保留原因，整批不执行'),R('center','worker','返回已失效；需新申请，不能强行重试')]),('[全部合法]',[
  S('center','在受并发控制的本地事务中执行 UC-02／03／04 全部变更'),
  S('center','同事务保存目标版本、执行状态及成功审计'),

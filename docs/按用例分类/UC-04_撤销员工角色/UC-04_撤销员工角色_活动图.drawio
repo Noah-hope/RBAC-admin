@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
 <mxfile host="app.diagrams.net" agent="official drawio skill XML activity workflow" modified="2026-10-15T00:00:00.000Z">
   <diagram id="uc-04-activity" name="UC-04 撤销员工角色">
     <mxGraphModel page="1" pageWidth="3000" pageHeight="4809" grid="1" gridSize="10">
@@ -202,7 +203,7 @@
         <mxCell id="end-inner" value="" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#23384f;strokeColor=#23384f;">
           <mxGeometry as="geometry" x="768.0" y="3894.0" width="14" height="14" />
         </mxCell>
-        <mxCell id="note0" value="撤销边界&lt;br&gt;不删除角色、不修改角色权限、不停用员工&lt;br&gt;不影响其他员工或其他角色的重合权限&lt;br&gt;撤销 ALL 来源后仍有 SELF 则缩小为 SELF" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note0" value="撤销边界&lt;br&gt;不删除角色、不修改角色权限、不停用员工&lt;br&gt;不影响其他员工或其他角色的重合权限&lt;br&gt;相同操作仍有有效来源则继续保留" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="4164.0" width="2920" height="185" />
         </mxCell>
         <mxCell id="note1" value="历史与重新授予&lt;br&gt;员工已调离／停用不阻止管理本公司历史&lt;br&gt;已失效关系无需 OA 才能失去权限&lt;br&gt;旧撤销审批不能误撤后来重新授予的新关系" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">

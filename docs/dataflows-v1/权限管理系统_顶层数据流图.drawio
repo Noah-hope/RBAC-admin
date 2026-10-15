@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
 <mxfile host="app.diagrams.net" agent="official drawio skill XML workflow">
   <diagram id="dfd-context" name="顶层数据流图（系统上下文）">
     <mxGraphModel page="1" pageWidth="2300" pageHeight="1830" grid="1" gridSize="10" adaptiveColors="auto">
@@ -55,7 +56,7 @@
             <mxPoint as="offset" x="0" y="0" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="F10" source="center" target="business" value="F10 系统进入资格、可见菜单&lt;br&gt;允许操作及范围／单项校验结果&lt;br&gt;调用或服务错误信息" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=block;endFill=1;endSize=10;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=19;fontColor=#243a52;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.9571428571428572;entryX=0.0;entryY=0.8333333333333334;exitPerimeter=0;entryPerimeter=0;">
+        <mxCell id="F10" source="center" target="business" value="F10 系统进入资格、可见菜单&lt;br&gt;允许功能操作／单项校验结果&lt;br&gt;调用或服务错误信息" edge="1" parent="1" style="html=1;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;endArrow=block;endFill=1;endSize=10;strokeColor=#4d6783;strokeWidth=2;fontFamily=Microsoft YaHei;fontSize=19;fontColor=#243a52;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.9571428571428572;entryX=0.0;entryY=0.8333333333333334;exitPerimeter=0;entryPerimeter=0;">
           <mxGeometry as="geometry" relative="1">
             <mxPoint as="offset" x="0" y="0" />
           </mxGeometry>
@@ -84,7 +85,7 @@
         <mxCell id="note1" value="一期外部对接&lt;br&gt;HR 以文件／模拟数据提供资料，管理员上传确认。&lt;br&gt;OA 模拟外部审批；结果接收不等于权限已生效。&lt;br&gt;业务系统使用简单、真实的 HTTP 调用演示。" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=23;fontColor=#243a52;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;fontSize=20;align=left;spacing=14;">
           <mxGeometry as="geometry" x="790" y="1580" width="710" height="175" />
         </mxCell>
-        <mxCell id="note2" value="边界与有效权限&lt;br&gt;普通员工不直接操作权限管理后台。&lt;br&gt;公司数据隔离、SELF 过滤由业务系统实施。&lt;br&gt;没有权限与调用失败／服务故障分别返回。" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=23;fontColor=#243a52;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;fontSize=20;align=left;spacing=14;">
+        <mxCell id="note2" value="边界与有效权限&lt;br&gt;普通员工不直接操作权限管理后台。&lt;br&gt;权限中心只管理功能权限，不设计数据权限。&lt;br&gt;没有权限与调用失败／服务故障分别返回。" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=23;fontColor=#243a52;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;fontSize=20;align=left;spacing=14;">
           <mxGeometry as="geometry" x="1535" y="1580" width="710" height="175" />
         </mxCell>
       </root>

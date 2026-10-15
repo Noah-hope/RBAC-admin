@@ -11,7 +11,7 @@
 <polyline points="147.0,520.0 355.0,579.0" fill="none" stroke="light-dark(#64748B,#FF0000)" stroke-width="1.4"/>
 <polyline points="950.0,510.0 750.0,461.0" fill="none" stroke="#64748b" stroke-width="1.4"/>
 <text x="47.0" y="47.0" font-size="25" text-anchor="start">03 员工角色分配与撤销</text>
-<text x="47.0" y="90.0" font-size="15" text-anchor="start">第一期 RBAC0 · 2026-10-13 · 最终用例需求基线</text>
+<text x="47.0" y="90.0" font-size="15" text-anchor="start">第一期 RBAC0 · 2026-10-15 · 最终用例需求基线</text>
 <ellipse cx="552.5" cy="225.0" rx="197.5" ry="38.0" fill="#eef5ff" stroke="#32649a" stroke-width="2"/>
 <text x="552.5" y="219.0" font-size="18" text-anchor="middle">UC-03</text><text x="552.5" y="243.0" font-size="18" text-anchor="middle">为员工分配角色</text>
 <ellipse cx="552.5" cy="343.0" rx="197.5" ry="38.0" fill="#eef5ff" stroke="#32649a" stroke-width="2"/>

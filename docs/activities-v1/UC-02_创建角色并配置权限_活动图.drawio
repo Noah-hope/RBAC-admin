@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
 <mxfile host="app.diagrams.net" agent="official drawio skill XML activity workflow" modified="2026-10-15T00:00:00.000Z">
   <diagram id="uc-02-activity" name="UC-02 创建角色并配置权限">
     <mxGraphModel page="1" pageWidth="3000" pageHeight="5027" grid="1" gridSize="10">
@@ -130,10 +131,10 @@
         <mxCell id="draft" value="读取已有角色；新角色校验编码唯一&lt;br&gt;保存不可分配草稿及创建审计" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
           <mxGeometry as="geometry" x="615.0" y="955.0" width="320" height="82" />
         </mxCell>
-        <mxCell id="edit" value="配置系统进入权限、操作及合法范围&lt;br&gt;可增删权限，填写原因" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+        <mxCell id="edit" value="配置系统进入权限及功能操作&lt;br&gt;可增删权限，填写原因" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
           <mxGeometry as="geometry" x="615.0" y="1147.0" width="320" height="82" />
         </mxCell>
-        <mxCell id="valid" value="归属、支持范围、非空配置及版本合法？" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+        <mxCell id="valid" value="归属、权限状态、非空配置及版本合法？" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
           <mxGeometry as="geometry" x="630.0" y="1339.0" width="290" height="110" />
         </mxCell>
         <mxCell id="valid-alt-0" value="根据规则错误或版本冲突提示&lt;br&gt;重新读取并修正配置" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#fff8e8;strokeColor=#bc9036;spacing=8;">
@@ -208,7 +209,7 @@
         <mxCell id="note1" value="草稿与当前配置&lt;br&gt;新角色草稿不可分配；允许仅保存草稿&lt;br&gt;未提交的新角色草稿可按规则删除&lt;br&gt;已有角色修改待审批时旧配置继续有效&lt;br&gt;一个角色仅一份未结束配置方案" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="4382.0" width="2920" height="185" />
         </mxCell>
-        <mxCell id="note2" value="权限范围&lt;br&gt;功能操作只能选择目录支持的 SELF／ALL&lt;br&gt;SYSTEM_ACCESS 的 scope=null&lt;br&gt;角色可只含进入权限或只含功能权限&lt;br&gt;正式配置不得为空" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note2" value="功能权限&lt;br&gt;目录登记查看、编辑等独立操作&lt;br&gt;角色仅选择是否授予，不配置数据范围&lt;br&gt;角色可只含进入权限或只含功能权限&lt;br&gt;正式配置不得为空" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="4582.0" width="2920" height="185" />
         </mxCell>
         <mxCell id="note3" value="OA 与执行&lt;br&gt;驳回后复制新方案修改并重新审批&lt;br&gt;批准不等于已执行，失败显示待恢复&lt;br&gt;原申请人离任不单独阻止合法方案执行&lt;br&gt;本平台不实现 OA 内部审批流程" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">

@@ -113,7 +113,7 @@
         <mxCell id="r20c0" value="其他：仅本平台账号，不负责外部系统登录；无自由注册，不经 OA。配套：总管理员为有效员工创建唯一账号及临时密码，再由 UC-07 任命；可重置专员密码并使旧登录失效。账号创建／密码重置不自动授予管理或业务权限。员工停用使任命失效；恢复后须重新任命，旧登录不能恢复资格。服务故障不作为密码错误。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="910" width="1044" height="94" />
         </mxCell>
-        <mxCell id="footer" value="UC-09 · 课程简表 V1.1 · 2026-10-13 · 详细规则见 usecases-v1 对应文档" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=13;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=none;fontStyle=0;" vertex="1" parent="1">
+        <mxCell id="footer" value="UC-09 · 课程简表 V1.1 · 2026-10-15 · 详细规则见 usecases-v1 对应文档" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=13;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=none;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="1011" width="1044" height="30" />
         </mxCell>
       </root>

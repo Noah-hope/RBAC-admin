@@ -1,12 +1,58 @@
-"""Refresh SVG previews from existing drawio without modifying its layout or XML."""
+"""Refresh SVG/PNG auxiliary previews from current drawio without changing its layout."""
 from pathlib import Path
 from html import escape
 import json
 import sys
+import re
+from PIL import Image, ImageDraw, ImageFont
 sys.argv.append("--preserve-layout") # Render current file only; no regeneration.
 import xml.etree.ElementTree as E
 
 OUT = Path(__file__).resolve().parent
+
+def render_png(svg_text, output):
+    """Render the simple SVG primitives emitted here; this is not a Desktop export."""
+    svg=E.fromstring(svg_text)
+    width,height=int(svg.get('width')),int(svg.get('height'))
+    im=Image.new('RGB',(width,height),'white');draw=ImageDraw.Draw(im)
+    def paint(element, inherited=None):
+        style=dict(inherited or {});style.update(element.attrib)
+        tag=element.tag.rsplit('}',1)[-1]
+        number=lambda key,default=0: float(style.get(key,default))
+        def color(key):
+            value=style.get(key,'none')
+            if value.startswith('light-dark('):value=value[11:].split(',',1)[0].strip()
+            return None if value=='none' else value
+        fill,stroke=color('fill'),color('stroke');line_width=max(1,round(number('stroke-width',1)))
+        if tag=='rect':
+            x,y=number('x'),number('y')
+            w=width if style['width']=='100%' else number('width')
+            h=height if style['height']=='100%' else number('height')
+            draw.rectangle((x,y,x+w,y+h),fill=fill,outline=stroke,width=line_width)
+        elif tag in ('ellipse','circle'):
+            x,y=number('cx'),number('cy');rx=number('r') if tag=='circle' else number('rx');ry=number('r') if tag=='circle' else number('ry')
+            draw.ellipse((x-rx,y-ry,x+rx,y+ry),fill=fill,outline=stroke,width=line_width)
+        elif tag=='polyline':
+            points=[tuple(map(float,p.split(','))) for p in style['points'].split()]
+            draw.line(points,fill=stroke,width=line_width)
+        elif tag=='path':
+            tokens=iter(re.findall(r'[MLHV]|-?\d+(?:\.\d+)?',style['d']))
+            x=y=0
+            for command in tokens:
+                if command in ('M','L'):
+                    target=(float(next(tokens)),float(next(tokens)))
+                elif command=='H':target=(float(next(tokens)),y)
+                elif command=='V':target=(x,float(next(tokens)))
+                else:raise ValueError(('Unsupported preview path',command))
+                if command!='M':draw.line([(x,y),target],fill=stroke,width=line_width)
+                x,y=target
+        elif tag=='text':
+            font=ImageFont.truetype('C:/Windows/Fonts/msyh.ttc',round(number('font-size',18)))
+            anchor={'middle':'ms','end':'rs'}.get(style.get('text-anchor'),'ls')
+            draw.text((number('x'),number('y')),element.text or '',font=font,fill=fill or '#17324d',anchor=anchor)
+        for child in element:paint(child,style)
+    paint(svg)
+    im.save(output)
 CASES = {
     'UC-01': '维护业务系统与权限目录', 'UC-02': '创建角色并配置权限',
     'UC-03': '为员工分配角色', 'UC-04': '撤销员工角色',
@@ -53,7 +99,7 @@ make_page('01 系统总体用例图','01-overview',list(CASES),[
 make_page('02 系统目录与角色配置','02-role-config',['UC-01','UC-02','UC-07'],[
     ('group','集团权限管理员',95,305)],
     [('group',c) for c in ['UC-01','UC-02','UC-07']],
-    ['角色限定一个业务系统；配置功能操作及 ALL／SELF；查看和编辑本人均为 SELF。',
+    ['角色限定一个业务系统；配置是否授予查看、编辑等独立功能操作。',
      '本页是总体图的局部视图，不表示 UC-01 必须在每次 UC-02 中执行。']),
 make_page('03 员工角色分配与撤销','03-assignment',['UC-03','UC-04','UC-11','UC-08'],[
     ('group','集团权限管理员',95,210),('dept','部门权限管理员',95,475),
@@ -66,7 +112,7 @@ make_page('04 业务系统权限查询与校验','04-runtime',['UC-05','UC-06'],
     ('biz','业务系统\n（可信服务端）',95,275)],
     [('biz','UC-05'),('biz','UC-06')],
     ['业务系统认证员工并传递统一标识；权限中心认证调用方并限定其目标系统。',
-     'SELF 由业务后端核对对象归属或过滤列表；查询菜单不能代替操作校验。']),
+     '本系统只管理功能权限；查询菜单不能代替实际操作的功能权限校验。']),
 ]
 
 # Update only connections in an already edited file; preserve every vertex and page.
@@ -150,6 +196,7 @@ for page in pages:
             svg.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="#fff8e8" stroke="#d7b76a"/>');svg.append(text(n,15,anchor='start'))
     svg.append('</g></svg>')
     (OUT/(page['slug']+'.svg')).write_text('\n'.join(svg),encoding='utf-8')
+    render_png('\n'.join(svg),OUT/(page['slug']+'.png'))
 E.indent(mx,space='  ')
 dest=OUT/'权限管理系统_用例图.drawio'
 if existing_tree is not None:
