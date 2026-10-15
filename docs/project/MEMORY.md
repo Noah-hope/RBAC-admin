@@ -44,6 +44,8 @@
 
 ## 下一步
 
+工具准备（2026-10-15）：按用户要求，已通过 `skill-installer` 安装 Anthropic 官方 [`frontend-design`](https://github.com/anthropics/skills/tree/main/skills/frontend-design)，位置 `D:\software\codex-data\skills\frontend-design`；已核验 `SKILL.md` 的名称及 `LICENSE.txt` 存在。下一轮可用，供界面设计使用；项目 Vue 3 + TypeScript + Tailwind CSS 约束保持有效，原型尚未开始。
+
 1. 进入原型阶段：页面关联 UC，覆盖部门/系统范围、员工授权来源、三类关权操作、后台账号与 OA 投递/审批/执行状态，模拟数据明确标注。
 2. 清单“全部”、空白 I340、“系统管理后台”和本人限定来源差异仍需映射核对；不猜测授权，不阻止通用原型设计。
 3. API 阶段前接入 Apifox MCP、选定项目及契约同步方式；当前尚无可调用连接。
