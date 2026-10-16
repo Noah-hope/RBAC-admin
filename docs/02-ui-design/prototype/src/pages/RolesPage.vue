@@ -87,7 +87,6 @@ const occupied = computed(() =>
 );
 const create = ref(false);
 const name = ref('');
-const code = ref('');
 const dept = ref('team-one');
 const newSystem = ref('oa');
 function open(r: Role) {
@@ -184,27 +183,23 @@ function createRole() {
   }
   formErrors.value = {
     name: !name.value.trim() ? '请填写角色名称' : '',
-    code: !code.value.trim()
-      ? '请填写唯一编码'
-      : data.roles.some((r) => r.code === code.value.trim())
-        ? '角色编码已存在'
-        : '',
   };
   if (Object.values(formErrors.value).some(Boolean)) {
-    reportError('请填写角色名称与唯一编码');
-    return;
-  }
-  if (data.roles.some((r) => r.code === code.value.trim())) {
-    reportError('角色编码已存在，请使用其他编码');
+    reportError('请填写角色名称');
     return;
   }
   if (!dept.value && !isGlobal.value) {
     toast('只有总管理员可新建公司级共享角色');
     return;
   }
+  // Local mock only; the real API will allocate the stable code on the server.
+  let generatedCode: string;
+  do {
+    generatedCode = `ROLE_${String(++data.serial).padStart(6, '0')}`;
+  } while (data.roles.some((r) => r.code === generatedCode));
   const r: Role = {
-    id: `R-${++data.serial}`,
-    code: code.value.trim(),
+    id: `R-${data.serial}`,
+    code: generatedCode,
     name: name.value.trim(),
     company: companyId.value,
     dept: dept.value || undefined,
@@ -249,7 +244,7 @@ function permissionId(feature: string, action: string) {
       @click="
         create = true;
         name = '';
-        code = '';
+        formErrors = {};
         dept = allowedDepts[0] ?? '';
         newSystem = allowedSystems[0] ?? '';
       "
@@ -355,6 +350,10 @@ function permissionId(feature: string, action: string) {
     ><template v-if="detail"
       ><div class="stack">
         <p v-if="error" class="field-error" role="alert">{{ error }}</p>
+        <label class="field"
+          ><span>角色编码</span><input :value="detail.code" readonly />
+          <small>编码创建后保持不变，不随角色名称或权限配置变化。</small></label
+        >
         <div class="info-box" v-if="!canEditRole(detail)">
           <UiIcon name="Lock" />
           <p>
@@ -510,14 +509,9 @@ function permissionId(feature: string, action: string) {
           placeholder="例如：工程一组资料归档员"
         /><small id="role-name-error" class="field-error">{{ formErrors.name }}</small></label
       ><label class="field"
-        ><span>唯一编码 <i>*</i></span
-        ><input
-          v-model="code"
-          :aria-invalid="Boolean(formErrors.code)"
-          aria-describedby="role-code-error"
-          placeholder="例如：ENG1_ARCHIVE"
-        /><small id="role-code-error" class="field-error">{{ formErrors.code }}</small
-        ><small>编码创建后保持稳定，不随角色更名变化。</small></label
+        ><span>角色编码</span
+        ><input value="保存后自动生成" readonly aria-describedby="role-code-help" />
+        <small id="role-code-help">无需手动填写，创建后保持不变。</small></label
       >
       <div class="form-grid">
         <label class="field"

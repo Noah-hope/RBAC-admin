@@ -215,10 +215,10 @@ test('角色草稿独立配置操作，通过模拟批准与执行后激活', as
   await page.getByRole('button', { name: '新建角色', exact: true }).click();
   const draft = page.getByRole('dialog', { name: '新建角色草稿', exact: true });
   await draft.getByLabel('角色名称').fill('资料审阅员');
-  await draft.getByLabel('唯一编码').fill('ENG1_REVIEW_DEMO');
   await draft.getByLabel('角色归属').selectOption('team-one');
   await draft.getByRole('button', { name: '保存角色草稿' }).click();
   const config = page.getByRole('dialog', { name: '资料审阅员', exact: true });
+  const roleCode = await config.getByLabel('角色编码').inputValue();
   await config.getByRole('checkbox', { name: '系统进入权限', exact: true }).check();
   await config.getByRole('checkbox', { name: '公文管理查看', exact: true }).check();
   await expect(
@@ -228,7 +228,7 @@ test('角色草稿独立配置操作，通过模拟批准与执行后激活', as
   await config.getByRole('button', { name: '预览变更' }).click();
   await config.getByRole('button', { name: '保存并等待 OA 投递' }).click();
   await expect(
-    page.getByRole('row').filter({ hasText: 'ENG1_REVIEW_DEMO' }).getByText('待配置'),
+    page.getByRole('row').filter({ hasText: roleCode }).getByText('待配置'),
   ).toBeVisible();
   await navigate(page, '变更申请');
   await page.getByRole('button', { name: '资料审阅员 · 调整配置', exact: true }).click();
@@ -240,7 +240,7 @@ test('角色草稿独立配置操作，通过模拟批准与执行后激活', as
   await request.getByRole('button', { name: '关闭对话框' }).click();
   await navigate(page, '角色权限');
   await expect(
-    page.getByRole('row').filter({ hasText: 'ENG1_REVIEW_DEMO' }).getByText('已生效'),
+    page.getByRole('row').filter({ hasText: roleCode }).getByText('已生效'),
   ).toBeVisible();
 });
 
