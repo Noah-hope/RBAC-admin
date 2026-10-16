@@ -7,6 +7,20 @@ import { reportError } from '../store';
 import UiDialog from '../components/UiDialog.vue';
 import StatusBadge from '../components/StatusBadge.vue';
 const selected = ref('oa');
+const collapsedFeatures = ref<string[]>([]);
+const featureKey = (feature: string) => `${selected.value}/${feature}`;
+function toggleFeature(feature: string) {
+  const key = featureKey(feature);
+  collapsedFeatures.value = collapsedFeatures.value.includes(key)
+    ? collapsedFeatures.value.filter((x) => x !== key)
+    : [...collapsedFeatures.value, key];
+}
+function setAllExpanded(expanded: boolean) {
+  const keys = features.value.map(featureKey);
+  collapsedFeatures.value = expanded
+    ? collapsedFeatures.value.filter((key) => !keys.includes(key))
+    : [...new Set([...collapsedFeatures.value, ...keys])];
+}
 const system = computed(() => data.systems.find((s) => s.id === selected.value)!);
 const features = computed(() => [
   ...new Set(
@@ -444,8 +458,14 @@ function toggle() {
             }}
           </button>
         </div>
-        <div class="flex items-center justify-between mb-4">
+        <div class="directory-controls mb-4">
           <h3>功能目录</h3>
+          <button class="text-button" @click="setAllExpanded(true)" aria-label="展开全部操作">
+            展开全部
+          </button>
+          <button class="text-button" @click="setAllExpanded(false)" aria-label="收起全部操作">
+            收起全部
+          </button>
           <button class="text-button" @click="open('feature')">
             <UiIcon name="Plus" :size="16" />新增功能
           </button>
@@ -470,16 +490,30 @@ function toggle() {
             </button>
           </div>
         </div>
-        <div v-for="f in features" :key="f" class="feature-card">
+        <div v-for="(f, index) in features" :key="f" class="feature-card">
           <div class="feature-heading">
-            <UiIcon name="Folder" :size="19" /><strong>{{ f }}</strong
+            <button
+              class="text-button"
+              :aria-label="`${collapsedFeatures.includes(featureKey(f)) ? '展开' : '收起'}操作 ${f}`"
+              :aria-expanded="!collapsedFeatures.includes(featureKey(f))"
+              :aria-controls="`${selected}-operations-${index}`"
+              @click="toggleFeature(f)"
+            >
+              <UiIcon
+                :name="collapsedFeatures.includes(featureKey(f)) ? 'ChevronRight' : 'ChevronDown'"
+                :size="18"
+              />{{ collapsedFeatures.includes(featureKey(f)) ? '展开操作' : '收起操作' }}
+            </button>
+            <strong>{{ f }}</strong
             ><button class="text-button" :aria-label="`配置菜单 ${f}`" @click="editFeature(f)">
               <UiIcon name="Pencil" :size="18" />配置目录</button
             ><button class="text-button" :aria-label="`登记操作 ${f}`" @click="openPermission(f)">
               登记操作</button
-            ><span class="small muted"
-              >{{ data.directoryMeta[`${selected}/${f}`]?.parent || '根目录' }} ·
-              菜单单独绑定查看/进入权限</span
+            ><span class="small muted feature-summary"
+              >{{
+                data.permissions.filter((p) => p.system === selected && p.feature === f).length
+              }}
+              项操作 · 上级：{{ data.directoryMeta[`${selected}/${f}`]?.parent || '根目录' }}</span
             ><button
               class="text-button ml-auto"
               @click="
@@ -494,7 +528,11 @@ function toggle() {
               {{ data.featureStates[`${selected}/${f}`] === false ? '启用功能' : '停用功能' }}
             </button>
           </div>
-          <div class="feature-operations">
+          <div
+            v-if="!collapsedFeatures.includes(featureKey(f))"
+            :id="`${selected}-operations-${index}`"
+            class="feature-operations"
+          >
             <div
               v-for="p in data.permissions.filter((p) => p.system === selected && p.feature === f)"
               :key="p.id"
@@ -544,20 +582,36 @@ function toggle() {
         </select></label
       >
       <label class="field"
-        ><span>名称 <i>*</i></span
+        ><span
+          >{{ modal === 'permission' ? '所属功能' : '名称' }}
+          <i v-if="modal !== 'permission'">*</i></span
         ><input
           v-model="name"
-          :disabled="modal === 'permission'"
+          :readonly="modal === 'permission'"
           :placeholder="modal === 'system' ? '例如：档案管理系统' : '例如：项目归档'" /></label
       ><label class="field"
-        ><span>稳定编码 <i>*</i></span
-        ><input v-model="code" :disabled="modal === 'permission'" placeholder="例如：archive"
+        ><span
+          >{{ modal === 'permission' ? '功能编码' : '稳定编码' }}
+          <i v-if="modal !== 'permission'">*</i></span
+        ><input v-model="code" :readonly="modal === 'permission'" placeholder="例如：archive"
       /></label>
       <div
         v-if="(modal === 'feature' && nodeKind !== 'navigation') || modal === 'permission'"
         class="field"
       >
         <span>登记独立操作</span>
+        <small v-if="modal === 'permission'"
+          >为当前功能补充尚未登记的操作。名称和编码只读；修改功能名称请使用“配置目录”。</small
+        >
+        <div v-if="modal === 'permission' && !availableActions.length" class="info-box">
+          <UiIcon name="CircleCheck" />
+          <div>
+            <strong>暂无可新增操作</strong>
+            <p>
+              本原型支持的查看、新增、编辑、审批、导出均已登记。已有操作可在列表中启停；员工授权请到“角色权限”和“员工授权”办理。
+            </p>
+          </div>
+        </div>
         <div class="flex gap-4 flex-wrap">
           <label v-for="a in availableActions" :key="a" class="check-line"
             ><input v-model="actionSet" type="checkbox" :value="a" />{{ a }}</label
@@ -577,7 +631,13 @@ function toggle() {
     </div>
     <template #footer
       ><button class="button" @click="modal = ''">取消</button
-      ><button class="button primary" @click="save">确认登记</button></template
+      ><button
+        class="button primary"
+        :disabled="modal === 'permission' && (!availableActions.length || !actionSet.length)"
+        @click="save"
+      >
+        确认登记
+      </button></template
     ></UiDialog
   >
   <UiDialog
@@ -604,6 +664,7 @@ function toggle() {
   <UiDialog
     :open="modal === 'edit-system' || modal === 'edit-feature'"
     :title="modal === 'edit-system' ? '编辑系统资料' : '配置功能目录'"
+    :subtitle="modal === 'edit-feature' ? '设置外部业务系统菜单的位置与显示条件' : undefined"
     @close="modal = ''"
     ><div class="stack">
       <p v-if="formError" class="field-error" role="alert">{{ formError }}</p>
@@ -615,15 +676,21 @@ function toggle() {
       ><template v-else
         ><label class="field"
           ><span>父级目录</span
-          ><select v-model="parent">
+          ><select v-model="parent" aria-label="父级目录" aria-describedby="directory-parent-help">
             <option value="">根目录</option>
-            <option v-for="n in parentOptions" :key="n">{{ n }}</option>
-          </select></label
+            <option v-for="n in parentOptions" :key="n">{{ n }}</option></select
+          ><small id="directory-parent-help"
+            >功能在外部业务系统菜单中的上级菜单或分组；根目录表示直接放在系统菜单下，与公司、部门层级无关。</small
+          ></label
         ><label class="field"
           ><span>显示排序</span><input type="number" v-model.number="sortOrder" /></label
         ><label v-if="!data.directoryMeta[`${selected}/${featureTarget}`]?.navigation" class="field"
           ><span>菜单可见权限</span
-          ><select v-model="menuPermission">
+          ><select
+            v-model="menuPermission"
+            aria-label="菜单可见权限"
+            aria-describedby="directory-menu-help"
+          >
             <option value="">未绑定（仅停用状态可保存）</option>
             <option
               v-for="p in data.permissions.filter(
@@ -637,8 +704,10 @@ function toggle() {
               :value="p.id"
             >
               {{ p.action }} / {{ p.id }}
-            </option>
-          </select></label
+            </option></select
+          ><small id="directory-menu-help"
+            >员工经角色获得所选查看/进入权限，且具备系统进入权限时，业务系统才显示此菜单。编辑权限不会自动带来查看权限。</small
+          ></label
         >
         <p class="readonly-note">
           仅本功能的有效查看/进入权限可作为条件；不会因此授予角色权限。编码及授权关联保留。

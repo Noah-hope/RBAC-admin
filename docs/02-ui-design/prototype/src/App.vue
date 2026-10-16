@@ -58,7 +58,7 @@ const views = {
 };
 const current = computed(() => navigation.find((n) => n.id === page.value)!);
 const mobileNav = ref(false);
-const railCollapsed = ref(false);
+const railCollapsed = ref(window.matchMedia('(min-width: 840px) and (max-width: 1199px)').matches);
 const help = ref(false);
 const terminology = ref(false);
 const accountMenu = ref(false);
@@ -238,7 +238,7 @@ function openPassword() {
           ><small>{{ companyName }}</small>
         </div>
       </div>
-      <nav aria-label="主导航">
+      <nav id="main-navigation" aria-label="主导航">
         <template
           v-for="group in ['授权管理', '操作记录', ...(isGlobal ? ['平台管理'] : [])]"
           :key="group"
@@ -297,12 +297,20 @@ function openPassword() {
     </aside>
     <div class="workspace">
       <header class="topbar">
-        <button class="icon-button mobile-only" aria-label="打开导航" @click="mobileNav = true">
+        <button
+          class="icon-button mobile-only"
+          aria-label="打开导航"
+          aria-controls="main-navigation"
+          :aria-expanded="mobileNav"
+          @click="mobileNav = true"
+        >
           <UiIcon name="Menu" />
         </button>
         <button
           class="icon-button desktop-nav-toggle"
           :aria-label="railCollapsed ? '展开侧栏' : '收起侧栏'"
+          aria-controls="main-navigation"
+          :aria-expanded="!railCollapsed"
           @click="railCollapsed = !railCollapsed"
         >
           <UiIcon name="Menu" />

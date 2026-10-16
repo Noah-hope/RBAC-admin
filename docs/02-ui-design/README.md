@@ -8,6 +8,8 @@
 
 技术：Vue 3 + TypeScript + Tailwind CSS，Vite 构建。未增加 UI 框架；旧 `@lucide/vue` 包已移除，Material Symbols 采用本地 SVG。源码与锁文件位于 [prototype](prototype/)，资源来源及许可证见[本地资源说明](prototype/public/assets/README.md)。最新设计依据见 [MATERIAL3-PLAN.md](MATERIAL3-PLAN.md)，早期演进记录见 [DESIGN.md](DESIGN.md)，验证见 [VALIDATION.md](VALIDATION.md)。
 
+840–1199px 首次打开默认显示图标栏，顶部“展开侧栏”可切换文字导航；小于 840px 继续使用抽屉导航。“系统与权限目录”的功能卡片支持单项及全部展开/收起操作，不改变权限启停状态。配置弹窗解释外部业务菜单的父级与显示条件；登记操作时所属功能/编码只读，只能补充尚未登记的候选操作，已全部登记时显示空态并禁止空提交。原型目前提供五类常见操作，具体业务操作集合仍以需求及原始清单核对为准。
+
 ## 启动
 
 在 PowerShell 中运行：

@@ -338,6 +338,22 @@ td strong {
   font-size: 14px;
   color: var(--ink);
 }
+.directory-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+.directory-controls h3 {
+  margin-right: auto;
+}
+.feature-heading {
+  flex-wrap: wrap;
+}
+.feature-heading .feature-summary {
+  flex-basis: 100%;
+  order: 1;
+}
 .system-access-row {
   background: var(--md-sys-color-surface-container-low);
   border: none;
@@ -483,40 +499,17 @@ button:disabled {
 }
 @media (min-width: 840px) and (max-width: 1199px) {
   .sidebar {
-    width: 80px;
+    width: 256px;
     transform: none;
   }
   .workspace {
-    margin-left: 80px;
+    margin-left: 256px;
   }
-  .sidebar .brand {
-    padding: 20px;
-  }
-  .sidebar .brand > div,
-  .sidebar .workspace-name,
-  .sidebar .nav-group-label,
-  .sidebar .nav-item > span:not(.ui-icon),
-  .sidebar-support > span:not(.ui-icon),
-  .sidebar .sidebar-version {
+  .mobile-only {
     display: none;
   }
-  .sidebar .nav-item {
-    padding: 16px;
-    justify-content: center;
-  }
-  .sidebar-support {
-    padding: 12px;
-    justify-content: center;
-  }
-  .sidebar-support > .ui-icon:last-child {
-    display: none;
-  }
-  .sidebar-bottom {
-    padding: 12px;
-  }
-  .mobile-only,
   .desktop-nav-toggle {
-    display: none;
+    display: inline-flex;
   }
   .roster-layout {
     grid-template-columns: minmax(0, 1fr);
