@@ -71,7 +71,7 @@ rbac-admin/
     └── 05-detailed-design/
 ```
 
-界面阶段已有可运行交互原型，位于 `docs/02-ui-design/prototype/`，阶段评审有条件通过，API 设计可启动。API、数据库及详细设计当前尚未产出正式交付物，后续按阶段产生；3 项原型缺口跟踪至契约冻结前。目录约定及迁移说明见 [LAYOUT.md](docs/project/LAYOUT.md)。
+界面阶段已有可运行交互原型，位于 `docs/02-ui-design/prototype/`，可作为 API 设计输入。API、数据库及详细设计当前尚未产出正式交付物；按 D-029，3 项原型展示/演示补齐后续跟踪，不作为 API 启动或契约定稿前置，对应业务规则保留。目录约定及迁移说明见 [LAYOUT.md](docs/project/LAYOUT.md)。
 
 ## 规定的项目流程
 
