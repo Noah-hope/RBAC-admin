@@ -1,0 +1,350 @@
+[
+  {
+    "name": "明确单对授予",
+    "schema": "ChangeContent",
+    "value": {
+      "kind": "ROLE_GRANT",
+      "companyId": "company_demo_01",
+      "items": [
+        {
+          "employeeId": "emp_demo_01",
+          "roleId": "role_demo_01",
+          "sourceCompanyId": "company_demo_01",
+          "sourceDepartmentId": "dept_demo_a",
+          "expectedRoleConfigurationVersion": 3,
+          "expectedSourceEpoch": 2,
+          "expectedRelationVersion": 4,
+          "employmentIds": [
+            "employment_demo_01"
+          ]
+        }
+      ]
+    },
+    "valid": true
+  },
+  {
+    "name": "批量一般撤销两条",
+    "schema": "ChangeContent",
+    "value": {
+      "kind": "ROLE_REVOCATION",
+      "companyId": "company_demo_01",
+      "items": [
+        {
+          "grantId": "grant_demo_01",
+          "expectedRelationVersion": 5
+        },
+        {
+          "grantId": "grant_demo_02",
+          "expectedRelationVersion": 2
+        }
+      ]
+    },
+    "valid": true
+  },
+  {
+    "name": "配置含进入和查看",
+    "schema": "ChangeContent",
+    "value": {
+      "kind": "ROLE_CONFIGURATION",
+      "companyId": "company_demo_01",
+      "roleId": "role_demo_01",
+      "expectedConfigurationVersion": 3,
+      "permissionIds": [
+        "perm_demo_access",
+        "perm_demo_view"
+      ]
+    },
+    "valid": true
+  },
+  {
+    "name": "拒绝负周期",
+    "schema": "ChangeContent",
+    "value": {
+      "kind": "ROLE_GRANT",
+      "companyId": "company_demo_01",
+      "items": [
+        {
+          "employeeId": "emp_demo_01",
+          "roleId": "role_demo_01",
+          "sourceCompanyId": "company_demo_01",
+          "sourceDepartmentId": "dept_demo_a",
+          "expectedRoleConfigurationVersion": 3,
+          "expectedSourceEpoch": -1,
+          "expectedRelationVersion": 4,
+          "employmentIds": [
+            "employment_demo_01"
+          ]
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "name": "拒绝101条批次",
+    "schema": "ChangeContent",
+    "value": {
+      "kind": "ROLE_GRANT",
+      "companyId": "company_demo_01",
+      "items": [
+        {
+          "employeeId": "emp_demo_01",
+          "roleId": "role_demo_01",
+          "sourceCompanyId": "company_demo_01",
+          "sourceDepartmentId": "dept_demo_a",
+          "expectedRoleConfigurationVersion": 3,
+          "expectedSourceEpoch": 2,
+          "expectedRelationVersion": 4,
+          "employmentIds": [
+            "employment_demo_01"
+          ]
+        }
+      ]
+    },
+    "valid": false,
+    "expandItemsTo": 101
+  },
+  {
+    "name": "拒绝缺任职依据",
+    "schema": "ChangeContent",
+    "value": {
+      "kind": "ROLE_GRANT",
+      "companyId": "company_demo_01",
+      "items": [
+        {
+          "employeeId": "emp_demo_01",
+          "roleId": "role_demo_01",
+          "sourceCompanyId": "company_demo_01",
+          "sourceDepartmentId": "dept_demo_a",
+          "expectedRoleConfigurationVersion": 3,
+          "expectedSourceEpoch": 2,
+          "expectedRelationVersion": 4
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "name": "撤销不接受授予配置版本字段",
+    "schema": "ChangeContent",
+    "value": {
+      "kind": "ROLE_REVOCATION",
+      "companyId": "company_demo_01",
+      "items": [
+        {
+          "grantId": "grant_demo_01",
+          "expectedRelationVersion": 5,
+          "expectedRoleConfigurationVersion": 5
+        },
+        {
+          "grantId": "grant_demo_02",
+          "expectedRelationVersion": 2
+        }
+      ]
+    },
+    "valid": false
+  },
+  {
+    "name": "无进入资格返回空集合",
+    "schema": "AuthorizationResult",
+    "value": {
+      "employeeKey": "demo.employee",
+      "companyId": "company_demo_01",
+      "systemId": "system_demo_hr",
+      "systemCode": "hr",
+      "canAccessSystem": false,
+      "menus": [],
+      "operations": [],
+      "evaluatedAt": "2026-10-16T08:00:00Z",
+      "requestId": "demo-query-01"
+    },
+    "valid": true
+  },
+  {
+    "name": "未知编码无权限且类型null",
+    "schema": "CheckResult",
+    "value": {
+      "employeeKey": "demo.employee",
+      "companyId": "company_demo_01",
+      "systemId": "system_demo_hr",
+      "permissionCode": "employee:edit",
+      "permissionType": null,
+      "hasPermission": false,
+      "evaluatedAt": "2026-10-16T08:00:00Z",
+      "requestId": "demo-check-01"
+    },
+    "valid": true
+  },
+  {
+    "name": "拒绝中间结果",
+    "schema": "OaFinalResult",
+    "value": {
+      "eventId": "demo_01",
+      "requestId": "demo_01",
+      "oaApprovalId": "demo_01",
+      "submittedVersion": 0,
+      "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "decision": "APPROVED",
+      "isFinal": false,
+      "decidedAt": "2026-10-16T08:00:00Z",
+      "comment": "示例值"
+    },
+    "valid": false
+  },
+  {
+    "name": "一期无撤回结果",
+    "schema": "OaFinalResult",
+    "value": {
+      "eventId": "demo_01",
+      "requestId": "demo_01",
+      "oaApprovalId": "demo_01",
+      "submittedVersion": 0,
+      "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "decision": "WITHDRAWN",
+      "isFinal": true,
+      "decidedAt": "2026-10-16T08:00:00Z",
+      "comment": "示例值"
+    },
+    "valid": false
+  },
+  {
+    "name": "拒绝业务记录范围字段",
+    "schema": "AuthorizationInput",
+    "value": {
+      "employeeKey": "示例值",
+      "companyId": "demo_01",
+      "ownerId": "emp_demo_01"
+    },
+    "valid": false
+  },
+  {
+    "name": "公司无启停",
+    "schema": "Company",
+    "value": {
+      "id": "demo_01",
+      "code": "demo_01",
+      "name": "示例值",
+      "version": 0,
+      "enabled": true
+    },
+    "valid": false
+  },
+  {
+    "name": "部门无父级",
+    "schema": "Department",
+    "value": {
+      "id": "demo_01",
+      "companyId": "demo_01",
+      "code": "demo_01",
+      "name": "示例值",
+      "version": 0,
+      "parentId": "dept_other"
+    },
+    "valid": false
+  },
+  {
+    "name": "编辑须有版本",
+    "schema": "DraftEdit",
+    "value": {
+      "content": {
+        "kind": "ROLE_REVOCATION",
+        "companyId": "company_demo_01",
+        "items": [
+          {
+            "grantId": "grant_demo_01",
+            "expectedRelationVersion": 5
+          },
+          {
+            "grantId": "grant_demo_02",
+            "expectedRelationVersion": 2
+          }
+        ]
+      },
+      "reason": "职责调整，撤销指定两条来源。"
+    },
+    "valid": false
+  },
+  {
+    "name": "允许范围无人空系统",
+    "schema": "ScopeInput",
+    "value": {
+      "companyId": "demo_01",
+      "departmentId": "demo_01",
+      "systemIds": [],
+      "accountIds": [],
+      "reason": "示例值"
+    },
+    "valid": true
+  },
+  {
+    "name": "无关系来源0基线",
+    "schema": "SourceBaseline",
+    "value": {
+      "source": {
+        "employeeId": "demo_01",
+        "companyId": "demo_01",
+        "departmentId": "demo_01",
+        "systemId": "demo_01"
+      },
+      "sourceEpoch": 0,
+      "version": 0
+    },
+    "valid": true
+  },
+  {
+    "name": "提交和批准不等于执行",
+    "schema": "SubmissionResult",
+    "value": {
+      "outcome": "SUBMITTED",
+      "request": {
+        "id": "change_demo_01",
+        "content": {
+          "kind": "ROLE_GRANT",
+          "companyId": "company_demo_01",
+          "items": [
+            {
+              "employeeId": "emp_demo_01",
+              "roleId": "role_demo_01",
+              "sourceCompanyId": "company_demo_01",
+              "sourceDepartmentId": "dept_demo_a",
+              "expectedRoleConfigurationVersion": 3,
+              "expectedSourceEpoch": 2,
+              "expectedRelationVersion": 4,
+              "employmentIds": [
+                "employment_demo_01"
+              ]
+            }
+          ]
+        },
+        "reason": "新增兼岗授权，固定A部门来源。",
+        "draftVersion": 2,
+        "submittedVersion": 1,
+        "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "statusVersion": 2,
+        "state": "PENDING",
+        "deliveryStatus": "PENDING_SEND",
+        "approvalResult": "NONE",
+        "executionStatus": "NOT_STARTED",
+        "originalAuthority": {
+          "kind": "SCOPE",
+          "scopeId": "scope_demo_01",
+          "scopeVersion": 3,
+          "appointmentId": "appointment_demo_01",
+          "appointmentVersion": 1,
+          "companyId": "company_demo_01",
+          "departmentId": "dept_demo_a",
+          "systemIds": [
+            "system_demo_hr"
+          ]
+        },
+        "submittedByAccountId": "account_demo_01",
+        "oaApprovalId": null,
+        "retryable": false,
+        "failureCode": null,
+        "nextRetryAt": null,
+        "createdAt": "2026-10-16T08:00:00Z"
+      },
+      "noChangeItems": []
+    },
+    "valid": true
+  }
+]
