@@ -24,6 +24,7 @@
 - [项目共享记忆](docs/project/MEMORY.md)：当前阶段、事实、待办和交接入口。
 - [开发流程](docs/project/WORKFLOW.md)：五个阶段及 TDD 执行要求。
 - [决策记录](docs/project/DECISIONS.md)：用户已确定的约束与后续变更依据。
+- [统一术语表](docs/project/GLOSSARY.md)：团队及 agent 交流使用的名称、别称、定义和边界示例。
 - [团队文档总入口](docs/README.md)：共享记忆及五个阶段的资料导航。
 - [需求资料](docs/01-requirements/README.md)：正式需求分析及配套图。
 - [需求总览与统一规则](docs/01-requirements/usecases-v1/用例说明.md)：2026-10-15 功能权限修订，保留 UC-01～UC-11。

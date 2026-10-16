@@ -7,6 +7,7 @@
 - [当前状态与交接](project/MEMORY.md)：已完成事项、待办、验证结果及下一步。
 - [项目流程](project/WORKFLOW.md)：需求 → 界面 → API → 数据库 → 详细设计与实现。
 - [已确认决策](project/DECISIONS.md)：与建议、未决事项区分。
+- [统一术语表](project/GLOSSARY.md)：统一总管理员、权限管理员、业务角色、管理范围及授权状态等概念，团队和 agent 交流先查阅。
 - [目录约定](project/LAYOUT.md)：当前最小结构及资料迁移说明。
 - [项目技能](project/SKILLS.md)：仓库技能入口、来源、版本与核验方式。
 

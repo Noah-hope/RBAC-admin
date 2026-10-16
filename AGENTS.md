@@ -3,7 +3,8 @@
 ## 工作入口与共享记忆
 
 - 项目根目录为 `D:\NoahProject\rbac-admin`，后续项目工作在本仓库开展。
-- 开始工作先读本文件、`docs/project/MEMORY.md`、`docs/project/WORKFLOW.md`、`docs/project/DECISIONS.md`，涉及需求时再读 `docs/README.md` 及对应详细用例。
+- 开始工作先读本文件、`docs/project/MEMORY.md`、`docs/project/WORKFLOW.md`、`docs/project/DECISIONS.md`、`docs/project/GLOSSARY.md`，涉及需求时再读 `docs/README.md` 及对应详细用例。
+- 团队成员及 agent 的交流、文档和设计统一采用 `docs/project/GLOSSARY.md` 的术语；“部门管理员”对应“权限管理员”，“公司共享角色”对应“公司级共享角色”。首次使用别称注明统一名称，明确后台身份与业务角色、管理范围与授权来源、OA 批准与实际执行的区别。术语变化同步维护本表；业务含义变化先按需求变更流程确认，不以术语整理改写需求。
 - 项目团队共享记忆统一由 `docs/` 维护；状态、待办、决策与流程以 `docs/project/` 为准，各阶段交付归入对应编号目录。根目录 `AGENTS.md` 是协作入口，`README.md` 是项目导航，不另建第二份状态或任务记忆。
 - 使用 Git 管理共享记忆。完成一项工作时，同步更新当前阶段、已完成事项、待办、相关决策与验证结果，再将文档和对应改动纳入同一提交。
 - 记录可验证的事实；将未决问题、建议与已确认决策分开。不得把工具未连接、测试未运行或原型演示记成已完成实现。
