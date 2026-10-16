@@ -73,7 +73,8 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/LoginInput"
-              }
+              },
+              "examples": {}
             }
           },
           "required": true
@@ -159,11 +160,7 @@
             "description": "Unavailable；具体 code 及恢复见 CONVENTIONS.md。"
           }
         },
-        "security": [
-          {
-            "AdminJwt": []
-          }
-        ],
+        "security": [],
         "x-use-cases": [
           "UC-09"
         ],
@@ -18621,18 +18618,24 @@
             "maximum": 9007199254740991
           },
           "companyId": {
-            "type": "object",
-            "properties": {}
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
           },
           "departmentId": {
-            "type": "object",
-            "properties": {}
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$",
+            "minLength": 1,
+            "maxLength": 64
           },
           "systemIds": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {}
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
             },
             "uniqueItems": true
           }
@@ -23407,7 +23410,7 @@
       "BadRequest": {
         "description": "BadRequest；具体 code 及恢复见 CONVENTIONS.md。",
         "content": {
-          "application/json": {
+          "application/problem+json": {
             "schema": {
               "$ref": "#/components/schemas/Problem"
             },
@@ -23430,7 +23433,7 @@
       "Unauthorized": {
         "description": "Unauthorized；具体 code 及恢复见 CONVENTIONS.md。",
         "content": {
-          "application/json": {
+          "application/problem+json": {
             "schema": {
               "$ref": "#/components/schemas/Problem"
             },
@@ -23462,7 +23465,7 @@
       "Forbidden": {
         "description": "Forbidden；具体 code 及恢复见 CONVENTIONS.md。",
         "content": {
-          "application/json": {
+          "application/problem+json": {
             "schema": {
               "$ref": "#/components/schemas/Problem"
             },
@@ -23485,7 +23488,7 @@
       "NotFound": {
         "description": "NotFound；具体 code 及恢复见 CONVENTIONS.md。",
         "content": {
-          "application/json": {
+          "application/problem+json": {
             "schema": {
               "$ref": "#/components/schemas/Problem"
             },
@@ -23508,7 +23511,7 @@
       "Conflict": {
         "description": "Conflict；具体 code 及恢复见 CONVENTIONS.md。",
         "content": {
-          "application/json": {
+          "application/problem+json": {
             "schema": {
               "$ref": "#/components/schemas/Problem"
             },
@@ -23541,7 +23544,7 @@
       "PayloadTooLarge": {
         "description": "PayloadTooLarge；具体 code 及恢复见 CONVENTIONS.md。",
         "content": {
-          "application/json": {
+          "application/problem+json": {
             "schema": {
               "$ref": "#/components/schemas/Problem"
             },
@@ -23564,7 +23567,7 @@
       "UnsupportedMediaType": {
         "description": "UnsupportedMediaType；具体 code 及恢复见 CONVENTIONS.md。",
         "content": {
-          "application/json": {
+          "application/problem+json": {
             "schema": {
               "$ref": "#/components/schemas/Problem"
             },
@@ -23587,7 +23590,7 @@
       "Unprocessable": {
         "description": "Unprocessable；具体 code 及恢复见 CONVENTIONS.md。",
         "content": {
-          "application/json": {
+          "application/problem+json": {
             "schema": {
               "$ref": "#/components/schemas/Problem"
             },
@@ -23610,7 +23613,7 @@
       "RateLimited": {
         "description": "RateLimited；具体 code 及恢复见 CONVENTIONS.md。",
         "content": {
-          "application/json": {
+          "application/problem+json": {
             "schema": {
               "$ref": "#/components/schemas/Problem"
             },
@@ -23643,7 +23646,7 @@
       "IntegrityError": {
         "description": "IntegrityError；具体 code 及恢复见 CONVENTIONS.md。",
         "content": {
-          "application/json": {
+          "application/problem+json": {
             "schema": {
               "$ref": "#/components/schemas/Problem"
             },
@@ -23666,7 +23669,7 @@
       "Unavailable": {
         "description": "Unavailable；具体 code 及恢复见 CONVENTIONS.md。",
         "content": {
-          "application/json": {
+          "application/problem+json": {
             "schema": {
               "$ref": "#/components/schemas/Problem"
             },

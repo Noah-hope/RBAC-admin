@@ -1,18 +1,8 @@
 {
-  "exportSha256": "74c159c93270359d2017f2ce6c7c2d1ce73e97fe9d535a89282c7e19fa3d2625",
+  "exportSha256": "b35f59f8d4973e3a293da223f02ab6fe711cbef073149b102afc9df320a41dbc",
   "openapiStructureValid": true,
   "modelExamplesChecked": 120,
-  "invalidModelExamples": [
-    {
-      "schema": "Appointment",
-      "valid": false,
-      "errors": [
-        "'company_demo_01' is not of type 'object'",
-        "'dept_demo_a' is not of type 'object'",
-        "'system_demo_hr' is not of type 'object'"
-      ]
-    }
-  ],
+  "invalidModelExamples": [],
   "exportOpenapi": "3.1.0",
   "exportVersion": "1.0.0",
   "paths": 56,
@@ -26,129 +16,71 @@
   "operationIdMismatches": [],
   "securityMismatches": [
     [
-      "/api/v1/admin/sessions",
-      "post"
-    ],
-    [
       "/api/v1/admin/sessions/current",
       "delete"
     ]
   ],
   "responseCodeMismatches": [],
-  "differenceEntryCount": 1544,
-  "componentDifferencePaths": [
-    "/components/responses/BadRequest/content/application/json",
-    "/components/responses/BadRequest/content/application/problem+json",
-    "/components/responses/Conflict/content/application/json",
-    "/components/responses/Conflict/content/application/problem+json",
-    "/components/responses/Forbidden/content/application/json",
-    "/components/responses/Forbidden/content/application/problem+json",
-    "/components/responses/IntegrityError/content/application/json",
-    "/components/responses/IntegrityError/content/application/problem+json",
-    "/components/responses/NotFound/content/application/json",
-    "/components/responses/NotFound/content/application/problem+json",
-    "/components/responses/PayloadTooLarge/content/application/json",
-    "/components/responses/PayloadTooLarge/content/application/problem+json",
-    "/components/responses/RateLimited/content/application/json",
-    "/components/responses/RateLimited/content/application/problem+json",
-    "/components/responses/Unauthorized/content/application/json",
-    "/components/responses/Unauthorized/content/application/problem+json",
-    "/components/responses/Unavailable/content/application/json",
-    "/components/responses/Unavailable/content/application/problem+json",
-    "/components/responses/Unprocessable/content/application/json",
-    "/components/responses/Unprocessable/content/application/problem+json",
-    "/components/responses/UnsupportedMediaType/content/application/json",
-    "/components/responses/UnsupportedMediaType/content/application/problem+json",
-    "/components/schemas/Appointment/properties/companyId/maxLength",
-    "/components/schemas/Appointment/properties/companyId/minLength",
-    "/components/schemas/Appointment/properties/companyId/pattern",
-    "/components/schemas/Appointment/properties/companyId/properties",
-    "/components/schemas/Appointment/properties/companyId/type",
-    "/components/schemas/Appointment/properties/departmentId/maxLength",
-    "/components/schemas/Appointment/properties/departmentId/minLength",
-    "/components/schemas/Appointment/properties/departmentId/pattern",
-    "/components/schemas/Appointment/properties/departmentId/properties",
-    "/components/schemas/Appointment/properties/departmentId/type",
-    "/components/schemas/Appointment/properties/systemIds/items/maxLength",
-    "/components/schemas/Appointment/properties/systemIds/items/minLength",
-    "/components/schemas/Appointment/properties/systemIds/items/pattern",
-    "/components/schemas/Appointment/properties/systemIds/items/properties",
-    "/components/schemas/Appointment/properties/systemIds/items/type",
-    "/components/schemas/AppointmentPage/properties/items/items/properties/companyId/maxLength",
-    "/components/schemas/AppointmentPage/properties/items/items/properties/companyId/minLength",
-    "/components/schemas/AppointmentPage/properties/items/items/properties/companyId/pattern",
-    "/components/schemas/AppointmentPage/properties/items/items/properties/companyId/properties",
-    "/components/schemas/AppointmentPage/properties/items/items/properties/companyId/type",
-    "/components/schemas/AppointmentPage/properties/items/items/properties/departmentId/maxLength",
-    "/components/schemas/AppointmentPage/properties/items/items/properties/departmentId/minLength",
-    "/components/schemas/AppointmentPage/properties/items/items/properties/departmentId/pattern",
-    "/components/schemas/AppointmentPage/properties/items/items/properties/departmentId/properties",
-    "/components/schemas/AppointmentPage/properties/items/items/properties/departmentId/type",
-    "/components/schemas/AppointmentPage/properties/items/items/properties/systemIds/items/maxLength",
-    "/components/schemas/AppointmentPage/properties/items/items/properties/systemIds/items/minLength",
-    "/components/schemas/AppointmentPage/properties/items/items/properties/systemIds/items/pattern",
-    "/components/schemas/AppointmentPage/properties/items/items/properties/systemIds/items/properties",
-    "/components/schemas/AppointmentPage/properties/items/items/properties/systemIds/items/type"
-  ],
-  "webhookDifferencePaths": [
-    "/webhooks/oaSubmission/post/responses/401/content/application/json",
-    "/webhooks/oaSubmission/post/responses/401/content/application/problem+json",
-    "/webhooks/oaSubmission/post/responses/409/content/application/json",
-    "/webhooks/oaSubmission/post/responses/409/content/application/problem+json",
-    "/webhooks/oaSubmission/post/responses/503/content/application/json",
-    "/webhooks/oaSubmission/post/responses/503/content/application/problem+json"
-  ],
+  "differenceEntryCount": 70,
+  "componentDifferencePaths": [],
+  "webhookDifferencePaths": [],
   "appointmentFields": {
     "companyId": {
-      "type": "object",
-      "properties": {}
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
     },
     "departmentId": {
-      "type": "object",
-      "properties": {}
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$",
+      "minLength": 1,
+      "maxLength": 64
     },
     "systemIds": {
       "type": "array",
       "items": {
-        "type": "object",
-        "properties": {}
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
       },
       "uniqueItems": true
     }
   },
   "errorContentTypes": {
     "BadRequest": [
-      "application/json"
+      "application/problem+json"
     ],
     "Unauthorized": [
-      "application/json"
+      "application/problem+json"
     ],
     "Forbidden": [
-      "application/json"
+      "application/problem+json"
     ],
     "NotFound": [
-      "application/json"
+      "application/problem+json"
     ],
     "Conflict": [
-      "application/json"
+      "application/problem+json"
     ],
     "PayloadTooLarge": [
-      "application/json"
+      "application/problem+json"
     ],
     "UnsupportedMediaType": [
-      "application/json"
+      "application/problem+json"
     ],
     "Unprocessable": [
-      "application/json"
+      "application/problem+json"
     ],
     "RateLimited": [
-      "application/json"
+      "application/problem+json"
     ],
     "IntegrityError": [
-      "application/json"
+      "application/problem+json"
     ],
     "Unavailable": [
-      "application/json"
+      "application/problem+json"
     ]
   },
   "uploadSchema": {
