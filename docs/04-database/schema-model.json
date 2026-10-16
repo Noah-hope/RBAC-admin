@@ -1,0 +1,4855 @@
+[
+  {
+    "name": "mutation_guard",
+    "meaning": "一期本地写事务串行化锚点；没有业务权限含义",
+    "columns": [
+      {
+        "name": "id",
+        "type": "SMALLINT",
+        "meaning": "固定为1",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "revision",
+        "type": "BIGINT",
+        "meaning": "内部提交序号，不映射API版本",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [],
+    "indexes": [],
+    "fks": [],
+    "checks": [
+      "id = 1"
+    ]
+  },
+  {
+    "name": "company",
+    "meaning": "公司；无启停或公司层级授权",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "code",
+        "type": "VARCHAR(100) COLLATE utf8mb4_0900_bin",
+        "meaning": "全局唯一稳定公司编码",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(100)",
+        "meaning": "显示名称",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "version",
+        "type": "BIGINT",
+        "meaning": "API 对象业务版本；仅实质变更递增",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "code"
+      ]
+    ],
+    "indexes": [],
+    "fks": [],
+    "checks": [
+      "version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "department",
+    "meaning": "一公司内平级部门；无父级和状态",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "company_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "所属公司",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "code",
+        "type": "VARCHAR(100) COLLATE utf8mb4_0900_bin",
+        "meaning": "公司内稳定编码",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(100)",
+        "meaning": "显示名称",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "version",
+        "type": "BIGINT",
+        "meaning": "API 对象业务版本；仅实质变更递增",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "company_id",
+        "code"
+      ],
+      [
+        "id",
+        "company_id"
+      ]
+    ],
+    "indexes": [],
+    "fks": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "table": "company",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "position",
+    "meaning": "明确部门内岗位；不关联业务角色",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "department_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "所属部门",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "code",
+        "type": "VARCHAR(100) COLLATE utf8mb4_0900_bin",
+        "meaning": "部门内稳定编码",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(100)",
+        "meaning": "显示名称",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "version",
+        "type": "BIGINT",
+        "meaning": "API 对象业务版本；仅实质变更递增",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "department_id",
+        "code"
+      ],
+      [
+        "id",
+        "department_id"
+      ]
+    ],
+    "indexes": [],
+    "fks": [
+      {
+        "columns": [
+          "department_id"
+        ],
+        "table": "department",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "employee",
+    "meaning": "统一员工身份；全局停用独立于后台账号",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "employee_key",
+        "type": "VARCHAR(100) COLLATE utf8mb4_0900_bin",
+        "meaning": "平台当前统一员工标识，全局唯一，不按姓名匹配",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(100)",
+        "meaning": "必要姓名",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "status",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "全局身份状态；枚举：ACTIVE/INACTIVE",
+        "nullable": false,
+        "default": "'ACTIVE'",
+        "generated": null
+      },
+      {
+        "name": "version",
+        "type": "BIGINT",
+        "meaning": "API 对象业务版本；仅实质变更递增",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "employee_key"
+      ]
+    ],
+    "indexes": [],
+    "fks": [],
+    "checks": [
+      "status IN ('ACTIVE','INACTIVE')",
+      "version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "employee_source_identity",
+    "meaning": "当前来源标识到内部员工的显式映射；重映射旧值另存审计",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "source_system",
+        "type": "VARCHAR(100) COLLATE utf8mb4_0900_bin",
+        "meaning": "来源系统标识",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "source_key",
+        "type": "VARCHAR(100) COLLATE utf8mb4_0900_bin",
+        "meaning": "来源的当前唯一标识",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "employee_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "内部员工",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "version",
+        "type": "BIGINT",
+        "meaning": "API 对象业务版本；仅实质变更递增",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "source_system",
+        "source_key"
+      ]
+    ],
+    "indexes": [
+      [
+        "employee_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "table": "employee",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "organization_mapping",
+    "meaning": "经过确认的完整来源路径映射；没有组织自动合并",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "source_system",
+        "type": "VARCHAR(100) COLLATE utf8mb4_0900_bin",
+        "meaning": "来源系统",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "source_path",
+        "type": "VARCHAR(300)",
+        "meaning": "完整来源路径，二进制区分比较",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "object_kind",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "映射对象类型；枚举：COMPANY/DEPARTMENT/POSITION",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "company_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "明确公司",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "department_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "明确部门；公司映射为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "position_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "明确岗位；非岗位映射为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "version",
+        "type": "BIGINT",
+        "meaning": "API 对象业务版本；仅实质变更递增",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "source_system",
+        "source_path"
+      ]
+    ],
+    "indexes": [
+      [
+        "company_id"
+      ],
+      [
+        "department_id",
+        "company_id"
+      ],
+      [
+        "position_id",
+        "department_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "table": "company",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "department_id",
+          "company_id"
+        ],
+        "table": "department",
+        "references": [
+          "id",
+          "company_id"
+        ]
+      },
+      {
+        "columns": [
+          "position_id",
+          "department_id"
+        ],
+        "table": "position",
+        "references": [
+          "id",
+          "department_id"
+        ]
+      }
+    ],
+    "checks": [
+      "(object_kind='COMPANY' AND department_id IS NULL AND position_id IS NULL) OR (object_kind='DEPARTMENT' AND department_id IS NOT NULL AND position_id IS NULL) OR (object_kind='POSITION' AND department_id IS NOT NULL AND position_id IS NOT NULL)",
+      "version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "employment",
+    "meaning": "独立任职及结束历史；同员工同岗位至多一个当前任职",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "employee_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "员工",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "company_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "任职公司",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "department_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "任职部门",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "position_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "任职岗位",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "status",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "任职状态；枚举：ACTIVE/ENDED",
+        "nullable": false,
+        "default": "'ACTIVE'",
+        "generated": null
+      },
+      {
+        "name": "started_at",
+        "type": "DATETIME(6)",
+        "meaning": "源资料明确的业务开始时间；初始化未知为NULL",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "ended_at",
+        "type": "DATETIME(6)",
+        "meaning": "源资料明确的业务结束时间；未知可为NULL，状态不靠时间推断",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "recorded_end_at",
+        "type": "DATETIME(6)",
+        "meaning": "平台记录结束动作时间；ENDED必须有值",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "version",
+        "type": "BIGINT",
+        "meaning": "API 对象业务版本；仅实质变更递增",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "active_slot",
+        "type": "TINYINT",
+        "meaning": "ACTIVE 时为1，结束历史为NULL；利用唯一键允许多份历史",
+        "nullable": true,
+        "default": null,
+        "generated": "CASE WHEN status = 'ACTIVE' THEN 1 ELSE NULL END"
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "employee_id",
+        "position_id",
+        "active_slot"
+      ]
+    ],
+    "indexes": [
+      [
+        "employee_id",
+        "company_id",
+        "department_id",
+        "status"
+      ],
+      [
+        "department_id",
+        "company_id"
+      ],
+      [
+        "position_id",
+        "department_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "table": "employee",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "department_id",
+          "company_id"
+        ],
+        "table": "department",
+        "references": [
+          "id",
+          "company_id"
+        ]
+      },
+      {
+        "columns": [
+          "position_id",
+          "department_id"
+        ],
+        "table": "position",
+        "references": [
+          "id",
+          "department_id"
+        ]
+      }
+    ],
+    "checks": [
+      "status IN ('ACTIVE','ENDED')",
+      "(status='ACTIVE' AND recorded_end_at IS NULL AND ended_at IS NULL) OR (status='ENDED' AND recorded_end_at IS NOT NULL)",
+      "started_at IS NULL OR ended_at IS NULL OR ended_at >= started_at",
+      "version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "admin_account",
+    "meaning": "后台账号及凭据失效依据；总管理员仅部署初始化",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "employee_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "关联员工；部署总管理员允许为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "login_name",
+        "type": "VARCHAR(100) COLLATE utf8mb4_0900_bin",
+        "meaning": "当前登录名全局唯一",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "password_hash",
+        "type": "VARCHAR(255)",
+        "meaning": "带算法参数和盐的专用密码摘要；不存密码历史",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "enabled",
+        "type": "TINYINT",
+        "meaning": "后台账号启用",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "is_super_admin",
+        "type": "TINYINT",
+        "meaning": "部署管理的全局后台身份；普通创建API不得写",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "must_change_password",
+        "type": "TINYINT",
+        "meaning": "临时密码强制修改",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "version",
+        "type": "BIGINT",
+        "meaning": "API 对象业务版本；仅实质变更递增",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "credential_version",
+        "type": "BIGINT",
+        "meaning": "改密/重置递增，JWT须精确匹配",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "session_epoch",
+        "type": "BIGINT",
+        "meaning": "失去全部资格/停用等递增，恢复不回退",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "row_version",
+        "type": "BIGINT",
+        "meaning": "JPA @Version 专用存储修订；不直接作为 API 业务版本",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "login_name"
+      ],
+      [
+        "employee_id"
+      ]
+    ],
+    "indexes": [],
+    "fks": [],
+    "checks": [
+      "is_super_admin=1 OR employee_id IS NOT NULL",
+      "enabled IN (0,1)",
+      "is_super_admin IN (0,1)",
+      "must_change_password IN (0,1)",
+      "version BETWEEN 0 AND 9007199254740991",
+      "credential_version BETWEEN 0 AND 9007199254740991",
+      "session_epoch BETWEEN 0 AND 9007199254740991",
+      "row_version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "admin_session",
+    "meaning": "可即时撤销的后台会话；不存JWT原文",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "JWT sid，不可猜测 UUID",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "account_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "所属后台账号",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "token_jti",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "本会话唯一JWT jti",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "mode",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "会话模式；枚举：NORMAL/PASSWORD_CHANGE_ONLY",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "credential_version",
+        "type": "BIGINT",
+        "meaning": "登录时凭据版本",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "session_epoch",
+        "type": "BIGINT",
+        "meaning": "登录时账号会话周期",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "expires_at",
+        "type": "DATETIME(6)",
+        "meaning": "正常15分钟/受限5分钟的到期时刻",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "revoked_at",
+        "type": "DATETIME(6)",
+        "meaning": "单会话退出撤销时刻",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "token_jti"
+      ]
+    ],
+    "indexes": [
+      [
+        "account_id",
+        "expires_at"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "account_id"
+        ],
+        "table": "admin_account",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "mode IN ('NORMAL','PASSWORD_CHANGE_ONLY')",
+      "expires_at > created_at",
+      "credential_version BETWEEN 0 AND 9007199254740991",
+      "session_epoch BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "management_scope",
+    "meaning": "稳定范围记录；一个公司一个部门，可无人及空系统集合",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "company_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "当前管理公司",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "department_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "当前指定部门",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "scope_version",
+        "type": "BIGINT",
+        "meaning": "API scopeVersion / Scope.version；名单/范围实质变更递增",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "row_version",
+        "type": "BIGINT",
+        "meaning": "JPA @Version 专用存储修订；不直接作为 API 业务版本",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "department_id",
+        "company_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "department_id",
+          "company_id"
+        ],
+        "table": "department",
+        "references": [
+          "id",
+          "company_id"
+        ]
+      }
+    ],
+    "checks": [
+      "scope_version BETWEEN 0 AND 9007199254740991",
+      "row_version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "scope_system",
+    "meaning": "当前范围系统集合；不授予业务进入权限",
+    "columns": [
+      {
+        "name": "scope_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "范围",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "system_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "获准系统",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "scope_id",
+      "system_id"
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "system_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "scope_id"
+        ],
+        "table": "management_scope",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "system_id"
+        ],
+        "table": "business_system",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": []
+  },
+  {
+    "name": "admin_appointment",
+    "meaning": "单账号单范围独立任命；结束后不恢复原任命",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "scope_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "稳定范围",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "account_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "后台账号，员工由账号取得",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "status",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "任命状态；枚举：ACTIVE/REVOKED/INVALIDATED",
+        "nullable": false,
+        "default": "'ACTIVE'",
+        "generated": null
+      },
+      {
+        "name": "appointment_version",
+        "type": "BIGINT",
+        "meaning": "API appointmentVersion / Appointment.version",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "ended_at",
+        "type": "DATETIME(6)",
+        "meaning": "撤销/资格失效时刻",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "ended_reason",
+        "type": "VARCHAR(500)",
+        "meaning": "结束原因",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "row_version",
+        "type": "BIGINT",
+        "meaning": "JPA @Version 专用存储修订；不直接作为 API 业务版本",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "active_slot",
+        "type": "TINYINT",
+        "meaning": "ACTIVE 时为1，结束历史为NULL；利用唯一键允许多份历史",
+        "nullable": true,
+        "default": null,
+        "generated": "CASE WHEN status = 'ACTIVE' THEN 1 ELSE NULL END"
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "scope_id",
+        "account_id",
+        "active_slot"
+      ]
+    ],
+    "indexes": [
+      [
+        "account_id",
+        "status",
+        "id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "scope_id"
+        ],
+        "table": "management_scope",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "account_id"
+        ],
+        "table": "admin_account",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "status IN ('ACTIVE','REVOKED','INVALIDATED')",
+      "(status='ACTIVE' AND ended_at IS NULL AND ended_reason IS NULL) OR (status<>'ACTIVE' AND ended_at IS NOT NULL AND ended_reason IS NOT NULL)",
+      "appointment_version BETWEEN 0 AND 9007199254740991",
+      "row_version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "business_system",
+    "meaning": "业务系统及目录聚合版本；新建同事务建立进入权限",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "code",
+        "type": "VARCHAR(100) COLLATE utf8mb4_0900_bin",
+        "meaning": "全局唯一稳定编码；新建API限制93字符",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(100)",
+        "meaning": "名称",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "description",
+        "type": "VARCHAR(500)",
+        "meaning": "说明",
+        "nullable": false,
+        "default": "''",
+        "generated": null
+      },
+      {
+        "name": "enabled",
+        "type": "TINYINT",
+        "meaning": "系统资源启用",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "version",
+        "type": "BIGINT",
+        "meaning": "API 对象业务版本；仅实质变更递增",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "catalog_version",
+        "type": "BIGINT",
+        "meaning": "仅目录实质变化递增",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "row_version",
+        "type": "BIGINT",
+        "meaning": "JPA @Version 专用存储修订；不直接作为 API 业务版本",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "code"
+      ]
+    ],
+    "indexes": [],
+    "fks": [],
+    "checks": [
+      "enabled IN (0,1)",
+      "version BETWEEN 0 AND 9007199254740991",
+      "catalog_version BETWEEN 0 AND 9007199254740991",
+      "row_version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "directory_node",
+    "meaning": "同系统导航/功能树；操作不作为树节点",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "system_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "所属业务系统",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "code",
+        "type": "VARCHAR(100) COLLATE utf8mb4_0900_bin",
+        "meaning": "系统内稳定目录编码",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(100)",
+        "meaning": "名称",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "node_type",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "创建后不改类型；枚举：NAVIGATION/FUNCTION",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "parent_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "同系统父节点；根为NULL",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "sort_order",
+        "type": "INT",
+        "meaning": "同父级按此值、code、id排序，允许负数/并列",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "enabled",
+        "type": "TINYINT",
+        "meaning": "节点自身状态",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "visibility_permission_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "本功能menuEligible操作；导航必须为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "version",
+        "type": "BIGINT",
+        "meaning": "API 对象业务版本；仅实质变更递增",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "system_id",
+        "code"
+      ],
+      [
+        "id",
+        "system_id"
+      ]
+    ],
+    "indexes": [
+      [
+        "system_id",
+        "parent_id",
+        "sort_order",
+        "code",
+        "id"
+      ],
+      [
+        "parent_id",
+        "system_id"
+      ],
+      [
+        "visibility_permission_id",
+        "id",
+        "system_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "system_id"
+        ],
+        "table": "business_system",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "parent_id",
+          "system_id"
+        ],
+        "table": "directory_node",
+        "references": [
+          "id",
+          "system_id"
+        ]
+      },
+      {
+        "columns": [
+          "visibility_permission_id",
+          "id",
+          "system_id"
+        ],
+        "table": "permission",
+        "references": [
+          "id",
+          "function_id",
+          "system_id"
+        ]
+      }
+    ],
+    "checks": [
+      "node_type IN ('NAVIGATION','FUNCTION')",
+      "parent_id IS NULL OR parent_id <> id",
+      "(node_type='NAVIGATION' AND visibility_permission_id IS NULL) OR (node_type='FUNCTION' AND (enabled=0 OR visibility_permission_id IS NOT NULL))",
+      "enabled IN (0,1)",
+      "version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "permission",
+    "meaning": "独立功能操作或唯一系统进入权限；不含数据权限",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "system_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "所属系统",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "code",
+        "type": "VARCHAR(100) COLLATE utf8mb4_0900_bin",
+        "meaning": "系统内唯一稳定权限编码",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(100)",
+        "meaning": "同功能内名称唯一",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "permission_type",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "权限类型；枚举：SYSTEM_ACCESS/FUNCTION_OPERATION",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "function_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "FUNCTION_OPERATION关联功能节点；进入权限为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "menu_eligible",
+        "type": "TINYINT",
+        "meaning": "显式查看/进入页面语义；不解析code",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "enabled",
+        "type": "TINYINT",
+        "meaning": "操作自身状态",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "version",
+        "type": "BIGINT",
+        "meaning": "API 对象业务版本；仅实质变更递增",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "access_slot",
+        "type": "TINYINT",
+        "meaning": "系统进入权限为1，其余NULL；系统内唯一",
+        "nullable": true,
+        "default": null,
+        "generated": "CASE WHEN permission_type='SYSTEM_ACCESS' THEN 1 ELSE NULL END"
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "system_id",
+        "code"
+      ],
+      [
+        "system_id",
+        "access_slot"
+      ],
+      [
+        "function_id",
+        "name"
+      ],
+      [
+        "id",
+        "system_id"
+      ],
+      [
+        "id",
+        "function_id",
+        "system_id"
+      ]
+    ],
+    "indexes": [
+      [
+        "function_id",
+        "system_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "system_id"
+        ],
+        "table": "business_system",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "function_id",
+          "system_id"
+        ],
+        "table": "directory_node",
+        "references": [
+          "id",
+          "system_id"
+        ]
+      }
+    ],
+    "checks": [
+      "(permission_type='SYSTEM_ACCESS' AND function_id IS NULL AND menu_eligible=0) OR (permission_type='FUNCTION_OPERATION' AND function_id IS NOT NULL)",
+      "menu_eligible IN (0,1)",
+      "enabled IN (0,1)",
+      "version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "business_role",
+    "meaning": "业务角色元数据和有效配置基线；无角色启停",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "code",
+        "type": "VARCHAR(100) COLLATE utf8mb4_0900_bin",
+        "meaning": "后端生成 ROLE_ 加UUID无连字符；全局唯一且不可更改",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(100)",
+        "meaning": "可重名的显示名称",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "description",
+        "type": "VARCHAR(500)",
+        "meaning": "说明",
+        "nullable": false,
+        "default": "''",
+        "generated": null
+      },
+      {
+        "name": "company_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "固定公司",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "department_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "部门角色固定部门；公司级共享角色为NULL",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "system_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "固定业务系统",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "state",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "首次配置执行成功后EFFECTIVE；枚举：UNCONFIGURED/EFFECTIVE",
+        "nullable": false,
+        "default": "'UNCONFIGURED'",
+        "generated": null
+      },
+      {
+        "name": "metadata_version",
+        "type": "BIGINT",
+        "meaning": "仅名称/说明实质变化递增",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "configuration_version",
+        "type": "BIGINT",
+        "meaning": "有效权限集合版本；未配置0",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "row_version",
+        "type": "BIGINT",
+        "meaning": "JPA @Version 专用存储修订；不直接作为 API 业务版本",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "code"
+      ],
+      [
+        "id",
+        "company_id",
+        "system_id"
+      ],
+      [
+        "id",
+        "system_id"
+      ]
+    ],
+    "indexes": [
+      [
+        "company_id",
+        "department_id",
+        "system_id",
+        "created_at",
+        "id"
+      ],
+      [
+        "department_id",
+        "company_id"
+      ],
+      [
+        "system_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "table": "company",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "department_id",
+          "company_id"
+        ],
+        "table": "department",
+        "references": [
+          "id",
+          "company_id"
+        ]
+      },
+      {
+        "columns": [
+          "system_id"
+        ],
+        "table": "business_system",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "(state='UNCONFIGURED' AND configuration_version=0) OR (state='EFFECTIVE' AND configuration_version>0)",
+      "metadata_version BETWEEN 0 AND 9007199254740991",
+      "configuration_version BETWEEN 0 AND 9007199254740991",
+      "row_version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "role_permission",
+    "meaning": "当前有效角色配置集合；关系只表示授予",
+    "columns": [
+      {
+        "name": "role_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "业务角色",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "permission_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "权限项",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "system_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "约束角色与权限同系统",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "role_id",
+      "permission_id"
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "role_id",
+        "system_id"
+      ],
+      [
+        "permission_id",
+        "system_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "role_id",
+          "system_id"
+        ],
+        "table": "business_role",
+        "references": [
+          "id",
+          "system_id"
+        ]
+      },
+      {
+        "columns": [
+          "permission_id",
+          "system_id"
+        ],
+        "table": "permission",
+        "references": [
+          "id",
+          "system_id"
+        ]
+      }
+    ],
+    "checks": []
+  },
+  {
+    "name": "role_configuration_history",
+    "meaning": "每次成功配置的完整历史快照，不是当前授权事实",
+    "columns": [
+      {
+        "name": "role_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "角色",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "configuration_version",
+        "type": "BIGINT",
+        "meaning": "成功配置版本，无重复",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "request_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "唯一成功来源申请",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "configuration_snapshot",
+        "type": "JSON",
+        "meaning": "权限稳定ID/类型/code/当时名称及完整集合，schemaVersion=1；JSON顶层OBJECT",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      },
+      {
+        "name": "applied_at",
+        "type": "DATETIME(6)",
+        "meaning": "成功配置提交时刻",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "role_id",
+      "configuration_version"
+    ],
+    "unique": [
+      [
+        "request_id"
+      ]
+    ],
+    "indexes": [],
+    "fks": [
+      {
+        "columns": [
+          "role_id"
+        ],
+        "table": "business_role",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "request_id"
+        ],
+        "table": "change_request",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "configuration_version BETWEEN 0 AND 9007199254740991",
+      "JSON_TYPE(configuration_snapshot) = 'OBJECT'"
+    ]
+  },
+  {
+    "name": "authorization_source",
+    "meaning": "员工+公司+来源部门+系统的持久周期；无关系也可存在",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "employee_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "员工",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "company_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "来源公司",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "department_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "来源部门",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "system_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "系统",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "source_epoch",
+        "type": "BIGINT",
+        "meaning": "关闭/资格丧失推进的周期；未落库逻辑基线为0",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "source_version",
+        "type": "BIGINT",
+        "meaning": "API SourceBaseline.version；该来源变更递增",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "row_version",
+        "type": "BIGINT",
+        "meaning": "JPA @Version 专用存储修订；不直接作为 API 业务版本",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "employee_id",
+        "company_id",
+        "department_id",
+        "system_id"
+      ],
+      [
+        "id",
+        "company_id",
+        "system_id"
+      ]
+    ],
+    "indexes": [
+      [
+        "department_id",
+        "company_id",
+        "system_id"
+      ],
+      [
+        "system_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "table": "employee",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "department_id",
+          "company_id"
+        ],
+        "table": "department",
+        "references": [
+          "id",
+          "company_id"
+        ]
+      },
+      {
+        "columns": [
+          "system_id"
+        ],
+        "table": "business_system",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "source_epoch BETWEEN 0 AND 9007199254740991",
+      "source_version BETWEEN 0 AND 9007199254740991",
+      "row_version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "grant_baseline",
+    "meaning": "同一来源同角色的永久关系版本锚点；不随授权结束删除",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "source_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "独立来源",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "role_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "业务角色",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "company_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "用于复合归属约束",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "system_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "用于复合同系统约束",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "relation_version",
+        "type": "BIGINT",
+        "meaning": "API当前关系基线；每次授予/结束递增，未落库为0",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "row_version",
+        "type": "BIGINT",
+        "meaning": "JPA @Version 专用存储修订；不直接作为 API 业务版本",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "source_id",
+        "role_id"
+      ]
+    ],
+    "indexes": [
+      [
+        "source_id",
+        "company_id",
+        "system_id"
+      ],
+      [
+        "role_id",
+        "company_id",
+        "system_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "source_id",
+          "company_id",
+          "system_id"
+        ],
+        "table": "authorization_source",
+        "references": [
+          "id",
+          "company_id",
+          "system_id"
+        ]
+      },
+      {
+        "columns": [
+          "role_id",
+          "company_id",
+          "system_id"
+        ],
+        "table": "business_role",
+        "references": [
+          "id",
+          "company_id",
+          "system_id"
+        ]
+      }
+    ],
+    "checks": [
+      "relation_version BETWEEN 0 AND 9007199254740991",
+      "row_version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "role_grant",
+    "meaning": "一次具体来源授予；结束后重授必须新ID",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "baseline_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "永久关系锚点",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "relation_version",
+        "type": "BIGINT",
+        "meaning": "该grant当前演进版本；结束时推进到基线新值",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "source_epoch",
+        "type": "BIGINT",
+        "meaning": "授予时固定来源周期",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "status",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "授权关系状态；枚举：ACTIVE/REVOKED/INVALIDATED",
+        "nullable": false,
+        "default": "'ACTIVE'",
+        "generated": null
+      },
+      {
+        "name": "granted_by_request_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "成功授予申请",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "ended_by_request_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "一般撤销申请；直接关权时为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "ended_at",
+        "type": "DATETIME(6)",
+        "meaning": "结束提交时刻",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "ended_reason",
+        "type": "VARCHAR(500)",
+        "meaning": "撤销/失效原因",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "active_slot",
+        "type": "TINYINT",
+        "meaning": "ACTIVE 时为1，结束历史为NULL；利用唯一键允许多份历史",
+        "nullable": true,
+        "default": null,
+        "generated": "CASE WHEN status = 'ACTIVE' THEN 1 ELSE NULL END"
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "baseline_id",
+        "active_slot"
+      ],
+      [
+        "baseline_id",
+        "relation_version"
+      ]
+    ],
+    "indexes": [
+      [
+        "granted_by_request_id"
+      ],
+      [
+        "ended_by_request_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "baseline_id"
+        ],
+        "table": "grant_baseline",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "granted_by_request_id"
+        ],
+        "table": "change_request",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "ended_by_request_id"
+        ],
+        "table": "change_request",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "status IN ('ACTIVE','REVOKED','INVALIDATED')",
+      "(status='ACTIVE' AND ended_at IS NULL AND ended_reason IS NULL AND ended_by_request_id IS NULL) OR (status<>'ACTIVE' AND ended_at IS NOT NULL AND ended_reason IS NOT NULL)",
+      "relation_version BETWEEN 0 AND 9007199254740991",
+      "source_epoch BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "grant_employment_evidence",
+    "meaning": "实际授予时适用任职依据；后续不因岗位改名改写",
+    "columns": [
+      {
+        "name": "grant_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "授权关系",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "employment_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "当时适用任职",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "grant_id",
+      "employment_id"
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "employment_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "grant_id"
+        ],
+        "table": "role_grant",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "employment_id"
+        ],
+        "table": "employment",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": []
+  },
+  {
+    "name": "change_request",
+    "meaning": "草稿与固定申请共用生命周期；七响应模型不建七表",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "kind",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "变更类型；枚举：ROLE_CONFIGURATION/ROLE_GRANT/ROLE_REVOCATION",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "company_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "一申请一个公司",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "content",
+        "type": "JSON",
+        "meaning": "草稿可编辑；提交后实际明细冻结，与规范字节一致；JSON顶层OBJECT",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      },
+      {
+        "name": "reason",
+        "type": "VARCHAR(500)",
+        "meaning": "提交原因；提交后不可改",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "draft_version",
+        "type": "BIGINT",
+        "meaning": "协作编辑版本；提交后冻结",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "status_version",
+        "type": "BIGINT",
+        "meaning": "投递/审批/执行状态修订",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "submitted_version",
+        "type": "BIGINT",
+        "meaning": "固定提交版本；取提交时draftVersion，提交后不变",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "submitted_at",
+        "type": "DATETIME(6)",
+        "meaning": "固定提交时刻，进入摘要",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "submitted_by_account_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "原提交人；离任不改写",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "state",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "受三轴约束的聚合展示状态；枚举：DRAFT/PENDING/REJECTED/APPROVED/EXECUTION_FAILED/EXECUTED/INVALIDATED",
+        "nullable": false,
+        "default": "'DRAFT'",
+        "generated": null
+      },
+      {
+        "name": "delivery_status",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "OA投递状态；枚举：NOT_SUBMITTED/PENDING_SEND/SEND_FAILED/LINKED",
+        "nullable": false,
+        "default": "'NOT_SUBMITTED'",
+        "generated": null
+      },
+      {
+        "name": "approval_result",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "可信最终结果；枚举：NONE/APPROVED/REJECTED",
+        "nullable": false,
+        "default": "'NONE'",
+        "generated": null
+      },
+      {
+        "name": "execution_status",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "本地执行状态；枚举：NOT_STARTED/PENDING/FAILED/SUCCEEDED/INVALIDATED",
+        "nullable": false,
+        "default": "'NOT_STARTED'",
+        "generated": null
+      },
+      {
+        "name": "authority_type",
+        "type": "VARCHAR(10)",
+        "meaning": "NULL草稿；GLOBAL或SCOPE",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "scope_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "原范围ID，仅SCOPE；范围保留",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "appointment_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "原任命ID；历史保留，执行不要求仍ACTIVE",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "original_authority",
+        "type": "JSON",
+        "meaning": "固定原资格完整快照，API Authority形状；JSON顶层OBJECT",
+        "nullable": true,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      },
+      {
+        "name": "fixed_payload_bytes",
+        "type": "MEDIUMBLOB",
+        "meaning": "RFC8785规范UTF-8摘要包原字节；不从MySQL JSON序列化重建",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "content_digest",
+        "type": "BINARY(32)",
+        "meaning": "规范字节SHA-256；API输出64位小写hex",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "failure_code",
+        "type": "VARCHAR(64)",
+        "meaning": "失效或可重试失败安全码",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "next_retry_at",
+        "type": "DATETIME(6)",
+        "meaning": "执行恢复计划；非取消期限",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "row_version",
+        "type": "BIGINT",
+        "meaning": "JPA @Version 专用存储修订；不直接作为 API 业务版本",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "id",
+        "kind"
+      ]
+    ],
+    "indexes": [
+      [
+        "scope_id",
+        "state",
+        "id"
+      ],
+      [
+        "company_id",
+        "created_at",
+        "id"
+      ],
+      [
+        "state",
+        "next_retry_at",
+        "id"
+      ],
+      [
+        "submitted_by_account_id"
+      ],
+      [
+        "appointment_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "company_id"
+        ],
+        "table": "company",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "scope_id"
+        ],
+        "table": "management_scope",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "appointment_id"
+        ],
+        "table": "admin_appointment",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "submitted_by_account_id"
+        ],
+        "table": "admin_account",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "kind IN ('ROLE_CONFIGURATION','ROLE_GRANT','ROLE_REVOCATION')",
+      "delivery_status IN ('NOT_SUBMITTED','PENDING_SEND','SEND_FAILED','LINKED')",
+      "approval_result IN ('NONE','APPROVED','REJECTED')",
+      "execution_status IN ('NOT_STARTED','PENDING','FAILED','SUCCEEDED','INVALIDATED')",
+      "(state='DRAFT' AND submitted_version IS NULL AND submitted_at IS NULL AND submitted_by_account_id IS NULL AND original_authority IS NULL AND authority_type IS NULL AND scope_id IS NULL AND appointment_id IS NULL AND fixed_payload_bytes IS NULL AND content_digest IS NULL) OR (state<>'DRAFT' AND submitted_version IS NOT NULL AND submitted_version>0 AND submitted_at IS NOT NULL AND submitted_by_account_id IS NOT NULL AND original_authority IS NOT NULL AND authority_type IS NOT NULL AND fixed_payload_bytes IS NOT NULL AND content_digest IS NOT NULL AND ((authority_type='GLOBAL' AND scope_id IS NULL AND appointment_id IS NULL) OR (authority_type='SCOPE' AND scope_id IS NOT NULL AND appointment_id IS NOT NULL)))",
+      "(state='DRAFT' AND delivery_status='NOT_SUBMITTED' AND approval_result='NONE' AND execution_status='NOT_STARTED' AND failure_code IS NULL AND next_retry_at IS NULL) OR (state='PENDING' AND delivery_status IN ('PENDING_SEND','SEND_FAILED','LINKED') AND approval_result='NONE' AND execution_status='NOT_STARTED' AND failure_code IS NULL AND next_retry_at IS NULL) OR (state='REJECTED' AND delivery_status='LINKED' AND approval_result='REJECTED' AND execution_status='NOT_STARTED' AND failure_code IS NULL AND next_retry_at IS NULL) OR (state='APPROVED' AND delivery_status='LINKED' AND approval_result='APPROVED' AND execution_status='PENDING' AND failure_code IS NULL) OR (state='EXECUTION_FAILED' AND delivery_status='LINKED' AND approval_result='APPROVED' AND execution_status='FAILED' AND failure_code IS NOT NULL AND next_retry_at IS NOT NULL) OR (state='EXECUTED' AND delivery_status='LINKED' AND approval_result='APPROVED' AND execution_status='SUCCEEDED' AND failure_code IS NULL AND next_retry_at IS NULL) OR (state='INVALIDATED' AND delivery_status IN ('PENDING_SEND','SEND_FAILED','LINKED') AND (delivery_status='LINKED' OR approval_result='NONE') AND execution_status='INVALIDATED' AND failure_code IS NOT NULL AND next_retry_at IS NULL)",
+      "JSON_TYPE(content) = 'OBJECT'",
+      "draft_version BETWEEN 0 AND 9007199254740991",
+      "status_version BETWEEN 0 AND 9007199254740991",
+      "submitted_version BETWEEN 0 AND 9007199254740991",
+      "JSON_TYPE(original_authority) = 'OBJECT'",
+      "row_version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "change_target",
+    "meaning": "草稿目标/提交后实际清单的可检索投影；必须与对应content一致",
+    "columns": [
+      {
+        "name": "request_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "所属申请",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "line_no",
+        "type": "INT",
+        "meaning": "固定清单序号，从0起",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "line_kind",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "匹配父申请类型；枚举：ROLE_CONFIGURATION/ROLE_GRANT/ROLE_REVOCATION",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "company_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "固定公司",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "system_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "固定系统",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "department_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "固定来源/角色部门；共享配置可为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "employee_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "分配/撤销目标员工；配置为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "role_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "明确角色",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "source_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "分配/撤销来源；配置为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "baseline_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "分配/撤销永久关系锚点；配置为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "grant_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "撤销的准确历史ID；分配/配置为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "expected_configuration_version",
+        "type": "BIGINT",
+        "meaning": "配置/授予检查；一般撤销为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "expected_source_epoch",
+        "type": "BIGINT",
+        "meaning": "授予固定周期；其他类型为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "expected_relation_version",
+        "type": "BIGINT",
+        "meaning": "授予/撤销固定关系版本",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "target_snapshot",
+        "type": "JSON",
+        "meaning": "schemaVersion=1；当时名称、适用employmentIds、完整权限差异/依据；JSON顶层OBJECT",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      }
+    ],
+    "pk": [
+      "request_id",
+      "line_no"
+    ],
+    "unique": [
+      [
+        "request_id",
+        "baseline_id"
+      ],
+      [
+        "request_id",
+        "grant_id"
+      ]
+    ],
+    "indexes": [
+      [
+        "request_id",
+        "line_kind"
+      ],
+      [
+        "source_id"
+      ],
+      [
+        "baseline_id"
+      ],
+      [
+        "grant_id"
+      ],
+      [
+        "role_id",
+        "company_id",
+        "system_id"
+      ],
+      [
+        "department_id",
+        "company_id"
+      ],
+      [
+        "employee_id"
+      ],
+      [
+        "system_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "request_id",
+          "line_kind"
+        ],
+        "table": "change_request",
+        "references": [
+          "id",
+          "kind"
+        ]
+      },
+      {
+        "columns": [
+          "role_id",
+          "company_id",
+          "system_id"
+        ],
+        "table": "business_role",
+        "references": [
+          "id",
+          "company_id",
+          "system_id"
+        ]
+      },
+      {
+        "columns": [
+          "department_id",
+          "company_id"
+        ],
+        "table": "department",
+        "references": [
+          "id",
+          "company_id"
+        ]
+      },
+      {
+        "columns": [
+          "employee_id"
+        ],
+        "table": "employee",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "source_id"
+        ],
+        "table": "authorization_source",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "baseline_id"
+        ],
+        "table": "grant_baseline",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "grant_id"
+        ],
+        "table": "role_grant",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "system_id"
+        ],
+        "table": "business_system",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "line_no BETWEEN 0 AND 99",
+      "(line_kind='ROLE_CONFIGURATION' AND line_no=0 AND employee_id IS NULL AND source_id IS NULL AND baseline_id IS NULL AND grant_id IS NULL AND expected_configuration_version IS NOT NULL AND expected_source_epoch IS NULL AND expected_relation_version IS NULL) OR (line_kind='ROLE_GRANT' AND employee_id IS NOT NULL AND department_id IS NOT NULL AND source_id IS NOT NULL AND baseline_id IS NOT NULL AND grant_id IS NULL AND expected_configuration_version IS NOT NULL AND expected_source_epoch IS NOT NULL AND expected_relation_version IS NOT NULL) OR (line_kind='ROLE_REVOCATION' AND employee_id IS NOT NULL AND department_id IS NOT NULL AND source_id IS NOT NULL AND baseline_id IS NOT NULL AND grant_id IS NOT NULL AND expected_configuration_version IS NULL AND expected_source_epoch IS NULL AND expected_relation_version IS NOT NULL)",
+      "expected_configuration_version BETWEEN 0 AND 9007199254740991",
+      "expected_source_epoch BETWEEN 0 AND 9007199254740991",
+      "expected_relation_version BETWEEN 0 AND 9007199254740991",
+      "JSON_TYPE(target_snapshot) = 'OBJECT'"
+    ]
+  },
+  {
+    "name": "role_change_claim",
+    "meaning": "当前角色配置通道；终态删除占用，历史不靠本表",
+    "columns": [
+      {
+        "name": "role_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "角色唯一配置通道",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "request_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "占用申请",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "role_id"
+    ],
+    "unique": [
+      [
+        "request_id"
+      ]
+    ],
+    "indexes": [],
+    "fks": [
+      {
+        "columns": [
+          "role_id"
+        ],
+        "table": "business_role",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "request_id"
+        ],
+        "table": "change_request",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": []
+  },
+  {
+    "name": "relation_change_claim",
+    "meaning": "当前关系变更通道；同来源去重，不阻塞其他来源",
+    "columns": [
+      {
+        "name": "baseline_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "关系唯一通道",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "request_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "占用申请",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "baseline_id"
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "request_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "baseline_id"
+        ],
+        "table": "grant_baseline",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "request_id"
+        ],
+        "table": "change_request",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": []
+  },
+  {
+    "name": "service_identity",
+    "meaning": "部署管理的服务身份和绑定；不保存私钥/令牌",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "subject",
+        "type": "VARCHAR(100) COLLATE utf8mb4_0900_bin",
+        "meaning": "JWT sub，全局唯一",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "kind",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "入口类型；枚举：BUSINESS/OA",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "system_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "BUSINESS唯一绑定系统，OA为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "enabled",
+        "type": "TINYINT",
+        "meaning": "当前服务身份状态",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "version",
+        "type": "BIGINT",
+        "meaning": "API 对象业务版本；仅实质变更递增",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "subject"
+      ]
+    ],
+    "indexes": [
+      [
+        "system_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "system_id"
+        ],
+        "table": "business_system",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "(kind='BUSINESS' AND system_id IS NOT NULL) OR (kind='OA' AND system_id IS NULL)",
+      "enabled IN (0,1)",
+      "version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "oa_link",
+    "meaning": "可靠外部审批关联；先由投递响应落地，回调不得抢绑",
+    "columns": [
+      {
+        "name": "request_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "申请，一对一",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "oa_instance_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "部署OA服务身份",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "oa_approval_id",
+        "type": "VARCHAR(64)",
+        "meaning": "外部审批编号",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "accepted_at",
+        "type": "DATETIME(6)",
+        "meaning": "OA受理时刻",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "request_id"
+    ],
+    "unique": [
+      [
+        "oa_instance_id",
+        "oa_approval_id"
+      ]
+    ],
+    "indexes": [],
+    "fks": [
+      {
+        "columns": [
+          "request_id"
+        ],
+        "table": "change_request",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "oa_instance_id"
+        ],
+        "table": "service_identity",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": []
+  },
+  {
+    "name": "oa_outbox",
+    "meaning": "同一固定申请可靠投递待办及租约；不复制可变申请内容",
+    "columns": [
+      {
+        "name": "request_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "申请，一申请一待办",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "oa_instance_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "目标OA实例",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "task_state",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "仅内部调度状态；枚举：READY/LEASED/DONE/STOPPED",
+        "nullable": false,
+        "default": "'READY'",
+        "generated": null
+      },
+      {
+        "name": "next_attempt_at",
+        "type": "DATETIME(6)",
+        "meaning": "下次投递时刻",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "lease_token",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "每次领取随机令牌",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "lease_until",
+        "type": "DATETIME(6)",
+        "meaning": "领取过期时间",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "attempt_count",
+        "type": "INT",
+        "meaning": "已开始尝试数",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "last_failure_code",
+        "type": "VARCHAR(64)",
+        "meaning": "安全故障码",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "row_version",
+        "type": "BIGINT",
+        "meaning": "JPA @Version 专用存储修订；不直接作为 API 业务版本",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      }
+    ],
+    "pk": [
+      "request_id"
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "task_state",
+        "next_attempt_at",
+        "request_id"
+      ],
+      [
+        "oa_instance_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "request_id"
+        ],
+        "table": "change_request",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "oa_instance_id"
+        ],
+        "table": "service_identity",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "task_state IN ('READY','LEASED','DONE','STOPPED')",
+      "attempt_count>=0",
+      "(task_state='LEASED' AND lease_token IS NOT NULL AND lease_until IS NOT NULL) OR (task_state<>'LEASED' AND lease_token IS NULL AND lease_until IS NULL)",
+      "row_version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "oa_callback_event",
+    "meaning": "OA实例+事件ID防重；同事件不同内容不得覆盖",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "oa_instance_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "可信OA实例",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "event_id",
+        "type": "VARCHAR(64)",
+        "meaning": "OA最终结果事件编号",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "request_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "匹配的固定申请",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "payload_digest",
+        "type": "BINARY(32)",
+        "meaning": "完整规范化回调内容摘要",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "safe_payload",
+        "type": "JSON",
+        "meaning": "不含认证凭据的最终结果原字段；JSON顶层OBJECT",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      },
+      {
+        "name": "received_at",
+        "type": "DATETIME(6)",
+        "meaning": "首次可靠接收时刻",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "oa_instance_id",
+        "event_id"
+      ]
+    ],
+    "indexes": [
+      [
+        "request_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "oa_instance_id"
+        ],
+        "table": "service_identity",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "request_id"
+        ],
+        "table": "change_request",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "JSON_TYPE(safe_payload) = 'OBJECT'"
+    ]
+  },
+  {
+    "name": "oa_final_result",
+    "meaning": "一申请一不可反转最终结果；新eventId不绕过",
+    "columns": [
+      {
+        "name": "request_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "申请",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "first_event_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "首次可信回调记录ID",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "decision",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "最终结果；枚举：APPROVED/REJECTED",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "decided_at",
+        "type": "DATETIME(6)",
+        "meaning": "OA决定时刻；不是覆盖优先级",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "comment",
+        "type": "VARCHAR(500)",
+        "meaning": "意见摘要",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "received_at",
+        "type": "DATETIME(6)",
+        "meaning": "平台接收时刻",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "request_id"
+    ],
+    "unique": [
+      [
+        "first_event_id"
+      ]
+    ],
+    "indexes": [],
+    "fks": [
+      {
+        "columns": [
+          "request_id"
+        ],
+        "table": "change_request",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "first_event_id"
+        ],
+        "table": "oa_callback_event",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "decision IN ('APPROVED','REJECTED')"
+    ]
+  },
+  {
+    "name": "execution_success",
+    "meaning": "一申请一次成功凭据；业务写入/成功审计同事务",
+    "columns": [
+      {
+        "name": "request_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "成功申请唯一键",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "audit_event_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "唯一成功业务事件",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "executed_at",
+        "type": "DATETIME(6)",
+        "meaning": "成功提交时刻",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "result_snapshot",
+        "type": "JSON",
+        "meaning": "实际授予ID/撤销ID/配置版本与计数，不含凭据；JSON顶层OBJECT",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      }
+    ],
+    "pk": [
+      "request_id"
+    ],
+    "unique": [
+      [
+        "audit_event_id"
+      ]
+    ],
+    "indexes": [],
+    "fks": [
+      {
+        "columns": [
+          "request_id"
+        ],
+        "table": "change_request",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "audit_event_id"
+        ],
+        "table": "audit_event",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "JSON_TYPE(result_snapshot) = 'OBJECT'"
+    ]
+  },
+  {
+    "name": "execution_attempt",
+    "meaning": "本地执行尝试历史；业务失败回滚后独立记录",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "request_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "原固定申请",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "attempt_no",
+        "type": "INT",
+        "meaning": "该申请递增尝试序号",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "outcome",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "尝试结果；枚举：FAILED/INVALIDATED/SUCCEEDED",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "failure_code",
+        "type": "VARCHAR(64)",
+        "meaning": "安全失败/失效码",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "started_at",
+        "type": "DATETIME(6)",
+        "meaning": "开始时间",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "finished_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录结果时间",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "request_id",
+        "attempt_no"
+      ]
+    ],
+    "indexes": [],
+    "fks": [
+      {
+        "columns": [
+          "request_id"
+        ],
+        "table": "change_request",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "attempt_no>0",
+      "outcome IN ('FAILED','INVALIDATED','SUCCEEDED')",
+      "finished_at>=started_at"
+    ]
+  },
+  {
+    "name": "http_idempotency",
+    "meaning": "HTTP接受结果窗口；独立于OA与业务成功防重",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "principal_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "当前后台账号主体",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "http_method",
+        "type": "VARCHAR(10)",
+        "meaning": "大写HTTP方法",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "canonical_path",
+        "type": "VARCHAR(300)",
+        "meaning": "包含稳定资源ID的规范路径，不包含易变查询排序",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "idempotency_key",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "客户端UUID键",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "request_digest",
+        "type": "BINARY(32)",
+        "meaning": "包含版本/目标/规范内容的受保护摘要",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "digest_key_id",
+        "type": "VARCHAR(64)",
+        "meaning": "摘要HMAC密钥版本；密钥不入库",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "state",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "处理中或已接受结果；枚举：IN_PROGRESS/COMPLETED",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "http_status",
+        "type": "SMALLINT",
+        "meaning": "原接受HTTP状态码",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "resource_location",
+        "type": "VARCHAR(300)",
+        "meaning": "原创建/接受资源地址，无则NULL",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "safe_response",
+        "type": "JSON",
+        "meaning": "原安全响应；不含密码/JWT/哈希；JSON顶层OBJECT",
+        "nullable": true,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      },
+      {
+        "name": "lease_token",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "当前处理者随机栅栏令牌；完成后清空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "lease_until",
+        "type": "DATETIME(6)",
+        "meaning": "处理中租约；过期仅允许同内容恢复接管",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "expires_at",
+        "type": "DATETIME(6)",
+        "meaning": "至少首次接受后7天；不删除长期业务防重",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "principal_id",
+        "http_method",
+        "canonical_path",
+        "idempotency_key"
+      ]
+    ],
+    "indexes": [
+      [
+        "expires_at"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "principal_id"
+        ],
+        "table": "admin_account",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "(state='IN_PROGRESS' AND http_status IS NULL AND safe_response IS NULL AND lease_token IS NOT NULL AND lease_until IS NOT NULL) OR (state='COMPLETED' AND http_status BETWEEN 200 AND 599 AND safe_response IS NOT NULL AND lease_token IS NULL AND lease_until IS NULL)",
+      "expires_at>created_at",
+      "JSON_TYPE(safe_response) = 'OBJECT'"
+    ]
+  },
+  {
+    "name": "import_file",
+    "meaning": "导入文件元数据；文件本体受控存储且不可原地覆盖",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "file_name",
+        "type": "VARCHAR(200)",
+        "meaning": "原文件名，仅显示不参与路径拼接",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "sha256",
+        "type": "BINARY(32)",
+        "meaning": "原文件字节摘要",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "size_bytes",
+        "type": "BIGINT",
+        "meaning": "原文件大小",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "storage_ref",
+        "type": "VARCHAR(300)",
+        "meaning": "服务端受控文件引用，非客户端任意URL",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "sheet_names",
+        "type": "JSON",
+        "meaning": "可用工作表名称，CSV固定CSV；JSON顶层ARRAY",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "ARRAY"
+      },
+      {
+        "name": "uploaded_by",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "上传总管理员",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "uploaded_by"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "uploaded_by"
+        ],
+        "table": "admin_account",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "size_bytes BETWEEN 1 AND 10485760",
+      "JSON_TYPE(sheet_names) = 'ARRAY'"
+    ]
+  },
+  {
+    "name": "import_batch",
+    "meaning": "冻结的预检与原子导入结果；成功sourceBatchId长期防重",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "file_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变原文件",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "source_system",
+        "type": "VARCHAR(100) COLLATE utf8mb4_0900_bin",
+        "meaning": "来源系统",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "source_batch_id",
+        "type": "VARCHAR(100) COLLATE utf8mb4_0900_bin",
+        "meaning": "来源批次业务编号",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "import_type",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "导入类别；枚举：ORGANIZATION/EMPLOYEE_INITIALIZATION/PERSONNEL_CHANGES",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "input_snapshot",
+        "type": "JSON",
+        "meaning": "完整ImportInput：worksheet、字段/组织映射、初始化状态、原因；JSON顶层OBJECT",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      },
+      {
+        "name": "input_digest",
+        "type": "BINARY(32)",
+        "meaning": "文件SHA+完整规范输入摘要，定位同批同内容",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "content_digest",
+        "type": "BINARY(32)",
+        "meaning": "规范行、前后值、候选代码和依赖基线摘要",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "state",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "API预检/执行状态；枚举：BLOCKED/READY/SUCCEEDED/FAILED/STALE",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "version",
+        "type": "BIGINT",
+        "meaning": "API 对象业务版本；仅实质变更递增",
+        "nullable": false,
+        "default": "1",
+        "generated": null
+      },
+      {
+        "name": "planned_counts",
+        "type": "JSON",
+        "meaning": "冻结计划ImportCounts八字段；JSON顶层OBJECT",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      },
+      {
+        "name": "actual_counts",
+        "type": "JSON",
+        "meaning": "仅成功时实际八字段计数；JSON顶层OBJECT",
+        "nullable": true,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      },
+      {
+        "name": "blocking_issue_count",
+        "type": "INT",
+        "meaning": "阻断问题数",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "warning_count",
+        "type": "INT",
+        "meaning": "警告数",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "failure_code",
+        "type": "VARCHAR(64)",
+        "meaning": "安全故障码",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "sealed_at",
+        "type": "DATETIME(6)",
+        "meaning": "预检完成冻结时间；API只暴露已冻结批次",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "committed_at",
+        "type": "DATETIME(6)",
+        "meaning": "成功提交时刻",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "created_by",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "发起总管理员",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "row_version",
+        "type": "BIGINT",
+        "meaning": "JPA @Version 专用存储修订；不直接作为 API 业务版本",
+        "nullable": false,
+        "default": "0",
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "source_system",
+        "source_batch_id"
+      ]
+    ],
+    "indexes": [
+      [
+        "created_at",
+        "id"
+      ],
+      [
+        "file_id"
+      ],
+      [
+        "created_by"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "file_id"
+        ],
+        "table": "import_file",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "created_by"
+        ],
+        "table": "admin_account",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "import_type IN ('ORGANIZATION','EMPLOYEE_INITIALIZATION','PERSONNEL_CHANGES')",
+      "state IN ('BLOCKED','READY','SUCCEEDED','FAILED','STALE')",
+      "(state='SUCCEEDED' AND actual_counts IS NOT NULL AND committed_at IS NOT NULL) OR (state<>'SUCCEEDED' AND actual_counts IS NULL AND committed_at IS NULL)",
+      "blocking_issue_count>=0 AND warning_count>=0",
+      "JSON_TYPE(input_snapshot) = 'OBJECT'",
+      "version BETWEEN 0 AND 9007199254740991",
+      "JSON_TYPE(planned_counts) = 'OBJECT'",
+      "JSON_TYPE(actual_counts) = 'OBJECT'",
+      "row_version BETWEEN 0 AND 9007199254740991"
+    ]
+  },
+  {
+    "name": "import_plan_row",
+    "meaning": "冻结规范行及逐字段前后值；候选组织尚未建正式记录",
+    "columns": [
+      {
+        "name": "batch_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "所属预检",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "row_number",
+        "type": "INT",
+        "meaning": "原文件行号",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "plan_no",
+        "type": "INT",
+        "meaning": "行内规范动作序号，同一原行可产生多动作",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "action",
+        "type": "VARCHAR(32)",
+        "meaning": "ImportPlanChange.action明确动作或UNCHANGED",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "target_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "既有或预分配候选ID；无FK以允许尚未创建对象",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "stable_code",
+        "type": "VARCHAR(100)",
+        "meaning": "候选/既有稳定编码",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "company_code",
+        "type": "VARCHAR(100)",
+        "meaning": "完整公司归属编码",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "department_code",
+        "type": "VARCHAR(100)",
+        "meaning": "完整部门归属编码",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "position_code",
+        "type": "VARCHAR(100)",
+        "meaning": "完整岗位归属编码",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "expected_version",
+        "type": "BIGINT",
+        "meaning": "既有目标预检版本；新对象为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "summary",
+        "type": "VARCHAR(500)",
+        "meaning": "安全摘要",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "normalized_values",
+        "type": "JSON",
+        "meaning": "类型校验后的完整规范输入，不执行公式；JSON顶层OBJECT",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      },
+      {
+        "name": "field_changes",
+        "type": "JSON",
+        "meaning": "ImportValueChange[]，明确字段及before/after；JSON顶层ARRAY",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "ARRAY"
+      },
+      {
+        "name": "dependency_snapshot",
+        "type": "JSON",
+        "meaning": "目标版本、唯一键不存在断言、引用集合摘要和来源周期；JSON顶层OBJECT",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      }
+    ],
+    "pk": [
+      "batch_id",
+      "row_number",
+      "plan_no"
+    ],
+    "unique": [],
+    "indexes": [],
+    "fks": [
+      {
+        "columns": [
+          "batch_id"
+        ],
+        "table": "import_batch",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "row_number>0 AND plan_no>=0",
+      "expected_version BETWEEN 0 AND 9007199254740991",
+      "JSON_TYPE(normalized_values) = 'OBJECT'",
+      "JSON_TYPE(field_changes) = 'ARRAY'",
+      "JSON_TYPE(dependency_snapshot) = 'OBJECT'"
+    ]
+  },
+  {
+    "name": "import_issue",
+    "meaning": "冻结预检报告；仅总管理员可读",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "batch_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "预检批次",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "row_number",
+        "type": "INT",
+        "meaning": "原始行号",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "field",
+        "type": "VARCHAR(100)",
+        "meaning": "字段定位",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "severity",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "问题严重性；枚举：WARNING/BLOCKING",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "code",
+        "type": "VARCHAR(64)",
+        "meaning": "稳定问题码",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "message",
+        "type": "VARCHAR(500)",
+        "meaning": "安全问题说明",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "batch_id",
+        "row_number",
+        "id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "batch_id"
+        ],
+        "table": "import_batch",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "severity IN ('WARNING','BLOCKING')",
+      "row_number>0"
+    ]
+  },
+  {
+    "name": "impact_preview",
+    "meaning": "五分钟固定预览；不是授权凭证",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "creator_account_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "创建身份",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "appointment_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "创建时所选任命；总管理员为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "authority_snapshot",
+        "type": "JSON",
+        "meaning": "创建时范围/版本及可见边界；JSON顶层OBJECT",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      },
+      {
+        "name": "operation",
+        "type": "VARCHAR(64)",
+        "meaning": "绑定操作语义与目标资源",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "input_digest",
+        "type": "BINARY(32)",
+        "meaning": "规范输入及目标版本摘要",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "content_digest",
+        "type": "BINARY(32)",
+        "meaning": "预览确认摘要",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "dependency_snapshot",
+        "type": "JSON",
+        "meaning": "影响实际清单/分类/统计的版本和集合依赖，见TRANSACTIONS；JSON顶层OBJECT",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      },
+      {
+        "name": "result_snapshot",
+        "type": "JSON",
+        "meaning": "Preview/ChangePreview的固定汇总、实际清单与noChangeItems；JSON顶层OBJECT",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      },
+      {
+        "name": "expires_at",
+        "type": "DATETIME(6)",
+        "meaning": "创建后五分钟",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "created_at",
+        "type": "DATETIME(6)",
+        "meaning": "记录创建时刻，UTC，非源系统业务起始日期",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "expires_at"
+      ],
+      [
+        "creator_account_id"
+      ],
+      [
+        "appointment_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "creator_account_id"
+        ],
+        "table": "admin_account",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "appointment_id"
+        ],
+        "table": "admin_appointment",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "expires_at>created_at",
+      "JSON_TYPE(authority_snapshot) = 'OBJECT'",
+      "JSON_TYPE(dependency_snapshot) = 'OBJECT'",
+      "JSON_TYPE(result_snapshot) = 'OBJECT'"
+    ]
+  },
+  {
+    "name": "preview_item",
+    "meaning": "同一预览的可见员工/目标分页快照；禁止实时重算混页",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "preview_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "预览",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "item_kind",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "目标类别；枚举：EMPLOYEE/ROLE/GRANT/SOURCE/APPOINTMENT/PENDING_REQUEST",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "stable_key",
+        "type": "VARCHAR(200)",
+        "meaning": "稳定ID或SOURCE完整四元键；员工项按员工公司系统键",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "safe_item",
+        "type": "JSON",
+        "meaning": "API ImpactEmployee/ImpactTarget；仅创建时有权明细；JSON顶层OBJECT",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      },
+      {
+        "name": "visibility_basis",
+        "type": "JSON",
+        "meaning": "读取时重新检查的固定来源边界，混合申请须全部覆盖；JSON顶层OBJECT",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [
+      [
+        "preview_id",
+        "item_kind",
+        "stable_key"
+      ]
+    ],
+    "indexes": [
+      [
+        "preview_id",
+        "item_kind",
+        "id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "preview_id"
+        ],
+        "table": "impact_preview",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "item_kind IN ('EMPLOYEE','ROLE','GRANT','SOURCE','APPOINTMENT','PENDING_REQUEST')",
+      "JSON_TYPE(safe_item) = 'OBJECT'",
+      "JSON_TYPE(visibility_basis) = 'OBJECT'"
+    ]
+  },
+  {
+    "name": "audit_event",
+    "meaning": "追加式授权/管理审计和申请事件；不通过当前资料倒推历史",
+    "columns": [
+      {
+        "name": "id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "不可变内部 UUID v4；API 原样输出小写带连字符字符串",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "occurred_at",
+        "type": "DATETIME(6)",
+        "meaning": "事件发生时刻，UTC",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "event_type",
+        "type": "VARCHAR(64)",
+        "meaning": "事件类型；提交/批准/执行分别记录",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "actor_kind",
+        "type": "VARCHAR(16)",
+        "meaning": "ACCOUNT / SERVICE / DEPLOYMENT",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "actor_id",
+        "type": "VARCHAR(64)",
+        "meaning": "当时操作者稳定标识；部署事件可无账号FK",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "original_submitter_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "原申请人账号，已提交申请事件适用",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "target_id",
+        "type": "VARCHAR(64)",
+        "meaning": "稳定目标标识或聚合ID",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "change_request_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "申请；草稿删除事件仅快照保留被删除ID",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "company_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "单来源公司；全局/混合无法安全分隔为空",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "source_department_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "单来源部门",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "system_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "单来源系统",
+        "nullable": true,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "visibility",
+        "type": "VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "全局记录仅总管理员；SCOPED按固定来源；枚举：GLOBAL/SCOPED",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "result",
+        "type": "VARCHAR(64)",
+        "meaning": "安全业务结果",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "correlation_id",
+        "type": "VARCHAR(64)",
+        "meaning": "HTTP X-Request-Id，不是防重键",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "reason",
+        "type": "VARCHAR(500)",
+        "meaning": "业务原因",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "event_snapshot",
+        "type": "JSON",
+        "meaning": "schemaVersion=1；当时名称、原/实际差异、审批编号/版本、失败码、敏感信息脱敏；JSON顶层OBJECT",
+        "nullable": false,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      }
+    ],
+    "pk": [
+      "id"
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "occurred_at",
+        "id"
+      ],
+      [
+        "company_id",
+        "source_department_id",
+        "system_id",
+        "occurred_at",
+        "id"
+      ],
+      [
+        "source_department_id",
+        "company_id"
+      ],
+      [
+        "system_id"
+      ],
+      [
+        "change_request_id",
+        "occurred_at",
+        "id"
+      ],
+      [
+        "original_submitter_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "original_submitter_id"
+        ],
+        "table": "admin_account",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "company_id"
+        ],
+        "table": "company",
+        "references": [
+          "id"
+        ]
+      },
+      {
+        "columns": [
+          "source_department_id",
+          "company_id"
+        ],
+        "table": "department",
+        "references": [
+          "id",
+          "company_id"
+        ]
+      },
+      {
+        "columns": [
+          "system_id"
+        ],
+        "table": "business_system",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": [
+      "visibility IN ('GLOBAL','SCOPED')",
+      "actor_kind IN ('ACCOUNT','SERVICE','DEPLOYMENT')",
+      "visibility='GLOBAL' OR (company_id IS NOT NULL AND source_department_id IS NOT NULL AND system_id IS NOT NULL)",
+      "JSON_TYPE(event_snapshot) = 'OBJECT'"
+    ]
+  },
+  {
+    "name": "audit_subject",
+    "meaning": "审计按稳定员工/角色等目标筛选的历史索引；可指已删除草稿对象",
+    "columns": [
+      {
+        "name": "audit_event_id",
+        "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
+        "meaning": "所属审计事件",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "subject_type",
+        "type": "VARCHAR(16)",
+        "meaning": "EMPLOYEE / ROLE / GRANT / ACCOUNT / REQUEST等稳定类型",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      },
+      {
+        "name": "subject_id",
+        "type": "VARCHAR(64)",
+        "meaning": "当时稳定对象标识，有意不设多态外键",
+        "nullable": false,
+        "default": null,
+        "generated": null
+      }
+    ],
+    "pk": [
+      "audit_event_id",
+      "subject_type",
+      "subject_id"
+    ],
+    "unique": [],
+    "indexes": [
+      [
+        "subject_type",
+        "subject_id",
+        "audit_event_id"
+      ]
+    ],
+    "fks": [
+      {
+        "columns": [
+          "audit_event_id"
+        ],
+        "table": "audit_event",
+        "references": [
+          "id"
+        ]
+      }
+    ],
+    "checks": []
+  }
+]

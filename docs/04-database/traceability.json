@@ -1,0 +1,2093 @@
+[
+  {
+    "operationId": "login",
+    "method": "POST",
+    "path": "/api/v1/admin/sessions",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "admin_appointment",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T0",
+      "T9",
+      "T12"
+    ],
+    "invariants": [
+      "I-04",
+      "I-20",
+      "I-22"
+    ]
+  },
+  {
+    "operationId": "currentSession",
+    "method": "GET",
+    "path": "/api/v1/admin/sessions/current",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "admin_appointment",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T0",
+      "T9",
+      "T12"
+    ],
+    "invariants": [
+      "I-04",
+      "I-20",
+      "I-22"
+    ]
+  },
+  {
+    "operationId": "logout",
+    "method": "DELETE",
+    "path": "/api/v1/admin/sessions/current",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "admin_appointment",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T0",
+      "T9",
+      "T12"
+    ],
+    "invariants": [
+      "I-04",
+      "I-20",
+      "I-22"
+    ]
+  },
+  {
+    "operationId": "changeOwnPassword",
+    "method": "PUT",
+    "path": "/api/v1/admin/password",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "admin_appointment",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T0",
+      "T9",
+      "T12"
+    ],
+    "invariants": [
+      "I-04",
+      "I-20",
+      "I-22"
+    ]
+  },
+  {
+    "operationId": "myAppointments",
+    "method": "GET",
+    "path": "/api/v1/admin/my-appointments",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "management_scope",
+      "scope_system",
+      "admin_appointment",
+      "admin_account",
+      "employee",
+      "employment"
+    ],
+    "transactions": [
+      "T6",
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-04",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "listAccounts",
+    "method": "GET",
+    "path": "/api/v1/admin/accounts",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T9"
+    ],
+    "invariants": [
+      "I-01",
+      "I-04",
+      "I-16",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "createAccount",
+    "method": "POST",
+    "path": "/api/v1/admin/accounts",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T9"
+    ],
+    "invariants": [
+      "I-01",
+      "I-04",
+      "I-16",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "getAccount",
+    "method": "GET",
+    "path": "/api/v1/admin/accounts/{accountId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T9"
+    ],
+    "invariants": [
+      "I-01",
+      "I-04",
+      "I-16",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "setAccountState",
+    "method": "PUT",
+    "path": "/api/v1/admin/accounts/{accountId}/state",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T9"
+    ],
+    "invariants": [
+      "I-01",
+      "I-04",
+      "I-16",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "resetAccountPassword",
+    "method": "PUT",
+    "path": "/api/v1/admin/accounts/{accountId}/password",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T9"
+    ],
+    "invariants": [
+      "I-01",
+      "I-04",
+      "I-16",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "listSystems",
+    "method": "GET",
+    "path": "/api/v1/admin/systems",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T1",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06"
+    ]
+  },
+  {
+    "operationId": "createSystem",
+    "method": "POST",
+    "path": "/api/v1/admin/systems",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "role_permission",
+      "business_role",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T1",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "operationId": "getSystem",
+    "method": "GET",
+    "path": "/api/v1/admin/systems/{systemId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T1",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06"
+    ]
+  },
+  {
+    "operationId": "updateSystem",
+    "method": "PUT",
+    "path": "/api/v1/admin/systems/{systemId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "role_permission",
+      "business_role",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T1",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "operationId": "systemStatePreview",
+    "method": "POST",
+    "path": "/api/v1/admin/systems/{systemId}/state-previews",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "role_permission",
+      "business_role",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T1",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "operationId": "listDirectoryNodes",
+    "method": "GET",
+    "path": "/api/v1/admin/systems/{systemId}/directory-nodes",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T1",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06"
+    ]
+  },
+  {
+    "operationId": "listPermissions",
+    "method": "GET",
+    "path": "/api/v1/admin/systems/{systemId}/permissions",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T1",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06"
+    ]
+  },
+  {
+    "operationId": "catalogPreview",
+    "method": "POST",
+    "path": "/api/v1/admin/systems/{systemId}/catalog-previews",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "role_permission",
+      "business_role",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T1",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "operationId": "saveCatalog",
+    "method": "POST",
+    "path": "/api/v1/admin/systems/{systemId}/catalog-changes",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "role_permission",
+      "business_role",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T1",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "operationId": "listRoles",
+    "method": "GET",
+    "path": "/api/v1/admin/roles",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02"
+    ],
+    "tables": [
+      "business_role",
+      "role_permission",
+      "role_change_claim"
+    ],
+    "transactions": [
+      "T2",
+      "T11"
+    ],
+    "invariants": [
+      "I-07",
+      "I-10"
+    ]
+  },
+  {
+    "operationId": "createRole",
+    "method": "POST",
+    "path": "/api/v1/admin/roles",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02"
+    ],
+    "tables": [
+      "business_role",
+      "change_request",
+      "change_target",
+      "role_change_claim",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T2"
+    ],
+    "invariants": [
+      "I-01",
+      "I-07",
+      "I-10",
+      "I-16"
+    ]
+  },
+  {
+    "operationId": "getRole",
+    "method": "GET",
+    "path": "/api/v1/admin/roles/{roleId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02"
+    ],
+    "tables": [
+      "business_role",
+      "role_permission",
+      "role_change_claim"
+    ],
+    "transactions": [
+      "T2",
+      "T11"
+    ],
+    "invariants": [
+      "I-07",
+      "I-10"
+    ]
+  },
+  {
+    "operationId": "updateRoleMetadata",
+    "method": "PUT",
+    "path": "/api/v1/admin/roles/{roleId}/metadata",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02"
+    ],
+    "tables": [
+      "business_role",
+      "change_request",
+      "change_target",
+      "role_change_claim",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T2"
+    ],
+    "invariants": [
+      "I-01",
+      "I-07",
+      "I-10",
+      "I-16"
+    ]
+  },
+  {
+    "operationId": "listEmployees",
+    "method": "GET",
+    "path": "/api/v1/admin/employees",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-03"
+    ],
+    "tables": [
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "grant_employment_evidence",
+      "business_role"
+    ],
+    "transactions": [
+      "T5",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-08",
+      "I-09"
+    ]
+  },
+  {
+    "operationId": "getEmployee",
+    "method": "GET",
+    "path": "/api/v1/admin/employees/{employeeId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-03"
+    ],
+    "tables": [
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "grant_employment_evidence",
+      "business_role"
+    ],
+    "transactions": [
+      "T5",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-08",
+      "I-09"
+    ]
+  },
+  {
+    "operationId": "listEmployments",
+    "method": "GET",
+    "path": "/api/v1/admin/employees/{employeeId}/employments",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-03"
+    ],
+    "tables": [
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "grant_employment_evidence",
+      "business_role"
+    ],
+    "transactions": [
+      "T5",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-08",
+      "I-09"
+    ]
+  },
+  {
+    "operationId": "listGrants",
+    "method": "GET",
+    "path": "/api/v1/admin/grants",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-03",
+      "UC-04"
+    ],
+    "tables": [
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "grant_employment_evidence",
+      "business_role"
+    ],
+    "transactions": [
+      "T5",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-08",
+      "I-09"
+    ]
+  },
+  {
+    "operationId": "grantBaselines",
+    "method": "POST",
+    "path": "/api/v1/admin/grant-baselines",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-03"
+    ],
+    "tables": [
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "grant_employment_evidence",
+      "business_role"
+    ],
+    "transactions": [
+      "T5",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-08",
+      "I-09"
+    ]
+  },
+  {
+    "operationId": "listChangeRequests",
+    "method": "GET",
+    "path": "/api/v1/admin/change-requests",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-11"
+    ],
+    "tables": [
+      "change_request",
+      "change_target",
+      "oa_link",
+      "oa_final_result",
+      "execution_success",
+      "audit_event"
+    ],
+    "transactions": [
+      "T3",
+      "T4",
+      "T10",
+      "T11"
+    ],
+    "invariants": [
+      "I-11",
+      "I-12",
+      "I-19"
+    ]
+  },
+  {
+    "operationId": "createChangeDraft",
+    "method": "POST",
+    "path": "/api/v1/admin/change-requests",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04"
+    ],
+    "tables": [
+      "change_request",
+      "change_target",
+      "role_change_claim",
+      "relation_change_claim",
+      "authorization_source",
+      "grant_baseline",
+      "impact_preview",
+      "preview_item",
+      "oa_outbox",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T2",
+      "T3",
+      "T11"
+    ],
+    "invariants": [
+      "I-08",
+      "I-10",
+      "I-11",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "operationId": "getChangeRequest",
+    "method": "GET",
+    "path": "/api/v1/admin/change-requests/{requestId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-11"
+    ],
+    "tables": [
+      "change_request",
+      "change_target",
+      "oa_link",
+      "oa_final_result",
+      "execution_success",
+      "audit_event"
+    ],
+    "transactions": [
+      "T3",
+      "T4",
+      "T10",
+      "T11"
+    ],
+    "invariants": [
+      "I-11",
+      "I-12",
+      "I-19"
+    ]
+  },
+  {
+    "operationId": "updateChangeDraft",
+    "method": "PUT",
+    "path": "/api/v1/admin/change-requests/{requestId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04"
+    ],
+    "tables": [
+      "change_request",
+      "change_target",
+      "role_change_claim",
+      "relation_change_claim",
+      "authorization_source",
+      "grant_baseline",
+      "impact_preview",
+      "preview_item",
+      "oa_outbox",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T2",
+      "T3",
+      "T11"
+    ],
+    "invariants": [
+      "I-08",
+      "I-10",
+      "I-11",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "operationId": "deleteChangeDraft",
+    "method": "DELETE",
+    "path": "/api/v1/admin/change-requests/{requestId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04"
+    ],
+    "tables": [
+      "change_request",
+      "change_target",
+      "role_change_claim",
+      "relation_change_claim",
+      "authorization_source",
+      "grant_baseline",
+      "impact_preview",
+      "preview_item",
+      "oa_outbox",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T2",
+      "T3",
+      "T11"
+    ],
+    "invariants": [
+      "I-08",
+      "I-10",
+      "I-11",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "operationId": "changePreview",
+    "method": "POST",
+    "path": "/api/v1/admin/change-requests/{requestId}/previews",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04"
+    ],
+    "tables": [
+      "change_request",
+      "change_target",
+      "role_change_claim",
+      "relation_change_claim",
+      "authorization_source",
+      "grant_baseline",
+      "impact_preview",
+      "preview_item",
+      "oa_outbox",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T2",
+      "T3",
+      "T11"
+    ],
+    "invariants": [
+      "I-08",
+      "I-10",
+      "I-11",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "operationId": "submitChange",
+    "method": "POST",
+    "path": "/api/v1/admin/change-requests/{requestId}/submissions",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04"
+    ],
+    "tables": [
+      "change_request",
+      "change_target",
+      "role_change_claim",
+      "relation_change_claim",
+      "authorization_source",
+      "grant_baseline",
+      "impact_preview",
+      "preview_item",
+      "oa_outbox",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T2",
+      "T3",
+      "T11"
+    ],
+    "invariants": [
+      "I-08",
+      "I-10",
+      "I-11",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "operationId": "retryOaDelivery",
+    "method": "POST",
+    "path": "/api/v1/admin/change-requests/{requestId}/delivery-retries",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-11"
+    ],
+    "tables": [
+      "change_request",
+      "oa_outbox",
+      "oa_link",
+      "service_identity",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T10"
+    ],
+    "invariants": [
+      "I-11",
+      "I-12",
+      "I-14",
+      "I-16"
+    ]
+  },
+  {
+    "operationId": "listChangeEvents",
+    "method": "GET",
+    "path": "/api/v1/admin/change-requests/{requestId}/events",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-11"
+    ],
+    "tables": [
+      "change_request",
+      "change_target",
+      "oa_link",
+      "oa_final_result",
+      "execution_success",
+      "audit_event"
+    ],
+    "transactions": [
+      "T3",
+      "T4",
+      "T10",
+      "T11"
+    ],
+    "invariants": [
+      "I-11",
+      "I-12",
+      "I-19"
+    ]
+  },
+  {
+    "operationId": "listPreviewEmployees",
+    "method": "GET",
+    "path": "/api/v1/admin/previews/{previewId}/employees",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01",
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-07",
+      "UC-10"
+    ],
+    "tables": [
+      "impact_preview",
+      "preview_item",
+      "admin_account",
+      "admin_appointment",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-18",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "sourceBaselines",
+    "method": "POST",
+    "path": "/api/v1/admin/source-baselines",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-04"
+    ],
+    "tables": [
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "grant_employment_evidence",
+      "business_role"
+    ],
+    "transactions": [
+      "T5",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-08",
+      "I-09"
+    ]
+  },
+  {
+    "operationId": "sourceClosePreview",
+    "method": "POST",
+    "path": "/api/v1/admin/source-closure-previews",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-04"
+    ],
+    "tables": [
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "change_request",
+      "change_target",
+      "relation_change_claim",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T5",
+      "T11"
+    ],
+    "invariants": [
+      "I-08",
+      "I-09",
+      "I-13",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "operationId": "closeSource",
+    "method": "POST",
+    "path": "/api/v1/admin/source-closures",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-04"
+    ],
+    "tables": [
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "change_request",
+      "change_target",
+      "relation_change_claim",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T5",
+      "T11"
+    ],
+    "invariants": [
+      "I-08",
+      "I-09",
+      "I-13",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "operationId": "listCompanies",
+    "method": "GET",
+    "path": "/api/v1/admin/companies",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07",
+      "UC-10"
+    ],
+    "tables": [
+      "company",
+      "department",
+      "position"
+    ],
+    "transactions": [
+      "T11"
+    ],
+    "invariants": [
+      "I-01",
+      "I-21"
+    ]
+  },
+  {
+    "operationId": "listDepartments",
+    "method": "GET",
+    "path": "/api/v1/admin/departments",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07",
+      "UC-10"
+    ],
+    "tables": [
+      "company",
+      "department",
+      "position"
+    ],
+    "transactions": [
+      "T11"
+    ],
+    "invariants": [
+      "I-01",
+      "I-21"
+    ]
+  },
+  {
+    "operationId": "listPositions",
+    "method": "GET",
+    "path": "/api/v1/admin/positions",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07",
+      "UC-10"
+    ],
+    "tables": [
+      "company",
+      "department",
+      "position"
+    ],
+    "transactions": [
+      "T11"
+    ],
+    "invariants": [
+      "I-01",
+      "I-21"
+    ]
+  },
+  {
+    "operationId": "employeeStatePreview",
+    "method": "POST",
+    "path": "/api/v1/admin/employees/{employeeId}/state-previews",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "admin_appointment",
+      "admin_account",
+      "change_request",
+      "change_target",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T7",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-13",
+      "I-18",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "setEmployeeState",
+    "method": "PUT",
+    "path": "/api/v1/admin/employees/{employeeId}/state",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "admin_appointment",
+      "admin_account",
+      "change_request",
+      "change_target",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T7",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-13",
+      "I-18",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "listScopes",
+    "method": "GET",
+    "path": "/api/v1/admin/management-scopes",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07"
+    ],
+    "tables": [
+      "management_scope",
+      "scope_system",
+      "admin_appointment",
+      "admin_account",
+      "employee",
+      "employment"
+    ],
+    "transactions": [
+      "T6",
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-04",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "createScope",
+    "method": "POST",
+    "path": "/api/v1/admin/management-scopes",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07"
+    ],
+    "tables": [
+      "management_scope",
+      "scope_system",
+      "admin_appointment",
+      "employee",
+      "employment",
+      "admin_account",
+      "change_request",
+      "change_target",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T6",
+      "T11"
+    ],
+    "invariants": [
+      "I-04",
+      "I-12",
+      "I-18",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "scopeCreatePreview",
+    "method": "POST",
+    "path": "/api/v1/admin/management-scope-previews",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07"
+    ],
+    "tables": [
+      "management_scope",
+      "scope_system",
+      "admin_appointment",
+      "employee",
+      "employment",
+      "admin_account",
+      "change_request",
+      "change_target",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T6",
+      "T11"
+    ],
+    "invariants": [
+      "I-04",
+      "I-12",
+      "I-18",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "getScope",
+    "method": "GET",
+    "path": "/api/v1/admin/management-scopes/{scopeId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07"
+    ],
+    "tables": [
+      "management_scope",
+      "scope_system",
+      "admin_appointment",
+      "admin_account",
+      "employee",
+      "employment"
+    ],
+    "transactions": [
+      "T6",
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-04",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "replaceScope",
+    "method": "PUT",
+    "path": "/api/v1/admin/management-scopes/{scopeId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07"
+    ],
+    "tables": [
+      "management_scope",
+      "scope_system",
+      "admin_appointment",
+      "employee",
+      "employment",
+      "admin_account",
+      "change_request",
+      "change_target",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T6",
+      "T11"
+    ],
+    "invariants": [
+      "I-04",
+      "I-12",
+      "I-18",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "listScopeAppointments",
+    "method": "GET",
+    "path": "/api/v1/admin/management-scopes/{scopeId}/appointments",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07"
+    ],
+    "tables": [
+      "management_scope",
+      "scope_system",
+      "admin_appointment",
+      "admin_account",
+      "employee",
+      "employment"
+    ],
+    "transactions": [
+      "T6",
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-04",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "scopeEditPreview",
+    "method": "POST",
+    "path": "/api/v1/admin/management-scopes/{scopeId}/previews",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07"
+    ],
+    "tables": [
+      "management_scope",
+      "scope_system",
+      "admin_appointment",
+      "employee",
+      "employment",
+      "admin_account",
+      "change_request",
+      "change_target",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T6",
+      "T11"
+    ],
+    "invariants": [
+      "I-04",
+      "I-12",
+      "I-18",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "listAudit",
+    "method": "GET",
+    "path": "/api/v1/admin/audit-events",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-08"
+    ],
+    "tables": [
+      "audit_event",
+      "audit_subject",
+      "management_scope",
+      "scope_system",
+      "admin_appointment"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-19",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "getAudit",
+    "method": "GET",
+    "path": "/api/v1/admin/audit-events/{auditEventId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-08"
+    ],
+    "tables": [
+      "audit_event",
+      "audit_subject",
+      "management_scope",
+      "scope_system",
+      "admin_appointment"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-19",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "uploadImportFile",
+    "method": "POST",
+    "path": "/api/v1/admin/import-files",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "import_file",
+      "import_batch",
+      "import_plan_row",
+      "import_issue",
+      "organization_mapping",
+      "employee_source_identity",
+      "company",
+      "department",
+      "position",
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "admin_account",
+      "admin_appointment",
+      "change_request",
+      "change_target",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T7",
+      "T8"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-16",
+      "I-17",
+      "I-21"
+    ]
+  },
+  {
+    "operationId": "getImportFile",
+    "method": "GET",
+    "path": "/api/v1/admin/import-files/{fileId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "import_file",
+      "import_batch",
+      "import_plan_row",
+      "import_issue",
+      "organization_mapping",
+      "employee_source_identity",
+      "company",
+      "department",
+      "position",
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "admin_account",
+      "admin_appointment",
+      "change_request",
+      "change_target",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T7",
+      "T8"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-16",
+      "I-17",
+      "I-21"
+    ]
+  },
+  {
+    "operationId": "precheckImport",
+    "method": "POST",
+    "path": "/api/v1/admin/import-batches",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "import_file",
+      "import_batch",
+      "import_plan_row",
+      "import_issue",
+      "organization_mapping",
+      "employee_source_identity",
+      "company",
+      "department",
+      "position",
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "admin_account",
+      "admin_appointment",
+      "change_request",
+      "change_target",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T7",
+      "T8"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-16",
+      "I-17",
+      "I-21"
+    ]
+  },
+  {
+    "operationId": "listImportBatches",
+    "method": "GET",
+    "path": "/api/v1/admin/import-batches",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "import_file",
+      "import_batch",
+      "import_plan_row",
+      "import_issue",
+      "organization_mapping",
+      "employee_source_identity",
+      "company",
+      "department",
+      "position",
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "admin_account",
+      "admin_appointment",
+      "change_request",
+      "change_target",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T7",
+      "T8"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-16",
+      "I-17",
+      "I-21"
+    ]
+  },
+  {
+    "operationId": "getImportBatch",
+    "method": "GET",
+    "path": "/api/v1/admin/import-batches/{batchId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "import_file",
+      "import_batch",
+      "import_plan_row",
+      "import_issue",
+      "organization_mapping",
+      "employee_source_identity",
+      "company",
+      "department",
+      "position",
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "admin_account",
+      "admin_appointment",
+      "change_request",
+      "change_target",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T7",
+      "T8"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-16",
+      "I-17",
+      "I-21"
+    ]
+  },
+  {
+    "operationId": "listImportIssues",
+    "method": "GET",
+    "path": "/api/v1/admin/import-batches/{batchId}/issues",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "import_file",
+      "import_batch",
+      "import_plan_row",
+      "import_issue",
+      "organization_mapping",
+      "employee_source_identity",
+      "company",
+      "department",
+      "position",
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "admin_account",
+      "admin_appointment",
+      "change_request",
+      "change_target",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T7",
+      "T8"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-16",
+      "I-17",
+      "I-21"
+    ]
+  },
+  {
+    "operationId": "commitImport",
+    "method": "POST",
+    "path": "/api/v1/admin/import-batches/{batchId}/commits",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "import_file",
+      "import_batch",
+      "import_plan_row",
+      "import_issue",
+      "organization_mapping",
+      "employee_source_identity",
+      "company",
+      "department",
+      "position",
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "admin_account",
+      "admin_appointment",
+      "change_request",
+      "change_target",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T7",
+      "T8"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-16",
+      "I-17",
+      "I-21"
+    ]
+  },
+  {
+    "operationId": "authorizationQuery",
+    "method": "POST",
+    "path": "/api/v1/integration/authorization-queries",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-05"
+    ],
+    "tables": [
+      "service_identity",
+      "business_system",
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "business_role",
+      "role_permission",
+      "permission",
+      "directory_node"
+    ],
+    "transactions": [
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-05",
+      "I-06",
+      "I-07",
+      "I-08"
+    ]
+  },
+  {
+    "operationId": "permissionCheck",
+    "method": "POST",
+    "path": "/api/v1/integration/permission-checks",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-06"
+    ],
+    "tables": [
+      "service_identity",
+      "business_system",
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "business_role",
+      "role_permission",
+      "permission",
+      "directory_node"
+    ],
+    "transactions": [
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-05",
+      "I-06",
+      "I-07",
+      "I-08"
+    ]
+  },
+  {
+    "operationId": "receiveOaResult",
+    "method": "POST",
+    "path": "/api/v1/oa/final-results",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-11"
+    ],
+    "tables": [
+      "service_identity",
+      "change_request",
+      "oa_link",
+      "oa_callback_event",
+      "oa_final_result",
+      "oa_outbox",
+      "execution_success",
+      "execution_attempt",
+      "audit_event"
+    ],
+    "transactions": [
+      "T0",
+      "T4",
+      "T10"
+    ],
+    "invariants": [
+      "I-11",
+      "I-12",
+      "I-14",
+      "I-15"
+    ]
+  },
+  {
+    "operationId": "listImportPlanChanges",
+    "method": "GET",
+    "path": "/api/v1/admin/import-batches/{batchId}/changes",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "import_file",
+      "import_batch",
+      "import_plan_row",
+      "import_issue",
+      "organization_mapping",
+      "employee_source_identity",
+      "company",
+      "department",
+      "position",
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "admin_account",
+      "admin_appointment",
+      "change_request",
+      "change_target",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T7",
+      "T8"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-16",
+      "I-17",
+      "I-21"
+    ]
+  },
+  {
+    "operationId": "listPreviewTargets",
+    "method": "GET",
+    "path": "/api/v1/admin/previews/{previewId}/targets",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01",
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-07",
+      "UC-10"
+    ],
+    "tables": [
+      "impact_preview",
+      "preview_item",
+      "admin_account",
+      "admin_appointment",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-18",
+      "I-20"
+    ]
+  },
+  {
+    "operationId": "deliverOaSubmission",
+    "method": "POST",
+    "path": "oaSubmission",
+    "direction": "OUTBOUND",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-11"
+    ],
+    "tables": [
+      "change_request",
+      "oa_outbox",
+      "oa_link",
+      "service_identity",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T10"
+    ],
+    "invariants": [
+      "I-11",
+      "I-12",
+      "I-14",
+      "I-16"
+    ]
+  }
+]
