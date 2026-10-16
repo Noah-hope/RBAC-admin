@@ -27,13 +27,13 @@ const memberships = computed(() => data.management.filter((m) => m.accounts.incl
       <label v-if="!isGlobal && memberships.length > 1" class="context-choice"
         >管理任命<select v-model="selectedManagement" aria-label="当前管理任命">
           <option v-for="m in memberships" :key="m.id" :value="m.id">
-            {{ companies.find((c) => c.id === m.company)?.name }} / {{ deptName(m.root) }} /
+            {{ companies.find((c) => c.id === m.company)?.name }} / {{ deptName(m.dept) }} /
             {{ m.systems.join('、') }}
           </option>
         </select></label
       >
       <span v-else>{{
-        isGlobal ? '当前公司全部部门' : `${deptName(currentManagement?.root ?? '')}及下级部门`
+        isGlobal ? '当前公司全部部门' : deptName(currentManagement?.dept ?? '')
       }}</span>
       <div class="context-systems">
         <span v-for="id in allowedSystems" :key="id" class="small-tag">{{

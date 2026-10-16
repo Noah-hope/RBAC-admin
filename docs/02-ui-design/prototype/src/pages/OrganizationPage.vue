@@ -192,18 +192,16 @@ function open() {
       <span class="object-icon violet"><UiIcon name="Building2" :size="24" /></span>
       <div>
         <h2>{{ companyName }}</h2>
-        <p>{{ orgs.length }} 个部门节点 / {{ visibleEmployees.length }} 名示例员工</p>
+        <p>{{ orgs.length }} 个平级部门 / {{ visibleEmployees.length }} 名示例员工</p>
       </div>
-      <span class="subtle-label ml-auto">稳定组织编码</span>
+      <span class="subtle-label ml-auto">公司 / 部门 / 岗位</span>
     </div>
     <div class="org-list">
-      <article v-for="d in orgs" :key="d.id" :class="{ indented: d.parent }">
-        <span class="org-line" v-if="d.parent" /><UiIcon name="Folder" :size="20" />
+      <article v-for="d in orgs" :key="d.id">
+        <UiIcon name="Folder" :size="20" />
         <div>
           <strong>{{ d.name }}</strong
-          ><small
-            >{{ d.id }}{{ d.parent ? ` / 上级：${deptName(d.parent)}` : ' / 一级部门' }}</small
-          >
+          ><small>{{ d.id }} / {{ companyName }}</small>
         </div>
         <span class="muted small ml-auto"
           >{{

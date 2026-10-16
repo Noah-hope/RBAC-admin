@@ -212,10 +212,10 @@
         <mxCell id="note0" value="来源识别&lt;br&gt;总表与公司分表是重复视图，不重复导入&lt;br&gt;不以姓名／手机号识别员工&lt;br&gt;组织更名不改变稳定 ID／编码&lt;br&gt;用户名变化须明确旧新对应" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="4140.0" width="1940" height="185" />
         </mxCell>
-        <mxCell id="note1" value="明确变更&lt;br&gt;新增任职、结束任职、停用、恢复须明确&lt;br&gt;文件缺行不推断离职或删除&lt;br&gt;兼岗独立保存，不覆盖其他任职&lt;br&gt;有历史引用的部门子树不能直接跨公司迁移" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note1" value="明确变更&lt;br&gt;新增任职、结束任职、停用、恢复须明确&lt;br&gt;文件缺行不推断离职或删除&lt;br&gt;兼岗独立保存，不覆盖其他任职&lt;br&gt;有历史引用的指定部门不能直接跨公司迁移" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="4340.0" width="1940" height="185" />
         </mxCell>
-        <mxCell id="note2" value="持续任职条件&lt;br&gt;公司级角色要求本公司有效任职&lt;br&gt;部门级角色要求该部门直接有效任职&lt;br&gt;岗位更名不单独失效；来源关闭后不恢复&lt;br&gt;其他部门的独立有效来源不受误伤" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note2" value="持续任职条件&lt;br&gt;公司级角色要求本公司有效任职&lt;br&gt;部门级角色要求该部门有效任职&lt;br&gt;岗位更名不单独失效；来源关闭后不恢复&lt;br&gt;其他部门的独立有效来源不受误伤" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="4540.0" width="1940" height="185" />
         </mxCell>
         <mxCell id="note3" value="恢复不复活授权&lt;br&gt;恢复员工仅恢复身份可用状态&lt;br&gt;失效业务角色按 UC-03 重新经 OA 申请&lt;br&gt;失效权限管理员由总管理员按 UC-07 重新任命&lt;br&gt;人员导入不自动授予新角色或创建后台账号" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">

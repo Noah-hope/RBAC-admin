@@ -43,9 +43,9 @@ function preflight() {
     error.value = '请核对来源标识映射及目标名称';
   else if (scenario.value === 'migration')
     error.value =
-      '第 2 行：部门及子树已有角色、任职或授权历史引用，禁止直接跨公司迁移。请在目标公司新建组织并明确变更任职。';
+      '第 2 行：部门已有角色、任职或授权历史引用，禁止直接跨公司迁移。请在目标公司新建组织并明确变更任职。';
   else if (scenario.value === 'duplicate')
-    error.value = '第 3 行：同一稳定编码存在冲突的名称或父级，请修正后重新预检。';
+    error.value = '第 3 行：同一稳定编码存在冲突的名称或所属公司，请修正后重新预检。';
   else if (type.value === 'position' && !oldJob.value) error.value = '请选择目标部门内的原岗位';
   version.value = data.organizationVersion;
   checked.value = !error.value;

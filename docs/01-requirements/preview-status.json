@@ -1,7 +1,7 @@
 {
-  "source_revision": "V1.2",
+  "source_revision": "V1.3",
   "preview_revision": "V1.1",
   "policy": "on-demand",
-  "updated_on": "2026-10-15",
-  "note": "正文与 drawio 为 V1.2；保留的 PNG/SVG 是 V1.1 辅助预览，新子流程尚无图片。完整刷新成功后才更新预览版本。"
+  "updated_on": "2026-10-16",
+  "note": "正文与 drawio 为 V1.3 平级部门修订；保留的 PNG/SVG 是 V1.1 辅助预览，不代表当前组织范围规则。"
 }

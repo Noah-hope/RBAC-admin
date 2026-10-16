@@ -506,7 +506,7 @@ function permissionId(feature: string, action: string) {
           v-model="name"
           :aria-invalid="Boolean(formErrors.name)"
           aria-describedby="role-name-error"
-          placeholder="例如：工程一组资料归档员"
+          placeholder="例如：第一项目经理部资料归档员"
         /><small id="role-name-error" class="field-error">{{ formErrors.name }}</small></label
       ><label class="field"
         ><span>角色编码</span

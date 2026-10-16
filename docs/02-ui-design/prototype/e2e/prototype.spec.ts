@@ -39,27 +39,30 @@ test('部门范围、员工搜索与总管理员页面边界', async ({ page }) 
   await expect(page.getByRole('heading', { name: '系统与权限目录' })).toBeVisible();
 });
 
-test('关闭工程一组来源，保留工程二组独立共享角色', async ({ page }) => {
+test('关闭第一项目经理部来源，保留第二项目经理部独立共享角色', async ({ page }) => {
   await page.getByRole('button', { name: /予安 林予安/ }).click();
   const drawer = page.getByRole('dialog', { name: '林予安', exact: true });
-  await expect(drawer.getByText('办公基础角色', { exact: true })).toHaveCount(2);
+  await expect(drawer.getByText('办公基础角色', { exact: true })).toHaveCount(1);
   await drawer.getByRole('button', { name: '关闭原部门权限', exact: true }).click();
   const modal = page.getByRole('dialog', { name: '关闭原部门权限', exact: true });
   await modal.getByLabel('原授权来源部门').selectOption('team-one');
-  await modal.getByRole('textbox').fill('调离工程一组，保留工程二组兼岗');
+  await modal.getByRole('textbox').fill('调离第一项目经理部，保留第二项目经理部兼岗');
   await modal.getByRole('button', { name: '预览影响' }).click();
   await modal.getByText('我已确认影响范围与办理原因').click();
   await modal.getByRole('button', { name: '确认关闭来源' }).click();
   await expect(
     drawer
       .locator('.source-card')
-      .filter({ hasText: '工程一组' })
+      .filter({ hasText: '第一项目经理部' })
       .getByText('已失效', { exact: true }),
   ).toHaveCount(3);
+  await drawer.getByRole('button', { name: '关闭对话框' }).click();
+  await page.getByLabel('当前管理任命').selectOption('M-02');
+  await page.getByRole('button', { name: /予安 林予安/ }).click();
   await expect(
     drawer
       .locator('.source-card')
-      .filter({ hasText: '工程二组' })
+      .filter({ hasText: '第二项目经理部' })
       .getByText('有效', { exact: true }),
   ).toHaveCount(1);
 });
@@ -85,6 +88,7 @@ test('关闭只有旧分配申请的来源，迟到批准不能复权', async ({
 });
 
 test('同一申请投递重试、批准与执行结果分开', async ({ page }) => {
+  await page.getByLabel('当前管理任命').selectOption('M-02');
   await navigate(page, '变更申请');
   await page.getByRole('button', { name: '程以宁 · 分配员工信息查询员', exact: true }).click();
   const request = page.getByRole('dialog', { name: '申请详情' });
@@ -117,6 +121,7 @@ test('共享角色只读，编辑不推导查看菜单', async ({ page }) => {
   const role = page.getByRole('dialog', { name: '办公基础角色' });
   await expect(role.getByRole('checkbox', { name: '系统进入权限' })).toBeDisabled();
   await role.getByRole('button', { name: '关闭对话框' }).click();
+  await page.getByLabel('当前管理任命').selectOption('M-03');
   await navigate(page, '权限验证');
   await page.getByLabel('目标员工').selectOption('EMP-1002');
   await page.getByLabel('调用方绑定系统').selectOption('hr');
@@ -186,6 +191,7 @@ test('小屏导航、页面状态和键盘关闭抽屉', async ({ page }) => {
 });
 
 test('分配角色先固定申请，执行前不改变已有授权', async ({ page }) => {
+  await page.getByLabel('当前管理任命').selectOption('M-02');
   await page.getByRole('button', { name: /亦川 沈亦川/ }).click();
   const drawer = page.getByRole('dialog', { name: '沈亦川', exact: true });
   await drawer.getByRole('button', { name: '申请分配角色', exact: true }).click();
@@ -262,7 +268,7 @@ test('建立账号与任命分别办理，停用账号不修改业务角色', as
       .getByRole('cell', { name: '未任命', exact: true }),
   ).toBeVisible();
   await page.getByRole('button', { name: '管理范围', exact: true }).click();
-  await page.getByRole('button', { name: '编辑范围' }).click();
+  await page.locator('.management-card').nth(2).getByRole('button', { name: '编辑范围' }).click();
   modal = page.getByRole('dialog', { name: '配置管理范围' });
   await modal.getByRole('checkbox', { name: /顾言溪/ }).check();
   await modal.getByRole('textbox').fill('增加同范围协作管理员');
@@ -347,7 +353,7 @@ test('多项任命选择明确范围，空系统不能新增角色授权', async
   await modal.getByRole('button', { name: '确认保存范围' }).click();
   await page.getByLabel('演示身份').selectOption('department');
   const scopeSelect = page.getByLabel('当前管理任命');
-  await expect(scopeSelect.locator('option')).toHaveCount(2);
+  await expect(scopeSelect.locator('option')).toHaveCount(4);
   const id = await scopeSelect.locator('option').last().getAttribute('value');
   await scopeSelect.selectOption(id!);
   await expect(page.locator('.context-systems .small-tag')).toHaveText(['HR']);

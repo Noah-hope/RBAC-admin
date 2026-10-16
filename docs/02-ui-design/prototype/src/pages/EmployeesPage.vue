@@ -272,13 +272,13 @@ function toggleAll(checked: boolean) {
         v-for="d in scopedDepartments"
         :key="d.id"
         class="tree-row"
-        :class="{ selected: department === d.id, child: d.parent }"
+        :class="{ selected: department === d.id }"
         @click="
           department = d.id;
           currentPage = 1;
         "
       >
-        <UiIcon :name="d.parent ? 'Folder' : 'Folder'" :size="16" /><span>{{ d.name }}</span
+        <UiIcon :name="'Folder'" :size="16" /><span>{{ d.name }}</span
         ><span class="tree-count">{{
           visibleEmployees.filter((e) => e.employments.some((j) => j.dept === d.id)).length
         }}</span>
@@ -620,9 +620,9 @@ function toggleAll(checked: boolean) {
               !selected.length
                 ? '请先选择员工'
                 : !roleApplicable(r)
-                  ? '部分所选员工不满足本部门直接有效任职条件'
+                  ? '部分所选员工不满足本部门有效任职条件'
                   : r.dept
-                    ? `要求在${deptName(r.dept)}直接有效任职`
+                    ? `要求在${deptName(r.dept)}部门有效任职`
                     : '公司级共享角色 · 可申请分配'
             }}</small>
           </div>

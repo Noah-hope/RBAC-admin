@@ -388,7 +388,7 @@
         <mxCell id="end-inner" value="" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#23384f;strokeColor=#23384f;">
           <mxGeometry as="geometry" x="768.0" y="3912.0" width="14" height="14" />
         </mxCell>
-        <mxCell id="note0" value="角色归属&lt;br&gt;一个公司＋一个系统，可限定直接任职部门&lt;br&gt;岗位不自动绑定角色&lt;br&gt;公司共享角色仅总管理员维护&lt;br&gt;部门角色按指定范围协作" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note0" value="角色归属&lt;br&gt;一个公司＋一个系统，可限定任职部门&lt;br&gt;岗位不自动绑定角色&lt;br&gt;公司共享角色仅总管理员维护&lt;br&gt;部门角色按指定范围协作" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="4182.0" width="2920" height="185" />
         </mxCell>
         <mxCell id="note1" value="草稿与当前配置&lt;br&gt;新角色草稿不可分配；允许仅保存草稿&lt;br&gt;未提交的新角色草稿可按规则删除&lt;br&gt;已有角色修改待审批时旧配置继续有效&lt;br&gt;一个角色仅一份未结束配置方案" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
@@ -600,7 +600,7 @@
         <mxCell id="end-inner" value="" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#23384f;strokeColor=#23384f;">
           <mxGeometry as="geometry" x="768.0" y="3714.0" width="14" height="14" />
         </mxCell>
-        <mxCell id="note0" value="任职条件&lt;br&gt;公司级角色要求本公司有效任职&lt;br&gt;部门级角色要求该部门直接有效任职&lt;br&gt;下属部门不自动适用；其他合法兼岗保留" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note0" value="任职条件&lt;br&gt;公司级角色要求本公司有效任职&lt;br&gt;部门级角色要求该部门有效任职&lt;br&gt;其他部门不适用；其他合法兼岗保留" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="3984.0" width="2920" height="185" />
         </mxCell>
         <mxCell id="note1" value="多角色&lt;br&gt;只新增指定配对，不覆盖已有其他角色&lt;br&gt;同公司、同系统角色权限取并集&lt;br&gt;进入资格和功能也必须来自该公司、系统" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
@@ -1426,13 +1426,13 @@
         <mxCell id="auth-end-inner" value="" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#23384f;strokeColor=#23384f;">
           <mxGeometry as="geometry" x="408.0" y="559.0" width="14" height="14" />
         </mxCell>
-        <mxCell id="read" value="读取公司、管理根部门、系统及任命版本" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+        <mxCell id="read" value="读取公司、管理部门、系统及任命版本" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
           <mxGeometry as="geometry" x="615.0" y="688.0" width="320" height="82" />
         </mxCell>
         <mxCell id="merge-0" value="" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
           <mxGeometry as="geometry" x="178.0" y="880.0" width="24" height="24" />
         </mxCell>
-        <mxCell id="edit" value="选择部门子树、可管理系统及管理员名单" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+        <mxCell id="edit" value="选择指定部门、可管理系统及管理员名单" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
           <mxGeometry as="geometry" x="615.0" y="955.0" width="320" height="82" />
         </mxCell>
         <mxCell id="valid" value="部门归属、任职、账号与任命去重合法？" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
@@ -1480,7 +1480,7 @@
         <mxCell id="end-inner" value="" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#23384f;strokeColor=#23384f;">
           <mxGeometry as="geometry" x="768.0" y="2595.0" width="14" height="14" />
         </mxCell>
-        <mxCell id="note0" value="指定范围&lt;br&gt;包含根部门及下级，不跨公司&lt;br&gt;同范围管理员协作，不因同公司就共享&lt;br&gt;不预设旧版公司人数限制" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note0" value="指定范围&lt;br&gt;包含指定部门，不跨公司&lt;br&gt;同范围管理员协作，不因同公司就共享&lt;br&gt;不预设旧版公司人数限制" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="2865.0" width="1940" height="185" />
         </mxCell>
         <mxCell id="note1" value="角色边界&lt;br&gt;公司级共享角色仅总管理员维护&lt;br&gt;部门管理员可申请分配共享角色&lt;br&gt;部门角色适用仍要求直接任职" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
@@ -2586,10 +2586,10 @@
         <mxCell id="note0" value="来源识别&lt;br&gt;总表与公司分表是重复视图，不重复导入&lt;br&gt;不以姓名／手机号识别员工&lt;br&gt;组织更名不改变稳定 ID／编码&lt;br&gt;用户名变化须明确旧新对应" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="4140.0" width="1940" height="185" />
         </mxCell>
-        <mxCell id="note1" value="明确变更&lt;br&gt;新增任职、结束任职、停用、恢复须明确&lt;br&gt;文件缺行不推断离职或删除&lt;br&gt;兼岗独立保存，不覆盖其他任职&lt;br&gt;有历史引用的部门子树不能直接跨公司迁移" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note1" value="明确变更&lt;br&gt;新增任职、结束任职、停用、恢复须明确&lt;br&gt;文件缺行不推断离职或删除&lt;br&gt;兼岗独立保存，不覆盖其他任职&lt;br&gt;有历史引用的指定部门不能直接跨公司迁移" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="4340.0" width="1940" height="185" />
         </mxCell>
-        <mxCell id="note2" value="持续任职条件&lt;br&gt;公司级角色要求本公司有效任职&lt;br&gt;部门级角色要求该部门直接有效任职&lt;br&gt;岗位更名不单独失效；来源关闭后不恢复&lt;br&gt;其他部门的独立有效来源不受误伤" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note2" value="持续任职条件&lt;br&gt;公司级角色要求本公司有效任职&lt;br&gt;部门级角色要求该部门有效任职&lt;br&gt;岗位更名不单独失效；来源关闭后不恢复&lt;br&gt;其他部门的独立有效来源不受误伤" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="4540.0" width="1940" height="185" />
         </mxCell>
         <mxCell id="note3" value="恢复不复活授权&lt;br&gt;恢复员工仅恢复身份可用状态&lt;br&gt;失效业务角色按 UC-03 重新经 OA 申请&lt;br&gt;失效权限管理员由总管理员按 UC-07 重新任命&lt;br&gt;人员导入不自动授予新角色或创建后台账号" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">

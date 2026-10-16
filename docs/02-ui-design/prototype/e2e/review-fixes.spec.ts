@@ -27,6 +27,7 @@ for (const viewport of [
   }) => {
     await page.setViewportSize(viewport);
     await page.goto('/');
+    await page.getByLabel('当前管理任命').selectOption('M-02');
     await page.getByRole('button', { name: '分配角色', exact: true }).click();
     const dialog = page.getByRole('dialog', { name: '申请分配角色', exact: true });
     const employeeSelect = dialog.getByLabel('选择分配员工');
@@ -49,9 +50,11 @@ for (const viewport of [
     await employeeSelect.selectOption('EMP-1004');
     await dialog.getByLabel('实际来源部门').selectOption('team-two');
     await dialog.getByRole('checkbox', { name: /办公基础角色/ }).check();
-    await dialog.getByRole('textbox').fill('为工程二组新任职申请基础办公角色');
+    await dialog.getByRole('textbox').fill('为第二项目经理部新任职申请基础办公角色');
     await dialog.getByRole('button', { name: '预览分配', exact: true }).click();
-    await expect(dialog.getByRole('row').filter({ hasText: '沈亦川' })).toContainText('工程二组');
+    await expect(dialog.getByRole('row').filter({ hasText: '沈亦川' })).toContainText(
+      '第二项目经理部',
+    );
     await expect(
       dialog.getByRole('button', { name: '保存并等待 OA 投递', exact: true }),
     ).toBeVisible();

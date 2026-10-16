@@ -4,8 +4,8 @@
     {
       "destination": "UC-01_维护业务系统与权限目录/UC-01_维护业务系统与权限目录.md",
       "source": "usecases-v1/UC-01_维护业务系统与权限目录.md",
-      "source_sha256": "0e988717b7c8b50e9ecdfaa4f52e42484acf7af691d56356bc349321d729641a",
-      "sha256": "e2317086aeadb61a9a581b0491bb02ae9ca64a12ad1c89306a57935f8e0fdfba",
+      "source_sha256": "ebbc4f13ba4e69e8b287bbdb056f9ea178c900dc15c9b47644c74f5d472d7819",
+      "sha256": "c50955022b2e69667c0c3437af0b1552477760205b460d489a0ba23869c325b1",
       "kind": "markdown-links"
     },
     {
@@ -53,14 +53,14 @@
     {
       "destination": "UC-01_维护业务系统与权限目录/课程简表.md",
       "source": "usecase-tables-v1/课程格式用例说明.md",
-      "source_sha256": "2578d96ec82af140fcf345dd9ce1b57ec0f34926221ba43583fe4ec53540bfc5",
+      "source_sha256": "ab25076723b6311ee6034e6d865fc55e52788150c39bd79dd5662773f499a336",
       "sha256": "714ec982585b09668f1d4d0ace33ea3322b905adf6e8e260d811eda9b97dc641",
       "kind": "markdown-section"
     },
     {
       "destination": "UC-01_维护业务系统与权限目录/课程简表.drawio",
       "source": "usecase-tables-v1/权限管理系统_课程格式用例说明.drawio",
-      "source_sha256": "6afcd1ac55605b26997221cf1fd63e58a4e34af8c2bffd5bf9b5ad0b0153259d",
+      "source_sha256": "cac800a7623be4b4adf9dac756e99140d3752a122ff09bbca1b29b5ad9c3675a",
       "sha256": "e70bdfe873daebd6fcc74bec5af859d3996e80aaa0b88b55b7c0e284bdaf90e4",
       "kind": "drawio-pages"
     },
@@ -131,28 +131,28 @@
       "destination": "UC-01_维护业务系统与权限目录/README.md",
       "source": null,
       "source_sha256": null,
-      "sha256": "7440dc24b67447b0aac5e5ed3625a937e889087c29194704f3feefdfa3d3a5b0",
+      "sha256": "d3d755fefdbbd9c4296b67319fd9a7865a9d3de0d4d067051d45126726e8956d",
       "kind": "index"
     },
     {
       "destination": "UC-01_维护业务系统与权限目录/预览.html",
       "source": null,
       "source_sha256": null,
-      "sha256": "85b9a61703af40498d3ccc13801ce8278eacd141da794fb957fbc6a3dff1c204",
+      "sha256": "febd8294635e491129e58fa85606380649d27b4bebc6ebe58353e495a9924dee",
       "kind": "preview-index"
     },
     {
       "destination": "UC-02_创建角色并配置权限/UC-02_创建角色并配置权限.md",
       "source": "usecases-v1/UC-02_创建角色并配置权限.md",
-      "source_sha256": "64da1b6ae451ce74c8f1255585d5c937c367cc47dfa75d5210928a9b13b56c71",
-      "sha256": "367f2da232094ff8764caf9f7bb9d3192cc12f097a56cc955297ffeffcd253b7",
+      "source_sha256": "821a274b82c280897e4049b2758db8ff2d2a2bae68016820f94f46c1b854d5cf",
+      "sha256": "5a5f66c49e99eec4c8e06bce9224c2599c70dd29293b490a1e46b078a182247f",
       "kind": "markdown-links"
     },
     {
       "destination": "UC-02_创建角色并配置权限/UC-02_创建角色并配置权限_流程图.drawio",
       "source": "flows-v1/UC-02_创建角色并配置权限_流程图.drawio",
-      "source_sha256": "6b5823e2db32b8a43155dd23efb6b9f0a19e64fde53372b0a0d0d638635332fb",
-      "sha256": "6b5823e2db32b8a43155dd23efb6b9f0a19e64fde53372b0a0d0d638635332fb",
+      "source_sha256": "75bdad0e9f115ae69bd139fa6a582620e45010b601694d2af2e2d2116b835b8b",
+      "sha256": "75bdad0e9f115ae69bd139fa6a582620e45010b601694d2af2e2d2116b835b8b",
       "kind": "copy"
     },
     {
@@ -179,8 +179,8 @@
     {
       "destination": "UC-02_创建角色并配置权限/UC-02_创建角色并配置权限_活动图.drawio",
       "source": "activities-v1/UC-02_创建角色并配置权限_活动图.drawio",
-      "source_sha256": "35b232d00128c7a132c2f29eda47fb919e5001ba5683dc28965b744a1d37c66a",
-      "sha256": "35b232d00128c7a132c2f29eda47fb919e5001ba5683dc28965b744a1d37c66a",
+      "source_sha256": "2b3fa643e7247f4f3b84cd5db1c4f3518567510645bf1d9056a53660b288315f",
+      "sha256": "2b3fa643e7247f4f3b84cd5db1c4f3518567510645bf1d9056a53660b288315f",
       "kind": "copy"
     },
     {
@@ -193,15 +193,15 @@
     {
       "destination": "UC-02_创建角色并配置权限/课程简表.md",
       "source": "usecase-tables-v1/课程格式用例说明.md",
-      "source_sha256": "2578d96ec82af140fcf345dd9ce1b57ec0f34926221ba43583fe4ec53540bfc5",
-      "sha256": "6b0b1a408d98f27cf2c0c586f4764f01ef9c20308fca9b9c2dff409a427a49c0",
+      "source_sha256": "ab25076723b6311ee6034e6d865fc55e52788150c39bd79dd5662773f499a336",
+      "sha256": "2e34488656080776e9eec145231242cb5183ca4e3cd7f0d99e8448cc3682395c",
       "kind": "markdown-section"
     },
     {
       "destination": "UC-02_创建角色并配置权限/课程简表.drawio",
       "source": "usecase-tables-v1/权限管理系统_课程格式用例说明.drawio",
-      "source_sha256": "6afcd1ac55605b26997221cf1fd63e58a4e34af8c2bffd5bf9b5ad0b0153259d",
-      "sha256": "2222c4e75bf3504f8dc869283d2f99adb429f49c0d532033ffb0baac601f6638",
+      "source_sha256": "cac800a7623be4b4adf9dac756e99140d3752a122ff09bbca1b29b5ad9c3675a",
+      "sha256": "ba48c9dd7592e775d5ea0ec2da07e8a8e8b3e044e31584fdbd13275c38ed7273",
       "kind": "drawio-pages"
     },
     {
@@ -271,28 +271,28 @@
       "destination": "UC-02_创建角色并配置权限/README.md",
       "source": null,
       "source_sha256": null,
-      "sha256": "4d7b8001c261a529ff695c6dbd468d36b876d9419a2ca447fd14b70471714bf5",
+      "sha256": "605c3e9ad11b7e3c1338506f974813720364b16dd153d071d5a6bfdf2e1e030a",
       "kind": "index"
     },
     {
       "destination": "UC-02_创建角色并配置权限/预览.html",
       "source": null,
       "source_sha256": null,
-      "sha256": "2ebe968520a796fed9052e008c3dddd3c356fdb1c96c64d078d9ad519f11abe7",
+      "sha256": "7c58efae96bd0624a56eed6ece1ae3956ab385754f929af6f4396953f656e5f5",
       "kind": "preview-index"
     },
     {
       "destination": "UC-03_为员工分配角色/UC-03_为员工分配角色.md",
       "source": "usecases-v1/UC-03_为员工分配角色.md",
-      "source_sha256": "71a4651565cf7029cf6f34e9439ba410b3c01899f55e3c2db81d410241f588a1",
-      "sha256": "c9931e89d3f789507cf2293bf4026913e197c57c2ff7774c8baacf0517bc0b89",
+      "source_sha256": "50a9b334caf0a63fe8d52d732e175f2e0d56f75e48799b7b85b05c59b2b3e7ef",
+      "sha256": "76979a4fadc0fffa6c3fb265bfb3bbb17c9ef08f0ae152319999923083e396de",
       "kind": "markdown-links"
     },
     {
       "destination": "UC-03_为员工分配角色/UC-03_为员工分配角色_流程图.drawio",
       "source": "flows-v1/UC-03_为员工分配角色_流程图.drawio",
-      "source_sha256": "de925f4331630b281d2cd3b1837bc83129470294b6b6077d8ab65f75a922a89d",
-      "sha256": "de925f4331630b281d2cd3b1837bc83129470294b6b6077d8ab65f75a922a89d",
+      "source_sha256": "459f2010b28ca3db1bd4623ee409425686b0a0b405a4a7997e0168af7c79108f",
+      "sha256": "459f2010b28ca3db1bd4623ee409425686b0a0b405a4a7997e0168af7c79108f",
       "kind": "copy"
     },
     {
@@ -319,8 +319,8 @@
     {
       "destination": "UC-03_为员工分配角色/UC-03_为员工分配角色_活动图.drawio",
       "source": "activities-v1/UC-03_为员工分配角色_活动图.drawio",
-      "source_sha256": "52b874266734092cfc3e4c67581e21414194b14267cbf6582bb8af37c8e8822c",
-      "sha256": "52b874266734092cfc3e4c67581e21414194b14267cbf6582bb8af37c8e8822c",
+      "source_sha256": "c583a9fbdb21d81d56696f3d2fc0dad984f21685a779d092a545834c880d5daf",
+      "sha256": "c583a9fbdb21d81d56696f3d2fc0dad984f21685a779d092a545834c880d5daf",
       "kind": "copy"
     },
     {
@@ -333,14 +333,14 @@
     {
       "destination": "UC-03_为员工分配角色/课程简表.md",
       "source": "usecase-tables-v1/课程格式用例说明.md",
-      "source_sha256": "2578d96ec82af140fcf345dd9ce1b57ec0f34926221ba43583fe4ec53540bfc5",
+      "source_sha256": "ab25076723b6311ee6034e6d865fc55e52788150c39bd79dd5662773f499a336",
       "sha256": "4b44bf454e63296beba68c5a96a46efac47d2fc802cfe70a85a9fcc868181aaa",
       "kind": "markdown-section"
     },
     {
       "destination": "UC-03_为员工分配角色/课程简表.drawio",
       "source": "usecase-tables-v1/权限管理系统_课程格式用例说明.drawio",
-      "source_sha256": "6afcd1ac55605b26997221cf1fd63e58a4e34af8c2bffd5bf9b5ad0b0153259d",
+      "source_sha256": "cac800a7623be4b4adf9dac756e99140d3752a122ff09bbca1b29b5ad9c3675a",
       "sha256": "85b29ee6c90c43dca26096c1da485471c3c39b45e504dca7f736ccdeb3027ff9",
       "kind": "drawio-pages"
     },
@@ -411,21 +411,21 @@
       "destination": "UC-03_为员工分配角色/README.md",
       "source": null,
       "source_sha256": null,
-      "sha256": "14447a4b15bafe326bbc3b39d1bd99aa22d6fe35c8dc7427621b423d1bad59a0",
+      "sha256": "49d3b4d6c6554e55f1b2d8e0d88fe15fcc012cdddffc4646ed02f40de6565289",
       "kind": "index"
     },
     {
       "destination": "UC-03_为员工分配角色/预览.html",
       "source": null,
       "source_sha256": null,
-      "sha256": "cc5fcefbaf44646b6950aae5d634c2a284b948865448dac93965dea37bdb9a67",
+      "sha256": "f732d20611eaafa9cfdd319fae6b7f9e749b626dba847e3ab6a6ec6964088d15",
       "kind": "preview-index"
     },
     {
       "destination": "UC-04_撤销员工角色/UC-04_撤销员工角色.md",
       "source": "usecases-v1/UC-04_撤销员工角色.md",
-      "source_sha256": "634afa2665e038f3194736a0229b892de10e65013a3ea862ce295969d164362d",
-      "sha256": "f192596ffbcda3aea853b6de2a6887d454e184ef546c6b6c013c2f77a02584b0",
+      "source_sha256": "afa3aa691e87c71fbc95ff1c30321cbe1dd7e0079cc4d6dc0d17f40ca6d7061f",
+      "sha256": "e6e018a295d0f8211113d81c5603c2d49ebe8f203bc61071d0fda4bd51db5e79",
       "kind": "markdown-links"
     },
     {
@@ -473,14 +473,14 @@
     {
       "destination": "UC-04_撤销员工角色/课程简表.md",
       "source": "usecase-tables-v1/课程格式用例说明.md",
-      "source_sha256": "2578d96ec82af140fcf345dd9ce1b57ec0f34926221ba43583fe4ec53540bfc5",
+      "source_sha256": "ab25076723b6311ee6034e6d865fc55e52788150c39bd79dd5662773f499a336",
       "sha256": "fb8cc19513be0078c0607ea92acc430b38169386e23dcdcce76a54b0704433e5",
       "kind": "markdown-section"
     },
     {
       "destination": "UC-04_撤销员工角色/课程简表.drawio",
       "source": "usecase-tables-v1/权限管理系统_课程格式用例说明.drawio",
-      "source_sha256": "6afcd1ac55605b26997221cf1fd63e58a4e34af8c2bffd5bf9b5ad0b0153259d",
+      "source_sha256": "cac800a7623be4b4adf9dac756e99140d3752a122ff09bbca1b29b5ad9c3675a",
       "sha256": "c1a25fdb2b8a9cf45b54b9c1d98589707e7ddfbaf6028bb6e13e9a2bf5f1e932",
       "kind": "drawio-pages"
     },
@@ -551,21 +551,21 @@
       "destination": "UC-04_撤销员工角色/README.md",
       "source": null,
       "source_sha256": null,
-      "sha256": "c92f49bb27470c614aa8867adbe06558625af8f9a1a110b0fa39a7f3d60cdcd3",
+      "sha256": "59fca0778ac65943022391b8cad7d30f041cece3ecab25691f548f7c505fb02b",
       "kind": "index"
     },
     {
       "destination": "UC-04_撤销员工角色/预览.html",
       "source": null,
       "source_sha256": null,
-      "sha256": "d27af3d6d55f5e23d54b7b9d334802d886aa5a210f95b6b4317ac1c885a2412c",
+      "sha256": "188733a7e94498cbd9f9cce4b5a3b6eb14b18232e8730de40925ebcbe1698381",
       "kind": "preview-index"
     },
     {
       "destination": "UC-05_查询员工有效权限/UC-05_查询员工有效权限.md",
       "source": "usecases-v1/UC-05_查询员工有效权限.md",
-      "source_sha256": "b4ca5cb860872ff476bf86fe9d379722c18766ee55277207ea4acca35b66cb09",
-      "sha256": "07a5fb5b49f7d4c80681055ae93360c0eb38cf5e2a7e75abde0ff68ec3f539aa",
+      "source_sha256": "ca9779095ff64ded04b5290af1927b0e643aa79b367f17ae273b1ddff44f4153",
+      "sha256": "283ea4d9d08fe160392152487cf8b8c169faf9c109c6f51ebb87891448a07a60",
       "kind": "markdown-links"
     },
     {
@@ -613,14 +613,14 @@
     {
       "destination": "UC-05_查询员工有效权限/课程简表.md",
       "source": "usecase-tables-v1/课程格式用例说明.md",
-      "source_sha256": "2578d96ec82af140fcf345dd9ce1b57ec0f34926221ba43583fe4ec53540bfc5",
+      "source_sha256": "ab25076723b6311ee6034e6d865fc55e52788150c39bd79dd5662773f499a336",
       "sha256": "08387495ea50b60cccd846417216d9cdd421025e199cfb3eb2feed8969c51736",
       "kind": "markdown-section"
     },
     {
       "destination": "UC-05_查询员工有效权限/课程简表.drawio",
       "source": "usecase-tables-v1/权限管理系统_课程格式用例说明.drawio",
-      "source_sha256": "6afcd1ac55605b26997221cf1fd63e58a4e34af8c2bffd5bf9b5ad0b0153259d",
+      "source_sha256": "cac800a7623be4b4adf9dac756e99140d3752a122ff09bbca1b29b5ad9c3675a",
       "sha256": "98af5f0b077142053925c3d3aa1026bfe9e478e5eb78401f236d6d2ae36843ad",
       "kind": "drawio-pages"
     },
@@ -691,21 +691,21 @@
       "destination": "UC-05_查询员工有效权限/README.md",
       "source": null,
       "source_sha256": null,
-      "sha256": "1ae3127116255eb5fad678f3506b29f2f8356ef173d6c958718bb36bf1a59e04",
+      "sha256": "ca06c05b9506e0f7199d503d24507897cfa6b1542ae0145a84c01df140ee617d",
       "kind": "index"
     },
     {
       "destination": "UC-05_查询员工有效权限/预览.html",
       "source": null,
       "source_sha256": null,
-      "sha256": "1a372d656b246f1851a996ad1c29d6d5877f33d4596edb3e41d200cb3f396ab7",
+      "sha256": "6307641f6cfe8ca251a15a9b4607ce3d873f4e9fc1bcd7a79aa07bdbbce26458",
       "kind": "preview-index"
     },
     {
       "destination": "UC-06_检查员工指定操作权限/UC-06_检查员工指定操作权限.md",
       "source": "usecases-v1/UC-06_检查员工指定操作权限.md",
-      "source_sha256": "a8342212862b55670bdefb02ae14c50a8ac55f6ba75df66d375a0f779a4f4771",
-      "sha256": "6fade28b345d74f03434d80875791c8ae280b377021b601c674e5a2565a1b186",
+      "source_sha256": "5c834a795a0a6b0fe6b58308d480d0ae4d7927c9daf797199a4d75fe56ae4467",
+      "sha256": "f3a305c07e5f7c26fa9f4f45247fba8b2d970d2371910de32fae1e97acdf9c8a",
       "kind": "markdown-links"
     },
     {
@@ -753,14 +753,14 @@
     {
       "destination": "UC-06_检查员工指定操作权限/课程简表.md",
       "source": "usecase-tables-v1/课程格式用例说明.md",
-      "source_sha256": "2578d96ec82af140fcf345dd9ce1b57ec0f34926221ba43583fe4ec53540bfc5",
+      "source_sha256": "ab25076723b6311ee6034e6d865fc55e52788150c39bd79dd5662773f499a336",
       "sha256": "7ee9d59d3cbedf8f422d0873b1ef3d4a0c23e2025429b191cacb585717dc4264",
       "kind": "markdown-section"
     },
     {
       "destination": "UC-06_检查员工指定操作权限/课程简表.drawio",
       "source": "usecase-tables-v1/权限管理系统_课程格式用例说明.drawio",
-      "source_sha256": "6afcd1ac55605b26997221cf1fd63e58a4e34af8c2bffd5bf9b5ad0b0153259d",
+      "source_sha256": "cac800a7623be4b4adf9dac756e99140d3752a122ff09bbca1b29b5ad9c3675a",
       "sha256": "4dfbc5e90d397c63617607c142cbbaee7a089c341aa73ffbe7d966e2e404b8d4",
       "kind": "drawio-pages"
     },
@@ -831,21 +831,21 @@
       "destination": "UC-06_检查员工指定操作权限/README.md",
       "source": null,
       "source_sha256": null,
-      "sha256": "a443781b515c90e0bf1b2f21750cb27fbc29c959e8f14067b3a06161831cec3d",
+      "sha256": "b4093c3cc9f1c4048c7f13d603aba0bf74ab97452c01f5c687fabbddfa70596b",
       "kind": "index"
     },
     {
       "destination": "UC-06_检查员工指定操作权限/预览.html",
       "source": null,
       "source_sha256": null,
-      "sha256": "4ac18eb17592d75bef0e0343c0e0b0fc2091829ed32ee2ae550e128b331e7147",
+      "sha256": "3f98e0f26f223365055edcec7fff8621e61d9493029b85595853a9cffaeacef0",
       "kind": "preview-index"
     },
     {
       "destination": "UC-07_配置管理员及管理范围/UC-07_配置管理员及管理范围.md",
       "source": "usecases-v1/UC-07_配置管理员及管理范围.md",
-      "source_sha256": "ca410b0c43b868ade80a75ca61d17830f211ec501bd026195cb41d02d0f990e5",
-      "sha256": "331bab0bb794627d3ada62d535295ad823a35f9e311d81dbea66d9b59802c023",
+      "source_sha256": "97c8fc93184e313efffe7998c4dd68285b7266cb9e6467776200f081805ba8cc",
+      "sha256": "8a03047fe405c8b109b926abf667de1b792aadfc558a57bc95c05c8030bd3862",
       "kind": "markdown-links"
     },
     {
@@ -858,8 +858,8 @@
     {
       "destination": "UC-07_配置管理员及管理范围/UC-07_配置管理员及管理范围_流程图.drawio",
       "source": "flows-v1/UC-07_配置管理员及管理范围_流程图.drawio",
-      "source_sha256": "490f8b1d43e987cbf6100e3bc4f21fdf6970fed72510c2ec7d8448a670729baa",
-      "sha256": "490f8b1d43e987cbf6100e3bc4f21fdf6970fed72510c2ec7d8448a670729baa",
+      "source_sha256": "e28dca3027a0b076828593630e7132cb35fde5d32d48c595974951cc2eed0c0d",
+      "sha256": "e28dca3027a0b076828593630e7132cb35fde5d32d48c595974951cc2eed0c0d",
       "kind": "copy"
     },
     {
@@ -872,8 +872,8 @@
     {
       "destination": "UC-07_配置管理员及管理范围/UC-07_配置管理员及管理范围_时序图.drawio",
       "source": "sequences-v1/UC-07_配置管理员及管理范围_时序图.drawio",
-      "source_sha256": "c3a9a89844c85a38627aee65cb8911306c48163584eb9d109e564fa0789d9781",
-      "sha256": "c3a9a89844c85a38627aee65cb8911306c48163584eb9d109e564fa0789d9781",
+      "source_sha256": "df550367743ad0f8d6c84abc7dbb406e989ed524951b3089b5ceb1373e39eec4",
+      "sha256": "df550367743ad0f8d6c84abc7dbb406e989ed524951b3089b5ceb1373e39eec4",
       "kind": "copy"
     },
     {
@@ -886,22 +886,22 @@
     {
       "destination": "UC-07_配置管理员及管理范围/UC-07_配置管理员及管理范围_活动图.drawio",
       "source": "activities-v1/UC-07_配置管理员及管理范围_活动图.drawio",
-      "source_sha256": "a44b05ff196d393434c89a7b0f91a5aff9a044e76ff6ff04b56397b7288eb189",
-      "sha256": "a44b05ff196d393434c89a7b0f91a5aff9a044e76ff6ff04b56397b7288eb189",
+      "source_sha256": "ce3e65090472240d6dc53f17d6c30f12462e2d7662748dd1bedfb53700bb3662",
+      "sha256": "ce3e65090472240d6dc53f17d6c30f12462e2d7662748dd1bedfb53700bb3662",
       "kind": "copy"
     },
     {
       "destination": "UC-07_配置管理员及管理范围/课程简表.md",
       "source": "usecase-tables-v1/课程格式用例说明.md",
-      "source_sha256": "2578d96ec82af140fcf345dd9ce1b57ec0f34926221ba43583fe4ec53540bfc5",
-      "sha256": "ebda3d315fc11ee5f5cb06065a60f11b55d7c452cc0538a357c26669897ffb3a",
+      "source_sha256": "ab25076723b6311ee6034e6d865fc55e52788150c39bd79dd5662773f499a336",
+      "sha256": "fb3c362fe77cd3ef64fc3b48cde881ca397415a5af9e199a0c894e5234fe4fd9",
       "kind": "markdown-section"
     },
     {
       "destination": "UC-07_配置管理员及管理范围/课程简表.drawio",
       "source": "usecase-tables-v1/权限管理系统_课程格式用例说明.drawio",
-      "source_sha256": "6afcd1ac55605b26997221cf1fd63e58a4e34af8c2bffd5bf9b5ad0b0153259d",
-      "sha256": "365aef6c5739260e99d5d19e4893f40e7c6b6b7e0729eb23640a9f20d933a868",
+      "source_sha256": "cac800a7623be4b4adf9dac756e99140d3752a122ff09bbca1b29b5ad9c3675a",
+      "sha256": "2e51d28009f7390514e15a4fff7cef7babc36606e277a42013f571cf36574896",
       "kind": "drawio-pages"
     },
     {
@@ -971,21 +971,21 @@
       "destination": "UC-07_配置管理员及管理范围/README.md",
       "source": null,
       "source_sha256": null,
-      "sha256": "dc5a739d8be8004283ed104c653f54be9fd45f66f3d4c9ef87728eee34c68954",
+      "sha256": "b883d1047e43f05fad89d235da369df5e547fb833e4bcf701e605fcbd8bbe6c5",
       "kind": "index"
     },
     {
       "destination": "UC-07_配置管理员及管理范围/预览.html",
       "source": null,
       "source_sha256": null,
-      "sha256": "aa618f6f3d0d5c8120f4cad7c56cc53c1c8a31c13f2a64f1c7e30e69550116e2",
+      "sha256": "5552c1e28c675564d9a0b93400b121dadfc25ac9484893956d7cfe56d3f0fafc",
       "kind": "preview-index"
     },
     {
       "destination": "UC-08_查询授权审计记录/UC-08_查询授权审计记录.md",
       "source": "usecases-v1/UC-08_查询授权审计记录.md",
-      "source_sha256": "fa9088e46cd9b692db4d1422ea3a773259d2a690eb4c6a676c2aed93f466a19c",
-      "sha256": "8d2d8f2fa94694f374ae4cac0e28683c840b94d1849a5039066d65980da56e8a",
+      "source_sha256": "8a21c656bd5a3b0b3b98b4573a89e70ab4c75c31a2c40837a3db42bfcc1c721b",
+      "sha256": "36c419973b06f1323049518f868fdc42faaea2f858803f2f29ece21a1d25c5dc",
       "kind": "markdown-links"
     },
     {
@@ -1033,15 +1033,15 @@
     {
       "destination": "UC-08_查询授权审计记录/课程简表.md",
       "source": "usecase-tables-v1/课程格式用例说明.md",
-      "source_sha256": "2578d96ec82af140fcf345dd9ce1b57ec0f34926221ba43583fe4ec53540bfc5",
-      "sha256": "5c3fb3dac63bd5e116f35230dfb35cc5b1193c7444d64b61d4b525165805bb66",
+      "source_sha256": "ab25076723b6311ee6034e6d865fc55e52788150c39bd79dd5662773f499a336",
+      "sha256": "87ffc49cdfdf655caaed6f3d646d3070799d4364491fa38ac64db445eeecdfc1",
       "kind": "markdown-section"
     },
     {
       "destination": "UC-08_查询授权审计记录/课程简表.drawio",
       "source": "usecase-tables-v1/权限管理系统_课程格式用例说明.drawio",
-      "source_sha256": "6afcd1ac55605b26997221cf1fd63e58a4e34af8c2bffd5bf9b5ad0b0153259d",
-      "sha256": "c7fc6d17d16e2f58ea482ee9a944ad82c52cfa7a3efe26ad7516a487de649ba1",
+      "source_sha256": "cac800a7623be4b4adf9dac756e99140d3752a122ff09bbca1b29b5ad9c3675a",
+      "sha256": "60869436062da9639b982ad6e6550127c0390d4866fa3621c75d3511f6d73443",
       "kind": "drawio-pages"
     },
     {
@@ -1111,21 +1111,21 @@
       "destination": "UC-08_查询授权审计记录/README.md",
       "source": null,
       "source_sha256": null,
-      "sha256": "4e687c8907df67a27a391b7527cc5eac151eae23a7525f5f75c058f0cccb972d",
+      "sha256": "7809a09a4d708f2c9e1dcc740d571d774936cb273a8065aa74ed4f68d9c9064b",
       "kind": "index"
     },
     {
       "destination": "UC-08_查询授权审计记录/预览.html",
       "source": null,
       "source_sha256": null,
-      "sha256": "077352dddb2bb1f7abffaf816962d6e5ba357e21428e855130d9437e717a46ca",
+      "sha256": "de6da6c1762795602620fc5050aa2ca100aaa439f227e3d1603896a74522b6c2",
       "kind": "preview-index"
     },
     {
       "destination": "UC-09_管理员登录与退出/UC-09_管理员登录与退出.md",
       "source": "usecases-v1/UC-09_管理员登录与退出.md",
-      "source_sha256": "498c68db1328fa4b77155a2075d0e62d07535524fb1993ef74e003f0819651a9",
-      "sha256": "1f4e96fa0a5da2ec4979ab0ab13be2b56472473aa3a61f28a72bceda11a80ee8",
+      "source_sha256": "ecdd1cc2ef6983dc7ea2f56fee3e15247d345483fedb2df1601419fa80d7907e",
+      "sha256": "7064d81dc57bb12ab531d3beadf04bcb2f424fc1106cf98a6dd0cde1d4148a58",
       "kind": "markdown-links"
     },
     {
@@ -1236,14 +1236,14 @@
     {
       "destination": "UC-09_管理员登录与退出/课程简表.md",
       "source": "usecase-tables-v1/课程格式用例说明.md",
-      "source_sha256": "2578d96ec82af140fcf345dd9ce1b57ec0f34926221ba43583fe4ec53540bfc5",
+      "source_sha256": "ab25076723b6311ee6034e6d865fc55e52788150c39bd79dd5662773f499a336",
       "sha256": "29f3452127150c0e83f45f3f7ccef09004e976f3b8fc613d89e6072284ed18ff",
       "kind": "markdown-section"
     },
     {
       "destination": "UC-09_管理员登录与退出/课程简表.drawio",
       "source": "usecase-tables-v1/权限管理系统_课程格式用例说明.drawio",
-      "source_sha256": "6afcd1ac55605b26997221cf1fd63e58a4e34af8c2bffd5bf9b5ad0b0153259d",
+      "source_sha256": "cac800a7623be4b4adf9dac756e99140d3752a122ff09bbca1b29b5ad9c3675a",
       "sha256": "cdb479c356af1f519090a3c876fff603f361539250a8e78b33cf68c64432b0b7",
       "kind": "drawio-pages"
     },
@@ -1300,28 +1300,28 @@
       "destination": "UC-09_管理员登录与退出/README.md",
       "source": null,
       "source_sha256": null,
-      "sha256": "40f3774e1944ca4d2268a55146cf7b9d07bb1fcd2b55f61a9edd28b8f497fee4",
+      "sha256": "6e87e74d313ef0e26e955bad42ab385e417c64a7a1a7afec1af1aa96b97cfa8e",
       "kind": "index"
     },
     {
       "destination": "UC-09_管理员登录与退出/预览.html",
       "source": null,
       "source_sha256": null,
-      "sha256": "aeab1c246f1431d9b7db047c604f74a67906a23bd050721cbd284fc3f225b129",
+      "sha256": "b6aeb8f2304dcc89d2c8d9fbbb13d2a6c475f4ec6be09696a9c646cd9c21a076",
       "kind": "preview-index"
     },
     {
       "destination": "UC-10_导入／同步员工组织信息/UC-10_导入同步员工组织信息.md",
       "source": "usecases-v1/UC-10_导入同步员工组织信息.md",
-      "source_sha256": "650443286a30775d3a14392c1ec5b906e761627c9249888fc59dd4c5cfd39bc4",
-      "sha256": "7bbcbe891526ee1966397d413e418754009966d0dd1675d5b11aa7dec9a514ab",
+      "source_sha256": "7b761c4106f4d7508bd85310de5b5ef25a95317705c5c76044ec9c169e826f65",
+      "sha256": "38ef5df35fe5d19e033a85705f80b789fac4301f8dce630657a808298ebf2a21",
       "kind": "markdown-links"
     },
     {
       "destination": "UC-10_导入／同步员工组织信息/UC-10_导入／同步员工组织信息_流程图.drawio",
       "source": "flows-v1/UC-10_导入／同步员工组织信息_流程图.drawio",
-      "source_sha256": "1c192add07a76bed9a04290129fdd6aa01d433b850f8a6416e3c3b6a4cb96e55",
-      "sha256": "1c192add07a76bed9a04290129fdd6aa01d433b850f8a6416e3c3b6a4cb96e55",
+      "source_sha256": "f12b4999d4fca0a08d6fa895c7efaf9d3f496f3879d61b3c92aa20b5312a7eae",
+      "sha256": "f12b4999d4fca0a08d6fa895c7efaf9d3f496f3879d61b3c92aa20b5312a7eae",
       "kind": "copy"
     },
     {
@@ -1348,8 +1348,8 @@
     {
       "destination": "UC-10_导入／同步员工组织信息/UC-10_导入同步员工组织信息_活动图.drawio",
       "source": "activities-v1/UC-10_导入同步员工组织信息_活动图.drawio",
-      "source_sha256": "e5378d83ac24b43b8584ec49cfcc4bca5c32b92b1e6c29a1f3358df19c3753f4",
-      "sha256": "e5378d83ac24b43b8584ec49cfcc4bca5c32b92b1e6c29a1f3358df19c3753f4",
+      "source_sha256": "cd46283ae725f50cb6863c8d1e2dbacc8ae0ac3c5eabfde660bb1a543c607afc",
+      "sha256": "cd46283ae725f50cb6863c8d1e2dbacc8ae0ac3c5eabfde660bb1a543c607afc",
       "kind": "copy"
     },
     {
@@ -1362,15 +1362,15 @@
     {
       "destination": "UC-10_导入／同步员工组织信息/课程简表.md",
       "source": "usecase-tables-v1/课程格式用例说明.md",
-      "source_sha256": "2578d96ec82af140fcf345dd9ce1b57ec0f34926221ba43583fe4ec53540bfc5",
-      "sha256": "5da6710ee9cd80dce09d95f3b8456f24771da40fc1086339875eb6549bffd01f",
+      "source_sha256": "ab25076723b6311ee6034e6d865fc55e52788150c39bd79dd5662773f499a336",
+      "sha256": "dbfb47b3e29c0ab3b7d9340ca90201bc62c6b3269d8bb3164ff3e5f70eea3b2b",
       "kind": "markdown-section"
     },
     {
       "destination": "UC-10_导入／同步员工组织信息/课程简表.drawio",
       "source": "usecase-tables-v1/权限管理系统_课程格式用例说明.drawio",
-      "source_sha256": "6afcd1ac55605b26997221cf1fd63e58a4e34af8c2bffd5bf9b5ad0b0153259d",
-      "sha256": "719a8edbcc7aff3bcf6a9f1d6457e24cd2e143bcd6336b1065f837329d025649",
+      "source_sha256": "cac800a7623be4b4adf9dac756e99140d3752a122ff09bbca1b29b5ad9c3675a",
+      "sha256": "5cdb4435477c5248caad43806f9f103a91dcca6f02b17491bb42128397e98889",
       "kind": "drawio-pages"
     },
     {
@@ -1426,21 +1426,21 @@
       "destination": "UC-10_导入／同步员工组织信息/README.md",
       "source": null,
       "source_sha256": null,
-      "sha256": "e46b7dea6843a596e8f0afe7307be3989dab627eb3115016dd79010385dcfd61",
+      "sha256": "7e2f5e87644a97559215e15e5393416c4bf4953f7458d2b2591e854d5070b751",
       "kind": "index"
     },
     {
       "destination": "UC-10_导入／同步员工组织信息/预览.html",
       "source": null,
       "source_sha256": null,
-      "sha256": "f0709efeb3f89e01752b28aadb21c90be1c0cb7f5d43451403c029d16ff763a8",
+      "sha256": "1527cfa5705d08bf68df1a49fefaaa8c3c5cab51de09fa02a9b569d7028f20c7",
       "kind": "preview-index"
     },
     {
       "destination": "UC-11_接收审批结果并执行权限变更/UC-11_接收审批结果并执行权限变更.md",
       "source": "usecases-v1/UC-11_接收审批结果并执行权限变更.md",
-      "source_sha256": "a9f8b289038e34a217791468878399838033dc20cb754758cba581c4644f7beb",
-      "sha256": "f5d6801ed87abe50ba5cc77f88b5b42376a45baa9ffd18df504d3dafe640c9c6",
+      "source_sha256": "a9288d6197d82c32ad92a98b8e7b3ef3aa8e80c5f365d51cc2b8deab145729fb",
+      "sha256": "ad35c8ad718c2b95f4beaadfa8995012d1084a89139a76432ab9c01e167f234f",
       "kind": "markdown-links"
     },
     {
@@ -1495,14 +1495,14 @@
     {
       "destination": "UC-11_接收审批结果并执行权限变更/课程简表.md",
       "source": "usecase-tables-v1/课程格式用例说明.md",
-      "source_sha256": "2578d96ec82af140fcf345dd9ce1b57ec0f34926221ba43583fe4ec53540bfc5",
+      "source_sha256": "ab25076723b6311ee6034e6d865fc55e52788150c39bd79dd5662773f499a336",
       "sha256": "0a1a77a60bb680ef09f748dfb8cae4612bc8d0cb8b439198d15ebe67273bd750",
       "kind": "markdown-section"
     },
     {
       "destination": "UC-11_接收审批结果并执行权限变更/课程简表.drawio",
       "source": "usecase-tables-v1/权限管理系统_课程格式用例说明.drawio",
-      "source_sha256": "6afcd1ac55605b26997221cf1fd63e58a4e34af8c2bffd5bf9b5ad0b0153259d",
+      "source_sha256": "cac800a7623be4b4adf9dac756e99140d3752a122ff09bbca1b29b5ad9c3675a",
       "sha256": "70246cc704bd1bc27680489abf0162160a67fc1f2b4a2e6a688a4028d8e7df12",
       "kind": "drawio-pages"
     },
@@ -1573,21 +1573,21 @@
       "destination": "UC-11_接收审批结果并执行权限变更/README.md",
       "source": null,
       "source_sha256": null,
-      "sha256": "4c9f88926faf49943472f7a3e526ace8566ec47dd5e9fde16022ff2cd16ad272",
+      "sha256": "9d93ad4aa165e3033f0fe18a138c4ee2702eaaa36bf4131535f5c144a72fd3ec",
       "kind": "index"
     },
     {
       "destination": "UC-11_接收审批结果并执行权限变更/预览.html",
       "source": null,
       "source_sha256": null,
-      "sha256": "e6d25fe6191f6669db115c079c3324d0aa4765414f689c5571c9e6365dce3ae5",
+      "sha256": "355a24038d0bc8685147e370c0eb5908caec0497cdf0a1bfcb7c7802dae288a3",
       "kind": "preview-index"
     },
     {
       "destination": "README.md",
       "source": null,
       "source_sha256": null,
-      "sha256": "d58035fd669f54af0dcab92455a0a8e4f0036731319871fb67b66fc3d13e731e",
+      "sha256": "f6292b2b2efec1a6f2d74a3731996e22d98c952411b14855188c0893db12c3e7",
       "kind": "index"
     }
   ]

@@ -283,7 +283,7 @@ function openPassword() {
           ><UiIcon name="ChevronRight" :size="14" />
         </button>
         <div class="sidebar-version">
-          <span class="live-dot" />交互原型 <span>V1.2</span
+          <span class="live-dot" />交互原型 <span>V1.3</span
           ><button
             class="icon-button"
             aria-label="重置演示数据"
@@ -492,8 +492,8 @@ function openPassword() {
       </div>
       <h3>建议体验路径</h3>
       <ol class="help-steps">
-        <li>查看林予安的授权来源，体验不同部门独立授予同一个角色。</li>
-        <li>关闭工程一组来源，确认工程二组来源保留。</li>
+        <li>查看林予安的授权来源，切换第一、第二项目经理部任命，分别查看独立来源。</li>
+        <li>关闭第一项目经理部来源，再切换第二项目经理部任命，确认其来源仍有效。</li>
         <li>提交角色分配，到变更申请展开演示工具，分别模拟 OA 结果和执行。</li>
         <li>切换总管理员，体验系统目录、后台账号、范围配置和人员预检。</li>
         <li>使用页面状态切换加载、空结果、故障、无权限和会话失效。</li>

@@ -21,16 +21,16 @@ test('未提交角色草稿可以保存后继续编辑并删除，员工授权�
   await nav(page, '角色权限');
   await page
     .getByRole('row')
-    .filter({ hasText: '工程一组归档员' })
+    .filter({ hasText: '第一项目经理部归档员' })
     .getByRole('button', { name: '配置权限' })
     .click();
-  const dialog = page.getByRole('dialog', { name: '工程一组归档员', exact: true });
+  const dialog = page.getByRole('dialog', { name: '第一项目经理部归档员', exact: true });
   await dialog.getByRole('checkbox', { name: '系统进入权限', exact: true }).check();
   await dialog.getByRole('button', { name: '保存配置草稿', exact: true }).click();
   await dialog.getByRole('button', { name: '关闭', exact: true }).click();
   await page
     .getByRole('row')
-    .filter({ hasText: '工程一组归档员' })
+    .filter({ hasText: '第一项目经理部归档员' })
     .getByRole('button', { name: '配置权限' })
     .click();
   await expect(dialog.getByRole('checkbox', { name: '系统进入权限', exact: true })).toBeChecked();
@@ -39,12 +39,13 @@ test('未提交角色草稿可以保存后继续编辑并删除，员工授权�
     .getByRole('dialog', { name: '删除未提交草稿', exact: true })
     .getByRole('button', { name: '确认删除草稿' })
     .click();
-  await expect(page.getByRole('row').filter({ hasText: '工程一组归档员' })).toHaveCount(0);
+  await expect(page.getByRole('row').filter({ hasText: '第一项目经理部归档员' })).toHaveCount(0);
   await nav(page, '员工授权');
   await expect(page.getByRole('button', { name: /予安 林予安/ })).toBeVisible();
 });
 
 test('驳回的分配申请复制为新草稿，修改原因重提后保留原驳回记录', async ({ page }) => {
+  await page.getByLabel('当前管理任命').selectOption('M-02');
   await nav(page, '变更申请');
   await page.getByRole('button', { name: '程以宁 · 分配员工信息查询员', exact: true }).click();
   const detail = page.getByRole('dialog', { name: '申请详情', exact: true });
@@ -102,6 +103,7 @@ test('组织资料预检明确阻断已有引用的跨公司迁移', async ({ pa
 });
 
 test('批量分配为不同部门员工保留各自来源，并在提交前预览固定配对', async ({ page }) => {
+  await page.getByLabel('演示身份', { exact: true }).selectOption('global');
   await page.getByRole('button', { name: '分配角色', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: '申请分配角色', exact: true });
   await dialog.getByLabel('选择分配员工').selectOption(['EMP-1003', 'EMP-1004']);
@@ -110,17 +112,21 @@ test('批量分配为不同部门员工保留各自来源，并在提交前预�
   await dialog.getByRole('checkbox', { name: /办公基础角色/ }).check();
   await dialog.getByRole('textbox').fill('按不同任职来源分配基础办公角色');
   await dialog.getByRole('button', { name: '预览分配', exact: true }).click();
-  await expect(dialog.getByRole('row').filter({ hasText: '许清禾' })).toContainText('工程一组');
-  await expect(dialog.getByRole('row').filter({ hasText: '沈亦川' })).toContainText('工程二组');
+  await expect(dialog.getByRole('row').filter({ hasText: '许清禾' })).toContainText(
+    '第一项目经理部',
+  );
+  await expect(dialog.getByRole('row').filter({ hasText: '沈亦川' })).toContainText(
+    '第二项目经理部',
+  );
   await dialog.getByRole('button', { name: '保存并等待 OA 投递', exact: true }).click();
   await nav(page, '变更申请');
   await page.getByRole('button', { name: '2 名员工 · 分配角色', exact: true }).click();
   const request = page.getByRole('dialog', { name: '申请详情', exact: true });
   await expect(
-    request.getByText('新增：许清禾 / 办公基础角色 / 工程一组', { exact: true }),
+    request.getByText('新增：许清禾 / 办公基础角色 / 第一项目经理部', { exact: true }),
   ).toBeVisible();
   await expect(
-    request.getByText('新增：沈亦川 / 办公基础角色 / 工程二组', { exact: true }),
+    request.getByText('新增：沈亦川 / 办公基础角色 / 第二项目经理部', { exact: true }),
   ).toBeVisible();
 });
 
@@ -128,10 +134,10 @@ test('离开未保存的角色配置时可以继续编辑，放弃后不改变�
   await nav(page, '角色权限');
   await page
     .getByRole('row')
-    .filter({ hasText: '工程一组归档员' })
+    .filter({ hasText: '第一项目经理部归档员' })
     .getByRole('button', { name: '配置权限' })
     .click();
-  const config = page.getByRole('dialog', { name: '工程一组归档员', exact: true });
+  const config = page.getByRole('dialog', { name: '第一项目经理部归档员', exact: true });
   await config.getByRole('checkbox', { name: '系统进入权限', exact: true }).check();
   await page.keyboard.press('Escape');
   const confirmation = page.getByRole('alertdialog', { name: '放弃未保存修改', exact: true });
@@ -142,7 +148,7 @@ test('离开未保存的角色配置时可以继续编辑，放弃后不改变�
   await confirmation.getByRole('button', { name: '放弃修改' }).click();
   await page
     .getByRole('row')
-    .filter({ hasText: '工程一组归档员' })
+    .filter({ hasText: '第一项目经理部归档员' })
     .getByRole('button', { name: '配置权限' })
     .click();
   await expect(

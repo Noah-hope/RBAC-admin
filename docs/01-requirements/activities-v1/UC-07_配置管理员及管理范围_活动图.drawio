@@ -95,13 +95,13 @@
         <mxCell id="auth-end-inner" value="" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#23384f;strokeColor=#23384f;">
           <mxGeometry as="geometry" x="408.0" y="559.0" width="14" height="14" />
         </mxCell>
-        <mxCell id="read" value="读取公司、管理根部门、系统及任命版本" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+        <mxCell id="read" value="读取公司、管理部门、系统及任命版本" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
           <mxGeometry as="geometry" x="615.0" y="688.0" width="320" height="82" />
         </mxCell>
         <mxCell id="merge-0" value="" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
           <mxGeometry as="geometry" x="178.0" y="880.0" width="24" height="24" />
         </mxCell>
-        <mxCell id="edit" value="选择部门子树、可管理系统及管理员名单" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
+        <mxCell id="edit" value="选择指定部门、可管理系统及管理员名单" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=1;arcSize=16;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
           <mxGeometry as="geometry" x="615.0" y="955.0" width="320" height="82" />
         </mxCell>
         <mxCell id="valid" value="部门归属、任职、账号与任命去重合法？" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rhombus;fillColor=#eef5ff;strokeColor=#32649a;spacing=8;">
@@ -149,7 +149,7 @@
         <mxCell id="end-inner" value="" vertex="1" parent="lane-center" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#23384f;strokeColor=#23384f;">
           <mxGeometry as="geometry" x="768.0" y="2595.0" width="14" height="14" />
         </mxCell>
-        <mxCell id="note0" value="指定范围&lt;br&gt;包含根部门及下级，不跨公司&lt;br&gt;同范围管理员协作，不因同公司就共享&lt;br&gt;不预设旧版公司人数限制" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note0" value="指定范围&lt;br&gt;包含指定部门，不跨公司&lt;br&gt;同范围管理员协作，不因同公司就共享&lt;br&gt;不预设旧版公司人数限制" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="2865.0" width="1940" height="185" />
         </mxCell>
         <mxCell id="note1" value="角色边界&lt;br&gt;公司级共享角色仅总管理员维护&lt;br&gt;部门管理员可申请分配共享角色&lt;br&gt;部门角色适用仍要求直接任职" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">

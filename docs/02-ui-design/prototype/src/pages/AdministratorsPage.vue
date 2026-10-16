@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { companies, departments, type Account, type Management } from '../data';
-import { audit, data, deptName, employeeName, isDescendant, systemName, toast } from '../store';
+import { audit, data, deptName, employeeName, systemName, toast } from '../store';
 import UiIcon from '../components/UiIcon.vue';
 import { reportError } from '../store';
 import UiPagination from '../components/UiPagination.vue';
@@ -19,7 +19,7 @@ const password = ref('');
 const confirm = ref('');
 const reason = ref('');
 const company = ref('municipal');
-const root = ref('engineering');
+const dept = ref('team-one');
 const systems = ref<string[]>([]);
 const members = ref<string[]>([]);
 const filtered = computed(() =>
@@ -36,7 +36,12 @@ const candidates = computed(() =>
         (e) =>
           e.id === a.employee &&
           e.active &&
-          e.employments.some((j) => j.active && isDescendant(j.dept, root.value)),
+          e.employments.some(
+            (j) =>
+              j.active &&
+              j.dept === dept.value &&
+              departments.some((d) => d.id === j.dept && d.company === company.value),
+          ),
       ),
   ),
 );
@@ -130,7 +135,7 @@ function saveAccountAction() {
 function openScope(m?: Management) {
   editing.value = m;
   company.value = m?.company ?? 'municipal';
-  root.value = m?.root ?? 'engineering';
+  dept.value = m?.dept ?? 'team-one';
   systems.value = [...(m?.systems ?? [])];
   members.value = [...(m?.accounts ?? [])];
   reason.value = '';
@@ -148,7 +153,7 @@ function saveScope() {
   if (editing.value)
     Object.assign(editing.value, {
       company: company.value,
-      root: root.value,
+      dept: dept.value,
       systems: [...systems.value],
       accounts: [...members.value],
       version: editing.value.version + 1,
@@ -157,19 +162,19 @@ function saveScope() {
     data.management.push({
       id: `M-${++data.serial}`,
       company: company.value,
-      root: root.value,
+      dept: dept.value,
       systems: [...systems.value],
       accounts: [...members.value],
       version: 1,
     });
   audit(
     '配置管理范围',
-    deptName(root.value),
-    root.value,
+    deptName(dept.value),
+    dept.value,
     '',
     '已生效',
     reason.value,
-    '部门子树不跨公司；范围内协作，不自动授予业务角色。',
+    '仅管理指定公司与部门；同范围协作，不自动授予业务角色。',
     undefined,
     true,
   );
@@ -272,8 +277,8 @@ const { rows, currentPage, pageSize } = usePagination(filtered);
             编辑范围<UiIcon name="ChevronRight" :size="14" />
           </button>
         </div>
-        <h3>{{ deptName(m.root) }}</h3>
-        <p>{{ companies.find((c) => c.id === m.company)?.name }} / 含下级部门，不跨公司</p>
+        <h3>{{ deptName(m.dept) }}</h3>
+        <p>{{ companies.find((c) => c.id === m.company)?.name }} / 仅该部门，不包含其他部门</p>
         <div class="flex gap-2 flex-wrap my-4">
           <span v-for="s in m.systems" :key="s" class="small-tag">{{ systemName(s) }}</span
           ><span v-if="!m.systems.length" class="muted small">未配置可管理系统</span>
@@ -368,7 +373,7 @@ const { rows, currentPage, pageSize } = usePagination(filtered);
   <UiDialog
     :open="modal === 'scope'"
     title="配置管理范围"
-    subtitle="指定公司、管理根部门与系统，同范围内协作"
+    subtitle="指定公司、指定部门与系统，同范围内协作"
     wide
     @close="modal = ''"
     ><div class="stack">
@@ -378,15 +383,15 @@ const { rows, currentPage, pageSize } = usePagination(filtered);
           ><select
             v-model="company"
             @change="
-              root = departments.find((d) => d.company === company)?.id ?? '';
+              dept = departments.find((d) => d.company === company)?.id ?? '';
               members = [];
             "
           >
             <option v-for="c in companies" :key="c.id" :value="c.id">{{ c.name }}</option>
           </select></label
         ><label class="field"
-          ><span>管理根部门</span
-          ><select v-model="root" @change="members = []">
+          ><span>指定部门</span
+          ><select v-model="dept" aria-label="指定部门" @change="members = []">
             <option
               v-for="d in departments.filter((d) => d.company === company)"
               :key="d.id"
@@ -394,7 +399,7 @@ const { rows, currentPage, pageSize } = usePagination(filtered);
             >
               {{ d.name }}
             </option></select
-          ><small>自动包含下级部门，遇到其他公司边界停止。</small></label
+          ><small>仅管理所选部门；管理其他部门需另行任命。</small></label
         >
       </div>
       <div class="field">

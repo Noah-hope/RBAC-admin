@@ -197,7 +197,7 @@
         <mxCell id="end-inner" value="" vertex="1" parent="lane-admin" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;ellipse;fillColor=#23384f;strokeColor=#23384f;">
           <mxGeometry as="geometry" x="768.0" y="3714.0" width="14" height="14" />
         </mxCell>
-        <mxCell id="note0" value="任职条件&lt;br&gt;公司级角色要求本公司有效任职&lt;br&gt;部门级角色要求该部门直接有效任职&lt;br&gt;下属部门不自动适用；其他合法兼岗保留" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
+        <mxCell id="note0" value="任职条件&lt;br&gt;公司级角色要求本公司有效任职&lt;br&gt;部门级角色要求该部门有效任职&lt;br&gt;其他部门不适用；其他合法兼岗保留" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">
           <mxGeometry as="geometry" x="40" y="3984.0" width="2920" height="185" />
         </mxCell>
         <mxCell id="note1" value="多角色&lt;br&gt;只新增指定配对，不覆盖已有其他角色&lt;br&gt;同公司、同系统角色权限取并集&lt;br&gt;进入资格和功能也必须来自该公司、系统" vertex="1" parent="1" style="html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=18;fontColor=#23384f;align=center;verticalAlign=middle;rounded=0;fillColor=#fff8e8;strokeColor=#c4a34f;align=left;spacing=12;fontSize=17;">

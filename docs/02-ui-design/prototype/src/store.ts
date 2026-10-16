@@ -49,22 +49,13 @@ export const systemName = (id: string) => data.systems.find((s) => s.id === id)?
 export const employeeName = (id: string) =>
   data.employees.find((e) => e.id === id)?.name ?? '总管理员';
 export const roleById = (id: string) => data.roles.find((r) => r.id === id)!;
-export function isDescendant(id: string, root: string): boolean {
-  if (id === root) return true;
-  const d = departments.find((d) => d.id === id);
-  return Boolean(
-    d?.parent &&
-    isDescendant(d.parent, root) &&
-    d.company === departments.find((x) => x.id === root)?.company,
-  );
-}
 export const allowedDepts = computed(() =>
   departments
     .filter(
       (d) =>
         d.company === companyId.value &&
         (isGlobal.value ||
-          Boolean(currentManagement.value && isDescendant(d.id, currentManagement.value.root))),
+          Boolean(currentManagement.value && d.id === currentManagement.value.dept)),
     )
     .map((d) => d.id),
 );
@@ -279,7 +270,7 @@ export function assignRolePairs(
     title: `${ids.length === 1 ? employeeName(ids[0]) : `${ids.length} 名员工`} · 分配角色`,
     kind: '分配角色',
     company: companyId.value,
-    dept: sources.length === 1 ? sources[0] : (currentManagement.value?.root ?? sources[0]),
+    dept: sources.length === 1 ? sources[0] : (currentManagement.value?.dept ?? sources[0]),
     system: [...systems][0],
     reason,
     pairs,
@@ -474,8 +465,9 @@ export function simulateExecution(c: Change, fail = false) {
     c.originManagement &&
     (!originalScope ||
       !originalScope.systems.includes(c.system) ||
-      !isDescendant(c.dept, originalScope.root) ||
-      c.pairs?.some((p) => !isDescendant(p.dept, originalScope.root))),
+      c.company !== originalScope.company ||
+      c.dept !== originalScope.dept ||
+      c.pairs?.some((p) => p.dept !== originalScope.dept)),
   );
   const invalid =
     scopeInvalid ||

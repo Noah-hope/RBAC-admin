@@ -122,7 +122,7 @@
         <mxCell id="r21c1" value="申请状态、失败原因" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="708" y="1004" width="364" height="42" />
         </mxCell>
-        <mxCell id="r22c0" value="其他：角色属于一个公司和一个系统，可限定直接任职部门，岗位不自动绑定。同范围管理员协作维护部门角色，公司级共享角色仅总管理员维护；总管理员可管理全部公司、系统。旧配置在修改审批期间继续有效；全部权限仅配置是否授予；一期无独立角色启停。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
+        <mxCell id="r22c0" value="其他：角色属于一个公司和一个系统，可限定任职部门，岗位不自动绑定。同范围管理员协作维护部门角色，公司级共享角色仅总管理员维护；总管理员可管理全部公司、系统。旧配置在修改审批期间继续有效；全部权限仅配置是否授予；一期无独立角色启停。" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=#333333;fontStyle=0;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="28" y="1046" width="1044" height="68" />
         </mxCell>
         <mxCell id="footer" value="UC-02 · 课程简表 V1.2 · 2026-10-15 · 详细规则见 usecases-v1 对应文档" style="rounded=0;whiteSpace=wrap;html=0;fontFamily=Microsoft YaHei;fontSize=13;fontColor=#111111;align=left;verticalAlign=middle;spacingLeft=12;spacingRight=12;spacingTop=8;spacingBottom=8;fillColor=#ffffff;strokeColor=none;fontStyle=0;" vertex="1" parent="1">

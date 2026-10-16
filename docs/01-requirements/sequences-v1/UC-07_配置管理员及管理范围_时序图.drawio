@@ -59,7 +59,7 @@
         <mxCell id="message0" source="admin" target="center" edge="1" parent="1" style="html=1;edgeStyle=none;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=block;endFill=1;exitX=0.5;entryX=0.5;exitY=0.0679144385026738;entryY=0.0679144385026738;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="label0" value="1. 读取范围配置（公司、管理根部门）" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+        <mxCell id="label0" value="1. 读取范围配置（公司、管理部门）" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="265" y="276" width="595" height="24" />
         </mxCell>
         <mxCell id="message1" source="center" target="center" edge="1" parent="1" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=block;endFill=1;exitX=0.5;entryX=0.5;exitY=0.12459893048128343;entryY=0.14598930481283423;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
@@ -80,7 +80,7 @@
         <mxCell id="message4" source="admin" target="center" edge="1" parent="1" style="html=1;edgeStyle=none;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=block;endFill=1;exitX=0.5;entryX=0.5;exitY=0.36149732620320857;entryY=0.36149732620320857;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="label4" value="4. 预览配置（公司、根部门、系统集合、最终名单、原因）" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+        <mxCell id="label4" value="4. 预览配置（公司、管理部门、系统集合、最终名单、原因）" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="265" y="825" width="595" height="24" />
         </mxCell>
         <mxCell id="message5" source="center" target="admin" edge="1" parent="1" style="html=1;edgeStyle=none;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=open;endFill=0;dashed=1;exitX=0.5;entryX=0.5;exitY=0.4053475935828877;entryY=0.4053475935828877;exitPerimeter=0;entryPerimeter=0;jettySize=35;">

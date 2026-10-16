@@ -83,7 +83,7 @@
         <mxCell id="end" value="完成本次处理" style="ellipse;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#ecf7ef;strokeColor=#44855e;strokeWidth=1.5;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="475" y="2692.5" width="190" height="47" />
         </mxCell>
-        <mxCell id="note0" value="角色归属&lt;br&gt;一个公司＋一个系统，可限定直接任职部门&lt;br&gt;岗位不自动绑定角色&lt;br&gt;公司共享角色仅总管理员维护&lt;br&gt;部门角色按指定范围协作" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#fff8e8;strokeColor=#bc9036;strokeWidth=1.5;align=left;fontSize=16;" vertex="1" parent="1">
+        <mxCell id="note0" value="角色归属&lt;br&gt;一个公司＋一个系统，可限定任职部门&lt;br&gt;岗位不自动绑定角色&lt;br&gt;公司共享角色仅总管理员维护&lt;br&gt;部门角色按指定范围协作" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#fff8e8;strokeColor=#bc9036;strokeWidth=1.5;align=left;fontSize=16;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="870" y="260" width="460" height="147" />
         </mxCell>
         <mxCell id="note1" value="草稿与当前配置&lt;br&gt;新角色草稿不可分配；允许仅保存草稿&lt;br&gt;未提交的新角色草稿可按规则删除&lt;br&gt;已有角色修改待审批时旧配置继续有效&lt;br&gt;一个角色仅一份未结束配置方案" style="rounded=0;html=1;whiteSpace=wrap;fontFamily=Microsoft YaHei;fontSize=17;fontColor=#1e3449;align=center;verticalAlign=middle;spacing=10;fillColor=#fff8e8;strokeColor=#bc9036;strokeWidth=1.5;align=left;fontSize=16;" vertex="1" parent="1">

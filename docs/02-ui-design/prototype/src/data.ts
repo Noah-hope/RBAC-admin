@@ -13,7 +13,6 @@ export interface Department {
   id: string;
   name: string;
   company: string;
-  parent?: string;
 }
 export interface Employment {
   dept: string;
@@ -111,23 +110,23 @@ export interface Account {
 export interface Management {
   id: string;
   company: string;
-  root: string;
+  dept: string;
   systems: string[];
   accounts: string[];
   version: number;
 }
 
 export const companies = [
-  { id: 'municipal', name: '市政建设集团' },
-  { id: 'digital', name: '城建数字公司' },
+  { id: 'municipal', name: '道路工程分公司' },
+  { id: 'digital', name: '桥梁工程分公司' },
 ];
 export const departments = reactive<Department[]>([
-  { id: 'engineering', name: '工程管理部', company: 'municipal' },
-  { id: 'team-one', name: '工程一组', company: 'municipal', parent: 'engineering' },
-  { id: 'team-two', name: '工程二组', company: 'municipal', parent: 'engineering' },
-  { id: 'finance', name: '财务管理部', company: 'municipal' },
+  { id: 'engineering', name: '工程技术部', company: 'municipal' },
+  { id: 'team-one', name: '第一项目经理部', company: 'municipal' },
+  { id: 'team-two', name: '第二项目经理部', company: 'municipal' },
+  { id: 'finance', name: '财务部', company: 'municipal' },
   { id: 'office', name: '综合办公室', company: 'municipal' },
-  { id: 'research', name: '产品研发部', company: 'digital' },
+  { id: 'research', name: '工程技术部', company: 'digital' },
 ]);
 export const actionLabels = ['查看', '新增', '编辑', '审批', '导出'];
 
@@ -218,7 +217,11 @@ export function initialData() {
       initials: '李乔',
       color: 'teal',
       active: true,
-      employments: [{ dept: 'engineering', position: '权限管理员', active: true }],
+      employments: [
+        { dept: 'engineering', position: '权限管理员', active: true },
+        { dept: 'team-one', position: '权限管理员', active: true },
+        { dept: 'team-two', position: '权限管理员', active: true },
+      ],
       updated: '10 月 10 日',
     },
     {
@@ -227,7 +230,11 @@ export function initialData() {
       initials: '周楠',
       color: 'rose',
       active: true,
-      employments: [{ dept: 'engineering', position: '权限管理员', active: true }],
+      employments: [
+        { dept: 'engineering', position: '权限管理员', active: true },
+        { dept: 'team-one', position: '权限管理员', active: true },
+        { dept: 'team-two', position: '权限管理员', active: true },
+      ],
       updated: '10 月 10 日',
     },
     {
@@ -316,25 +323,25 @@ export function initialData() {
     {
       id: 'R-03',
       code: 'ENG1_EDITOR',
-      name: '工程一组协作员',
+      name: '第一项目经理部协作员',
       company: 'municipal',
       dept: 'team-one',
       system: 'oa',
       permissions: ['oa:access', 'oa:items:view', 'oa:items:edit', 'oa:records:add'],
       active: true,
-      description: '工程一组公文维护与事项登记',
+      description: '第一项目经理部公文维护与事项登记',
       version: 4,
     },
     {
       id: 'R-04',
       code: 'ENG2_AUDITOR',
-      name: '工程二组审核员',
+      name: '第二项目经理部审核员',
       company: 'municipal',
       dept: 'team-two',
       system: 'oa',
       permissions: ['oa:access', 'oa:items:view', 'oa:items:approve'],
       active: true,
-      description: '工程二组公文查看与审批',
+      description: '第二项目经理部公文查看与审批',
       version: 2,
     },
     {
@@ -352,7 +359,7 @@ export function initialData() {
     {
       id: 'R-06',
       code: 'ENG_EXPORT_DRAFT',
-      name: '工程一组归档员',
+      name: '第一项目经理部归档员',
       company: 'municipal',
       dept: 'team-one',
       system: 'oa',
@@ -503,7 +510,7 @@ export function initialData() {
       execution: '未执行',
       date: '今天 09:38',
       pairs: [{ employee: 'EMP-1003', role: 'R-02', dept: 'team-one' }],
-      diff: ['新增：员工信息查询员', '授权来源：工程一组'],
+      diff: ['新增：员工信息查询员', '授权来源：第一项目经理部'],
       events: ['09:38 保存固定申请', '09:38 已关联模拟 OA，等待最终结果'],
     },
     {
@@ -520,12 +527,12 @@ export function initialData() {
       execution: '未执行',
       date: '今天 09:26',
       pairs: [{ employee: 'EMP-1007', role: 'R-02', dept: 'team-two' }],
-      diff: ['新增：员工信息查询员', '授权来源：工程二组'],
+      diff: ['新增：员工信息查询员', '授权来源：第二项目经理部'],
       events: ['09:26 保存固定申请', '09:26 模拟投递失败，未被 OA 受理'],
     },
     {
       id: 'CHG-20261014-006',
-      title: '林予安 · 分配工程一组协作员',
+      title: '林予安 · 分配第一项目经理部协作员',
       kind: '分配角色',
       company: 'municipal',
       dept: 'team-one',
@@ -536,7 +543,7 @@ export function initialData() {
       approval: '已批准',
       execution: '执行成功',
       date: '昨天 16:42',
-      diff: ['新增：工程一组协作员', '来源：工程一组'],
+      diff: ['新增：第一项目经理部协作员', '来源：第一项目经理部'],
       events: [
         '16:35 固定申请并关联 OA',
         '16:40 收到模拟 OA 最终批准',
@@ -583,10 +590,26 @@ export function initialData() {
     {
       id: 'M-01',
       company: 'municipal',
-      root: 'engineering',
+      dept: 'team-one',
       systems: ['oa', 'hr'],
       accounts: ['A-01', 'A-02'],
       version: 2,
+    },
+    {
+      id: 'M-02',
+      company: 'municipal',
+      dept: 'team-two',
+      systems: ['oa', 'hr'],
+      accounts: ['A-01', 'A-02'],
+      version: 1,
+    },
+    {
+      id: 'M-03',
+      company: 'municipal',
+      dept: 'engineering',
+      systems: ['oa', 'hr'],
+      accounts: ['A-01', 'A-02'],
+      version: 1,
     },
   ];
   const audits: Audit[] = [
@@ -600,7 +623,7 @@ export function initialData() {
       system: 'hr',
       result: '待审批',
       reason: '新增项目考勤核对职责',
-      detail: '固定员工、角色及工程一组来源，提交不改变当前授权。',
+      detail: '固定员工、角色及第一项目经理部来源，提交不改变当前授权。',
       request: changes[0].id,
     },
     {
@@ -626,7 +649,7 @@ export function initialData() {
       system: 'oa',
       result: '执行成功',
       reason: '项目资料协作',
-      detail: '工程一组来源新增协作员，其他独立来源保留。',
+      detail: '第一项目经理部来源新增协作员，其他独立来源保留。',
       request: changes[2].id,
     },
     {
@@ -647,17 +670,19 @@ export function initialData() {
       time: '2026-10-10 10:00',
       actor: '总管理员',
       action: '配置管理范围',
-      target: '工程管理部',
+      target: '工程技术部',
       dept: 'engineering',
       system: 'oa',
       result: '已生效',
       reason: '部门授权管理',
-      detail: '指定工程管理部及下级、OA/HR 两系统，李乔与周楠协作。',
+      detail: '三个平级部门分别任命；每次只管理选定部门及 OA/HR，李乔与周楠同范围协作。',
       global: true,
     },
   ];
   changes.forEach((c) => {
-    c.originManagement = 'M-01';
+    c.originManagement = management.find(
+      (m) => m.company === c.company && m.dept === c.dept && m.systems.includes(c.system),
+    )?.id;
     c.pairs?.forEach((p) => (p.version = roles.find((r) => r.id === p.role)?.version));
   });
   return {
