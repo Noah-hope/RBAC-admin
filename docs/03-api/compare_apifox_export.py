@@ -90,7 +90,8 @@ report = {
                            if a[k].get('security', local.get('security')) !=
                            b[k].get('security', remote.get('security'))],
     'responseCodeMismatches': [list(k) for k in sorted(a.keys() & b.keys())
-                               if a[k]['responses'].keys() != b[k]['responses'].keys()],
+                               if a[k].get('responses', {}).keys() != b[k].get('responses', {}).keys()],
+    'operationsMissingResponses': [list(k) for k, op in sorted(b.items()) if not op.get('responses')],
     'differenceEntryCount': len(diffs),
     'componentDifferencePaths': [v['path'] for v in diffs if v['path'].startswith('/components/')],
     'webhookDifferencePaths': [v['path'] for v in diffs if v['path'].startswith('/webhooks/')],
@@ -99,8 +100,8 @@ report = {
     'errorContentTypes': {k: list(v['content']) for k,v in remote['components']['responses'].items()},
     'uploadSchema': remote['paths']['/api/v1/admin/import-files']['post']['requestBody']['content']['multipart/form-data']['schema'],
 }
-(ROOT / 'APIFOX-EXPORT-DIFF.json').write_text(
-    json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+(ROOT / 'APIFOX-EXPORT-DIFF.json').write_bytes(
+    (json.dumps(report, ensure_ascii=False, indent=2) + '\n').encode('utf-8'))
 print(json.dumps({k: v for k, v in report.items() if k != 'differences'},
                  ensure_ascii=False, indent=2))
 print('Difference entries (repeated referenced schemas included):', len(diffs))
