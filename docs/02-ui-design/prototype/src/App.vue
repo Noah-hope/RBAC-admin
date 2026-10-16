@@ -363,43 +363,55 @@ function openPassword() {
           </div>
         </div>
       </header>
-      <details class="prototype-tools">
-        <summary>
-          <span class="prototype-label">界面原型</span><span>模拟数据 · 未连接真实业务系统</span
-          ><span class="tools-caption">原型演示工具</span
-          ><UiIcon name="SlidersHorizontal" :size="18" />
-        </summary>
-        <div class="prototype-toolbar">
-          <button class="text-button" @click="go('verification')">
-            <UiIcon name="Fingerprint" />权限调用演示
-          </button>
-          <div>
-            <label
-              >演示身份<select
-                :value="identity"
-                aria-label="演示身份"
-                @change="
-                  switchIdentity(
-                    ($event.target as HTMLSelectElement).value as 'department' | 'global',
-                  )
-                "
+      <div class="prototype-controls">
+        <details class="prototype-tools">
+          <summary>
+            <span class="prototype-label">界面原型</span><span>模拟数据 · 未连接真实业务系统</span
+            ><span class="tools-caption">原型演示工具</span
+            ><UiIcon name="SlidersHorizontal" :size="18" />
+          </summary>
+          <div class="prototype-toolbar">
+            <button class="text-button" @click="go('verification')">
+              <UiIcon name="Fingerprint" />权限调用演示
+            </button>
+            <div>
+              <label
+                >演示身份<select
+                  :value="identity"
+                  aria-label="演示身份"
+                  @change="
+                    switchIdentity(
+                      ($event.target as HTMLSelectElement).value as 'department' | 'global',
+                    )
+                  "
+                >
+                  <option value="department">部门权限管理员</option>
+                  <option value="global">总管理员</option>
+                </select></label
+              ><label
+                >页面状态<select v-model="scene" aria-label="演示页面状态">
+                  <option value="normal">正常</option>
+                  <option value="loading">加载中</option>
+                  <option value="empty">空结果</option>
+                  <option value="error">服务故障</option>
+                  <option value="forbidden">无权限</option>
+                  <option value="expired">会话失效</option>
+                </select></label
               >
-                <option value="department">部门权限管理员</option>
-                <option value="global">总管理员</option>
-              </select></label
-            ><label
-              >页面状态<select v-model="scene" aria-label="演示页面状态">
-                <option value="normal">正常</option>
-                <option value="loading">加载中</option>
-                <option value="empty">空结果</option>
-                <option value="error">服务故障</option>
-                <option value="forbidden">无权限</option>
-                <option value="expired">会话失效</option>
-              </select></label
-            >
+            </div>
           </div>
-        </div>
-      </details>
+        </details>
+        <button
+          class="text-button demo-identity-switch"
+          @click="
+            accountMenu = false;
+            switchIdentity(isGlobal ? 'department' : 'global');
+          "
+        >
+          <UiIcon name="UserCog" :size="16" />
+          {{ isGlobal ? '切换为部门权限管理员（演示）' : '切换为总管理员（演示）' }}
+        </button>
+      </div>
       <main id="main-content" class="main-content" tabindex="-1">
         <section v-if="temporary" class="state-panel">
           <span class="empty-orbit"><UiIcon name="KeyRound" :size="38" /></span>

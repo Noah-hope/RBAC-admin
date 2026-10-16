@@ -68,7 +68,7 @@ input[type='checkbox']:disabled {
   cursor: not-allowed;
 }
 select,
-.field input,
+.field input:not([type='checkbox']):not([type='radio']),
 textarea {
   min-width: 0;
   border: 1px solid var(--md-sys-color-surface-container-highest);
@@ -1217,7 +1217,7 @@ td small {
   color: var(--md-sys-color-error);
   font-style: normal;
 }
-.field input,
+.field input:not([type='checkbox']):not([type='radio']),
 .field textarea,
 .field select {
   width: 100%;

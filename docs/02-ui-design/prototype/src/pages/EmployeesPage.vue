@@ -548,23 +548,18 @@ function toggleAll(checked: boolean) {
 
   <UiDialog
     :open="dialog === 'assign'"
+    class="assignment-dialog"
     title="申请分配角色"
     subtitle="新增授权经 OA 批准并执行后生效"
     wide
     @close="dialog = ''"
     ><div class="stack">
-      <div class="info-box">
-        <UiIcon name="Users" />
-        <p>
-          {{
-            selected.length ? selected.map(employeeName).join('、') : '尚未选择员工，请在下方选择。'
-          }}
-        </p>
-      </div>
       <label class="field"
-        ><span>选择员工</span
+        ><span
+          >选择员工 <small>已选 {{ selected.length }} 人</small></span
         ><select
           multiple
+          size="4"
           v-model="selected"
           :disabled="assignmentPreview"
           aria-label="选择分配员工"
@@ -622,11 +617,13 @@ function toggleAll(checked: boolean) {
           <div>
             <strong>{{ r.name }}</strong
             ><small>{{
-              !roleApplicable(r)
-                ? '部分所选员工不满足本部门直接有效任职条件'
-                : r.dept
-                  ? `要求在${deptName(r.dept)}直接有效任职`
-                  : '公司级共享角色 · 可申请分配'
+              !selected.length
+                ? '请先选择员工'
+                : !roleApplicable(r)
+                  ? '部分所选员工不满足本部门直接有效任职条件'
+                  : r.dept
+                    ? `要求在${deptName(r.dept)}直接有效任职`
+                    : '公司级共享角色 · 可申请分配'
             }}</small>
           </div>
           <span class="muted small">{{ r.permissions.length }} 项权限</span></label

@@ -46,6 +46,24 @@
 .tools-caption {
   margin-left: auto;
 }
+.prototype-controls {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin: 0 24px;
+  border-bottom: 1px solid var(--md-sys-color-surface-container-high);
+}
+.prototype-controls .prototype-tools {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  border: none;
+}
+.demo-identity-switch {
+  flex-shrink: 0;
+  min-height: 40px;
+  font-size: 12px;
+}
 .prototype-toolbar {
   padding: 16px 0;
   border: none;
@@ -130,7 +148,7 @@
   background: transparent;
   padding: 8px;
 }
-.field input,
+.field input:not([type='checkbox']):not([type='radio']),
 .field select,
 .field textarea,
 .table-toolbar > select {
@@ -138,7 +156,7 @@
   border-color: var(--md-sys-color-outline);
   color: var(--ink);
 }
-.field input:disabled {
+.field input:not([type='checkbox']):not([type='radio']):disabled {
   background: var(--md-sys-color-surface-container);
   color: var(--muted);
 }
@@ -148,6 +166,44 @@
 }
 .field [aria-invalid='true'] {
   border-color: var(--md-sys-color-error);
+}
+.choice-row {
+  min-width: 0;
+}
+.choice-row > div {
+  min-width: 0;
+}
+.choice-row > span:last-child {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.ui-dialog.assignment-dialog {
+  width: min(720px, calc(100vw - 48px));
+}
+.assignment-dialog .stack {
+  gap: 16px;
+}
+.assignment-dialog .field select[multiple] {
+  height: 104px;
+  min-height: 104px;
+  padding: 8px;
+  font-size: 14px;
+}
+.assignment-dialog .choice-row {
+  padding: 8px 12px;
+  gap: 12px;
+  min-height: 56px;
+}
+.assignment-dialog .choice-row strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+.assignment-dialog .choice-row small {
+  margin-top: 0;
+}
+.assignment-dialog .choice-row:has(input:disabled) {
+  cursor: not-allowed;
+  background: var(--md-sys-color-surface);
 }
 .table-scroll:focus-visible {
   outline: 2px solid var(--primary);
@@ -484,6 +540,17 @@ button:disabled {
   }
 }
 @media (max-width: 839px) {
+  .prototype-controls {
+    margin-inline: 16px;
+    flex-wrap: wrap;
+    gap: 0 8px;
+  }
+  .prototype-controls .prototype-tools {
+    flex-basis: 100%;
+  }
+  .ui-dialog.assignment-dialog {
+    width: 100vw;
+  }
   .sidebar {
     width: 256px;
     transform: translateX(-100%);
