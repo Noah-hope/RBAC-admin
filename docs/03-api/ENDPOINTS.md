@@ -44,6 +44,7 @@
 | 申请 | POST | /api/v1/admin/change-requests/{requestId}/delivery-retries | retryOaDelivery | 范围 | UC-11 | 重试原固定申请投递 |
 | 申请 | GET | /api/v1/admin/change-requests/{requestId}/events | listChangeEvents | 范围 | UC-11 | 分页读取申请事件 |
 | 申请 | GET | /api/v1/admin/previews/{previewId}/employees | listPreviewEmployees | 范围 | UC-01,UC-02,UC-03,UC-04,UC-07,UC-10 | 分页读取影响员工 |
+| 申请 | GET | /api/v1/admin/previews/{previewId}/targets | listPreviewTargets | 范围 | UC-01,UC-02,UC-03,UC-04,UC-07,UC-10 | 分页读取有权查看的目标影响 |
 | 来源 | POST | /api/v1/admin/source-baselines | sourceBaselines | 范围 | UC-04 | 读取来源周期基线 |
 | 来源 | POST | /api/v1/admin/source-closure-previews | sourceClosePreview | 范围 | UC-04 | 预览关闭原部门权限 |
 | 来源 | POST | /api/v1/admin/source-closures | closeSource | 范围 | UC-04 | 直接关闭原部门授权来源 |

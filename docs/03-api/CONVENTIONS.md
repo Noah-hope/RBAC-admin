@@ -2,7 +2,7 @@
 
 ## 版本、结构与标识
 
-契约版本 1.0.0，路径 `/api/v1`。JSON 使用 camelCase，UTF-8，时间用带时区 RFC 3339，响应统一 UTC，界面按 Asia/Shanghai 显示；时间筛选 `[from,to)`。未知字段拒绝，禁止把缺字段解释为清空。字符串先去首尾空白后检查长度；业务名称允许中文；编码规则见模型。ID 为后端生成的不透明字符串（1～64 字符），示例 `emp_demo_01`，不是物理主键类型承诺。公司、部门、岗位、任职、角色、关系、范围、任命、申请等分别有 ID，不能解析名称/编码推断权限。
+契约版本 1.1.0（API评审修订、尚未上线），路径 `/api/v1`。JSON 使用 camelCase，UTF-8，时间用带时区 RFC 3339，响应统一 UTC，界面按 Asia/Shanghai 显示；时间筛选 `[from,to)`。未知字段拒绝，禁止把缺字段解释为清空。字符串先去首尾空白后检查长度；业务名称允许中文；编码规则见模型。ID 为后端生成的不透明字符串（1～64 字符），示例 `emp_demo_01`，不是物理主键类型承诺。公司、部门、岗位、任职、角色、关系、范围、任命、申请等分别有 ID，不能解析名称/编码推断权限。
 
 员工 `employeeKey` 是来源系统稳定用户名映射，首次导入不生成拼音账号；内部关联使用 `employeeId`。角色 code 全局唯一、后端生成且不可改；目录和权限 code 在所属系统内唯一。所有列表先做范围过滤，再分页计数。
 
@@ -49,7 +49,7 @@
 
 ## 返回、错误与幂等
 
-成功返回具体资源或明确结果，不统一塞进 `success:true`。201 表示创建，202 表示固定申请已提交/回调可靠接收而非业务生效；200 包含 APPLIED/NO_CHANGE 或预览；204 退出/草稿删除。创建及异步接受返回 Location；全部响应回传 X-Request-Id，敏感数据不缓存。客户端可传 X-Request-Id（1～64 安全字符），服务端可生成；不作为防重或身份凭据。
+成功返回具体资源或明确结果，不统一塞进 `success:true`。201 表示创建，202 表示固定申请已提交/回调可靠接收而非业务生效；200 包含 APPLIED/NO_CHANGE 或预览；204 退出/草稿删除。创建及异步接受返回 Location；saveCatalog/closeSource是直接变更结果，返回200，不伪造不存在的变更查询地址；全部响应回传 X-Request-Id，敏感数据不缓存。客户端可传 X-Request-Id（1～64 安全字符），服务端可生成；不作为防重或身份凭据。
 
 所有改变业务状态的请求带 UUID `Idempotency-Key`，本人改密/登录/退出例外；仅预览的 POST 无需该头。修改已有资源还带模型中 expectedVersion，缺失 422，陈旧 409 VERSION_CONFLICT；不用时间戳或状态版本替代配置版本。不同时再要求 If-Match，避免两套并发协议。重复请求优先通过当前身份/范围检查，再回放原安全响应；不能绕过已取消资格。
 
@@ -75,6 +75,8 @@
 OA 关联暂未可靠落地时使用409 OA_LINK_PENDING及Retry-After。申请 INVALIDATED 的failureCode允许 SCOPE_NO_LONGER_COVERS、SOURCE_EPOCH_CHANGED、RELATION_VERSION_CHANGED、ROLE_CONFIGURATION_CHANGED、EMPLOYEE_INACTIVE、NO_APPLICABLE_EMPLOYMENT、PERMISSION_UNAVAILABLE；可重试失败使用 EXECUTION_STORAGE_FAILURE。它们是状态原因，不以200状态伪装为本次已经执行成功。
 
 ## 演进与规范依据
+
+1.0.0尚未上线、未导入Apifox；本轮1.1.0是设计评审修订编号，不代表对首版完全兼容。具体迁移差异见[评审报告](REVIEW.md)，已有首版生成客户端需重新生成并适配两项201→200及新增响应字段。公开稳定发布后的规则如下。
 
 兼容新增可选字段/错误码以次版本发布；客户端忽略未知响应字段但提交请求仍严格校验。字段删除、含义改变、必填新增及鉴权变化走新主路径 `/api/v2`，保留 v1 迁移窗口（上线前另定具体日期），文档明确弃用，不静默复用权限编码。
 

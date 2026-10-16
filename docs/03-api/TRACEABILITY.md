@@ -30,3 +30,5 @@
 | R-04同步方式 | Git权威→人工导入Apifox→MCP刷新/回读语义核对；APIFOX.md如实记录实际状态 |
 
 全部接口均有 x-use-cases 和 x-access，维护脚本检查 operationId 唯一、UC-01～11覆盖及与本表关联。追踪覆盖是设计证据，不是后端验收测试通过证据。
+
+API评审补充：`listPreviewTargets` 与上述 `listPreviewEmployees` 共用预览快照，覆盖UC-01目录/角色影响、UC-02配置影响、UC-03/04明确关系与待分配申请、UC-07任命/原申请影响、UC-10全局员工状态影响。它不授予额外读取资格；混合范围的整份申请不可见时，不返回其ID或计数。导入文件预检的冻结行明细仍由 `listImportPlanChanges` 返回，包含归属编码及字段前后差异。

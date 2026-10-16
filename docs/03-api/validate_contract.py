@@ -8,6 +8,8 @@ import copy
 import json
 import re
 import sys
+import itertools
+import subprocess
 
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
@@ -49,6 +51,9 @@ for path, item in document['paths'].items():
         operations.append((path, method, operation))
 ids = [op['operationId'] for _, _, op in operations]
 assert len(ids) == len(set(ids)), 'Duplicate operationId'
+webhook_ids = [op['operationId'] for item in document.get('webhooks', {}).values()
+               for method, op in item.items() if method in {'post', 'get', 'put', 'patch', 'delete'}]
+assert len(ids + webhook_ids) == len(set(ids + webhook_ids)), 'Duplicate webhook operationId'
 covered = {uc for _, _, op in operations for uc in op['x-use-cases']}
 assert covered == {f'UC-{n:02}' for n in range(1, 12)}, covered
 
@@ -107,12 +112,93 @@ for name, schema in document['components']['schemas'].items():
 
 # Examples explicitly describe expected acceptance/rejection, not implemented business tests.
 scenarios = json.loads((ROOT / 'scenarios.json').read_text(encoding='utf-8'))
-for case in scenarios:
+review_scenarios = json.loads((ROOT / 'review_cases.json').read_text(encoding='utf-8'))
+for case in scenarios + review_scenarios:
     value = copy.deepcopy(case['value'])
     if 'expandItemsTo' in case:
         value['items'] = value['items'] * case['expandItemsTo']
     errors = list(validator(rooted({'$ref': '#/components/schemas/' + case['schema']})).iter_errors(value))
     assert bool(errors) != case['valid'], (case['name'], [e.message for e in errors])
+
+baseline_accepted = None
+if '--baseline' in sys.argv:
+    raw = subprocess.run(['git', 'show', '269d269:docs/03-api/openapi.yaml'],
+                         cwd=ROOT, check=True, capture_output=True).stdout
+    baseline = yaml.safe_load(raw.decode('utf-8'))
+    baseline_registry = Registry().with_resource('urn:rbac:baseline', Resource.from_contents(
+        {'$schema': 'https://json-schema.org/draft/2020-12/schema', **baseline}))
+    baseline_cases = [c for c in review_scenarios if 'baselineValue' in c]
+    baseline_accepted = 0
+    for case in baseline_cases:
+        check = Draft202012Validator(
+            {'$ref': 'urn:rbac:baseline#/components/schemas/' + case['schema']}, registry=baseline_registry)
+        assert check.is_valid(case['baselineValue']), case['name']
+        baseline_accepted += 1
+
+# Prove object-union branches are disjoint using contradictory required field domains.
+# This is schema analysis, not a simulated authorization/approval implementation.
+def object_leaves(schema):
+    if '$ref' in schema:
+        return object_leaves(resolve(schema['$ref']))
+    if 'oneOf' in schema:
+        return [leaf for branch in schema['oneOf'] for leaf in object_leaves(branch)]
+    return [schema]
+
+
+def primitive_kind(value):
+    if isinstance(value, bool):
+        return 'boolean'
+    if value is None:
+        return 'null'
+    if isinstance(value, str):
+        return 'string'
+    return 'number'
+
+
+def domain(schema):
+    if '$ref' in schema:
+        return domain(resolve(schema['$ref']))
+    if 'enum' in schema:
+        values = {(primitive_kind(v), v) for v in schema['enum']}
+        return {k for k, _ in values}, values
+    types = schema.get('type')
+    if types:
+        types = types if isinstance(types, list) else [types]
+        return {'number' if t == 'integer' else t for t in types}, None
+    return {'null', 'string', 'number', 'boolean', 'object', 'array'}, None
+
+
+def disjoint(left, right):
+    for key in set(left.get('required', [])) & set(right.get('required', [])):
+        lt, lv = domain(left['properties'][key])
+        rt, rv = domain(right['properties'][key])
+        if not lt & rt or (lv is not None and rv is not None and not lv & rv):
+            return True
+    return False
+
+
+branch_groups, branch_pairs = 0, 0
+
+
+def check_branches(value):
+    global branch_groups, branch_pairs
+    if isinstance(value, dict):
+        if 'oneOf' in value:
+            leaves = object_leaves(value)
+            if all('properties' in leaf for leaf in leaves):
+                branch_groups += 1
+                for left, right in itertools.combinations(leaves, 2):
+                    assert disjoint(left, right), 'Object union branches are not proven disjoint'
+                    branch_pairs += 1
+        for key, child in value.items():
+            if key not in {'example', 'examples'}:
+                check_branches(child)
+    elif isinstance(value, list):
+        for child in value:
+            check_branches(child)
+
+
+check_branches(document['components']['schemas'])
 
 for kind, group in document['components']['responses'].items():
     for content in group.get('content', {}).values():
@@ -135,6 +221,25 @@ for _, _, op in operations + [('', 'post', document['webhooks']['oaSubmission'][
 forbidden = {'dataScope', 'ownerId', 'recordId', 'parentDepartmentId'}
 for name, schema in document['components']['schemas'].items():
     assert not forbidden.intersection(schema.get('properties', {})), name
+
+
+def check_nested_schema(value):
+    if isinstance(value, dict):
+        assert not forbidden.intersection(value.get('properties', {})), value.get('properties')
+        for key, child in value.items():
+            if key not in {'examples', 'example'}:
+                check_nested_schema(child)
+    elif isinstance(value, list):
+        for child in value:
+            check_nested_schema(child)
+
+
+check_nested_schema(document['components']['schemas'])
+delivery_retry = document['paths']['/api/v1/admin/change-requests/{requestId}/delivery-retries']['post']
+assert delivery_retry['x-required-state'] == {'state': 'PENDING', 'deliveryStatus': 'SEND_FAILED', 'approvalResult': 'NONE'}
+for direct_path in ['/api/v1/admin/source-closures', '/api/v1/admin/systems/{systemId}/catalog-changes']:
+    assert '200' in document['paths'][direct_path]['post']['responses']
+    assert '201' not in document['paths'][direct_path]['post']['responses']
 for path, method, op in operations:
     assert not re.search(r'/admin/.*/(approve|force-execution|execute|withdraw|cancel)$', path), path
 
@@ -142,5 +247,8 @@ print(json.dumps({'operations': len(operations), 'paths': len(document['paths'])
                   'webhooks': len(document.get('webhooks', {})),
                   'schemas': len(document['components']['schemas']), 'localRefs': len(refs),
                   'modelExamples': examples, 'schemaScenarios': len(scenarios),
+                  'reviewSchemaScenarios': len(review_scenarios),
+                  'objectUnionGroups': branch_groups, 'disjointBranchPairs': branch_pairs,
+                  'baselineInvalidExamplesAccepted': baseline_accepted,
                   'mediaExamples': media_examples,
                   'useCases': sorted(covered), 'result': 'PASS'}, ensure_ascii=False))

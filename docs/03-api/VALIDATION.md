@@ -1,4 +1,47 @@
-# API 设计验证与待办
+# API 契约评审修订验证（1.1.0）
+
+日期：2026-10-16（Asia/Shanghai）。基线269d269；分支codex/api-design，开始时干净，沿用当前目录、不建worktree、不合并main。本轮只评审并修订API，报告见[REVIEW.md](REVIEW.md)。
+
+## 本轮实际结果
+
+| 检查 | 结果 |
+| --- | --- |
+| 结构、引用与追踪 | OpenAPI3.1、67个入站操作/56路径、1个出站webhook、129模型；1142处引用及UC-01～11追踪通过 |
+| 示例和反例 | 120个模型示例、789处媒体示例、原18项及新增25项Schema场景通过 |
+| 首版缺陷复现 | --baseline从Git269d269复现10个非法输入被旧Schema接受，修订版全部拒绝 |
+| 联合分支互斥 | 18组对象联合、466对分支均可由必填字段枚举/类型证明互斥，无未证明对 |
+| 固定Redocly2.8.0 | 0错误、0告警 |
+| 额外Redocly2.64.1 | 0错误、55条no-illogical-composition-keywords启发式重叠告警；独立域检查证明分支互斥；保留告警记录，未关闭规则或削弱约束 |
+| Prism5.14.2 | 仅127.0.0.1:4010；67项请求/成功响应、5项非法输入、1项409 Problem检查通过；Mock已停止 |
+| Apifox | 首尾刷新、根文档及三项组件引用读取成功；远程模块仍0接口/空组件；未导入新契约，未宣称同步完成 |
+| 文档与提交前检查 | 85个本地链接有效、两份维护脚本语法通过、31条决策编号唯一、MEMORY无本机绝对路径、契约SHA匹配及Git差异格式通过 |
+
+契约SHA-256：`ec7ef9ef1ab046bb61cec9728c423c32f58311c850860be8ef54a9cf3a4798fd`。
+
+新版Redocly对嵌套oneOf及null/字符串引用分支仍报告重叠，固定版及独立JSON Schema校验通过；未用忽略配置掩盖。修订先采用条件组合时也曾暴露工具示例预处理差异，最终改为逻辑等价的完整互斥分支和单值enum。这个调整保留严格未知字段拒绝、非法状态/来源拒绝及正反例，不是为lint删需求。
+
+本轮Mock首次调用早于监听就绪，连接被拒绝；待监听后完整重跑通过。没有将暂态启动失败当成业务失败，也没有将Mock成功当成真实认证、权限、OA执行或事务测试通过。正式后端仍未实现。API评审有条件通过；人工导入/完整回读后按项目顺序交接数据库阶段，本轮未开展数据库设计。
+
+## 复现
+
+依赖版本及临时venv安装方法沿用下方首版记录（PyYAML6.0.3、jsonschema4.26.0、openapi-spec-validator0.7.2）；本轮使用先前临时目录的同版本工具，无项目依赖或环境文件提交。
+
+```powershell
+python docs/03-api/validate_contract.py --baseline
+npx --yes @redocly/cli@2.8.0 lint docs/03-api/openapi.yaml --format=summary
+npx --yes @redocly/cli@2.64.1 lint docs/03-api/openapi.yaml --format=summary
+# 一个终端启动Mock，另一个终端运行检查，完成后停止Mock
+npm exec --offline --yes --package @stoplight/prism-cli@5.14.2 -- prism mock docs/03-api/openapi.yaml --host 127.0.0.1 --port 4010
+python docs/03-api/mock_check.py
+```
+
+离线Mock命令要求已有npm缓存；未缓存时先按下方npx命令下载固定版本。--baseline要求本地Git仍可访问269d269；普通校验不依赖该历史提交。首次确认条件Schema错误的原始值与修订版输入分开保存，避免新增submittedAt掩盖旧缺陷。
+
+## 首版交付历史（269d269 / 1.0.0）
+
+以下是首版已发生的验证记录，其数量和契约摘要不代表本次1.1.0。
+
+### 首版 API 设计验证与待办
 
 日期：2026-10-16（Asia/Shanghai）；需求V1.3；契约版本1.0.0。起点Git `d032a95`，工作区干净，从main创建并切换`codex/api-design`，未创建worktree、未合并main。交付是本地API设计与设计自查，未开展数据库设计或后续跨阶段一致性评审，不代表用户已逐项评审契约。
 

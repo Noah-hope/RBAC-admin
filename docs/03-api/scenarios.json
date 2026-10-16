@@ -181,7 +181,7 @@
       "eventId": "demo_01",
       "requestId": "demo_01",
       "oaApprovalId": "demo_01",
-      "submittedVersion": 0,
+      "submittedVersion": 1,
       "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "decision": "APPROVED",
       "isFinal": false,
@@ -197,7 +197,7 @@
       "eventId": "demo_01",
       "requestId": "demo_01",
       "oaApprovalId": "demo_01",
-      "submittedVersion": 0,
+      "submittedVersion": 1,
       "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "decision": "WITHDRAWN",
       "isFinal": true,
@@ -341,7 +341,8 @@
         "retryable": false,
         "failureCode": null,
         "nextRetryAt": null,
-        "createdAt": "2026-10-16T08:00:00Z"
+        "createdAt": "2026-10-16T08:00:00Z",
+        "submittedAt": "2026-10-16T08:00:00Z"
       },
       "noChangeItems": []
     },

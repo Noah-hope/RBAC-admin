@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
   title: RBAC 权限中心 API
-  version: 1.0.0
-  description: 需求 V1.3；API设计交付，尚未实现。Git契约为权威，Apifox 8934976 默认模块待人工导入。
+  version: 1.1.0
+  description: 需求V1.3；269d269首版API评审修订1.1.0，尚未上线。Git契约为权威，Apifox8934976默认模块待人工导入。修订含更严格Schema及两项直接变更201→200，迁移说明见REVIEW.md。
   license:
     name: 项目内部设计文档；不授予额外许可
     identifier: LicenseRef-RBAC-Internal
@@ -58,7 +58,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Location:
               description: 创建资源或申请状态查询 URI。
               schema:
@@ -124,7 +125,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -179,7 +181,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
         '400':
           $ref: '#/components/responses/BadRequest'
         '429':
@@ -215,7 +218,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -270,7 +274,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -351,7 +356,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -405,7 +411,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Location:
               description: 创建资源或申请状态查询 URI。
               schema:
@@ -490,7 +497,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -559,7 +567,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Idempotent-Replayed:
               description: 同请求回放为 true。
               schema:
@@ -644,7 +653,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Idempotent-Replayed:
               description: 同请求回放为 true。
               schema:
@@ -732,7 +742,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -786,7 +797,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Location:
               description: 创建资源或申请状态查询 URI。
               schema:
@@ -880,7 +892,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -950,7 +963,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Idempotent-Replayed:
               description: 同请求回放为 true。
               schema:
@@ -1040,7 +1054,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -1057,6 +1072,11 @@ paths:
                   visibility: COMPLETE
                   hasUndisclosedImpact: false
                   warning: 示例值
+                  visibleRoleCount: 0
+                  visibleGrantCount: 0
+                  visibleSourceCount: 0
+                  visibleAppointmentCount: 0
+                  visiblePendingRequestCount: 0
                 warnings: []
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -1165,7 +1185,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             X-Catalog-Version:
               description: 本页对应目录聚合版本；跨页变化重新读取。
               schema:
@@ -1277,7 +1298,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -1342,7 +1364,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -1359,6 +1382,11 @@ paths:
                   visibility: COMPLETE
                   hasUndisclosedImpact: false
                   warning: 示例值
+                  visibleRoleCount: 0
+                  visibleGrantCount: 0
+                  visibleSourceCount: 0
+                  visibleAppointmentCount: 0
+                  visiblePendingRequestCount: 0
                 warnings: []
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -1429,37 +1457,6 @@ paths:
           - demo_01
       - $ref: '#/components/parameters/Idempotency'
       responses:
-        '201':
-          description: 已创建资源。
-          headers:
-            X-Request-Id:
-              description: 请求追踪标识。
-              schema:
-                type: string
-            Cache-Control:
-              description: 敏感结果禁止缓存。
-              schema:
-                type: string
-                const: no-store
-            Location:
-              description: 创建资源或申请状态查询 URI。
-              schema:
-                type: string
-                format: uri-reference
-            Idempotent-Replayed:
-              description: 同请求回放为 true。
-              schema:
-                type: boolean
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CatalogResult'
-              example:
-                systemId: demo_01
-                catalogVersion: 0
-                outcome: APPLIED
-                createdIds: []
-                auditEventIds: []
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1483,7 +1480,22 @@ paths:
         '413':
           $ref: '#/components/responses/PayloadTooLarge'
         '200':
-          description: 所有命令均无变化，返回NO_CHANGE和原catalogVersion，不创建新的变更。
+          description: 直接变更已原子提交；同key重试回放原结果，详情通过目标资源和审计读取。
+          headers:
+            X-Request-Id:
+              description: 请求追踪标识。
+              schema:
+                type: string
+            Cache-Control:
+              description: 敏感结果禁止缓存。
+              schema:
+                type: string
+                enum:
+                - no-store
+            Idempotent-Replayed:
+              description: 同请求回放为 true。
+              schema:
+                type: boolean
           content:
             application/json:
               schema:
@@ -1491,7 +1503,7 @@ paths:
               example:
                 systemId: demo_01
                 catalogVersion: 0
-                outcome: NO_CHANGE
+                outcome: APPLIED
                 createdIds: []
                 auditEventIds: []
       x-use-cases:
@@ -1595,7 +1607,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -1652,7 +1665,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Location:
               description: 创建资源或申请状态查询 URI。
               schema:
@@ -1755,7 +1769,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -1835,7 +1850,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Idempotent-Replayed:
               description: 同请求回放为 true。
               schema:
@@ -1961,7 +1977,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -2029,7 +2046,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -2132,7 +2150,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -2256,7 +2275,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -2314,7 +2334,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -2472,7 +2493,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -2532,7 +2554,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Location:
               description: 创建资源或申请状态查询 URI。
               schema:
@@ -2577,6 +2600,7 @@ paths:
                 failureCode: null
                 nextRetryAt: null
                 createdAt: '2026-10-16T08:00:00Z'
+                submittedAt: null
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -2660,7 +2684,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -2696,6 +2721,7 @@ paths:
                 failureCode: null
                 nextRetryAt: null
                 createdAt: '2026-10-16T08:00:00Z'
+                submittedAt: null
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -2757,7 +2783,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Idempotent-Replayed:
               description: 同请求回放为 true。
               schema:
@@ -2797,6 +2824,7 @@ paths:
                 failureCode: null
                 nextRetryAt: null
                 createdAt: '2026-10-16T08:00:00Z'
+                submittedAt: null
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -2886,7 +2914,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Idempotent-Replayed:
               description: 同请求回放为 true。
               schema:
@@ -2951,7 +2980,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -2969,6 +2999,11 @@ paths:
                     visibility: COMPLETE
                     hasUndisclosedImpact: false
                     warning: 示例值
+                    visibleRoleCount: 0
+                    visibleGrantCount: 0
+                    visibleSourceCount: 0
+                    visibleAppointmentCount: 0
+                    visiblePendingRequestCount: 0
                   warnings: []
                 draftId: change_demo_01
                 draftVersion: 2
@@ -3059,7 +3094,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Location:
               description: 创建资源或申请状态查询 URI。
               schema:
@@ -3115,6 +3151,7 @@ paths:
                   failureCode: null
                   nextRetryAt: null
                   createdAt: '2026-10-16T08:00:00Z'
+                  submittedAt: '2026-10-16T08:00:00Z'
                 noChangeItems: []
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -3177,6 +3214,7 @@ paths:
                   failureCode: null
                   nextRetryAt: null
                   createdAt: '2026-10-16T08:00:00Z'
+                  submittedAt: null
                 noChangeItems: []
       x-use-cases:
       - UC-02
@@ -3198,7 +3236,8 @@ paths:
       operationId: retryOaDelivery
       tags:
       - 申请
-      description: 仅 SEND_FAILED 且无最终结果；同固定 ID/摘要，不改内容不新建，不批准、不强制执行。
+      description: 仅state=PENDING、deliveryStatus=SEND_FAILED、approvalResult=NONE且当前statusVersion匹配时允许。已失效/驳回/批准/执行均409
+        STATE_CONFLICT；同固定申请ID/摘要重投，不更改内容，不批准或强制执行。后台发送器领取及最终发送前复核仍可投递；与失效串行，已经在途的OA结果只按INVALIDATED记录不执行。
       parameters:
       - $ref: '#/components/parameters/RequestId'
       - name: requestId
@@ -3228,7 +3267,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Location:
               description: 创建资源或申请状态查询 URI。
               schema:
@@ -3273,6 +3313,7 @@ paths:
                 failureCode: null
                 nextRetryAt: null
                 createdAt: '2026-10-16T08:00:00Z'
+                submittedAt: null
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -3307,6 +3348,10 @@ paths:
             example:
               expectedStatusVersion: 0
               reason: 示例值
+      x-required-state:
+        state: PENDING
+        deliveryStatus: SEND_FAILED
+        approvalResult: NONE
   /api/v1/admin/change-requests/{requestId}/events:
     get:
       summary: 分页读取申请事件
@@ -3344,7 +3389,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -3414,7 +3460,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -3476,7 +3523,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -3551,7 +3599,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -3568,6 +3617,11 @@ paths:
                   visibility: COMPLETE
                   hasUndisclosedImpact: false
                   warning: 示例值
+                  visibleRoleCount: 0
+                  visibleGrantCount: 0
+                  visibleSourceCount: 0
+                  visibleAppointmentCount: 0
+                  visiblePendingRequestCount: 0
                 warnings: []
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -3623,44 +3677,6 @@ paths:
       - $ref: '#/components/parameters/ScopeVersion'
       - $ref: '#/components/parameters/AppointmentVersion'
       responses:
-        '201':
-          description: 已创建资源。
-          headers:
-            X-Request-Id:
-              description: 请求追踪标识。
-              schema:
-                type: string
-            Cache-Control:
-              description: 敏感结果禁止缓存。
-              schema:
-                type: string
-                const: no-store
-            Location:
-              description: 创建资源或申请状态查询 URI。
-              schema:
-                type: string
-                format: uri-reference
-            Idempotent-Replayed:
-              description: 同请求回放为 true。
-              schema:
-                type: boolean
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SourceCloseResult'
-              example:
-                outcome: APPLIED
-                updatedSources:
-                - source:
-                    employeeId: demo_01
-                    companyId: demo_01
-                    departmentId: demo_01
-                    systemId: demo_01
-                  sourceEpoch: 0
-                  version: 0
-                auditEventIds: []
-                invalidatedGrantCount: 0
-                invalidatedRequestCount: 0
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -3683,6 +3699,40 @@ paths:
           $ref: '#/components/responses/UnsupportedMediaType'
         '413':
           $ref: '#/components/responses/PayloadTooLarge'
+        '200':
+          description: 直接变更已原子提交；同key重试回放原结果，详情通过目标资源和审计读取。
+          headers:
+            X-Request-Id:
+              description: 请求追踪标识。
+              schema:
+                type: string
+            Cache-Control:
+              description: 敏感结果禁止缓存。
+              schema:
+                type: string
+                enum:
+                - no-store
+            Idempotent-Replayed:
+              description: 同请求回放为 true。
+              schema:
+                type: boolean
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SourceCloseResult'
+              example:
+                outcome: APPLIED
+                updatedSources:
+                - source:
+                    employeeId: demo_01
+                    companyId: demo_01
+                    departmentId: demo_01
+                    systemId: demo_01
+                  sourceEpoch: 0
+                  version: 0
+                auditEventIds: []
+                invalidatedGrantCount: 0
+                invalidatedRequestCount: 0
       x-use-cases:
       - UC-04
       x-access: 范围
@@ -3737,7 +3787,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -3816,7 +3867,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -3906,7 +3958,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -3972,7 +4025,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -3989,6 +4043,11 @@ paths:
                   visibility: COMPLETE
                   hasUndisclosedImpact: false
                   warning: 示例值
+                  visibleRoleCount: 0
+                  visibleGrantCount: 0
+                  visibleSourceCount: 0
+                  visibleAppointmentCount: 0
+                  visiblePendingRequestCount: 0
                 warnings: []
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -4058,7 +4117,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Idempotent-Replayed:
               description: 同请求回放为 true。
               schema:
@@ -4161,7 +4221,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -4215,7 +4276,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Location:
               description: 创建资源或申请状态查询 URI。
               schema:
@@ -4300,7 +4362,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -4317,6 +4380,11 @@ paths:
                   visibility: COMPLETE
                   hasUndisclosedImpact: false
                   warning: 示例值
+                  visibleRoleCount: 0
+                  visibleGrantCount: 0
+                  visibleSourceCount: 0
+                  visibleAppointmentCount: 0
+                  visiblePendingRequestCount: 0
                 warnings: []
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -4387,7 +4455,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -4454,7 +4523,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Idempotent-Replayed:
               description: 同请求回放为 true。
               schema:
@@ -4558,7 +4628,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -4623,7 +4694,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -4640,6 +4712,11 @@ paths:
                   visibility: COMPLETE
                   hasUndisclosedImpact: false
                   warning: 示例值
+                  visibleRoleCount: 0
+                  visibleGrantCount: 0
+                  visibleSourceCount: 0
+                  visibleAppointmentCount: 0
+                  visiblePendingRequestCount: 0
                 warnings: []
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -4835,7 +4912,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -4903,7 +4981,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -4972,7 +5051,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Location:
               description: 创建资源或申请状态查询 URI。
               schema:
@@ -5062,7 +5142,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -5119,7 +5200,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Location:
               description: 创建资源或申请状态查询 URI。
               schema:
@@ -5249,7 +5331,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -5314,7 +5397,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -5416,7 +5500,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -5482,7 +5567,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Idempotent-Replayed:
               description: 同请求回放为 true。
               schema:
@@ -5577,7 +5663,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -5649,7 +5736,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -5721,7 +5809,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
             Location:
               description: 创建资源或申请状态查询 URI。
               schema:
@@ -5788,7 +5877,7 @@ paths:
               eventId: demo_01
               requestId: demo_01
               oaApprovalId: demo_01
-              submittedVersion: 0
+              submittedVersion: 1
               contentDigest: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
               decision: APPROVED
               isFinal: true
@@ -5830,7 +5919,8 @@ paths:
               description: 敏感结果禁止缓存。
               schema:
                 type: string
-                const: no-store
+                enum:
+                - no-store
           content:
             application/json:
               schema:
@@ -5863,6 +5953,78 @@ paths:
       x-use-cases:
       - UC-10
       x-access: 总管理员
+  /api/v1/admin/previews/{previewId}/targets:
+    get:
+      summary: 分页读取预览目标影响
+      operationId: listPreviewTargets
+      tags:
+      - 申请
+      description: 按预览快照分页列出当前有权查看的角色/授权关系/来源/任命/固定申请/目录影响；排序targetType,targetId或来源组合键。完整申请不在当前一项范围内时不得返回其ID/内容/数量。过期或权限变动409
+        PREVIEW_STALE。
+      parameters:
+      - $ref: '#/components/parameters/RequestId'
+      - name: previewId
+        in: path
+        required: true
+        description: 稳定资源标识；详情越权与不存在统一 404。
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          examples:
+          - demo_01
+      - $ref: '#/components/parameters/Appointment'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      - $ref: '#/components/parameters/ScopeVersion'
+      - $ref: '#/components/parameters/AppointmentVersion'
+      responses:
+        '200':
+          description: 成功；业务状态以返回字段为准。
+          headers:
+            X-Request-Id:
+              description: 请求追踪标识。
+              schema:
+                type: string
+            Cache-Control:
+              description: 敏感结果禁止缓存。
+              schema:
+                type: string
+                enum:
+                - no-store
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImpactTargetPage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/Unprocessable'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/IntegrityError'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+      x-use-cases:
+      - UC-01
+      - UC-02
+      - UC-03
+      - UC-04
+      - UC-07
+      - UC-10
+      x-access: 范围
 webhooks:
   oaSubmission:
     post:
@@ -6060,7 +6222,7 @@ components:
             requestId: demo-request-01
       headers:
         Retry-After:
-          description: 建议等待秒数；409 仅 REQUEST_IN_PROGRESS 时返回。
+          description: REQUEST_IN_PROGRESS或OA_LINK_PENDING时给出建议等待秒数；其他409要求修正/重读，不盲目重试。
           schema:
             type: integer
             minimum: 1
@@ -6263,23 +6425,17 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         accountId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         employeeId:
           anyOf:
           - type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
         identity:
           type: string
@@ -6303,8 +6459,6 @@ components:
         expiresAt:
           type: string
           format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
       examples:
       - sessionId: demo_01
         accountId: demo_01
@@ -6330,23 +6484,17 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         accountId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         employeeId:
           anyOf:
           - type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
         identity:
           type: string
@@ -6361,8 +6509,6 @@ components:
         expiresAt:
           type: string
           format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
       examples:
       - sessionId: demo_01
         accountId: demo_01
@@ -6408,8 +6554,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         loginName:
           type: string
           minLength: 1
@@ -6429,8 +6573,6 @@ components:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
     PasswordReset:
       type: object
       additionalProperties: false
@@ -6444,8 +6586,6 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         temporaryPassword:
           type: string
           minLength: 12
@@ -6460,8 +6600,6 @@ components:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
     AccountStateInput:
       type: object
       additionalProperties: false
@@ -6474,16 +6612,12 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         enabled:
           type: boolean
         reason:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
       examples:
       - expectedVersion: 0
         enabled: false
@@ -6505,16 +6639,12 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         employeeId:
           anyOf:
           - type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
         loginName:
           type: string
@@ -6528,13 +6658,9 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         createdAt:
           type: string
           format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
       examples:
       - id: demo_01
         employeeId: null
@@ -6557,8 +6683,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         code:
           type: string
           minLength: 1
@@ -6572,8 +6696,6 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
       examples:
       - id: demo_01
         code: demo_01
@@ -6594,15 +6716,11 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         companyId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         code:
           type: string
           minLength: 1
@@ -6616,8 +6734,6 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
       examples:
       - id: demo_01
         companyId: demo_01
@@ -6639,15 +6755,11 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         departmentId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         code:
           type: string
           minLength: 1
@@ -6661,8 +6773,6 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
       examples:
       - id: demo_01
         departmentId: demo_01
@@ -6685,8 +6795,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         employeeKey:
           type: string
           minLength: 1
@@ -6704,13 +6812,9 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         createdAt:
           type: string
           format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
       examples:
       - id: demo_01
         employeeKey: 示例值
@@ -6737,36 +6841,26 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         employeeId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         companyId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         departmentId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         positionId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         status:
           type: string
           enum:
@@ -6776,21 +6870,15 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         startedAt:
           anyOf:
           - type: string
             format: date-time
-            examples:
-            - '2026-10-16T08:00:00Z'
           - type: 'null'
         endedAt:
           anyOf:
           - type: string
             format: date-time
-            examples:
-            - '2026-10-16T08:00:00Z'
           - type: 'null'
       examples:
       - id: demo_01
@@ -6821,8 +6909,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         code:
           type: string
           minLength: 1
@@ -6842,26 +6928,18 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         catalogVersion:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         systemAccessPermissionId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         createdAt:
           type: string
           format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
       examples:
       - id: demo_01
         code: demo_01
@@ -6897,8 +6975,6 @@ components:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
       examples:
       - code: demo_01
         name: 示例值
@@ -6917,8 +6993,6 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         name:
           type: string
           minLength: 1
@@ -6933,8 +7007,6 @@ components:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
       examples:
       - expectedVersion: 0
         name: 示例值
@@ -6955,8 +7027,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
       examples:
       - input:
           expectedVersion: 0
@@ -6966,78 +7036,187 @@ components:
           reason: 示例值
         previewId: demo_01
     DirectoryNode:
-      type: object
-      additionalProperties: false
-      required:
-      - id
-      - systemId
-      - code
-      - name
-      - nodeType
-      - parentId
-      - sortOrder
-      - enabled
-      - visibilityPermissionId
-      - version
-      properties:
-        id:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        systemId:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        code:
-          type: string
-          minLength: 1
-          maxLength: 100
-          pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
-        name:
-          type: string
-          minLength: 1
-          maxLength: 100
-        nodeType:
-          type: string
-          enum:
-          - NAVIGATION
-          - FUNCTION
-        parentId:
-          anyOf:
-          - type: string
+      oneOf:
+      - type: object
+        required:
+        - id
+        - systemId
+        - code
+        - name
+        - nodeType
+        - parentId
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - version
+        properties:
+          id:
+            type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          - type: 'null'
-        sortOrder:
-          type: integer
-          minimum: -2147483648
-          maximum: 2147483647
-        enabled:
-          type: boolean
-        visibilityPermissionId:
-          anyOf:
-          - type: string
+          systemId:
+            type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          - type: 'null'
-        version:
-          type: integer
-          minimum: 0
-          maximum: 9007199254740991
-          examples:
-          - 0
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - NAVIGATION
+          parentId:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            - type: 'null'
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+          visibilityPermissionId:
+            type: 'null'
+          version:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+        additionalProperties: false
+      - type: object
+        required:
+        - id
+        - systemId
+        - code
+        - name
+        - nodeType
+        - parentId
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - version
+        properties:
+          id:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          systemId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            - type: 'null'
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - false
+          visibilityPermissionId:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            - type: 'null'
+          version:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+        additionalProperties: false
+      - type: object
+        required:
+        - id
+        - systemId
+        - code
+        - name
+        - nodeType
+        - parentId
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - version
+        properties:
+          id:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          systemId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            - type: 'null'
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - true
+          visibilityPermissionId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          version:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+        additionalProperties: false
       examples:
       - id: demo_01
         systemId: demo_01
@@ -7050,66 +7229,104 @@ components:
         visibilityPermissionId: null
         version: 0
     Permission:
-      type: object
-      additionalProperties: false
-      required:
-      - id
-      - systemId
-      - code
-      - name
-      - permissionType
-      - functionId
-      - menuEligible
-      - enabled
-      - version
-      properties:
-        id:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        systemId:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        code:
-          type: string
-          minLength: 1
-          maxLength: 100
-          pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
-        name:
-          type: string
-          minLength: 1
-          maxLength: 100
-        permissionType:
-          type: string
-          enum:
-          - SYSTEM_ACCESS
-          - FUNCTION_OPERATION
-        functionId:
-          anyOf:
-          - type: string
+      oneOf:
+      - type: object
+        required:
+        - id
+        - systemId
+        - code
+        - name
+        - permissionType
+        - functionId
+        - menuEligible
+        - enabled
+        - version
+        properties:
+          id:
+            type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          - type: 'null'
-        menuEligible:
-          type: boolean
-        enabled:
-          type: boolean
-        version:
-          type: integer
-          minimum: 0
-          maximum: 9007199254740991
-          examples:
-          - 0
+          systemId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          permissionType:
+            type: string
+            enum:
+            - SYSTEM_ACCESS
+          functionId:
+            type: 'null'
+          menuEligible:
+            type: boolean
+            enum:
+            - false
+          enabled:
+            type: boolean
+          version:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+        additionalProperties: false
+      - type: object
+        required:
+        - id
+        - systemId
+        - code
+        - name
+        - permissionType
+        - functionId
+        - menuEligible
+        - enabled
+        - version
+        properties:
+          id:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          systemId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          permissionType:
+            type: string
+            enum:
+            - FUNCTION_OPERATION
+          functionId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          menuEligible:
+            type: boolean
+          enabled:
+            type: boolean
+          version:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+        additionalProperties: false
       examples:
       - id: demo_01
         systemId: demo_01
@@ -7121,86 +7338,1027 @@ components:
         enabled: false
         version: 0
     NodeCreate:
-      type: object
-      additionalProperties: false
-      required:
-      - kind
-      - localKey
-      - code
-      - name
-      - nodeType
-      - parentId
-      - parentLocalKey
-      - sortOrder
-      - enabled
-      - visibilityPermissionId
-      - visibilityPermissionLocalKey
-      properties:
-        kind:
-          const: NODE_CREATE
-        localKey:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        code:
-          type: string
-          minLength: 1
-          maxLength: 100
-          pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
-        name:
-          type: string
-          minLength: 1
-          maxLength: 100
-        nodeType:
-          type: string
-          enum:
-          - NAVIGATION
-          - FUNCTION
-        parentId:
-          anyOf:
-          - type: string
+      oneOf:
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          - type: 'null'
-        parentLocalKey:
-          anyOf:
-          - type: string
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - NAVIGATION
+          parentId:
+            type: 'null'
+          parentLocalKey:
+            type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          - type: 'null'
-        sortOrder:
-          type: integer
-          minimum: -2147483648
-          maximum: 2147483647
-        enabled:
-          type: boolean
-        visibilityPermissionId:
-          anyOf:
-          - type: string
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+          visibilityPermissionId:
+            type: 'null'
+          visibilityPermissionLocalKey:
+            type: 'null'
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          - type: 'null'
-        visibilityPermissionLocalKey:
-          anyOf:
-          - type: string
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            type: 'null'
+          parentLocalKey:
+            type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          - type: 'null'
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - false
+          visibilityPermissionId:
+            type: 'null'
+          visibilityPermissionLocalKey:
+            type: 'null'
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            type: 'null'
+          parentLocalKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - false
+          visibilityPermissionId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          visibilityPermissionLocalKey:
+            type: 'null'
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            type: 'null'
+          parentLocalKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - false
+          visibilityPermissionId:
+            type: 'null'
+          visibilityPermissionLocalKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            type: 'null'
+          parentLocalKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - true
+          visibilityPermissionId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          visibilityPermissionLocalKey:
+            type: 'null'
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            type: 'null'
+          parentLocalKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - true
+          visibilityPermissionId:
+            type: 'null'
+          visibilityPermissionLocalKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - NAVIGATION
+          parentId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          parentLocalKey:
+            type: 'null'
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+          visibilityPermissionId:
+            type: 'null'
+          visibilityPermissionLocalKey:
+            type: 'null'
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          parentLocalKey:
+            type: 'null'
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - false
+          visibilityPermissionId:
+            type: 'null'
+          visibilityPermissionLocalKey:
+            type: 'null'
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          parentLocalKey:
+            type: 'null'
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - false
+          visibilityPermissionId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          visibilityPermissionLocalKey:
+            type: 'null'
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          parentLocalKey:
+            type: 'null'
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - false
+          visibilityPermissionId:
+            type: 'null'
+          visibilityPermissionLocalKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          parentLocalKey:
+            type: 'null'
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - true
+          visibilityPermissionId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          visibilityPermissionLocalKey:
+            type: 'null'
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          parentLocalKey:
+            type: 'null'
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - true
+          visibilityPermissionId:
+            type: 'null'
+          visibilityPermissionLocalKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - NAVIGATION
+          parentId:
+            type: 'null'
+          parentLocalKey:
+            type: 'null'
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+          visibilityPermissionId:
+            type: 'null'
+          visibilityPermissionLocalKey:
+            type: 'null'
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            type: 'null'
+          parentLocalKey:
+            type: 'null'
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - false
+          visibilityPermissionId:
+            type: 'null'
+          visibilityPermissionLocalKey:
+            type: 'null'
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            type: 'null'
+          parentLocalKey:
+            type: 'null'
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - false
+          visibilityPermissionId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          visibilityPermissionLocalKey:
+            type: 'null'
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            type: 'null'
+          parentLocalKey:
+            type: 'null'
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - false
+          visibilityPermissionId:
+            type: 'null'
+          visibilityPermissionLocalKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            type: 'null'
+          parentLocalKey:
+            type: 'null'
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - true
+          visibilityPermissionId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          visibilityPermissionLocalKey:
+            type: 'null'
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - code
+        - name
+        - nodeType
+        - parentId
+        - parentLocalKey
+        - sortOrder
+        - enabled
+        - visibilityPermissionId
+        - visibilityPermissionLocalKey
+        properties:
+          kind:
+            enum:
+            - NODE_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          nodeType:
+            type: string
+            enum:
+            - FUNCTION
+          parentId:
+            type: 'null'
+          parentLocalKey:
+            type: 'null'
+          sortOrder:
+            type: integer
+            minimum: -2147483648
+            maximum: 2147483647
+          enabled:
+            type: boolean
+            enum:
+            - true
+          visibilityPermissionId:
+            type: 'null'
+          visibilityPermissionLocalKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        additionalProperties: false
       examples:
       - kind: NODE_CREATE
         localKey: demo_01
@@ -7227,20 +8385,18 @@ components:
       - visibilityPermissionId
       properties:
         kind:
-          const: NODE_UPDATE
+          enum:
+          - NODE_UPDATE
+          type: string
         id:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         expectedVersion:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         name:
           type: string
           minLength: 1
@@ -7251,8 +8407,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
         sortOrder:
           type: integer
@@ -7266,8 +8420,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
       examples:
       - kind: NODE_UPDATE
@@ -7279,62 +8431,93 @@ components:
         enabled: false
         visibilityPermissionId: null
     PermissionCreate:
-      type: object
-      additionalProperties: false
-      required:
-      - kind
-      - localKey
-      - functionId
-      - functionLocalKey
-      - code
-      - name
-      - menuEligible
-      - enabled
-      properties:
-        kind:
-          const: PERMISSION_CREATE
-        localKey:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        functionId:
-          anyOf:
-          - type: string
+      oneOf:
+      - type: object
+        required:
+        - kind
+        - localKey
+        - functionId
+        - functionLocalKey
+        - code
+        - name
+        - menuEligible
+        - enabled
+        properties:
+          kind:
+            enum:
+            - PERMISSION_CREATE
+            type: string
+          localKey:
+            type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          - type: 'null'
-        functionLocalKey:
-          anyOf:
-          - type: string
+          functionId:
+            type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          - type: 'null'
-        code:
-          type: string
-          minLength: 1
-          maxLength: 100
-          pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
-        name:
-          type: string
-          minLength: 1
-          maxLength: 100
-        menuEligible:
-          type: boolean
-        enabled:
-          type: boolean
+          functionLocalKey:
+            type: 'null'
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          menuEligible:
+            type: boolean
+          enabled:
+            type: boolean
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - localKey
+        - functionId
+        - functionLocalKey
+        - code
+        - name
+        - menuEligible
+        - enabled
+        properties:
+          kind:
+            enum:
+            - PERMISSION_CREATE
+            type: string
+          localKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          functionId:
+            type: 'null'
+          functionLocalKey:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          menuEligible:
+            type: boolean
+          enabled:
+            type: boolean
+        additionalProperties: false
       examples:
       - kind: PERMISSION_CREATE
         localKey: demo_01
-        functionId: null
+        functionId: function_demo_01
         functionLocalKey: null
         code: demo_01
         name: 示例值
@@ -7352,20 +8535,18 @@ components:
       - enabled
       properties:
         kind:
-          const: PERMISSION_UPDATE
+          enum:
+          - PERMISSION_UPDATE
+          type: string
         id:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         expectedVersion:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         name:
           type: string
           minLength: 1
@@ -7418,8 +8599,6 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         commands:
           type: array
           items:
@@ -7430,8 +8609,6 @@ components:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
       examples:
       - expectedCatalogVersion: 0
         commands:
@@ -7460,8 +8637,6 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         commands:
           type: array
           items:
@@ -7472,15 +8647,11 @@ components:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
         previewId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
       examples:
       - expectedCatalogVersion: 0
         commands:
@@ -7509,15 +8680,11 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         id:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
       examples:
       - localKey: demo_01
         id: demo_01
@@ -7536,14 +8703,10 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         catalogVersion:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         outcome:
           type: string
           enum:
@@ -7562,8 +8725,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           minItems: 0
           uniqueItems: true
       examples:
@@ -7583,6 +8744,11 @@ components:
       - visibility
       - hasUndisclosedImpact
       - warning
+      - visibleRoleCount
+      - visibleGrantCount
+      - visibleSourceCount
+      - visibleAppointmentCount
+      - visiblePendingRequestCount
       properties:
         visibleEmployeeCount:
           type: integer
@@ -7607,6 +8773,21 @@ components:
           type: string
           minLength: 0
           maxLength: 500
+        visibleRoleCount:
+          type: integer
+          minimum: 0
+        visibleGrantCount:
+          type: integer
+          minimum: 0
+        visibleSourceCount:
+          type: integer
+          minimum: 0
+        visibleAppointmentCount:
+          type: integer
+          minimum: 0
+        visiblePendingRequestCount:
+          type: integer
+          minimum: 0
       examples:
       - visibleEmployeeCount: 0
         visibleLosingAccessCount: 0
@@ -7615,6 +8796,11 @@ components:
         visibility: COMPLETE
         hasUndisclosedImpact: false
         warning: 示例值
+        visibleRoleCount: 0
+        visibleGrantCount: 0
+        visibleSourceCount: 0
+        visibleAppointmentCount: 0
+        visiblePendingRequestCount: 0
     ImpactEmployee:
       type: object
       additionalProperties: false
@@ -7632,22 +8818,16 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         companyId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         systemId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         canAccessBefore:
           type: boolean
         canAccessAfter:
@@ -7664,8 +8844,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           minItems: 0
           uniqueItems: true
       examples:
@@ -7691,8 +8869,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         contentDigest:
           type: string
           minLength: 1
@@ -7701,8 +8877,6 @@ components:
         expiresAt:
           type: string
           format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
           description: 预览创建后5分钟；不是OA申请到期时间。
         impact:
           $ref: '#/components/schemas/ImpactSummary'
@@ -7726,111 +8900,182 @@ components:
           visibility: COMPLETE
           hasUndisclosedImpact: false
           warning: 示例值
+          visibleRoleCount: 0
+          visibleGrantCount: 0
+          visibleSourceCount: 0
+          visibleAppointmentCount: 0
+          visiblePendingRequestCount: 0
         warnings: []
     Role:
-      type: object
-      additionalProperties: false
-      required:
-      - id
-      - code
-      - name
-      - description
-      - companyId
-      - departmentId
-      - systemId
-      - state
-      - metadataVersion
-      - configurationVersion
-      - permissionIds
-      - activeChangeRequestId
-      - createdAt
-      properties:
-        id:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        code:
-          type: string
-          minLength: 1
-          maxLength: 100
-          pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
-        name:
-          type: string
-          minLength: 1
-          maxLength: 100
-        description:
-          type: string
-          minLength: 0
-          maxLength: 500
-        companyId:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        departmentId:
-          anyOf:
-          - type: string
-            minLength: 1
-            maxLength: 64
-            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          - type: 'null'
-        systemId:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        state:
-          type: string
-          enum:
-          - UNCONFIGURED
-          - EFFECTIVE
-        metadataVersion:
-          type: integer
-          minimum: 0
-          maximum: 9007199254740991
-          examples:
-          - 0
-        configurationVersion:
-          type: integer
-          minimum: 0
-          maximum: 9007199254740991
-          examples:
-          - 0
-        permissionIds:
-          type: array
-          items:
+      oneOf:
+      - type: object
+        required:
+        - id
+        - code
+        - name
+        - description
+        - companyId
+        - departmentId
+        - systemId
+        - state
+        - metadataVersion
+        - configurationVersion
+        - permissionIds
+        - activeChangeRequestId
+        - createdAt
+        properties:
+          id:
             type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          minItems: 0
-          maxItems: 10000
-          uniqueItems: true
-        activeChangeRequestId:
-          anyOf:
-          - type: string
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          description:
+            type: string
+            minLength: 0
+            maxLength: 500
+          companyId:
+            type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          - type: 'null'
-        createdAt:
-          type: string
-          format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
+          departmentId:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            - type: 'null'
+          systemId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          state:
+            type: string
+            enum:
+            - UNCONFIGURED
+          metadataVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          configurationVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          permissionIds:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            minItems: 0
+            maxItems: 0
+            uniqueItems: true
+          activeChangeRequestId:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            - type: 'null'
+          createdAt:
+            type: string
+            format: date-time
+        additionalProperties: false
+      - type: object
+        required:
+        - id
+        - code
+        - name
+        - description
+        - companyId
+        - departmentId
+        - systemId
+        - state
+        - metadataVersion
+        - configurationVersion
+        - permissionIds
+        - activeChangeRequestId
+        - createdAt
+        properties:
+          id:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          code:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          name:
+            type: string
+            minLength: 1
+            maxLength: 100
+          description:
+            type: string
+            minLength: 0
+            maxLength: 500
+          companyId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          departmentId:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            - type: 'null'
+          systemId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          state:
+            type: string
+            enum:
+            - EFFECTIVE
+          metadataVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          configurationVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          permissionIds:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            minItems: 1
+            maxItems: 10000
+            uniqueItems: true
+          activeChangeRequestId:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            - type: 'null'
+          createdAt:
+            type: string
+            format: date-time
+        additionalProperties: false
       examples:
       - id: demo_01
         code: demo_01
@@ -7870,30 +9115,22 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         departmentId:
           anyOf:
           - type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
         systemId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         reason:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
       examples:
       - name: 示例值
         companyId: demo_01
@@ -7913,8 +9150,6 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         name:
           type: string
           minLength: 1
@@ -7927,8 +9162,6 @@ components:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
       examples:
       - expectedVersion: 0
         name: 示例值
@@ -7949,14 +9182,10 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         draftVersion:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
       examples:
       - role:
           id: demo_01
@@ -7988,29 +9217,21 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         companyId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         departmentId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         systemId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
       examples:
       - employeeId: demo_01
         companyId: demo_01
@@ -8030,14 +9251,10 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         version:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
       examples:
       - source:
           employeeId: demo_01
@@ -8047,104 +9264,160 @@ components:
         sourceEpoch: 0
         version: 0
     Grant:
-      type: object
-      additionalProperties: false
-      required:
-      - id
-      - employeeId
-      - roleId
-      - companyId
-      - sourceDepartmentId
-      - systemId
-      - employmentIds
-      - sourceEpoch
-      - relationVersion
-      - status
-      - endedReason
-      - createdAt
-      properties:
-        id:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        employeeId:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        roleId:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        companyId:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        sourceDepartmentId:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        systemId:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        employmentIds:
-          type: array
-          items:
+      oneOf:
+      - type: object
+        required:
+        - id
+        - employeeId
+        - roleId
+        - companyId
+        - sourceDepartmentId
+        - systemId
+        - employmentIds
+        - sourceEpoch
+        - relationVersion
+        - status
+        - endedReason
+        - createdAt
+        properties:
+          id:
             type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          minItems: 0
-          uniqueItems: true
-        sourceEpoch:
-          type: integer
-          minimum: 0
-          maximum: 9007199254740991
-          examples:
-          - 0
-        relationVersion:
-          type: integer
-          minimum: 0
-          maximum: 9007199254740991
-          examples:
-          - 0
-        status:
-          type: string
-          enum:
-          - ACTIVE
-          - REVOKED
-          - INVALIDATED
-        endedReason:
-          anyOf:
-          - type: string
+          employeeId:
+            type: string
             minLength: 1
-            maxLength: 500
-          - type: 'null'
-        createdAt:
-          type: string
-          format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          roleId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          companyId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          sourceDepartmentId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          systemId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          employmentIds:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            minItems: 1
+            uniqueItems: true
+          sourceEpoch:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          relationVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          status:
+            type: string
+            enum:
+            - ACTIVE
+          endedReason:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 500
+            - type: 'null'
+          createdAt:
+            type: string
+            format: date-time
+        additionalProperties: false
+      - type: object
+        required:
+        - id
+        - employeeId
+        - roleId
+        - companyId
+        - sourceDepartmentId
+        - systemId
+        - employmentIds
+        - sourceEpoch
+        - relationVersion
+        - status
+        - endedReason
+        - createdAt
+        properties:
+          id:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          employeeId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          roleId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          companyId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          sourceDepartmentId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          systemId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          employmentIds:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            minItems: 0
+            uniqueItems: true
+          sourceEpoch:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          relationVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          status:
+            type: string
+            enum:
+            - REVOKED
+            - INVALIDATED
+          endedReason:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 500
+            - type: 'null'
+          createdAt:
+            type: string
+            format: date-time
+        additionalProperties: false
       examples:
       - id: demo_01
         employeeId: demo_01
@@ -8152,7 +9425,8 @@ components:
         companyId: demo_01
         sourceDepartmentId: demo_01
         systemId: demo_01
-        employmentIds: []
+        employmentIds:
+        - employment_demo_01
         sourceEpoch: 0
         relationVersion: 0
         status: ACTIVE
@@ -8172,29 +9446,21 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         roleId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         sourceCompanyId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         sourceDepartmentId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
       examples:
       - employeeId: demo_01
         roleId: demo_01
@@ -8219,26 +9485,18 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         roleConfigurationVersion:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         sourceEpoch:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         relationVersion:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         employmentIds:
           type: array
           items:
@@ -8246,8 +9504,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           minItems: 0
           uniqueItems: true
         activeGrantId:
@@ -8256,8 +9512,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
       examples:
       - key:
@@ -8332,47 +9586,33 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         roleId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         sourceCompanyId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         sourceDepartmentId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         expectedRoleConfigurationVersion:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         expectedSourceEpoch:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         expectedRelationVersion:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         employmentIds:
           type: array
           items:
@@ -8380,8 +9620,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           minItems: 1
           maxItems: 100
           uniqueItems: true
@@ -8407,14 +9645,10 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         expectedRelationVersion:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
       examples:
       - grantId: demo_01
         expectedRelationVersion: 0
@@ -8429,27 +9663,23 @@ components:
       - permissionIds
       properties:
         kind:
-          const: ROLE_CONFIGURATION
+          enum:
+          - ROLE_CONFIGURATION
+          type: string
         companyId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         roleId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         expectedConfigurationVersion:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         permissionIds:
           type: array
           items:
@@ -8457,8 +9687,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           minItems: 0
           maxItems: 10000
           uniqueItems: true
@@ -8479,14 +9707,14 @@ components:
       - items
       properties:
         kind:
-          const: ROLE_GRANT
+          enum:
+          - ROLE_GRANT
+          type: string
         companyId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         items:
           type: array
           items:
@@ -8515,14 +9743,14 @@ components:
       - items
       properties:
         kind:
-          const: ROLE_REVOCATION
+          enum:
+          - ROLE_REVOCATION
+          type: string
         companyId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         items:
           type: array
           items:
@@ -8588,15 +9816,11 @@ components:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
         copiedFromRequestId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
       examples:
       - content:
           kind: ROLE_GRANT
@@ -8624,16 +9848,12 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         content:
           $ref: '#/components/schemas/ChangeContent'
         reason:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
       examples:
       - expectedDraftVersion: 2
         content:
@@ -8646,84 +9866,102 @@ components:
             expectedRelationVersion: 2
         reason: 职责调整，撤销指定两条来源。
     Authority:
-      type: object
-      additionalProperties: false
-      required:
-      - kind
-      - scopeId
-      - scopeVersion
-      - appointmentId
-      - appointmentVersion
-      - companyId
-      - departmentId
-      - systemIds
-      properties:
-        kind:
-          type: string
-          enum:
-          - GLOBAL
-          - SCOPE
-        scopeId:
-          anyOf:
-          - type: string
-            minLength: 1
-            maxLength: 64
-            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          - type: 'null'
-        scopeVersion:
-          anyOf:
-          - type: integer
-            minimum: 0
-            maximum: 9007199254740991
-            examples:
-            - 0
-          - type: 'null'
-        appointmentId:
-          anyOf:
-          - type: string
-            minLength: 1
-            maxLength: 64
-            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          - type: 'null'
-        appointmentVersion:
-          anyOf:
-          - type: integer
-            minimum: 0
-            maximum: 9007199254740991
-            examples:
-            - 0
-          - type: 'null'
-        companyId:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        departmentId:
-          anyOf:
-          - type: string
-            minLength: 1
-            maxLength: 64
-            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          - type: 'null'
-        systemIds:
-          type: array
-          items:
+      oneOf:
+      - type: object
+        required:
+        - kind
+        - scopeId
+        - scopeVersion
+        - appointmentId
+        - appointmentVersion
+        - companyId
+        - departmentId
+        - systemIds
+        properties:
+          kind:
+            type: string
+            enum:
+            - GLOBAL
+          scopeId:
+            type: 'null'
+          scopeVersion:
+            type: 'null'
+          appointmentId:
+            type: 'null'
+          appointmentVersion:
+            type: 'null'
+          companyId:
             type: string
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          minItems: 0
-          uniqueItems: true
+          departmentId:
+            type: 'null'
+          systemIds:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            minItems: 0
+            uniqueItems: true
+        description: 后端固定；GLOBAL 不需任命，SCOPE 保存原范围快照，执行不要求原人仍任职。
+        additionalProperties: false
+      - type: object
+        required:
+        - kind
+        - scopeId
+        - scopeVersion
+        - appointmentId
+        - appointmentVersion
+        - companyId
+        - departmentId
+        - systemIds
+        properties:
+          kind:
+            type: string
+            enum:
+            - SCOPE
+          scopeId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          scopeVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          appointmentId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          appointmentVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          companyId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          departmentId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          systemIds:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            minItems: 0
+            uniqueItems: true
+        description: 后端固定；GLOBAL 不需任命，SCOPE 保存原范围快照，执行不要求原人仍任职。
+        additionalProperties: false
       description: 后端固定；GLOBAL 不需任命，SCOPE 保存原范围快照，执行不要求原人仍任职。
       examples:
       - kind: SCOPE
@@ -8758,151 +9996,20 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
       examples:
       - index: 0
         reason: ALREADY_GRANTED
         grantId: null
     ChangeRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - id
-      - content
-      - reason
-      - draftVersion
-      - submittedVersion
-      - contentDigest
-      - statusVersion
-      - state
-      - deliveryStatus
-      - approvalResult
-      - executionStatus
-      - originalAuthority
-      - submittedByAccountId
-      - oaApprovalId
-      - retryable
-      - failureCode
-      - nextRetryAt
-      - createdAt
-      properties:
-        id:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        content:
-          $ref: '#/components/schemas/ChangeContent'
-        reason:
-          type: string
-          minLength: 1
-          maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
-        draftVersion:
-          type: integer
-          minimum: 0
-          maximum: 9007199254740991
-          examples:
-          - 0
-        submittedVersion:
-          anyOf:
-          - type: integer
-            minimum: 0
-            maximum: 9007199254740991
-            examples:
-            - 0
-          - type: 'null'
-        contentDigest:
-          anyOf:
-          - type: string
-            minLength: 1
-            maxLength: 64
-            pattern: ^[a-f0-9]{64}$
-          - type: 'null'
-        statusVersion:
-          type: integer
-          minimum: 0
-          maximum: 9007199254740991
-          examples:
-          - 0
-        state:
-          type: string
-          enum:
-          - DRAFT
-          - PENDING
-          - REJECTED
-          - APPROVED
-          - EXECUTED
-          - EXECUTION_FAILED
-          - INVALIDATED
-        deliveryStatus:
-          type: string
-          enum:
-          - NOT_SUBMITTED
-          - PENDING_SEND
-          - SEND_FAILED
-          - LINKED
-        approvalResult:
-          type: string
-          enum:
-          - NONE
-          - APPROVED
-          - REJECTED
-        executionStatus:
-          type: string
-          enum:
-          - NOT_STARTED
-          - PENDING
-          - SUCCEEDED
-          - FAILED
-          - INVALIDATED
-        originalAuthority:
-          anyOf:
-          - $ref: '#/components/schemas/Authority'
-          - type: 'null'
-        submittedByAccountId:
-          anyOf:
-          - type: string
-            minLength: 1
-            maxLength: 64
-            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          - type: 'null'
-        oaApprovalId:
-          anyOf:
-          - type: string
-            minLength: 1
-            maxLength: 64
-            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
-          - type: 'null'
-        retryable:
-          type: boolean
-        failureCode:
-          anyOf:
-          - type: string
-            minLength: 1
-            maxLength: 64
-          - type: 'null'
-        nextRetryAt:
-          anyOf:
-          - type: string
-            format: date-time
-            examples:
-            - '2026-10-16T08:00:00Z'
-          - type: 'null'
-        createdAt:
-          type: string
-          format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
+      oneOf:
+      - $ref: '#/components/schemas/DraftChangeRequest'
+      - $ref: '#/components/schemas/PendingChangeRequest'
+      - $ref: '#/components/schemas/RejectedChangeRequest'
+      - $ref: '#/components/schemas/ApprovedChangeRequest'
+      - $ref: '#/components/schemas/ExecutedChangeRequest'
+      - $ref: '#/components/schemas/ExecutionFailedChangeRequest'
+      - $ref: '#/components/schemas/InvalidatedChangeRequest'
       examples:
       - id: change_demo_01
         content:
@@ -8934,6 +10041,17 @@ components:
         failureCode: null
         nextRetryAt: null
         createdAt: '2026-10-16T08:00:00Z'
+        submittedAt: null
+      discriminator:
+        propertyName: state
+        mapping:
+          DRAFT: '#/components/schemas/DraftChangeRequest'
+          PENDING: '#/components/schemas/PendingChangeRequest'
+          REJECTED: '#/components/schemas/RejectedChangeRequest'
+          APPROVED: '#/components/schemas/ApprovedChangeRequest'
+          EXECUTED: '#/components/schemas/ExecutedChangeRequest'
+          EXECUTION_FAILED: '#/components/schemas/ExecutionFailedChangeRequest'
+          INVALIDATED: '#/components/schemas/InvalidatedChangeRequest'
     ChangePreviewInput:
       type: object
       additionalProperties: false
@@ -8944,8 +10062,6 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
       examples:
       - expectedDraftVersion: 0
     ChangePreview:
@@ -8967,14 +10083,10 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         draftVersion:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         addedPermissionIds:
           type: array
           items:
@@ -8982,8 +10094,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           minItems: 0
           uniqueItems: true
           maxItems: 10000
@@ -8994,8 +10104,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           minItems: 0
           uniqueItems: true
           maxItems: 10000
@@ -9023,6 +10131,11 @@ components:
             visibility: COMPLETE
             hasUndisclosedImpact: false
             warning: 示例值
+            visibleRoleCount: 0
+            visibleGrantCount: 0
+            visibleSourceCount: 0
+            visibleAppointmentCount: 0
+            visiblePendingRequestCount: 0
           warnings: []
         draftId: change_demo_01
         draftVersion: 2
@@ -9053,39 +10166,54 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         previewId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
       examples:
       - expectedDraftVersion: 0
         previewId: demo_01
     SubmissionResult:
-      type: object
-      additionalProperties: false
-      required:
-      - outcome
-      - request
-      - noChangeItems
-      properties:
-        outcome:
-          type: string
-          enum:
-          - SUBMITTED
-          - NO_CHANGE
-        request:
-          $ref: '#/components/schemas/ChangeRequest'
-        noChangeItems:
-          type: array
-          items:
-            $ref: '#/components/schemas/NoChangeLine'
-          minItems: 0
-          maxItems: 100
+      oneOf:
+      - type: object
+        required:
+        - outcome
+        - request
+        - noChangeItems
+        properties:
+          outcome:
+            type: string
+            enum:
+            - SUBMITTED
+          request:
+            $ref: '#/components/schemas/PendingChangeRequest'
+          noChangeItems:
+            type: array
+            items:
+              $ref: '#/components/schemas/NoChangeLine'
+            minItems: 0
+            maxItems: 100
+        additionalProperties: false
+      - type: object
+        required:
+        - outcome
+        - request
+        - noChangeItems
+        properties:
+          outcome:
+            type: string
+            enum:
+            - NO_CHANGE
+          request:
+            $ref: '#/components/schemas/DraftChangeRequest'
+          noChangeItems:
+            type: array
+            items:
+              $ref: '#/components/schemas/NoChangeLine'
+            minItems: 0
+            maxItems: 100
+        additionalProperties: false
       examples:
       - outcome: SUBMITTED
         request:
@@ -9128,6 +10256,7 @@ components:
           failureCode: null
           nextRetryAt: null
           createdAt: '2026-10-16T08:00:00Z'
+          submittedAt: '2026-10-16T08:00:00Z'
         noChangeItems: []
     RetryInput:
       type: object
@@ -9140,14 +10269,10 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         reason:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
       examples:
       - expectedStatusVersion: 0
         reason: 示例值
@@ -9165,22 +10290,16 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         companyId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         departmentId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         systemIds:
           type: array
           items:
@@ -9188,8 +10307,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           minItems: 1
           maxItems: 100
           uniqueItems: true
@@ -9233,20 +10350,14 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         expectedSourceEpoch:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         expectedVersion:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
       examples:
       - systemId: demo_01
         expectedSourceEpoch: 0
@@ -9266,22 +10377,16 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         companyId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         departmentId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         systems:
           type: array
           items:
@@ -9292,8 +10397,6 @@ components:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
       examples:
       - employeeId: demo_01
         companyId: demo_01
@@ -9317,8 +10420,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
       examples:
       - input:
           employeeId: demo_01
@@ -9357,8 +10458,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           minItems: 0
           uniqueItems: true
         invalidatedGrantCount:
@@ -9392,8 +10491,6 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         status:
           type: string
           enum:
@@ -9403,8 +10500,6 @@ components:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
       examples:
       - expectedVersion: 0
         status: ACTIVE
@@ -9423,8 +10518,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
       examples:
       - input:
           expectedVersion: 0
@@ -9461,8 +10554,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           minItems: 0
           uniqueItems: true
       examples:
@@ -9493,22 +10584,16 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         companyId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         departmentId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         systemIds:
           type: array
           items:
@@ -9516,21 +10601,15 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           minItems: 0
           uniqueItems: true
         version:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         createdAt:
           type: string
           format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
       examples:
       - id: demo_01
         companyId: demo_01
@@ -9558,29 +10637,21 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         scopeId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         accountId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         employeeId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         status:
           type: string
           enum:
@@ -9591,14 +10662,10 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         scopeVersion:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         companyId:
           $ref: '#/components/schemas/Company/properties/id'
         departmentId:
@@ -9635,15 +10702,11 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         departmentId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         systemIds:
           type: array
           items:
@@ -9651,8 +10714,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           minItems: 0
           uniqueItems: true
         accountIds:
@@ -9662,16 +10723,12 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           minItems: 0
           uniqueItems: true
         reason:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
       examples:
       - companyId: demo_01
         departmentId: demo_01
@@ -9693,22 +10750,16 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         companyId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         departmentId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         systemIds:
           type: array
           items:
@@ -9716,8 +10767,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           minItems: 0
           uniqueItems: true
         accountIds:
@@ -9727,16 +10776,12 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           minItems: 0
           uniqueItems: true
         reason:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
       examples:
       - expectedVersion: 0
         companyId: demo_01
@@ -9758,8 +10803,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
       examples:
       - input:
           expectedVersion: 0
@@ -9783,8 +10826,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
       examples:
       - input:
           companyId: demo_01
@@ -9811,8 +10852,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           minItems: 0
           uniqueItems: true
         outcome:
@@ -9850,20 +10889,14 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         requestId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         occurredAt:
           type: string
           format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
         eventType:
           type: string
           enum:
@@ -9881,8 +10914,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         message:
           type: string
           minLength: 1
@@ -9916,13 +10947,9 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         occurredAt:
           type: string
           format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
         eventType:
           type: string
           minLength: 1
@@ -9933,8 +10960,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
         sourceDepartmentId:
           anyOf:
@@ -9942,8 +10967,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
         systemId:
           anyOf:
@@ -9951,23 +10974,17 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
         actorId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         targetId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         result:
           type: string
           minLength: 1
@@ -9978,8 +10995,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
         requestId:
           type: string
@@ -10055,8 +11070,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
         oaApprovalId:
           anyOf:
@@ -10064,16 +11077,12 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
         submittedVersion:
           anyOf:
           - type: integer
             minimum: 0
             maximum: 9007199254740991
-            examples:
-            - 0
           - type: 'null'
         failureCode:
           anyOf:
@@ -10116,8 +11125,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
       examples:
       - employeeKey: 示例值
         companyId: demo_01
@@ -10137,8 +11144,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         code:
           type: string
           minLength: 1
@@ -10150,8 +11155,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
         name:
           type: string
@@ -10184,8 +11187,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         permissionCode:
           type: string
           minLength: 1
@@ -10196,8 +11197,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         functionCode:
           type: string
           minLength: 1
@@ -10209,65 +11208,117 @@ components:
         functionId: demo_01
         functionCode: demo_01
     AuthorizationResult:
-      type: object
-      additionalProperties: false
-      required:
-      - employeeKey
-      - companyId
-      - systemId
-      - systemCode
-      - canAccessSystem
-      - menus
-      - operations
-      - evaluatedAt
-      - requestId
-      properties:
-        employeeKey:
-          type: string
-          minLength: 1
-          maxLength: 100
-        companyId:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        systemId:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        systemCode:
-          type: string
-          minLength: 1
-          maxLength: 100
-          pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
-        canAccessSystem:
-          type: boolean
-        menus:
-          type: array
-          items:
-            $ref: '#/components/schemas/Menu'
-          minItems: 0
-          maxItems: 10000
-        operations:
-          type: array
-          items:
-            $ref: '#/components/schemas/EffectiveOperation'
-          minItems: 0
-          maxItems: 10000
-        evaluatedAt:
-          type: string
-          format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
-        requestId:
-          type: string
-          minLength: 1
-          maxLength: 64
+      oneOf:
+      - type: object
+        required:
+        - employeeKey
+        - companyId
+        - systemId
+        - systemCode
+        - canAccessSystem
+        - menus
+        - operations
+        - evaluatedAt
+        - requestId
+        properties:
+          employeeKey:
+            type: string
+            minLength: 1
+            maxLength: 100
+          companyId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          systemId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          systemCode:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          canAccessSystem:
+            type: boolean
+            enum:
+            - false
+          menus:
+            type: array
+            items:
+              $ref: '#/components/schemas/Menu'
+            minItems: 0
+            maxItems: 0
+          operations:
+            type: array
+            items:
+              $ref: '#/components/schemas/EffectiveOperation'
+            minItems: 0
+            maxItems: 0
+          evaluatedAt:
+            type: string
+            format: date-time
+          requestId:
+            type: string
+            minLength: 1
+            maxLength: 64
+        additionalProperties: false
+      - type: object
+        required:
+        - employeeKey
+        - companyId
+        - systemId
+        - systemCode
+        - canAccessSystem
+        - menus
+        - operations
+        - evaluatedAt
+        - requestId
+        properties:
+          employeeKey:
+            type: string
+            minLength: 1
+            maxLength: 100
+          companyId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          systemId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          systemCode:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          canAccessSystem:
+            type: boolean
+            enum:
+            - true
+          menus:
+            type: array
+            items:
+              $ref: '#/components/schemas/Menu'
+            minItems: 0
+            maxItems: 10000
+          operations:
+            type: array
+            items:
+              $ref: '#/components/schemas/EffectiveOperation'
+            minItems: 0
+            maxItems: 10000
+          evaluatedAt:
+            type: string
+            format: date-time
+          requestId:
+            type: string
+            minLength: 1
+            maxLength: 64
+        additionalProperties: false
       examples:
       - employeeKey: demo.employee
         companyId: company_demo_01
@@ -10295,8 +11346,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         permissionCode:
           type: string
           minLength: 1
@@ -10307,59 +11356,96 @@ components:
         companyId: demo_01
         permissionCode: demo_01
     CheckResult:
-      type: object
-      additionalProperties: false
-      required:
-      - employeeKey
-      - companyId
-      - systemId
-      - permissionCode
-      - permissionType
-      - hasPermission
-      - evaluatedAt
-      - requestId
-      properties:
-        employeeKey:
-          type: string
-          minLength: 1
-          maxLength: 100
-        companyId:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        systemId:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        permissionCode:
-          type: string
-          minLength: 1
-          maxLength: 100
-          pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
-        permissionType:
-          anyOf:
-          - type: string
+      oneOf:
+      - type: object
+        required:
+        - employeeKey
+        - companyId
+        - systemId
+        - permissionCode
+        - permissionType
+        - hasPermission
+        - evaluatedAt
+        - requestId
+        properties:
+          employeeKey:
+            type: string
+            minLength: 1
+            maxLength: 100
+          companyId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          systemId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          permissionCode:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          permissionType:
+            type: 'null'
+          hasPermission:
+            type: boolean
+            enum:
+            - false
+          evaluatedAt:
+            type: string
+            format: date-time
+          requestId:
+            type: string
+            minLength: 1
+            maxLength: 64
+        additionalProperties: false
+      - type: object
+        required:
+        - employeeKey
+        - companyId
+        - systemId
+        - permissionCode
+        - permissionType
+        - hasPermission
+        - evaluatedAt
+        - requestId
+        properties:
+          employeeKey:
+            type: string
+            minLength: 1
+            maxLength: 100
+          companyId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          systemId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          permissionCode:
+            type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          permissionType:
+            type: string
             enum:
             - SYSTEM_ACCESS
             - FUNCTION_OPERATION
-          - type: 'null'
-        hasPermission:
-          type: boolean
-        evaluatedAt:
-          type: string
-          format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
-        requestId:
-          type: string
-          minLength: 1
-          maxLength: 64
+          hasPermission:
+            type: boolean
+          evaluatedAt:
+            type: string
+            format: date-time
+          requestId:
+            type: string
+            minLength: 1
+            maxLength: 64
+        additionalProperties: false
       examples:
       - employeeKey: demo.employee
         companyId: company_demo_01
@@ -10388,28 +11474,20 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         requestId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         oaApprovalId:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         submittedVersion:
           type: integer
-          minimum: 0
+          minimum: 1
           maximum: 9007199254740991
-          examples:
-          - 0
         contentDigest:
           type: string
           minLength: 1
@@ -10421,12 +11499,12 @@ components:
           - APPROVED
           - REJECTED
         isFinal:
-          const: true
+          enum:
+          - true
+          type: boolean
         decidedAt:
           type: string
           format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
         comment:
           type: string
           minLength: 0
@@ -10435,57 +11513,134 @@ components:
       - eventId: demo_01
         requestId: demo_01
         oaApprovalId: demo_01
-        submittedVersion: 0
+        submittedVersion: 1
         contentDigest: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
         decision: APPROVED
         isFinal: true
         decidedAt: '2026-10-16T08:00:00Z'
         comment: 示例值
     OaReceipt:
-      type: object
-      additionalProperties: false
-      required:
-      - receiptId
-      - requestId
-      - accepted
-      - duplicate
-      - approvalResult
-      - executionStatus
-      - retryable
-      properties:
-        receiptId:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        requestId:
-          type: string
-          minLength: 1
-          maxLength: 64
-          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
-        accepted:
-          const: true
-        duplicate:
-          type: boolean
-        approvalResult:
-          type: string
-          enum:
-          - APPROVED
-          - REJECTED
-        executionStatus:
-          type: string
-          enum:
-          - NOT_STARTED
-          - PENDING
-          - SUCCEEDED
-          - FAILED
-          - INVALIDATED
-        retryable:
-          type: boolean
+      oneOf:
+      - type: object
+        required:
+        - receiptId
+        - requestId
+        - accepted
+        - duplicate
+        - approvalResult
+        - executionStatus
+        - retryable
+        properties:
+          receiptId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          requestId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          accepted:
+            enum:
+            - true
+            type: boolean
+          duplicate:
+            type: boolean
+          approvalResult:
+            type: string
+            enum:
+            - REJECTED
+          executionStatus:
+            type: string
+            enum:
+            - NOT_STARTED
+            - INVALIDATED
+          retryable:
+            type: boolean
+            enum:
+            - false
+        additionalProperties: false
+      - type: object
+        required:
+        - receiptId
+        - requestId
+        - accepted
+        - duplicate
+        - approvalResult
+        - executionStatus
+        - retryable
+        properties:
+          receiptId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          requestId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          accepted:
+            enum:
+            - true
+            type: boolean
+          duplicate:
+            type: boolean
+          approvalResult:
+            type: string
+            enum:
+            - APPROVED
+          executionStatus:
+            type: string
+            enum:
+            - PENDING
+            - FAILED
+          retryable:
+            type: boolean
+            enum:
+            - true
+        additionalProperties: false
+      - type: object
+        required:
+        - receiptId
+        - requestId
+        - accepted
+        - duplicate
+        - approvalResult
+        - executionStatus
+        - retryable
+        properties:
+          receiptId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          requestId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          accepted:
+            enum:
+            - true
+            type: boolean
+          duplicate:
+            type: boolean
+          approvalResult:
+            type: string
+            enum:
+            - APPROVED
+          executionStatus:
+            type: string
+            enum:
+            - SUCCEEDED
+            - INVALIDATED
+          retryable:
+            type: boolean
+            enum:
+            - false
+        additionalProperties: false
       examples:
       - receiptId: receipt_demo_01
         requestId: change_demo_01
@@ -10510,8 +11665,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         fileName:
           type: string
           minLength: 1
@@ -10535,8 +11688,6 @@ components:
         createdAt:
           type: string
           format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
       examples:
       - id: demo_01
         fileName: 示例值
@@ -10598,8 +11749,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
         departmentId:
           anyOf:
@@ -10607,8 +11756,6 @@ components:
             minLength: 1
             maxLength: 64
             pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-            examples:
-            - demo_01
           - type: 'null'
         companyCode:
           anyOf:
@@ -10647,8 +11794,6 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         sourceSystem:
           type: string
           minLength: 1
@@ -10688,8 +11833,6 @@ components:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
       examples:
       - fileId: demo_01
         sourceSystem: 示例值
@@ -10805,16 +11948,12 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         input:
           $ref: '#/components/schemas/ImportInput'
         version:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         contentDigest:
           type: string
           minLength: 1
@@ -10849,8 +11988,6 @@ components:
         createdAt:
           type: string
           format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
       examples:
       - id: demo_01
         input:
@@ -10893,8 +12030,6 @@ components:
           type: integer
           minimum: 0
           maximum: 9007199254740991
-          examples:
-          - 0
         contentDigest:
           type: string
           minLength: 1
@@ -11532,7 +12667,6 @@ components:
         total: 0
     OaSubmission:
       type: object
-      additionalProperties: false
       required:
       - requestId
       - submittedVersion
@@ -11548,27 +12682,60 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         submittedVersion:
           type: integer
-          minimum: 0
+          minimum: 1
           maximum: 9007199254740991
-          examples:
-          - 0
         contentDigest:
           type: string
           minLength: 1
           maxLength: 64
           pattern: ^[a-f0-9]{64}$
         content:
-          $ref: '#/components/schemas/ChangeContent'
+          oneOf:
+          - type: object
+            additionalProperties: false
+            required:
+            - kind
+            - companyId
+            - roleId
+            - expectedConfigurationVersion
+            - permissionIds
+            properties:
+              kind:
+                enum:
+                - ROLE_CONFIGURATION
+                type: string
+              companyId:
+                type: string
+                minLength: 1
+                maxLength: 64
+                pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+              roleId:
+                type: string
+                minLength: 1
+                maxLength: 64
+                pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+              expectedConfigurationVersion:
+                type: integer
+                minimum: 0
+                maximum: 9007199254740991
+              permissionIds:
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+                  maxLength: 64
+                  pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+                minItems: 1
+                maxItems: 10000
+                uniqueItems: true
+          - $ref: '#/components/schemas/RoleGrant'
+          - $ref: '#/components/schemas/RoleRevocation'
         reason:
           type: string
           minLength: 1
           maxLength: 500
-          examples:
-          - 职责调整，按明确来源办理
         originalAuthority:
           $ref: '#/components/schemas/Authority'
         submittedByAccountId:
@@ -11576,13 +12743,9 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         submittedAt:
           type: string
           format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
       examples:
       - submittedVersion: 1
         contentDigest: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
@@ -11613,6 +12776,7 @@ components:
         submittedByAccountId: account_demo_01
         requestId: change_demo_01
         submittedAt: '2026-10-16T08:00:00Z'
+      additionalProperties: false
     OaLink:
       type: object
       additionalProperties: false
@@ -11628,14 +12792,10 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         submittedVersion:
           type: integer
-          minimum: 0
+          minimum: 1
           maximum: 9007199254740991
-          examples:
-          - 0
         contentDigest:
           type: string
           minLength: 1
@@ -11646,16 +12806,12 @@ components:
           minLength: 1
           maxLength: 64
           pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
-          examples:
-          - demo_01
         acceptedAt:
           type: string
           format: date-time
-          examples:
-          - '2026-10-16T08:00:00Z'
       examples:
       - requestId: demo_01
-        submittedVersion: 0
+        submittedVersion: 1
         contentDigest: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
         oaApprovalId: demo_01
         acceptedAt: '2026-10-16T08:00:00Z'
@@ -11669,6 +12825,10 @@ components:
       - stableCode
       - expectedVersion
       - summary
+      - companyCode
+      - departmentCode
+      - positionCode
+      - fieldChanges
       properties:
         rowNumber:
           type: integer
@@ -11712,6 +12872,32 @@ components:
           type: string
           minLength: 1
           maxLength: 500
+        companyCode:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          - type: 'null'
+        departmentCode:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          - type: 'null'
+        positionCode:
+          anyOf:
+          - type: string
+            minLength: 1
+            maxLength: 100
+            pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$
+          - type: 'null'
+        fieldChanges:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImportValueChange'
+          maxItems: 30
       examples:
       - rowNumber: 2
         action: END_EMPLOYMENT
@@ -11719,6 +12905,14 @@ components:
         stableCode: null
         expectedVersion: 3
         summary: 结束明确任职；其他适用兼岗保留。
+        companyCode: company_demo
+        departmentCode: dept_demo_a
+        positionCode: position_demo_01
+        fieldChanges:
+        - field: employmentState
+          before: ACTIVE
+          after: ENDED
+      description: 源行号、明确动作、目标版本、归属稳定编码及冻结字段差异。生成的新代码在这里回读；未知值不猜测，缺必要映射阻断。
     ImportPlanChangePage:
       type: object
       additionalProperties: false
@@ -11751,6 +12945,1243 @@ components:
         page: 1
         pageSize: 20
         total: 0
+    ImpactTarget:
+      oneOf:
+      - type: object
+        required:
+        - targetType
+        - targetId
+        - source
+        - companyId
+        - departmentId
+        - systemId
+        - targetVersion
+        - effect
+        - summary
+        properties:
+          targetType:
+            type: string
+            enum:
+            - SOURCE
+          targetId:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            - type: 'null'
+          source:
+            $ref: '#/components/schemas/SourceKey'
+          companyId:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            - type: 'null'
+          departmentId:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            - type: 'null'
+          systemId:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            - type: 'null'
+          targetVersion:
+            anyOf:
+            - type: integer
+              minimum: 0
+              maximum: 9007199254740991
+            - type: 'null'
+          effect:
+            type: string
+            enum:
+            - CONFIGURATION_CHANGE
+            - ENABLE
+            - DISABLE
+            - INVALIDATE
+            - REVOKE_APPOINTMENT
+            - KEEP_VALID
+            - CLOSE_SOURCE
+          summary:
+            type: string
+            minLength: 1
+            maxLength: 500
+        additionalProperties: false
+      - type: object
+        required:
+        - targetType
+        - targetId
+        - source
+        - companyId
+        - departmentId
+        - systemId
+        - targetVersion
+        - effect
+        - summary
+        properties:
+          targetType:
+            type: string
+            enum:
+            - ROLE
+            - GRANT
+            - APPOINTMENT
+            - CHANGE_REQUEST
+            - DIRECTORY_NODE
+            - PERMISSION
+          targetId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          source:
+            anyOf:
+            - $ref: '#/components/schemas/SourceKey'
+            - type: 'null'
+          companyId:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            - type: 'null'
+          departmentId:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            - type: 'null'
+          systemId:
+            anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+            - type: 'null'
+          targetVersion:
+            anyOf:
+            - type: integer
+              minimum: 0
+              maximum: 9007199254740991
+            - type: 'null'
+          effect:
+            type: string
+            enum:
+            - CONFIGURATION_CHANGE
+            - ENABLE
+            - DISABLE
+            - INVALIDATE
+            - REVOKE_APPOINTMENT
+            - KEEP_VALID
+            - CLOSE_SOURCE
+          summary:
+            type: string
+            minLength: 1
+            maxLength: 500
+        additionalProperties: false
+      examples:
+      - targetType: CHANGE_REQUEST
+        targetId: change_demo_pending
+        source: null
+        companyId: company_demo_01
+        departmentId: dept_demo_a
+        systemId: system_demo_hr
+        targetVersion: 2
+        effect: INVALIDATE
+        summary: 关闭此来源后整份旧分配申请失效。
+    ImpactTargetPage:
+      type: object
+      additionalProperties: false
+      required:
+      - items
+      - page
+      - pageSize
+      - total
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImpactTarget'
+          minItems: 0
+          maxItems: 100
+        page:
+          type: integer
+          minimum: 1
+        pageSize:
+          type: integer
+          enum:
+          - 10
+          - 20
+          - 50
+          - 100
+        total:
+          type: integer
+          minimum: 0
+      examples:
+      - items: []
+        page: 1
+        pageSize: 10
+        total: 0
+    ImportValueChange:
+      type: object
+      additionalProperties: false
+      required:
+      - field
+      - before
+      - after
+      properties:
+        field:
+          type: string
+          enum:
+          - employeeKey
+          - name
+          - companyCode
+          - departmentCode
+          - positionCode
+          - employmentId
+          - employmentState
+          - startedAt
+          - endedAt
+          - status
+        before:
+          anyOf:
+          - type:
+            - string
+            - integer
+            - boolean
+          - type: 'null'
+        after:
+          anyOf:
+          - type:
+            - string
+            - integer
+            - boolean
+          - type: 'null'
+      examples:
+      - field: name
+        before: 原部门名
+        after: 新部门名
+    DraftChangeRequest:
+      type: object
+      required:
+      - id
+      - content
+      - reason
+      - draftVersion
+      - submittedVersion
+      - contentDigest
+      - statusVersion
+      - state
+      - deliveryStatus
+      - approvalResult
+      - executionStatus
+      - originalAuthority
+      - submittedByAccountId
+      - oaApprovalId
+      - retryable
+      - failureCode
+      - nextRetryAt
+      - createdAt
+      - submittedAt
+      properties:
+        id:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        content:
+          $ref: '#/components/schemas/ChangeContent'
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+        draftVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        submittedVersion:
+          type: 'null'
+        contentDigest:
+          type: 'null'
+        statusVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        state:
+          type: string
+          enum:
+          - DRAFT
+        deliveryStatus:
+          type: string
+          enum:
+          - NOT_SUBMITTED
+        approvalResult:
+          type: string
+          enum:
+          - NONE
+        executionStatus:
+          type: string
+          enum:
+          - NOT_STARTED
+        originalAuthority:
+          type: 'null'
+        submittedByAccountId:
+          type: 'null'
+        oaApprovalId:
+          type: 'null'
+        retryable:
+          type: boolean
+          description: 仅表示已批准方案可由服务端继续尝试执行；不是管理员执行按钮，也不表示可以投递重试。
+          enum:
+          - false
+        failureCode:
+          type: 'null'
+        nextRetryAt:
+          type: 'null'
+        createdAt:
+          type: string
+          format: date-time
+        submittedAt:
+          type: 'null'
+      additionalProperties: false
+    PendingChangeRequest:
+      oneOf:
+      - type: object
+        required:
+        - id
+        - content
+        - reason
+        - draftVersion
+        - submittedVersion
+        - contentDigest
+        - statusVersion
+        - state
+        - deliveryStatus
+        - approvalResult
+        - executionStatus
+        - originalAuthority
+        - submittedByAccountId
+        - oaApprovalId
+        - retryable
+        - failureCode
+        - nextRetryAt
+        - createdAt
+        - submittedAt
+        properties:
+          id:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          content:
+            $ref: '#/components/schemas/ChangeContent'
+          reason:
+            type: string
+            minLength: 1
+            maxLength: 500
+          draftVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          submittedVersion:
+            type: integer
+            minimum: 1
+            maximum: 9007199254740991
+          contentDigest:
+            type: string
+            pattern: ^[a-f0-9]{64}$
+          statusVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          state:
+            type: string
+            enum:
+            - PENDING
+          deliveryStatus:
+            type: string
+            enum:
+            - PENDING_SEND
+          approvalResult:
+            type: string
+            enum:
+            - NONE
+          executionStatus:
+            type: string
+            enum:
+            - NOT_STARTED
+          originalAuthority:
+            $ref: '#/components/schemas/Authority'
+          submittedByAccountId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          oaApprovalId:
+            type: 'null'
+          retryable:
+            type: boolean
+            description: 仅表示已批准方案可由服务端继续尝试执行；不是管理员执行按钮，也不表示可以投递重试。
+            enum:
+            - false
+          failureCode:
+            type: 'null'
+          nextRetryAt:
+            type: 'null'
+          createdAt:
+            type: string
+            format: date-time
+          submittedAt:
+            type: string
+            format: date-time
+        additionalProperties: false
+      - type: object
+        required:
+        - id
+        - content
+        - reason
+        - draftVersion
+        - submittedVersion
+        - contentDigest
+        - statusVersion
+        - state
+        - deliveryStatus
+        - approvalResult
+        - executionStatus
+        - originalAuthority
+        - submittedByAccountId
+        - oaApprovalId
+        - retryable
+        - failureCode
+        - nextRetryAt
+        - createdAt
+        - submittedAt
+        properties:
+          id:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          content:
+            $ref: '#/components/schemas/ChangeContent'
+          reason:
+            type: string
+            minLength: 1
+            maxLength: 500
+          draftVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          submittedVersion:
+            type: integer
+            minimum: 1
+            maximum: 9007199254740991
+          contentDigest:
+            type: string
+            pattern: ^[a-f0-9]{64}$
+          statusVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          state:
+            type: string
+            enum:
+            - PENDING
+          deliveryStatus:
+            type: string
+            enum:
+            - SEND_FAILED
+          approvalResult:
+            type: string
+            enum:
+            - NONE
+          executionStatus:
+            type: string
+            enum:
+            - NOT_STARTED
+          originalAuthority:
+            $ref: '#/components/schemas/Authority'
+          submittedByAccountId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          oaApprovalId:
+            type: 'null'
+          retryable:
+            type: boolean
+            description: 仅表示已批准方案可由服务端继续尝试执行；不是管理员执行按钮，也不表示可以投递重试。
+            enum:
+            - false
+          failureCode:
+            type: 'null'
+          nextRetryAt:
+            type: 'null'
+          createdAt:
+            type: string
+            format: date-time
+          submittedAt:
+            type: string
+            format: date-time
+        additionalProperties: false
+      - type: object
+        required:
+        - id
+        - content
+        - reason
+        - draftVersion
+        - submittedVersion
+        - contentDigest
+        - statusVersion
+        - state
+        - deliveryStatus
+        - approvalResult
+        - executionStatus
+        - originalAuthority
+        - submittedByAccountId
+        - oaApprovalId
+        - retryable
+        - failureCode
+        - nextRetryAt
+        - createdAt
+        - submittedAt
+        properties:
+          id:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          content:
+            $ref: '#/components/schemas/ChangeContent'
+          reason:
+            type: string
+            minLength: 1
+            maxLength: 500
+          draftVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          submittedVersion:
+            type: integer
+            minimum: 1
+            maximum: 9007199254740991
+          contentDigest:
+            type: string
+            pattern: ^[a-f0-9]{64}$
+          statusVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          state:
+            type: string
+            enum:
+            - PENDING
+          deliveryStatus:
+            type: string
+            enum:
+            - LINKED
+          approvalResult:
+            type: string
+            enum:
+            - NONE
+          executionStatus:
+            type: string
+            enum:
+            - NOT_STARTED
+          originalAuthority:
+            $ref: '#/components/schemas/Authority'
+          submittedByAccountId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          oaApprovalId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          retryable:
+            type: boolean
+            description: 仅表示已批准方案可由服务端继续尝试执行；不是管理员执行按钮，也不表示可以投递重试。
+            enum:
+            - false
+          failureCode:
+            type: 'null'
+          nextRetryAt:
+            type: 'null'
+          createdAt:
+            type: string
+            format: date-time
+          submittedAt:
+            type: string
+            format: date-time
+        additionalProperties: false
+    RejectedChangeRequest:
+      type: object
+      required:
+      - id
+      - content
+      - reason
+      - draftVersion
+      - submittedVersion
+      - contentDigest
+      - statusVersion
+      - state
+      - deliveryStatus
+      - approvalResult
+      - executionStatus
+      - originalAuthority
+      - submittedByAccountId
+      - oaApprovalId
+      - retryable
+      - failureCode
+      - nextRetryAt
+      - createdAt
+      - submittedAt
+      properties:
+        id:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        content:
+          $ref: '#/components/schemas/ChangeContent'
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+        draftVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        submittedVersion:
+          type: integer
+          minimum: 1
+          maximum: 9007199254740991
+        contentDigest:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        statusVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        state:
+          type: string
+          enum:
+          - REJECTED
+        deliveryStatus:
+          type: string
+          enum:
+          - LINKED
+        approvalResult:
+          type: string
+          enum:
+          - REJECTED
+        executionStatus:
+          type: string
+          enum:
+          - NOT_STARTED
+        originalAuthority:
+          $ref: '#/components/schemas/Authority'
+        submittedByAccountId:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        oaApprovalId:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        retryable:
+          type: boolean
+          description: 仅表示已批准方案可由服务端继续尝试执行；不是管理员执行按钮，也不表示可以投递重试。
+          enum:
+          - false
+        failureCode:
+          type: 'null'
+        nextRetryAt:
+          type: 'null'
+        createdAt:
+          type: string
+          format: date-time
+        submittedAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    ApprovedChangeRequest:
+      type: object
+      required:
+      - id
+      - content
+      - reason
+      - draftVersion
+      - submittedVersion
+      - contentDigest
+      - statusVersion
+      - state
+      - deliveryStatus
+      - approvalResult
+      - executionStatus
+      - originalAuthority
+      - submittedByAccountId
+      - oaApprovalId
+      - retryable
+      - failureCode
+      - nextRetryAt
+      - createdAt
+      - submittedAt
+      properties:
+        id:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        content:
+          $ref: '#/components/schemas/ChangeContent'
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+        draftVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        submittedVersion:
+          type: integer
+          minimum: 1
+          maximum: 9007199254740991
+        contentDigest:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        statusVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        state:
+          type: string
+          enum:
+          - APPROVED
+        deliveryStatus:
+          type: string
+          enum:
+          - LINKED
+        approvalResult:
+          type: string
+          enum:
+          - APPROVED
+        executionStatus:
+          type: string
+          enum:
+          - PENDING
+        originalAuthority:
+          $ref: '#/components/schemas/Authority'
+        submittedByAccountId:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        oaApprovalId:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        retryable:
+          type: boolean
+          description: 仅表示已批准方案可由服务端继续尝试执行；不是管理员执行按钮，也不表示可以投递重试。
+          enum:
+          - true
+        failureCode:
+          type: 'null'
+        nextRetryAt:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: 下一次服务端执行重试时间；投递重试不复用此字段。
+        createdAt:
+          type: string
+          format: date-time
+        submittedAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    ExecutedChangeRequest:
+      type: object
+      required:
+      - id
+      - content
+      - reason
+      - draftVersion
+      - submittedVersion
+      - contentDigest
+      - statusVersion
+      - state
+      - deliveryStatus
+      - approvalResult
+      - executionStatus
+      - originalAuthority
+      - submittedByAccountId
+      - oaApprovalId
+      - retryable
+      - failureCode
+      - nextRetryAt
+      - createdAt
+      - submittedAt
+      properties:
+        id:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        content:
+          $ref: '#/components/schemas/ChangeContent'
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+        draftVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        submittedVersion:
+          type: integer
+          minimum: 1
+          maximum: 9007199254740991
+        contentDigest:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        statusVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        state:
+          type: string
+          enum:
+          - EXECUTED
+        deliveryStatus:
+          type: string
+          enum:
+          - LINKED
+        approvalResult:
+          type: string
+          enum:
+          - APPROVED
+        executionStatus:
+          type: string
+          enum:
+          - SUCCEEDED
+        originalAuthority:
+          $ref: '#/components/schemas/Authority'
+        submittedByAccountId:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        oaApprovalId:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        retryable:
+          type: boolean
+          description: 仅表示已批准方案可由服务端继续尝试执行；不是管理员执行按钮，也不表示可以投递重试。
+          enum:
+          - false
+        failureCode:
+          type: 'null'
+        nextRetryAt:
+          type: 'null'
+        createdAt:
+          type: string
+          format: date-time
+        submittedAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    ExecutionFailedChangeRequest:
+      type: object
+      required:
+      - id
+      - content
+      - reason
+      - draftVersion
+      - submittedVersion
+      - contentDigest
+      - statusVersion
+      - state
+      - deliveryStatus
+      - approvalResult
+      - executionStatus
+      - originalAuthority
+      - submittedByAccountId
+      - oaApprovalId
+      - retryable
+      - failureCode
+      - nextRetryAt
+      - createdAt
+      - submittedAt
+      properties:
+        id:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        content:
+          $ref: '#/components/schemas/ChangeContent'
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+        draftVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        submittedVersion:
+          type: integer
+          minimum: 1
+          maximum: 9007199254740991
+        contentDigest:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        statusVersion:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        state:
+          type: string
+          enum:
+          - EXECUTION_FAILED
+        deliveryStatus:
+          type: string
+          enum:
+          - LINKED
+        approvalResult:
+          type: string
+          enum:
+          - APPROVED
+        executionStatus:
+          type: string
+          enum:
+          - FAILED
+        originalAuthority:
+          $ref: '#/components/schemas/Authority'
+        submittedByAccountId:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        oaApprovalId:
+          type: string
+          minLength: 1
+          maxLength: 64
+          pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+        retryable:
+          type: boolean
+          description: 仅表示已批准方案可由服务端继续尝试执行；不是管理员执行按钮，也不表示可以投递重试。
+          enum:
+          - true
+        failureCode:
+          type: string
+          minLength: 1
+          maxLength: 64
+        nextRetryAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        submittedAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    InvalidatedChangeRequest:
+      oneOf:
+      - type: object
+        required:
+        - id
+        - content
+        - reason
+        - draftVersion
+        - submittedVersion
+        - contentDigest
+        - statusVersion
+        - state
+        - deliveryStatus
+        - approvalResult
+        - executionStatus
+        - originalAuthority
+        - submittedByAccountId
+        - oaApprovalId
+        - retryable
+        - failureCode
+        - nextRetryAt
+        - createdAt
+        - submittedAt
+        properties:
+          id:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          content:
+            $ref: '#/components/schemas/ChangeContent'
+          reason:
+            type: string
+            minLength: 1
+            maxLength: 500
+          draftVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          submittedVersion:
+            type: integer
+            minimum: 1
+            maximum: 9007199254740991
+          contentDigest:
+            type: string
+            pattern: ^[a-f0-9]{64}$
+          statusVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          state:
+            type: string
+            enum:
+            - INVALIDATED
+          deliveryStatus:
+            type: string
+            enum:
+            - PENDING_SEND
+          approvalResult:
+            type: string
+            enum:
+            - NONE
+          executionStatus:
+            type: string
+            enum:
+            - INVALIDATED
+          originalAuthority:
+            $ref: '#/components/schemas/Authority'
+          submittedByAccountId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          oaApprovalId:
+            type: 'null'
+          retryable:
+            type: boolean
+            description: 仅表示已批准方案可由服务端继续尝试执行；不是管理员执行按钮，也不表示可以投递重试。
+            enum:
+            - false
+          failureCode:
+            type: string
+            minLength: 1
+            maxLength: 64
+          nextRetryAt:
+            type: 'null'
+          createdAt:
+            type: string
+            format: date-time
+          submittedAt:
+            type: string
+            format: date-time
+        additionalProperties: false
+      - type: object
+        required:
+        - id
+        - content
+        - reason
+        - draftVersion
+        - submittedVersion
+        - contentDigest
+        - statusVersion
+        - state
+        - deliveryStatus
+        - approvalResult
+        - executionStatus
+        - originalAuthority
+        - submittedByAccountId
+        - oaApprovalId
+        - retryable
+        - failureCode
+        - nextRetryAt
+        - createdAt
+        - submittedAt
+        properties:
+          id:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          content:
+            $ref: '#/components/schemas/ChangeContent'
+          reason:
+            type: string
+            minLength: 1
+            maxLength: 500
+          draftVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          submittedVersion:
+            type: integer
+            minimum: 1
+            maximum: 9007199254740991
+          contentDigest:
+            type: string
+            pattern: ^[a-f0-9]{64}$
+          statusVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          state:
+            type: string
+            enum:
+            - INVALIDATED
+          deliveryStatus:
+            type: string
+            enum:
+            - SEND_FAILED
+          approvalResult:
+            type: string
+            enum:
+            - NONE
+          executionStatus:
+            type: string
+            enum:
+            - INVALIDATED
+          originalAuthority:
+            $ref: '#/components/schemas/Authority'
+          submittedByAccountId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          oaApprovalId:
+            type: 'null'
+          retryable:
+            type: boolean
+            description: 仅表示已批准方案可由服务端继续尝试执行；不是管理员执行按钮，也不表示可以投递重试。
+            enum:
+            - false
+          failureCode:
+            type: string
+            minLength: 1
+            maxLength: 64
+          nextRetryAt:
+            type: 'null'
+          createdAt:
+            type: string
+            format: date-time
+          submittedAt:
+            type: string
+            format: date-time
+        additionalProperties: false
+      - type: object
+        required:
+        - id
+        - content
+        - reason
+        - draftVersion
+        - submittedVersion
+        - contentDigest
+        - statusVersion
+        - state
+        - deliveryStatus
+        - approvalResult
+        - executionStatus
+        - originalAuthority
+        - submittedByAccountId
+        - oaApprovalId
+        - retryable
+        - failureCode
+        - nextRetryAt
+        - createdAt
+        - submittedAt
+        properties:
+          id:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          content:
+            $ref: '#/components/schemas/ChangeContent'
+          reason:
+            type: string
+            minLength: 1
+            maxLength: 500
+          draftVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          submittedVersion:
+            type: integer
+            minimum: 1
+            maximum: 9007199254740991
+          contentDigest:
+            type: string
+            pattern: ^[a-f0-9]{64}$
+          statusVersion:
+            type: integer
+            minimum: 0
+            maximum: 9007199254740991
+          state:
+            type: string
+            enum:
+            - INVALIDATED
+          deliveryStatus:
+            type: string
+            enum:
+            - LINKED
+          approvalResult:
+            type: string
+            enum:
+            - NONE
+            - APPROVED
+            - REJECTED
+          executionStatus:
+            type: string
+            enum:
+            - INVALIDATED
+          originalAuthority:
+            $ref: '#/components/schemas/Authority'
+          submittedByAccountId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          oaApprovalId:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[A-Za-z0-9][A-Za-z0-9_-]*$
+          retryable:
+            type: boolean
+            description: 仅表示已批准方案可由服务端继续尝试执行；不是管理员执行按钮，也不表示可以投递重试。
+            enum:
+            - false
+          failureCode:
+            type: string
+            minLength: 1
+            maxLength: 64
+          nextRetryAt:
+            type: 'null'
+          createdAt:
+            type: string
+            format: date-time
+          submittedAt:
+            type: string
+            format: date-time
+        additionalProperties: false
 x-requirements-baseline: V1.3
 x-apifox-project-id: '8934976'
 x-design-status: DESIGNED_NOT_IMPLEMENTED
