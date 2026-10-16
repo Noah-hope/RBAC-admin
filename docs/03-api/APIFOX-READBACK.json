@@ -1,0 +1,97 @@
+{
+  "projectId": "8934976",
+  "module": "默认模块",
+  "baselineCommit": "471892c",
+  "contractVersion": "1.1.0",
+  "downloadTime": "2026-10-16T15:41:12.514Z",
+  "referenceFilesRead": 203,
+  "remotePathCount": 56,
+  "remoteOperationCount": 67,
+  "remoteSchemaCount": 129,
+  "remoteWebhookCount": 0,
+  "operationIdsAndMethodPathsMatch": true,
+  "responseStatusCodeSetsMatch": true,
+  "appointmentFields": {
+    "companyId": {
+      "type": "object",
+      "properties": {}
+    },
+    "departmentId": {
+      "type": "object",
+      "properties": {}
+    },
+    "systemIds": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {}
+      },
+      "uniqueItems": true
+    }
+  },
+  "loginSecurity": [
+    {
+      "AdminJwt": []
+    }
+  ],
+  "logoutSecurity": [
+    {
+      "AdminJwt": []
+    }
+  ],
+  "remoteErrorContentTypes": {
+    "BadRequest": [
+      "application/json"
+    ],
+    "Unauthorized": [
+      "application/json"
+    ],
+    "Forbidden": [
+      "application/json"
+    ],
+    "NotFound": [
+      "application/json"
+    ],
+    "Conflict": [
+      "application/json"
+    ],
+    "PayloadTooLarge": [
+      "application/json"
+    ],
+    "UnsupportedMediaType": [
+      "application/json"
+    ],
+    "Unprocessable": [
+      "application/json"
+    ],
+    "RateLimited": [
+      "application/json"
+    ],
+    "IntegrityError": [
+      "application/json"
+    ],
+    "Unavailable": [
+      "application/json"
+    ]
+  },
+  "uploadSchema": {
+    "type": "object",
+    "properties": {
+      "file": {
+        "type": "string",
+        "format": "binary",
+        "description": "CSV或XLSX；禁止XLSM/旧XLS/宏；校验扩展名/MIME/文件内容。",
+        "example": ""
+      }
+    },
+    "required": [
+      "file"
+    ]
+  },
+  "remoteVersion": "1.0.0",
+  "result": "PARTIAL_IMPORT_SEMANTIC_MISMATCH",
+  "limitations": [
+    "客户端完整导出尚未提供；不能断定差异产生于导入、存储或MCP导出层。",
+    "未验证真实后端、认证、OA或事务。"
+  ]
+}

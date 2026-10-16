@@ -42,3 +42,23 @@
 本次以269d269为评审基线；启动刷新下载时间2026-10-16T14:47:23.323Z、收尾2026-10-16T15:12:56.488Z，均为UTC（北京时间22:47、23:12）。read根文档成功，三项组件引用schemas/responses/securitySchemes均回读为{}，paths/webhooks仍空。当前MCP仍仅读文档、读引用及刷新；没有写入/导入工具，也未操作客户端导入。
 
 待导入文件为本目录openapi.yaml **1.1.0**：56个路径、67个入站操作、1个出站OA webhook、129个模型。应以本次评审修订提交及VALIDATION中的SHA为导入基线；不要继续导入269d269的首版。现已准备好文件及前述人工步骤，**实际导入和导入后的完整回读核对仍未完成**。2.64.1 lint的启发式告警及3.1/null/oneOf在Apifox客户端的实际呈现均需记录，不能为显示方便静默弱化边界或改成不等价的3.0文件。
+
+
+## 用户导入后的完整 MCP 回读（2026-10-16）
+
+用户在本聊天确认已手动导入；客户端版本、具体导入选项和完成时刻未提供，不作推定。基线为471892c中的1.1.0，文件SHA-256仍为ec7ef9ef1ab046bb61cec9728c423c32f58311c850860be8ef54a9cf3a4798fd。MCP刷新下载时间2026-10-16T15:41:12.514Z（北京时间23:41），根文档及递归发现的全部203个外部引用文件均读取成功，无未读取外部引用。按引用映射恢复组件名，比较全部56路径/67操作、129模型、11公共响应、4认证方案及参数；忽略对象键顺序、平台扩展、参数排列、默认false、单示例转命名示例等等价表示。原始差异数不等于问题数。
+
+结论：**已发生人工导入，完整MCP回读完成，但语义一致性未通过，不能宣布同步完成。** 路径＋方法、operationId、响应状态码集合均一致；129模型、必填/枚举/null/oneOf及示例已纳入比较，模型结构差异集中在Appointment的三个字段及引用它的响应。证据摘要见[APIFOX-READBACK.json](APIFOX-READBACK.json)。
+
+| 编号 | 回读差异及影响 | 后续处理 |
+| --- | --- | --- |
+| AS-01 | Appointment.companyId、departmentId及systemIds.items由字符串标识（含长度/格式约束）变成type:object、properties:{}，导致字符串示例与远程模型矛盾 | 客户端核查这三个字段；若完整导出也损坏，按Git修复为字符串标识后再次回读，不能把Git改成对象 |
+| AS-02 | POST /api/v1/admin/sessions由security:[]变成AdminJwt，登录出现先有JWT的循环；DELETE /api/v1/admin/sessions/current丢失原security中的空对象备选 | 分别恢复匿名登录及退出的原认证约定；其余65项有效认证绑定一致，不能把继承改显式视为越权 |
+| AS-03 | 全部11项公共错误响应的媒体类型由application/problem+json变为application/json，影响所有引用它们的错误响应 | 保留Problem模型、状态码和示例值，恢复媒体类型，不将其视为纯展示差异 |
+| AS-04 | 上传文件multipart请求Schema丢失additionalProperties:false，远程放宽未知字段约束；另生成file为空字符串的示例 | 恢复未知字段拒绝，核对文件示例的展示用途 |
+| AS-05 | webhooks为空，缺少出站oaSubmission/deliverOaSubmission；相关模型和OaDeliveryJwt仍在 | 核查客户端对webhooks的支持；出站契约继续以Git为准，不伪造管理员入站接口。若平台不支持，需明确接受并记录该工具缺口，仍不能称完整一致同步 |
+| AS-06 | 根标题默认模块、版本1.0.0；servers为空，license/tags及项目/需求/设计扩展部分未回读 | 设置模块版本1.1.0并记录Git基线；占位服务器未部署，不擅填实际地址。保留Git导航及设计说明 |
+
+客户端单文件OpenAPI导出尚未提供，因此上述是MCP可见差异，不能断言都由客户端导入器造成；可能涉及导入、平台存储或MCP导出层。下一步先从默认模块导出OpenAPI3.1到本目录apifox-export.json或apifox-export.yaml（只含契约，不含调试凭据），再与Git及MCP快照交叉核对，定位差异后修复远程或记录平台限制。本轮MCP无写入工具，未擅自修改远程或本地权威契约。
+
+本地validate_contract.py复跑PASS：67操作、1142引用、120模型示例、789媒体示例、43Schema场景；未重复Mock或宣称业务实现测试通过。数据库输入仍使用Git1.1.0；正式同步交接条件尚未满足，本轮未进入数据库设计。
