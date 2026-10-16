@@ -30,12 +30,14 @@ test('1063px 图标栏可以展开为文字导航，再次收起并正常切换�
     .toBeLessThan(100);
 });
 
-test('操作已登记完时禁止空提交，所属功能只读而非待编辑必填字段', async ({ page }) => {
+test('未选择或填写操作时禁止空提交，所属功能只读而非待编辑必填字段', async ({ page }) => {
   await openDirectory(page);
   await page.getByRole('button', { name: '登记操作 公文管理', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: '登记操作权限', exact: true });
   await expect(dialog.getByRole('button', { name: '确认登记', exact: true })).toBeDisabled();
-  await expect(dialog.getByText('暂无可新增操作', { exact: true })).toBeVisible();
+  await expect(
+    dialog.getByText('常用操作已全部登记，可在下方新增自定义操作。', { exact: true }),
+  ).toBeVisible();
   await expect(dialog.getByLabel('所属功能', { exact: true })).toHaveAttribute('readonly', '');
   await expect(dialog.getByLabel('功能编码', { exact: true })).toHaveValue('items');
 });

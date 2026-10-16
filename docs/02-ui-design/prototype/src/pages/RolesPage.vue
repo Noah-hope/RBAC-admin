@@ -68,6 +68,14 @@ const formErrors = ref<Record<string, string>>({});
 const selectedPermissions = ref<string[]>([]);
 const reason = ref('');
 const preview = ref(false);
+const systemActions = computed(() => [
+  ...new Set([
+    ...actionLabels,
+    ...data.permissions
+      .filter((p) => p.system === detail.value?.system && p.action !== '进入系统')
+      .map((p) => p.action),
+  ]),
+]);
 const features = computed(() => [
   ...new Set(
     data.permissions
@@ -404,7 +412,7 @@ function permissionId(feature: string, action: string) {
               <thead>
                 <tr>
                   <th>功能目录</th>
-                  <th v-for="a in actionLabels" :key="a">{{ a }}</th>
+                  <th v-for="a in systemActions" :key="a">{{ a }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -426,7 +434,7 @@ function permissionId(feature: string, action: string) {
                       />{{ feature }}
                     </button>
                   </td>
-                  <td v-for="a in actionLabels" :key="a">
+                  <td v-for="a in systemActions" :key="a">
                     <span v-if="collapsedFeatures.includes(feature)">—</span
                     ><template v-else>
                       <input

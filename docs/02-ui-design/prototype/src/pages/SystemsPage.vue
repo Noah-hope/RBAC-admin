@@ -51,6 +51,9 @@ const name = ref('');
 const code = ref('');
 const reason = ref('');
 const actionSet = ref<string[]>(['查看', '新增', '编辑']);
+const operationName = ref('');
+const operationCode = ref('');
+const hasCustomOperation = computed(() => Boolean(operationName.value || operationCode.value));
 const toggleTarget = ref<{
   label: string;
   type: 'system' | 'feature' | 'permission';
@@ -176,29 +179,62 @@ function openPermission(feature: string) {
       .find((p) => p.system === selected.value && p.feature === feature)
       ?.id.split(':')[1] ?? '';
   actionSet.value = [];
+  operationName.value = '';
+  operationCode.value = '';
   formError.value = '';
   modal.value = 'permission';
 }
 function save() {
   if (modal.value === 'permission') {
-    if (!actionSet.value.length) {
+    const customName = operationName.value.trim();
+    const customCode = operationCode.value.trim();
+    if (hasCustomOperation.value && (!customName || !customCode)) {
+      formError.value = '请填写操作名称和操作编码';
+      return;
+    }
+    if (hasCustomOperation.value && !/^[a-z][a-z0-9-]*$/.test(customCode)) {
+      formError.value = '操作编码须以小写字母开头，可含数字及短横线';
+      return;
+    }
+    if (customName === '进入系统') {
+      formError.value = '系统进入权限由系统登记维护';
+      return;
+    }
+    const additions = actionSet.value.map((action) => ({
+      action,
+      id: `${selected.value}:${code.value}:${['view', 'add', 'edit', 'approve', 'export'][actionLabels.indexOf(action)]}`,
+    }));
+    if (hasCustomOperation.value) {
+      additions.push({ action: customName, id: `${selected.value}:${code.value}:${customCode}` });
+    }
+    if (!additions.length) {
       formError.value = '请选择尚未登记的独立操作';
       return;
     }
-    for (const action of actionSet.value) {
+    for (const [index, addition] of additions.entries()) {
+      if (
+        data.permissions.some((p) => p.id === addition.id) ||
+        additions.slice(0, index).some((p) => p.id === addition.id)
+      ) {
+        formError.value = '操作编码已存在';
+        return;
+      }
       if (
         data.permissions.some(
           (p) =>
-            p.system === selected.value && p.feature === featureTarget.value && p.action === action,
-        )
+            p.system === selected.value &&
+            p.feature === featureTarget.value &&
+            p.action === addition.action,
+        ) ||
+        additions.slice(0, index).some((p) => p.action === addition.action)
       ) {
-        formError.value = '包含已登记操作，请重新核对';
+        formError.value = '操作名称已存在';
         return;
       }
     }
-    actionSet.value.forEach((action) =>
+    additions.forEach(({ action, id }) =>
       data.permissions.push({
-        id: `${selected.value}:${code.value}:${['view', 'add', 'edit', 'approve', 'export'][actionLabels.indexOf(action)]}`,
+        id,
         system: selected.value,
         feature: featureTarget.value,
         action,
@@ -217,6 +253,7 @@ function save() {
       true,
     );
     modal.value = '';
+    toast('操作已登记，请在角色权限中配置；已有角色授权未改变');
     return;
   }
 
@@ -492,6 +529,7 @@ function toggle() {
         </div>
         <div v-for="(f, index) in features" :key="f" class="feature-card">
           <div class="feature-heading">
+            <strong>{{ f }}</strong>
             <button
               class="text-button"
               :aria-label="`${collapsedFeatures.includes(featureKey(f)) ? '展开' : '收起'}操作 ${f}`"
@@ -504,8 +542,7 @@ function toggle() {
                 :size="18"
               />{{ collapsedFeatures.includes(featureKey(f)) ? '展开操作' : '收起操作' }}
             </button>
-            <strong>{{ f }}</strong
-            ><button class="text-button" :aria-label="`配置菜单 ${f}`" @click="editFeature(f)">
+            <button class="text-button" :aria-label="`配置菜单 ${f}`" @click="editFeature(f)">
               <UiIcon name="Pencil" :size="18" />配置目录</button
             ><button class="text-button" :aria-label="`登记操作 ${f}`" @click="openPermission(f)">
               登记操作</button
@@ -599,24 +636,42 @@ function toggle() {
         v-if="(modal === 'feature' && nodeKind !== 'navigation') || modal === 'permission'"
         class="field"
       >
-        <span>登记独立操作</span>
+        <span>{{ modal === 'permission' ? '常用操作（可多选）' : '登记独立操作' }}</span>
         <small v-if="modal === 'permission'"
-          >为当前功能补充尚未登记的操作。名称和编码只读；修改功能名称请使用“配置目录”。</small
+          >选择尚未登记的常用操作，或在下方填写自定义操作。所属功能固定，无需为操作设置目录。</small
         >
-        <div v-if="modal === 'permission' && !availableActions.length" class="info-box">
-          <UiIcon name="CircleCheck" />
-          <div>
-            <strong>暂无可新增操作</strong>
-            <p>
-              本原型支持的查看、新增、编辑、审批、导出均已登记。已有操作可在列表中启停；员工授权请到“角色权限”和“员工授权”办理。
-            </p>
-          </div>
-        </div>
+        <small v-if="modal === 'permission' && !availableActions.length"
+          >常用操作已全部登记，可在下方新增自定义操作。</small
+        >
         <div class="flex gap-4 flex-wrap">
           <label v-for="a in availableActions" :key="a" class="check-line"
             ><input v-model="actionSet" type="checkbox" :value="a" />{{ a }}</label
           >
         </div>
+      </div>
+      <div v-if="modal === 'permission'" class="stack">
+        <h3>自定义操作</h3>
+        <div class="form-grid">
+          <label class="field"
+            ><span>操作名称</span>
+            <input v-model="operationName" placeholder="例如：打印" />
+          </label>
+          <label class="field"
+            ><span>操作编码</span>
+            <input
+              v-model="operationCode"
+              placeholder="例如：print"
+              aria-describedby="operation-code-help"
+            />
+          </label>
+        </div>
+        <p id="operation-code-help" class="small muted break-all">
+          小写字母开头，可含数字及短横线；同一功能内名称、编码不能重复。
+          <template v-if="operationCode.trim()"
+            >完整权限编码：{{ selected }}:{{ code }}:{{ operationCode.trim() }}</template
+          >
+          编码登记后保持稳定，须与业务系统使用的权限标识一致。
+        </p>
       </div>
       <div class="info-box">
         <UiIcon name="Info" />
@@ -633,7 +688,7 @@ function toggle() {
       ><button class="button" @click="modal = ''">取消</button
       ><button
         class="button primary"
-        :disabled="modal === 'permission' && (!availableActions.length || !actionSet.length)"
+        :disabled="modal === 'permission' && !actionSet.length && !hasCustomOperation"
         @click="save"
       >
         确认登记
