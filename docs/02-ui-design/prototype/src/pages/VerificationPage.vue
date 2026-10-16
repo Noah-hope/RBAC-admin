@@ -13,6 +13,7 @@ import {
 import UiIcon from '../components/UiIcon.vue';
 import StatusBadge from '../components/StatusBadge.vue';
 const queryError = ref('');
+const callScene = ref('normal');
 const employee = ref(visibleEmployees.value[0]?.id ?? '');
 const system = ref(allowedSystems.value[0] ?? 'oa');
 const checked = ref(false);
@@ -20,16 +21,21 @@ const code = ref('');
 const single = ref<boolean | null>(null);
 const result = computed(() => effectivePermissions(employee.value, companyId.value, system.value));
 const permissions = computed(() => data.permissions.filter((p) => p.system === system.value));
-watch([employee, system], () => {
+watch([employee, system, callScene], () => {
   checked.value = false;
   single.value = null;
   code.value = '';
   queryError.value = '';
 });
 function queryPermissions() {
-  queryError.value = data.systems.find((s) => s.id === system.value)?.active
-    ? ''
-    : '调用系统已停用，拒绝本次查询；这不是空权限结果';
+  queryError.value =
+    callScene.value === 'service-error'
+      ? '服务暂不可用，请稍后重试；未返回成功空权限，也未默认放行'
+      : callScene.value === 'cross-system'
+        ? '模拟调用身份绑定另一系统，拒绝越系统查询'
+        : data.systems.find((s) => s.id === system.value)?.active
+          ? ''
+          : '调用系统已停用，拒绝本次查询；这不是空权限结果';
   checked.value = !queryError.value;
 }
 function checkPermission() {
@@ -44,7 +50,7 @@ function checkPermission() {
 <template>
   <div class="page-heading">
     <div>
-      <h1>权限验证</h1>
+      <h1>权限调用演示</h1>
       <p>验证进入资格、可见菜单与独立功能操作。</p>
     </div>
     <span class="demo-chip"><UiIcon name="Play" :size="13" />本地模拟</span>
@@ -60,6 +66,14 @@ function checkPermission() {
     <section class="panel p-6">
       <h2 class="section-title">查询上下文</h2>
       <div class="stack">
+        <label class="field"
+          ><span>模拟调用场景</span
+          ><select v-model="callScene">
+            <option value="normal">正常受信调用</option>
+            <option value="cross-system">越系统调用</option>
+            <option value="service-error">服务故障</option>
+          </select></label
+        >
         <label class="field"><span>当前公司</span><input :value="companyName" readonly /></label
         ><label class="field"
           ><span>目标员工</span

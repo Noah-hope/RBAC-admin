@@ -1,6 +1,6 @@
 # 前端原型设计方案
 
-2026-10-16：用户新指定 Material Design 3 / Google Workspace 浅色风格，并要求先确认方案再实施。最新待评审提案见 [MATERIAL3-PLAN.md](MATERIAL3-PLAN.md)；本文以下记录当前已实现版本及历史选择，深蓝侧栏方案不作为新版设计目标。
+2026-10-16：用户指定并确认执行 Material Design 3 / Google Workspace 浅色方案，0.2.0 已实现并验证，待用户评审；见 [MATERIAL3-PLAN.md](MATERIAL3-PLAN.md)及 [VALIDATION.md](VALIDATION.md)。本文以下保留早期版本及演进选择，深蓝侧栏不再用于当前原型。
 
 日期：2026-10-15。依据 V1.2 详细用例和管理范围规则；使用项目 `frontend-design` skill。本文记录本轮原型设计选择，界面和模拟行为待用户评审，不新增已确认业务规则。
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { actionLabels, departments, type Role } from '../data';
 import {
   allowedDepts,
@@ -20,12 +20,15 @@ import {
   visibleRoles,
 } from '../store';
 import UiIcon from '../components/UiIcon.vue';
+import { reportError } from '../store';
 import UiDialog from '../components/UiDialog.vue';
 import StatusBadge from '../components/StatusBadge.vue';
+import UiPagination from '../components/UiPagination.vue';
+import { usePagination } from '../composables/usePagination';
 const query = ref('');
 const tab = ref('全部角色');
 const system = ref('all');
-const rows = computed(() =>
+const filtered = computed(() =>
   visibleRoles.value.filter(
     (r) =>
       (!query.value || `${r.name} ${r.code}`.toLowerCase().includes(query.value.toLowerCase())) &&
@@ -38,7 +41,30 @@ const rows = computed(() =>
             : !r.active)),
   ),
 );
+const { rows, currentPage, pageSize } = usePagination(filtered);
 const detail = ref<Role>();
+const configDialog = ref<InstanceType<typeof UiDialog>>();
+const configDirty = computed(() => {
+  const r = detail.value;
+  if (!r || !canEditRole(r)) return false;
+  const baseline = data.roleDrafts[r.id] ?? {
+    permissions: r.permissions,
+    reason: '',
+    name: r.name,
+  };
+  return (
+    JSON.stringify([...selectedPermissions.value].sort()) !==
+      JSON.stringify([...baseline.permissions].sort()) ||
+    reason.value !== baseline.reason ||
+    roleName.value !== baseline.name
+  );
+});
+const collapsedFeatures = ref<string[]>([]);
+const roleName = ref('');
+const featureQuery = ref('');
+const deleting = ref(false);
+const error = ref('');
+const formErrors = ref<Record<string, string>>({});
 const selectedPermissions = ref<string[]>([]);
 const reason = ref('');
 const preview = ref(false);
@@ -46,7 +72,8 @@ const features = computed(() => [
   ...new Set(
     data.permissions
       .filter((p) => p.system === detail.value?.system && p.action !== '进入系统')
-      .map((p) => p.feature),
+      .map((p) => p.feature)
+      .filter((f) => f.includes(featureQuery.value)),
   ),
 ]);
 const add = computed(() =>
@@ -65,14 +92,88 @@ const dept = ref('team-one');
 const newSystem = ref('oa');
 function open(r: Role) {
   detail.value = r;
-  selectedPermissions.value = [...r.permissions];
-  reason.value = '';
+  const draft = data.roleDrafts[r.id];
+  selectedPermissions.value = [...(draft?.permissions ?? r.permissions)];
+  reason.value = draft?.reason ?? '';
+  roleName.value = draft?.name ?? r.name;
+  featureQuery.value = '';
+  error.value = '';
   preview.value = false;
+}
+function saveDraft() {
+  if (!detail.value || !canEditRole(detail.value) || occupied.value) return;
+  if (!roleName.value.trim()) {
+    error.value = '请填写角色名称';
+    return;
+  }
+  if (!detail.value.active) detail.value.name = roleName.value.trim();
+  data.roleDrafts[detail.value.id] = {
+    permissions: [...selectedPermissions.value],
+    reason: reason.value,
+    name: roleName.value.trim(),
+  };
+  audit(
+    '保存配置草稿',
+    detail.value.name,
+    detail.value.dept ?? '',
+    detail.value.system,
+    '草稿',
+    reason.value || '继续编辑',
+    '草稿未提交，不改变员工有效权限。',
+    undefined,
+    !detail.value.dept,
+  );
+  toast('配置草稿已保存，有效授权未改变');
+}
+function deleteDraft() {
+  const r = detail.value;
+  if (
+    !r ||
+    !canEditRole(r) ||
+    occupied.value ||
+    data.changes.some((c) => c.roleId === r.id) ||
+    (!r.active && data.grants.some((g) => g.role === r.id))
+  ) {
+    error.value = '此草稿存在申请或授权引用，不能删除';
+    deleting.value = false;
+    return;
+  }
+  delete data.roleDrafts[r.id];
+  if (!r.active) data.roles = data.roles.filter((x) => x.id !== r.id);
+  audit(
+    '删除未提交草稿',
+    r.name,
+    r.dept ?? '',
+    r.system,
+    '已生效',
+    '放弃未提交草稿',
+    '有效配置及授权关系未改变。',
+    undefined,
+    !r.dept,
+  );
+  deleting.value = false;
+  detail.value = undefined;
+  toast('未提交草稿已删除');
+}
+function previewConfig() {
+  error.value = !roleName.value.trim()
+    ? '请填写角色名称'
+    : !reason.value.trim()
+      ? '请填写变更原因'
+      : !selectedPermissions.value.length
+        ? '至少选择一项系统进入或功能权限'
+        : !add.value.length && !remove.value.length
+          ? '至少修改一项权限'
+          : '';
+  if (!error.value) preview.value = true;
 }
 function save() {
   if (
     detail.value &&
-    tryAction(() => saveRoleConfig(detail.value!, selectedPermissions.value, reason.value))
+    tryAction(() => {
+      saveRoleConfig(detail.value!, selectedPermissions.value, reason.value);
+      delete data.roleDrafts[detail.value!.id];
+    })
   )
     detail.value = undefined;
 }
@@ -81,12 +182,20 @@ function createRole() {
     toast('当前范围没有可管理系统，请联系总管理员核对任命');
     return;
   }
-  if (!name.value.trim() || !code.value.trim()) {
-    toast('请填写角色名称与唯一编码');
+  formErrors.value = {
+    name: !name.value.trim() ? '请填写角色名称' : '',
+    code: !code.value.trim()
+      ? '请填写唯一编码'
+      : data.roles.some((r) => r.code === code.value.trim())
+        ? '角色编码已存在'
+        : '',
+  };
+  if (Object.values(formErrors.value).some(Boolean)) {
+    reportError('请填写角色名称与唯一编码');
     return;
   }
   if (data.roles.some((r) => r.code === code.value.trim())) {
-    toast('角色编码已存在，请使用其他编码');
+    reportError('角色编码已存在，请使用其他编码');
     return;
   }
   if (!dept.value && !isGlobal.value) {
@@ -233,8 +342,11 @@ function permissionId(feature: string, action: string) {
       <p>调整筛选，或新建当前范围内的部门角色。</p>
     </div>
     <div class="table-footer"><span>角色归属与员工授权来源分别记录；岗位不自动绑定角色</span></div>
+    <UiPagination :total="filtered.length" v-model:page="currentPage" v-model:size="pageSize" />
   </div>
   <UiDialog
+    ref="configDialog"
+    :dirty="configDirty"
     :open="Boolean(detail)"
     :title="detail?.name ?? ''"
     :subtitle="`${detail?.code ?? ''} / ${detail ? systemName(detail.system) : ''}`"
@@ -242,6 +354,7 @@ function permissionId(feature: string, action: string) {
     @close="detail = undefined"
     ><template v-if="detail"
       ><div class="stack">
+        <p v-if="error" class="field-error" role="alert">{{ error }}</p>
         <div class="info-box" v-if="!canEditRole(detail)">
           <UiIcon name="Lock" />
           <p>
@@ -262,8 +375,18 @@ function permissionId(feature: string, action: string) {
             </button>
           </p>
         </div>
-        <template v-if="!preview"
-          ><div class="access-toggle">
+        <template v-if="!preview">
+          <div v-if="!detail.active && canEditRole(detail)" class="draft-name">
+            <label class="field"><span>草稿角色名称</span><input v-model="roleName" /></label>
+            <p class="readonly-note">归属和业务系统固定；草稿不授予员工任何权限。</p>
+          </div>
+          <label class="search-field"
+            ><UiIcon name="Search" /><input
+              v-model="featureQuery"
+              aria-label="搜索功能目录"
+              placeholder="搜索功能目录"
+          /></label>
+          <div class="access-toggle">
             <div>
               <strong>系统进入权限</strong>
               <p>员工使用本系统功能的必要前提，独立于菜单查看。</p>
@@ -287,19 +410,38 @@ function permissionId(feature: string, action: string) {
               </thead>
               <tbody>
                 <tr v-for="feature in features" :key="feature">
-                  <td><UiIcon name="Folder" :size="16" />{{ feature }}</td>
-                  <td v-for="a in actionLabels" :key="a">
-                    <input
-                      v-model="selectedPermissions"
-                      type="checkbox"
-                      :value="permissionId(feature, a)"
-                      :disabled="
-                        !canEditRole(detail) ||
-                        (!data.permissions.find((p) => p.id === permissionId(feature, a))?.active &&
-                          !detail.permissions.includes(permissionId(feature, a)))
+                  <td>
+                    <button
+                      class="text-button"
+                      :aria-expanded="!collapsedFeatures.includes(feature)"
+                      @click="
+                        collapsedFeatures.includes(feature)
+                          ? (collapsedFeatures = collapsedFeatures.filter((f) => f !== feature))
+                          : collapsedFeatures.push(feature)
                       "
-                      :aria-label="`${feature}${a}`"
-                    />
+                    >
+                      <UiIcon
+                        name="ChevronDown"
+                        :size="18"
+                        :class="{ 'rotate-180': collapsedFeatures.includes(feature) }"
+                      />{{ feature }}
+                    </button>
+                  </td>
+                  <td v-for="a in actionLabels" :key="a">
+                    <span v-if="collapsedFeatures.includes(feature)">—</span
+                    ><template v-else>
+                      <input
+                        v-model="selectedPermissions"
+                        type="checkbox"
+                        :value="permissionId(feature, a)"
+                        :disabled="
+                          !canEditRole(detail) ||
+                          (!data.permissions.find((p) => p.id === permissionId(feature, a))
+                            ?.active &&
+                            !detail.permissions.includes(permissionId(feature, a)))
+                        "
+                        :aria-label="`${feature}${a}`"
+                    /></template>
                   </td>
                 </tr>
               </tbody>
@@ -330,19 +472,24 @@ function permissionId(feature: string, action: string) {
         >
       </div></template
     ><template #footer
-      ><button class="button" @click="preview ? (preview = false) : (detail = undefined)">
+      ><button class="button" @click="preview ? (preview = false) : configDialog?.requestClose()">
         {{ preview ? '上一步' : '关闭' }}</button
-      ><template v-if="detail && canEditRole(detail)"
-        ><button
-          v-if="!preview"
-          class="button primary"
-          :disabled="occupied"
-          @click="
-            reason.trim() && (add.length || remove.length)
-              ? (preview = true)
-              : toast('请填写原因并至少修改一项权限')
+      ><template v-if="detail && canEditRole(detail)">
+        <button v-if="!preview && !occupied" class="button" @click="saveDraft">保存配置草稿</button>
+        <button
+          v-if="
+            !preview &&
+            !occupied &&
+            !data.changes.some((c) => c.roleId === detail?.id) &&
+            (!detail.active || data.roleDrafts[detail.id])
           "
+          class="text-button danger"
+          @click="deleting = true"
         >
+          删除未提交草稿
+        </button> </template
+      ><template v-if="detail && canEditRole(detail)"
+        ><button v-if="!preview" class="button primary" :disabled="occupied" @click="previewConfig">
           预览变更</button
         ><button v-else class="button primary" @click="save">保存并等待 OA 投递</button></template
       ></template
@@ -356,12 +503,21 @@ function permissionId(feature: string, action: string) {
     ><div class="stack">
       <label class="field"
         ><span>角色名称 <i>*</i></span
-        ><input v-model="name" placeholder="例如：工程一组资料归档员" /></label
+        ><input
+          v-model="name"
+          :aria-invalid="Boolean(formErrors.name)"
+          aria-describedby="role-name-error"
+          placeholder="例如：工程一组资料归档员"
+        /><small id="role-name-error" class="field-error">{{ formErrors.name }}</small></label
       ><label class="field"
         ><span>唯一编码 <i>*</i></span
-        ><input v-model="code" placeholder="例如：ENG1_ARCHIVE" /><small
-          >编码创建后保持稳定，不随角色更名变化。</small
-        ></label
+        ><input
+          v-model="code"
+          :aria-invalid="Boolean(formErrors.code)"
+          aria-describedby="role-code-error"
+          placeholder="例如：ENG1_ARCHIVE"
+        /><small id="role-code-error" class="field-error">{{ formErrors.code }}</small
+        ><small>编码创建后保持稳定，不随角色更名变化。</small></label
       >
       <div class="form-grid">
         <label class="field"
@@ -387,6 +543,13 @@ function permissionId(feature: string, action: string) {
     <template #footer
       ><button class="button" @click="create = false">取消</button
       ><button class="button primary" @click="createRole">保存角色草稿</button></template
+    ></UiDialog
+  >
+  <UiDialog :open="deleting" title="删除未提交草稿" @close="deleting = false"
+    ><p>仅删除这份未提交草稿。已生效角色、授权与申请历史保留；新角色无历史引用时一并删除空草稿。</p>
+    <template #footer
+      ><button class="button" @click="deleting = false">取消</button
+      ><button class="button danger-fill" @click="deleteDraft">确认删除草稿</button></template
     ></UiDialog
   >
 </template>

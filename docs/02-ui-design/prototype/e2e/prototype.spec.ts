@@ -1,6 +1,13 @@
 import { expect, test, type Page } from '@playwright/test';
 
 async function navigate(page: Page, name: string) {
+  if (name === '权限验证') {
+    const tools = page.locator('.prototype-tools');
+    await tools.evaluate((el) => ((el as HTMLDetailsElement).open = true));
+    await tools.getByRole('button', { name: '权限调用演示', exact: true }).click();
+    return;
+  }
+  if (name === '系统目录') name = '系统与权限目录';
   const mobile = await page.getByRole('button', { name: '打开导航', exact: true }).isVisible();
   if (mobile) await page.getByRole('button', { name: '打开导航', exact: true }).click();
   await page
@@ -11,6 +18,7 @@ async function navigate(page: Page, name: string) {
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
+  await page.locator('.prototype-tools').evaluate((el) => ((el as HTMLDetailsElement).open = true));
 });
 
 test('部门范围、员工搜索与总管理员页面边界', async ({ page }) => {
@@ -19,8 +27,13 @@ test('部门范围、员工搜索与总管理员页面边界', async ({ page }) 
   await expect(page.getByText('没有匹配的员工', { exact: true })).toBeVisible();
   await page.getByRole('textbox', { name: '搜索员工' }).fill('林予安');
   await expect(page.getByRole('button', { name: /予安 林予安/ })).toBeVisible();
-  await navigate(page, '系统目录');
-  await expect(page.getByRole('heading', { name: '此页面需要总管理员资格' })).toBeVisible();
+  await expect(
+    page
+      .getByRole('navigation', { name: '主导航' })
+      .getByRole('button', { name: '系统与权限目录', exact: true }),
+  ).toHaveCount(0);
+  await page.getByLabel('演示页面状态').selectOption('forbidden');
+  await expect(page.getByRole('heading', { name: '当前身份无权访问此页面' })).toBeVisible();
   await page.getByLabel('演示身份').selectOption('global');
   await navigate(page, '系统目录');
   await expect(page.getByRole('heading', { name: '系统与权限目录' })).toBeVisible();
@@ -179,6 +192,7 @@ test('分配角色先固定申请，执行前不改变已有授权', async ({ pa
   const assignment = page.getByRole('dialog', { name: '申请分配角色', exact: true });
   await assignment.getByRole('checkbox', { name: /办公基础角色/ }).check();
   await assignment.getByRole('textbox').fill('新增协作办公职责');
+  await assignment.getByRole('button', { name: '预览分配', exact: true }).click();
   await assignment.getByRole('button', { name: '保存并等待 OA 投递' }).click();
   await expect(drawer.getByText('办公基础角色', { exact: true })).toHaveCount(0);
   await drawer.getByRole('button', { name: '关闭对话框' }).click();
@@ -210,7 +224,7 @@ test('角色草稿独立配置操作，通过模拟批准与执行后激活', as
   await expect(
     config.getByRole('checkbox', { name: '公文管理编辑', exact: true }),
   ).not.toBeChecked();
-  await config.getByRole('textbox').fill('只授予公文查看功能');
+  await config.getByRole('textbox', { name: /变更原因/ }).fill('只授予公文查看功能');
   await config.getByRole('button', { name: '预览变更' }).click();
   await config.getByRole('button', { name: '保存并等待 OA 投递' }).click();
   await expect(
@@ -336,7 +350,7 @@ test('多项任命选择明确范围，空系统不能新增角色授权', async
   await expect(scopeSelect.locator('option')).toHaveCount(2);
   const id = await scopeSelect.locator('option').last().getAttribute('value');
   await scopeSelect.selectOption(id!);
-  await expect(page.locator('.scope-systems .small-tag')).toHaveText(['HR']);
+  await expect(page.locator('.context-systems .small-tag')).toHaveText(['HR']);
   await page.getByLabel('演示身份').selectOption('global');
   await navigate(page, '管理员与范围');
   await page.getByRole('button', { name: '管理范围', exact: true }).click();

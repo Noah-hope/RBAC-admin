@@ -1,106 +1,17 @@
 <script setup lang="ts">
-import { computed, type Component } from 'vue';
-import {
-  Users,
-  ShieldCheck,
-  GitPullRequest,
-  Grid2X2,
-  Building2,
-  UserCog,
-  Fingerprint,
-  History,
-  ChevronDown,
-  ChevronRight,
-  Search,
-  Plus,
-  ArrowUpRight,
-  ArrowRight,
-  Check,
-  X,
-  MoreHorizontal,
-  Bell,
-  SlidersHorizontal,
-  Download,
-  Upload,
-  LogOut,
-  Lock,
-  Info,
-  HelpCircle,
-  BookOpen,
-  Settings2,
-  RefreshCw,
-  TriangleAlert,
-  Folder,
-  FileText,
-  Clock,
-  CircleCheck,
-  Layers,
-  Menu,
-  Eye,
-  KeyRound,
-  Circle,
-  Send,
-  Shield,
-  CheckCheck,
-  UserPlus,
-  Copy,
-  Play,
-} from '@lucide/vue';
-const props = withDefaults(defineProps<{ name: string; size?: number }>(), { size: 18 });
-const icons: Record<string, Component> = {
-  Users,
-  ShieldCheck,
-  GitPullRequest,
-  Grid2X2,
-  Building2,
-  UserCog,
-  Fingerprint,
-  History,
-  ChevronDown,
-  ChevronRight,
-  Search,
-  Plus,
-  ArrowUpRight,
-  ArrowRight,
-  Check,
-  X,
-  MoreHorizontal,
-  Bell,
-  SlidersHorizontal,
-  Download,
-  Upload,
-  LogOut,
-  Lock,
-  Info,
-  HelpCircle,
-  BookOpen,
-  Settings2,
-  RefreshCw,
-  TriangleAlert,
-  Folder,
-  FileText,
-  Clock,
-  CircleCheck,
-  Layers,
-  Menu,
-  Eye,
-  KeyRound,
-  Circle,
-  Send,
-  Shield,
-  CheckCheck,
-  UserPlus,
-  Copy,
-  Play,
-};
-const icon = computed(() => icons[props.name] ?? Circle);
+import { computed } from 'vue';
+import { materialSymbols } from '../material-symbols';
+const props = withDefaults(defineProps<{ name: string; size?: number }>(), { size: 24 });
+const symbol = computed(() => materialSymbols[props.name] ?? 'circle');
 </script>
 <template>
-  <component
-    :is="icon"
-    :size="size"
-    :stroke-width="1.7"
+  <span
+    class="ui-icon material-symbol shrink-0"
     aria-hidden="true"
-    class="ui-icon shrink-0"
+    :style="{
+      width: `${size}px`,
+      height: `${size}px`,
+      '--symbol': `url(/assets/symbols/${symbol}.svg)`,
+    }"
   />
 </template>

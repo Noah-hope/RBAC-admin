@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
+import type { Role } from '../data';
 import { departments, type Employee, type Grant } from '../data';
 import {
   actor,
   allowedDepts,
   allowedSystems,
-  assignRoles,
+  assignRolePairs,
   closeSource,
   companyId,
   companyName,
@@ -29,8 +30,10 @@ import {
   visibleRoles,
 } from '../store';
 import UiIcon from '../components/UiIcon.vue';
+import { reportError } from '../store';
 import UiDialog from '../components/UiDialog.vue';
 import StatusBadge from '../components/StatusBadge.vue';
+import UiPagination from '../components/UiPagination.vue';
 
 const colleagues = computed(
   () =>
@@ -42,6 +45,7 @@ const query = ref('');
 const department = ref('all');
 const state = ref('all');
 const currentPage = ref(1);
+const pageSize = ref(10);
 const selected = ref<string[]>([]);
 const detail = ref<Employee>();
 const detailTab = ref('来源授权');
@@ -54,7 +58,10 @@ const filtered = computed(() =>
   ),
 );
 const rows = computed(() =>
-  filtered.value.slice((currentPage.value - 1) * 8, currentPage.value * 8),
+  filtered.value.slice(
+    (currentPage.value - 1) * pageSize.value,
+    currentPage.value * pageSize.value,
+  ),
 );
 const scopedDepartments = computed(() =>
   departments.filter((d) => allowedDepts.value.includes(d.id)),
@@ -71,6 +78,37 @@ const systems = ref<string[]>([]);
 const roleIds = ref<string[]>([]);
 const assignSystem = ref('oa');
 const preview = ref(false);
+const assignmentPreview = ref(false);
+const assignmentError = ref('');
+const employeeSources = ref<Record<string, string>>({});
+const assignmentPairs = computed(() =>
+  selected.value.flatMap((employee) =>
+    roleIds.value.map((role) => ({
+      employee,
+      role,
+      dept: selected.value.length > 1 ? employeeSources.value[employee] : source.value,
+    })),
+  ),
+);
+watch(
+  selected,
+  (ids) => {
+    assignmentPreview.value = false;
+    ids.forEach((id) => {
+      employeeSources.value[id] ??=
+        data.employees
+          .find((e) => e.id === id)
+          ?.employments.find((j) => j.active && allowedDepts.value.includes(j.dept))?.dept ?? '';
+    });
+  },
+  { deep: true },
+);
+const roleApplicable = (role: Role) =>
+  selected.value.length > 0 &&
+  selected.value.every((id) => {
+    const e = data.employees.find((e) => e.id === id);
+    return e?.active && (!role.dept || e.employments.some((j) => j.dept === role.dept && j.active));
+  });
 const acknowledged = ref(false);
 const targetGrant = ref<Grant>();
 const eligibleRoles = computed(() =>
@@ -78,6 +116,15 @@ const eligibleRoles = computed(() =>
 );
 const detailSources = computed(
   () => detail.value?.employments.filter((j) => allowedDepts.value.includes(j.dept)) ?? [],
+);
+const pendingSourceCount = computed(
+  () =>
+    visibleChanges.value.filter(
+      (c) =>
+        isPending(c) &&
+        c.pairs?.some((p) => p.employee === detail.value?.id && p.dept === source.value) &&
+        systems.value.includes(c.system),
+    ).length,
 );
 const impacted = computed(() =>
   detail.value
@@ -110,6 +157,8 @@ function open(kind: typeof dialog.value, e?: Employee) {
   if (e) detail.value = e;
   reason.value = '';
   preview.value = false;
+  assignmentPreview.value = false;
+  assignmentError.value = '';
   acknowledged.value = false;
   roleIds.value = [];
   source.value =
@@ -121,8 +170,25 @@ function open(kind: typeof dialog.value, e?: Employee) {
   if (kind === 'assign' && e) selected.value = [e.id];
   dialog.value = kind;
 }
+function previewAssignment() {
+  assignmentError.value = !selected.value.length
+    ? '请选择员工'
+    : !roleIds.value.length
+      ? '请选择角色'
+      : !reason.value.trim()
+        ? '请填写申请原因'
+        : assignmentPairs.value.some(
+              (p) =>
+                !data.employees
+                  .find((e) => e.id === p.employee)
+                  ?.employments.some((j) => j.dept === p.dept && j.active),
+            )
+          ? '部分员工不满足来源任职条件'
+          : '';
+  if (!assignmentError.value) assignmentPreview.value = true;
+}
 function assign() {
-  if (tryAction(() => assignRoles(selected.value, roleIds.value, source.value, reason.value))) {
+  if (tryAction(() => assignRolePairs(assignmentPairs.value, reason.value))) {
     dialog.value = '';
     selected.value = [];
   }
@@ -130,7 +196,7 @@ function assign() {
 function finish() {
   if (!detail.value) return;
   if (!acknowledged.value) {
-    toast('请先确认本次操作的影响');
+    reportError('请先确认本次操作的影响');
     return;
   }
   if (
@@ -147,11 +213,11 @@ function finish() {
 }
 function showPreview() {
   if (!reason.value.trim()) {
-    toast('请填写办理原因');
+    reportError('请填写办理原因');
     return;
   }
   if (dialog.value === 'close' && !systems.value.length) {
-    toast('至少选择一个系统');
+    reportError('至少选择一个系统');
     return;
   }
   preview.value = true;
@@ -171,24 +237,6 @@ function toggleAll(checked: boolean) {
       <UiIcon name="Plus" :size="17" />分配角色
     </button>
   </div>
-  <div class="scope-strip">
-    <span class="scope-emblem"><UiIcon name="ShieldCheck" :size="21" /></span>
-    <div>
-      <strong>{{ companyName }} / 管理范围</strong
-      ><span>{{
-        isGlobal ? '当前公司全部部门' : `${deptName(currentManagement?.root ?? '')}及下级部门`
-      }}</span>
-    </div>
-    <div class="scope-divider" />
-    <div class="scope-systems">
-      <span v-for="id in allowedSystems" :key="id" class="small-tag">{{
-        data.systems.find((s) => s.id === id)?.short
-      }}</span>
-    </div>
-    <span class="scope-footnote"
-      ><UiIcon name="Users" :size="14" />{{ isGlobal ? '总管理员视角' : `${colleagues}管理` }}</span
-    >
-  </div>
   <div v-if="!allowedSystems.length" class="warning-box mt-4">
     <UiIcon name="Info" />
     <p>当前任命未配置可管理系统，暂时没有可操作系统。请联系总管理员核对范围。</p>
@@ -197,7 +245,7 @@ function toggleAll(checked: boolean) {
     <span
       >范围内员工 <b>{{ visibleEmployees.length }}</b></span
     ><span
-      >在职 <b>{{ visibleEmployees.filter((e) => e.active).length }}</b></span
+      >身份有效 <b>{{ visibleEmployees.filter((e) => e.active).length }}</b></span
     ><span
       >待分配角色 <b class="text-amber">{{ needsRoles }}</b></span
     ><button @click="page = 'requests'">
@@ -250,7 +298,7 @@ function toggleAll(checked: boolean) {
             @input="currentPage = 1" /></label
         ><select v-model="state" aria-label="员工状态" @change="currentPage = 1">
           <option value="all">全部员工状态</option>
-          <option value="active">在职</option>
+          <option value="active">身份有效</option>
           <option value="inactive">已停用</option></select
         ><span class="toolbar-spacer" /><span class="muted small"
           >{{ filtered.length }} 名员工</span
@@ -269,7 +317,7 @@ function toggleAll(checked: boolean) {
               <th class="checkbox-cell">
                 <input
                   type="checkbox"
-                  aria-label="选择当前页在职员工"
+                  aria-label="选择当前页身份有效员工"
                   :checked="
                     rows.filter((e) => e.active).length > 0 &&
                     rows.filter((e) => e.active).every((e) => selected.includes(e.id))
@@ -338,7 +386,7 @@ function toggleAll(checked: boolean) {
                 </div>
                 <small v-if="activeGrants(e.id).length">{{ employeeSystems(e.id) }}</small>
               </td>
-              <td><StatusBadge :value="e.active ? '在职' : '已停用'" dot /></td>
+              <td><StatusBadge :value="e.active ? '身份有效' : '已停用'" dot /></td>
               <td class="muted small nowrap">{{ e.updated }}</td>
               <td class="align-right">
                 <button
@@ -372,19 +420,8 @@ function toggleAll(checked: boolean) {
       </div>
       <div class="table-footer">
         <span><UiIcon name="Info" :size="14" />仅显示当前管理范围；无角色不代表无后台管理资格</span>
-        <div class="pagination">
-          <button aria-label="上一页" :disabled="currentPage === 1" @click="currentPage--">
-            <UiIcon name="ChevronRight" class="rotate-180" :size="15" /></button
-          ><span>{{ currentPage }} / {{ Math.max(1, Math.ceil(filtered.length / 8)) }}</span
-          ><button
-            aria-label="下一页"
-            :disabled="currentPage * 8 >= filtered.length"
-            @click="currentPage++"
-          >
-            <UiIcon name="ChevronRight" :size="15" />
-          </button>
-        </div>
       </div>
+      <UiPagination :total="filtered.length" v-model:page="currentPage" v-model:size="pageSize" />
     </section>
   </div>
   <div class="bottom-note">
@@ -419,7 +456,7 @@ function toggleAll(checked: boolean) {
             }}
           </p>
         </div>
-        <StatusBadge :value="detail.active ? '在职' : '已停用'" dot />
+        <StatusBadge :value="detail.active ? '身份有效' : '已停用'" dot />
       </div>
       <div class="tabs">
         <button
@@ -526,14 +563,19 @@ function toggleAll(checked: boolean) {
       </div>
       <label class="field"
         ><span>选择员工</span
-        ><select multiple v-model="selected" aria-label="选择分配员工">
+        ><select
+          multiple
+          v-model="selected"
+          :disabled="assignmentPreview"
+          aria-label="选择分配员工"
+        >
           <option v-for="e in visibleEmployees.filter((e) => e.active)" :key="e.id" :value="e.id">
             {{ e.name }} / {{ e.id }}
           </option></select
         ><small>可按住 Ctrl 多选；每名员工须有本次来源部门的有效任职。</small></label
       >
-      <div class="form-grid">
-        <label class="field"
+      <div v-if="!assignmentPreview" class="form-grid">
+        <label v-if="selected.length <= 1" class="field"
           ><span>实际来源部门</span
           ><select v-model="source">
             <option v-for="d in scopedDepartments" :key="d.id" :value="d.id">{{ d.name }}</option>
@@ -545,30 +587,96 @@ function toggleAll(checked: boolean) {
           </select></label
         >
       </div>
-      <div class="field">
+      <div v-if="selected.length > 1 && !assignmentPreview" class="table-scroll">
+        <table class="mock-pair-table">
+          <thead>
+            <tr>
+              <th>员工</th>
+              <th>本次授权来源</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="id in selected" :key="id">
+              <td>{{ employeeName(id) }}</td>
+              <td>
+                <select v-model="employeeSources[id]" :aria-label="`${employeeName(id)}的授权来源`">
+                  <option
+                    v-for="j in data.employees
+                      .find((e) => e.id === id)
+                      ?.employments.filter((j) => j.active && allowedDepts.includes(j.dept))"
+                    :key="j.dept"
+                    :value="j.dept"
+                  >
+                    {{ deptName(j.dept) }}
+                  </option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div v-if="!assignmentPreview" class="field">
         <span>选择角色</span
         ><label v-for="r in eligibleRoles" :key="r.id" class="choice-row"
-          ><input v-model="roleIds" type="checkbox" :value="r.id" />
+          ><input v-model="roleIds" type="checkbox" :value="r.id" :disabled="!roleApplicable(r)" />
           <div>
             <strong>{{ r.name }}</strong
             ><small>{{
-              r.dept ? `要求在${deptName(r.dept)}直接有效任职` : '公司级共享角色 · 可申请分配'
+              !roleApplicable(r)
+                ? '部分所选员工不满足本部门直接有效任职条件'
+                : r.dept
+                  ? `要求在${deptName(r.dept)}直接有效任职`
+                  : '公司级共享角色 · 可申请分配'
             }}</small>
           </div>
           <span class="muted small">{{ r.permissions.length }} 项权限</span></label
         >
       </div>
-      <label class="field"
+      <label v-if="!assignmentPreview" class="field"
         ><span>申请原因 <i>*</i></span
         ><textarea v-model="reason" rows="3" placeholder="说明工作职责与本次授权需要" />
       </label>
+      <p v-if="assignmentError" class="field-error" role="alert">{{ assignmentError }}</p>
+      <div v-if="assignmentPreview" class="table-scroll">
+        <table class="mock-pair-table">
+          <thead>
+            <tr>
+              <th>员工</th>
+              <th>角色</th>
+              <th>来源部门</th>
+              <th>适用任职</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="p in assignmentPairs" :key="`${p.employee}/${p.role}/${p.dept}`">
+              <td>{{ employeeName(p.employee) }}</td>
+              <td>{{ roleById(p.role).name }}</td>
+              <td>{{ deptName(p.dept) }}</td>
+              <td>
+                {{
+                  data.employees
+                    .find((e) => e.id === p.employee)
+                    ?.employments.find((j) => j.dept === p.dept && j.active)?.position
+                }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="readonly-note mt-4">
+          原因：{{ reason }}。相同来源已有有效关系会标记无变化并排除；提交不会改变当前权限。
+        </p>
+      </div>
       <p class="small muted">
         来源部门、员工与角色清单提交后固定。相同来源的已有有效授权作为无变化项排除。
       </p>
     </div>
     <template #footer
       ><button class="button" @click="dialog = ''">取消</button
-      ><button class="button primary" @click="assign">
+      ><button v-if="assignmentPreview" class="button" @click="assignmentPreview = false">
+        返回修改</button
+      ><button v-if="!assignmentPreview" class="button primary" @click="previewAssignment">
+        预览分配</button
+      ><button v-else class="button primary" @click="assign">
         <UiIcon name="Send" :size="16" />保存并等待 OA 投递
       </button></template
     ></UiDialog
@@ -602,6 +710,9 @@ function toggleAll(checked: boolean) {
           }}
         </p>
       </div>
+      <p v-if="dialog === 'close'" class="readonly-note">
+        本来源涉及 {{ pendingSourceCount }} 项未结束分配申请；关闭后这些旧申请整批失效。
+      </p>
       <template v-if="!preview"
         ><template v-if="dialog === 'close'"
           ><label class="field"

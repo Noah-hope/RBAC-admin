@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { companies, departments, type Account, type Management } from '../data';
 import { audit, data, deptName, employeeName, isDescendant, systemName, toast } from '../store';
 import UiIcon from '../components/UiIcon.vue';
+import { reportError } from '../store';
+import UiPagination from '../components/UiPagination.vue';
+import { usePagination } from '../composables/usePagination';
 import UiDialog from '../components/UiDialog.vue';
 import StatusBadge from '../components/StatusBadge.vue';
 const tab = ref('后台账号');
@@ -19,7 +22,7 @@ const company = ref('municipal');
 const root = ref('engineering');
 const systems = ref<string[]>([]);
 const members = ref<string[]>([]);
-const rows = computed(() =>
+const filtered = computed(() =>
   data.accounts.filter((a) =>
     `${employeeName(a.employee)} ${a.login}`.toLowerCase().includes(query.value.toLowerCase()),
   ),
@@ -58,7 +61,7 @@ function open(kind: typeof modal.value, a?: Account) {
 }
 function saveAccount() {
   if (!employee.value || !login.value.trim() || !reason.value.trim()) {
-    toast('请选择员工并填写登录名、原因');
+    reportError('请选择员工并填写登录名、原因');
     return;
   }
   if (data.accounts.some((a) => a.employee === employee.value || a.login === login.value.trim())) {
@@ -66,7 +69,7 @@ function saveAccount() {
     return;
   }
   if (password.value.length < 8 || password.value !== confirm.value) {
-    toast('临时密码至少 8 位，且两次输入须一致');
+    reportError('临时密码至少 8 位，且两次输入须一致');
     return;
   }
   data.accounts.push({
@@ -98,12 +101,12 @@ function saveAccountAction() {
     return;
   }
   if (!reason.value.trim()) {
-    toast('请填写办理原因');
+    reportError('请填写办理原因');
     return;
   }
   if (modal.value === 'password') {
     if (password.value.length < 8 || password.value !== confirm.value) {
-      toast('临时密码至少 8 位，且两次输入须一致');
+      reportError('临时密码至少 8 位，且两次输入须一致');
       return;
     }
     target.value.temporary = true;
@@ -135,7 +138,7 @@ function openScope(m?: Management) {
 }
 function saveScope() {
   if (!reason.value.trim()) {
-    toast('请填写配置原因');
+    reportError('请填写配置原因');
     return;
   }
   if (members.value.some((id) => !candidates.value.some((a) => a.id === id))) {
@@ -173,6 +176,7 @@ function saveScope() {
   modal.value = '';
   toast('管理范围已保存，后续操作按当前范围展示');
 }
+const { rows, currentPage, pageSize } = usePagination(filtered);
 </script>
 <template>
   <div class="page-heading">
@@ -257,8 +261,9 @@ function saveScope() {
       </div>
       <div class="table-footer">
         <span>账号创建不自动产生任命；停用或改密后旧会话不可继续使用</span>
-      </div></template
-    >
+      </div>
+      <UiPagination :total="filtered.length" v-model:page="currentPage" v-model:size="pageSize"
+    /></template>
     <div v-else class="scope-card-grid">
       <article v-for="m in data.management" :key="m.id" class="management-card">
         <div class="flex items-center justify-between">

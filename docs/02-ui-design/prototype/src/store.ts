@@ -4,6 +4,7 @@ import {
   companies,
   departments,
   initialData,
+  initialDepartments,
   type Change,
   type Employee,
   type Grant,
@@ -15,9 +16,15 @@ export const data = reactive(initialData());
 export const identity = ref<'department' | 'global'>('department');
 export const companyId = ref('municipal');
 export const page = ref<Page>('employees');
+export const requestedChange = ref('');
 export const loggedIn = ref(true);
 export const scene = ref('normal');
 export const notice = ref('');
+export const actionError = ref('');
+export function reportError(message: string) {
+  actionError.value = message;
+  toast(message);
+}
 export const isGlobal = computed(() => identity.value === 'global');
 export const actor = computed(() => (isGlobal.value ? '总管理员' : '李乔'));
 export const selectedManagement = ref('M-01');
@@ -36,7 +43,8 @@ export const sessionUsable = computed(
 export const companyName = computed(
   () => companies.find((c) => c.id === companyId.value)?.name ?? '',
 );
-export const deptName = (id: string) => departments.find((d) => d.id === id)?.name ?? '公司共享';
+export const deptName = (id: string) =>
+  departments.find((d) => d.id === id)?.name ?? '公司级共享角色';
 export const systemName = (id: string) => data.systems.find((s) => s.id === id)?.name ?? '平台管理';
 export const employeeName = (id: string) =>
   data.employees.find((e) => e.id === id)?.name ?? '总管理员';
@@ -116,11 +124,12 @@ export function tryAction(action: () => unknown): boolean {
     action();
     return true;
   } catch (e) {
-    toast(e instanceof Error ? e.message : '操作未完成，请重试');
+    reportError(e instanceof Error ? e.message : '操作未完成，请重试');
     return false;
   }
 }
 export function resetDemo() {
+  departments.splice(0, departments.length, ...JSON.parse(JSON.stringify(initialDepartments)));
   Object.assign(data, initialData());
   companyId.value = 'municipal';
   selectedManagement.value = 'M-01';
@@ -142,7 +151,7 @@ export function switchIdentity(value: 'department' | 'global') {
 }
 const nextId = (prefix: string) => `${prefix}-${++data.serial}`;
 const time = () =>
-  '2026-10-15 ' +
+  '2026-10-16 ' +
   new Date().toLocaleTimeString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false }).slice(0, 5);
 export function audit(
   action: string,
@@ -215,50 +224,63 @@ export function createChange(
   return c;
 }
 export function assignRoles(ids: string[], roleIds: string[], dept: string, reason: string) {
+  return assignRolePairs(
+    ids.flatMap((employee) => roleIds.map((role) => ({ employee, role, dept }))),
+    reason,
+  );
+}
+export function assignRolePairs(
+  input: { employee: string; role: string; dept: string }[],
+  reason: string,
+) {
   requireReason(reason);
-  if (!ids.length || !roleIds.length) throw Error('请选择员工和角色');
-  const roles = roleIds.map(roleById);
-  if (new Set(roles.map((r) => r.system)).size !== 1)
-    throw Error('本次演示批次请选择同一系统的角色');
-  if (!data.systems.find((s) => s.id === roles[0].system)?.active)
-    throw Error('目标业务系统已停用，不能新增授权');
-  requireScope(dept, roles[0].system);
-  const pairs: { employee: string; role: string; dept: string; version?: number }[] = [];
-  for (const id of ids) {
-    const e = data.employees.find((e) => e.id === id);
-    if (!e?.active || !e.employments.some((j) => j.dept === dept && j.active))
-      throw Error(`${e?.name ?? id} 没有所选来源部门的有效任职，整批未提交`);
-    for (const r of roles) {
-      if (
-        !r.active ||
-        r.company !== companyId.value ||
-        (r.dept && !e.employments.some((j) => j.dept === r.dept && j.active))
+  if (!input.length) throw Error('请选择员工和角色');
+  const pairs: { employee: string; role: string; dept: string; version: number }[] = [];
+  const systems = new Set<string>();
+  const seen = new Set<string>();
+  for (const p of input) {
+    const r = roleById(p.role);
+    const e = data.employees.find((e) => e.id === p.employee);
+    if (!r || !e?.active || !r.active || r.company !== companyId.value)
+      throw Error('员工或角色状态已变化，整批未提交');
+    systems.add(r.system);
+    requireScope(p.dept, r.system);
+    if (!data.systems.find((s) => s.id === r.system)?.active) throw Error('目标系统已停用');
+    if (
+      !e.employments.some((j) => j.dept === p.dept && j.active) ||
+      (r.dept && !e.employments.some((j) => j.dept === r.dept && j.active))
+    )
+      throw Error(`${e.name} 的来源或角色任职条件不适用，整批未提交`);
+    const key = `${p.employee}/${p.role}/${p.dept}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    if (
+      data.grants.some(
+        (g) =>
+          g.employee === p.employee && g.role === p.role && g.dept === p.dept && g.state === '有效',
       )
-        throw Error(`${r.name} 的状态或任职条件不适用，整批未提交`);
-      if (
-        data.grants.some(
-          (g) => g.employee === id && g.role === r.id && g.dept === dept && g.state === '有效',
-        )
+    )
+      continue;
+    if (
+      data.changes.some(
+        (c) =>
+          isPending(c) &&
+          c.pairs?.some((x) => x.employee === p.employee && x.role === p.role && x.dept === p.dept),
       )
-        continue;
-      if (
-        data.changes.some(
-          (c) =>
-            isPending(c) &&
-            c.pairs?.some((p) => p.employee === id && p.role === r.id && p.dept === dept),
-        )
-      )
-        throw Error(`${e.name} 的同来源分配已有未结束申请，请先查看该申请`);
-      pairs.push({ employee: id, role: r.id, dept, version: r.version });
-    }
+    )
+      throw Error(`${e.name} 同来源已有未结束申请，请查看原申请`);
+    pairs.push({ ...p, version: r.version });
   }
-  if (!pairs.length) throw Error('所选来源已有相同有效角色，本次没有变化');
+  if (systems.size !== 1) throw Error('本次批次请选择同一系统的角色');
+  if (!pairs.length) throw Error('相同来源已有有效角色，本次没有变化');
+  const ids = [...new Set(pairs.map((p) => p.employee))];
+  const sources = [...new Set(pairs.map((p) => p.dept))];
   return createChange({
     title: `${ids.length === 1 ? employeeName(ids[0]) : `${ids.length} 名员工`} · 分配角色`,
     kind: '分配角色',
     company: companyId.value,
-    dept,
-    system: roles[0].system,
+    dept: sources.length === 1 ? sources[0] : (currentManagement.value?.root ?? sources[0]),
+    system: [...systems][0],
     reason,
     pairs,
     diff: pairs.map(
@@ -452,7 +474,8 @@ export function simulateExecution(c: Change, fail = false) {
     c.originManagement &&
     (!originalScope ||
       !originalScope.systems.includes(c.system) ||
-      !isDescendant(c.dept, originalScope.root)),
+      !isDescendant(c.dept, originalScope.root) ||
+      c.pairs?.some((p) => !isDescendant(p.dept, originalScope.root))),
   );
   const invalid =
     scopeInvalid ||
@@ -514,6 +537,12 @@ export function simulateExecution(c: Change, fail = false) {
   toast('模拟执行成功，可在员工授权和权限验证中查看变化');
 }
 
+function directoryEnabled(system: string, feature: string, seen = new Set<string>()): boolean {
+  if (seen.has(feature) || data.featureStates[`${system}/${feature}`] === false) return false;
+  seen.add(feature);
+  const parent = data.directoryMeta[`${system}/${feature}`]?.parent;
+  return !parent || directoryEnabled(system, parent, seen);
+}
 export function effectivePermissions(employee: string, company: string, system: string) {
   const e = data.employees.find((e) => e.id === employee);
   if (!e?.active || !data.systems.find((s) => s.id === system)?.active)
@@ -545,14 +574,33 @@ export function effectivePermissions(employee: string, company: string, system: 
       p.system === system &&
       p.active &&
       ids.has(p.id) &&
-      (p.action === '进入系统' || data.featureStates[`${system}/${p.feature}`] !== false),
+      (p.action === '进入系统' || directoryEnabled(system, p.feature)),
   );
   const canAccess = active.some((p) => p.action === '进入系统');
   return {
     canAccess,
     operations: canAccess ? active.filter((p) => p.action !== '进入系统').map((p) => p.id) : [],
     menus: canAccess
-      ? [...new Set(active.filter((p) => p.action === '查看').map((p) => p.feature))]
+      ? [
+          ...new Set(
+            active
+              .filter((p) => {
+                const menu = data.directoryMeta[`${system}/${p.feature}`]?.menu;
+                return menu !== undefined ? p.id === menu : p.action === '查看';
+              })
+              .flatMap((p) => {
+                const parents: string[] = [];
+                let parent = data.directoryMeta[`${system}/${p.feature}`]?.parent;
+                const seen = new Set<string>();
+                while (parent && !seen.has(parent)) {
+                  seen.add(parent);
+                  parents.unshift(`${parent}（导航容器）`);
+                  parent = data.directoryMeta[`${system}/${parent}`]?.parent;
+                }
+                return [...parents, p.feature];
+              }),
+          ),
+        ]
       : [],
   };
 }

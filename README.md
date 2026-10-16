@@ -31,6 +31,7 @@
 - [按用例分类阅读](docs/01-requirements/按用例分类/README.md)：详细说明、简表和图的同步阅读副本。
 - [导入说明](docs/project/IMPORT.md)：资料来源、校验方式及导入边界。
 - [前端界面原型](docs/02-ui-design/README.md)：页面、启动方式和原型验证。
+- [Material 3 界面方案](docs/02-ui-design/MATERIAL3-PLAN.md)：已确认并实施的页面、导航、Token 与改造清单，原型 0.2.0 待评审。
 - [项目技能](docs/project/SKILLS.md)：仓库内四个技能的入口、来源、版本和文件摘要。
 
 ## 当前目录

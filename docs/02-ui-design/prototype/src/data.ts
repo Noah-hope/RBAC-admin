@@ -1,3 +1,4 @@
+import { reactive } from 'vue';
 export type Page =
   | 'employees'
   | 'roles'
@@ -120,16 +121,17 @@ export const companies = [
   { id: 'municipal', name: '市政建设集团' },
   { id: 'digital', name: '城建数字公司' },
 ];
-export const departments: Department[] = [
+export const departments = reactive<Department[]>([
   { id: 'engineering', name: '工程管理部', company: 'municipal' },
   { id: 'team-one', name: '工程一组', company: 'municipal', parent: 'engineering' },
   { id: 'team-two', name: '工程二组', company: 'municipal', parent: 'engineering' },
   { id: 'finance', name: '财务管理部', company: 'municipal' },
   { id: 'office', name: '综合办公室', company: 'municipal' },
   { id: 'research', name: '产品研发部', company: 'digital' },
-];
+]);
 export const actionLabels = ['查看', '新增', '编辑', '审批', '导出'];
 
+export const initialDepartments = JSON.parse(JSON.stringify(departments)) as Department[];
 export function initialData() {
   const employees: Employee[] = [
     {
@@ -668,6 +670,12 @@ export function initialData() {
     accounts,
     management,
     audits,
+    roleDrafts: {} as Record<string, { permissions: string[]; reason: string; name: string }>,
+    directoryMeta: {} as Record<
+      string,
+      { parent: string; menu: string; order: number; navigation?: boolean; code?: string }
+    >,
+    organizationVersion: 0,
     serial: 20,
     featureStates: {} as Record<string, boolean>,
   };

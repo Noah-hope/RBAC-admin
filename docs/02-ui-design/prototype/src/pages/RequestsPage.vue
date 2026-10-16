@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import type { Change } from '../data';
 import {
   deptName,
+  requestedChange,
+  data,
+  assignRolePairs,
+  saveRoleConfig,
+  revokeGrant,
+  toast,
+  roleById,
   isPending,
   retryDelivery,
   simulateApproval,
@@ -12,15 +19,35 @@ import {
   visibleChanges,
 } from '../store';
 import UiIcon from '../components/UiIcon.vue';
+import UiPagination from '../components/UiPagination.vue';
+import { usePagination } from '../composables/usePagination';
 import UiDialog from '../components/UiDialog.vue';
 import StatusBadge from '../components/StatusBadge.vue';
 const tab = ref('全部申请');
 const query = ref('');
 const detail = ref<Change>();
+watch(
+  requestedChange,
+  (id) => {
+    if (id) {
+      detail.value = visibleChanges.value.find((c) => c.id === id);
+      requestedChange.value = '';
+    }
+  },
+  { immediate: true },
+);
 const simulator = ref(false);
-const rows = computed(() =>
+const copyDraft = ref<Change>();
+const copyReason = ref('');
+const copyError = ref('');
+const copyPermissions = ref<string[]>([]);
+const approval = ref('all');
+const execution = ref('all');
+const filtered = computed(() =>
   visibleChanges.value.filter(
     (c) =>
+      (approval.value === 'all' || c.approval === approval.value) &&
+      (execution.value === 'all' || c.execution === execution.value) &&
       `${c.title} ${c.id} ${c.actor}`.toLowerCase().includes(query.value.toLowerCase()) &&
       (tab.value === '全部申请' ||
         (tab.value === '待处理'
@@ -30,6 +57,40 @@ const rows = computed(() =>
             : c.execution === '执行失败' || c.delivery === '发送失败' || c.execution === '已失效')),
   ),
 );
+const { rows, currentPage, pageSize } = usePagination(filtered);
+function copyRejected() {
+  if (!detail.value || detail.value.approval !== '已驳回') return;
+  copyDraft.value = JSON.parse(JSON.stringify(detail.value));
+  copyReason.value = detail.value.reason;
+  copyPermissions.value = [...(detail.value.permissionIds ?? [])];
+  copyError.value = '';
+}
+function resubmit() {
+  const d = copyDraft.value;
+  if (!d) return;
+  copyError.value = !copyReason.value.trim() ? '请填写新的办理原因' : '';
+  if (copyError.value) return;
+  try {
+    let next: Change | undefined;
+    if (d.kind === '分配角色' && d.pairs?.length) {
+      next = assignRolePairs(
+        d.pairs.map((p) => ({ employee: p.employee, role: p.role, dept: p.dept })),
+        copyReason.value,
+      );
+    } else if (d.kind === '配置角色' && d.roleId) {
+      next = saveRoleConfig(roleById(d.roleId), copyPermissions.value, copyReason.value);
+    } else if (d.kind === '撤销角色' && d.grantIds?.length === 1) {
+      const grant = data.grants.find((g) => g.id === d.grantIds![0]);
+      if (!grant) throw Error('原来源关系已不存在');
+      next = revokeGrant(grant, copyReason.value);
+    } else throw Error('请返回对应业务页，按当前合法来源重新选择明细');
+    copyDraft.value = undefined;
+    detail.value = next;
+    simulator.value = false;
+  } catch (e) {
+    copyError.value = (e as Error).message;
+  }
+}
 </script>
 <template>
   <div class="page-heading">
@@ -76,6 +137,18 @@ const rows = computed(() =>
           v-model="query"
           placeholder="搜索申请编号、目标、提交人"
           aria-label="搜索申请" /></label
+      ><select v-model="approval" aria-label="审批结果筛选">
+        <option value="all">全部审批结果</option>
+        <option>待审批</option>
+        <option>已批准</option>
+        <option>已驳回</option></select
+      ><select v-model="execution" aria-label="执行结果筛选">
+        <option value="all">全部执行结果</option>
+        <option>未执行</option>
+        <option>待执行</option>
+        <option>执行成功</option>
+        <option>执行失败</option>
+        <option>已失效</option></select
       ><span class="toolbar-spacer" /><span class="small muted">同范围管理员协作可见</span>
     </div>
     <div class="table-scroll">
@@ -137,6 +210,7 @@ const rows = computed(() =>
       ><span>{{ rows.length }} 条申请</span>
     </div>
   </div>
+  <UiPagination :total="filtered.length" v-model:page="currentPage" v-model:size="pageSize" />
   <UiDialog
     :open="Boolean(detail)"
     drawer
@@ -207,6 +281,13 @@ const rows = computed(() =>
             detail.delivery === '发送失败' ? '重试投递同一申请' : '投递至模拟 OA'
           }}
         </button>
+        <button
+          v-if="detail.approval === '已驳回'"
+          class="button primary full"
+          @click="copyRejected"
+        >
+          复制为新草稿
+        </button>
         <div class="simulator-panel">
           <button class="simulator-trigger" @click="simulator = !simulator">
             <UiIcon name="Play" :size="15" /><span>原型演示工具</span
@@ -254,6 +335,40 @@ const rows = computed(() =>
           </div>
         </div>
       </div></template
+    ></UiDialog
+  >
+  <UiDialog
+    :open="Boolean(copyDraft)"
+    title="编辑重提草稿"
+    subtitle="原驳回记录保持不变，新申请按当前资格重新校验"
+    @close="copyDraft = undefined"
+    ><div class="stack">
+      <div class="info-box">
+        <p>
+          {{ copyDraft?.title }}。来源和目标沿用原申请；如需更改员工或来源，请回到业务页重新选择。
+        </p>
+      </div>
+      <template v-if="copyDraft?.kind === '配置角色'"
+        ><label
+          v-for="p in data.permissions.filter((p) => p.system === copyDraft?.system && p.active)"
+          :key="p.id"
+          class="check-line"
+          ><input type="checkbox" v-model="copyPermissions" :value="p.id" />{{ p.feature }} /
+          {{ p.action }}</label
+        ></template
+      ><label class="field"
+        ><span>办理原因</span
+        ><textarea
+          v-model="copyReason"
+          :aria-invalid="Boolean(copyError)"
+          aria-describedby="resubmit-error"
+        />
+      </label>
+      <p v-if="copyError" id="resubmit-error" class="field-error" role="alert">{{ copyError }}</p>
+    </div>
+    <template #footer
+      ><button class="button" @click="copyDraft = undefined">取消</button
+      ><button class="button primary" @click="resubmit">提交新申请</button></template
     ></UiDialog
   >
 </template>

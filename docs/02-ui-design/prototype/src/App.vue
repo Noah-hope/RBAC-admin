@@ -26,6 +26,7 @@ import {
 import UiIcon from './components/UiIcon.vue';
 import UiDialog from './components/UiDialog.vue';
 import TerminologyGuide from './components/TerminologyGuide.vue';
+import ManagementContext from './components/ManagementContext.vue';
 import EmployeesPage from './pages/EmployeesPage.vue';
 import RolesPage from './pages/RolesPage.vue';
 import RequestsPage from './pages/RequestsPage.vue';
@@ -39,9 +40,9 @@ const navigation: { id: Page; title: string; icon: string; group: string; global
   { id: 'employees', title: '员工授权', icon: 'Users', group: '授权管理' },
   { id: 'roles', title: '角色权限', icon: 'ShieldCheck', group: '授权管理' },
   { id: 'requests', title: '变更申请', icon: 'GitPullRequest', group: '授权管理' },
-  { id: 'verification', title: '权限验证', icon: 'Fingerprint', group: '授权管理' },
-  { id: 'audit', title: '审计记录', icon: 'History', group: '授权管理' },
-  { id: 'systems', title: '系统目录', icon: 'Grid2X2', group: '平台管理', global: true },
+  { id: 'verification', title: '权限调用演示', icon: 'Fingerprint', group: '演示工具' },
+  { id: 'audit', title: '审计记录', icon: 'History', group: '操作记录' },
+  { id: 'systems', title: '系统与权限目录', icon: 'Grid2X2', group: '平台管理', global: true },
   { id: 'administrators', title: '管理员与范围', icon: 'UserCog', group: '平台管理', global: true },
   { id: 'organization', title: '员工组织', icon: 'Building2', group: '平台管理', global: true },
 ];
@@ -57,6 +58,7 @@ const views = {
 };
 const current = computed(() => navigation.find((n) => n.id === page.value)!);
 const mobileNav = ref(false);
+const railCollapsed = ref(false);
 const help = ref(false);
 const terminology = ref(false);
 const accountMenu = ref(false);
@@ -144,8 +146,8 @@ function openPassword() {
   <div v-if="!loggedIn" class="login-page">
     <section class="login-story">
       <div class="brand">
-        <span class="brand-mark">衡</span>
-        <div><strong>衡序</strong><small>权限中心</small></div>
+        <span class="brand-mark"><UiIcon name="ShieldCheck" :size="26" /></span>
+        <div><strong>权限中心</strong><small>功能权限管理</small></div>
       </div>
       <div class="login-story-copy">
         <span class="story-line" />
@@ -214,13 +216,13 @@ function openPassword() {
       </div>
     </section>
   </div>
-  <div v-else class="app-shell">
+  <div v-else class="app-shell" :class="{ 'rail-collapsed': railCollapsed }">
     <a class="skip-link" href="#main-content">跳到主要内容</a>
     <div v-if="mobileNav" class="mobile-scrim" @click="mobileNav = false" />
     <aside class="sidebar" :class="{ 'mobile-open': mobileNav }">
       <div class="brand">
-        <span class="brand-mark">衡</span>
-        <div><strong>衡序</strong><small>权限中心</small></div>
+        <span class="brand-mark"><UiIcon name="ShieldCheck" :size="26" /></span>
+        <div><strong>权限中心</strong><small>功能权限管理</small></div>
         <button
           class="icon-button mobile-only ml-auto"
           aria-label="关闭导航"
@@ -237,13 +239,17 @@ function openPassword() {
         </div>
       </div>
       <nav aria-label="主导航">
-        <template v-for="group in ['授权管理', '平台管理']" :key="group"
+        <template
+          v-for="group in ['授权管理', '操作记录', ...(isGlobal ? ['平台管理'] : [])]"
+          :key="group"
           ><div class="nav-group-label">
             {{ group }}<span v-if="group === '平台管理' && !isGlobal">仅总管理员</span>
           </div>
           <button
             v-for="n in navigation.filter((n) => n.group === group)"
             :key="n.id"
+            :aria-label="n.title"
+            :title="n.title"
             class="nav-item"
             :class="{ active: page === n.id, restricted: n.global && !isGlobal }"
             :aria-current="page === n.id ? 'page' : undefined"
@@ -258,11 +264,21 @@ function openPassword() {
         ></template>
       </nav>
       <div class="sidebar-bottom">
-        <button class="sidebar-support" @click="terminology = true">
+        <button
+          class="sidebar-support"
+          aria-label="术语说明"
+          title="术语说明"
+          @click="terminology = true"
+        >
           <UiIcon name="BookOpen" :size="17" /><span>术语说明</span
           ><UiIcon name="ChevronRight" :size="14" />
         </button>
-        <button class="sidebar-support" @click="help = true">
+        <button
+          class="sidebar-support"
+          aria-label="原型使用说明"
+          title="原型使用说明"
+          @click="help = true"
+        >
           <UiIcon name="HelpCircle" :size="17" /><span>原型使用说明</span
           ><UiIcon name="ChevronRight" :size="14" />
         </button>
@@ -284,13 +300,20 @@ function openPassword() {
         <button class="icon-button mobile-only" aria-label="打开导航" @click="mobileNav = true">
           <UiIcon name="Menu" />
         </button>
+        <button
+          class="icon-button desktop-nav-toggle"
+          :aria-label="railCollapsed ? '展开侧栏' : '收起侧栏'"
+          @click="railCollapsed = !railCollapsed"
+        >
+          <UiIcon name="Menu" />
+        </button>
         <div class="breadcrumb">
           <span>权限中心</span><UiIcon name="ChevronRight" :size="14" /><strong>{{
             current.title
           }}</strong>
         </div>
         <div class="topbar-right">
-          <label class="company-select"
+          <label v-if="!['systems', 'administrators'].includes(page)" class="company-select"
             ><UiIcon name="Building2" :size="15" /><select
               v-model="companyId"
               aria-label="当前公司"
@@ -340,45 +363,44 @@ function openPassword() {
           </div>
         </div>
       </header>
-      <div class="prototype-toolbar">
-        <span><span class="prototype-label">界面原型</span>模拟数据 · 未连接真实业务系统</span>
-        <div>
-          <label
-            >演示身份<select
-              :value="identity"
-              aria-label="演示身份"
-              @change="
-                switchIdentity(
-                  ($event.target as HTMLSelectElement).value as 'department' | 'global',
-                )
-              "
+      <details class="prototype-tools">
+        <summary>
+          <span class="prototype-label">界面原型</span><span>模拟数据 · 未连接真实业务系统</span
+          ><span class="tools-caption">原型演示工具</span
+          ><UiIcon name="SlidersHorizontal" :size="18" />
+        </summary>
+        <div class="prototype-toolbar">
+          <button class="text-button" @click="go('verification')">
+            <UiIcon name="Fingerprint" />权限调用演示
+          </button>
+          <div>
+            <label
+              >演示身份<select
+                :value="identity"
+                aria-label="演示身份"
+                @change="
+                  switchIdentity(
+                    ($event.target as HTMLSelectElement).value as 'department' | 'global',
+                  )
+                "
+              >
+                <option value="department">部门权限管理员</option>
+                <option value="global">总管理员</option>
+              </select></label
+            ><label
+              >页面状态<select v-model="scene" aria-label="演示页面状态">
+                <option value="normal">正常</option>
+                <option value="loading">加载中</option>
+                <option value="empty">空结果</option>
+                <option value="error">服务故障</option>
+                <option value="forbidden">无权限</option>
+                <option value="expired">会话失效</option>
+              </select></label
             >
-              <option value="department">部门权限管理员</option>
-              <option value="global">总管理员</option>
-            </select></label
-          ><label
-            >页面状态<select v-model="scene" aria-label="演示页面状态">
-              <option value="normal">正常</option>
-              <option value="loading">加载中</option>
-              <option value="empty">空结果</option>
-              <option value="error">服务故障</option>
-              <option value="forbidden">无权限</option>
-              <option value="expired">会话失效</option>
-            </select></label
-          >
+          </div>
         </div>
-      </div>
+      </details>
       <main id="main-content" class="main-content" tabindex="-1">
-        <div v-if="!isGlobal && memberships.length > 1" class="scope-choice-bar">
-          <UiIcon name="ShieldCheck" :size="17" /><label
-            >本次管理任命<select v-model="selectedManagement" aria-label="当前管理任命">
-              <option v-for="m in memberships" :key="m.id" :value="m.id">
-                {{ companies.find((c) => c.id === m.company)?.name }} / {{ deptName(m.root) }} /
-                {{ m.systems.join('、') }}
-              </option>
-            </select></label
-          >
-        </div>
         <section v-if="temporary" class="state-panel">
           <span class="empty-orbit"><UiIcon name="KeyRound" :size="38" /></span>
           <h1>先修改临时密码</h1>
@@ -433,10 +455,12 @@ function openPassword() {
           <p>试试调整筛选条件，或确认当前管理范围。</p>
           <button class="button" @click="scene = 'normal'">恢复正常演示</button>
         </section>
-        <component v-else :is="views[page]" :key="viewKey" />
+        <template v-else
+          ><ManagementContext /><component :is="views[page]" :key="viewKey"
+        /></template>
       </main>
       <footer class="workspace-footer">
-        <span>衡序 · 集中权限管理系统</span><span>{{ companyName }} / 功能权限管理</span>
+        <span>集中权限管理系统</span><span>{{ companyName }} / 功能权限管理</span>
       </footer>
     </div>
   </div>

@@ -15,7 +15,10 @@ import {
   visibleEmployees,
 } from '../store';
 import UiIcon from '../components/UiIcon.vue';
+import { reportError } from '../store';
 import UiDialog from '../components/UiDialog.vue';
+import OrganizationPreflight from '../components/OrganizationPreflight.vue';
+const organizationOpen = ref(false);
 const importing = ref(false);
 const step = ref(1);
 const filename = ref('');
@@ -50,7 +53,7 @@ async function loadFile(event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0];
   if (!file) return;
   if (!file.name.toLowerCase().endsWith('.csv') || file.size > 128 * 1024) {
-    toast('请选择 128KB 以内、按演示模板填写的 CSV 文件');
+    reportError('请选择 128KB 以内、按演示模板填写的 CSV 文件');
     return;
   }
   filename.value = file.name;
@@ -104,7 +107,7 @@ function preflight() {
 }
 function apply() {
   if (!confirmed.value || !reason.value.trim()) {
-    toast('请填写导入原因，并确认预检影响');
+    reportError('请填写导入原因，并确认预检影响');
     return;
   }
   if (committed.value) {
@@ -172,6 +175,7 @@ function open() {
     <div class="flex gap-2">
       <button class="button" @click="downloadTemplate">
         <UiIcon name="Download" :size="16" />演示模板</button
+      ><button class="button" @click="organizationOpen = true">导入组织资料</button
       ><button class="button primary" @click="open">
         <UiIcon name="Upload" :size="16" />导入员工变更
       </button>
@@ -331,4 +335,5 @@ function open() {
       </button></template
     ></UiDialog
   >
+  <OrganizationPreflight :open="organizationOpen" @close="organizationOpen = false" />
 </template>
