@@ -25,6 +25,7 @@ import {
 } from './store';
 import UiIcon from './components/UiIcon.vue';
 import UiDialog from './components/UiDialog.vue';
+import TerminologyGuide from './components/TerminologyGuide.vue';
 import EmployeesPage from './pages/EmployeesPage.vue';
 import RolesPage from './pages/RolesPage.vue';
 import RequestsPage from './pages/RequestsPage.vue';
@@ -57,6 +58,7 @@ const views = {
 const current = computed(() => navigation.find((n) => n.id === page.value)!);
 const mobileNav = ref(false);
 const help = ref(false);
+const terminology = ref(false);
 const accountMenu = ref(false);
 const passwordOpen = ref(false);
 const password = ref('');
@@ -229,7 +231,10 @@ function openPassword() {
       </div>
       <div class="workspace-name">
         <span class="workspace-icon"><UiIcon name="Building2" :size="17" /></span>
-        <div><strong>集团权限工作区</strong><small>集中管理 · 边界清晰</small></div>
+        <div>
+          <strong>{{ isGlobal ? '总管理员工作区' : '部门授权工作区' }}</strong
+          ><small>{{ companyName }}</small>
+        </div>
       </div>
       <nav aria-label="主导航">
         <template v-for="group in ['授权管理', '平台管理']" :key="group"
@@ -253,10 +258,13 @@ function openPassword() {
         ></template>
       </nav>
       <div class="sidebar-bottom">
-        <button class="help-card" @click="help = true">
-          <span class="help-icon"><UiIcon name="ShieldCheck" :size="21" /></span
-          ><strong>清晰授权，有据可查</strong><span>了解当前原型的管理边界</span
-          ><UiIcon name="ArrowUpRight" :size="16" class="help-arrow" />
+        <button class="sidebar-support" @click="terminology = true">
+          <UiIcon name="BookOpen" :size="17" /><span>术语说明</span
+          ><UiIcon name="ChevronRight" :size="14" />
+        </button>
+        <button class="sidebar-support" @click="help = true">
+          <UiIcon name="HelpCircle" :size="17" /><span>原型使用说明</span
+          ><UiIcon name="ChevronRight" :size="14" />
         </button>
         <div class="sidebar-version">
           <span class="live-dot" />交互原型 <span>V1.2</span
@@ -333,7 +341,7 @@ function openPassword() {
         </div>
       </header>
       <div class="prototype-toolbar">
-        <span><span class="demo-dot" />模拟数据 · 未连接真实业务系统</span>
+        <span><span class="prototype-label">界面原型</span>模拟数据 · 未连接真实业务系统</span>
         <div>
           <label
             >演示身份<select
@@ -439,6 +447,7 @@ function openPassword() {
         <UiIcon name="X" :size="15" />
       </button></div
   ></Transition>
+  <TerminologyGuide :open="terminology" @close="terminology = false" />
   <UiDialog :open="help" title="原型使用说明" @close="help = false"
     ><div class="stack">
       <div class="info-box">

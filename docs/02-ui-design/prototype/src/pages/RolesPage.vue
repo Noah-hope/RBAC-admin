@@ -90,7 +90,7 @@ function createRole() {
     return;
   }
   if (!dept.value && !isGlobal.value) {
-    toast('只有总管理员可新建公司共享角色');
+    toast('只有总管理员可新建公司级共享角色');
     return;
   }
   const r: Role = {
@@ -151,7 +151,7 @@ function permissionId(feature: string, action: string) {
   <div class="info-box mb-6">
     <UiIcon name="ShieldCheck" />
     <p>
-      公司共享角色由总管理员维护；部门管理员可以申请分配。查看、编辑、新增等操作分别勾选，不自动推导。
+      公司级共享角色由总管理员配置；权限管理员可维护范围内部门角色，并为合格员工申请分配两类角色。
     </p>
   </div>
   <div class="panel">
@@ -163,7 +163,7 @@ function permissionId(feature: string, action: string) {
           :class="{ active: tab === t }"
           @click="tab = t"
         >
-          {{ t }}
+          {{ t === '公司共享' ? '公司级共享角色' : t }}
         </button>
       </div>
       <span class="small muted">{{ visibleRoles.length }} 个范围内角色</span>
@@ -207,7 +207,7 @@ function permissionId(feature: string, action: string) {
             <td>{{ systemName(r.system) }}</td>
             <td>
               <span class="role-type" :class="{ shared: !r.dept }">{{
-                r.dept ? deptName(r.dept) : '公司共享'
+                r.dept ? deptName(r.dept) : '公司级共享角色'
               }}</span>
             </td>
             <td>
@@ -244,7 +244,9 @@ function permissionId(feature: string, action: string) {
       ><div class="stack">
         <div class="info-box" v-if="!canEditRole(detail)">
           <UiIcon name="Lock" />
-          <p>此公司共享角色仅总管理员可修改。你可在员工授权中申请分配。</p>
+          <p>
+            此公司级共享角色仅总管理员可修改。你可在员工授权中申请分配。查看、编辑等操作独立授予。
+          </p>
         </div>
         <div v-if="occupied" class="warning-box">
           <UiIcon name="Clock" />
@@ -365,7 +367,7 @@ function permissionId(feature: string, action: string) {
         <label class="field"
           ><span>角色归属</span
           ><select v-model="dept">
-            <option v-if="isGlobal" value="">公司共享角色</option>
+            <option v-if="isGlobal" value="">公司级共享角色</option>
             <option
               v-for="d in departments.filter((d) => allowedDepts.includes(d.id))"
               :key="d.id"

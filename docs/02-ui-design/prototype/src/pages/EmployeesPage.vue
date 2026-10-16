@@ -247,8 +247,7 @@ function toggleAll(checked: boolean) {
             v-model="query"
             aria-label="搜索员工"
             placeholder="搜索姓名、员工编号"
-            @input="currentPage = 1"
-          /><kbd>/</kbd></label
+            @input="currentPage = 1" /></label
         ><select v-model="state" aria-label="员工状态" @change="currentPage = 1">
           <option value="all">全部员工状态</option>
           <option value="active">在职</option>
@@ -553,7 +552,7 @@ function toggleAll(checked: boolean) {
           <div>
             <strong>{{ r.name }}</strong
             ><small>{{
-              r.dept ? `要求${deptName(r.dept)}直接任职` : '公司共享角色 · 可分配，配置只读'
+              r.dept ? `要求在${deptName(r.dept)}直接有效任职` : '公司级共享角色 · 可申请分配'
             }}</small>
           </div>
           <span class="muted small">{{ r.permissions.length }} 项权限</span></label
