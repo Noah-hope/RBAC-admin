@@ -22,7 +22,7 @@
 
 项目技能统一从 `.agents/skills/<技能名>/SKILL.md` 读取，包含 `grill-me`、`grilling`、`frontend-design`、`test-driven-development`；优先使用仓库副本，来源与版本见 `docs/project/SKILLS.md`。`grill-me` 是委托入口，实际访谈同时读取 `grilling`。后续正式业务逻辑的新功能、缺陷修复及行为变更使用 TDD，编写或修改测试时同时读取其 `writing-good-tests.md`。
 
-进入依赖某个 skill/MCP 的实际阶段前，检查其可用性，不因文件存在就声称外部工具已连接。Apifox MCP 尚未就绪，当前事实以共享记忆为准。
+进入依赖某个 skill/MCP 的实际阶段前，检查其可用性，不因文件存在就声称外部工具已连接。Apifox MCP 已于 2026-10-16 验证文档读取与刷新，写入能力未提供；当前事实以共享记忆为准。
 
 当前只采用 `.agents/skills/`、`docs/project/` 和 `docs/01-requirements/`～`05-detailed-design/`；不提前创建额外工程目录。界面阶段交付归入 `docs/02-ui-design/`，正式代码目录后续确定。完整目录约定见 `docs/project/LAYOUT.md`。
 
