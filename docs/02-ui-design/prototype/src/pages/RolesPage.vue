@@ -245,7 +245,6 @@ function permissionId(feature: string, action: string) {
   <div class="page-heading">
     <div>
       <h1>角色权限</h1>
-      <p>组合独立功能操作，通过角色授予员工。</p>
     </div>
     <button
       class="button primary"
@@ -259,12 +258,6 @@ function permissionId(feature: string, action: string) {
     >
       <UiIcon name="Plus" :size="17" />新建角色
     </button>
-  </div>
-  <div class="info-box mb-6">
-    <UiIcon name="ShieldCheck" />
-    <p>
-      公司级共享角色由总管理员配置；权限管理员可维护范围内部门角色，并为合格员工申请分配两类角色。
-    </p>
   </div>
   <div class="panel">
     <div class="panel-tabs">
@@ -344,7 +337,6 @@ function permissionId(feature: string, action: string) {
       <UiIcon name="ShieldCheck" :size="30" /><strong>没有匹配的角色</strong>
       <p>调整筛选，或新建当前范围内的部门角色。</p>
     </div>
-    <div class="table-footer"><span>角色归属与员工授权来源分别记录；岗位不自动绑定角色</span></div>
     <UiPagination :total="filtered.length" v-model:page="currentPage" v-model:size="pageSize" />
   </div>
   <UiDialog

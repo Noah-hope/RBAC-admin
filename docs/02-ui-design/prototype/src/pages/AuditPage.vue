@@ -36,7 +36,6 @@ const { rows, currentPage, pageSize } = usePagination(filtered);
   <div class="page-heading">
     <div>
       <h1>审计记录</h1>
-      <p>追溯授权来源、申请与实际执行，历史记录只读保留。</p>
     </div>
     <span class="subtle-label"><UiIcon name="Lock" :size="15" />只读记录</span>
   </div>
@@ -122,9 +121,6 @@ const { rows, currentPage, pageSize } = usePagination(filtered);
     <div v-if="!rows.length" class="empty-inline">
       <UiIcon name="History" :size="30" /><strong>没有匹配的审计记录</strong>
       <p>调整关键词或系统范围后重试。</p>
-    </div>
-    <div class="table-footer">
-      <span>仅展示获准来源与系统的事件，不按原申请人隔离</span><span>{{ rows.length }} 条记录</span>
     </div>
   </div>
   <UiPagination :total="filtered.length" v-model:page="currentPage" v-model:size="pageSize" />

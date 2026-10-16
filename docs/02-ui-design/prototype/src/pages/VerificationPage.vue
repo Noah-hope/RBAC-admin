@@ -51,16 +51,8 @@ function checkPermission() {
   <div class="page-heading">
     <div>
       <h1>权限调用演示</h1>
-      <p>验证进入资格、可见菜单与独立功能操作。</p>
     </div>
     <span class="demo-chip"><UiIcon name="Play" :size="13" />本地模拟</span>
-  </div>
-  <div class="info-box mb-6">
-    <UiIcon name="Info" />
-    <p>
-      模拟受信业务后端查询，未接入真实外部系统。下方响应仅表达界面含义，不是已定稿 API
-      契约；普通员工不登录本平台。
-    </p>
   </div>
   <div class="verification-grid">
     <section class="panel p-6">
@@ -117,7 +109,6 @@ function checkPermission() {
     <section class="panel p-6">
       <div class="flex justify-between items-center mb-5">
         <h2 class="section-title mb-0">有效权限结果</h2>
-        <span class="muted small">UC-05 / UC-06</span>
       </div>
       <div v-if="queryError" role="alert" class="error-box">
         <UiIcon name="TriangleAlert" />

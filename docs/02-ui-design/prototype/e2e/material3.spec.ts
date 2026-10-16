@@ -81,13 +81,14 @@ test('目录显示名称编辑保留稳定编码，菜单可见条件可以独�
   );
 });
 
-test('审计结果筛选只呈现匹配事件，筛选后仍可分页', async ({ page }) => {
+test('审计结果筛选及每页条数切换后保持正确事件', async ({ page }) => {
   await nav(page, '审计记录');
   await page.getByLabel('审计结果', { exact: true }).selectOption('执行成功');
   await expect(page.locator('tbody tr').filter({ hasNotText: '执行成功' })).toHaveCount(0);
   await expect(page.getByLabel('每页条数')).toBeVisible();
   await page.getByLabel('每页条数').selectOption('20');
-  await expect(page.getByText('仅展示获准来源与系统的事件，不按原申请人隔离')).toBeVisible();
+  await expect(page.locator('tbody tr')).toHaveCount(1);
+  await expect(page.locator('tbody tr')).toContainText('AUD-1056');
 });
 
 test('组织资料预检明确阻断已有引用的跨公司迁移', async ({ page }) => {

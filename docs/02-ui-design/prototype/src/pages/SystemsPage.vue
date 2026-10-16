@@ -430,7 +430,6 @@ function toggle() {
   <div class="page-heading">
     <div>
       <h1>系统与权限目录</h1>
-      <p>维护系统、功能与独立操作，目录登记不会自动授权。</p>
     </div>
     <button class="button primary" @click="open('system')">
       <UiIcon name="Plus" :size="17" />登记系统
@@ -454,7 +453,6 @@ function toggle() {
           ><small>{{ s.id }}</small></span
         ><span class="system-state-dot" :class="{ off: !s.active }" />
       </button>
-      <p class="small muted px-4 py-3">系统编码保持稳定，名称可以随业务调整。</p>
     </aside>
     <section class="panel directory-content">
       <header class="directory-header">
@@ -477,7 +475,7 @@ function toggle() {
         <div class="access-toggle mb-6">
           <div>
             <strong>系统进入权限</strong>
-            <p>{{ selected }}:access <span class="muted"> / 每系统唯一，不绑定功能目录</span></p>
+            <p>{{ selected }}:access</p>
           </div>
           <button
             class="button small-button"
@@ -593,12 +591,6 @@ function toggle() {
         <div v-if="!features.length" class="empty-inline">
           <UiIcon name="Folder" :size="30" /><strong>还没有功能目录</strong>
           <p>新增功能并登记独立操作，再配置角色。</p>
-        </div>
-        <div class="info-box mt-6">
-          <UiIcon name="Info" />
-          <p>
-            系统或目录重新启用后，尚有效的关联可以重新参与计算；已失效、已撤销授权不会复活。不提供组织启停。
-          </p>
         </div>
       </div>
     </section>
@@ -734,9 +726,7 @@ function toggle() {
           ><select v-model="parent" aria-label="父级目录" aria-describedby="directory-parent-help">
             <option value="">根目录</option>
             <option v-for="n in parentOptions" :key="n">{{ n }}</option></select
-          ><small id="directory-parent-help"
-            >功能在外部业务系统菜单中的上级菜单或分组；根目录表示直接放在系统菜单下，与公司、部门层级无关。</small
-          ></label
+          ><small id="directory-parent-help">业务菜单的上级分组；不分组时选择根目录。</small></label
         ><label class="field"
           ><span>显示排序</span><input type="number" v-model.number="sortOrder" /></label
         ><label v-if="!data.directoryMeta[`${selected}/${featureTarget}`]?.navigation" class="field"
@@ -761,13 +751,10 @@ function toggle() {
               {{ p.action }} / {{ p.id }}
             </option></select
           ><small id="directory-menu-help"
-            >员工经角色获得所选查看/进入权限，且具备系统进入权限时，业务系统才显示此菜单。编辑权限不会自动带来查看权限。</small
+            >员工需同时获得系统进入权限及所选查看/进入权限，才能看到此菜单。</small
           ></label
         >
-        <p class="readonly-note">
-          仅本功能的有效查看/进入权限可作为条件；不会因此授予角色权限。编码及授权关联保留。
-        </p></template
-      >
+      </template>
     </div>
     <template #footer
       ><button class="button" @click="modal = ''">取消</button

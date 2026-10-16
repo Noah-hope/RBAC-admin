@@ -27,6 +27,7 @@ import UiIcon from './components/UiIcon.vue';
 import UiDialog from './components/UiDialog.vue';
 import TerminologyGuide from './components/TerminologyGuide.vue';
 import ManagementContext from './components/ManagementContext.vue';
+import PageHelp from './components/PageHelp.vue';
 import EmployeesPage from './pages/EmployeesPage.vue';
 import RolesPage from './pages/RolesPage.vue';
 import RequestsPage from './pages/RequestsPage.vue';
@@ -337,7 +338,8 @@ function openPassword() {
             </select></label
           ><span class="topbar-separator" /><button
             class="icon-button help-top"
-            aria-label="原型使用说明"
+            aria-label="页面帮助"
+            title="页面帮助"
             @click="help = true"
           >
             <UiIcon name="HelpCircle" :size="20" />
@@ -374,7 +376,7 @@ function openPassword() {
       <div class="prototype-controls">
         <details class="prototype-tools">
           <summary>
-            <span class="prototype-label">界面原型</span><span>模拟数据 · 未连接真实业务系统</span
+            <span class="prototype-label">界面原型</span><span>模拟数据</span
             ><span class="tools-caption">原型演示工具</span
             ><UiIcon name="SlidersHorizontal" :size="18" />
           </summary>
@@ -479,9 +481,6 @@ function openPassword() {
           ><ManagementContext /><component :is="views[page]" :key="viewKey"
         /></template>
       </main>
-      <footer class="workspace-footer">
-        <span>集中权限管理系统</span><span>{{ companyName }} / 功能权限管理</span>
-      </footer>
     </div>
   </div>
   <Transition name="toast"
@@ -492,28 +491,7 @@ function openPassword() {
       </button></div
   ></Transition>
   <TerminologyGuide :open="terminology" @close="terminology = false" />
-  <UiDialog :open="help" title="原型使用说明" @close="help = false"
-    ><div class="stack">
-      <div class="info-box">
-        <UiIcon name="Play" />
-        <p>这是可交互的界面原型，数据、账号与事件均为虚构。刷新页面或重置演示会恢复初始数据。</p>
-      </div>
-      <h3>建议体验路径</h3>
-      <ol class="help-steps">
-        <li>查看林予安的授权来源，切换第一、第二项目经理部任命，分别查看独立来源。</li>
-        <li>关闭第一项目经理部来源，再切换第二项目经理部任命，确认其来源仍有效。</li>
-        <li>提交角色分配，到变更申请展开演示工具，分别模拟 OA 结果和执行。</li>
-        <li>切换总管理员，体验系统目录、后台账号、范围配置和人员预检。</li>
-        <li>使用页面状态切换加载、空结果、故障、无权限和会话失效。</li>
-      </ol>
-      <p class="small muted">
-        原型未实现真实登录认证、后端权限防护、数据库事务和 OA/HR 接入；演示响应不是正式 API 契约。
-      </p>
-    </div>
-    <template #footer
-      ><button class="button primary" @click="help = false">开始体验</button></template
-    ></UiDialog
-  >
+  <PageHelp :open="help" :page="page" :title="current.title" @close="help = false" />
   <UiDialog
     :open="passwordOpen"
     title="修改本人密码"

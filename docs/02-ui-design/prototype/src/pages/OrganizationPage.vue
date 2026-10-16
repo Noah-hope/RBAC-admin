@@ -170,7 +170,6 @@ function open() {
   <div class="page-heading">
     <div>
       <h1>员工组织</h1>
-      <p>维护人员与任职，岗位和组织本身不自动授予权限。</p>
     </div>
     <div class="flex gap-2">
       <button class="button" @click="downloadTemplate">
@@ -180,12 +179,6 @@ function open() {
         <UiIcon name="Upload" :size="16" />导入员工变更
       </button>
     </div>
-  </div>
-  <div class="info-box mb-6">
-    <UiIcon name="Building2" />
-    <p>
-      组织用于管理边界与任职，不设计公司、部门启停。员工离岗可直接关闭来源，员工全局停用由总管理员办理。
-    </p>
   </div>
   <div class="panel">
     <div class="organization-header">

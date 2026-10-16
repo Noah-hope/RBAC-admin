@@ -231,7 +231,6 @@ function toggleAll(checked: boolean) {
   <div class="page-heading">
     <div>
       <h1>员工授权</h1>
-      <p>查看员工角色，按部门来源办理分配与关权。</p>
     </div>
     <button class="button primary" :disabled="!allowedSystems.length" @click="open('assign')">
       <UiIcon name="Plus" :size="17" />分配角色
@@ -253,8 +252,8 @@ function toggleAll(checked: boolean) {
       ><UiIcon name="ArrowUpRight" :size="14" />
     </button>
   </div>
-  <div class="roster-layout panel">
-    <aside class="department-tree">
+  <div class="roster-layout panel" :class="{ 'single-department': scopedDepartments.length <= 1 }">
+    <aside v-if="scopedDepartments.length > 1" class="department-tree">
       <div class="tree-title">部门范围<UiIcon name="Building2" :size="15" /></div>
       <button
         class="tree-row"
@@ -283,10 +282,6 @@ function toggleAll(checked: boolean) {
           visibleEmployees.filter((e) => e.employments.some((j) => j.dept === d.id)).length
         }}</span>
       </button>
-      <div class="tree-boundary">
-        <UiIcon name="Lock" :size="14" />
-        <p>只显示获准范围<br />授权来源独立保留</p>
-      </div>
     </aside>
     <section class="roster-content">
       <div class="table-toolbar">
@@ -418,21 +413,8 @@ function toggleAll(checked: boolean) {
           清除筛选
         </button>
       </div>
-      <div class="table-footer">
-        <span><UiIcon name="Info" :size="14" />仅显示当前管理范围；无角色不代表无后台管理资格</span>
-      </div>
       <UiPagination :total="filtered.length" v-model:page="currentPage" v-model:size="pageSize" />
     </section>
-  </div>
-  <div class="bottom-note">
-    <UiIcon name="Shield" :size="17" />
-    <p>
-      员工通过角色获得功能权限。角色分配需经 OA
-      批准并执行后生效，<strong>系统进入权限独立配置</strong>。
-    </p>
-    <button @click="page = 'verification'">
-      验证有效权限<UiIcon name="ArrowRight" :size="15" />
-    </button>
   </div>
 
   <UiDialog

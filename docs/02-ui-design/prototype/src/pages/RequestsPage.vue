@@ -96,7 +96,6 @@ function resubmit() {
   <div class="page-heading">
     <div>
       <h1>变更申请</h1>
-      <p>审批通过与执行成功，始终分开记录。</p>
     </div>
     <span class="subtle-label"
       ><UiIcon name="GitPullRequest" :size="16" />{{
@@ -104,19 +103,6 @@ function resubmit() {
       }}
       项未结束申请</span
     >
-  </div>
-  <div class="request-legend">
-    <div>
-      <span class="legend-number">1</span><strong>OA 投递</strong><span>固定申请送达外部 OA</span>
-    </div>
-    <UiIcon name="ChevronRight" :size="16" />
-    <div>
-      <span class="legend-number">2</span><strong>最终审批</strong><span>接收可信的批准或驳回</span>
-    </div>
-    <UiIcon name="ChevronRight" :size="16" />
-    <div>
-      <span class="legend-number">3</span><strong>变更执行</strong><span>执行成功后权限才生效</span>
-    </div>
   </div>
   <div class="panel">
     <div class="panel-tabs">
@@ -148,8 +134,8 @@ function resubmit() {
         <option>待执行</option>
         <option>执行成功</option>
         <option>执行失败</option>
-        <option>已失效</option></select
-      ><span class="toolbar-spacer" /><span class="small muted">同范围管理员协作可见</span>
+        <option>已失效</option>
+      </select>
     </div>
     <div class="table-scroll">
       <table>
@@ -204,10 +190,6 @@ function resubmit() {
     <div v-if="!rows.length" class="empty-inline">
       <UiIcon name="GitPullRequest" :size="30" /><strong>没有匹配的申请</strong>
       <p>试试其他关键词或申请状态。</p>
-    </div>
-    <div class="table-footer">
-      <span>已提交内容保持固定，不提供本地撤回或超时自动取消</span
-      ><span>{{ rows.length }} 条申请</span>
     </div>
   </div>
   <UiPagination :total="filtered.length" v-model:page="currentPage" v-model:size="pageSize" />

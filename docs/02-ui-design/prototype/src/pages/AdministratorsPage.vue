@@ -187,7 +187,6 @@ const { rows, currentPage, pageSize } = usePagination(filtered);
   <div class="page-heading">
     <div>
       <h1>管理员与范围</h1>
-      <p>账号负责登录，任命决定管理边界，两者分别办理。</p>
     </div>
     <button class="button primary" @click="tab === '后台账号' ? open('create') : openScope()">
       <UiIcon name="Plus" :size="17" />{{ tab === '后台账号' ? '建立后台账号' : '新增管理范围' }}
@@ -264,9 +263,6 @@ const { rows, currentPage, pageSize } = usePagination(filtered);
           </tbody>
         </table>
       </div>
-      <div class="table-footer">
-        <span>账号创建不自动产生任命；停用或改密后旧会话不可继续使用</span>
-      </div>
       <UiPagination :total="filtered.length" v-model:page="currentPage" v-model:size="pageSize"
     /></template>
     <div v-else class="scope-card-grid">
@@ -278,7 +274,7 @@ const { rows, currentPage, pageSize } = usePagination(filtered);
           </button>
         </div>
         <h3>{{ deptName(m.dept) }}</h3>
-        <p>{{ companies.find((c) => c.id === m.company)?.name }} / 仅该部门，不包含其他部门</p>
+        <p>{{ companies.find((c) => c.id === m.company)?.name }}</p>
         <div class="flex gap-2 flex-wrap my-4">
           <span v-for="s in m.systems" :key="s" class="small-tag">{{ systemName(s) }}</span
           ><span v-if="!m.systems.length" class="muted small">未配置可管理系统</span>

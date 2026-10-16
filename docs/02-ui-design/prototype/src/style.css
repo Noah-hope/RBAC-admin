@@ -743,21 +743,6 @@ small {
   background: var(--md-sys-color-surface-container-high);
   margin: var(--app-space-2) var(--app-space-1);
 }
-.tree-boundary {
-  border-top: 1px dashed var(--md-sys-color-surface-container-highest);
-  margin: var(--app-space-4) var(--app-space-1) 0;
-  padding-top: var(--app-space-2);
-  display: flex;
-  gap: var(--app-space-1);
-  color: var(--muted);
-}
-.tree-boundary p {
-  font-size: 11px;
-  line-height: 1.9;
-}
-.tree-boundary .ui-icon {
-  margin-top: var(--app-space-half);
-}
 .roster-content {
   min-width: 0;
 }
@@ -1063,38 +1048,6 @@ td small {
 }
 .selection-bar button {
   font-weight: 500;
-}
-.bottom-note {
-  display: flex;
-  align-items: center;
-  gap: var(--app-space-1);
-  margin: var(--app-space-3) 0 0;
-  color: var(--muted);
-}
-.bottom-note p {
-  font-size: 11px;
-  line-height: 1.8;
-}
-.bottom-note p strong {
-  font-weight: 400;
-  color: var(--muted);
-}
-.bottom-note > button {
-  margin-left: auto;
-  font-size: 12px;
-  color: var(--muted);
-  display: flex;
-  align-items: center;
-  gap: var(--app-space-half);
-  flex-shrink: 0;
-}
-.workspace-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--app-space-2) var(--app-space-4);
-  color: var(--muted);
-  font-size: 11px;
 }
 .object-icon {
   display: inline-flex;
@@ -1517,45 +1470,6 @@ td small {
 .diff-line.removed {
   background: var(--md-sys-color-surface-container-low);
   color: var(--md-sys-color-error);
-}
-.request-legend {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--app-space-2);
-  background: var(--md-sys-color-surface-container-lowest);
-  border: 1px solid var(--md-sys-color-surface-container-highest);
-  border-radius: 8px;
-  padding: var(--app-space-3) var(--app-space-3);
-  margin-bottom: var(--app-space-3);
-}
-.request-legend > div {
-  display: grid;
-  grid-template-columns: 29px 1fr;
-  column-gap: var(--app-space-1);
-  align-items: center;
-}
-.legend-number {
-  grid-row: span 2;
-  width: 29px;
-  height: 29px;
-  border-radius: 50%;
-  background: var(--md-sys-color-surface-container);
-  color: var(--muted);
-  display: grid;
-  place-items: center;
-  font-size: 13px;
-}
-.request-legend strong {
-  font-size: 13px;
-  color: var(--muted);
-}
-.request-legend > div > span:last-child {
-  color: var(--muted);
-  font-size: 11px;
-}
-.request-legend > .ui-icon {
-  color: var(--muted);
 }
 .tab-dot {
   display: inline-block;
@@ -2508,12 +2422,6 @@ td small {
     grid-template-columns: 205px minmax(0, 1fr);
     gap: 16px;
   }
-  .request-legend {
-    padding: 17px;
-  }
-  .request-legend > div > span:last-child {
-    max-width: 115px;
-  }
 }
 @media (max-width: 900px) {
   .sidebar {
@@ -2590,9 +2498,6 @@ td small {
     display: none;
   }
   .topbar-separator,
-  .help-top {
-    display: none;
-  }
   .profile-button {
     gap: 7px;
   }
@@ -2713,8 +2618,7 @@ td small {
     flex-wrap: wrap;
   }
   .tree-title,
-  .tree-rule,
-  .tree-boundary {
+  .tree-rule {
     display: none;
   }
   .tree-row,
@@ -2761,33 +2665,6 @@ td small {
     gap: 7px;
     font-size: 11px;
   }
-  .bottom-note {
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 7px;
-  }
-  .bottom-note > .ui-icon {
-    flex-shrink: 0;
-    margin-top: 3px;
-  }
-  .bottom-note p {
-    font-size: 11px;
-    flex: 1;
-    line-height: 2;
-  }
-  .bottom-note > button {
-    margin-top: 4px;
-    margin-left: 24px;
-    font-size: 12px;
-  }
-  .workspace-footer {
-    padding: 10px 15px 20px;
-    font-size: 10px;
-    gap: 10px;
-  }
-  .workspace-footer > span:last-child {
-    text-align: right;
-  }
   .panel-tabs {
     padding: 3px 13px 0;
     gap: 10px;
@@ -2828,25 +2705,6 @@ td small {
   }
   .source-card strong {
     font-size: 12px;
-  }
-  .request-legend {
-    padding: 15px 12px;
-    gap: 7px;
-  }
-  .request-legend > div {
-    grid-template-columns: 1fr;
-    gap: 7px;
-  }
-  .legend-number {
-    width: 23px;
-    height: 23px;
-    font-size: 12px;
-  }
-  .request-legend strong {
-    font-size: 12px;
-  }
-  .request-legend > div > span:last-child {
-    display: none;
   }
   .verification-grid {
     grid-template-columns: 1fr;

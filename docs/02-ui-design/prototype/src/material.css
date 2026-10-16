@@ -82,11 +82,12 @@
 .management-context {
   display: flex;
   align-items: center;
-  gap: 16px;
-  background: var(--md-sys-color-surface-container);
-  padding: 16px 24px;
-  border-radius: var(--md-sys-shape-corner-medium);
-  margin-bottom: 24px;
+  gap: 8px 16px;
+  flex-wrap: wrap;
+  background: var(--md-sys-color-surface-container-low);
+  padding: 8px 16px;
+  border-radius: var(--md-sys-shape-corner-small);
+  margin-bottom: 16px;
   color: var(--muted);
   font-size: 14px;
   min-width: 0;
@@ -95,7 +96,10 @@
   color: var(--primary);
 }
 .management-context > div:first-of-type {
-  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 .management-context small,
 .management-context strong {
@@ -109,7 +113,7 @@
   font-weight: 500;
 }
 .context-divider {
-  height: 32px;
+  height: 24px;
   border-left: 1px solid var(--md-sys-color-outline-variant);
 }
 .context-systems {
@@ -124,9 +128,21 @@
   gap: 8px;
   align-items: center;
   flex-wrap: wrap;
+  flex: 1 1 280px;
 }
 .context-choice select {
   max-width: 100%;
+  min-width: 0;
+  flex: 1;
+}
+.page-help-demo {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.page-help-demo summary {
+  cursor: pointer;
 }
 .data-pagination {
   display: flex;
@@ -373,6 +389,9 @@ td strong {
 .roster-layout {
   grid-template-columns: 208px minmax(0, 1fr);
 }
+.roster-layout.single-department {
+  grid-template-columns: minmax(0, 1fr);
+}
 .department-tree {
   background: var(--md-sys-color-surface-container-lowest);
 }
@@ -523,7 +542,6 @@ button:disabled {
     padding: 16px;
   }
   .department-tree .tree-title,
-  .department-tree .tree-boundary,
   .department-tree .tree-rule {
     display: none;
   }
@@ -567,9 +585,8 @@ button:disabled {
     margin: 0 16px;
   }
   .management-context {
-    padding: 16px;
-    flex-wrap: wrap;
-    gap: 12px;
+    padding: 8px 12px;
+    gap: 8px;
   }
   .context-systems {
     margin-left: 0;
@@ -589,7 +606,6 @@ button:disabled {
     gap: 4px;
   }
   .tree-title,
-  .tree-boundary,
   .tree-rule {
     display: none;
   }
