@@ -8,6 +8,21 @@
 
 权限管理员按公司、指定部门及系统范围管理；员工离岗关权直接生效。规则见[管理范围与人员权限](docs/01-requirements/usecases-v1/管理范围与人员权限规则.md)。PNG/SVG 按需生成，现有 V1.1 预览已标记，详见[预览维护规则](docs/project/PREVIEWS.md)。
 
+## 已确认技术栈
+
+2026-10-16 用户确认，决策见 [D-028](docs/project/DECISIONS.md)：
+
+| 领域 | 已确认选型 |
+| --- | --- |
+| 前端 | Vue 3 + TypeScript + Tailwind CSS |
+| 后端 | Spring Boot + Spring Data JPA |
+| 数据库 | MySQL |
+| API 风格 | RESTful API；使用 Apifox 管理契约 |
+| 身份认证凭证 | JWT；功能授权仍按 RBAC 规则判断 |
+| 分析与设计方法 | 结构化分析与结构化设计 |
+
+选型已确认，API 契约、数据库结构、后端和正式认证实现仍待对应阶段开展。框架与数据库具体版本、JWT 有效期、续期及失效机制、测试框架和最终工程布局待设计细化；会话退出、账号停用和资格变更仍须满足现有用例的失效要求。
+
 ## 分析与设计方法
 
 本项目采用**结构化分析与结构化设计方法**，以自顶向下、逐步求精的方式分解业务处理和系统模块，并以高内聚、低耦合作为模块划分原则。
@@ -31,7 +46,8 @@
 - [按用例分类阅读](docs/01-requirements/按用例分类/README.md)：详细说明、简表和图的同步阅读副本。
 - [导入说明](docs/project/IMPORT.md)：资料来源、校验方式及导入边界。
 - [前端界面原型](docs/02-ui-design/README.md)：页面、启动方式和原型验证。
-- [Material 3 界面方案](docs/02-ui-design/MATERIAL3-PLAN.md)：已确认并实施的页面、导航、Token 与改造清单，原型 0.2.0 待评审。
+- [Material 3 界面方案](docs/02-ui-design/MATERIAL3-PLAN.md)：已确认并实施的页面、导航、Token 与改造清单。
+- [阶段评审](docs/02-ui-design/STAGE-REVIEW.md)：原型有条件通过，可作为 API 设计输入；3 项原型缺口及契约同步待办。
 - [项目技能](docs/project/SKILLS.md)：仓库内四个技能的入口、来源、版本和文件摘要。
 
 ## 当前目录
@@ -55,7 +71,7 @@ rbac-admin/
     └── 05-detailed-design/
 ```
 
-界面阶段已有可运行交互原型，位于 `docs/02-ui-design/prototype/`，待用户评审。API、数据库及详细设计阶段当前只保留目录，交付在对应阶段产生。目录约定及迁移说明见 [LAYOUT.md](docs/project/LAYOUT.md)。
+界面阶段已有可运行交互原型，位于 `docs/02-ui-design/prototype/`，阶段评审有条件通过，API 设计可启动。API、数据库及详细设计当前尚未产出正式交付物，后续按阶段产生；3 项原型缺口跟踪至契约冻结前。目录约定及迁移说明见 [LAYOUT.md](docs/project/LAYOUT.md)。
 
 ## 规定的项目流程
 
@@ -65,7 +81,7 @@ rbac-admin/
 4. 数据库设计：依据已确定的需求与接口契约设计。
 5. 详细设计与实现：先生成设计文档、分解业务流程和模块，再使用 TDD skill，逐模块执行“失败测试 → 最小实现 → 重构”。
 
-各阶段的交付内容见[开发流程](docs/project/WORKFLOW.md)。后端语言、框架、数据库产品与测试框架尚未选定。
+各阶段的交付内容见[开发流程](docs/project/WORKFLOW.md)。技术栈已按 D-028 确认，具体版本与测试框架待对应阶段确定。
 
 ## Git 共享记忆
 
