@@ -1,55 +1,30 @@
 {
-  "exportSha256": "e350c34855b941e49201ed4d417c85623b7507c40b781ce3e6467a6dd55efc00",
+  "exportSha256": "3441b617d7e22d5fdb4a75c194a6494028bbf0009079bdc236ed48515c27a361",
   "openapiStructureValid": true,
   "modelExamplesChecked": 120,
   "invalidModelExamples": [],
+  "mediaExamplesChecked": 104,
+  "invalidMediaExamples": [],
   "exportOpenapi": "3.1.0",
   "exportVersion": "1.1.0",
   "paths": 56,
-  "operations": 66,
+  "operations": 67,
   "schemas": 129,
   "webhooks": [
     "oaSubmission"
   ],
   "extraOperations": [],
-  "missingOperations": [
-    [
-      "/api/v1/admin/sessions/current",
-      "get"
-    ]
-  ],
-  "operationIdMismatches": [
-    [
-      "/api/v1/admin/import-files",
-      "post"
-    ],
-    [
-      "/api/v1/admin/sessions/current",
-      "delete"
-    ]
-  ],
+  "missingOperations": [],
+  "operationIdMismatches": [],
   "securityMismatches": [],
-  "responseCodeMismatches": [
-    [
-      "/api/v1/admin/import-files",
-      "post"
-    ],
-    [
-      "/api/v1/admin/sessions/current",
-      "delete"
-    ]
+  "responseCodeMismatches": [],
+  "operationsMissingResponses": [],
+  "differenceEntryCount": 3,
+  "differencePaths": [
+    "/info/license",
+    "/paths//api/v1/admin/sessions/post/requestBody/content/application/json/exampleValues",
+    "/servers"
   ],
-  "operationsMissingResponses": [
-    [
-      "/api/v1/admin/import-files",
-      "post"
-    ],
-    [
-      "/api/v1/admin/sessions/current",
-      "delete"
-    ]
-  ],
-  "differenceEntryCount": 74,
   "componentDifferencePaths": [],
   "webhookDifferencePaths": [],
   "appointmentFields": {
@@ -112,6 +87,17 @@
     ]
   },
   "uploadSchema": {
-    "additionalProperties": false
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "file"
+    ],
+    "properties": {
+      "file": {
+        "type": "string",
+        "format": "binary",
+        "description": "CSV或XLSX；禁止XLSM/旧XLS/宏；校验扩展名/MIME/文件内容。"
+      }
+    }
   }
 }
