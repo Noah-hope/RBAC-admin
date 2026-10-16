@@ -62,3 +62,23 @@
 客户端单文件OpenAPI导出尚未提供，因此上述是MCP可见差异，不能断言都由客户端导入器造成；可能涉及导入、平台存储或MCP导出层。下一步先从默认模块导出OpenAPI3.1到本目录apifox-export.json或apifox-export.yaml（只含契约，不含调试凭据），再与Git及MCP快照交叉核对，定位差异后修复远程或记录平台限制。本轮MCP无写入工具，未擅自修改远程或本地权威契约。
 
 本地validate_contract.py复跑PASS：67操作、1142引用、120模型示例、789媒体示例、43Schema场景；未重复Mock或宣称业务实现测试通过。数据库输入仍使用Git1.1.0；正式同步交接条件尚未满足，本轮未进入数据库设计。
+
+## 客户端导出交叉核对
+
+用户随后提供[apifox-export.json](apifox-export.json)，实际为OpenAPI3.1.0，SHA-256为74c159c93270359d2017f2ce6c7c2d1ce73e97fe9d535a89282c7e19fa3d2625。这是远程导出证据，不是第二份权威契约。使用[compare_apifox_export.py](compare_apifox_export.py)逐项比较，结果摘要见[APIFOX-EXPORT-DIFF.json](APIFOX-EXPORT-DIFF.json)。脚本依赖沿用VALIDATION中的PyYAML/jsonschema/openapi-spec-validator，运行方式为python docs/03-api/compare_apifox_export.py；生成差异摘要，出现差异不表示脚本执行失败，也不代表同步通过。
+
+**修正AS-05的定位：客户端导出含oaSubmission webhook及deliverOaSubmission，68条等于67个入站操作加1个出站操作。出站webhook没有被误转为入站路径；缺失发生在MCP文档暴露层，不能继续要求用户重新导入该webhook。** 出站请求、成功响应和认证绑定一致，错误响应同样受AS-03媒体类型转换影响。
+
+AS-01～04和AS-06在客户端导出中也存在，排除“仅MCP回读改变”这一解释；仍无法仅凭导出区分客户端导入、平台存储与公共导出逻辑。无多余/缺失入站操作，operationId及响应码集合全部一致。129模型的必填、枚举、可空、oneOf及示例已比较；组件模型差异仍集中于Appointment三个标识和它的引用展开。有效认证差异仅登录及退出两项；其他65项一致。
+
+导出通过OpenAPI结构校验，但120个模型示例中119个通过，Appointment示例因companyId/departmentId/systemIds中的字符串被错误要求为对象而失败。这再次说明结构lint不能证明契约同步正确。本地Git契约保持原样且仍为1.1.0；本轮未修改远程、未进行业务实现测试。
+
+需要在Apifox端核查并修复：
+
+1. Appointment.companyId和departmentId，以及systemIds的items恢复type:string、minLength:1、maxLength:64、pattern:`^[A-Za-z0-9][A-Za-z0-9_-]*$`。systemIds仍为数组且uniqueItems:true。不要将Company/Department/Application整个对象作为字段类型。
+2. 登录POST /api/v1/admin/sessions恢复security:[]，不继承AdminJwt；退出DELETE /api/v1/admin/sessions/current恢复security:[{AdminJwt:[]},{}]。如果客户端无法表达退出的认证备选，记录工具限制，不能静默改Git。
+3. 11项公共错误响应恢复application/problem+json，引用它们的接口及出站webhook应随之正确导出；不能只修改响应示例。
+4. 上传POST /api/v1/admin/import-files的multipart/form-data对象恢复additionalProperties:false，保留file必填和binary格式。
+5. 模块版本调整为1.1.0；标题、标签说明及设计元数据与Git差异记录为展示/导航差异，占位servers不是已部署地址。
+
+修复后再次导出同一路径并刷新MCP，比较客户端导出和MCP可覆盖部分；MCP不暴露webhook的限制单独保留。当前状态为“人工导入及双通道核对完成，实质差异待修复”，不是同步完成。正式同步交接仍未满足，本轮不进入数据库设计。
