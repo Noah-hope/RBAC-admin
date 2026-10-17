@@ -17,7 +17,7 @@
 | --- | --- | --- |
 | [01-requirements](01-requirements/README.md) | 正式需求、用例、简表、图源、辅助预览与同步脚本 | V1.3 复核完成，可作为原型依据 |
 | [02-ui-design](02-ui-design/README.md) | Vue 3 + TypeScript + Tailwind CSS 界面原型及设计说明 | 可作为 API 输入；按 D-029，3 项原型补齐后续跟踪，不阻塞 API |
-| [03-api](03-api/README.md) | OpenAPI 契约、示例、状态/错误、追踪及数据库交接 | Git1.2.0正式跨阶段修订完成；Apifox任命模型已修复；最新导出未体现指定覆盖配置，待应用及核对；1.1.0证据及MCP限制保留 |
+| [03-api](03-api/README.md) | OpenAPI 契约、示例、状态/错误、追踪及数据库交接 | Git1.2.0正式跨阶段修订完成；Apifox1.2.0指定客户端导出核心一致已核对；两处元数据差异及MCP限制保留 |
 | [04-database](04-database/README.md) | ER图、完整字典、约束/索引、事务/JPA/幂等、DDL草案与验证 | 1.1草案，正式跨阶段评审修订后有条件通过；未建库/执行SQL，见[评审报告](04-database/CONSISTENCY-REVIEW.md) |
 | [05-detailed-design](05-detailed-design/) | 架构、流程、模块依赖和正式逻辑实现设计 | 仅保留目录，尚未开始 |
 

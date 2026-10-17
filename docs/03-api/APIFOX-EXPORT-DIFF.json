@@ -1,12 +1,12 @@
 {
-  "exportSha256": "f7a3a59bd1b595c3e65b7646d552405e5662c5c5b105228ca280e829326d162e",
+  "exportSha256": "67fd08c024a365cfef26485a5984be28c7941cfc9662e1ae8d3ddac558fd5501",
   "openapiStructureValid": true,
   "modelExamplesChecked": 120,
   "invalidModelExamples": [],
-  "mediaExamplesChecked": 105,
+  "mediaExamplesChecked": 104,
   "invalidMediaExamples": [],
   "exportOpenapi": "3.1.0",
-  "exportVersion": "1.0.0",
+  "exportVersion": "1.2.0",
   "paths": 56,
   "operations": 67,
   "schemas": 129,
@@ -16,27 +16,12 @@
   "extraOperations": [],
   "missingOperations": [],
   "operationIdMismatches": [],
-  "securityMismatches": [
-    [
-      "/api/v1/admin/sessions",
-      "post"
-    ],
-    [
-      "/api/v1/admin/sessions/current",
-      "delete"
-    ]
-  ],
+  "securityMismatches": [],
   "responseCodeMismatches": [],
   "operationsMissingResponses": [],
-  "differenceEntryCount": 8,
+  "differenceEntryCount": 2,
   "differencePaths": [
     "/info/license",
-    "/info/title",
-    "/info/version",
-    "/paths//api/v1/admin/import-files/post/requestBody/content/multipart/form-data/exampleValues",
-    "/paths//api/v1/admin/import-files/post/requestBody/content/multipart/form-data/schema/additionalProperties",
-    "/paths//api/v1/admin/sessions/post/security",
-    "/paths//api/v1/admin/sessions/current/delete/security",
     "/servers"
   ],
   "componentDifferencePaths": [],
@@ -102,29 +87,22 @@
   },
   "uploadSchema": {
     "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "file"
+    ],
     "properties": {
       "file": {
         "type": "string",
         "format": "binary",
-        "description": "CSV或XLSX；禁止XLSM/旧XLS/宏；校验扩展名/MIME/文件内容。",
-        "example": ""
+        "description": "CSV或XLSX；禁止XLSM/旧XLS/宏；校验扩展名/MIME/文件内容。"
       }
-    },
-    "required": [
-      "file"
-    ]
+    }
   },
   "displayOnlyDifferencePaths": [
     "/info/license",
     "/servers"
   ],
-  "blockingDifferencePaths": [
-    "/info/title",
-    "/info/version",
-    "/paths//api/v1/admin/import-files/post/requestBody/content/multipart/form-data/exampleValues",
-    "/paths//api/v1/admin/import-files/post/requestBody/content/multipart/form-data/schema/additionalProperties",
-    "/paths//api/v1/admin/sessions/post/security",
-    "/paths//api/v1/admin/sessions/current/delete/security"
-  ],
-  "coreContractConsistent": false
+  "blockingDifferencePaths": [],
+  "coreContractConsistent": true
 }

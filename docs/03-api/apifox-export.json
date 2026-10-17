@@ -1,9 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "默认模块",
+    "title": "RBAC 权限中心 API",
     "description": "需求V1.3；269d269首版API评审修订1.1.0，尚未上线。Git契约为权威，Apifox8934976默认模块待人工导入。修订含更严格Schema及两项直接变更201→200，迁移说明见REVIEW.md。",
-    "version": "1.0.0"
+    "version": "1.2.0"
   },
   "tags": [
     {
@@ -47,40 +47,43 @@
     "/api/v1/admin/sessions": {
       "post": {
         "summary": "管理员登录",
-        "deprecated": false,
-        "description": "统一登录失败，不泄露账号存在性；临时密码签发 PASSWORD_CHANGE_ONLY 受限 JWT，不得用业务角色登录。",
         "operationId": "login",
         "tags": [
           "会话"
         ],
+        "description": "统一登录失败，不泄露账号存在性；临时密码签发 PASSWORD_CHANGE_ONLY 受限 JWT，不得用业务角色登录。",
         "parameters": [
           {
-            "name": "X-Request-Id",
-            "in": "header",
-            "description": "调用追踪标识，不是凭据或幂等键。",
-            "required": false,
-            "example": "",
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 64,
-              "pattern": "^[A-Za-z0-9_-]+$"
-            }
+            "$ref": "#/components/parameters/RequestId"
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginInput"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "201": {
             "description": "已创建资源。",
+            "headers": {
+              "X-Request-Id": {
+                "description": "请求追踪标识。",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "敏感结果禁止缓存。",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "Location": {
+                "description": "创建资源或申请状态查询 URI。",
+                "schema": {
+                  "type": "string",
+                  "format": "uri-reference"
+                }
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -97,17 +100,74 @@
                   "expiresAt": "2026-10-16T08:00:00Z"
                 }
               }
-            },
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "413": {
+            "$ref": "#/components/responses/PayloadTooLarge"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "422": {
+            "$ref": "#/components/responses/Unprocessable"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/IntegrityError"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          }
+        },
+        "x-use-cases": [
+          "UC-09"
+        ],
+        "x-access": "公开",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginInput"
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/admin/sessions/current": {
+      "get": {
+        "summary": "读取当前正常会话",
+        "operationId": "currentSession",
+        "tags": [
+          "会话"
+        ],
+        "description": "正常会话身份摘要；受限会话不能调用，登录响应已包含改密所需信息。",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功；业务状态以返回字段为准。",
             "headers": {
               "X-Request-Id": {
-                "required": false,
                 "description": "请求追踪标识。",
                 "schema": {
                   "type": "string"
                 }
               },
               "Cache-Control": {
-                "required": false,
                 "description": "敏感结果禁止缓存。",
                 "schema": {
                   "type": "string",
@@ -115,88 +175,8 @@
                     "no-store"
                   ]
                 }
-              },
-              "Location": {
-                "required": false,
-                "description": "创建资源或申请状态查询 URI。",
-                "schema": {
-                  "type": "string",
-                  "format": "uri-reference"
-                }
               }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest",
-            "description": "BadRequest；具体 code 及恢复见 CONVENTIONS.md。"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized",
-            "description": "Unauthorized；具体 code 及恢复见 CONVENTIONS.md。"
-          },
-          "413": {
-            "$ref": "#/components/responses/PayloadTooLarge",
-            "description": "PayloadTooLarge；具体 code 及恢复见 CONVENTIONS.md。"
-          },
-          "415": {
-            "$ref": "#/components/responses/UnsupportedMediaType",
-            "description": "UnsupportedMediaType；具体 code 及恢复见 CONVENTIONS.md。"
-          },
-          "422": {
-            "$ref": "#/components/responses/Unprocessable",
-            "description": "Unprocessable；具体 code 及恢复见 CONVENTIONS.md。"
-          },
-          "429": {
-            "$ref": "#/components/responses/RateLimited",
-            "description": "RateLimited；具体 code 及恢复见 CONVENTIONS.md。"
-          },
-          "500": {
-            "$ref": "#/components/responses/IntegrityError",
-            "description": "IntegrityError；具体 code 及恢复见 CONVENTIONS.md。"
-          },
-          "503": {
-            "$ref": "#/components/responses/Unavailable",
-            "description": "Unavailable；具体 code 及恢复见 CONVENTIONS.md。"
-          }
-        },
-        "security": [
-          {
-            "AdminJwt": []
-          }
-        ],
-        "x-use-cases": [
-          "UC-09"
-        ],
-        "x-access": "公开"
-      }
-    },
-    "/api/v1/admin/sessions/current": {
-      "get": {
-        "summary": "读取当前正常会话",
-        "deprecated": false,
-        "description": "正常会话身份摘要；受限会话不能调用，登录响应已包含改密所需信息。",
-        "operationId": "currentSession",
-        "tags": [
-          "会话"
-        ],
-        "parameters": [
-          {
-            "name": "X-Request-Id",
-            "in": "header",
-            "description": "调用追踪标识，不是凭据或幂等键。",
-            "required": false,
-            "example": "",
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 64,
-              "pattern": "^[A-Za-z0-9_-]+$"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "成功；业务状态以返回字段为准。",
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -211,73 +191,39 @@
                   "expiresAt": "2026-10-16T08:00:00Z"
                 }
               }
-            },
-            "headers": {
-              "X-Request-Id": {
-                "required": false,
-                "description": "请求追踪标识。",
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "Cache-Control": {
-                "required": false,
-                "description": "敏感结果禁止缓存。",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "no-store"
-                  ]
-                }
-              }
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest",
-            "description": "BadRequest；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/BadRequest"
           },
           "401": {
-            "$ref": "#/components/responses/Unauthorized",
-            "description": "Unauthorized；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/Unauthorized"
           },
           "403": {
-            "$ref": "#/components/responses/Forbidden",
-            "description": "Forbidden；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/Forbidden"
           },
           "404": {
-            "$ref": "#/components/responses/NotFound",
-            "description": "NotFound；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/NotFound"
           },
           "409": {
-            "$ref": "#/components/responses/Conflict",
-            "description": "Conflict；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/Conflict"
           },
           "413": {
-            "$ref": "#/components/responses/PayloadTooLarge",
-            "description": "PayloadTooLarge；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/PayloadTooLarge"
           },
           "422": {
-            "$ref": "#/components/responses/Unprocessable",
-            "description": "Unprocessable；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/Unprocessable"
           },
           "429": {
-            "$ref": "#/components/responses/RateLimited",
-            "description": "RateLimited；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/RateLimited"
           },
           "500": {
-            "$ref": "#/components/responses/IntegrityError",
-            "description": "IntegrityError；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/IntegrityError"
           },
           "503": {
-            "$ref": "#/components/responses/Unavailable",
-            "description": "Unavailable；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/Unavailable"
           }
         },
-        "security": [
-          {
-            "AdminJwt": []
-          }
-        ],
         "x-use-cases": [
           "UC-09"
         ],
@@ -285,25 +231,14 @@
       },
       "delete": {
         "summary": "退出当前会话",
-        "deprecated": false,
-        "description": "撤销当前 sid；重复、缺失或过期凭据统一 204，不影响其他会话。受限 JWT 可调用。",
         "operationId": "logout",
         "tags": [
           "会话"
         ],
+        "description": "撤销当前 sid；重复、缺失或过期凭据统一 204，不影响其他会话。受限 JWT 可调用。",
         "parameters": [
           {
-            "name": "X-Request-Id",
-            "in": "header",
-            "description": "调用追踪标识，不是凭据或幂等键。",
-            "required": false,
-            "example": "",
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 64,
-              "pattern": "^[A-Za-z0-9_-]+$"
-            }
+            "$ref": "#/components/parameters/RequestId"
           }
         ],
         "responses": {
@@ -311,14 +246,12 @@
             "description": "成功；业务状态以返回字段为准。",
             "headers": {
               "X-Request-Id": {
-                "required": false,
                 "description": "请求追踪标识。",
                 "schema": {
                   "type": "string"
                 }
               },
               "Cache-Control": {
-                "required": false,
                 "description": "敏感结果禁止缓存。",
                 "schema": {
                   "type": "string",
@@ -330,31 +263,28 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest",
-            "description": "BadRequest；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/BadRequest"
           },
           "413": {
-            "$ref": "#/components/responses/PayloadTooLarge",
-            "description": "PayloadTooLarge；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/PayloadTooLarge"
           },
           "429": {
-            "$ref": "#/components/responses/RateLimited",
-            "description": "RateLimited；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/RateLimited"
           },
           "503": {
-            "$ref": "#/components/responses/Unavailable",
-            "description": "Unavailable；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/Unavailable"
           }
         },
-        "security": [
-          {
-            "AdminJwt": []
-          }
-        ],
         "x-use-cases": [
           "UC-09"
         ],
-        "x-access": "管理员"
+        "x-access": "管理员",
+        "security": [
+          {
+            "AdminJwt": []
+          },
+          {}
+        ]
       }
     },
     "/api/v1/admin/password": {
@@ -9245,65 +9175,52 @@
     "/api/v1/admin/import-files": {
       "post": {
         "summary": "上传导入文件",
-        "deprecated": false,
-        "description": "CSV UTF-8（支持标准引号/逗号转义）或XLSX，10MiB/解压50MiB/1000行；不执行宏/公式，仅暂存。",
         "operationId": "uploadImportFile",
         "tags": [
           "组织导入"
         ],
+        "description": "CSV UTF-8（支持标准引号/逗号转义）或XLSX，10MiB/解压50MiB/1000行；不执行宏/公式，仅暂存。",
         "parameters": [
           {
-            "name": "X-Request-Id",
-            "in": "header",
-            "description": "调用追踪标识，不是凭据或幂等键。",
-            "required": false,
-            "example": "",
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 64,
-              "pattern": "^[A-Za-z0-9_-]+$"
-            }
+            "$ref": "#/components/parameters/RequestId"
           },
           {
-            "name": "Idempotency-Key",
-            "in": "header",
-            "description": "UUID；同主体/方法/路径/键同内容回放，不同内容 409。",
-            "required": true,
-            "example": "",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
+            "$ref": "#/components/parameters/Idempotency"
           }
         ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "CSV或XLSX；禁止XLSM/旧XLS/宏；校验扩展名/MIME/文件内容。",
-                    "example": ""
-                  }
-                },
-                "required": [
-                  "file"
-                ]
-              },
-              "example": {
-                "file": ""
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "201": {
             "description": "已创建资源。",
+            "headers": {
+              "X-Request-Id": {
+                "description": "请求追踪标识。",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "敏感结果禁止缓存。",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "Location": {
+                "description": "创建资源或申请状态查询 URI。",
+                "schema": {
+                  "type": "string",
+                  "format": "uri-reference"
+                }
+              },
+              "Idempotent-Replayed": {
+                "description": "同请求回放为 true。",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -9318,92 +9235,64 @@
                   "createdAt": "2026-10-16T08:00:00Z"
                 }
               }
-            },
-            "headers": {
-              "X-Request-Id": {
-                "required": false,
-                "description": "请求追踪标识。",
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "Cache-Control": {
-                "required": false,
-                "description": "敏感结果禁止缓存。",
-                "schema": {
-                  "type": "string",
-                  "enum": [
-                    "no-store"
-                  ]
-                }
-              },
-              "Location": {
-                "required": false,
-                "description": "创建资源或申请状态查询 URI。",
-                "schema": {
-                  "type": "string",
-                  "format": "uri-reference"
-                }
-              },
-              "Idempotent-Replayed": {
-                "required": false,
-                "description": "同请求回放为 true。",
-                "schema": {
-                  "type": "boolean"
-                }
-              }
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest",
-            "description": "BadRequest；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/BadRequest"
           },
           "401": {
-            "$ref": "#/components/responses/Unauthorized",
-            "description": "Unauthorized；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/Unauthorized"
           },
           "403": {
-            "$ref": "#/components/responses/Forbidden",
-            "description": "Forbidden；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/Forbidden"
           },
           "404": {
-            "$ref": "#/components/responses/NotFound",
-            "description": "NotFound；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/NotFound"
           },
           "409": {
-            "$ref": "#/components/responses/Conflict",
-            "description": "Conflict；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/Conflict"
           },
           "413": {
-            "$ref": "#/components/responses/PayloadTooLarge",
-            "description": "PayloadTooLarge；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/PayloadTooLarge"
           },
           "422": {
-            "$ref": "#/components/responses/Unprocessable",
-            "description": "Unprocessable；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/Unprocessable"
           },
           "429": {
-            "$ref": "#/components/responses/RateLimited",
-            "description": "RateLimited；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/RateLimited"
           },
           "500": {
-            "$ref": "#/components/responses/IntegrityError",
-            "description": "IntegrityError；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/IntegrityError"
           },
           "503": {
-            "$ref": "#/components/responses/Unavailable",
-            "description": "Unavailable；具体 code 及恢复见 CONVENTIONS.md。"
+            "$ref": "#/components/responses/Unavailable"
           }
         },
-        "security": [
-          {
-            "AdminJwt": []
-          }
-        ],
         "x-use-cases": [
           "UC-10"
         ],
-        "x-access": "总管理员"
+        "x-access": "总管理员",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "CSV或XLSX；禁止XLSM/旧XLS/宏；校验扩展名/MIME/文件内容。"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/admin/import-files/{fileId}": {
