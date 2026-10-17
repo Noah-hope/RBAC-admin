@@ -28,7 +28,7 @@ D-039补充：基座阶段由用户本人确认，无需其他成员评审；TDD
 
 进入依赖某个 skill/MCP 的实际阶段前，检查其可用性，不因文件存在就声称外部工具已连接。Apifox MCP 已于 2026-10-16 验证文档读取与刷新，写入能力未提供；当前事实以共享记忆为准。
 
-当前只采用 `.agents/skills/`、`docs/project/` 和 `docs/01-requirements/`～`05-detailed-design/`；不提前创建额外工程目录。界面阶段交付归入 `docs/02-ui-design/`，正式代码目录后续确定。完整目录约定见 `docs/project/LAYOUT.md`。
+当前采用 `.agents/skills/`、`docs/project/`、`docs/01-requirements/`～`05-detailed-design/`及已生成的`backend/`。D-041授权完成BE-02公共HTTP骨架；正式后端为单Maven工程，基础包`com.adgn.backend`，配置YAML，不另建Git仓库或common同义包。未实现业务不建空接口；deploy/tools/.github按后续任务实际需要创建。界面阶段交付归入 `docs/02-ui-design/`，完整目录约定见 `docs/project/LAYOUT.md`。
 
 ## 当前需求的权威来源
 

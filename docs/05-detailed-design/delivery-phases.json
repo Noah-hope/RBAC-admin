@@ -11,7 +11,7 @@
       "BE-04",
       "BE-05"
     ],
-    "status": "PREPARING",
+    "status": "IN_PROGRESS",
     "reviewRequired": false,
     "reviewPolicy": "OWNER_ACCEPTANCE",
     "acceptanceOwnerSlot": "USER",

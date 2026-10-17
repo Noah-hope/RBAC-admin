@@ -7,13 +7,15 @@
 | 云服务器 | 已有一台，可在后续通过Docker部署数据库服务 | 未连接服务器，Docker、数据库容器、网络、持久卷、版本和备份均未核验；不能记为已部署 |
 | 当前数据库 | 先用本机MySQL服务；Navicat截图显示服务端8.4.8、本机3306；用户确认开发空库rbac_admin_dev已创建 | 属于截图及用户报告，agent未连接或执行SQL；迁移、SQL mode、应用连接和隔离测试库仍待核验 |
 | 后端数据库账号 | 后端服务使用项目专用数据库用户，密码团队共享 | 具体用户名、Host及目标库权限待配置验证；root可用于建库/授权，服务运行使用专用账号。密码经私下渠道传递，各成员本机注入，禁止进入Git、文档、Issue、PR或日志；独立迁移身份保留 |
-| IDE与工程位置 | 用户已通过IntelliJ IDEA生成rbac-admin/backend；包名com.adgn.backend，配置YAML | 生成pom为Boot4.0.8/Java21；保留用户生成代码，本次只修正Wrapper的Maven发行版。命令行构建通过，IDE重新导入待用户确认；不表示BE-02完整验收通过 |
+| IDE与工程位置 | 用户已通过IntelliJ IDEA生成rbac-admin/backend；包名com.adgn.backend，配置YAML | D-041已实现并自测BE-02公共适配，完整构建30测试通过；用户此前截图已确认IDE启动和健康UP，本次变更后需重新加载/启动。实施自测不代替用户本人确认 |
 | JDK | 使用JDK 21，本地已下载，IDE可以引用 | java与javac实测21.0.12.1，Amazon Corretto；命令会话临时设置JAVA_HOME后实际构建，无永久系统环境变量修改 |
 | 命令行 | 尚未配置Java环境变量，java/javac查询不到 | 本次Get-Command确认java和javac均未在PATH，JAVA_HOME未配置；未修改用户或系统环境变量 |
 | 基座确认 | 基座由用户本人确认，不需要别人评审 | BE-01～05采用OWNER_ACCEPTANCE，不要求Reviewer；TDD、自检、真实约束/事务验证及交接证据仍保留 |
 | 业务阶段 | 基座验收后再分派 | 30项业务/交付任务仍未分派；基座不要求他人评审的安排不自动取消业务阶段原评审规则 |
 
 ## 接下来怎样准备
+
+D-041后续：BE-02公共骨架已实际按TDD实现并完成30项测试及jar随机端口HTTP验证，待用户本人确认；当前用户名/权限、数据库连接/隔离测试库准备继续留BE-01/03，不将其写成通过。运行说明见[后端README](../../backend/README.md)，完整命令/版本/环境限制见[BE-02实施记录](BE-02-IMPLEMENTATION.md)。
 
 1. 在IntelliJ IDEA中确认Project SDK、Maven导入/运行JDK和应用运行JRE均为21，记录实际构建使用的JDK。可通过IDE验证，或在受控命令会话显式指定JDK；永久修改系统JAVA_HOME/PATH不是硬性前置，不要求团队统一个人安装目录。
 2. 已生成Maven Wrapper，当前固定Maven3.9.11；在backend目录、JDK21可用的会话运行`./mvnw.cmd --version`及`./mvnw.cmd --batch-mode --no-transfer-progress verify`。本次实际构建通过，后续BE-02继续补齐公共行为及测试。

@@ -41,4 +41,4 @@
 
 ## 外部条件
 
-用户确认已有云服务器可后续部署Docker数据库，目前用本机MySQL。JDK21可在IDE引用，命令行java/javac/JAVA_HOME尚不可用；不要求永久环境变量，实施时明确IDE/显式JDK方式。本机MySQL真实版本、连接和独立测试schema、云端Docker实际部署均未核验；环境证据见ENVIRONMENT.md。演示OA按既定方案，真实OA不是本期前置。外部等待未计入估算。
+用户确认已有云服务器可后续部署Docker数据库，目前用本机MySQL。JDK21可在IDE引用，命令行java/javac/JAVA_HOME尚不可用；不要求永久环境变量，实施时明确IDE/显式JDK方式。用户截图显示MySQL8.4.8，已报告创建开发空库；应用连接、专用账号、测试库及云端部署仍待核验。JDK21/Wrapper3.9.11及BE-02已实测，见ENVIRONMENT.md和BE-02-IMPLEMENTATION.md。演示OA按既定方案，真实OA不是本期前置。外部等待未计入估算。

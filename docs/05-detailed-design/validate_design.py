@@ -73,7 +73,8 @@ def checks(report):
     module_order=dag(modules,'dependencies');task_order=dag(tasks,'dependencies')
     require((len(modules),len(tasks),len(cases),len(mapping))==(13,35,41,68),'冻结设计规模不符')
     require(len(cids)==len(cases),'重复验收编号')
-    require(all(c['status']=='DESIGNED_NOT_RUN' for c in cases),'误记业务验收已运行')
+    require(all(c['status']==('PARTIALLY_VERIFIED' if c['id'] in {'AT-01','AT-37'} else 'DESIGNED_NOT_RUN') for c in cases),'验收局部/完整状态不符')
+    require(all(c.get('evidence')=='BE-02-IMPLEMENTATION.md' for c in cases if c['status']=='PARTIALLY_VERIFIED'),'局部验收缺实施证据')
     deferred={c['id'] for c in cases if c['delivery']=='FRONTEND_DEFERRED'}
     require(deferred=={'AT-40'},'前端后置边界不符')
     phase_plan=read('delivery-phases.json')
@@ -84,7 +85,7 @@ def checks(report):
     require(set(phase_plan['foundation']['taskIds'])==foundation_ids and phase_plan['foundation']['ownerSlot']=='USER','基座阶段边界/负责人不符')
     require(set(phase_plan['business']['taskIds'])==business_ids and phase_plan['business']['ownerSlot'] is None,'业务阶段错误指派')
     require(phase_plan['business']['startConditions']==required_gates,'阶段门槛缺失')
-    require(phase_plan['foundation']['status']=='PREPARING' and phase_plan['gateStatus']=='NOT_EVALUATED' and not phase_plan['gateEvidence'],'误记基座已实现/验收')
+    require(phase_plan['foundation']['status']=='IN_PROGRESS' and phase_plan['gateStatus']=='NOT_EVALUATED' and not phase_plan['gateEvidence'],'误记基座全部验收')
     require(phase_plan['foundation']['reviewerSlot'] is None,'虚构基座评审人')
     require(phase_plan['foundation']['reviewRequired'] is False and phase_plan['foundation']['reviewPolicy']=='OWNER_ACCEPTANCE' and phase_plan['foundation']['acceptanceOwnerSlot']=='USER','未落实基座本人确认')
     require(phase_plan['business']['reviewPolicy']=='INDEPENDENT_REVIEW','擅自扩大基座评审豁免')
@@ -93,7 +94,8 @@ def checks(report):
         require(module['ownerSlot']==('USER' if module['id']=='M00' else None),'模块人员误记已分派')
     referenced=set()
     for task in tasks:
-        require(task['status']==('IN_PROGRESS' if task['id']=='BE-01' else 'PLANNED'),'任务准备/实现状态不符')
+        expected_status={'BE-01':'IN_PROGRESS','BE-02':'IMPLEMENTED_PENDING_OWNER_ACCEPTANCE'}.get(task['id'],'PLANNED')
+        require(task['status']==expected_status,'任务准备/实现状态不符')
         require(task['remoteIssueNumber'] is None and task['remotePrNumber'] is None,'伪造远程事项')
         require(task['suggestedOwnerSlot'] in 'ABCD','建议组无效')
         require(task['reviewerSlot'] is None,'评审人尚未登记，不应伪造')
@@ -210,7 +212,7 @@ def checks(report):
                     edges+=1;require(cell.get('source')in ids and cell.get('target')in ids and cell.find('mxGeometry')is not None,'图源悬空连线')
     require(diagram_pages==6,'图页数量不符')
     links=0
-    docs=list(ROOT.glob('*.md'))+[REPO/'README.md',REPO/'docs/README.md']+list((REPO/'docs/project').glob('*.md'))
+    docs=list(ROOT.glob('*.md'))+[REPO/'README.md',REPO/'docs/README.md',REPO/'backend/README.md']+list((REPO/'docs/project').glob('*.md'))
     for p in docs:
         for dest in re.findall(r'\[[^\]]*\]\(([^)]+)\)',p.read_text(encoding='utf-8-sig')):
             dest=dest.strip('<>').split('#')[0]
@@ -226,7 +228,8 @@ def checks(report):
     for name in source_paths:
         original=subprocess.check_output(['git','show',f'{BASELINE}:{name}'],cwd=REPO)
         require(hashlib.sha256(original).hexdigest()==sha(REPO/name),'意外改变上游 '+name);source_hashes[name]=sha(REPO/name)
-    for directory in ('backend','deploy','tools','.github'):
+    require((REPO/'backend/pom.xml').exists(),'BE-02工程缺失')
+    for directory in ('deploy','tools','.github'):
         require(not (REPO/directory).exists(),'本设计阶段提前创建工程/远程配置目录 '+directory)
     report.update(dict(modules=len(modules),backendIssueDrafts=len(tasks),acceptanceItems=len(cases),
         backendAcceptanceItems=len(cases)-len(deferred),deferredFrontendItems=len(deferred),
@@ -242,9 +245,9 @@ def checks(report):
 
 
 def main():
-    report=dict(scope='DETAILED_DESIGN_STATIC_ONLY',baseline=BASELINE,status='RUNNING',
-        businessTestsRun=False,databaseStarted=False,sqlExecuted=False,httpIntegrationRun=False,
-        remoteIssuesCreated=0,remotePrsCreated=0,applicationCreated=False,deployed=False,
+    report=dict(scope='DESIGN_AND_IMPLEMENTATION_TRACKING_STATIC_ONLY',baseline=BASELINE,status='RUNNING',
+        businessTestsRunByThisCheck=False,databaseStarted=False,sqlExecuted=False,httpIntegrationRunByThisCheck=False,
+        remoteIssuesCreated=0,remotePrsCreated=0,applicationCreatedByThisCheck=False,applicationExists=(REPO/'backend/pom.xml').exists(),deployed=False,
         diagramDesktopValidated=False)
     target=ROOT/'validation.json'
     target.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')

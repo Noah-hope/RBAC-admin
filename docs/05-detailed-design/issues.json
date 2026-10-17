@@ -81,7 +81,7 @@
     ],
     "deliverable": "backend单Maven工程、按模块分包、配置绑定、统一Problem/请求ID、未知字段拒绝、Actuator健康。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",

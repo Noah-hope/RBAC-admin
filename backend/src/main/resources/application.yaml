@@ -1,3 +1,30 @@
 spring:
   application:
-    name: backend
+    name: rbac-admin
+  profiles:
+    default: dev
+
+server:
+  address: 127.0.0.1
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+    include-exception: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+      show-components: never
+      probes:
+        enabled: true
+
+logging:
+  pattern:
+    level: "%5p [instance=${rbac.runtime.instance-id:unconfigured},requestId=%X{requestId:-none}]"

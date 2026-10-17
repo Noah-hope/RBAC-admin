@@ -7,8 +7,9 @@
     "operations": [],
     "useCases": [],
     "reviewScenario": "",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-02-IMPLEMENTATION.md"
   },
   {
     "id": "AT-02",
@@ -594,8 +595,9 @@
     "operations": [],
     "useCases": [],
     "reviewScenario": "",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-02-IMPLEMENTATION.md"
   },
   {
     "id": "AT-38",

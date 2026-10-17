@@ -1,13 +1,13 @@
 # 工程布局与技术设计取值
 
-本轮只确定可评审的技术方案，不创建工程或安装后端依赖。产品选型沿用D-028；版本/布局/工具是本轮设计取值，后续BE-01/02固定到真实Wrapper/pom并记录实际解析依赖和支持状态。
+产品选型沿用D-028；原版本/布局/工具为技术设计取值。D-041后BE-02已在backend实际实现公共骨架，固定Boot4.0.8/Java21、Maven3.9.11及发行包校验和，记录实际解析版本和RED/GREEN结果，见[BE-02实施记录](BE-02-IMPLEMENTATION.md)。下列业务/持久化部分仍为后续设计，不能因骨架通过就视为全部组合已运行。
 
-修订1.2/D-038/D-039：用户先实施BE-01～05，由用户本人确认基座交接，无需他人评审，随后再分派业务。`common`是公共基座责任组，Java包沿用`core`；不新增并行同义包、不按四人合并13逻辑模块。基座包括M12公共HTTP装配/M11读事务约定及迁移适配，真实身份、领域实体、审批和导入由第二阶段任务补齐。交接清单见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。本次只更新方案，没有创建以下工程。
+修订1.2/D-038/D-039：用户先实施BE-01～05，由用户本人确认基座交接，无需他人评审，随后再分派业务。`common`是公共基座责任组，Java包沿用`core`；不新增并行同义包、不按四人合并13逻辑模块。基座包括M12公共HTTP装配/M11读事务约定及迁移适配，真实身份、领域实体、审批和导入由第二阶段任务补齐。交接清单见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。BE-02公共部分已有实际工程，其余仍按目标布局在后续任务实现。
 
 | 项目 | 设计取值与依据 | 实现检查 |
 | --- | --- | --- |
-| JDK/后端 | Java21、Spring Boot4.0.8，沿用数据库阶段建议，单应用可执行jar | [Boot4.0系统要求](https://docs.spring.io/spring-boot/4.0/system-requirements.html)支持Java17～26，Java21在范围内；未运行组合 |
-| 构建 | Maven Wrapper固定3.9.11，编译release21，运行`verify` | [Maven3.9.11发布说明](https://maven.apache.org/docs/3.9.11/release-notes.html)可确认版本存在；Wrapper校验和/插件在BE-02固化，不能声称当前已能构建 |
+| JDK/后端 | Java21、Spring Boot4.0.8，沿用数据库阶段建议，单应用可执行jar | [Boot4.0系统要求](https://docs.spring.io/spring-boot/4.0/system-requirements.html)支持Java17～26，Java21在范围内；BE-02组合已运行，持久化/认证组合仍待后续 |
+| 构建 | Maven Wrapper固定3.9.11，编译release21，运行`verify` | [Maven3.9.11发布说明](https://maven.apache.org/docs/3.9.11/release-notes.html)可确认版本存在；Wrapper校验和与插件已在BE-02固定、实际构建通过，见实施记录 |
 | 持久化 | Spring Data JPA4.0.7、Hibernate7.2.24.Final、Connector/J9.7.0，跟随Boot4.0.8 BOM | [BOM依赖表](https://docs.spring.io/spring-boot/4.0/appendix/dependency-versions/coordinates.html)当日核实；不分别覆盖版本或把普通Javax包混入Jakarta工程 |
 | 认证 | Spring Security/OAuth2 Resource Server/Jose，BOM管理；RS256及三类受众/签发方隔离 | 管理员当前资格和服务identity/system绑定仍逐请求读库 |
 | 迁移 | Flyway11.14.1及flyway-mysql，BOM管理，迁移与运行身份分开 | [Boot初始化说明](https://docs.spring.io/spring-boot/how-to/data-initialization.html)要求数据库特定支持模块；MySQL DDL/触发器须真实验证 |
@@ -20,16 +20,16 @@
 
 D-040：用户确认使用IntelliJ IDEA配置JDK21，后端位置确定为`rbac-admin/backend`。IDE向导最终目标应为该目录，避免生成`backend/backend`；沿用根Git仓库，不勾选创建新Git仓库。Project SDK、Maven导入/运行JDK及应用运行JRE均设为21；pom编译release21和Wrapper仍须在BE-02落实并实测。IDE配置不代表外部命令行已有Java环境。参考[IDE SDK配置](https://www.jetbrains.com/help/idea/sdk.html)、[Maven项目](https://www.jetbrains.com/help/idea/maven-support.html)。
 
-以下仅是后续创建清单，本轮不建立这些目录：
+以下为目标布局；当前已实现入口、core/config、web公共适配及相关测试，其余业务包、迁移、deploy/tools留对应任务创建。配置扩展名统一.yaml：
 
 ```text
 backend/
   pom.xml, mvnw, mvnw.cmd, .mvn/wrapper/
-  src/main/java/com/noah/rbacadmin/
+  src/main/java/com/adgn/backend/
     core/ identity/ people/ scope/ catalog/ role/ grant/
     change/ approval/ execution/ lifecycle/ query/ web/
   src/main/resources/
-    application.yml, application-demo.yml, application-server.yml
+    application.yaml, application-dev.yaml, application-test.yaml, application-server.yaml
     db/migration/                 # 审核后的版本化迁移，无密码/真实人员
   src/test/java/...               # 单元、HTTP和MySQL集成测试
   src/test/resources/fixtures/    # 虚构样例、非法/冲突/并发输入

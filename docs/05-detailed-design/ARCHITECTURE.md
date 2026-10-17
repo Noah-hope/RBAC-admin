@@ -8,7 +8,7 @@
 
 HTTP适配层M12负责DTO、认证头、状态码和Problem；应用编排层负责当前授权、完整用例和事务；领域策略/受控写端口维护本域不变量；JPA/JDBC与文件/OA适配器提供持久化和外部边界。使用普通Java接口及构造注入，不为每个字段/表建一套抽象层。
 
-模块及编译依赖见[MODULES](MODULES.md)，可编辑图见[module-structure.drawio](module-structure.drawio)。公共包取`com.noah.rbacadmin`，按功能包再分`web/application/domain/persistence`，不按全局Controller/Service/Repository大目录让四人同时编辑同一服务。M11跨表只做独立SQL/不可变DTO投影，实体写入仍归各模块；统计和详情使用相同授权谓词。
+模块及编译依赖见[MODULES](MODULES.md)，可编辑图见[module-structure.drawio](module-structure.drawio)。公共包取`com.adgn.backend`，按功能包再分`web/application/domain/persistence`，不按全局Controller/Service/Repository大目录让四人同时编辑同一服务。M11跨表只做独立SQL/不可变DTO投影，实体写入仍归各模块；统计和详情使用相同授权谓词。
 
 ## 数据流到结构化模块
 

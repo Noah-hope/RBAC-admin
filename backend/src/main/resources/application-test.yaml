@@ -1,0 +1,5 @@
+rbac:
+  runtime:
+    instance-id: test
+server:
+  port: 0
