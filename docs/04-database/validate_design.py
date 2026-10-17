@@ -151,12 +151,12 @@ def main():
     check(all(len(n)<=64 for n in trigger_names),'触发器名称超长')
     check(guards.count('END$$')==len(trigger_names),'触发器文本块不平衡')
     for n in ['tr_change_request_fixed','tr_change_target_insert','tr_change_target_update','tr_change_target_delete',
-              'tr_import_batch_fixed','tr_audit_event_update','tr_audit_event_delete']:
+              'tr_import_batch_fixed','tr_audit_event_update','tr_audit_event_delete','tr_http_idempotency_completed']:
         check(n in trigger_names,'缺不可变保护 '+n)
     api=yaml.safe_load((REPO/'docs/03-api/openapi.yaml').read_text(encoding='utf-8'))
-    check(api['info']['version']=='1.1.0','API基线版本改变')
+    check(api['info']['version']=='1.2.0','API基线版本改变')
     digest=hashlib.sha256((REPO/'docs/03-api/openapi.yaml').read_bytes()).hexdigest()
-    check(digest=='ec7ef9ef1ab046bb61cec9728c423c32f58311c850860be8ef54a9cf3a4798fd','权威契约摘要改变')
+    check(digest=='9910ceafadea88d85793d00f7bb4e6e5673700a8565366a407185c4517e0cbdf','权威契约摘要改变')
     ops={op['operationId']:(m.upper(),p,op.get('x-use-cases',[])) for source in ['paths','webhooks'] for p,v in api.get(source,{}).items() for m,op in v.items() if isinstance(op,dict) and 'operationId'in op}
     trace=json.loads((ROOT/'traceability.json').read_text(encoding='utf-8'))
     markdown_rows={}
@@ -174,6 +174,8 @@ def main():
         cells=markdown_rows.get(row['operationId'])
         check(cells is not None and cells[1]==row['method']+' '+row['operationId'] and cells[2]==row['path'],'Markdown操作追踪不一致')
         check([s.strip() for s in cells[3].split(',')]==row['tables'],'Markdown表追踪与JSON不一致')
+        check(cells[4].split(',')==row['transactions'],'Markdown事务追踪与JSON不一致')
+        check(cells[5].split(',')==row['invariants'],'Markdown不变量追踪与JSON不一致')
     cases=check_cases(tables)
     diagram=ET.parse(ROOT/'database-erd.drawio').getroot()
     check(len(diagram.findall('diagram'))==4,'ER图页数')
@@ -192,7 +194,7 @@ def main():
     check('<!--' not in (ROOT/'database-erd.drawio').read_text(encoding='utf-8'),'图包含XML注释')
     check(shown==tables.keys(),'ER图遗漏实体')
     links=0
-    docs=list(ROOT.glob('*.md'))+[REPO/'README.md',REPO/'docs/README.md']+list((REPO/'docs/project').glob('*.md'))
+    docs=list(ROOT.glob('*.md'))+list((REPO/'docs/03-api').glob('*.md'))+[REPO/'README.md',REPO/'docs/README.md']+list((REPO/'docs/project').glob('*.md'))
     for p in docs:
         for dest in re.findall(r'\[[^\]]*\]\(([^)]+)\)',p.read_text(encoding='utf-8-sig')):
             dest=dest.strip('<>').split('#')[0]

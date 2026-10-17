@@ -3742,6 +3742,15 @@
         "json_shape": "OBJECT"
       },
       {
+        "name": "authorization_basis",
+        "type": "JSON",
+        "meaning": "内部重放授权事实：操作策略及完整目标范围；不能替代当前资格；完成时固定；JSON顶层OBJECT",
+        "nullable": true,
+        "default": null,
+        "generated": null,
+        "json_shape": "OBJECT"
+      },
+      {
         "name": "lease_token",
         "type": "CHAR(36) CHARACTER SET ascii COLLATE ascii_bin",
         "meaning": "当前处理者随机栅栏令牌；完成后清空",
@@ -3802,9 +3811,10 @@
       }
     ],
     "checks": [
-      "(state='IN_PROGRESS' AND http_status IS NULL AND safe_response IS NULL AND lease_token IS NOT NULL AND lease_until IS NOT NULL) OR (state='COMPLETED' AND http_status BETWEEN 200 AND 599 AND safe_response IS NOT NULL AND lease_token IS NULL AND lease_until IS NULL)",
+      "(state='IN_PROGRESS' AND http_status IS NULL AND safe_response IS NULL AND lease_token IS NOT NULL AND lease_until IS NOT NULL) OR (state='COMPLETED' AND http_status BETWEEN 200 AND 599 AND safe_response IS NOT NULL AND authorization_basis IS NOT NULL AND JSON_TYPE(authorization_basis)='OBJECT' AND lease_token IS NULL AND lease_until IS NULL)",
       "expires_at>created_at",
-      "JSON_TYPE(safe_response) = 'OBJECT'"
+      "JSON_TYPE(safe_response) = 'OBJECT'",
+      "JSON_TYPE(authorization_basis) = 'OBJECT'"
     ]
   },
   {

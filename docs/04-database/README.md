@@ -1,8 +1,8 @@
 # 数据库设计入口
 
-日期：2026-10-17（Asia/Shanghai）。数据库设计版本：1.0 草案交付；需求 V1.3；权威 API [openapi.yaml](../03-api/openapi.yaml) 1.1.0，输入提交 `2b78430`，SHA-256 `ec7ef9ef1ab046bb61cec9728c423c32f58311c850860be8ef54a9cf3a4798fd`。
+日期：2026-10-17（Asia/Shanghai）。数据库设计版本：1.1 草案；需求 V1.3；权威 API [openapi.yaml](../03-api/openapi.yaml) 1.2.0，SHA-256 `9910ceafadea88d85793d00f7bb4e6e5673700a8565366a407185c4517e0cbdf`。原输入为`2b78430/API1.1.0`，本次正式评审起点`e3fa818`。
 
-本次只完成数据库设计。没有启动 MySQL、连接任何数据库、执行 DDL、迁移资料、创建 ORM 实体或应用工程。并发场景均是设计推演。数据库阶段自查不表示后续正式跨阶段一致性评审已经完成。
+本次只完成数据库设计。没有启动 MySQL、连接任何数据库、执行 DDL、迁移资料、创建 ORM 实体或应用工程。并发场景均是设计推演。本次正式需求—API—数据库评审已完成并修订6项缺陷，设计层面有条件通过；见[CONSISTENCY-REVIEW.md](CONSISTENCY-REVIEW.md)。静态检查与设计推演不代替真实业务/引擎验证。
 
 ## 阅读与交付
 
@@ -19,6 +19,7 @@
 | [schema.sql](schema.sql)、[immutability.sql](immutability.sql) | MySQL建表/外键与不可变触发器草案，仅文本 |
 | [MIGRATION-VALIDATION.md](MIGRATION-VALIDATION.md) | 初始化、演进、后续真实MySQL验证计划及本轮静态复现 |
 | [REVIEW.md](REVIEW.md)、[VALIDATION.md](VALIDATION.md) | 自查、未决、详细设计交接及实际验证边界 |
+| [CONSISTENCY-REVIEW.md](CONSISTENCY-REVIEW.md)、[consistency-validation.json](consistency-validation.json) | 正式跨阶段评审、6项修订、25场景及12项静态回归 |
 
 [schema_model.py](schema_model.py) 是表元数据与文档生成器；[schema-model.json](schema-model.json) 为其可检查导出。它生成字典、键索引、DDL和图源，不生成业务代码、不执行SQL。[validate_design.py](validate_design.py) 只做静态检查。设计变化先修改元数据及对应人工说明，再生成并检查，避免维护三份互不一致的表结构。
 

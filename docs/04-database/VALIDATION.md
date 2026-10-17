@@ -1,5 +1,33 @@
 # 数据库设计验证记录
 
+## 正式跨阶段评审修订验证（数据库1.1 / API1.2.0）
+
+日期：2026-10-17；起点codex/database-design/e3fa818且工作区干净。正式结论、6项问题和25个文档场景见[CONSISTENCY-REVIEW.md](CONSISTENCY-REVIEW.md)。没有建库、连接数据库、执行SQL或业务实现。
+
+- API：OpenAPI3.1结构、1142引用、67入站/56路径/1出站/129模型、120模型示例/789媒体示例、原18项＋API评审25项场景全部通过；19组对象联合、467对分支证明互斥。`--baseline`另复现269d269的10项旧非法输入被接受，和本次e3fa818反例不同。
+- 本次跨阶段静态回归：[validate_consistency_review.py](validate_consistency_review.py)的8项JSON Schema场景＋4项有限CHECK表达式推演通过，精确检查15项无管理员幂等头例外、68项读写/幂等追踪、字段模型名称和本地Apifox覆盖派生配置。见[consistency-validation.json](consistency-validation.json)。C01/C04/C09/C11分别展示原契约或原CHECK与修订后的接受/拒绝差异；不是业务服务测试。
+- 固定Redocly CLI2.8.0本地lint通过，无错误/告警。未重复Prism Mock或尝试真实HTTP业务流程；Mock即使通过也不能证明本次授权/事务正确。
+- DDL元数据及MySQL方言静态解析：43表/356列/79外键/124条DDL、41触发器文本块、原20项CHECK表达式场景通过；当前SHA及完整计数见[static-validation.json](static-validation.json)。另4项HTTP幂等CHECK推演记录在跨阶段报告，不混计为引擎测试。全部字段/键/外键/索引/追踪/本地链接检查通过；图源与原先一致。
+- [validate_handoff.py](validate_handoff.py)检查需求同步清单、历史预览保留、需求图源、Python语法、决策编号和共享记忆；实际数量见[handoff-validation.json](handoff-validation.json)。正式需求未变，无需重新生成图或阅读副本。
+- 依赖只在隔离临时目录：PyYAML6.0.3、jsonschema4.26.0、openapi-spec-validator0.7.2、sqlglot27.28.1。首次普通沙箱pip因DNS失败、Redocly离线因未缓存失败；受控提升下载固定版本后实际重跑成功，没有把初次失败记成通过。未修改应用依赖或提交工具环境。
+- Git差异检查使用`git -c core.whitespace=cr-at-eol diff --check`及暂存区同等命令；保留旧文件原换行风格。只有本轮相关设计/验证/共享文档纳入提交，原型和正式工程不变。
+
+权威API1.2.0 SHA-256：`9910ceafadea88d85793d00f7bb4e6e5673700a8565366a407185c4517e0cbdf`。Apifox既有1.1.0导出仅是历史证据，当前1.2.0待人工同步；本次未重查远程或MCP，没有宣称同步完成。
+
+复现：先按API目录原隔离安装方法准备固定依赖；本次实际通过临时PYTHONPATH加载，不创建仓库venv。
+
+```powershell
+python docs/03-api/validate_contract.py --baseline
+python docs/04-database/validate_consistency_review.py --baseline e3fa818
+python docs/04-database/validate_design.py
+python docs/04-database/validate_handoff.py
+npx --yes @redocly/cli@2.8.0 lint docs/03-api/openapi.yaml --format=summary
+```
+
+以上只做结构/引用/Schema和有限表达式静态检查；25个业务场景是设计推演。**没有真实MySQL触发器编译、并发、JPA、故障恢复、SQL计划/性能、JWT或OA/HR集成通过结论。** 这些不再列为“尚未正式评审”，而是正式设计评审后的实现验证待办。
+
+## 数据库1.0首次交付验证历史
+
 日期：2026-10-17（Asia/Shanghai）。开始时`codex/api-design`、HEAD `2b78430`、工作区干净；与指定API分支/提交无差异。原地建立`codex/database-design`，没有worktree，没有合并main。
 
 ## 实际工具事实

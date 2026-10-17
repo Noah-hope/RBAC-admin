@@ -4,6 +4,11 @@
 
 DELIMITER $$
 
+CREATE TRIGGER `tr_http_idempotency_completed` BEFORE UPDATE ON `http_idempotency` FOR EACH ROW
+BEGIN
+  IF OLD.state='COMPLETED' AND (NOT (OLD.`id` <=> NEW.`id`) OR NOT (OLD.`principal_id` <=> NEW.`principal_id`) OR NOT (OLD.`http_method` <=> NEW.`http_method`) OR NOT (OLD.`canonical_path` <=> NEW.`canonical_path`) OR NOT (OLD.`idempotency_key` <=> NEW.`idempotency_key`) OR NOT (OLD.`request_digest` <=> NEW.`request_digest`) OR NOT (OLD.`digest_key_id` <=> NEW.`digest_key_id`) OR NOT (OLD.`state` <=> NEW.`state`) OR NOT (OLD.`http_status` <=> NEW.`http_status`) OR NOT (OLD.`resource_location` <=> NEW.`resource_location`) OR NOT (OLD.`safe_response` <=> NEW.`safe_response`) OR NOT (OLD.`authorization_basis` <=> NEW.`authorization_basis`) OR NOT (OLD.`lease_token` <=> NEW.`lease_token`) OR NOT (OLD.`lease_until` <=> NEW.`lease_until`) OR NOT (OLD.`expires_at` <=> NEW.`expires_at`) OR NOT (OLD.`created_at` <=> NEW.`created_at`)) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='completed HTTP result is immutable'; END IF;
+END$$
+
 CREATE TRIGGER `tr_change_request_fixed` BEFORE UPDATE ON `change_request` FOR EACH ROW
 BEGIN
   IF OLD.submitted_version IS NOT NULL AND (NOT (OLD.`id` <=> NEW.`id`) OR NOT (OLD.`kind` <=> NEW.`kind`) OR NOT (OLD.`company_id` <=> NEW.`company_id`) OR NOT (OLD.`content` <=> NEW.`content`) OR NOT (OLD.`reason` <=> NEW.`reason`) OR NOT (OLD.`draft_version` <=> NEW.`draft_version`) OR NOT (OLD.`submitted_version` <=> NEW.`submitted_version`) OR NOT (OLD.`submitted_at` <=> NEW.`submitted_at`) OR NOT (OLD.`submitted_by_account_id` <=> NEW.`submitted_by_account_id`) OR NOT (OLD.`authority_type` <=> NEW.`authority_type`) OR NOT (OLD.`scope_id` <=> NEW.`scope_id`) OR NOT (OLD.`appointment_id` <=> NEW.`appointment_id`) OR NOT (OLD.`original_authority` <=> NEW.`original_authority`) OR NOT (OLD.`fixed_payload_bytes` <=> NEW.`fixed_payload_bytes`) OR NOT (OLD.`content_digest` <=> NEW.`content_digest`)) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='fixed request is immutable'; END IF;

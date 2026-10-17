@@ -1,6 +1,6 @@
 # API字段与持久化映射
 
-权威契约1.1.0保持不变。API响应是当前联结/安全投影，不能把每个字段都机械建列。所有API `id` 对应稳定UUID字符串，所有createdAt/occurredAt/到期时间对应UTC DATETIME(6)，BINARY(32)摘要输出64位小写hex；分页page/pageSize/total是范围过滤后的查询结果。
+权威契约1.2.0（正式跨阶段评审修订，原输入1.1.0）。API响应是当前联结/安全投影，不能把每个字段都机械建列。所有API `id` 对应稳定UUID字符串，所有createdAt/occurredAt/到期时间对应UTC DATETIME(6)，BINARY(32)摘要输出64位小写hex；分页page/pageSize/total是范围过滤后的查询结果。
 
 | API资源/字段 | 持久化来源或生成方式 |
 | --- | --- |
@@ -53,14 +53,16 @@
 | OaSubmission全字段 | 从change_request固定规范字节/固定列读出，不用当前角色名称/权限重建；oa_outbox只保存待办与关联对象 |
 | OaLink.requestId/submittedVersion/contentDigest/oaApprovalId/acceptedAt | oa_link及固定申请联合校验/存储；不因回调自报审批号创建关联 |
 | OaFinalResult.eventId/requestId/oaApprovalId/submittedVersion/contentDigest/decision/isFinal/decidedAt/comment | callback_event.safe_payload/摘要+oa_final_result决定；isFinal仅接受true，不是可变状态列；审批号按oa_link匹配 |
-| OaReceiveResult各接收/重复/执行字段 | 回调防重记录、最终结果及当前申请执行状态联结；202仅表示可靠接收，不表示已执行 |
+| OaReceipt各接收/重复/执行字段 | 回调防重记录、最终结果及当前申请执行状态联结；202仅表示可靠接收，不表示已执行 |
 | ImportFile.id/fileName/sha256/sizeBytes/sheetNames/createdAt | import_file对应列；storage_ref仅内部服务端读，不当作公开任意下载URL |
 | ImportBatch.id/input/version/contentDigest/state/plannedCounts/actualCounts/blockingIssueCount/warningCount/failureCode/createdAt | import_batch对应列；input_snapshot完整保存ImportInput，包括fileId/sourceSystem/sourceBatchId/importType/worksheet/fieldMappings/organizationMappings/initialEmploymentState/reason |
 | ImportPlanChange.rowNumber/action/targetId/stableCode/expectedVersion/summary/companyCode/departmentCode/positionCode/fieldChanges | import_plan_row对应列；field_changes保存ImportValueChange的field/before/after；内部plan_no允许同一原行展开多规范动作，结果稳定按rowNumber/plan_no排序 |
 | ImportIssue.rowNumber/field/severity/code/message | import_issue对应列，只向当前总管理员开放；阻断问题不靠跳错行提交 |
 | ImportCounts八字段 | planned_counts/actual_counts JSON；实际失效grant/任命由同事务真实变化统计，非复制预检计数 |
 | CatalogResult/SourceCloseResult/EmployeeStateResult/ScopeResult及auditEventIds | 成功事务变更值和审计ID组成安全响应，同事务保存幂等结果；NO_CHANGE不制造假审批或假业务成功事件 |
-| AuthorizationResult/PermissionCheckResult/Menu/EffectiveOperation | T11新鲜一致快照计算，不持久化员工直接权限表/结果缓存；permissionType来自目标目录，未知编码类型null |
+| SourceCloseResult.visibility/hasUndisclosedImpact及失效计数 | 从完整实际失效结果按当前单项资格投影；不保存新业务表。混合申请不可完整查看则不返回其ID/计数；缓存同一安全投影 |
+| HTTP幂等内部授权事实（非API字段） | http_idempotency.authorization_basis固定操作策略及原目标/响应范围；删除草稿后仍可复核当前资格再重放，不能作为授权凭证 |
+| AuthorizationResult/CheckResult/Menu/EffectiveOperation | T11新鲜一致快照计算，不持久化员工直接权限表/结果缓存；permissionType来自目标目录，未知编码类型null |
 | Problem/requestId/errors、分页/排序参数 | 安全HTTP结果和诊断，不为每种错误/响应模型建表；无SQL/凭据进入响应或审计 |
 
 后台审计混合来源无法安全分隔时，完整审计事件visibility=GLOBAL，仅总管理员访问；同一申请的安全ChangeEvent时间线仍按当前整份申请资格读取，两种入口各按其契约过滤，不因持有requestId跳过授权。多系统批次不会为了适配单systemId审计字段而拆成多笔业务提交。

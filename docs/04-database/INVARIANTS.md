@@ -19,7 +19,7 @@
 | I-13 | source_epoch/source_version、relation_version非负及安全整数CHECK，持久保留 | T5推进所选每个来源周期，即使无grant；失效关系推进baseline；旧未结束已提交授予任一受影响则整份失效；员工停用/失去任职同理 | 执行先提交则关闭随后失效新grant；关闭先提交则旧授予拒绝；恢复不倒退周期 |
 | I-14 | oa_link(request)PK及(instance,approvalId)UQ；回调(instance,eventId)UQ；oa_final_result(request)PK | T10只接受可信实例，核对关联/摘要/版本；同event不同payload冲突，不同event同最终结果重复，新最终结果矛盾409；先存关联不能回调自绑 | 关联未落地409 OA_LINK_PENDING；接收未落地503；失效申请匹配迟到结果只留历史 |
 | I-15 | execution_success(request)PK，唯一成功audit引用；request触发器要求成功凭据及一致最终结果存在 | T4业务全清单、关系/配置版本、成功审计、success、状态、释放claim同事务；失败尝试在回滚后另存，先锁再看成功凭据 | 两执行器顺序取得锚点，后者回读成功；HTTP超时不新建申请；不出现第二个业务成功事件 |
-| I-16 | 幂等UQ(principal,method,path,key)，状态/响应/租约组合CHECK，持久expires_at | T0当前认证/范围之后、业务目标版本检查之前定位原结果；短事务预留摘要与租约，失败也不允许同key换内容；同token业务与成功结果同事务；密码用HMAC | 处理中409、不同摘要409；租约过期仅同内容恢复；失败结果不能覆盖已提交成功；回放是原接受结果，GET查当前申请；窗口过期不削弱长期业务防重 |
+| I-16 | 幂等UQ(principal,method,path,key)，完成时authorization_basis非空JSON对象CHECK，状态/响应/租约CHECK，持久expires_at；完成记录UPDATE触发器禁止改写 | T0当前认证/范围之后、业务目标版本检查之前定位原结果；以固定目标范围复核当前单项资格，删除后也可授权；短事务预留摘要与租约，失败也不允许同key换内容；同token业务/授权事实/安全响应同事务；密码用HMAC | 处理中409、不同摘要409；租约过期仅同内容恢复；资格已失401/403不回放；失败结果不能覆盖成功；窗口过期不削弱长期业务防重 |
 | I-17 | import_batch(source_system,source_batch_id)UQ；文件FK；sealed输入及行/报告不可变触发器；成功计数组合CHECK | T8预检冻结规范前后值/映射/候选code/依赖及不存在断言；正式提交逐条复核，全部1000行一个事务；明确动作顺序，不由缺行推删除 | 第N行失败全部回滚；唯一冲突/依赖变更STALE；FAILED保留原基线重试；成功原actualCounts长期回放 |
 | I-18 | 预览主体/上下文与输入/内容摘要持久化；明细UQ(preview,kind,key)去重 | T11同快照生成统计/分页、5分钟；读取重新鉴权，变小范围使原快照失效；创建权限与当前权限交集，不能当凭证；完整授权计算后安全投影 | 过期/目标清单或无变化分类改变409 PREVIEW_STALE；不泄露隐藏来源、混合申请ID/计数 |
 | I-19 | 审计append-only触发器；来源公司/部门FK；无级联；success唯一审计引用 | 每次成功动作与审计同事务；全局/混合不可分隔事件仅总管理员；关联申请也当前鉴权；历史名称/批准/执行区别快照 | 审计写入失败业务回滚；数据库不可用不宣称失败日志已落库；不倒推历史进入资格 |

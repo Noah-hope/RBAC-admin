@@ -581,6 +581,7 @@ CREATE TABLE `http_idempotency` (
   `http_status` SMALLINT NULL COMMENT '原接受HTTP状态码',
   `resource_location` VARCHAR(300) NULL COMMENT '原创建/接受资源地址，无则NULL',
   `safe_response` JSON NULL COMMENT '原安全响应；不含密码/JWT/哈希；JSON顶层OBJECT',
+  `authorization_basis` JSON NULL COMMENT '内部重放授权事实：操作策略及完整目标范围；不能替代当前资格；完成时固定；JSON顶层OBJECT',
   `lease_token` CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NULL COMMENT '当前处理者随机栅栏令牌；完成后清空',
   `lease_until` DATETIME(6) NULL COMMENT '处理中租约；过期仅允许同内容恢复接管',
   `expires_at` DATETIME(6) NOT NULL COMMENT '至少首次接受后7天；不删除长期业务防重',
@@ -588,9 +589,10 @@ CREATE TABLE `http_idempotency` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_http_idempotency_1` (`principal_id`, `http_method`, `canonical_path`, `idempotency_key`),
   KEY `ix_http_idempotency_1` (`expires_at`),
-  CONSTRAINT `ck_http_idempotency_1` CHECK ((state='IN_PROGRESS' AND http_status IS NULL AND safe_response IS NULL AND lease_token IS NOT NULL AND lease_until IS NOT NULL) OR (state='COMPLETED' AND http_status BETWEEN 200 AND 599 AND safe_response IS NOT NULL AND lease_token IS NULL AND lease_until IS NULL)),
+  CONSTRAINT `ck_http_idempotency_1` CHECK ((state='IN_PROGRESS' AND http_status IS NULL AND safe_response IS NULL AND lease_token IS NOT NULL AND lease_until IS NOT NULL) OR (state='COMPLETED' AND http_status BETWEEN 200 AND 599 AND safe_response IS NOT NULL AND authorization_basis IS NOT NULL AND JSON_TYPE(authorization_basis)='OBJECT' AND lease_token IS NULL AND lease_until IS NULL)),
   CONSTRAINT `ck_http_idempotency_2` CHECK (expires_at>created_at),
-  CONSTRAINT `ck_http_idempotency_3` CHECK (JSON_TYPE(safe_response) = 'OBJECT')
+  CONSTRAINT `ck_http_idempotency_3` CHECK (JSON_TYPE(safe_response) = 'OBJECT'),
+  CONSTRAINT `ck_http_idempotency_4` CHECK (JSON_TYPE(authorization_basis) = 'OBJECT')
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin COMMENT='HTTP接受结果窗口；独立于OA与业务成功防重';
 
 CREATE TABLE `import_file` (

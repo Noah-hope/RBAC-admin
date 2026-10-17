@@ -109,12 +109,13 @@
 
 本表维护统一含义和表达方式。项目状态与待办仍保存在 [MEMORY.md](MEMORY.md)，已确认决策保存在 [DECISIONS.md](DECISIONS.md)，阶段流程遵循 [WORKFLOW.md](WORKFLOW.md)。
 
-## 7. 数据库设计术语补充（2026-10-17）
+## 8. 数据库设计术语补充（2026-10-17）
 
 | 统一术语 | 技术表达 | 含义与边界 |
 | --- | --- | --- |
 | 关系基线 | grant_baseline、永久关系锚点 | 员工/角色/来源公司/部门的一条永久版本依据；具体授权结束后保留，重授新关系ID并推进版本，不是额外直接用户权限 |
 | 固定申请规范字节 | fixed_payload_bytes | 提交时RFC8785规范化摘要包原字节，供OA匹配；不是执行时读取当前资料重新拼出的快照 |
+| 幂等重放授权事实 | http_idempotency.authorization_basis | 服务端固定的操作策略及原目标/可见响应范围，用于对象删除后复核当前单项资格；不是授权凭证，也不是OA固定原资格originalAuthority |
 | 写事务锚点 | mutation_guard | 一期数据库设计的事务行锁协调点，串行本地状态变更；不授予管理或业务权限，等待OA/网络不持锁；技术取值见D-032 |
 
 来源授权周期sourceEpoch与来源对象version、永久关系版本relationVersion、准确grant历史版本、JPA存储row_version各有职责，见数据库TRANSACTIONS T12，不机械共用。明确结束最后适用任职后同批重新就职的离岗事件按D-033留周期/失效历史，仍有其他适用兼岗及仅岗位更名的保留规则不变。

@@ -1,4 +1,14 @@
-# API 契约评审修订验证（1.1.0）
+# API契约验证记录
+
+## 正式跨阶段修订验证（1.2.0，2026-10-17）
+
+在codex/database-design/e3fa818输入上开展正式需求—API—数据库评审，6项设计缺陷已修订，设计层面有条件通过。报告及兼容性见[正式评审](../04-database/CONSISTENCY-REVIEW.md)，完整实际命令与工具边界见[当前验证记录](../04-database/VALIDATION.md)。
+
+`validate_contract.py --baseline`实际通过：67入站/56路径/1出站/129模型、1142引用、120模型示例、789媒体示例、原18项及API评审25项Schema场景、19组联合/467对互斥分支、269d269首版10项缺陷复现。固定Redocly2.8.0 lint通过，无错误/告警。本次另有8项跨阶段Schema场景及4项数据库CHECK表达式静态推演，见[consistency-validation.json](../04-database/consistency-validation.json)；不是业务执行或数据库验证。
+
+权威契约1.2.0 SHA-256：`9910ceafadea88d85793d00f7bb4e6e5673700a8565366a407185c4517e0cbdf`。Apifox1.2.0尚未人工同步，原1.1.0指定导出及MCP差异记录保留。本轮没有运行Prism、真实服务/数据库/SQL/并发/JPA或OA集成，不能沿用旧Mock结果宣称新版业务正确。
+
+## 1.1.0单阶段评审验证历史
 
 日期：2026-10-16（Asia/Shanghai）。基线269d269；分支codex/api-design，开始时干净，沿用当前目录、不建worktree、不合并main。本轮只评审并修订API，报告见[REVIEW.md](REVIEW.md)。
 

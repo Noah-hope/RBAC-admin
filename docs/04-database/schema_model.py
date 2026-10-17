@@ -274,10 +274,11 @@ t('http_idempotency','HTTP接受结果窗口；独立于OA与业务成功防重'
     c('request_digest','BINARY(32)','包含版本/目标/规范内容的受保护摘要'),txt('digest_key_id',64,'摘要HMAC密钥版本；密钥不入库'),
     en('state',['IN_PROGRESS','COMPLETED'],'处理中或已接受结果'),c('http_status','SMALLINT','原接受HTTP状态码',True),
     txt('resource_location',300,'原创建/接受资源地址，无则NULL',True),js('safe_response','原安全响应；不含密码/JWT/哈希',True),
+    js('authorization_basis','内部重放授权事实：操作策略及完整目标范围；不能替代当前资格；完成时固定',True),
     ident('lease_token','当前处理者随机栅栏令牌；完成后清空',True),tm('lease_until','处理中租约；过期仅允许同内容恢复接管',True),
     tm('expires_at','至少首次接受后7天；不删除长期业务防重'),tm()],
     unique=[('principal_id','http_method','canonical_path','idempotency_key')],indexes=[('expires_at',)],
-    fks=[fk('principal_id','admin_account')],checks=["(state='IN_PROGRESS' AND http_status IS NULL AND safe_response IS NULL AND lease_token IS NOT NULL AND lease_until IS NOT NULL) OR (state='COMPLETED' AND http_status BETWEEN 200 AND 599 AND safe_response IS NOT NULL AND lease_token IS NULL AND lease_until IS NULL)", 'expires_at>created_at'])
+    fks=[fk('principal_id','admin_account')],checks=["(state='IN_PROGRESS' AND http_status IS NULL AND safe_response IS NULL AND lease_token IS NOT NULL AND lease_until IS NOT NULL) OR (state='COMPLETED' AND http_status BETWEEN 200 AND 599 AND safe_response IS NOT NULL AND authorization_basis IS NOT NULL AND JSON_TYPE(authorization_basis)='OBJECT' AND lease_token IS NULL AND lease_until IS NULL)", 'expires_at>created_at'])
 t('import_file','导入文件元数据；文件本体受控存储且不可原地覆盖',[
     ident(),txt('file_name',200,'原文件名，仅显示不参与路径拼接'),c('sha256','BINARY(32)','原文件字节摘要'),
     c('size_bytes','BIGINT','原文件大小'),txt('storage_ref',300,'服务端受控文件引用，非客户端任意URL'),
@@ -406,6 +407,8 @@ def generate_guards():
         return f"  IF {condition} THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT={q(message)}; END IF;"
     def diff(fields):
         return ' OR '.join(f'NOT (OLD.`{f}` <=> NEW.`{f}`)' for f in fields)
+    idem_fields=[col['name'] for table in TABLES if table['name']=='http_idempotency' for col in table['columns']]
+    trig('tr_http_idempotency_completed','UPDATE','http_idempotency',deny("OLD.state='COMPLETED' AND ("+diff(idem_fields)+')','completed HTTP result is immutable'))
     fixed=['id','kind','company_id','content','reason','draft_version','submitted_version','submitted_at',
            'submitted_by_account_id','authority_type','scope_id','appointment_id','original_authority','fixed_payload_bytes','content_digest']
     body=deny('OLD.submitted_version IS NOT NULL AND ('+diff(fixed)+')','fixed request is immutable')
