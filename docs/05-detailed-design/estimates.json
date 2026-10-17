@@ -1,0 +1,51 @@
+{
+  "capacityHours": {
+    "minimum": 40,
+    "maximum": 72
+  },
+  "totalHours": {
+    "low": 79.25,
+    "likely": 148.0,
+    "high": 244
+  },
+  "personLoad": {
+    "A": {
+      "low": 23.5,
+      "likely": 47.0,
+      "high": 76
+    },
+    "B": {
+      "low": 19.0,
+      "likely": 35.5,
+      "high": 59
+    },
+    "C": {
+      "low": 18.75,
+      "likely": 33.5,
+      "high": 55
+    },
+    "D": {
+      "low": 18.0,
+      "likely": 32.0,
+      "high": 54
+    }
+  },
+  "assumption": "人工有效小时、含任务评审；仅算容量下界，不假装精确工期；外部采购/等待未计；均为估算非实测",
+  "capacityLowerBounds": {
+    "low": {
+      "hoursPerPersonPerDay": 3,
+      "pooledCapacityDays": 7,
+      "fixedAssignmentCapacityDays": 8
+    },
+    "likely": {
+      "hoursPerPersonPerDay": 2.5,
+      "pooledCapacityDays": 15,
+      "fixedAssignmentCapacityDays": 19
+    },
+    "high": {
+      "hoursPerPersonPerDay": 2,
+      "pooledCapacityDays": 31,
+      "fixedAssignmentCapacityDays": 38
+    }
+  }
+}

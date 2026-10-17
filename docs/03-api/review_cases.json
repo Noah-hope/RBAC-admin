@@ -1,0 +1,1048 @@
+[
+  {
+    "name": "执行成功不能没有批准及固定依据",
+    "schema": "ChangeRequest",
+    "value": {
+      "id": "change_demo_01",
+      "content": {
+        "kind": "ROLE_GRANT",
+        "companyId": "company_demo_01",
+        "items": [
+          {
+            "employeeId": "emp_demo_01",
+            "roleId": "role_demo_01",
+            "sourceCompanyId": "company_demo_01",
+            "sourceDepartmentId": "dept_demo_a",
+            "expectedRoleConfigurationVersion": 3,
+            "expectedSourceEpoch": 2,
+            "expectedRelationVersion": 4,
+            "employmentIds": [
+              "employment_demo_01"
+            ]
+          }
+        ]
+      },
+      "reason": "新增兼岗授权，固定A部门来源。",
+      "draftVersion": 2,
+      "submittedVersion": null,
+      "contentDigest": null,
+      "statusVersion": 1,
+      "state": "EXECUTED",
+      "deliveryStatus": "NOT_SUBMITTED",
+      "approvalResult": "NONE",
+      "executionStatus": "NOT_STARTED",
+      "originalAuthority": null,
+      "submittedByAccountId": null,
+      "oaApprovalId": null,
+      "retryable": false,
+      "failureCode": null,
+      "nextRetryAt": null,
+      "createdAt": "2026-10-16T08:00:00Z",
+      "submittedAt": "2026-10-16T08:00:00Z"
+    },
+    "valid": false,
+    "baselineValue": {
+      "id": "change_demo_01",
+      "content": {
+        "kind": "ROLE_GRANT",
+        "companyId": "company_demo_01",
+        "items": [
+          {
+            "employeeId": "emp_demo_01",
+            "roleId": "role_demo_01",
+            "sourceCompanyId": "company_demo_01",
+            "sourceDepartmentId": "dept_demo_a",
+            "expectedRoleConfigurationVersion": 3,
+            "expectedSourceEpoch": 2,
+            "expectedRelationVersion": 4,
+            "employmentIds": [
+              "employment_demo_01"
+            ]
+          }
+        ]
+      },
+      "reason": "新增兼岗授权，固定A部门来源。",
+      "draftVersion": 2,
+      "submittedVersion": null,
+      "contentDigest": null,
+      "statusVersion": 1,
+      "state": "EXECUTED",
+      "deliveryStatus": "NOT_SUBMITTED",
+      "approvalResult": "NONE",
+      "executionStatus": "NOT_STARTED",
+      "originalAuthority": null,
+      "submittedByAccountId": null,
+      "oaApprovalId": null,
+      "retryable": false,
+      "failureCode": null,
+      "nextRetryAt": null,
+      "createdAt": "2026-10-16T08:00:00Z"
+    }
+  },
+  {
+    "name": "范围依据必须有范围ID",
+    "schema": "Authority",
+    "value": {
+      "kind": "SCOPE",
+      "scopeId": null,
+      "scopeVersion": 3,
+      "appointmentId": "appointment_demo_01",
+      "appointmentVersion": 1,
+      "companyId": "company_demo_01",
+      "departmentId": "dept_demo_a",
+      "systemIds": [
+        "system_demo_hr"
+      ]
+    },
+    "valid": false,
+    "baselineValue": {
+      "kind": "SCOPE",
+      "scopeId": null,
+      "scopeVersion": 3,
+      "appointmentId": "appointment_demo_01",
+      "appointmentVersion": 1,
+      "companyId": "company_demo_01",
+      "departmentId": "dept_demo_a",
+      "systemIds": [
+        "system_demo_hr"
+      ]
+    }
+  },
+  {
+    "name": "系统进入权限不能关联功能",
+    "schema": "Permission",
+    "value": {
+      "id": "demo_01",
+      "systemId": "demo_01",
+      "code": "demo_01",
+      "name": "示例值",
+      "permissionType": "SYSTEM_ACCESS",
+      "functionId": "function_demo_01",
+      "menuEligible": false,
+      "enabled": false,
+      "version": 0
+    },
+    "valid": false,
+    "baselineValue": {
+      "id": "demo_01",
+      "systemId": "demo_01",
+      "code": "demo_01",
+      "name": "示例值",
+      "permissionType": "SYSTEM_ACCESS",
+      "functionId": "function_demo_01",
+      "menuEligible": false,
+      "enabled": false,
+      "version": 0
+    }
+  },
+  {
+    "name": "父级引用不能两种同时指定",
+    "schema": "NodeCreate",
+    "value": {
+      "kind": "NODE_CREATE",
+      "localKey": "demo_01",
+      "code": "demo_01",
+      "name": "示例值",
+      "nodeType": "NAVIGATION",
+      "parentId": "parent_demo_01",
+      "parentLocalKey": "new_parent",
+      "sortOrder": 0,
+      "enabled": false,
+      "visibilityPermissionId": null,
+      "visibilityPermissionLocalKey": null
+    },
+    "valid": false,
+    "baselineValue": {
+      "kind": "NODE_CREATE",
+      "localKey": "demo_01",
+      "code": "demo_01",
+      "name": "示例值",
+      "nodeType": "NAVIGATION",
+      "parentId": "parent_demo_01",
+      "parentLocalKey": "new_parent",
+      "sortOrder": 0,
+      "enabled": false,
+      "visibilityPermissionId": null,
+      "visibilityPermissionLocalKey": null
+    }
+  },
+  {
+    "name": "功能操作创建必须有归属",
+    "schema": "PermissionCreate",
+    "value": {
+      "kind": "PERMISSION_CREATE",
+      "localKey": "demo_01",
+      "functionId": null,
+      "functionLocalKey": null,
+      "code": "demo_01",
+      "name": "示例值",
+      "menuEligible": false,
+      "enabled": false
+    },
+    "valid": false,
+    "baselineValue": {
+      "kind": "PERMISSION_CREATE",
+      "localKey": "demo_01",
+      "functionId": null,
+      "functionLocalKey": null,
+      "code": "demo_01",
+      "name": "示例值",
+      "menuEligible": false,
+      "enabled": false
+    }
+  },
+  {
+    "name": "无进入权限不得返回可用操作",
+    "schema": "AuthorizationResult",
+    "value": {
+      "employeeKey": "demo.employee",
+      "companyId": "company_demo_01",
+      "systemId": "system_demo_hr",
+      "systemCode": "hr",
+      "canAccessSystem": false,
+      "menus": [],
+      "operations": [
+        {
+          "permissionId": "p1",
+          "permissionCode": "employee:edit",
+          "functionId": "f1",
+          "functionCode": "employee"
+        }
+      ],
+      "evaluatedAt": "2026-10-16T08:00:00Z",
+      "requestId": "demo-query-01"
+    },
+    "valid": false,
+    "baselineValue": {
+      "employeeKey": "demo.employee",
+      "companyId": "company_demo_01",
+      "systemId": "system_demo_hr",
+      "systemCode": "hr",
+      "canAccessSystem": false,
+      "menus": [],
+      "operations": [
+        {
+          "permissionId": "p1",
+          "permissionCode": "employee:edit",
+          "functionId": "f1",
+          "functionCode": "employee"
+        }
+      ],
+      "evaluatedAt": "2026-10-16T08:00:00Z",
+      "requestId": "demo-query-01"
+    }
+  },
+  {
+    "name": "未知权限类型不能放行",
+    "schema": "CheckResult",
+    "value": {
+      "employeeKey": "demo.employee",
+      "companyId": "company_demo_01",
+      "systemId": "system_demo_hr",
+      "permissionCode": "employee:edit",
+      "permissionType": null,
+      "hasPermission": true,
+      "evaluatedAt": "2026-10-16T08:00:00Z",
+      "requestId": "demo-check-01"
+    },
+    "valid": false,
+    "baselineValue": {
+      "employeeKey": "demo.employee",
+      "companyId": "company_demo_01",
+      "systemId": "system_demo_hr",
+      "permissionCode": "employee:edit",
+      "permissionType": null,
+      "hasPermission": true,
+      "evaluatedAt": "2026-10-16T08:00:00Z",
+      "requestId": "demo-check-01"
+    }
+  },
+  {
+    "name": "驳回结果不能执行成功",
+    "schema": "OaReceipt",
+    "value": {
+      "receiptId": "receipt_demo_01",
+      "requestId": "change_demo_01",
+      "accepted": true,
+      "duplicate": false,
+      "approvalResult": "REJECTED",
+      "executionStatus": "SUCCEEDED",
+      "retryable": true
+    },
+    "valid": false,
+    "baselineValue": {
+      "receiptId": "receipt_demo_01",
+      "requestId": "change_demo_01",
+      "accepted": true,
+      "duplicate": false,
+      "approvalResult": "REJECTED",
+      "executionStatus": "SUCCEEDED",
+      "retryable": true
+    }
+  },
+  {
+    "name": "已提交结果不能仍是草稿",
+    "schema": "SubmissionResult",
+    "value": {
+      "outcome": "SUBMITTED",
+      "request": {
+        "id": "change_demo_01",
+        "content": {
+          "kind": "ROLE_GRANT",
+          "companyId": "company_demo_01",
+          "items": [
+            {
+              "employeeId": "emp_demo_01",
+              "roleId": "role_demo_01",
+              "sourceCompanyId": "company_demo_01",
+              "sourceDepartmentId": "dept_demo_a",
+              "expectedRoleConfigurationVersion": 3,
+              "expectedSourceEpoch": 2,
+              "expectedRelationVersion": 4,
+              "employmentIds": [
+                "employment_demo_01"
+              ]
+            }
+          ]
+        },
+        "reason": "新增兼岗授权，固定A部门来源。",
+        "draftVersion": 2,
+        "submittedVersion": null,
+        "contentDigest": null,
+        "statusVersion": 1,
+        "state": "DRAFT",
+        "deliveryStatus": "NOT_SUBMITTED",
+        "approvalResult": "NONE",
+        "executionStatus": "NOT_STARTED",
+        "originalAuthority": null,
+        "submittedByAccountId": null,
+        "oaApprovalId": null,
+        "retryable": false,
+        "failureCode": null,
+        "nextRetryAt": null,
+        "createdAt": "2026-10-16T08:00:00Z",
+        "submittedAt": null
+      },
+      "noChangeItems": []
+    },
+    "valid": false,
+    "baselineValue": {
+      "outcome": "SUBMITTED",
+      "request": {
+        "id": "change_demo_01",
+        "content": {
+          "kind": "ROLE_GRANT",
+          "companyId": "company_demo_01",
+          "items": [
+            {
+              "employeeId": "emp_demo_01",
+              "roleId": "role_demo_01",
+              "sourceCompanyId": "company_demo_01",
+              "sourceDepartmentId": "dept_demo_a",
+              "expectedRoleConfigurationVersion": 3,
+              "expectedSourceEpoch": 2,
+              "expectedRelationVersion": 4,
+              "employmentIds": [
+                "employment_demo_01"
+              ]
+            }
+          ]
+        },
+        "reason": "新增兼岗授权，固定A部门来源。",
+        "draftVersion": 2,
+        "submittedVersion": null,
+        "contentDigest": null,
+        "statusVersion": 1,
+        "state": "DRAFT",
+        "deliveryStatus": "NOT_SUBMITTED",
+        "approvalResult": "NONE",
+        "executionStatus": "NOT_STARTED",
+        "originalAuthority": null,
+        "submittedByAccountId": null,
+        "oaApprovalId": null,
+        "retryable": false,
+        "failureCode": null,
+        "nextRetryAt": null,
+        "createdAt": "2026-10-16T08:00:00Z"
+      },
+      "noChangeItems": []
+    }
+  },
+  {
+    "name": "未生效角色不能有有效权限配置",
+    "schema": "Role",
+    "value": {
+      "id": "demo_01",
+      "code": "demo_01",
+      "name": "示例值",
+      "description": "示例值",
+      "companyId": "demo_01",
+      "departmentId": null,
+      "systemId": "demo_01",
+      "state": "UNCONFIGURED",
+      "metadataVersion": 1,
+      "configurationVersion": 3,
+      "permissionIds": [
+        "perm_demo_access",
+        "perm_demo_view"
+      ],
+      "activeChangeRequestId": null,
+      "createdAt": "2026-10-16T08:00:00Z"
+    },
+    "valid": false,
+    "baselineValue": {
+      "id": "demo_01",
+      "code": "demo_01",
+      "name": "示例值",
+      "description": "示例值",
+      "companyId": "demo_01",
+      "departmentId": null,
+      "systemId": "demo_01",
+      "state": "UNCONFIGURED",
+      "metadataVersion": 1,
+      "configurationVersion": 3,
+      "permissionIds": [
+        "perm_demo_access",
+        "perm_demo_view"
+      ],
+      "activeChangeRequestId": null,
+      "createdAt": "2026-10-16T08:00:00Z"
+    }
+  },
+  {
+    "name": "合法待投递固定申请",
+    "schema": "ChangeRequest",
+    "value": {
+      "id": "change_demo_01",
+      "content": {
+        "kind": "ROLE_GRANT",
+        "companyId": "company_demo_01",
+        "items": [
+          {
+            "employeeId": "emp_demo_01",
+            "roleId": "role_demo_01",
+            "sourceCompanyId": "company_demo_01",
+            "sourceDepartmentId": "dept_demo_a",
+            "expectedRoleConfigurationVersion": 3,
+            "expectedSourceEpoch": 2,
+            "expectedRelationVersion": 4,
+            "employmentIds": [
+              "employment_demo_01"
+            ]
+          }
+        ]
+      },
+      "reason": "新增兼岗授权，固定A部门来源。",
+      "draftVersion": 2,
+      "submittedVersion": 1,
+      "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "statusVersion": 2,
+      "state": "PENDING",
+      "deliveryStatus": "PENDING_SEND",
+      "approvalResult": "NONE",
+      "executionStatus": "NOT_STARTED",
+      "originalAuthority": {
+        "kind": "SCOPE",
+        "scopeId": "scope_demo_01",
+        "scopeVersion": 3,
+        "appointmentId": "appointment_demo_01",
+        "appointmentVersion": 1,
+        "companyId": "company_demo_01",
+        "departmentId": "dept_demo_a",
+        "systemIds": [
+          "system_demo_hr"
+        ]
+      },
+      "submittedByAccountId": "account_demo_01",
+      "oaApprovalId": null,
+      "retryable": false,
+      "failureCode": null,
+      "nextRetryAt": null,
+      "createdAt": "2026-10-16T08:00:00Z",
+      "submittedAt": "2026-10-16T08:00:00Z"
+    },
+    "valid": true
+  },
+  {
+    "name": "合法状态组合REJECTEDREJECTED",
+    "schema": "ChangeRequest",
+    "value": {
+      "id": "change_demo_01",
+      "content": {
+        "kind": "ROLE_GRANT",
+        "companyId": "company_demo_01",
+        "items": [
+          {
+            "employeeId": "emp_demo_01",
+            "roleId": "role_demo_01",
+            "sourceCompanyId": "company_demo_01",
+            "sourceDepartmentId": "dept_demo_a",
+            "expectedRoleConfigurationVersion": 3,
+            "expectedSourceEpoch": 2,
+            "expectedRelationVersion": 4,
+            "employmentIds": [
+              "employment_demo_01"
+            ]
+          }
+        ]
+      },
+      "reason": "新增兼岗授权，固定A部门来源。",
+      "draftVersion": 2,
+      "submittedVersion": 1,
+      "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "statusVersion": 2,
+      "state": "REJECTED",
+      "deliveryStatus": "LINKED",
+      "approvalResult": "REJECTED",
+      "executionStatus": "NOT_STARTED",
+      "originalAuthority": {
+        "kind": "SCOPE",
+        "scopeId": "scope_demo_01",
+        "scopeVersion": 3,
+        "appointmentId": "appointment_demo_01",
+        "appointmentVersion": 1,
+        "companyId": "company_demo_01",
+        "departmentId": "dept_demo_a",
+        "systemIds": [
+          "system_demo_hr"
+        ]
+      },
+      "submittedByAccountId": "account_demo_01",
+      "oaApprovalId": "oa_demo_01",
+      "retryable": false,
+      "failureCode": null,
+      "nextRetryAt": null,
+      "createdAt": "2026-10-16T08:00:00Z",
+      "submittedAt": "2026-10-16T08:00:00Z"
+    },
+    "valid": true
+  },
+  {
+    "name": "合法状态组合APPROVEDAPPROVED",
+    "schema": "ChangeRequest",
+    "value": {
+      "id": "change_demo_01",
+      "content": {
+        "kind": "ROLE_GRANT",
+        "companyId": "company_demo_01",
+        "items": [
+          {
+            "employeeId": "emp_demo_01",
+            "roleId": "role_demo_01",
+            "sourceCompanyId": "company_demo_01",
+            "sourceDepartmentId": "dept_demo_a",
+            "expectedRoleConfigurationVersion": 3,
+            "expectedSourceEpoch": 2,
+            "expectedRelationVersion": 4,
+            "employmentIds": [
+              "employment_demo_01"
+            ]
+          }
+        ]
+      },
+      "reason": "新增兼岗授权，固定A部门来源。",
+      "draftVersion": 2,
+      "submittedVersion": 1,
+      "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "statusVersion": 2,
+      "state": "APPROVED",
+      "deliveryStatus": "LINKED",
+      "approvalResult": "APPROVED",
+      "executionStatus": "PENDING",
+      "originalAuthority": {
+        "kind": "SCOPE",
+        "scopeId": "scope_demo_01",
+        "scopeVersion": 3,
+        "appointmentId": "appointment_demo_01",
+        "appointmentVersion": 1,
+        "companyId": "company_demo_01",
+        "departmentId": "dept_demo_a",
+        "systemIds": [
+          "system_demo_hr"
+        ]
+      },
+      "submittedByAccountId": "account_demo_01",
+      "oaApprovalId": "oa_demo_01",
+      "retryable": true,
+      "failureCode": null,
+      "nextRetryAt": null,
+      "createdAt": "2026-10-16T08:00:00Z",
+      "submittedAt": "2026-10-16T08:00:00Z"
+    },
+    "valid": true
+  },
+  {
+    "name": "合法状态组合EXECUTEDAPPROVED",
+    "schema": "ChangeRequest",
+    "value": {
+      "id": "change_demo_01",
+      "content": {
+        "kind": "ROLE_GRANT",
+        "companyId": "company_demo_01",
+        "items": [
+          {
+            "employeeId": "emp_demo_01",
+            "roleId": "role_demo_01",
+            "sourceCompanyId": "company_demo_01",
+            "sourceDepartmentId": "dept_demo_a",
+            "expectedRoleConfigurationVersion": 3,
+            "expectedSourceEpoch": 2,
+            "expectedRelationVersion": 4,
+            "employmentIds": [
+              "employment_demo_01"
+            ]
+          }
+        ]
+      },
+      "reason": "新增兼岗授权，固定A部门来源。",
+      "draftVersion": 2,
+      "submittedVersion": 1,
+      "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "statusVersion": 2,
+      "state": "EXECUTED",
+      "deliveryStatus": "LINKED",
+      "approvalResult": "APPROVED",
+      "executionStatus": "SUCCEEDED",
+      "originalAuthority": {
+        "kind": "SCOPE",
+        "scopeId": "scope_demo_01",
+        "scopeVersion": 3,
+        "appointmentId": "appointment_demo_01",
+        "appointmentVersion": 1,
+        "companyId": "company_demo_01",
+        "departmentId": "dept_demo_a",
+        "systemIds": [
+          "system_demo_hr"
+        ]
+      },
+      "submittedByAccountId": "account_demo_01",
+      "oaApprovalId": "oa_demo_01",
+      "retryable": false,
+      "failureCode": null,
+      "nextRetryAt": null,
+      "createdAt": "2026-10-16T08:00:00Z",
+      "submittedAt": "2026-10-16T08:00:00Z"
+    },
+    "valid": true
+  },
+  {
+    "name": "合法状态组合EXECUTION_FAILEDAPPROVED",
+    "schema": "ChangeRequest",
+    "value": {
+      "id": "change_demo_01",
+      "content": {
+        "kind": "ROLE_GRANT",
+        "companyId": "company_demo_01",
+        "items": [
+          {
+            "employeeId": "emp_demo_01",
+            "roleId": "role_demo_01",
+            "sourceCompanyId": "company_demo_01",
+            "sourceDepartmentId": "dept_demo_a",
+            "expectedRoleConfigurationVersion": 3,
+            "expectedSourceEpoch": 2,
+            "expectedRelationVersion": 4,
+            "employmentIds": [
+              "employment_demo_01"
+            ]
+          }
+        ]
+      },
+      "reason": "新增兼岗授权，固定A部门来源。",
+      "draftVersion": 2,
+      "submittedVersion": 1,
+      "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "statusVersion": 2,
+      "state": "EXECUTION_FAILED",
+      "deliveryStatus": "LINKED",
+      "approvalResult": "APPROVED",
+      "executionStatus": "FAILED",
+      "originalAuthority": {
+        "kind": "SCOPE",
+        "scopeId": "scope_demo_01",
+        "scopeVersion": 3,
+        "appointmentId": "appointment_demo_01",
+        "appointmentVersion": 1,
+        "companyId": "company_demo_01",
+        "departmentId": "dept_demo_a",
+        "systemIds": [
+          "system_demo_hr"
+        ]
+      },
+      "submittedByAccountId": "account_demo_01",
+      "oaApprovalId": "oa_demo_01",
+      "retryable": true,
+      "failureCode": "EXECUTION_STORAGE_FAILURE",
+      "nextRetryAt": "2026-10-16T08:01:00Z",
+      "createdAt": "2026-10-16T08:00:00Z",
+      "submittedAt": "2026-10-16T08:00:00Z"
+    },
+    "valid": true
+  },
+  {
+    "name": "合法状态组合INVALIDATEDAPPROVED",
+    "schema": "ChangeRequest",
+    "value": {
+      "id": "change_demo_01",
+      "content": {
+        "kind": "ROLE_GRANT",
+        "companyId": "company_demo_01",
+        "items": [
+          {
+            "employeeId": "emp_demo_01",
+            "roleId": "role_demo_01",
+            "sourceCompanyId": "company_demo_01",
+            "sourceDepartmentId": "dept_demo_a",
+            "expectedRoleConfigurationVersion": 3,
+            "expectedSourceEpoch": 2,
+            "expectedRelationVersion": 4,
+            "employmentIds": [
+              "employment_demo_01"
+            ]
+          }
+        ]
+      },
+      "reason": "新增兼岗授权，固定A部门来源。",
+      "draftVersion": 2,
+      "submittedVersion": 1,
+      "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "statusVersion": 2,
+      "state": "INVALIDATED",
+      "deliveryStatus": "LINKED",
+      "approvalResult": "APPROVED",
+      "executionStatus": "INVALIDATED",
+      "originalAuthority": {
+        "kind": "SCOPE",
+        "scopeId": "scope_demo_01",
+        "scopeVersion": 3,
+        "appointmentId": "appointment_demo_01",
+        "appointmentVersion": 1,
+        "companyId": "company_demo_01",
+        "departmentId": "dept_demo_a",
+        "systemIds": [
+          "system_demo_hr"
+        ]
+      },
+      "submittedByAccountId": "account_demo_01",
+      "oaApprovalId": "oa_demo_01",
+      "retryable": false,
+      "failureCode": "SOURCE_EPOCH_CHANGED",
+      "nextRetryAt": null,
+      "createdAt": "2026-10-16T08:00:00Z",
+      "submittedAt": "2026-10-16T08:00:00Z"
+    },
+    "valid": true
+  },
+  {
+    "name": "合法状态组合INVALIDATEDREJECTED",
+    "schema": "ChangeRequest",
+    "value": {
+      "id": "change_demo_01",
+      "content": {
+        "kind": "ROLE_GRANT",
+        "companyId": "company_demo_01",
+        "items": [
+          {
+            "employeeId": "emp_demo_01",
+            "roleId": "role_demo_01",
+            "sourceCompanyId": "company_demo_01",
+            "sourceDepartmentId": "dept_demo_a",
+            "expectedRoleConfigurationVersion": 3,
+            "expectedSourceEpoch": 2,
+            "expectedRelationVersion": 4,
+            "employmentIds": [
+              "employment_demo_01"
+            ]
+          }
+        ]
+      },
+      "reason": "新增兼岗授权，固定A部门来源。",
+      "draftVersion": 2,
+      "submittedVersion": 1,
+      "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "statusVersion": 2,
+      "state": "INVALIDATED",
+      "deliveryStatus": "LINKED",
+      "approvalResult": "REJECTED",
+      "executionStatus": "INVALIDATED",
+      "originalAuthority": {
+        "kind": "SCOPE",
+        "scopeId": "scope_demo_01",
+        "scopeVersion": 3,
+        "appointmentId": "appointment_demo_01",
+        "appointmentVersion": 1,
+        "companyId": "company_demo_01",
+        "departmentId": "dept_demo_a",
+        "systemIds": [
+          "system_demo_hr"
+        ]
+      },
+      "submittedByAccountId": "account_demo_01",
+      "oaApprovalId": "oa_demo_01",
+      "retryable": false,
+      "failureCode": "SOURCE_EPOCH_CHANGED",
+      "nextRetryAt": null,
+      "createdAt": "2026-10-16T08:00:00Z",
+      "submittedAt": "2026-10-16T08:00:00Z"
+    },
+    "valid": true
+  },
+  {
+    "name": "未关联OA前来源关闭可记录失效",
+    "schema": "ChangeRequest",
+    "value": {
+      "id": "change_demo_01",
+      "content": {
+        "kind": "ROLE_GRANT",
+        "companyId": "company_demo_01",
+        "items": [
+          {
+            "employeeId": "emp_demo_01",
+            "roleId": "role_demo_01",
+            "sourceCompanyId": "company_demo_01",
+            "sourceDepartmentId": "dept_demo_a",
+            "expectedRoleConfigurationVersion": 3,
+            "expectedSourceEpoch": 2,
+            "expectedRelationVersion": 4,
+            "employmentIds": [
+              "employment_demo_01"
+            ]
+          }
+        ]
+      },
+      "reason": "新增兼岗授权，固定A部门来源。",
+      "draftVersion": 2,
+      "submittedVersion": 1,
+      "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "statusVersion": 2,
+      "state": "INVALIDATED",
+      "deliveryStatus": "SEND_FAILED",
+      "approvalResult": "NONE",
+      "executionStatus": "INVALIDATED",
+      "originalAuthority": {
+        "kind": "SCOPE",
+        "scopeId": "scope_demo_01",
+        "scopeVersion": 3,
+        "appointmentId": "appointment_demo_01",
+        "appointmentVersion": 1,
+        "companyId": "company_demo_01",
+        "departmentId": "dept_demo_a",
+        "systemIds": [
+          "system_demo_hr"
+        ]
+      },
+      "submittedByAccountId": "account_demo_01",
+      "oaApprovalId": null,
+      "retryable": false,
+      "failureCode": "SOURCE_EPOCH_CHANGED",
+      "nextRetryAt": null,
+      "createdAt": "2026-10-16T08:00:00Z",
+      "submittedAt": "2026-10-16T08:00:00Z"
+    },
+    "valid": true
+  },
+  {
+    "name": "合法未提交草稿",
+    "schema": "ChangeRequest",
+    "value": {
+      "id": "change_demo_01",
+      "content": {
+        "kind": "ROLE_GRANT",
+        "companyId": "company_demo_01",
+        "items": [
+          {
+            "employeeId": "emp_demo_01",
+            "roleId": "role_demo_01",
+            "sourceCompanyId": "company_demo_01",
+            "sourceDepartmentId": "dept_demo_a",
+            "expectedRoleConfigurationVersion": 3,
+            "expectedSourceEpoch": 2,
+            "expectedRelationVersion": 4,
+            "employmentIds": [
+              "employment_demo_01"
+            ]
+          }
+        ]
+      },
+      "reason": "新增兼岗授权，固定A部门来源。",
+      "draftVersion": 2,
+      "submittedVersion": null,
+      "contentDigest": null,
+      "statusVersion": 1,
+      "state": "DRAFT",
+      "deliveryStatus": "NOT_SUBMITTED",
+      "approvalResult": "NONE",
+      "executionStatus": "NOT_STARTED",
+      "originalAuthority": null,
+      "submittedByAccountId": null,
+      "oaApprovalId": null,
+      "retryable": false,
+      "failureCode": null,
+      "nextRetryAt": null,
+      "createdAt": "2026-10-16T08:00:00Z",
+      "submittedAt": null
+    },
+    "valid": true
+  },
+  {
+    "name": "总管理员全局依据不要求任命",
+    "schema": "Authority",
+    "value": {
+      "kind": "GLOBAL",
+      "scopeId": null,
+      "scopeVersion": null,
+      "appointmentId": null,
+      "appointmentVersion": null,
+      "companyId": "company_demo_01",
+      "departmentId": null,
+      "systemIds": [
+        "system_demo_hr"
+      ]
+    },
+    "valid": true
+  },
+  {
+    "name": "新功能操作可绑定本地引用",
+    "schema": "PermissionCreate",
+    "value": {
+      "kind": "PERMISSION_CREATE",
+      "localKey": "demo_01",
+      "functionId": null,
+      "functionLocalKey": "new_function",
+      "code": "demo_01",
+      "name": "示例值",
+      "menuEligible": false,
+      "enabled": false
+    },
+    "valid": true
+  },
+  {
+    "name": "同批新功能可绑定新查看操作",
+    "schema": "NodeCreate",
+    "value": {
+      "kind": "NODE_CREATE",
+      "localKey": "demo_01",
+      "code": "demo_01",
+      "name": "示例值",
+      "nodeType": "FUNCTION",
+      "parentId": null,
+      "parentLocalKey": null,
+      "sortOrder": 0,
+      "enabled": true,
+      "visibilityPermissionId": null,
+      "visibilityPermissionLocalKey": "new_view"
+    },
+    "valid": true
+  },
+  {
+    "name": "启用功能不能无可见权限",
+    "schema": "NodeCreate",
+    "value": {
+      "kind": "NODE_CREATE",
+      "localKey": "demo_01",
+      "code": "demo_01",
+      "name": "示例值",
+      "nodeType": "FUNCTION",
+      "parentId": null,
+      "parentLocalKey": null,
+      "sortOrder": 0,
+      "enabled": true,
+      "visibilityPermissionId": null,
+      "visibilityPermissionLocalKey": null
+    },
+    "valid": false
+  },
+  {
+    "name": "全部无变化预览允许空候选",
+    "schema": "ChangePreview",
+    "value": {
+      "preview": {
+        "id": "demo_01",
+        "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "expiresAt": "2026-10-16T08:00:00Z",
+        "impact": {
+          "visibleEmployeeCount": 0,
+          "visibleLosingAccessCount": 0,
+          "visibleRetainingAccessCount": 0,
+          "visibleGainingAccessCount": 0,
+          "visibility": "COMPLETE",
+          "hasUndisclosedImpact": false,
+          "warning": "示例值",
+          "visibleRoleCount": 0,
+          "visibleGrantCount": 0,
+          "visibleSourceCount": 0,
+          "visibleAppointmentCount": 0,
+          "visiblePendingRequestCount": 0
+        },
+        "warnings": []
+      },
+      "draftId": "change_demo_01",
+      "draftVersion": 2,
+      "addedPermissionIds": [],
+      "removedPermissionIds": [],
+      "effectiveContent": null,
+      "noChangeItems": [
+        {
+          "index": 0,
+          "reason": "ALREADY_GRANTED",
+          "grantId": "grant_demo_01"
+        }
+      ]
+    },
+    "valid": true
+  },
+  {
+    "name": "固定提交版本不能超出JSON安全整数",
+    "schema": "ChangeRequest",
+    "value": {
+      "id": "change_demo_01",
+      "content": {
+        "kind": "ROLE_GRANT",
+        "companyId": "company_demo_01",
+        "items": [
+          {
+            "employeeId": "emp_demo_01",
+            "roleId": "role_demo_01",
+            "sourceCompanyId": "company_demo_01",
+            "sourceDepartmentId": "dept_demo_a",
+            "expectedRoleConfigurationVersion": 3,
+            "expectedSourceEpoch": 2,
+            "expectedRelationVersion": 4,
+            "employmentIds": [
+              "employment_demo_01"
+            ]
+          }
+        ]
+      },
+      "reason": "新增兼岗授权，固定A部门来源。",
+      "draftVersion": 2,
+      "submittedVersion": 9007199254740992,
+      "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "statusVersion": 2,
+      "state": "PENDING",
+      "deliveryStatus": "PENDING_SEND",
+      "approvalResult": "NONE",
+      "executionStatus": "NOT_STARTED",
+      "originalAuthority": {
+        "kind": "SCOPE",
+        "scopeId": "scope_demo_01",
+        "scopeVersion": 3,
+        "appointmentId": "appointment_demo_01",
+        "appointmentVersion": 1,
+        "companyId": "company_demo_01",
+        "departmentId": "dept_demo_a",
+        "systemIds": [
+          "system_demo_hr"
+        ]
+      },
+      "submittedByAccountId": "account_demo_01",
+      "oaApprovalId": null,
+      "retryable": false,
+      "failureCode": null,
+      "nextRetryAt": null,
+      "createdAt": "2026-10-16T08:00:00Z",
+      "submittedAt": "2026-10-16T08:00:00Z"
+    },
+    "valid": false
+  }
+]

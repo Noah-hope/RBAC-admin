@@ -1,0 +1,192 @@
+<mxfile host="app.diagrams.net" type="device" version="detailed-design-1.0">
+  <diagram id="A" name="A 模块层次与调用概览">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" page="1" pageWidth="1600" pageHeight="1200" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="input" value="三类HTTP入口 / 演示调用方" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="580" y="30" width="360" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="M12" value="M12 HTTP适配与装配" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#dbeafe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="580" y="140" width="360" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="scheduler" value="启动/定时扫描（内部任务）" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#f1f5f9;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="1080" y="140" width="380" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="M01" value="M01 后台账号、JWT与会话" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#eef2ff;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="70" y="285" width="300" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="M03" value="M03 范围与管理员任命基础操作" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#eef2ff;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="440" y="285" width="300" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="M04" value="M04 系统、目录和权限" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#eef2ff;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="810" y="285" width="300" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="M05" value="M05 角色元数据与有效配置" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#eef2ff;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="1180" y="285" width="300" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="M07" value="M07 草稿、固定申请与占用" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#eef2ff;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="70" y="455" width="300" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="M08" value="M08 OA投递、关联和最终结果接收" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#eef2ff;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="440" y="455" width="300" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="M09" value="M09 已批准申请自动执行与恢复" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#eef2ff;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="810" y="455" width="300" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="M10" value="M10 关权、员工/范围变更及HR原子导入" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#eef2ff;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="1180" y="455" width="300" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="M02" value="M02 组织/任职基础" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#fef3c7;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="70" y="650" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="M06" value="M06 来源/关系基础" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#fef3c7;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="440" y="650" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="M11" value="M11 安全读投影/影响计算" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#dcfce7;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="810" y="650" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="M00" value="M00 事务/幂等/审计/公共契约" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#f1f5f9;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="440" y="850" width="670" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="db" value="MySQL8.4 / 文件持久目录&#10;单应用，OA仅演示适配" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#ffedd5;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="440" y="1020" width="670" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-0" value="认证与路由" edge="1" parent="1" source="input" target="M12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-1" value="委派" edge="1" parent="1" source="M12" target="M01" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-2" value="委派" edge="1" parent="1" source="M12" target="M03" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-3" value="委派" edge="1" parent="1" source="M12" target="M04" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-4" value="委派" edge="1" parent="1" source="M12" target="M05" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-5" value="委派" edge="1" parent="1" source="M12" target="M07" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-6" value="委派" edge="1" parent="1" source="M12" target="M08" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-7" value="委派" edge="1" parent="1" source="M12" target="M10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-8" value="装配" edge="1" parent="1" source="M12" target="scheduler" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-9" value="扫描批准记录" edge="1" parent="1" source="scheduler" target="M09" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-10" value="领取投递" edge="1" parent="1" source="scheduler" target="M08" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-11" value="人员更新" edge="1" parent="1" source="M10" target="M02" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-12" value="关来源" edge="1" parent="1" source="M10" target="M06" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-13" value="基线" edge="1" parent="1" source="M07" target="M06" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-14" value="授予/撤销" edge="1" parent="1" source="M09" target="M06" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-15" value="配置" edge="1" parent="1" source="M09" target="M05" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-16" value="可靠结果" edge="1" parent="1" source="M08" target="M07" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-17" value="同快照" edge="1" parent="1" source="M11" target="M00" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-18" value="受控写" edge="1" parent="1" source="M06" target="M00" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-19" value="受控写" edge="1" parent="1" source="M02" target="M00" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-20" value="同一连接/事务" edge="1" parent="1" source="M00" target="db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="B" name="B 需求数据流到模块">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" page="1" pageWidth="1600" pageHeight="1200" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="p1" value="1.0 身份/管理范围" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="60" y="70" width="350" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="p2" value="2.0 系统/权限目录" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="60" y="210" width="350" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="p3" value="3.0 人员导入/失效" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="60" y="350" width="350" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="p4" value="4.0 角色/授权申请" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="60" y="490" width="350" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="p5" value="5.0 审批/执行" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="60" y="630" width="350" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="p6" value="6.0 有效权限" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="60" y="770" width="350" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="p7" value="7.0 范围内审计" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="60" y="910" width="350" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="r1" value="M01/M03/M10 当前身份、范围及失效编排" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#dcfce7;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="680" y="70" width="750" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="r2" value="M04/M11 目录规则与影响" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#dcfce7;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="680" y="210" width="750" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="r3" value="M02/M06/M10 冻结计划与原子提交" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#dcfce7;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="680" y="350" width="750" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="r4" value="M05/M06/M07/M11 草稿、预览与固定" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#dcfce7;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="680" y="490" width="750" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="r5" value="M08/M09 可靠结果与一次执行" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#dcfce7;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="680" y="630" width="750" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="r6" value="M11 主库快照与完整并集" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#dcfce7;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="680" y="770" width="750" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="r7" value="M11读取 / M00追加审计" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#dcfce7;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="680" y="910" width="750" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-0" value="按处理职责细化" edge="1" parent="1" source="p1" target="r1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-1" value="按处理职责细化" edge="1" parent="1" source="p2" target="r2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-2" value="按处理职责细化" edge="1" parent="1" source="p3" target="r3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-3" value="按处理职责细化" edge="1" parent="1" source="p4" target="r4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-4" value="按处理职责细化" edge="1" parent="1" source="p5" target="r5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-5" value="按处理职责细化" edge="1" parent="1" source="p6" target="r6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-6" value="按处理职责细化" edge="1" parent="1" source="p7" target="r7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

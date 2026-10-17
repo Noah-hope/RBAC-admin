@@ -1,0 +1,34 @@
+{
+  "scope": "STATIC_ONLY_NO_DATABASE",
+  "mysqlExecuted": false,
+  "databaseConnections": 0,
+  "tables": 43,
+  "columns": 356,
+  "foreignKeys": 79,
+  "ddlParsedStatements": 124,
+  "triggerTextBlocks": 41,
+  "triggerEngineValidation": false,
+  "checkExpressionReasoningCases": 20,
+  "apiOperations": 68,
+  "localLinks": 207,
+  "diagramPages": 4,
+  "diagramVertices": 44,
+  "diagramDistinctEntities": 43,
+  "diagramEdges": 46,
+  "openapiSha256": "9910ceafadea88d85793d00f7bb4e6e5673700a8565366a407185c4517e0cbdf",
+  "sqlglotVersion": "27.28.1",
+  "pyyamlVersion": "6.0.3",
+  "artifactSha256": {
+    "schema.sql": "6b2f25c44452b9222d1e3dad0c62a71f8befdc0b0c608852ba620329a6f7135a",
+    "immutability.sql": "1d36a1374144c1887ee785102adf9db157246c4e1bf30ef477d22c28c47fb4fc",
+    "schema-model.json": "2acdb668597e7afdcd41a08481aa5bd17fa792b4798fcdc7ad70972414b20d77",
+    "database-erd.drawio": "2a7530a1d5dc19c236a1585b718aa357fadf20f99c74320b40d4b837ff3d8fb2"
+  },
+  "limitations": [
+    "DDL未提交MySQL引擎",
+    "触发器仅文本结构检查",
+    "CHECK用有限表达式三值逻辑推演",
+    "无真实并发/JPA/查询计划/业务测试",
+    "图源未在draw.io客户端验收"
+  ]
+}

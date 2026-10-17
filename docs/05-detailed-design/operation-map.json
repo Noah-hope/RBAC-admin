@@ -1,0 +1,4865 @@
+[
+  {
+    "operationId": "login",
+    "method": "POST",
+    "path": "/api/v1/admin/sessions",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "admin_appointment",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T0",
+      "T9",
+      "T12"
+    ],
+    "invariants": [
+      "I-04",
+      "I-20",
+      "I-22"
+    ],
+    "module": "M01",
+    "issue": "BE-06",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-05",
+      "AT-06",
+      "AT-07",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "LoginInput"
+    ],
+    "successResponseModels": {
+      "201": [
+        "Session"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "currentSession",
+    "method": "GET",
+    "path": "/api/v1/admin/sessions/current",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "admin_appointment",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-04",
+      "I-20",
+      "I-22"
+    ],
+    "module": "M01",
+    "issue": "BE-06",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-05",
+      "AT-06",
+      "AT-07",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "SessionView"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "logout",
+    "method": "DELETE",
+    "path": "/api/v1/admin/sessions/current",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "admin_appointment",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T0",
+      "T9",
+      "T12"
+    ],
+    "invariants": [
+      "I-04",
+      "I-20",
+      "I-22"
+    ],
+    "module": "M01",
+    "issue": "BE-06",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-05",
+      "AT-06",
+      "AT-07",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "204": []
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "changeOwnPassword",
+    "method": "PUT",
+    "path": "/api/v1/admin/password",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "admin_appointment",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T0",
+      "T9",
+      "T12"
+    ],
+    "invariants": [
+      "I-04",
+      "I-20",
+      "I-22"
+    ],
+    "module": "M01",
+    "issue": "BE-06",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-05",
+      "AT-06",
+      "AT-07",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "PasswordInput"
+    ],
+    "successResponseModels": {
+      "204": []
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "myAppointments",
+    "method": "GET",
+    "path": "/api/v1/admin/my-appointments",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "management_scope",
+      "scope_system",
+      "admin_appointment",
+      "admin_account",
+      "employee",
+      "employment"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-04",
+      "I-20"
+    ],
+    "module": "M03",
+    "issue": "BE-08",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-08",
+      "AT-19",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "AppointmentPage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listAccounts",
+    "method": "GET",
+    "path": "/api/v1/admin/accounts",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "audit_event"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-01",
+      "I-04",
+      "I-20"
+    ],
+    "module": "M01",
+    "issue": "BE-07",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-06",
+      "AT-07",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "employeeId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "q",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "enabled",
+        "location": "query",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "AccountPage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "createAccount",
+    "method": "POST",
+    "path": "/api/v1/admin/accounts",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T9"
+    ],
+    "invariants": [
+      "I-01",
+      "I-04",
+      "I-16",
+      "I-20"
+    ],
+    "module": "M01",
+    "issue": "BE-07",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-06",
+      "AT-07",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      }
+    ],
+    "requestModels": [
+      "AccountCreate"
+    ],
+    "successResponseModels": {
+      "201": [
+        "Account"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "getAccount",
+    "method": "GET",
+    "path": "/api/v1/admin/accounts/{accountId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "audit_event"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-01",
+      "I-04",
+      "I-20"
+    ],
+    "module": "M01",
+    "issue": "BE-07",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-06",
+      "AT-07",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "accountId",
+        "location": "path",
+        "required": true
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "Account"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "setAccountState",
+    "method": "PUT",
+    "path": "/api/v1/admin/accounts/{accountId}/state",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T9"
+    ],
+    "invariants": [
+      "I-01",
+      "I-04",
+      "I-16",
+      "I-20"
+    ],
+    "module": "M01",
+    "issue": "BE-07",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-06",
+      "AT-07",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "accountId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      }
+    ],
+    "requestModels": [
+      "AccountStateInput"
+    ],
+    "successResponseModels": {
+      "200": [
+        "Account"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "resetAccountPassword",
+    "method": "PUT",
+    "path": "/api/v1/admin/accounts/{accountId}/password",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-09"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "employee",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T9"
+    ],
+    "invariants": [
+      "I-01",
+      "I-04",
+      "I-16",
+      "I-20"
+    ],
+    "module": "M01",
+    "issue": "BE-07",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-06",
+      "AT-07",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "accountId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      }
+    ],
+    "requestModels": [
+      "PasswordReset"
+    ],
+    "successResponseModels": {
+      "200": [
+        "Account"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listSystems",
+    "method": "GET",
+    "path": "/api/v1/admin/systems",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06"
+    ],
+    "module": "M04",
+    "issue": "BE-11",
+    "ownerSlot": "B",
+    "acceptance": [
+      "AT-09",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "enabled",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "q",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "ApplicationPage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "createSystem",
+    "method": "POST",
+    "path": "/api/v1/admin/systems",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "role_permission",
+      "business_role",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T1",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06",
+      "I-16",
+      "I-18"
+    ],
+    "module": "M04",
+    "issue": "BE-11",
+    "ownerSlot": "B",
+    "acceptance": [
+      "AT-09",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      }
+    ],
+    "requestModels": [
+      "ApplicationInput"
+    ],
+    "successResponseModels": {
+      "201": [
+        "Application"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "getSystem",
+    "method": "GET",
+    "path": "/api/v1/admin/systems/{systemId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06"
+    ],
+    "module": "M04",
+    "issue": "BE-11",
+    "ownerSlot": "B",
+    "acceptance": [
+      "AT-09",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "systemId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "Application"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "updateSystem",
+    "method": "PUT",
+    "path": "/api/v1/admin/systems/{systemId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "role_permission",
+      "business_role",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T1",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06",
+      "I-16",
+      "I-18"
+    ],
+    "module": "M04",
+    "issue": "BE-12",
+    "ownerSlot": "B",
+    "acceptance": [
+      "AT-09",
+      "AT-10",
+      "AT-31",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "systemId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      }
+    ],
+    "requestModels": [
+      "ApplicationSave"
+    ],
+    "successResponseModels": {
+      "200": [
+        "Application"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "systemStatePreview",
+    "method": "POST",
+    "path": "/api/v1/admin/systems/{systemId}/state-previews",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "role_permission",
+      "business_role",
+      "impact_preview",
+      "preview_item",
+      "audit_event"
+    ],
+    "transactions": [
+      "T0",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06",
+      "I-18"
+    ],
+    "module": "M04",
+    "issue": "BE-12",
+    "ownerSlot": "B",
+    "acceptance": [
+      "AT-09",
+      "AT-10",
+      "AT-31",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "systemId",
+        "location": "path",
+        "required": true
+      }
+    ],
+    "requestModels": [
+      "ApplicationEdit"
+    ],
+    "successResponseModels": {
+      "200": [
+        "Preview"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listDirectoryNodes",
+    "method": "GET",
+    "path": "/api/v1/admin/systems/{systemId}/directory-nodes",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06"
+    ],
+    "module": "M04",
+    "issue": "BE-12",
+    "ownerSlot": "B",
+    "acceptance": [
+      "AT-09",
+      "AT-10",
+      "AT-31",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "systemId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "parentId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "nodeType",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "enabled",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "rootOnly",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "DirectoryNodePage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listPermissions",
+    "method": "GET",
+    "path": "/api/v1/admin/systems/{systemId}/permissions",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06"
+    ],
+    "module": "M04",
+    "issue": "BE-12",
+    "ownerSlot": "B",
+    "acceptance": [
+      "AT-09",
+      "AT-10",
+      "AT-31",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "systemId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "functionId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "permissionType",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "enabled",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "q",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "PermissionPage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "catalogPreview",
+    "method": "POST",
+    "path": "/api/v1/admin/systems/{systemId}/catalog-previews",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "role_permission",
+      "business_role",
+      "impact_preview",
+      "preview_item",
+      "audit_event"
+    ],
+    "transactions": [
+      "T0",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06",
+      "I-18"
+    ],
+    "module": "M04",
+    "issue": "BE-12",
+    "ownerSlot": "B",
+    "acceptance": [
+      "AT-09",
+      "AT-10",
+      "AT-31",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "systemId",
+        "location": "path",
+        "required": true
+      }
+    ],
+    "requestModels": [
+      "CatalogInput"
+    ],
+    "successResponseModels": {
+      "200": [
+        "Preview"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "saveCatalog",
+    "method": "POST",
+    "path": "/api/v1/admin/systems/{systemId}/catalog-changes",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "business_system",
+      "directory_node",
+      "permission",
+      "role_permission",
+      "business_role",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T1",
+      "T11"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06",
+      "I-16",
+      "I-18"
+    ],
+    "module": "M04",
+    "issue": "BE-12",
+    "ownerSlot": "B",
+    "acceptance": [
+      "AT-09",
+      "AT-10",
+      "AT-31",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "systemId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      }
+    ],
+    "requestModels": [
+      "CatalogSave"
+    ],
+    "successResponseModels": {
+      "200": [
+        "CatalogResult"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listRoles",
+    "method": "GET",
+    "path": "/api/v1/admin/roles",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02"
+    ],
+    "tables": [
+      "business_role",
+      "role_permission",
+      "role_change_claim"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-07",
+      "I-10"
+    ],
+    "module": "M05",
+    "issue": "BE-13",
+    "ownerSlot": "B",
+    "acceptance": [
+      "AT-11",
+      "AT-12",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "companyId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "departmentId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "systemId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "state",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "q",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "RolePage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "createRole",
+    "method": "POST",
+    "path": "/api/v1/admin/roles",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02"
+    ],
+    "tables": [
+      "business_role",
+      "change_request",
+      "change_target",
+      "role_change_claim",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T2"
+    ],
+    "invariants": [
+      "I-01",
+      "I-07",
+      "I-10",
+      "I-16"
+    ],
+    "module": "M07",
+    "issue": "BE-20",
+    "ownerSlot": "C",
+    "acceptance": [
+      "AT-11",
+      "AT-13",
+      "AT-16",
+      "AT-17",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "RoleCreate"
+    ],
+    "successResponseModels": {
+      "201": [
+        "RoleCreated"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "getRole",
+    "method": "GET",
+    "path": "/api/v1/admin/roles/{roleId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02"
+    ],
+    "tables": [
+      "business_role",
+      "role_permission",
+      "role_change_claim"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-07",
+      "I-10"
+    ],
+    "module": "M05",
+    "issue": "BE-13",
+    "ownerSlot": "B",
+    "acceptance": [
+      "AT-11",
+      "AT-12",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "roleId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "Role"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "updateRoleMetadata",
+    "method": "PUT",
+    "path": "/api/v1/admin/roles/{roleId}/metadata",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02"
+    ],
+    "tables": [
+      "business_role",
+      "change_request",
+      "change_target",
+      "role_change_claim",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T2"
+    ],
+    "invariants": [
+      "I-01",
+      "I-07",
+      "I-10",
+      "I-16"
+    ],
+    "module": "M05",
+    "issue": "BE-13",
+    "ownerSlot": "B",
+    "acceptance": [
+      "AT-11",
+      "AT-12",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "roleId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "RoleMetadata"
+    ],
+    "successResponseModels": {
+      "200": [
+        "Role"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listEmployees",
+    "method": "GET",
+    "path": "/api/v1/admin/employees",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-03"
+    ],
+    "tables": [
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "grant_employment_evidence",
+      "business_role"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-08",
+      "I-09"
+    ],
+    "module": "M02",
+    "issue": "BE-10",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-13",
+      "AT-27",
+      "AT-29",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "companyId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "departmentId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "status",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "q",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "EmployeePage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "getEmployee",
+    "method": "GET",
+    "path": "/api/v1/admin/employees/{employeeId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-03"
+    ],
+    "tables": [
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "grant_employment_evidence",
+      "business_role"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-08",
+      "I-09"
+    ],
+    "module": "M02",
+    "issue": "BE-10",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-13",
+      "AT-27",
+      "AT-29",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "employeeId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "Employee"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listEmployments",
+    "method": "GET",
+    "path": "/api/v1/admin/employees/{employeeId}/employments",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-03"
+    ],
+    "tables": [
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "grant_employment_evidence",
+      "business_role"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-08",
+      "I-09"
+    ],
+    "module": "M02",
+    "issue": "BE-10",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-13",
+      "AT-27",
+      "AT-29",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "employeeId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "companyId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "departmentId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "status",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "EmploymentPage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listGrants",
+    "method": "GET",
+    "path": "/api/v1/admin/grants",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-03",
+      "UC-04"
+    ],
+    "tables": [
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "grant_employment_evidence",
+      "business_role"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-08",
+      "I-09"
+    ],
+    "module": "M06",
+    "issue": "BE-14",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-13",
+      "AT-14",
+      "AT-15",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "employeeId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "roleId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "companyId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "sourceDepartmentId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "systemId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "status",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "GrantPage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "grantBaselines",
+    "method": "POST",
+    "path": "/api/v1/admin/grant-baselines",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-03"
+    ],
+    "tables": [
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "grant_employment_evidence",
+      "business_role"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-08",
+      "I-09"
+    ],
+    "module": "M06",
+    "issue": "BE-14",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-13",
+      "AT-14",
+      "AT-15",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "BaselineQuery"
+    ],
+    "successResponseModels": {
+      "200": [
+        "BaselineResult"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listChangeRequests",
+    "method": "GET",
+    "path": "/api/v1/admin/change-requests",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-11"
+    ],
+    "tables": [
+      "change_request",
+      "change_target",
+      "oa_link",
+      "oa_final_result",
+      "execution_success",
+      "audit_event"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-11",
+      "I-12",
+      "I-19"
+    ],
+    "module": "M07",
+    "issue": "BE-22",
+    "ownerSlot": "C",
+    "acceptance": [
+      "AT-17",
+      "AT-18",
+      "AT-19",
+      "AT-34",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "companyId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "systemId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "state",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "deliveryStatus",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "approvalResult",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "executionStatus",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "q",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "ChangeRequestPage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "createChangeDraft",
+    "method": "POST",
+    "path": "/api/v1/admin/change-requests",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04"
+    ],
+    "tables": [
+      "change_request",
+      "change_target",
+      "role_change_claim",
+      "relation_change_claim",
+      "authorization_source",
+      "grant_baseline",
+      "impact_preview",
+      "preview_item",
+      "oa_outbox",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T2",
+      "T3",
+      "T11"
+    ],
+    "invariants": [
+      "I-08",
+      "I-10",
+      "I-11",
+      "I-16",
+      "I-18"
+    ],
+    "module": "M07",
+    "issue": "BE-20",
+    "ownerSlot": "C",
+    "acceptance": [
+      "AT-11",
+      "AT-13",
+      "AT-16",
+      "AT-17",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "DraftInput"
+    ],
+    "successResponseModels": {
+      "201": [
+        "ChangeRequest"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "getChangeRequest",
+    "method": "GET",
+    "path": "/api/v1/admin/change-requests/{requestId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-11"
+    ],
+    "tables": [
+      "change_request",
+      "change_target",
+      "oa_link",
+      "oa_final_result",
+      "execution_success",
+      "audit_event"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-11",
+      "I-12",
+      "I-19"
+    ],
+    "module": "M07",
+    "issue": "BE-22",
+    "ownerSlot": "C",
+    "acceptance": [
+      "AT-17",
+      "AT-18",
+      "AT-19",
+      "AT-34",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "requestId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "ChangeRequest"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "updateChangeDraft",
+    "method": "PUT",
+    "path": "/api/v1/admin/change-requests/{requestId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04"
+    ],
+    "tables": [
+      "change_request",
+      "change_target",
+      "role_change_claim",
+      "relation_change_claim",
+      "authorization_source",
+      "grant_baseline",
+      "impact_preview",
+      "preview_item",
+      "oa_outbox",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T2",
+      "T3",
+      "T11"
+    ],
+    "invariants": [
+      "I-08",
+      "I-10",
+      "I-11",
+      "I-16",
+      "I-18"
+    ],
+    "module": "M07",
+    "issue": "BE-20",
+    "ownerSlot": "C",
+    "acceptance": [
+      "AT-11",
+      "AT-13",
+      "AT-16",
+      "AT-17",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "requestId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "DraftEdit"
+    ],
+    "successResponseModels": {
+      "200": [
+        "ChangeRequest"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "deleteChangeDraft",
+    "method": "DELETE",
+    "path": "/api/v1/admin/change-requests/{requestId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04"
+    ],
+    "tables": [
+      "change_request",
+      "change_target",
+      "role_change_claim",
+      "relation_change_claim",
+      "authorization_source",
+      "grant_baseline",
+      "impact_preview",
+      "preview_item",
+      "oa_outbox",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T2",
+      "T3",
+      "T11"
+    ],
+    "invariants": [
+      "I-08",
+      "I-10",
+      "I-11",
+      "I-16",
+      "I-18"
+    ],
+    "module": "M07",
+    "issue": "BE-20",
+    "ownerSlot": "C",
+    "acceptance": [
+      "AT-11",
+      "AT-13",
+      "AT-16",
+      "AT-17",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "requestId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "expectedDraftVersion",
+        "location": "query",
+        "required": true
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "204": []
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "changePreview",
+    "method": "POST",
+    "path": "/api/v1/admin/change-requests/{requestId}/previews",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04"
+    ],
+    "tables": [
+      "change_request",
+      "change_target",
+      "role_change_claim",
+      "relation_change_claim",
+      "authorization_source",
+      "grant_baseline",
+      "impact_preview",
+      "preview_item",
+      "oa_outbox",
+      "audit_event"
+    ],
+    "transactions": [
+      "T0",
+      "T11"
+    ],
+    "invariants": [
+      "I-08",
+      "I-10",
+      "I-11",
+      "I-18"
+    ],
+    "module": "M07",
+    "issue": "BE-21",
+    "ownerSlot": "C",
+    "acceptance": [
+      "AT-12",
+      "AT-13",
+      "AT-16",
+      "AT-18",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "requestId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "ChangePreviewInput"
+    ],
+    "successResponseModels": {
+      "200": [
+        "ChangePreview"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "submitChange",
+    "method": "POST",
+    "path": "/api/v1/admin/change-requests/{requestId}/submissions",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04"
+    ],
+    "tables": [
+      "change_request",
+      "change_target",
+      "role_change_claim",
+      "relation_change_claim",
+      "authorization_source",
+      "grant_baseline",
+      "impact_preview",
+      "preview_item",
+      "oa_outbox",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T2",
+      "T3",
+      "T11"
+    ],
+    "invariants": [
+      "I-08",
+      "I-10",
+      "I-11",
+      "I-16",
+      "I-18"
+    ],
+    "module": "M07",
+    "issue": "BE-21",
+    "ownerSlot": "C",
+    "acceptance": [
+      "AT-12",
+      "AT-13",
+      "AT-16",
+      "AT-18",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "requestId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "SubmitInput"
+    ],
+    "successResponseModels": {
+      "202": [
+        "SubmissionResult"
+      ],
+      "200": [
+        "SubmissionResult"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "retryOaDelivery",
+    "method": "POST",
+    "path": "/api/v1/admin/change-requests/{requestId}/delivery-retries",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-11"
+    ],
+    "tables": [
+      "change_request",
+      "oa_outbox",
+      "oa_link",
+      "service_identity",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T10"
+    ],
+    "invariants": [
+      "I-11",
+      "I-12",
+      "I-14",
+      "I-16"
+    ],
+    "module": "M08",
+    "issue": "BE-23",
+    "ownerSlot": "C",
+    "acceptance": [
+      "AT-20",
+      "AT-35",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "requestId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "RetryInput"
+    ],
+    "successResponseModels": {
+      "202": [
+        "ChangeRequest"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listChangeEvents",
+    "method": "GET",
+    "path": "/api/v1/admin/change-requests/{requestId}/events",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-11"
+    ],
+    "tables": [
+      "change_request",
+      "change_target",
+      "oa_link",
+      "oa_final_result",
+      "execution_success",
+      "audit_event"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-11",
+      "I-12",
+      "I-19"
+    ],
+    "module": "M07",
+    "issue": "BE-22",
+    "ownerSlot": "C",
+    "acceptance": [
+      "AT-17",
+      "AT-18",
+      "AT-19",
+      "AT-34",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "requestId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "ChangeEventPage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listPreviewEmployees",
+    "method": "GET",
+    "path": "/api/v1/admin/previews/{previewId}/employees",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01",
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-07",
+      "UC-10"
+    ],
+    "tables": [
+      "impact_preview",
+      "preview_item",
+      "admin_account",
+      "admin_appointment",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-18",
+      "I-20"
+    ],
+    "module": "M11",
+    "issue": "BE-17",
+    "ownerSlot": "B",
+    "acceptance": [
+      "AT-31",
+      "AT-32",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "previewId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "ImpactEmployeePage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "sourceBaselines",
+    "method": "POST",
+    "path": "/api/v1/admin/source-baselines",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-04"
+    ],
+    "tables": [
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "grant_employment_evidence",
+      "business_role"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-08",
+      "I-09"
+    ],
+    "module": "M06",
+    "issue": "BE-14",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-13",
+      "AT-14",
+      "AT-15",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "SourceQuery"
+    ],
+    "successResponseModels": {
+      "200": [
+        "SourceQueryResult"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "sourceClosePreview",
+    "method": "POST",
+    "path": "/api/v1/admin/source-closure-previews",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-04"
+    ],
+    "tables": [
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "change_request",
+      "change_target",
+      "relation_change_claim",
+      "impact_preview",
+      "preview_item",
+      "audit_event"
+    ],
+    "transactions": [
+      "T0",
+      "T11"
+    ],
+    "invariants": [
+      "I-08",
+      "I-09",
+      "I-13",
+      "I-18"
+    ],
+    "module": "M10",
+    "issue": "BE-26",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-15",
+      "AT-16",
+      "AT-19",
+      "AT-32",
+      "AT-37",
+      "AT-41"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "SourceCloseInput"
+    ],
+    "successResponseModels": {
+      "200": [
+        "Preview"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "closeSource",
+    "method": "POST",
+    "path": "/api/v1/admin/source-closures",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-04"
+    ],
+    "tables": [
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "change_request",
+      "change_target",
+      "relation_change_claim",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T5",
+      "T11"
+    ],
+    "invariants": [
+      "I-08",
+      "I-09",
+      "I-13",
+      "I-16",
+      "I-18"
+    ],
+    "module": "M10",
+    "issue": "BE-26",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-15",
+      "AT-16",
+      "AT-19",
+      "AT-32",
+      "AT-37",
+      "AT-41"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "SourceCloseSave"
+    ],
+    "successResponseModels": {
+      "200": [
+        "SourceCloseResult"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listCompanies",
+    "method": "GET",
+    "path": "/api/v1/admin/companies",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07",
+      "UC-10"
+    ],
+    "tables": [
+      "company",
+      "department",
+      "position"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-01",
+      "I-21"
+    ],
+    "module": "M02",
+    "issue": "BE-10",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-13",
+      "AT-27",
+      "AT-29",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "q",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "CompanyPage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listDepartments",
+    "method": "GET",
+    "path": "/api/v1/admin/departments",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07",
+      "UC-10"
+    ],
+    "tables": [
+      "company",
+      "department",
+      "position"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-01",
+      "I-21"
+    ],
+    "module": "M02",
+    "issue": "BE-10",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-13",
+      "AT-27",
+      "AT-29",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "q",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "companyId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "DepartmentPage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listPositions",
+    "method": "GET",
+    "path": "/api/v1/admin/positions",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07",
+      "UC-10"
+    ],
+    "tables": [
+      "company",
+      "department",
+      "position"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-01",
+      "I-21"
+    ],
+    "module": "M02",
+    "issue": "BE-10",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-13",
+      "AT-27",
+      "AT-29",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "q",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "companyId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "departmentId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "PositionPage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "employeeStatePreview",
+    "method": "POST",
+    "path": "/api/v1/admin/employees/{employeeId}/state-previews",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "admin_appointment",
+      "admin_account",
+      "change_request",
+      "change_target",
+      "impact_preview",
+      "preview_item",
+      "audit_event"
+    ],
+    "transactions": [
+      "T0",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-13",
+      "I-18",
+      "I-20"
+    ],
+    "module": "M10",
+    "issue": "BE-27",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-08",
+      "AT-19",
+      "AT-24",
+      "AT-31",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "employeeId",
+        "location": "path",
+        "required": true
+      }
+    ],
+    "requestModels": [
+      "EmployeeStateInput"
+    ],
+    "successResponseModels": {
+      "200": [
+        "Preview"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "setEmployeeState",
+    "method": "PUT",
+    "path": "/api/v1/admin/employees/{employeeId}/state",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "admin_appointment",
+      "admin_account",
+      "change_request",
+      "change_target",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T7",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-13",
+      "I-16",
+      "I-18",
+      "I-20"
+    ],
+    "module": "M10",
+    "issue": "BE-27",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-08",
+      "AT-19",
+      "AT-24",
+      "AT-31",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "employeeId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      }
+    ],
+    "requestModels": [
+      "EmployeeStateSave"
+    ],
+    "successResponseModels": {
+      "200": [
+        "EmployeeStateResult"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listScopes",
+    "method": "GET",
+    "path": "/api/v1/admin/management-scopes",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07"
+    ],
+    "tables": [
+      "management_scope",
+      "scope_system",
+      "admin_appointment",
+      "admin_account",
+      "employee",
+      "employment"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-04",
+      "I-20"
+    ],
+    "module": "M03",
+    "issue": "BE-08",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-08",
+      "AT-19",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "companyId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "departmentId",
+        "location": "query",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "ScopePage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "createScope",
+    "method": "POST",
+    "path": "/api/v1/admin/management-scopes",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07"
+    ],
+    "tables": [
+      "management_scope",
+      "scope_system",
+      "admin_appointment",
+      "employee",
+      "employment",
+      "admin_account",
+      "change_request",
+      "change_target",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T6",
+      "T11"
+    ],
+    "invariants": [
+      "I-04",
+      "I-12",
+      "I-16",
+      "I-18",
+      "I-20"
+    ],
+    "module": "M03",
+    "issue": "BE-09",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-08",
+      "AT-31",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      }
+    ],
+    "requestModels": [
+      "ScopeCreateSave"
+    ],
+    "successResponseModels": {
+      "201": [
+        "ScopeResult"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "scopeCreatePreview",
+    "method": "POST",
+    "path": "/api/v1/admin/management-scope-previews",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07"
+    ],
+    "tables": [
+      "management_scope",
+      "scope_system",
+      "admin_appointment",
+      "employee",
+      "employment",
+      "admin_account",
+      "change_request",
+      "change_target",
+      "impact_preview",
+      "preview_item",
+      "audit_event"
+    ],
+    "transactions": [
+      "T0",
+      "T11"
+    ],
+    "invariants": [
+      "I-04",
+      "I-12",
+      "I-18",
+      "I-20"
+    ],
+    "module": "M03",
+    "issue": "BE-09",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-08",
+      "AT-31",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "ScopeInput"
+    ],
+    "successResponseModels": {
+      "200": [
+        "Preview"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "getScope",
+    "method": "GET",
+    "path": "/api/v1/admin/management-scopes/{scopeId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07"
+    ],
+    "tables": [
+      "management_scope",
+      "scope_system",
+      "admin_appointment",
+      "admin_account",
+      "employee",
+      "employment"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-04",
+      "I-20"
+    ],
+    "module": "M03",
+    "issue": "BE-08",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-08",
+      "AT-19",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "scopeId",
+        "location": "path",
+        "required": true
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "Scope"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "replaceScope",
+    "method": "PUT",
+    "path": "/api/v1/admin/management-scopes/{scopeId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07"
+    ],
+    "tables": [
+      "management_scope",
+      "scope_system",
+      "admin_appointment",
+      "employee",
+      "employment",
+      "admin_account",
+      "change_request",
+      "change_target",
+      "impact_preview",
+      "preview_item",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T6",
+      "T11"
+    ],
+    "invariants": [
+      "I-04",
+      "I-12",
+      "I-16",
+      "I-18",
+      "I-20"
+    ],
+    "module": "M10",
+    "issue": "BE-27",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-08",
+      "AT-19",
+      "AT-24",
+      "AT-31",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "scopeId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      }
+    ],
+    "requestModels": [
+      "ScopeSave"
+    ],
+    "successResponseModels": {
+      "200": [
+        "ScopeResult"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listScopeAppointments",
+    "method": "GET",
+    "path": "/api/v1/admin/management-scopes/{scopeId}/appointments",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07"
+    ],
+    "tables": [
+      "management_scope",
+      "scope_system",
+      "admin_appointment",
+      "admin_account",
+      "employee",
+      "employment"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-04",
+      "I-20"
+    ],
+    "module": "M03",
+    "issue": "BE-08",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-08",
+      "AT-19",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "scopeId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "status",
+        "location": "query",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "AppointmentPage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "scopeEditPreview",
+    "method": "POST",
+    "path": "/api/v1/admin/management-scopes/{scopeId}/previews",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-07"
+    ],
+    "tables": [
+      "management_scope",
+      "scope_system",
+      "admin_appointment",
+      "employee",
+      "employment",
+      "admin_account",
+      "change_request",
+      "change_target",
+      "impact_preview",
+      "preview_item",
+      "audit_event"
+    ],
+    "transactions": [
+      "T0",
+      "T11"
+    ],
+    "invariants": [
+      "I-04",
+      "I-12",
+      "I-18",
+      "I-20"
+    ],
+    "module": "M10",
+    "issue": "BE-27",
+    "ownerSlot": "A",
+    "acceptance": [
+      "AT-08",
+      "AT-19",
+      "AT-24",
+      "AT-31",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "scopeId",
+        "location": "path",
+        "required": true
+      }
+    ],
+    "requestModels": [
+      "ScopeEdit"
+    ],
+    "successResponseModels": {
+      "200": [
+        "Preview"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listAudit",
+    "method": "GET",
+    "path": "/api/v1/admin/audit-events",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-08"
+    ],
+    "tables": [
+      "audit_event",
+      "audit_subject",
+      "management_scope",
+      "scope_system",
+      "admin_appointment"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-19",
+      "I-20"
+    ],
+    "module": "M11",
+    "issue": "BE-19",
+    "ownerSlot": "C",
+    "acceptance": [
+      "AT-32",
+      "AT-34",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "companyId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "sourceDepartmentId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "systemId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "employeeId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "roleId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "actorId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "changeRequestId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "oaApprovalId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "from",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "to",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "eventType",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "result",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "requestId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "AuditEventPage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "getAudit",
+    "method": "GET",
+    "path": "/api/v1/admin/audit-events/{auditEventId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-08"
+    ],
+    "tables": [
+      "audit_event",
+      "audit_subject",
+      "management_scope",
+      "scope_system",
+      "admin_appointment"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-19",
+      "I-20"
+    ],
+    "module": "M11",
+    "issue": "BE-19",
+    "ownerSlot": "C",
+    "acceptance": [
+      "AT-32",
+      "AT-34",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "auditEventId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "AuditDetail"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "uploadImportFile",
+    "method": "POST",
+    "path": "/api/v1/admin/import-files",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "import_file",
+      "admin_account",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T8"
+    ],
+    "invariants": [
+      "I-16",
+      "I-17",
+      "I-21"
+    ],
+    "module": "M10",
+    "issue": "BE-28",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-26",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "201": [
+        "ImportFile"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "getImportFile",
+    "method": "GET",
+    "path": "/api/v1/admin/import-files/{fileId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "import_file",
+      "admin_account"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-17",
+      "I-21"
+    ],
+    "module": "M10",
+    "issue": "BE-28",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-26",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "fileId",
+        "location": "path",
+        "required": true
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "ImportFile"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "precheckImport",
+    "method": "POST",
+    "path": "/api/v1/admin/import-batches",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "import_file",
+      "import_batch",
+      "import_plan_row",
+      "import_issue",
+      "organization_mapping",
+      "employee_source_identity",
+      "company",
+      "department",
+      "position",
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "admin_account",
+      "admin_appointment",
+      "change_request",
+      "change_target",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T8"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-16",
+      "I-17",
+      "I-21"
+    ],
+    "module": "M10",
+    "issue": "BE-29",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-25",
+      "AT-26",
+      "AT-27",
+      "AT-29",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      }
+    ],
+    "requestModels": [
+      "ImportInput"
+    ],
+    "successResponseModels": {
+      "201": [
+        "ImportBatch"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listImportBatches",
+    "method": "GET",
+    "path": "/api/v1/admin/import-batches",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "import_batch",
+      "import_file",
+      "admin_account"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-17",
+      "I-21"
+    ],
+    "module": "M10",
+    "issue": "BE-29",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-25",
+      "AT-26",
+      "AT-27",
+      "AT-29",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "sourceBatchId",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "state",
+        "location": "query",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "ImportBatchPage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "getImportBatch",
+    "method": "GET",
+    "path": "/api/v1/admin/import-batches/{batchId}",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "import_batch",
+      "import_file",
+      "admin_account"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-17",
+      "I-21"
+    ],
+    "module": "M10",
+    "issue": "BE-29",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-25",
+      "AT-26",
+      "AT-27",
+      "AT-29",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "batchId",
+        "location": "path",
+        "required": true
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "ImportBatch"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listImportIssues",
+    "method": "GET",
+    "path": "/api/v1/admin/import-batches/{batchId}/issues",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "import_batch",
+      "import_issue",
+      "admin_account"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-17",
+      "I-21"
+    ],
+    "module": "M10",
+    "issue": "BE-29",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-25",
+      "AT-26",
+      "AT-27",
+      "AT-29",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "batchId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "severity",
+        "location": "query",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "ImportIssuePage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "commitImport",
+    "method": "POST",
+    "path": "/api/v1/admin/import-batches/{batchId}/commits",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "import_file",
+      "import_batch",
+      "import_plan_row",
+      "import_issue",
+      "organization_mapping",
+      "employee_source_identity",
+      "company",
+      "department",
+      "position",
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "admin_account",
+      "admin_appointment",
+      "change_request",
+      "change_target",
+      "audit_event",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T7",
+      "T8"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-16",
+      "I-17",
+      "I-21"
+    ],
+    "module": "M10",
+    "issue": "BE-30",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-24",
+      "AT-25",
+      "AT-27",
+      "AT-28",
+      "AT-29",
+      "AT-37",
+      "AT-41"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "batchId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "Idempotency-Key",
+        "location": "header",
+        "required": true
+      }
+    ],
+    "requestModels": [
+      "ImportCommit"
+    ],
+    "successResponseModels": {
+      "200": [
+        "ImportBatch"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "authorizationQuery",
+    "method": "POST",
+    "path": "/api/v1/integration/authorization-queries",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-05"
+    ],
+    "tables": [
+      "service_identity",
+      "business_system",
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "business_role",
+      "role_permission",
+      "permission",
+      "directory_node"
+    ],
+    "transactions": [
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-05",
+      "I-06",
+      "I-07",
+      "I-08"
+    ],
+    "module": "M11",
+    "issue": "BE-18",
+    "ownerSlot": "B",
+    "acceptance": [
+      "AT-07",
+      "AT-10",
+      "AT-30",
+      "AT-33",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "AuthorizationInput"
+    ],
+    "successResponseModels": {
+      "200": [
+        "AuthorizationResult"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "permissionCheck",
+    "method": "POST",
+    "path": "/api/v1/integration/permission-checks",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-06"
+    ],
+    "tables": [
+      "service_identity",
+      "business_system",
+      "employee",
+      "employment",
+      "authorization_source",
+      "grant_baseline",
+      "role_grant",
+      "business_role",
+      "role_permission",
+      "permission",
+      "directory_node"
+    ],
+    "transactions": [
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-05",
+      "I-06",
+      "I-07",
+      "I-08"
+    ],
+    "module": "M11",
+    "issue": "BE-18",
+    "ownerSlot": "B",
+    "acceptance": [
+      "AT-07",
+      "AT-10",
+      "AT-30",
+      "AT-33",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "CheckInput"
+    ],
+    "successResponseModels": {
+      "200": [
+        "CheckResult"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "receiveOaResult",
+    "method": "POST",
+    "path": "/api/v1/oa/final-results",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-11"
+    ],
+    "tables": [
+      "service_identity",
+      "change_request",
+      "oa_link",
+      "oa_callback_event",
+      "oa_final_result",
+      "oa_outbox",
+      "execution_success",
+      "execution_attempt",
+      "audit_event"
+    ],
+    "transactions": [
+      "T0",
+      "T10"
+    ],
+    "invariants": [
+      "I-11",
+      "I-12",
+      "I-14",
+      "I-15"
+    ],
+    "module": "M08",
+    "issue": "BE-24",
+    "ownerSlot": "C",
+    "acceptance": [
+      "AT-07",
+      "AT-20",
+      "AT-21",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "OaFinalResult"
+    ],
+    "successResponseModels": {
+      "202": [
+        "OaReceipt"
+      ],
+      "200": [
+        "OaReceipt"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listImportPlanChanges",
+    "method": "GET",
+    "path": "/api/v1/admin/import-batches/{batchId}/changes",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "import_batch",
+      "import_plan_row",
+      "admin_account"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-17",
+      "I-21"
+    ],
+    "module": "M10",
+    "issue": "BE-29",
+    "ownerSlot": "D",
+    "acceptance": [
+      "AT-25",
+      "AT-26",
+      "AT-27",
+      "AT-29",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "batchId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "ImportPlanChangePage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "listPreviewTargets",
+    "method": "GET",
+    "path": "/api/v1/admin/previews/{previewId}/targets",
+    "direction": "INBOUND",
+    "useCases": [
+      "UC-01",
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-07",
+      "UC-10"
+    ],
+    "tables": [
+      "impact_preview",
+      "preview_item",
+      "admin_account",
+      "admin_appointment",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T9",
+      "T11"
+    ],
+    "invariants": [
+      "I-18",
+      "I-20"
+    ],
+    "module": "M11",
+    "issue": "BE-17",
+    "ownerSlot": "B",
+    "acceptance": [
+      "AT-31",
+      "AT-32",
+      "AT-37"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "previewId",
+        "location": "path",
+        "required": true
+      },
+      {
+        "name": "X-Admin-Appointment-Id",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "page",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "pageSize",
+        "location": "query",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Scope-Version",
+        "location": "header",
+        "required": false
+      },
+      {
+        "name": "X-Admin-Appointment-Version",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [],
+    "successResponseModels": {
+      "200": [
+        "ImpactTargetPage"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  },
+  {
+    "operationId": "deliverOaSubmission",
+    "method": "POST",
+    "path": "oaSubmission",
+    "direction": "OUTBOUND",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-11"
+    ],
+    "tables": [
+      "change_request",
+      "oa_outbox",
+      "oa_link",
+      "service_identity",
+      "audit_event"
+    ],
+    "transactions": [
+      "T0",
+      "T10"
+    ],
+    "invariants": [
+      "I-11",
+      "I-12",
+      "I-14"
+    ],
+    "module": "M08",
+    "issue": "BE-23",
+    "ownerSlot": "C",
+    "acceptance": [
+      "AT-20",
+      "AT-35"
+    ],
+    "parameters": [
+      {
+        "name": "X-Request-Id",
+        "location": "header",
+        "required": false
+      }
+    ],
+    "requestModels": [
+      "OaSubmission"
+    ],
+    "successResponseModels": {
+      "200": [
+        "OaLink"
+      ]
+    },
+    "status": "PLANNED_NOT_IMPLEMENTED"
+  }
+]

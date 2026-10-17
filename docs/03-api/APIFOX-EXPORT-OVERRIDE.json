@@ -1,0 +1,374 @@
+{
+  "info": {
+    "title": "RBAC 权限中心 API",
+    "version": "1.2.0"
+  },
+  "paths": {
+    "/api/v1/admin/sessions/current": {
+      "get": {
+        "summary": "读取当前正常会话",
+        "operationId": "currentSession",
+        "tags": [
+          "会话"
+        ],
+        "description": "正常会话身份摘要；受限会话不能调用，登录响应已包含改密所需信息。",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功；业务状态以返回字段为准。",
+            "headers": {
+              "X-Request-Id": {
+                "description": "请求追踪标识。",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "敏感结果禁止缓存。",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionView"
+                },
+                "example": {
+                  "sessionId": "demo_01",
+                  "accountId": "demo_01",
+                  "employeeId": null,
+                  "identity": "SUPER_ADMIN",
+                  "mode": "NORMAL",
+                  "expiresAt": "2026-10-16T08:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "#/components/responses/Unprocessable"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/IntegrityError"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          },
+          "413": {
+            "$ref": "#/components/responses/PayloadTooLarge"
+          }
+        },
+        "x-use-cases": [
+          "UC-09"
+        ],
+        "x-access": "管理员"
+      },
+      "delete": {
+        "summary": "退出当前会话",
+        "operationId": "logout",
+        "tags": [
+          "会话"
+        ],
+        "description": "撤销当前 sid；重复、缺失或过期凭据统一 204，不影响其他会话。受限 JWT 可调用。",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "成功；业务状态以返回字段为准。",
+            "headers": {
+              "X-Request-Id": {
+                "description": "请求追踪标识。",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "敏感结果禁止缓存。",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          },
+          "413": {
+            "$ref": "#/components/responses/PayloadTooLarge"
+          }
+        },
+        "x-use-cases": [
+          "UC-09"
+        ],
+        "x-access": "管理员",
+        "security": [
+          {
+            "AdminJwt": []
+          },
+          {}
+        ]
+      }
+    },
+    "/api/v1/admin/import-files": {
+      "post": {
+        "summary": "上传导入文件",
+        "operationId": "uploadImportFile",
+        "tags": [
+          "组织导入"
+        ],
+        "description": "CSV UTF-8（支持标准引号/逗号转义）或XLSX，10MiB/解压50MiB/1000行；不执行宏/公式，仅暂存。",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/Idempotency"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "已创建资源。",
+            "headers": {
+              "X-Request-Id": {
+                "description": "请求追踪标识。",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "敏感结果禁止缓存。",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "Location": {
+                "description": "创建资源或申请状态查询 URI。",
+                "schema": {
+                  "type": "string",
+                  "format": "uri-reference"
+                }
+              },
+              "Idempotent-Replayed": {
+                "description": "同请求回放为 true。",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportFile"
+                },
+                "example": {
+                  "id": "demo_01",
+                  "fileName": "示例值",
+                  "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "sizeBytes": 0,
+                  "sheetNames": [],
+                  "createdAt": "2026-10-16T08:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "422": {
+            "$ref": "#/components/responses/Unprocessable"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/IntegrityError"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          },
+          "413": {
+            "$ref": "#/components/responses/PayloadTooLarge"
+          }
+        },
+        "x-use-cases": [
+          "UC-10"
+        ],
+        "x-access": "总管理员",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "CSV或XLSX；禁止XLSM/旧XLS/宏；校验扩展名/MIME/文件内容。"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/sessions": {
+      "post": {
+        "summary": "管理员登录",
+        "operationId": "login",
+        "tags": [
+          "会话"
+        ],
+        "description": "统一登录失败，不泄露账号存在性；临时密码签发 PASSWORD_CHANGE_ONLY 受限 JWT，不得用业务角色登录。",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "已创建资源。",
+            "headers": {
+              "X-Request-Id": {
+                "description": "请求追踪标识。",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "敏感结果禁止缓存。",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "Location": {
+                "description": "创建资源或申请状态查询 URI。",
+                "schema": {
+                  "type": "string",
+                  "format": "uri-reference"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                },
+                "example": {
+                  "sessionId": "demo_01",
+                  "accountId": "demo_01",
+                  "employeeId": null,
+                  "identity": "SUPER_ADMIN",
+                  "mode": "NORMAL",
+                  "accessToken": "PLACEHOLDER_NOT_A_TOKEN",
+                  "tokenType": "Bearer",
+                  "expiresAt": "2026-10-16T08:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/Unprocessable"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/IntegrityError"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "413": {
+            "$ref": "#/components/responses/PayloadTooLarge"
+          }
+        },
+        "x-use-cases": [
+          "UC-09"
+        ],
+        "x-access": "公开",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginInput"
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    }
+  }
+}

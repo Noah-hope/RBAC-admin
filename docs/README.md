@@ -17,9 +17,9 @@
 | --- | --- | --- |
 | [01-requirements](01-requirements/README.md) | 正式需求、用例、简表、图源、辅助预览与同步脚本 | V1.3 复核完成，可作为原型依据 |
 | [02-ui-design](02-ui-design/README.md) | Vue 3 + TypeScript + Tailwind CSS 界面原型及设计说明 | 可作为 API 输入；按 D-029，3 项原型补齐后续跟踪，不阻塞 API |
-| [03-api](03-api/) | Apifox 契约、示例、错误及用例映射 | 可启动，契约尚未编制；先确定 Git/Apifox 同步方式 |
-| [04-database](04-database/) | 实体关系、约束、索引、事务及数据字典 | 仅保留目录，尚未开始 |
-| [05-detailed-design](05-detailed-design/) | 架构、流程、模块依赖和正式逻辑实现设计 | 仅保留目录，尚未开始 |
+| [03-api](03-api/README.md) | OpenAPI 契约、示例、状态/错误、追踪及数据库交接 | Git1.2.0正式跨阶段修订完成；Apifox1.2.0指定客户端导出核心一致已核对；两处元数据差异及MCP限制保留 |
+| [04-database](04-database/README.md) | ER图、完整字典、约束/索引、事务/JPA/幂等、DDL草案与验证 | 1.1草案，正式跨阶段评审修订后有条件通过；未建库/执行SQL，见[评审报告](04-database/CONSISTENCY-REVIEW.md) |
+| [05-detailed-design](05-detailed-design/README.md) | 后端模块/流程/部署、Issue/PR任务、估算及验收追踪 | 1.0设计交付/静态自查；35本地任务，未开始实现或远程协作 |
 
 阶段状态以 `project/MEMORY.md` 为准，目录存在不代表阶段完成。阶段变化时同步更新导航。
 

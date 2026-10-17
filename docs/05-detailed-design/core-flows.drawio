@@ -1,0 +1,208 @@
+<mxfile host="app.diagrams.net" type="device" version="detailed-design-1.0">
+  <diagram id="F1" name="F1 固定申请到执行">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" page="1" pageWidth="1600" pageHeight="1200" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="n0" value="当前身份/单项范围 + 幂等" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="35" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n1" value="全目标授权 → 无变化分类 → 版本/预览" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="180" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n2" value="冻结内容/原资格/JCS/投影/待办&#10;事务提交：尚未授权" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="325" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n3" value="事务外OA演示受理 → 可靠关联" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="470" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n4" value="可信最终结果独立提交 → 202" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="615" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n5" value="执行事务：全部复核后全部写&#10;业务 + audit + success + EXECUTED" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="760" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n6" value="失败全回滚 → 独立复核记失败&#10;扫描重试 / 非法整份失效" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#dcfce7;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="30" y="760" width="330" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="success" value="EXECUTED / 一次成功&#10;轮询读取原结果" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#dcfce7;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="905" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="invalid" value="整份INVALIDATED&#10;释放占用，不改合法子集" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#fee2e2;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="1210" y="760" width="330" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="rejected" value="REJECTED / 释放占用&#10;不执行权限变更" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#fee2e2;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="1210" y="615" width="330" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-0" value="通过当前授权" edge="1" parent="1" source="n0" target="n1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-1" value="有实际变化且版本一致" edge="1" parent="1" source="n1" target="n2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-2" value="固定内容待投递" edge="1" parent="1" source="n2" target="n3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-3" value="收到可信最终回调" edge="1" parent="1" source="n3" target="n4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-4" value="APPROVED，后台扫描" edge="1" parent="1" source="n4" target="n5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-5" value="REJECTED" edge="1" parent="1" source="n4" target="rejected" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-6" value="全部写入COMMIT" edge="1" parent="1" source="n5" target="success" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-7" value="任一固定条件失效" edge="1" parent="1" source="n5" target="invalid" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-8" value="存储故障，ROLLBACK后" edge="1" parent="1" source="n5" target="n6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-9" value="到期重试并完整复核" edge="1" parent="1" source="n6" target="n5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="F2" name="F2 关权与迟到批准">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" page="1" pageWidth="1600" pageHeight="1200" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="n0" value="当前身份与单项来源范围" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="35" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n1" value="锁guard → 物化0基线 → 精确版本" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="180" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n2" value="推进epoch/来源版本 → 结束有效grant" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="325" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n3" value="整份受影响已提交申请INVALIDATED&#10;释放全部claim，其他来源保留" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="470" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n4" value="完整审计 + 安全响应 + 幂等同事务" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="615" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n5" value="后到批准仅留可靠历史&#10;恢复/新任职不复活旧周期" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#dcfce7;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="760" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-0" value="明确调用/提交边界" edge="1" parent="1" source="n0" target="n1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-1" value="明确调用/提交边界" edge="1" parent="1" source="n1" target="n2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-2" value="明确调用/提交边界" edge="1" parent="1" source="n2" target="n3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-3" value="明确调用/提交边界" edge="1" parent="1" source="n3" target="n4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-4" value="提交后若收到匹配旧批准" edge="1" parent="1" source="n4" target="n5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="F3" name="F3 原子HR导入">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" page="1" pageWidth="1600" pageHeight="1200" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="n0" value="上传受控文件，元数据不可变" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="35" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n1" value="预检：解析/规范化/映射/分配候选ID-code" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="180" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n2" value="冻结前后值/顺序/依赖/影响&#10;不写正式组织人员" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="325" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n3" value="提交：锁guard，身份/批次成功回放/基线" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="470" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n4" value="按明确事件顺序更新全部计划&#10;离岗后新岗仍推进旧来源周期" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="615" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n5" value="正式数据 + 失效 + audit + counts&#10;一个COMMIT；错误全回滚" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="760" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n6" value="另事务只记STALE/FAILED&#10;先确认未成功，重试完整复核" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#dcfce7;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="30" y="760" width="330" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-0" value="文件合法" edge="1" parent="1" source="n0" target="n1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-1" value="冻结计划/报告" edge="1" parent="1" source="n1" target="n2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-2" value="READY且人工确认" edge="1" parent="1" source="n2" target="n3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-3" value="完整复核通过" edge="1" parent="1" source="n3" target="n4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-4" value="全部成功COMMIT" edge="1" parent="1" source="n4" target="n5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-5" value="依赖陈旧，原事务退出" edge="1" parent="1" source="n3" target="n6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-6" value="存储失败，整体ROLLBACK" edge="1" parent="1" source="n4" target="n6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-7" value="STALE：新批重预检" edge="1" parent="1" source="n6" target="n1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-8" value="FAILED：同批完整重试" edge="1" parent="1" source="n6" target="n3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="F4" name="F4 后端部署验收">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" page="1" pageWidth="1600" pageHeight="1200" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="n0" value="固定提交/Wrapper/依赖 → 测试与打包" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="35" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n1" value="选定服务器/隔离MySQL8.4/持久目录" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="180" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n2" value="备份 → 独立迁移账号 → 迁移校验&#10;DDL非整份事务回滚" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="325" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n3" value="受控bootstrap/服务身份公钥配置" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="470" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n4" value="非root运行jar → HTTPS代理 → 健康" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#e0f2fe;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="615" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="n5" value="Apifox完整链路/重启/数据恢复验收&#10;留下版本与结果，未通过项保持开放" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=0;align=center;verticalAlign=middle;fillColor=#dcfce7;strokeColor=#475569;fontSize=15;spacing=8;">
+          <mxGeometry x="420" y="760" width="730" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-0" value="明确调用/提交边界" edge="1" parent="1" source="n0" target="n1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-1" value="明确调用/提交边界" edge="1" parent="1" source="n1" target="n2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-2" value="明确调用/提交边界" edge="1" parent="1" source="n2" target="n3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-3" value="明确调用/提交边界" edge="1" parent="1" source="n3" target="n4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-4" value="明确调用/提交边界" edge="1" parent="1" source="n4" target="n5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;html=0;fontSize=12;strokeColor=#64748b;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,317 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device" version="database-design-1.0">
+  <diagram id="page-1" name="组织与后台身份">
+    <mxGraphModel adaptiveColors="auto" page="1" pageWidth="1600" pageHeight="1130">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="legend" parent="1" vertex="1" style="text;html=1;whiteSpace=wrap;align=left;fontSize=16;" value="组织与后台身份&lt;br&gt;实体关系子视图；实线：物理FK（子→父），N:1，含可空；虚线：事务协调，无FK；全量键及空值见数据字典。">
+          <mxGeometry x="40" y="20" width="1450" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="company" value="&lt;b&gt;company&lt;/b&gt;&lt;br&gt;公司；无启停或公司层级授权&lt;hr&gt;PK id&lt;br&gt;code&lt;br&gt;name&lt;br&gt;version&lt;br&gt;created_at" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="40" y="140" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="department" value="&lt;b&gt;department&lt;/b&gt;&lt;br&gt;一公司内平级部门；无父级和状态&lt;hr&gt;PK id&lt;br&gt;company_id&lt;br&gt;code&lt;br&gt;name&lt;br&gt;version" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="430" y="140" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="position" value="&lt;b&gt;position&lt;/b&gt;&lt;br&gt;明确部门内岗位；不关联业务角色&lt;hr&gt;PK id&lt;br&gt;department_id&lt;br&gt;code&lt;br&gt;name&lt;br&gt;version" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="820" y="140" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="employee" value="&lt;b&gt;employee&lt;/b&gt;&lt;br&gt;统一员工身份；全局停用独立于后台账号&lt;hr&gt;PK id&lt;br&gt;employee_key&lt;br&gt;name&lt;br&gt;status&lt;br&gt;version" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="1210" y="140" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="employment" value="&lt;b&gt;employment&lt;/b&gt;&lt;br&gt;独立任职及结束历史；同员工同岗位至多一个当前任职&lt;hr&gt;PK id&lt;br&gt;employee_id&lt;br&gt;company_id&lt;br&gt;department_id&lt;br&gt;position_id" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="40" y="460" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_account" value="&lt;b&gt;admin_account&lt;/b&gt;&lt;br&gt;后台账号及凭据失效依据；总管理员仅部署初始化&lt;hr&gt;PK id&lt;br&gt;employee_id&lt;br&gt;login_name&lt;br&gt;password_hash&lt;br&gt;enabled" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="430" y="460" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="management_scope" value="&lt;b&gt;management_scope&lt;/b&gt;&lt;br&gt;稳定范围记录；一个公司一个部门，可无人及空系统集合&lt;hr&gt;PK id&lt;br&gt;company_id&lt;br&gt;department_id&lt;br&gt;scope_version&lt;br&gt;row_version" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="820" y="460" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_appointment" value="&lt;b&gt;admin_appointment&lt;/b&gt;&lt;br&gt;单账号单范围独立任命；结束后不恢复原任命&lt;hr&gt;PK id&lt;br&gt;scope_id&lt;br&gt;account_id&lt;br&gt;status&lt;br&gt;appointment_version" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="1210" y="460" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="scope_system" value="&lt;b&gt;scope_system&lt;/b&gt;&lt;br&gt;当前范围系统集合；不授予业务进入权限&lt;hr&gt;PK scope_id&lt;br&gt;PK system_id" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="40" y="780" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_session" value="&lt;b&gt;admin_session&lt;/b&gt;&lt;br&gt;可即时撤销的后台会话；不存JWT原文&lt;hr&gt;PK id&lt;br&gt;account_id&lt;br&gt;token_jti&lt;br&gt;mode&lt;br&gt;credential_version" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="430" y="780" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="N:1" edge="1" parent="1" source="department" target="company" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="N:1" edge="1" parent="1" source="position" target="department" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="N:1" edge="1" parent="1" source="employment" target="employee" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="N:1" edge="1" parent="1" source="employment" target="department" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="N:1" edge="1" parent="1" source="employment" target="position" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="N:1" edge="1" parent="1" source="management_scope" target="department" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="N:1" edge="1" parent="1" source="admin_appointment" target="management_scope" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="N:1" edge="1" parent="1" source="admin_appointment" target="admin_account" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" value="N:1" edge="1" parent="1" source="scope_system" target="management_scope" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" value="N:1" edge="1" parent="1" source="admin_session" target="admin_account" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="page-2" name="目录、角色与独立来源">
+    <mxGraphModel adaptiveColors="auto" page="1" pageWidth="1600" pageHeight="1130">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="legend" parent="1" vertex="1" style="text;html=1;whiteSpace=wrap;align=left;fontSize=16;" value="目录、角色与独立来源&lt;br&gt;实体关系子视图；实线：物理FK（子→父），N:1，含可空；虚线：事务协调，无FK；全量键及空值见数据字典。">
+          <mxGeometry x="40" y="20" width="1450" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="business_system" value="&lt;b&gt;business_system&lt;/b&gt;&lt;br&gt;业务系统及目录聚合版本；新建同事务建立进入权限&lt;hr&gt;PK id&lt;br&gt;code&lt;br&gt;name&lt;br&gt;description&lt;br&gt;enabled" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="40" y="140" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="directory_node" value="&lt;b&gt;directory_node&lt;/b&gt;&lt;br&gt;同系统导航/功能树；操作不作为树节点&lt;hr&gt;PK id&lt;br&gt;system_id&lt;br&gt;code&lt;br&gt;name&lt;br&gt;node_type" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="430" y="140" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="permission" value="&lt;b&gt;permission&lt;/b&gt;&lt;br&gt;独立功能操作或唯一系统进入权限；不含数据权限&lt;hr&gt;PK id&lt;br&gt;system_id&lt;br&gt;code&lt;br&gt;name&lt;br&gt;permission_type" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="820" y="140" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="business_role" value="&lt;b&gt;business_role&lt;/b&gt;&lt;br&gt;业务角色元数据和有效配置基线；无角色启停&lt;hr&gt;PK id&lt;br&gt;code&lt;br&gt;name&lt;br&gt;description&lt;br&gt;company_id" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="1210" y="140" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="role_permission" value="&lt;b&gt;role_permission&lt;/b&gt;&lt;br&gt;当前有效角色配置集合；关系只表示授予&lt;hr&gt;PK role_id&lt;br&gt;PK permission_id&lt;br&gt;system_id" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="40" y="460" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="employee" value="&lt;b&gt;employee&lt;/b&gt;&lt;br&gt;统一员工身份；全局停用独立于后台账号&lt;hr&gt;PK id&lt;br&gt;employee_key&lt;br&gt;name&lt;br&gt;status&lt;br&gt;version" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="430" y="460" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="authorization_source" value="&lt;b&gt;authorization_source&lt;/b&gt;&lt;br&gt;员工+公司+来源部门+系统的持久周期；无关系也可存在&lt;hr&gt;PK id&lt;br&gt;employee_id&lt;br&gt;company_id&lt;br&gt;department_id&lt;br&gt;system_id" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="820" y="460" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="grant_baseline" value="&lt;b&gt;grant_baseline&lt;/b&gt;&lt;br&gt;同一来源同角色的永久关系版本锚点；不随授权结束删除&lt;hr&gt;PK id&lt;br&gt;source_id&lt;br&gt;role_id&lt;br&gt;company_id&lt;br&gt;system_id" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="1210" y="460" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="role_grant" value="&lt;b&gt;role_grant&lt;/b&gt;&lt;br&gt;一次具体来源授予；结束后重授必须新ID&lt;hr&gt;PK id&lt;br&gt;baseline_id&lt;br&gt;relation_version&lt;br&gt;source_epoch&lt;br&gt;status" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="40" y="780" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="grant_employment_evidence" value="&lt;b&gt;grant_employment_evidence&lt;/b&gt;&lt;br&gt;实际授予时适用任职依据；后续不因岗位改名改写&lt;hr&gt;PK grant_id&lt;br&gt;PK employment_id" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="430" y="780" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="role_configuration_history" value="&lt;b&gt;role_configuration_history&lt;/b&gt;&lt;br&gt;每次成功配置的完整历史快照，不是当前授权事实&lt;hr&gt;PK role_id&lt;br&gt;PK configuration_version&lt;br&gt;request_id&lt;br&gt;configuration_snapshot&lt;br&gt;applied_at" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="820" y="780" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="N:1" edge="1" parent="1" source="directory_node" target="business_system" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="N:1" edge="1" parent="1" source="directory_node" target="directory_node" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="N:1" edge="1" parent="1" source="directory_node" target="permission" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="N:1" edge="1" parent="1" source="permission" target="business_system" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="N:1" edge="1" parent="1" source="permission" target="directory_node" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="N:1" edge="1" parent="1" source="business_role" target="business_system" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="N:1" edge="1" parent="1" source="role_permission" target="business_role" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="N:1" edge="1" parent="1" source="role_permission" target="permission" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" value="N:1" edge="1" parent="1" source="authorization_source" target="employee" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" value="N:1" edge="1" parent="1" source="authorization_source" target="business_system" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" value="N:1" edge="1" parent="1" source="grant_baseline" target="authorization_source" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" value="N:1" edge="1" parent="1" source="grant_baseline" target="business_role" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" value="N:1" edge="1" parent="1" source="role_grant" target="grant_baseline" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" value="N:1" edge="1" parent="1" source="grant_employment_evidence" target="role_grant" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" value="N:1" edge="1" parent="1" source="role_configuration_history" target="business_role" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="page-3" name="固定申请、OA与执行">
+    <mxGraphModel adaptiveColors="auto" page="1" pageWidth="1600" pageHeight="1450">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="legend" parent="1" vertex="1" style="text;html=1;whiteSpace=wrap;align=left;fontSize=16;" value="固定申请、OA与执行&lt;br&gt;实体关系子视图；实线：物理FK（子→父），N:1，含可空；虚线：事务协调，无FK；全量键及空值见数据字典。">
+          <mxGeometry x="40" y="20" width="1450" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="change_request" value="&lt;b&gt;change_request&lt;/b&gt;&lt;br&gt;草稿与固定申请共用生命周期；七响应模型不建七表&lt;hr&gt;PK id&lt;br&gt;kind&lt;br&gt;company_id&lt;br&gt;content&lt;br&gt;reason" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="40" y="140" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="change_target" value="&lt;b&gt;change_target&lt;/b&gt;&lt;br&gt;草稿目标/提交后实际清单的可检索投影；必须与对应content一致&lt;hr&gt;PK request_id&lt;br&gt;PK line_no&lt;br&gt;line_kind&lt;br&gt;company_id&lt;br&gt;system_id&lt;br&gt;department_id" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="430" y="140" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="role_change_claim" value="&lt;b&gt;role_change_claim&lt;/b&gt;&lt;br&gt;当前角色配置通道；终态删除占用，历史不靠本表&lt;hr&gt;PK role_id&lt;br&gt;request_id" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="820" y="140" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="relation_change_claim" value="&lt;b&gt;relation_change_claim&lt;/b&gt;&lt;br&gt;当前关系变更通道；同来源去重，不阻塞其他来源&lt;hr&gt;PK baseline_id&lt;br&gt;request_id" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="1210" y="140" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="oa_outbox" value="&lt;b&gt;oa_outbox&lt;/b&gt;&lt;br&gt;同一固定申请可靠投递待办及租约；不复制可变申请内容&lt;hr&gt;PK request_id&lt;br&gt;oa_instance_id&lt;br&gt;task_state&lt;br&gt;next_attempt_at&lt;br&gt;lease_token" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="40" y="460" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="oa_link" value="&lt;b&gt;oa_link&lt;/b&gt;&lt;br&gt;可靠外部审批关联；先由投递响应落地，回调不得抢绑&lt;hr&gt;PK request_id&lt;br&gt;oa_instance_id&lt;br&gt;oa_approval_id&lt;br&gt;accepted_at&lt;br&gt;created_at" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="430" y="460" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="oa_callback_event" value="&lt;b&gt;oa_callback_event&lt;/b&gt;&lt;br&gt;OA实例+事件ID防重；同事件不同内容不得覆盖&lt;hr&gt;PK id&lt;br&gt;oa_instance_id&lt;br&gt;event_id&lt;br&gt;request_id&lt;br&gt;payload_digest" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="820" y="460" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="oa_final_result" value="&lt;b&gt;oa_final_result&lt;/b&gt;&lt;br&gt;一申请一不可反转最终结果；新eventId不绕过&lt;hr&gt;PK request_id&lt;br&gt;first_event_id&lt;br&gt;decision&lt;br&gt;decided_at&lt;br&gt;comment" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="1210" y="460" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="execution_success" value="&lt;b&gt;execution_success&lt;/b&gt;&lt;br&gt;一申请一次成功凭据；业务写入/成功审计同事务&lt;hr&gt;PK request_id&lt;br&gt;audit_event_id&lt;br&gt;executed_at&lt;br&gt;result_snapshot" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="40" y="780" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="audit_event" value="&lt;b&gt;audit_event&lt;/b&gt;&lt;br&gt;追加式授权/管理审计和申请事件；不通过当前资料倒推历史&lt;hr&gt;PK id&lt;br&gt;occurred_at&lt;br&gt;event_type&lt;br&gt;actor_kind&lt;br&gt;actor_id" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="430" y="780" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="execution_attempt" value="&lt;b&gt;execution_attempt&lt;/b&gt;&lt;br&gt;本地执行尝试历史；业务失败回滚后独立记录&lt;hr&gt;PK id&lt;br&gt;request_id&lt;br&gt;attempt_no&lt;br&gt;outcome&lt;br&gt;failure_code" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="820" y="780" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="service_identity" value="&lt;b&gt;service_identity&lt;/b&gt;&lt;br&gt;部署管理的服务身份和绑定；不保存私钥/令牌&lt;hr&gt;PK id&lt;br&gt;subject&lt;br&gt;kind&lt;br&gt;system_id&lt;br&gt;enabled" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="1210" y="780" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="audit_subject" value="&lt;b&gt;audit_subject&lt;/b&gt;&lt;br&gt;审计按稳定员工/角色等目标筛选的历史索引；可指已删除草稿对象&lt;hr&gt;PK audit_event_id&lt;br&gt;PK subject_type&lt;br&gt;PK subject_id" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="40" y="1100" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="N:1" edge="1" parent="1" source="change_target" target="change_request" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="N:1" edge="1" parent="1" source="role_change_claim" target="change_request" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="N:1" edge="1" parent="1" source="relation_change_claim" target="change_request" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="N:1" edge="1" parent="1" source="oa_outbox" target="change_request" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="N:1" edge="1" parent="1" source="oa_outbox" target="service_identity" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="N:1" edge="1" parent="1" source="oa_link" target="change_request" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="N:1" edge="1" parent="1" source="oa_link" target="service_identity" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="N:1" edge="1" parent="1" source="oa_callback_event" target="service_identity" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" value="N:1" edge="1" parent="1" source="oa_callback_event" target="change_request" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" value="N:1" edge="1" parent="1" source="oa_final_result" target="change_request" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" value="N:1" edge="1" parent="1" source="oa_final_result" target="oa_callback_event" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" value="N:1" edge="1" parent="1" source="execution_success" target="change_request" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" value="N:1" edge="1" parent="1" source="execution_success" target="audit_event" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" value="N:1" edge="1" parent="1" source="execution_attempt" target="change_request" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" value="N:1" edge="1" parent="1" source="audit_subject" target="audit_event" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="page-4" name="导入、预览与可靠性">
+    <mxGraphModel adaptiveColors="auto" page="1" pageWidth="1600" pageHeight="1130">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="legend" parent="1" vertex="1" style="text;html=1;whiteSpace=wrap;align=left;fontSize=16;" value="导入、预览与可靠性&lt;br&gt;实体关系子视图；实线：物理FK（子→父），N:1，含可空；虚线：事务协调，无FK；全量键及空值见数据字典。">
+          <mxGeometry x="40" y="20" width="1450" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="import_file" value="&lt;b&gt;import_file&lt;/b&gt;&lt;br&gt;导入文件元数据；文件本体受控存储且不可原地覆盖&lt;hr&gt;PK id&lt;br&gt;file_name&lt;br&gt;sha256&lt;br&gt;size_bytes&lt;br&gt;storage_ref" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="40" y="140" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="import_batch" value="&lt;b&gt;import_batch&lt;/b&gt;&lt;br&gt;冻结的预检与原子导入结果；成功sourceBatchId长期防重&lt;hr&gt;PK id&lt;br&gt;file_id&lt;br&gt;source_system&lt;br&gt;source_batch_id&lt;br&gt;import_type" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="430" y="140" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="import_plan_row" value="&lt;b&gt;import_plan_row&lt;/b&gt;&lt;br&gt;冻结规范行及逐字段前后值；候选组织尚未建正式记录&lt;hr&gt;PK batch_id&lt;br&gt;PK row_number&lt;br&gt;PK plan_no&lt;br&gt;action&lt;br&gt;target_id&lt;br&gt;stable_code&lt;br&gt;company_code" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="820" y="140" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="import_issue" value="&lt;b&gt;import_issue&lt;/b&gt;&lt;br&gt;冻结预检报告；仅总管理员可读&lt;hr&gt;PK id&lt;br&gt;batch_id&lt;br&gt;row_number&lt;br&gt;field&lt;br&gt;severity" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="1210" y="140" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="organization_mapping" value="&lt;b&gt;organization_mapping&lt;/b&gt;&lt;br&gt;经过确认的完整来源路径映射；没有组织自动合并&lt;hr&gt;PK id&lt;br&gt;source_system&lt;br&gt;source_path&lt;br&gt;object_kind&lt;br&gt;company_id" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="40" y="460" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="employee_source_identity" value="&lt;b&gt;employee_source_identity&lt;/b&gt;&lt;br&gt;当前来源标识到内部员工的显式映射；重映射旧值另存审计&lt;hr&gt;PK id&lt;br&gt;source_system&lt;br&gt;source_key&lt;br&gt;employee_id&lt;br&gt;version" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="430" y="460" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="impact_preview" value="&lt;b&gt;impact_preview&lt;/b&gt;&lt;br&gt;五分钟固定预览；不是授权凭证&lt;hr&gt;PK id&lt;br&gt;creator_account_id&lt;br&gt;appointment_id&lt;br&gt;authority_snapshot&lt;br&gt;operation" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="820" y="460" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="preview_item" value="&lt;b&gt;preview_item&lt;/b&gt;&lt;br&gt;同一预览的可见员工/目标分页快照；禁止实时重算混页&lt;hr&gt;PK id&lt;br&gt;preview_id&lt;br&gt;item_kind&lt;br&gt;stable_key&lt;br&gt;safe_item" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="1210" y="460" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="http_idempotency" value="&lt;b&gt;http_idempotency&lt;/b&gt;&lt;br&gt;HTTP接受结果窗口；独立于OA与业务成功防重&lt;hr&gt;PK id&lt;br&gt;principal_id&lt;br&gt;http_method&lt;br&gt;canonical_path&lt;br&gt;idempotency_key" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="40" y="780" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="mutation_guard" value="&lt;b&gt;mutation_guard&lt;/b&gt;&lt;br&gt;一期本地写事务串行化锚点；没有业务权限含义&lt;hr&gt;PK id&lt;br&gt;revision" vertex="1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fillColor=#eaf2f8;strokeColor=#456b87;fontSize=12;">
+          <mxGeometry x="430" y="780" width="290" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="N:1" edge="1" parent="1" source="import_batch" target="import_file" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="N:1" edge="1" parent="1" source="import_plan_row" target="import_batch" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="N:1" edge="1" parent="1" source="import_issue" target="import_batch" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="N:1" edge="1" parent="1" source="preview_item" target="impact_preview" style="entityRelationEdgeStyle;html=1;endArrow=ERone;startArrow=ERmany;strokeColor=#456b87;fontSize=11;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="写事务先锁" edge="1" parent="1" source="import_batch" target="mutation_guard" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;endArrow=open;strokeColor=#777777;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="写事务先锁" edge="1" parent="1" source="http_idempotency" target="mutation_guard" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;endArrow=open;strokeColor=#777777;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

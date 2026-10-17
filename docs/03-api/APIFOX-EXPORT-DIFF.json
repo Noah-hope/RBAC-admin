@@ -1,0 +1,108 @@
+{
+  "exportSha256": "67fd08c024a365cfef26485a5984be28c7941cfc9662e1ae8d3ddac558fd5501",
+  "openapiStructureValid": true,
+  "modelExamplesChecked": 120,
+  "invalidModelExamples": [],
+  "mediaExamplesChecked": 104,
+  "invalidMediaExamples": [],
+  "exportOpenapi": "3.1.0",
+  "exportVersion": "1.2.0",
+  "paths": 56,
+  "operations": 67,
+  "schemas": 129,
+  "webhooks": [
+    "oaSubmission"
+  ],
+  "extraOperations": [],
+  "missingOperations": [],
+  "operationIdMismatches": [],
+  "securityMismatches": [],
+  "responseCodeMismatches": [],
+  "operationsMissingResponses": [],
+  "differenceEntryCount": 2,
+  "differencePaths": [
+    "/info/license",
+    "/servers"
+  ],
+  "componentDifferencePaths": [],
+  "webhookDifferencePaths": [],
+  "appointmentFields": {
+    "companyId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+    },
+    "departmentId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+    },
+    "systemIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+      },
+      "uniqueItems": true
+    }
+  },
+  "errorContentTypes": {
+    "BadRequest": [
+      "application/problem+json"
+    ],
+    "Unauthorized": [
+      "application/problem+json"
+    ],
+    "Forbidden": [
+      "application/problem+json"
+    ],
+    "NotFound": [
+      "application/problem+json"
+    ],
+    "Conflict": [
+      "application/problem+json"
+    ],
+    "PayloadTooLarge": [
+      "application/problem+json"
+    ],
+    "UnsupportedMediaType": [
+      "application/problem+json"
+    ],
+    "Unprocessable": [
+      "application/problem+json"
+    ],
+    "RateLimited": [
+      "application/problem+json"
+    ],
+    "IntegrityError": [
+      "application/problem+json"
+    ],
+    "Unavailable": [
+      "application/problem+json"
+    ]
+  },
+  "uploadSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "file"
+    ],
+    "properties": {
+      "file": {
+        "type": "string",
+        "format": "binary",
+        "description": "CSV或XLSX；禁止XLSM/旧XLS/宏；校验扩展名/MIME/文件内容。"
+      }
+    }
+  },
+  "displayOnlyDifferencePaths": [
+    "/info/license",
+    "/servers"
+  ],
+  "blockingDifferencePaths": [],
+  "coreContractConsistent": true
+}

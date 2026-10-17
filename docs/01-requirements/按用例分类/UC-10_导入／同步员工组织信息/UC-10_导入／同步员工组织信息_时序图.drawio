@@ -122,7 +122,7 @@
         <mxCell id="message8" source="center" target="center" edge="1" parent="1" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=block;endFill=1;exitX=0.5;entryX=0.5;exitY=0.8056758056758057;entryY=0.8249158249158249;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
           <mxGeometry as="geometry" relative="1" />
         </mxCell>
-        <mxCell id="label8" value="9. 同事务更新组织、员工、任职及受影响授权／任命失效&lt;br&gt;状态" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=left;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
+        <mxCell id="label8" value="9. 同事务按冻结动作顺序更新资料；离岗周期与授权／任&lt;br&gt;命失效持久保存" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;text;align=left;verticalAlign=middle;fillColor=#ffffff;strokeColor=none;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="915" y="1800" width="410" height="48" />
         </mxCell>
         <mxCell id="message9" source="center" target="center" edge="1" parent="1" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#334d68;strokeWidth=1.5;endSize=7;endArrow=block;endFill=1;exitX=0.5;entryX=0.5;exitY=0.8523328523328524;entryY=0.8715728715728716;exitPerimeter=0;entryPerimeter=0;jettySize=35;">
@@ -140,7 +140,7 @@
         <mxCell id="note0" value="HR 一期通过文件／模拟数据提供资料，不设计真实 HR 查询接口；文件作为数据，不执行宏。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;rounded=0;whiteSpace=wrap;align=left;spacing=12;fillColor=#fff8e8;strokeColor=#c4a34f;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="55" y="2289" width="1310" height="50" />
         </mxCell>
-        <mxCell id="note1" value="有适用兼岗则保留授权；员工停用使全部业务授权及任命失效。恢复身份不恢复旧关系，重新申请／任命。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;rounded=0;whiteSpace=wrap;align=left;spacing=12;fillColor=#fff8e8;strokeColor=#c4a34f;" vertex="1" parent="1">
+        <mxCell id="note1" value="仍有适用兼岗则保留；明确结束最后任职后同批再就职不复权。员工停用使全部授权及任命失效，恢复不复权。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;rounded=0;whiteSpace=wrap;align=left;spacing=12;fillColor=#fff8e8;strokeColor=#c4a34f;" vertex="1" parent="1">
           <mxGeometry as="geometry" x="55" y="2359" width="1310" height="50" />
         </mxCell>
         <mxCell id="note2" value="导入不自动建后台账号或授予业务角色；缺行不代表离职，总表与分表不得重复追加。" style="html=1;fontFamily=Microsoft YaHei;fontSize=16;fontColor=#23384f;rounded=0;whiteSpace=wrap;align=left;spacing=12;fillColor=#fff8e8;strokeColor=#c4a34f;" vertex="1" parent="1">

@@ -1,0 +1,107 @@
+{
+  "scope": "DESIGN_SCHEMA_AND_STATIC_REVIEW_ONLY",
+  "baseline": "e3fa818",
+  "inputApiVersion": "1.1.0",
+  "apiVersion": "1.2.0",
+  "openapiSha256": "9910ceafadea88d85793d00f7bb4e6e5673700a8565366a407185c4517e0cbdf",
+  "cases": [
+    {
+      "id": "C01_all_101_employments",
+      "kind": "JSON_SCHEMA",
+      "baselineAccepted": false,
+      "currentAccepted": true
+    },
+    {
+      "id": "C02_duplicate_evidence",
+      "kind": "JSON_SCHEMA",
+      "baselineAccepted": false,
+      "currentAccepted": false
+    },
+    {
+      "id": "C03_empty_evidence",
+      "kind": "JSON_SCHEMA",
+      "baselineAccepted": false,
+      "currentAccepted": false
+    },
+    {
+      "id": "C04_ambiguous_close_counts",
+      "kind": "JSON_SCHEMA",
+      "baselineAccepted": true,
+      "currentAccepted": false
+    },
+    {
+      "id": "C05_complete_close_result",
+      "kind": "JSON_SCHEMA",
+      "baselineAccepted": false,
+      "currentAccepted": true
+    },
+    {
+      "id": "C06_zero_visible_with_hidden_impact",
+      "kind": "JSON_SCHEMA",
+      "baselineAccepted": false,
+      "currentAccepted": true
+    },
+    {
+      "id": "C07_false_completeness_claim",
+      "kind": "JSON_SCHEMA",
+      "baselineAccepted": false,
+      "currentAccepted": false
+    },
+    {
+      "id": "C08_undocumented_hidden_counter",
+      "kind": "JSON_SCHEMA",
+      "baselineAccepted": false,
+      "currentAccepted": false
+    },
+    {
+      "id": "C09_deleted_draft_without_authorization_facts",
+      "kind": "FINITE_CHECK_EXPRESSION_ONLY",
+      "baselineAccepted": true,
+      "currentAccepted": false
+    },
+    {
+      "id": "C10_completed_with_authorization_facts",
+      "kind": "FINITE_CHECK_EXPRESSION_ONLY",
+      "baselineAccepted": true,
+      "currentAccepted": true
+    },
+    {
+      "id": "C11_invalid_authorization_json_shape",
+      "kind": "FINITE_CHECK_EXPRESSION_ONLY",
+      "baselineAccepted": true,
+      "currentAccepted": false
+    },
+    {
+      "id": "C12_reservation_before_result",
+      "kind": "FINITE_CHECK_EXPRESSION_ONLY",
+      "baselineAccepted": true,
+      "currentAccepted": true
+    }
+  ],
+  "schemaAndCheckCases": 12,
+  "inboundOperations": 67,
+  "idempotencyHeaderExceptions": [
+    "authorizationQuery",
+    "catalogPreview",
+    "changeOwnPassword",
+    "changePreview",
+    "employeeStatePreview",
+    "grantBaselines",
+    "login",
+    "logout",
+    "permissionCheck",
+    "receiveOaResult",
+    "scopeCreatePreview",
+    "scopeEditPreview",
+    "sourceBaselines",
+    "sourceClosePreview",
+    "systemStatePreview"
+  ],
+  "fieldMappingModelNames": "PASS",
+  "exportOverrideMatchesGit": true,
+  "remoteExportRevalidated": false,
+  "readWriteAndIdempotencyTracing": "PASS",
+  "businessOrConcurrencyTestsRun": false,
+  "databaseStarted": false,
+  "sqlExecuted": false
+}

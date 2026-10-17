@@ -42,7 +42,7 @@ python docs/01-requirements/sync_usecase_folders.py
 
 前者更新图源、简表及副本，后者只同步副本。需要导出图片时仅为前者增加 `--previews`。
 
-界面原型现位于 `02-ui-design/prototype/`，设计说明、启动及验证文档在 `02-ui-design/`。`03-api/`～`05-detailed-design/` 目前仅保留 `.gitkeep`，便于 Git 跟踪空目录。当前不创建根目录 `tasks/`、`frontend/`、`backend/`、`prototype/` 或 `.github/`；正式代码布局到实现阶段再确定。
+界面原型现位于 `02-ui-design/prototype/`，设计说明、启动及验证文档在 `02-ui-design/`。`03-api/`已交付API1.2.0及指定Apifox导出核对，`04-database/`已交付数据库1.1与正式跨阶段评审，`05-detailed-design/`已交付后端详细设计1.0、本地Issue草案与静态验证。当前不创建根目录 `tasks/`、`frontend/`、`backend/`、`prototype/` 或 `.github/`；正式代码布局在详细设计ENGINEERING中提出backend单工程、deploy及tools/demo的拟定结构，当前只记录方案，待实施开始时更新约定并创建；本轮没有新增这些工程目录。
 
 ## 验证记录
 
