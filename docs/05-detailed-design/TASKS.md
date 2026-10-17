@@ -1,24 +1,28 @@
 # 本地Issue草案与验收卡
 
-35项后端任务，均PLANNED，尚未创建远程Issue/PR；BE编号不是平台Issue号。仅正文可复制到托管平台，账号、远程、milestone ID和目标分支待团队配置。估算单位为人工小时，开发含该任务的设计细化/TDD/自测/文档；评审另计，外部购买/下载等待不计。
+修订1.1/D-038：35项均PLANNED。BE-01～05为用户先实现的基座；BE-06～35为验收基座后待分派的业务/交付任务，ownerSlot和reviewerSlot为null时绝不表示已指派。suggestedOwnerSlot/suggestedReviewerSlot只是旧方案参考。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。
 
-通用DoD：对应设计已读且引用准确→业务/可执行基础能力RED失败原因留证→最小实现→GREEN及重构→对应安全/事务验收→另一成员PR评审→集成与文档更新。环境/协作/发布核验使用实际清单和运行记录，不伪造RED/GREEN。未运行验证不得勾选通过；依赖任务只有合并且其负责验收部分通过才算解除，完整跨域证据由BE-33/34/35汇总。服务/JWT秘密只用本地/服务器环境，不进Issue正文。
+业务任务启动须同时满足FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED和原dependencies；这两个阶段门槛不是额外业务需求。基座验收见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。开发估算含设计细化/TDD/自测/文档，评审另计，外部等待不计。
 
-## BE-01 协作基线、开发环境与部署目标确认
+通用DoD：对应设计已读且引用准确→业务/可执行基础能力RED失败原因留证→最小实现→GREEN及重构→对应安全/事务验收→未参与改动的成员PR评审→集成与文档更新。环境/协作/发布核验使用真实记录。未运行验证不得勾选通过；依赖只有合并且本任务负责部分通过才解除，完整跨域证据由BE-33/34/35汇总。秘密不进Issue正文。
 
-- 状态：PLANNED；负责人槽位A，评审槽位B；模块M00,M12。
+## BE-01 基座开发准备与协作条件核验
+
+- 状态：PLANNED；阶段FOUNDATION；负责人用户（已确认），独立评审人待登记；模块M00,M12。
+- 分派参考：建议组A、建议评审组B，不是已确认人员；启动条件基座任务按下列依赖推进。
 - 依赖：无；开发估算1/2/3h，评审0.25/0.5/1h（低/中/高）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：全用例公共/部署基础；公共事务设计；见对应AT及数据库不变量。
-- 交付：确定四人账号/远程平台/分支规则、JDK/构建/MySQL隔离条件和服务器OS/访问方式；记录实际工具清单。
+- 交付：用户负责基座，核对最新main、JDK/构建/隔离MySQL、评审安排和实际工具；登记后续人员/服务器未就绪条件。
 - 验收：AT-01 可重复构建与最小部署；AT-39 PR与发布证据。
-- 验收边界：只核验协作/工具/环境清单、负责人和未就绪条件；AT-01/39在此为准备证据，不要求尚不存在的构建产物或发布包。服务器未到位须保留BE-34前置条件，不能声称部署已完成。
+- 验收边界：核验用户的基座开发环境、共同main和非作者评审方式；AT-01/39只为准备证据。业务分派和服务器验收留后续，不要求先有发布包或四人业务任务已分配。
 - PR说明：关联真实Issue号；列明变更行为、契约/表版本、实际RED/GREEN命令及结果、待办；所有验收定义见TEST-PLAN。
-- 注意：无服务器时只可完成本地准备，BE-34仍阻塞；不默认已有GitHub远程或Docker。
+- 注意：GitHub及设计主线已就绪；30项业务的人员分派在基座验收后完成，服务器不作为本地基座门槛；不默认Docker已可用。
 
 ## BE-02 应用骨架、契约边界与健康检查
 
-- 状态：PLANNED；负责人槽位A，评审槽位B；模块M00,M12。
+- 状态：PLANNED；阶段FOUNDATION；负责人用户（已确认），独立评审人待登记；模块M00,M12。
+- 分派参考：建议组A、建议评审组B，不是已确认人员；启动条件基座任务按下列依赖推进。
 - 依赖：BE-01；开发估算1.5/3/5h，评审0.25/0.5/1h（低/中/高）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：全用例公共/部署基础；公共事务设计；见对应AT及数据库不变量。
@@ -29,7 +33,8 @@
 
 ## BE-03 迁移、UUID/版本及JPA基础适配
 
-- 状态：PLANNED；负责人槽位A，评审槽位B；模块M00。
+- 状态：PLANNED；阶段FOUNDATION；负责人用户（已确认），独立评审人待登记；模块M00。
+- 分派参考：建议组A、建议评审组B，不是已确认人员；启动条件基座任务按下列依赖推进。
 - 依赖：BE-02；开发估算2.5/5/8h，评审0.25/0.5/1h（低/中/高）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：全用例公共/部署基础；公共事务设计；见对应AT及数据库不变量。
@@ -41,7 +46,8 @@
 
 ## BE-04 统一写事务、读快照与审计追加
 
-- 状态：PLANNED；负责人槽位A，评审槽位B；模块M00,M11。
+- 状态：PLANNED；阶段FOUNDATION；负责人用户（已确认），独立评审人待登记；模块M00,M11。
+- 分派参考：建议组A、建议评审组B，不是已确认人员；启动条件基座任务按下列依赖推进。
 - 依赖：BE-03；开发估算2/4/6h，评审0.25/0.5/1h（低/中/高）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：UC-05,UC-06；公共事务设计；见对应AT及数据库不变量。
@@ -52,18 +58,20 @@
 
 ## BE-05 HTTP幂等预留、栅栏与删除后重放
 
-- 状态：PLANNED；负责人槽位A，评审槽位B；模块M00。
+- 状态：PLANNED；阶段FOUNDATION；负责人用户（已确认），独立评审人待登记；模块M00。
+- 分派参考：建议组A、建议评审组B，不是已确认人员；启动条件基座任务按下列依赖推进。
 - 依赖：BE-04；开发估算2/4/6h，评审0.25/0.5/1h（低/中/高）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：UC-02,UC-03,UC-04；公共事务设计；见对应AT及数据库不变量。
 - 交付：请求HMAC/租约/安全结果/authorization_basis、同token提交和过期接管、敏感响应过滤。
 - 验收：AT-04 HTTP幂等栅栏与失败恢复。
-- 验收边界：完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。
+- 验收边界：验证公共幂等状态机、租约栅栏、结果回放及当前授权回调；删除后重放用隔离测试夹具证明机制，不提前实现deleteChangeDraft。正式草稿端到端行为在BE-20/33补齐，不能把局部通过标记为完整AT-04通过。
 - PR说明：关联真实Issue号；列明变更行为、契约/表版本、实际RED/GREEN命令及结果、待办；所有验收定义见TEST-PLAN。
 
 ## BE-06 三类JWT与后台登录、退出、本人改密
 
-- 状态：PLANNED；负责人槽位A，评审槽位B；模块M01,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M01,M12。
+- 分派参考：建议组A、建议评审组B，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-04；开发估算2.5/5/8h，评审0.25/0.5/1h（低/中/高）。
 - API：login, currentSession, logout, changeOwnPassword。
 - 需求/数据库：UC-05,UC-06,UC-09,UC-11；T0,T11,T12,T9；I-04,I-20,I-22。
@@ -74,7 +82,8 @@
 
 ## BE-07 后台账号管理与密码重置
 
-- 状态：PLANNED；负责人槽位A，评审槽位B；模块M01,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M01,M12。
+- 分派参考：建议组A、建议评审组B，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-05,BE-06；开发估算1.5/3/5h，评审0.25/0.5/1h（低/中/高）。
 - API：listAccounts, createAccount, getAccount, setAccountState, resetAccountPassword。
 - 需求/数据库：UC-05,UC-06,UC-09,UC-11；T0,T11,T9；I-01,I-04,I-16,I-20。
@@ -85,7 +94,8 @@
 
 ## BE-08 当前单项任命、范围读模型与覆盖策略
 
-- 状态：PLANNED；负责人槽位A，评审槽位B；模块M03,M11,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M03,M11,M12。
+- 分派参考：建议组A、建议评审组B，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-06,BE-10；开发估算1.5/3/5h，评审0.25/0.5/1h（低/中/高）。
 - API：myAppointments, listScopes, getScope, listScopeAppointments。
 - 需求/数据库：UC-07,UC-09,UC-11；T11,T9；I-03,I-04,I-20。
@@ -96,7 +106,8 @@
 
 ## BE-09 创建管理范围及任命、创建预览
 
-- 状态：PLANNED；负责人槽位A，评审槽位B；模块M03,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M03,M12。
+- 分派参考：建议组A、建议评审组B，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-05,BE-08,BE-17；开发估算1.5/3/5h，评审0.25/0.5/1h（低/中/高）。
 - API：createScope, scopeCreatePreview。
 - 需求/数据库：UC-01,UC-02,UC-03,UC-04,UC-07,UC-09,UC-10；T0,T11,T6；I-04,I-12,I-16,I-18,I-20。
@@ -107,7 +118,8 @@
 
 ## BE-10 组织、员工与任职读取及基础变更端口
 
-- 状态：PLANNED；负责人槽位D，评审槽位C；模块M02,M11,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M02,M11,M12。
+- 分派参考：建议组D、建议评审组C，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-03,BE-04；开发估算1.5/3/5h，评审0.25/0.5/1h（低/中/高）。
 - API：listCompanies, listDepartments, listPositions, listEmployees, getEmployee, listEmployments。
 - 需求/数据库：UC-03,UC-07,UC-10；T11,T9；I-01,I-03,I-08,I-09,I-21。
@@ -118,7 +130,8 @@
 
 ## BE-11 系统登记及查询
 
-- 状态：PLANNED；负责人槽位B，评审槽位D；模块M04,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M04,M12。
+- 分派参考：建议组B、建议评审组D，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-03,BE-04,BE-05,BE-06；开发估算1.5/3/5h，评审0.25/0.5/1h（低/中/高）。
 - API：listSystems, createSystem, getSystem。
 - 需求/数据库：UC-01；T0,T1,T11,T9；I-05,I-06,I-16,I-18。
@@ -129,7 +142,8 @@
 
 ## BE-12 目录原子编辑、系统启停及影响预览
 
-- 状态：PLANNED；负责人槽位B，评审槽位D；模块M04,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M04,M12。
+- 分派参考：建议组B、建议评审组D，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-11,BE-17；开发估算3/5/8h，评审0.25/0.5/1h（低/中/高）。
 - API：updateSystem, systemStatePreview, listDirectoryNodes, listPermissions, catalogPreview, saveCatalog。
 - 需求/数据库：UC-01,UC-02,UC-03,UC-04,UC-05,UC-06,UC-07,UC-10；T0,T1,T11,T9；I-05,I-06,I-16,I-18。
@@ -140,7 +154,8 @@
 
 ## BE-13 角色元数据和当前配置读取
 
-- 状态：PLANNED；负责人槽位B，评审槽位D；模块M05,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M05,M12。
+- 分派参考：建议组B、建议评审组D，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-03,BE-05,BE-06,BE-11；开发估算1.5/2.5/4h，评审0.25/0.5/1h（低/中/高）。
 - API：listRoles, getRole, updateRoleMetadata。
 - 需求/数据库：UC-02；T0,T11,T2,T9；I-01,I-07,I-10,I-16。
@@ -151,7 +166,8 @@
 
 ## BE-14 来源和关系基线、授权历史及当前资格
 
-- 状态：PLANNED；负责人槽位D，评审槽位C；模块M06,M11,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M06,M11,M12。
+- 分派参考：建议组D、建议评审组C，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-04,BE-10,BE-11；开发估算2/3.5/6h，评审0.25/0.5/1h（低/中/高）。
 - API：listGrants, grantBaselines, sourceBaselines。
 - 需求/数据库：UC-03,UC-04,UC-11；T11,T9；I-03,I-08,I-09。
@@ -162,7 +178,8 @@
 
 ## BE-15 有效角色配置应用器
 
-- 状态：PLANNED；负责人槽位B，评审槽位D；模块M05。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M05。
+- 分派参考：建议组B、建议评审组D，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-04,BE-13；开发估算1.5/3/5h，评审0.25/0.5/1h（低/中/高）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：UC-02,UC-03,UC-04,UC-11；公共事务设计；见对应AT及数据库不变量。
@@ -173,7 +190,8 @@
 
 ## BE-16 授予/撤销及关闭来源底层原子操作
 
-- 状态：PLANNED；负责人槽位D，评审槽位C；模块M06。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M06。
+- 分派参考：建议组D、建议评审组C，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-04,BE-14；开发估算2/3.5/6h，评审0.25/0.5/1h（低/中/高）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：UC-03,UC-04,UC-10,UC-11；公共事务设计；见对应AT及数据库不变量。
@@ -184,7 +202,8 @@
 
 ## BE-17 安全影响预览与分页、依赖集合快照
 
-- 状态：PLANNED；负责人槽位B，评审槽位D；模块M11,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M11,M12。
+- 分派参考：建议组B、建议评审组D，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-04,BE-08,BE-10；开发估算2.5/5/8h，评审0.25/0.5/1h（低/中/高）。
 - API：listPreviewEmployees, listPreviewTargets。
 - 需求/数据库：UC-01,UC-02,UC-03,UC-04,UC-07,UC-08,UC-10；T11,T9；I-18,I-20。
@@ -196,7 +215,8 @@
 
 ## BE-18 业务系统有效权限和单项检查
 
-- 状态：PLANNED；负责人槽位B，评审槽位D；模块M11,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M11,M12。
+- 分派参考：建议组B、建议评审组D，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-06,BE-10,BE-14；开发估算2/4/6h，评审0.25/0.5/1h（低/中/高）。
 - API：authorizationQuery, permissionCheck。
 - 需求/数据库：UC-01,UC-05,UC-06,UC-11；T11；I-03,I-05,I-06,I-07,I-08。
@@ -207,7 +227,8 @@
 
 ## BE-19 审计列表、详情与敏感访问
 
-- 状态：PLANNED；负责人槽位C，评审槽位A；模块M11,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M11,M12。
+- 分派参考：建议组C、建议评审组A，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-04,BE-06,BE-08；开发估算1.5/2.5/4h，评审0.25/0.5/1h（低/中/高）。
 - API：listAudit, getAudit。
 - 需求/数据库：UC-04,UC-08,UC-11；T11,T9；I-19,I-20。
@@ -218,7 +239,8 @@
 
 ## BE-20 角色创建与配置/授予/撤销草稿、占用
 
-- 状态：PLANNED；负责人槽位C，评审槽位A；模块M07,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M07,M12。
+- 分派参考：建议组C、建议评审组A，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-05,BE-08,BE-13,BE-14；开发估算3/5/8h，评审0.25/0.5/1h（低/中/高）。
 - API：createRole, createChangeDraft, updateChangeDraft, deleteChangeDraft。
 - 需求/数据库：UC-02,UC-03,UC-04；T0,T11,T2,T3；I-01,I-07,I-08,I-10,I-11,I-16,I-18。
@@ -229,7 +251,8 @@
 
 ## BE-21 预览确认、固定申请与OA待办
 
-- 状态：PLANNED；负责人槽位C，评审槽位A；模块M07,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M07,M12。
+- 分派参考：建议组C、建议评审组A，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-17,BE-20；开发估算3/5/8h，评审0.25/0.5/1h（低/中/高）。
 - API：changePreview, submitChange。
 - 需求/数据库：UC-02,UC-03,UC-04,UC-11；T0,T11,T2,T3；I-08,I-10,I-11,I-16,I-18。
@@ -240,7 +263,8 @@
 
 ## BE-22 申请列表、详情及安全时间线
 
-- 状态：PLANNED；负责人槽位C，评审槽位A；模块M07,M11,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M07,M11,M12。
+- 分派参考：建议组C、建议评审组A，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-20；开发估算1/2/3h，评审0.25/0.5/1h（低/中/高）。
 - API：listChangeRequests, getChangeRequest, listChangeEvents。
 - 需求/数据库：UC-02,UC-03,UC-04,UC-07,UC-08,UC-11；T11,T9；I-11,I-12,I-19。
@@ -251,7 +275,8 @@
 
 ## BE-23 OA可靠投递、关联及人工投递重试
 
-- 状态：PLANNED；负责人槽位C，评审槽位A；模块M08,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M08,M12。
+- 分派参考：建议组C、建议评审组A，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-21；开发估算2/4/6h，评审0.25/0.5/1h（低/中/高）。
 - API：retryOaDelivery, deliverOaSubmission。
 - 需求/数据库：UC-02,UC-03,UC-04,UC-11；T0,T10；I-11,I-12,I-14,I-16。
@@ -262,7 +287,8 @@
 
 ## BE-24 OA最终结果接收与三层去重
 
-- 状态：PLANNED；负责人槽位C，评审槽位A；模块M08,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M08,M12。
+- 分派参考：建议组C、建议评审组A，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-21,BE-23,BE-06；开发估算2/3.5/6h，评审0.25/0.5/1h（低/中/高）。
 - API：receiveOaResult。
 - 需求/数据库：UC-05,UC-06,UC-11；T0,T10；I-11,I-12,I-14,I-15。
@@ -273,7 +299,8 @@
 
 ## BE-25 自动执行、整份失效与失败恢复
 
-- 状态：PLANNED；负责人槽位C，评审槽位A；模块M09。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M09。
+- 分派参考：建议组C、建议评审组A，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-15,BE-16,BE-24；开发估算3/5/8h，评审0.25/0.5/1h（低/中/高）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：UC-02,UC-07,UC-11；公共事务设计；见对应AT及数据库不变量。
@@ -284,7 +311,8 @@
 
 ## BE-26 直接来源关闭与统一申请失效编排
 
-- 状态：PLANNED；负责人槽位D，评审槽位C；模块M10,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M10,M12。
+- 分派参考：建议组D、建议评审组C，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-05,BE-16,BE-20,BE-17；开发估算2.5/4.5/7h，评审0.25/0.5/1h（低/中/高）。
 - API：sourceClosePreview, closeSource。
 - 需求/数据库：UC-02,UC-03,UC-04,UC-07,UC-08,UC-10,UC-11；T0,T11,T5；I-08,I-09,I-13,I-16,I-18。
@@ -295,7 +323,8 @@
 
 ## BE-27 员工状态及管理范围替换的跨域失效
 
-- 状态：PLANNED；负责人槽位A，评审槽位B；模块M10,M03,M01,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M10,M03,M01,M12。
+- 分派参考：建议组A、建议评审组B，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-07,BE-08,BE-09,BE-26；开发估算2/4/6h，评审0.25/0.5/1h（低/中/高）。
 - API：employeeStatePreview, setEmployeeState, scopeEditPreview, replaceScope。
 - 需求/数据库：UC-01,UC-02,UC-03,UC-04,UC-07,UC-09,UC-10,UC-11；T0,T11,T6,T7；I-03,I-04,I-12,I-13,I-16,I-18,I-20。
@@ -306,7 +335,8 @@
 
 ## BE-28 CSV/XLSX文件上传、元数据及解析
 
-- 状态：PLANNED；负责人槽位D，评审槽位C；模块M10,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M10,M12。
+- 分派参考：建议组D、建议评审组C，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-03,BE-05,BE-06；开发估算2/3.5/6h，评审0.25/0.5/1h（低/中/高）。
 - API：uploadImportFile, getImportFile。
 - 需求/数据库：UC-10；T0,T11,T8,T9；I-01,I-02,I-03,I-13,I-16,I-17,I-21。
@@ -317,7 +347,8 @@
 
 ## BE-29 冻结导入预检、差异与问题报告
 
-- 状态：PLANNED；负责人槽位D，评审槽位C；模块M10,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M10,M12。
+- 分派参考：建议组D、建议评审组C，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-10,BE-17,BE-28；开发估算3/5/8h，评审0.25/0.5/1h（低/中/高）。
 - API：precheckImport, listImportBatches, getImportBatch, listImportIssues, listImportPlanChanges。
 - 需求/数据库：UC-10,UC-11；T0,T11,T8,T9；I-01,I-02,I-03,I-13,I-16,I-17,I-21。
@@ -328,7 +359,8 @@
 
 ## BE-30 导入整批提交、历史与失败恢复
 
-- 状态：PLANNED；负责人槽位D，评审槽位C；模块M10,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M10,M12。
+- 分派参考：建议组D、建议评审组C，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-27,BE-29；开发估算3/5/8h，评审0.25/0.5/1h（低/中/高）。
 - API：commitImport。
 - 需求/数据库：UC-03,UC-10,UC-11；T0,T7,T8；I-01,I-02,I-03,I-13,I-16,I-17,I-21。
@@ -339,7 +371,8 @@
 
 ## BE-31 演示OA适配器及受控服务身份工具
 
-- 状态：PLANNED；负责人槽位C，评审槽位A；模块M08,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M08,M12。
+- 分派参考：建议组C、建议评审组A，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-06,BE-23,BE-24；开发估算1.5/3/5h，评审0.25/0.5/1h（低/中/高）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：UC-05,UC-06,UC-11；公共事务设计；见对应AT及数据库不变量。
@@ -350,7 +383,8 @@
 
 ## BE-32 部署产物、配置与管理员初始化
 
-- 状态：PLANNED；负责人槽位A，评审槽位B；模块M00,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M00,M12。
+- 分派参考：建议组A、建议评审组B，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-01,BE-02,BE-03,BE-06；开发估算2/4/6h，评审0.25/0.5/1h（低/中/高）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：全用例公共/部署基础；公共事务设计；见对应AT及数据库不变量。
@@ -361,7 +395,8 @@
 
 ## BE-33 完整业务链路及并发/失败集成验收
 
-- 状态：PLANNED；负责人槽位B，评审槽位D；模块M00,M09,M10,M11,M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M00,M09,M10,M11,M12。
+- 分派参考：建议组B、建议评审组D，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-12,BE-18,BE-19,BE-22,BE-25,BE-27,BE-30,BE-31；开发估算3/5/8h，评审0.25/0.5/1h（低/中/高）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：UC-01,UC-02,UC-03,UC-04,UC-05,UC-06,UC-07,UC-08,UC-10,UC-11；公共事务设计；见对应AT及数据库不变量。
@@ -373,7 +408,8 @@
 
 ## BE-34 实际服务器部署、重启与演示验收
 
-- 状态：PLANNED；负责人槽位A，评审槽位B；模块M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M12。
+- 分派参考：建议组A、建议评审组B，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-32,BE-33；开发估算1.5/3/5h，评审0.25/0.5/1h（低/中/高）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：全用例公共/部署基础；公共事务设计；见对应AT及数据库不变量。
@@ -385,7 +421,8 @@
 
 ## BE-35 交接、任务证据与发布收尾
 
-- 状态：PLANNED；负责人槽位B，评审槽位D；模块M12。
+- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，独立评审人待登记；模块M12。
+- 分派参考：建议组B、建议评审组D，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-34；开发估算1/2/3h，评审0.25/0.5/1h（低/中/高）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：全用例公共/部署基础；公共事务设计；见对应AT及数据库不变量。

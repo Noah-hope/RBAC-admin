@@ -19,7 +19,7 @@
 | [02-ui-design](02-ui-design/README.md) | Vue 3 + TypeScript + Tailwind CSS 界面原型及设计说明 | 可作为 API 输入；按 D-029，3 项原型补齐后续跟踪，不阻塞 API |
 | [03-api](03-api/README.md) | OpenAPI 契约、示例、状态/错误、追踪及数据库交接 | Git1.2.0正式跨阶段修订完成；Apifox1.2.0指定客户端导出核心一致已核对；两处元数据差异及MCP限制保留 |
 | [04-database](04-database/README.md) | ER图、完整字典、约束/索引、事务/JPA/幂等、DDL草案与验证 | 1.1草案，正式跨阶段评审修订后有条件通过；未建库/执行SQL，见[评审报告](04-database/CONSISTENCY-REVIEW.md) |
-| [05-detailed-design](05-detailed-design/README.md) | 后端模块/流程/部署、Issue/PR任务、估算及验收追踪 | 1.0设计已合并main并推送GitHub；35本地任务，尚未实现或登记远程Issue/PR |
+| [05-detailed-design](05-detailed-design/README.md) | 后端模块/流程/部署、两阶段任务与基座交接 | 1.1计划修订：用户先实现5项基座，验收后分派30项业务；尚未实施基座或登记远程Issue/PR，1.0设计主线已推送 |
 
 阶段状态以 `project/MEMORY.md` 为准，目录存在不代表阶段完成。阶段变化时同步更新导航。
 

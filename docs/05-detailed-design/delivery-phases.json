@@ -1,0 +1,60 @@
+{
+  "revision": "1.1",
+  "decision": "D-038",
+  "foundation": {
+    "ownerSlot": "USER",
+    "taskIds": [
+      "BE-01",
+      "BE-02",
+      "BE-03",
+      "BE-04",
+      "BE-05"
+    ],
+    "status": "PLANNED_NOT_RUN",
+    "acceptanceGate": "FOUNDATION_ACCEPTED",
+    "reviewerSlot": null
+  },
+  "business": {
+    "taskIds": [
+      "BE-06",
+      "BE-07",
+      "BE-08",
+      "BE-09",
+      "BE-10",
+      "BE-11",
+      "BE-12",
+      "BE-13",
+      "BE-14",
+      "BE-15",
+      "BE-16",
+      "BE-17",
+      "BE-18",
+      "BE-19",
+      "BE-20",
+      "BE-21",
+      "BE-22",
+      "BE-23",
+      "BE-24",
+      "BE-25",
+      "BE-26",
+      "BE-27",
+      "BE-28",
+      "BE-29",
+      "BE-30",
+      "BE-31",
+      "BE-32",
+      "BE-33",
+      "BE-34",
+      "BE-35"
+    ],
+    "ownerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ]
+  },
+  "gateStatus": "NOT_EVALUATED",
+  "gateEvidence": [],
+  "reviewRule": "至少一名未参与对应改动的成员评审；身份待登记"
+}

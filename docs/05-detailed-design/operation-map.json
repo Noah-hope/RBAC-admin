@@ -27,7 +27,14 @@
     ],
     "module": "M01",
     "issue": "BE-06",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-05",
       "AT-06",
@@ -78,7 +85,14 @@
     ],
     "module": "M01",
     "issue": "BE-06",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-05",
       "AT-06",
@@ -128,7 +142,14 @@
     ],
     "module": "M01",
     "issue": "BE-06",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-05",
       "AT-06",
@@ -176,7 +197,14 @@
     ],
     "module": "M01",
     "issue": "BE-06",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-05",
       "AT-06",
@@ -225,7 +253,14 @@
     ],
     "module": "M03",
     "issue": "BE-08",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-08",
       "AT-19",
@@ -281,7 +316,14 @@
     ],
     "module": "M01",
     "issue": "BE-07",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-06",
       "AT-07",
@@ -354,7 +396,14 @@
     ],
     "module": "M01",
     "issue": "BE-07",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-06",
       "AT-07",
@@ -407,7 +456,14 @@
     ],
     "module": "M01",
     "issue": "BE-07",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-06",
       "AT-07",
@@ -460,7 +516,14 @@
     ],
     "module": "M01",
     "issue": "BE-07",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-06",
       "AT-07",
@@ -520,7 +583,14 @@
     ],
     "module": "M01",
     "issue": "BE-07",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-06",
       "AT-07",
@@ -578,7 +648,14 @@
     ],
     "module": "M04",
     "issue": "BE-11",
-    "ownerSlot": "B",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "B",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-09",
       "AT-37"
@@ -665,7 +742,14 @@
     ],
     "module": "M04",
     "issue": "BE-11",
-    "ownerSlot": "B",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "B",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-09",
       "AT-37"
@@ -717,7 +801,14 @@
     ],
     "module": "M04",
     "issue": "BE-11",
-    "ownerSlot": "B",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "B",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-09",
       "AT-37"
@@ -789,7 +880,14 @@
     ],
     "module": "M04",
     "issue": "BE-12",
-    "ownerSlot": "B",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "B",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-09",
       "AT-10",
@@ -852,7 +950,14 @@
     ],
     "module": "M04",
     "issue": "BE-12",
-    "ownerSlot": "B",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "B",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-09",
       "AT-10",
@@ -906,7 +1011,14 @@
     ],
     "module": "M04",
     "issue": "BE-12",
-    "ownerSlot": "B",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "B",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-09",
       "AT-10",
@@ -1003,7 +1115,14 @@
     ],
     "module": "M04",
     "issue": "BE-12",
-    "ownerSlot": "B",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "B",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-09",
       "AT-10",
@@ -1104,7 +1223,14 @@
     ],
     "module": "M04",
     "issue": "BE-12",
-    "ownerSlot": "B",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "B",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-09",
       "AT-10",
@@ -1165,7 +1291,14 @@
     ],
     "module": "M04",
     "issue": "BE-12",
-    "ownerSlot": "B",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "B",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-09",
       "AT-10",
@@ -1222,7 +1355,14 @@
     ],
     "module": "M05",
     "issue": "BE-13",
-    "ownerSlot": "B",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "B",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-11",
       "AT-12",
@@ -1321,7 +1461,14 @@
     ],
     "module": "M07",
     "issue": "BE-20",
-    "ownerSlot": "C",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "C",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-11",
       "AT-13",
@@ -1389,7 +1536,14 @@
     ],
     "module": "M05",
     "issue": "BE-13",
-    "ownerSlot": "B",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "B",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-11",
       "AT-12",
@@ -1458,7 +1612,14 @@
     ],
     "module": "M05",
     "issue": "BE-13",
-    "ownerSlot": "B",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "B",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-11",
       "AT-12",
@@ -1534,7 +1695,14 @@
     ],
     "module": "M02",
     "issue": "BE-10",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-13",
       "AT-27",
@@ -1629,7 +1797,14 @@
     ],
     "module": "M02",
     "issue": "BE-10",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-13",
       "AT-27",
@@ -1699,7 +1874,14 @@
     ],
     "module": "M02",
     "issue": "BE-10",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-13",
       "AT-27",
@@ -1795,7 +1977,14 @@
     ],
     "module": "M06",
     "issue": "BE-14",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-13",
       "AT-14",
@@ -1900,7 +2089,14 @@
     ],
     "module": "M06",
     "issue": "BE-14",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-13",
       "AT-14",
@@ -1969,7 +2165,14 @@
     ],
     "module": "M07",
     "issue": "BE-22",
-    "ownerSlot": "C",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "C",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-17",
       "AT-18",
@@ -2090,7 +2293,14 @@
     ],
     "module": "M07",
     "issue": "BE-20",
-    "ownerSlot": "C",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "C",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-11",
       "AT-13",
@@ -2165,7 +2375,14 @@
     ],
     "module": "M07",
     "issue": "BE-22",
-    "ownerSlot": "C",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "C",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-17",
       "AT-18",
@@ -2246,7 +2463,14 @@
     ],
     "module": "M07",
     "issue": "BE-20",
-    "ownerSlot": "C",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "C",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-11",
       "AT-13",
@@ -2334,7 +2558,14 @@
     ],
     "module": "M07",
     "issue": "BE-20",
-    "ownerSlot": "C",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "C",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-11",
       "AT-13",
@@ -2419,7 +2650,14 @@
     ],
     "module": "M07",
     "issue": "BE-21",
-    "ownerSlot": "C",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "C",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-12",
       "AT-13",
@@ -2502,7 +2740,14 @@
     ],
     "module": "M07",
     "issue": "BE-21",
-    "ownerSlot": "C",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "C",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-12",
       "AT-13",
@@ -2583,7 +2828,14 @@
     ],
     "module": "M08",
     "issue": "BE-23",
-    "ownerSlot": "C",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "C",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-20",
       "AT-35",
@@ -2658,7 +2910,14 @@
     ],
     "module": "M07",
     "issue": "BE-22",
-    "ownerSlot": "C",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "C",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-17",
       "AT-18",
@@ -2742,7 +3001,14 @@
     ],
     "module": "M11",
     "issue": "BE-17",
-    "ownerSlot": "B",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "B",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-31",
       "AT-32",
@@ -2821,7 +3087,14 @@
     ],
     "module": "M06",
     "issue": "BE-14",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-13",
       "AT-14",
@@ -2891,7 +3164,14 @@
     ],
     "module": "M10",
     "issue": "BE-26",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-15",
       "AT-16",
@@ -2966,7 +3246,14 @@
     ],
     "module": "M10",
     "issue": "BE-26",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-15",
       "AT-16",
@@ -3036,7 +3323,14 @@
     ],
     "module": "M02",
     "issue": "BE-10",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-13",
       "AT-27",
@@ -3112,7 +3406,14 @@
     ],
     "module": "M02",
     "issue": "BE-10",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-13",
       "AT-27",
@@ -3193,7 +3494,14 @@
     ],
     "module": "M02",
     "issue": "BE-10",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-13",
       "AT-27",
@@ -3289,7 +3597,14 @@
     ],
     "module": "M10",
     "issue": "BE-27",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-08",
       "AT-19",
@@ -3356,7 +3671,14 @@
     ],
     "module": "M10",
     "issue": "BE-27",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-08",
       "AT-19",
@@ -3418,7 +3740,14 @@
     ],
     "module": "M03",
     "issue": "BE-08",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-08",
       "AT-19",
@@ -3495,7 +3824,14 @@
     ],
     "module": "M03",
     "issue": "BE-09",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-08",
       "AT-31",
@@ -3556,7 +3892,14 @@
     ],
     "module": "M03",
     "issue": "BE-09",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-08",
       "AT-31",
@@ -3606,7 +3949,14 @@
     ],
     "module": "M03",
     "issue": "BE-08",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-08",
       "AT-19",
@@ -3668,7 +4018,14 @@
     ],
     "module": "M10",
     "issue": "BE-27",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-08",
       "AT-19",
@@ -3730,7 +4087,14 @@
     ],
     "module": "M03",
     "issue": "BE-08",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-08",
       "AT-19",
@@ -3804,7 +4168,14 @@
     ],
     "module": "M10",
     "issue": "BE-27",
-    "ownerSlot": "A",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "A",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-08",
       "AT-19",
@@ -3859,7 +4230,14 @@
     ],
     "module": "M11",
     "issue": "BE-19",
-    "ownerSlot": "C",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "C",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-32",
       "AT-34",
@@ -3995,7 +4373,14 @@
     ],
     "module": "M11",
     "issue": "BE-19",
-    "ownerSlot": "C",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "C",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-32",
       "AT-34",
@@ -4061,7 +4446,14 @@
     ],
     "module": "M10",
     "issue": "BE-28",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-26",
       "AT-37"
@@ -4112,7 +4504,14 @@
     ],
     "module": "M10",
     "issue": "BE-28",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-26",
       "AT-37"
@@ -4182,7 +4581,14 @@
     ],
     "module": "M10",
     "issue": "BE-29",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-25",
       "AT-26",
@@ -4239,7 +4645,14 @@
     ],
     "module": "M10",
     "issue": "BE-29",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-25",
       "AT-26",
@@ -4309,7 +4722,14 @@
     ],
     "module": "M10",
     "issue": "BE-29",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-25",
       "AT-26",
@@ -4364,7 +4784,14 @@
     ],
     "module": "M10",
     "issue": "BE-29",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-25",
       "AT-26",
@@ -4453,7 +4880,14 @@
     ],
     "module": "M10",
     "issue": "BE-30",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-24",
       "AT-25",
@@ -4523,7 +4957,14 @@
     ],
     "module": "M11",
     "issue": "BE-18",
-    "ownerSlot": "B",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "B",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-07",
       "AT-10",
@@ -4581,7 +5022,14 @@
     ],
     "module": "M11",
     "issue": "BE-18",
-    "ownerSlot": "B",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "B",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-07",
       "AT-10",
@@ -4637,7 +5085,14 @@
     ],
     "module": "M08",
     "issue": "BE-24",
-    "ownerSlot": "C",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "C",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-07",
       "AT-20",
@@ -4691,7 +5146,14 @@
     ],
     "module": "M10",
     "issue": "BE-29",
-    "ownerSlot": "D",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "D",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-25",
       "AT-26",
@@ -4760,7 +5222,14 @@
     ],
     "module": "M11",
     "issue": "BE-17",
-    "ownerSlot": "B",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "B",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-31",
       "AT-32",
@@ -4840,7 +5309,14 @@
     ],
     "module": "M08",
     "issue": "BE-23",
-    "ownerSlot": "C",
+    "ownerSlot": null,
+    "suggestedOwnerSlot": "C",
+    "phase": "BUSINESS",
+    "assignmentStatus": "UNASSIGNED",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "acceptance": [
       "AT-20",
       "AT-35"

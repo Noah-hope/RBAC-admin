@@ -4,6 +4,8 @@
 
 项目团队共享记忆统一维护在 `docs/`；当前阶段、已完成事项及待办见[项目共享记忆](docs/project/MEMORY.md)。
 
+当前实施组织（D-038）：先由用户实现 BE-01～05 公共基座，按[基座交接标准](docs/05-detailed-design/FOUNDATION-HANDOFF.md)验收并纳入主线后，再分派其余30项业务/交付任务。A～D为职责建议，尚未分派实际业务人员；当前没有正式后端实现或已验收基座。
+
 当前业务范围：**仅管理功能权限**。员工经角色获得系统进入及查看、编辑、新增等操作权限；不设计业务数据权限。需求于 2026-10-15 按用户要求修订，说明见[变更记录](docs/project/FUNCTION_PERMISSIONS.md)。
 
 权限管理员按公司、指定部门及系统范围管理；员工离岗关权直接生效。规则见[管理范围与人员权限](docs/01-requirements/usecases-v1/管理范围与人员权限规则.md)。PNG/SVG 按需生成，现有 V1.1 预览已标记，详见[预览维护规则](docs/project/PREVIEWS.md)。
@@ -21,7 +23,7 @@
 | 身份认证凭证 | JWT；功能授权仍按 RBAC 规则判断 |
 | 分析与设计方法 | 结构化分析与结构化设计 |
 
-选型已确认，[API 契约 1.2.0](docs/03-api/README.md) 已完成正式跨阶段评审修订及静态校验，设计层面有条件通过；Apifox1.2.0指定客户端导出核心一致已核对，历史证据及MCP限制保留；JWT 生命周期及失效规则已有接口设计。[数据库设计草案](docs/04-database/README.md)已交付，MySQL8.4及后端具体版本已有可评审技术取值；正式数据库/后端/认证未实现，未建库或执行SQL，[正式需求—API—数据库一致性评审](docs/04-database/CONSISTENCY-REVIEW.md)已完成修订，数据库草案1.1；[后端详细设计1.0](docs/05-detailed-design/README.md)及35个本地Issue草案已交付，迁移/测试/工程布局已有设计取值；真实引擎/并发与服务器验收仍待实现阶段开展。
+选型已确认，[API 契约 1.2.0](docs/03-api/README.md) 已完成正式跨阶段评审修订及静态校验，设计层面有条件通过；Apifox1.2.0指定客户端导出核心一致已核对，历史证据及MCP限制保留；JWT 生命周期及失效规则已有接口设计。[数据库设计草案](docs/04-database/README.md)已交付，MySQL8.4及后端具体版本已有可评审技术取值；正式数据库/后端/认证未实现，未建库或执行SQL，[正式需求—API—数据库一致性评审](docs/04-database/CONSISTENCY-REVIEW.md)已完成修订，数据库草案1.1；[后端详细设计1.1](docs/05-detailed-design/README.md)及35个本地Issue草案已交付，迁移/测试/工程布局已有设计取值；真实引擎/并发与服务器验收仍待实现阶段开展。
 
 ## 分析与设计方法
 
@@ -49,7 +51,7 @@
 - [Material 3 界面方案](docs/02-ui-design/MATERIAL3-PLAN.md)：已确认并实施的页面、导航、Token 与改造清单。
 - [阶段评审](docs/02-ui-design/STAGE-REVIEW.md)：原型有条件通过，可作为 API 设计输入；3 项原型缺口及契约同步待办。
 - [数据库设计](docs/04-database/README.md)：实体关系、数据字典、并发/幂等/JPA、DDL草案、静态自查及交接。
-- [后端详细设计与实施任务](docs/05-detailed-design/README.md)：模块/流程/部署、35个本地Issue草案、四人估算及未运行验收。
+- [后端详细设计与实施任务](docs/05-detailed-design/README.md)：1.1实施计划修订；13模块、5项用户先行基座、30项验收后待分派任务及未运行验收。
 - [项目技能](docs/project/SKILLS.md)：仓库内四个技能的入口、来源、版本和文件摘要。
 
 ## 当前目录
