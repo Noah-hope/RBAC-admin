@@ -174,7 +174,7 @@ def checks(report):
             if not dest or re.match(r'\w+://',dest):continue
             require((p.parent/dest).resolve().exists(),'失效链接 '+str(p.relative_to(REPO))+': '+dest);links+=1
     for p in ROOT.glob('*.py'):ast.parse(p.read_text(encoding='utf-8'))
-    require(not re.search(r'[A-Za-z]:[\\/]',(REPO/'docs/project/MEMORY.md').read_text(encoding='utf-8')),'MEMORY含本机绝对路径')
+    require(not re.search(r'(?<![A-Za-z0-9_])[A-Za-z]:[\\/]',(REPO/'docs/project/MEMORY.md').read_text(encoding='utf-8')),'MEMORY含本机绝对路径')
     decisions=re.findall(r'^\| (D-\d+) \|',(REPO/'docs/project/DECISIONS.md').read_text(encoding='utf-8'),re.M)
     require(len(decisions)==len(set(decisions)),'决策ID重复')
     source_paths=['docs/03-api/openapi.yaml','docs/03-api/apifox-export.json','docs/04-database/schema.sql','docs/04-database/immutability.sql','docs/04-database/schema-model.json','docs/04-database/traceability.json']
