@@ -141,3 +141,15 @@ Git权威契约已从1.1.0修订为1.2.0：GrantLine.employmentIds移除任意10
 比较摘要APIFOX-EXPORT-DIFF.json现保留63处差异：61处阻断路径（任命字段及引用展开60处、登录认证1处）和2处既有元数据/占位servers差异。它们对应两项核心问题，不是61项不同业务缺陷。比较器新增coreContractConsistent=false、阻断/展示路径分类；只要存在核心差异或无效示例，命令退出1，避免将脚本运行结束误当核对通过。没有关闭严格字段/认证检查。
 
 用户在客户端完成上述两项后，再从同一指定规格导出覆盖apifox-export.json，重新运行compare_apifox_export.py。尚未执行远程写入、刷新或重复调查MCP；没有改动权威openapi.yaml、原型、数据库或业务实现。既有1.1.0导出及当时通过证据保留于Git历史，本次新文件不覆写那些历史事实。
+
+## 任命修复后的再次导出核对（2026-10-17）
+
+用户再次提供原样apifox-export.json，SHA-256：`f7a3a59bd1b595c3e65b7646d552405e5662c5c5b105228ca280e829326d162e`。本轮只读取文件并运行既有比较器，不重新导入、不操作远程或调查MCP。
+
+进展：Appointment.companyId/departmentId/systemIds.items已完整恢复string、1～64长度及pattern，数组唯一性保留；120/120模型示例、105/105媒体示例通过。56路径/67入站/129模型/1出站、operationId及响应码一致。GrantLine任职依据上限修订及SourceCloseResult新增必填/互斥约束均仍在。
+
+**本次核心一致性仍未通过，问题集中于导出未体现指定覆盖配置。** 实际info.title=默认模块、version=1.0.0；登录仍AdminJwt、退出缺匿名备选；上传multipart根additionalProperties:false缺失并多空文件示例。这些正是完整三路径覆盖应修正的位置。本文件的特征说明没有体现该配置，不能仅凭卡片或用户点击导出的动作推断具体使用了哪个入口。
+
+比较摘要保留8处差异：6处阻断路径（标题、版本、登录认证、退出认证、上传根约束及上传示例），另2处license/占位servers元数据差异。比较器实际退出1、coreContractConsistent=false；模型示例全通过不代替认证/操作约束一致性。
+
+下一步**仅处理导出规格配置**：打开本次实际点击导出的那条规格，完整保存APIFOX-EXPORT-OVERRIDE.json中的内容到OAS自定义覆盖，再从这条配置以OpenAPI3.1/JSON/全部导出。可先检查文件info.title应为RBAC权限中心API、info.version应为1.2.0；导出后仍需完整比较。无需重新导入同一Git文件，也无需重复修改已经正确的Appointment。默认规格可以保留；不要直接手改导出文件来隐藏差异。本轮没有修改权威契约、原型、数据库或正式业务实现。
