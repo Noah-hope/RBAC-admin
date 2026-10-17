@@ -1,6 +1,6 @@
 # API 设计入口
 
-最新状态（2026-10-17）：Git契约1.2.0已完成需求—API—数据库正式评审修订，见[跨阶段评审](../04-database/CONSISTENCY-REVIEW.md)。Apifox既有1.1.0指定客户端导出核心一致；1.2.0尚待人工同步，MCP既有暴露差异保留，消费以Git为准。覆盖配置、剩余展示差异及证据见[APIFOX.md](APIFOX.md)。不代表正式服务已实现。
+最新状态（2026-10-17）：Git契约1.2.0已完成需求—API—数据库正式评审修订，见[跨阶段评审](../04-database/CONSISTENCY-REVIEW.md)。Apifox1.2.0已重新导入并导出，但登录认证/Appointment标识类型两项回归待修复；本次核心核对未通过。既有1.1.0证据及MCP限制保留，消费以Git为准。覆盖配置、剩余展示差异及证据见[APIFOX.md](APIFOX.md)。不代表正式服务已实现。
 
 版本：1.2.0（正式跨阶段评审修订，未上线）；需求 V1.3；日期：2026-10-17。适用 Spring Boot + Spring Data JPA、REST、JWT，数据库后续采用 MySQL。本目录交付接口设计，不代表服务已实现或 Apifox 已同步。
 

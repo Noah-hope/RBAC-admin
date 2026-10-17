@@ -122,3 +122,22 @@ MCP本轮刷新2026-10-16T16:33:20.465Z（北京时间2026-10-17 00:33），定�
 Git权威契约已从1.1.0修订为1.2.0：GrantLine.employmentIds移除任意100上限，SourceCloseResult新增必填visibility/hasUndisclosedImpact并明确可见计数及审计ID；67入站＋1出站、129模型不变。接口/Schema校验和本地完整两路径覆盖配置派生检查通过，详细证据见[正式评审](../04-database/CONSISTENCY-REVIEW.md)及[验证记录](VALIDATION.md)。
 
 **尚未人工导入1.2.0，未操作远程或重新核查MCP。** 既有apifox-export.json及比较摘要保留为1.1.0真实导出证据，不手改伪造新结果。APIFOX-EXPORT-OVERRIDE.json仅更新派生版本，完整路径仍逐项等于Git；后续按原已验证配置导入新Git文件、应用本地完整覆盖并导出，再核对本次Schema差异。无需重复排查旧MCP暴露差异，也不称工具链完全一致。
+
+## 1.2.0重新导入后的客户端导出核对（2026-10-17）
+
+用户已在默认模块重新导入并使用指定配置导出，原样保存apifox-export.json，SHA-256为`852c787ec244417bc92268f87013352f7c1d7c745079996849536049b3628475`。截图中仍有rbac-admin/1.0.0的默认规格卡片；该卡片版本不能替代实际导出info.version，**不需要删除该规格**，继续保留并使用已经配置自定义覆盖的指定规格。
+
+实际文件为OpenAPI3.1、info.version=1.2.0，56路径/67入站/129模型/1出站完整，operationId、响应码及webhook一致。本次GrantLine.employmentIds已无错误100上限，SourceCloseResult新增两字段、必填和互斥分支已同步。平台在外层已限定object的oneOf分支补type:object，与Git语义等价；比较器仅在这个外层类型上下文归一化，无外层类型时仍保留差异。四项边界检查覆盖等价显式类型、无外层类型的真实收紧、ID字符串变对象及布尔枚举变化。
+
+**本次核心一致性未通过，不将重新导入记为同步完成。** 120模型示例中119通过，Appointment示例失败；104媒体示例通过。两项实际回归：
+
+| 位置 | 导出问题 | 具体处理 |
+| --- | --- | --- |
+| POST /api/v1/admin/sessions | 登录继承AdminJwt，Git为security:[] | 已将此完整路径加入本地APIFOX-EXPORT-OVERRIDE.json；当前覆盖共三条完整路径（登录、当前会话GET/DELETE、文件上传）。将文件全部替换到原配置后再导出；此本地适配尚未在客户端验证 |
+| components.schemas.Appointment | companyId/departmentId为object，systemIds.items也为object | 客户端模型Appointment中将这三处改为string，minLength=1、maxLength=64、pattern=^[A-Za-z0-9][A-Za-z0-9_-]*$；systemIds仍为array且uniqueItems=true。修正基础模型，引用处应随之恢复，下一次导出核对，不能直接手改导出证据 |
+
+本轮导入设置说明此前没有充分处理登录匿名认证的特殊情况，现补入完整路径覆盖以保留Git语义；不是要求修改Git认证规则。Appointment回归来自重新导出中的实际字段变化，不是再次排查旧MCP差异。
+
+比较摘要APIFOX-EXPORT-DIFF.json现保留63处差异：61处阻断路径（任命字段及引用展开60处、登录认证1处）和2处既有元数据/占位servers差异。它们对应两项核心问题，不是61项不同业务缺陷。比较器新增coreContractConsistent=false、阻断/展示路径分类；只要存在核心差异或无效示例，命令退出1，避免将脚本运行结束误当核对通过。没有关闭严格字段/认证检查。
+
+用户在客户端完成上述两项后，再从同一指定规格导出覆盖apifox-export.json，重新运行compare_apifox_export.py。尚未执行远程写入、刷新或重复调查MCP；没有改动权威openapi.yaml、原型、数据库或业务实现。既有1.1.0导出及当时通过证据保留于Git历史，本次新文件不覆写那些历史事实。

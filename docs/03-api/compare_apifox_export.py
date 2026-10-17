@@ -50,6 +50,13 @@ def normalize(value, doc, stack=(), name_map=False):
         example = result.pop('example')
         if example != '':
             result['exampleValues'] = [example]
+    # 外层已限定object时，组合分支显式补type:object不改变语义。
+    # 无外层类型时不得做此归一化，否则会把真实的类型收紧当成展示差异。
+    if not name_map and result.get('type') == 'object':
+        for keyword in ('oneOf', 'anyOf', 'allOf'):
+            for branch in result.get(keyword, []):
+                if isinstance(branch, dict):
+                    branch.setdefault('type', 'object')
     return result
 
 diffs = []
@@ -147,6 +154,14 @@ report = {
     'errorContentTypes': {k: list(v['content']) for k,v in remote['components']['responses'].items()},
     'uploadSchema': remote['paths']['/api/v1/admin/import-files']['post']['requestBody']['content']['multipart/form-data']['schema'],
 }
+display_only_paths = {'/info/license', '/servers',
+    '/paths//api/v1/admin/sessions/post/requestBody/content/application/json/exampleValues'}
+report['displayOnlyDifferencePaths'] = [v['path'] for v in diffs if v['path'] in display_only_paths]
+report['blockingDifferencePaths'] = [v['path'] for v in diffs if v['path'] not in display_only_paths]
+report['coreContractConsistent'] = not any(report[k] for k in [
+    'invalidModelExamples', 'invalidMediaExamples', 'extraOperations', 'missingOperations',
+    'operationIdMismatches', 'securityMismatches', 'responseCodeMismatches',
+    'operationsMissingResponses', 'blockingDifferencePaths'])
 (ROOT / 'APIFOX-EXPORT-DIFF.json').write_bytes(
     (json.dumps(report, ensure_ascii=False, indent=2) + '\n').encode('utf-8'))
 print(json.dumps({k: v for k, v in report.items() if k != 'differences'},
@@ -159,3 +174,4 @@ for row in diffs:
     if '/security' in path or '/Appointment' in path:
         continue
     print(json.dumps(row, ensure_ascii=False)[:500])
+sys.exit(0 if report['coreContractConsistent'] else 1)

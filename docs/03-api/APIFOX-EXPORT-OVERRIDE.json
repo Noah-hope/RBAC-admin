@@ -269,6 +269,106 @@
           }
         }
       }
+    },
+    "/api/v1/admin/sessions": {
+      "post": {
+        "summary": "管理员登录",
+        "operationId": "login",
+        "tags": [
+          "会话"
+        ],
+        "description": "统一登录失败，不泄露账号存在性；临时密码签发 PASSWORD_CHANGE_ONLY 受限 JWT，不得用业务角色登录。",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "已创建资源。",
+            "headers": {
+              "X-Request-Id": {
+                "description": "请求追踪标识。",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "description": "敏感结果禁止缓存。",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "Location": {
+                "description": "创建资源或申请状态查询 URI。",
+                "schema": {
+                  "type": "string",
+                  "format": "uri-reference"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                },
+                "example": {
+                  "sessionId": "demo_01",
+                  "accountId": "demo_01",
+                  "employeeId": null,
+                  "identity": "SUPER_ADMIN",
+                  "mode": "NORMAL",
+                  "accessToken": "PLACEHOLDER_NOT_A_TOKEN",
+                  "tokenType": "Bearer",
+                  "expiresAt": "2026-10-16T08:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/Unprocessable"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/IntegrityError"
+          },
+          "503": {
+            "$ref": "#/components/responses/Unavailable"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "413": {
+            "$ref": "#/components/responses/PayloadTooLarge"
+          }
+        },
+        "x-use-cases": [
+          "UC-09"
+        ],
+        "x-access": "公开",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginInput"
+              }
+            }
+          }
+        },
+        "security": []
+      }
     }
   }
 }

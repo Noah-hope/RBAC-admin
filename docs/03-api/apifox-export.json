@@ -3,7 +3,7 @@
   "info": {
     "title": "RBAC 权限中心 API",
     "description": "需求V1.3；269d269首版API评审修订1.1.0，尚未上线。Git契约为权威，Apifox8934976默认模块待人工导入。修订含更严格Schema及两项直接变更201→200，迁移说明见REVIEW.md。",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   "tags": [
     {
@@ -73,8 +73,7 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/LoginInput"
-              },
-              "examples": {}
+              }
             }
           },
           "required": true
@@ -160,7 +159,11 @@
             "description": "Unavailable；具体 code 及恢复见 CONVENTIONS.md。"
           }
         },
-        "security": [],
+        "security": [
+          {
+            "AdminJwt": []
+          }
+        ],
         "x-use-cases": [
           "UC-09"
         ],
@@ -8139,7 +8142,9 @@
                   ],
                   "auditEventIds": [],
                   "invalidatedGrantCount": 0,
-                  "invalidatedRequestCount": 0
+                  "invalidatedRequestCount": 0,
+                  "visibility": "COMPLETE",
+                  "hasUndisclosedImpact": false
                 }
               }
             },
@@ -17074,6 +17079,7 @@
           },
           "employmentIds": {
             "type": "array",
+            "description": "提交时该来源全部适用任职依据，必须与当前基线集合一致；不按100项目标上限截断，也不设置未经需求确认的兼岗数量上限。",
             "items": {
               "type": "string",
               "minLength": 1,
@@ -17081,7 +17087,6 @@
               "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
             },
             "minItems": 1,
-            "maxItems": 100,
             "uniqueItems": true
           }
         },
@@ -18227,12 +18232,54 @@
       "SourceCloseResult": {
         "type": "object",
         "additionalProperties": false,
+        "oneOf": [
+          {
+            "required": [
+              "visibility",
+              "hasUndisclosedImpact"
+            ],
+            "properties": {
+              "visibility": {
+                "enum": [
+                  "COMPLETE"
+                ]
+              },
+              "hasUndisclosedImpact": {
+                "enum": [
+                  false
+                ]
+              }
+            },
+            "type": "object"
+          },
+          {
+            "required": [
+              "visibility",
+              "hasUndisclosedImpact"
+            ],
+            "properties": {
+              "visibility": {
+                "enum": [
+                  "SCOPED"
+                ]
+              },
+              "hasUndisclosedImpact": {
+                "enum": [
+                  true
+                ]
+              }
+            },
+            "type": "object"
+          }
+        ],
         "required": [
           "outcome",
           "updatedSources",
           "auditEventIds",
           "invalidatedGrantCount",
-          "invalidatedRequestCount"
+          "invalidatedRequestCount",
+          "visibility",
+          "hasUndisclosedImpact"
         ],
         "properties": {
           "outcome": {
@@ -18251,6 +18298,7 @@
           },
           "auditEventIds": {
             "type": "array",
+            "description": "仅返回当前身份及所选单项任命有权读取的审计事件ID；混合范围的完整事件不得泄露。",
             "items": {
               "type": "string",
               "minLength": 1,
@@ -18262,11 +18310,25 @@
           },
           "invalidatedGrantCount": {
             "type": "integer",
+            "description": "本次失效且当前有权查看的授权关系数量，按grantId去重；不包含范围外关系。",
             "minimum": 0
           },
           "invalidatedRequestCount": {
             "type": "integer",
+            "description": "本次整份失效且当前身份可完整查看的申请数量，按requestId去重；混合范围不可见申请不计入，不返回其ID或隐藏数量。",
             "minimum": 0
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "COMPLETE",
+              "SCOPED"
+            ],
+            "description": "按当前身份判定结果完整性；存在不可披露影响时为SCOPED。COMPLETE才允许将计数解释为完整影响。"
+          },
+          "hasUndisclosedImpact": {
+            "type": "boolean",
+            "description": "只提示存在不可披露影响，不提供隐藏申请、关系或审计的数量与标识；为true时visibility为SCOPED。"
           }
         },
         "examples": [
@@ -18286,7 +18348,9 @@
             ],
             "auditEventIds": [],
             "invalidatedGrantCount": 0,
-            "invalidatedRequestCount": 0
+            "invalidatedRequestCount": 0,
+            "visibility": "COMPLETE",
+            "hasUndisclosedImpact": false
           }
         ]
       },
@@ -18533,24 +18597,18 @@
             "maximum": 9007199254740991
           },
           "companyId": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 64,
-            "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+            "type": "object",
+            "properties": {}
           },
           "departmentId": {
-            "type": "string",
-            "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$",
-            "minLength": 1,
-            "maxLength": 64
+            "type": "object",
+            "properties": {}
           },
           "systemIds": {
             "type": "array",
             "items": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 64,
-              "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+              "type": "object",
+              "properties": {}
             },
             "uniqueItems": true
           }
