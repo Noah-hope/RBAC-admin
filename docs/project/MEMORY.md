@@ -6,7 +6,7 @@
 
 ## 当前状态
 
-- 项目根目录：`rbac-admin`；当前分支`main`跟踪`origin/main`。`codex/detailed-design/10edfdd`已通过合并提交`abbcc1e`纳入main；未建worktree，原设计分支保留。本地origin为`https://github.com/Noah-hope/RBAC-admin.git`，首次推送与远程main/HEAD回查通过。
+- 项目根目录：`rbac-admin`；当前文档维护分支`codex/docs-portable-readme`，主线`main`跟踪`origin/main`。`codex/detailed-design/10edfdd`已通过合并提交`abbcc1e`纳入main；未建worktree，原设计分支保留。本地origin为`https://github.com/Noah-hope/RBAC-admin.git`，首次推送与远程main/HEAD回查通过。
 - 已从原项目需求文档目录导入 396 个文件，39,073,839 字节；首次导入 SHA-256 全部一致。原目录未修改，导入清单保留为历史快照。
 - 当前需求基线：V1.3，2026-10-16；沿用仅功能权限、来源关权、账号与 OA 规则，按实际材料采用公司—部门—岗位，部门平级。**Material 3 原型 0.2.0 阶段评审有条件通过，可启动 API 设计**；3 项原型缺口及工具同步待办见 [STAGE-REVIEW.md](../02-ui-design/STAGE-REVIEW.md)。本地API契约1.2.0、数据库1.1草案已完成正式需求—API—数据库一致性评审修订，设计层面有条件通过；Apifox1.2.0指定客户端导出核心一致已核对，历史导出证据及MCP限制保留；后端详细设计1.0及团队计划已交付并完成静态自查；正式数据库/后端尚未实现，未建库/执行SQL或部署。本期没有真实OA，按用户授权采用演示适配器。团队共享记忆统一由本仓库 `docs/` 维护。
 
@@ -18,6 +18,12 @@
 | 3. API 设计 | Git1.2.0正式跨阶段修订完成，指定客户端导出核心一致已核对 | 67入站、1出站、129模型；120模型/104媒体示例通过，三路径覆盖及模型修复有效；Git权威，MCP限制保留 |
 | 4. 数据库设计 | 1.1草案，正式跨阶段评审修订后有条件通过 | [正式评审](../04-database/CONSISTENCY-REVIEW.md)；43表/356列，6项缺陷修订；未建库/执行SQL，真实引擎/并发/JPA验证待后续 |
 | 5. 详细设计与 TDD | 后端详细设计1.0/本地任务草案交付；尚未实现 | [详细设计入口](../05-detailed-design/README.md)；13模块、35任务、41未运行验收、68操作；低/中/高79.25/148/244人时，超出40～72预算 |
+
+## README路径与导航复核（2026-10-17）
+
+用户要求项目根目录统一表述为rbac-admin，不暴露个人本机存放路径。已检查根目录和docs下26份README：清理根README的绝对项目路径及原型README的绝对启动路径，同步协作入口AGENTS的根目录约定；原型启动示例改为从rbac-admin执行相对路径。顺带修正README中远程未配置、API尚未开始、测试框架待定等过期状态，未修改原型代码或业务设计。
+
+本次使用独立文档分支codex/docs-portable-readme；26份README及AGENTS复扫未发现本机路径，366处本地链接有效，代码块成对、原型相对启动目录存在，Git差异空白检查通过。当前文件检查不代表已清理既有Git历史。本节为文档维护事实，实施、数据库和远程Issue/PR状态不变。
 
 ## 主分支合并与GitHub交接（2026-10-17）
 
