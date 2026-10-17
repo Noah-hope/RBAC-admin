@@ -1,14 +1,14 @@
 {
-  "revision": "1.1",
-  "decision": "D-038",
+  "revision": "1.2",
+  "decision": "D-039",
   "capacityHours": {
     "minimum": 40,
     "maximum": 72
   },
   "totalHours": {
-    "low": 79.25,
-    "likely": 148.0,
-    "high": 244
+    "low": 78.0,
+    "likely": 145.5,
+    "high": 239
   },
   "phaseTotals": {
     "FOUNDATION": {
@@ -19,14 +19,14 @@
         "high": 28
       },
       "reviewHours": {
-        "low": 1.25,
-        "likely": 2.5,
-        "high": 5
+        "low": 0,
+        "likely": 0,
+        "high": 0
       },
       "totalHours": {
-        "low": 10.25,
-        "likely": 20.5,
-        "high": 33
+        "low": 9.0,
+        "likely": 18,
+        "high": 28
       }
     },
     "BUSINESS": {
@@ -54,7 +54,7 @@
     "high": 28
   },
   "businessPersonLoad": null,
-  "assumption": "沿用逐任务技术工作量，按两阶段重算；基座开发仅用户，基座评审可由其他人并行，业务阶段仅假设四人可投入但尚未分派。容量下界非工期承诺，不含外部等待/依赖/评审交接停顿。",
+  "assumption": "沿用逐任务技术工作量，按两阶段重算；基座开发及本人确认由用户，取消单列独立评审工时，业务阶段独立评审保留且暂假设四人可投入。容量下界非工期承诺，不含外部等待/依赖/评审交接停顿。",
   "capacityLowerBounds": {
     "low": {
       "hoursPerPersonPerDay": 3,
@@ -72,7 +72,7 @@
     },
     "high": {
       "hoursPerPersonPerDay": 2,
-      "pooledCapacityDays": 31,
+      "pooledCapacityDays": 30,
       "foundationOwnerDevelopmentDayEquivalent": 14.0,
       "businessPooledDayEquivalent": 26.375,
       "stagedCapacityDays": 41

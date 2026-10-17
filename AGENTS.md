@@ -20,6 +20,8 @@
 
 当前实施组织按 D-038：先由用户实现 BE-01～05 公共基座，按 `docs/05-detailed-design/FOUNDATION-HANDOFF.md` 验收并纳入共同主线后，再分派 BE-06～35 的业务/交付任务。A～D 只作职责建议，业务实际负责人和评审人待登记；不将文档修订或基座静态检查记为已实现/已验收。正式业务启动仍须满足原技术依赖。
 
+D-039补充：基座阶段由用户本人确认，无需其他成员评审；TDD、自检、真实数据库/事务验证和交接证据仍保留。该安排不自动取消后续业务阶段评审。当前先使用本机MySQL，云服务器已具备、Docker数据库留后续部署；JDK21由IDE引用，命令行未配置，可用IDE或显式JDK运行，不强制永久环境变量。
+
 完整阶段交付要求见 `docs/project/WORKFLOW.md`，当前阶段及交接事实见 `docs/project/MEMORY.md`。不因目录或文档存在就宣布阶段完成。尚未选定的技术不自行记为既定方案。
 
 项目技能统一从 `.agents/skills/<技能名>/SKILL.md` 读取，包含 `grill-me`、`grilling`、`frontend-design`、`test-driven-development`；优先使用仓库副本，来源与版本见 `docs/project/SKILLS.md`。`grill-me` 是委托入口，实际访谈同时读取 `grilling`。后续正式业务逻辑的新功能、缺陷修复及行为变更使用 TDD，编写或修改测试时同时读取其 `writing-good-tests.md`。

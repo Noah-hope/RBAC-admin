@@ -2,7 +2,7 @@
 
 本轮只确定可评审的技术方案，不创建工程或安装后端依赖。产品选型沿用D-028；版本/布局/工具是本轮设计取值，后续BE-01/02固定到真实Wrapper/pom并记录实际解析依赖和支持状态。
 
-修订1.1/D-038：用户先实施BE-01～05，完成基座交接后再分派业务。`common`是公共基座责任组，Java包沿用`core`；不新增并行同义包、不按四人合并13逻辑模块。基座包括M12公共HTTP装配/M11读事务约定及迁移适配，真实身份、领域实体、审批和导入由第二阶段任务补齐。交接清单见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。本次只更新方案，没有创建以下工程。
+修订1.2/D-038/D-039：用户先实施BE-01～05，由用户本人确认基座交接，无需他人评审，随后再分派业务。`common`是公共基座责任组，Java包沿用`core`；不新增并行同义包、不按四人合并13逻辑模块。基座包括M12公共HTTP装配/M11读事务约定及迁移适配，真实身份、领域实体、审批和导入由第二阶段任务补齐。交接清单见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。本次只更新方案，没有创建以下工程。
 
 | 项目 | 设计取值与依据 | 实现检查 |
 | --- | --- | --- |
@@ -14,7 +14,7 @@
 | 测试 | Boot测试支持、JUnit Jupiter/Mockito、Testcontainers2.0.5 MySQL模块，BOM管理 | Surefire单元/Failsafe集成，MySQL镜像固定8.4补丁及digest后运行；Docker未就绪时选隔离实例，不能悄然skip或改H2 |
 | 文件解析 | Apache POI poi-ooxml5.5.1、Commons CSV1.14.1 | [POI发布](https://poi.apache.org/download.html)、[CSV发布](https://commons.apache.org/csv/download_csv.cgi)核实；BE-28复核安全公告/传递依赖，拒绝宏/公式/超限，不执行公式 |
 | 规范摘要 | RFC8785兼容CanonicalPayloadCodec，普通DTO JSON不是规范化算法 | [RFC8785](https://www.rfc-editor.org/rfc/rfc8785)向量＋本项目固定摘要包；BE-21记录选定实现/版本/向量结果再使用 |
-| 数据库 | MySQL8.4 LTS/InnoDB，UTC；候选补丁沿用本机可见8.4.8，部署前固定真实版本 | 服务器未买、未配置数据库；本轮没有运行实例或SQL，不能把候选当已部署版本 |
+| 数据库 | MySQL8.4 LTS/InnoDB，UTC；候选补丁沿用本机可见8.4.8，部署前固定真实版本 | 用户确认已有云服务器，当前先用本机MySQL；实际本机服务版本未核验，云端Docker数据库未部署，候选不是实测版本 |
 
 ## 正式工程拟定布局
 
@@ -51,6 +51,8 @@ Boot/Jackson默认行为不可代替OpenAPI严格约束；DTO校验显式拒绝�
 
 ## 运行配置责任
 
-BE-01先核验用户基座开发所需工具和隔离MySQL，登记服务器未就绪条件；OS/架构、网络/证书和部署存储在后续BE-32/34落实，不要求买好服务器才完成基座。当前建议Linux+systemd+jar作为演示目标，属于部署设计取值，未确认实际宿主。不引入Kubernetes/消息队列/Redis。单实例内存限流承担初始基础限制，当前资格和权限不能用该缓存；未来多实例需重新设计共享限流。
+BE-01先核验用户基座开发所需工具和隔离MySQL，记录已有云服务器和后续Docker数据库部署待核验条件；OS/架构、网络/证书和部署存储在后续BE-32/34落实，不要求买好服务器才完成基座。当前建议Linux+systemd+jar作为演示目标，属于部署设计取值，未确认实际宿主。不引入Kubernetes/消息队列/Redis。单实例内存限流承担初始基础限制，当前资格和权限不能用该缓存；未来多实例需重新设计共享限流。
 
 BE-02固定依赖树/构建插件，BE-03真实验证迁移/JPA，BE-32产物和启动说明，BE-34目标机实测。确认环境前不选购服务器或承诺吞吐/内存配置。现在仅有设计文件，以上命令/目录都未实际存在或执行。
+
+D-039环境补充：JDK21已由用户在IDE配置；Get-Command实测java/javac不在PATH，JAVA_HOME未配置。可用IDE构建JDK或会话显式指定，不要求永久修改系统环境变量。本机MySQL的真实版本及独立测试schema应在迁移前确认，本次未连接。详见[ENVIRONMENT.md](ENVIRONMENT.md)。

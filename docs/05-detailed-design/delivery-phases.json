@@ -1,6 +1,7 @@
 {
-  "revision": "1.1",
-  "decision": "D-038",
+  "revision": "1.2",
+  "decision": "D-039",
+  "organizationDecision": "D-038",
   "foundation": {
     "ownerSlot": "USER",
     "taskIds": [
@@ -10,7 +11,10 @@
       "BE-04",
       "BE-05"
     ],
-    "status": "PLANNED_NOT_RUN",
+    "status": "PREPARING",
+    "reviewRequired": false,
+    "reviewPolicy": "OWNER_ACCEPTANCE",
+    "acceptanceOwnerSlot": "USER",
     "acceptanceGate": "FOUNDATION_ACCEPTED",
     "reviewerSlot": null
   },
@@ -52,9 +56,10 @@
     "startConditions": [
       "FOUNDATION_ACCEPTED",
       "BUSINESS_OWNER_ASSIGNED"
-    ]
+    ],
+    "reviewPolicy": "INDEPENDENT_REVIEW"
   },
   "gateStatus": "NOT_EVALUATED",
   "gateEvidence": [],
-  "reviewRule": "至少一名未参与对应改动的成员评审；身份待登记"
+  "reviewRule": "基座由用户确认，无需他人评审；业务阶段原独立评审规则保留，人员以后登记"
 }

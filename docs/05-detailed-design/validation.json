@@ -73,9 +73,9 @@
     "BE-35"
   ],
   "estimatesHours": {
-    "low": 79.25,
-    "likely": 148.0,
-    "high": 244
+    "low": 78.0,
+    "likely": 145.5,
+    "high": 239
   },
   "capacityHours": {
     "minimum": 40,
@@ -84,9 +84,9 @@
   "diagramPages": 6,
   "diagramVertices": 59,
   "diagramEdges": 57,
-  "localLinks": 182,
+  "localLinks": 188,
   "pythonSyntaxFiles": 2,
-  "decisionIds": 38,
+  "decisionIds": 39,
   "upstreamSha256": {
     "docs/03-api/openapi.yaml": "9910ceafadea88d85793d00f7bb4e6e5673700a8565366a407185c4517e0cbdf",
     "docs/03-api/apifox-export.json": "67fd08c024a365cfef26485a5984be28c7941cfc9662e1ae8d3ddac558fd5501",
@@ -109,24 +109,26 @@
     "docs/01-requirements/usecases-v1/用例说明.md": "9a74f87cac2b6a3dfdb136cd40f73329ea09159b408630b0679a09efd3a4f640",
     "docs/01-requirements/usecases-v1/管理范围与人员权限规则.md": "b0638d3a5d8c39feefdd680b9a99d045be7bc5daf42add086e465cbb1999b1a7"
   },
-  "planRevision": "1.1",
+  "planRevision": "1.2",
   "foundationTasks": 5,
   "businessTasksAwaitingAssignment": 30,
+  "foundationReviewPolicy": "OWNER_ACCEPTANCE",
+  "environmentPreparationTask": "BE-01:IN_PROGRESS",
   "foundationGateStatus": "NOT_EVALUATED",
   "businessOperationsAwaitingAssignment": 68,
   "artifactSha256": {
     "modules.json": "dc99695be5d2294525f5110735c0675a5d172461ae24974cffa15bc2a77af565",
-    "issues.json": "0e3b0253937d0a74770fc47b68331ca0926e1b7dc72b66a5e7dbeb41426fb37d",
+    "issues.json": "0ef18d3baa45e8bee24ee74248dd605fe8c300e402d7b095edbeab18f63bf163",
     "acceptance.json": "dd28852b1ecd96fafd73c77263a1e2608c7ac8fa9c6ef5fa82b32b350fc8e067",
     "operation-map.json": "262cae257ef96fe807c55d93f3a332c176e115a09f46313d96901610df654131",
-    "estimates.json": "00f9b31634a86027cd09b34c48de0fe677f793f20eb68c17fad74a4a2c26bced",
-    "delivery-phases.json": "ebd9e3ca510e1acc0f91c4b5e00efe35826ba0fa4b2d2a519f46b81f0bdeaad4",
-    "MODULES.md": "11863d9fd4c7583169957d3280a228fbc3ded9249de78387b2fdc34f2e86d3f2",
+    "estimates.json": "3bd31b2b62f60d167409cb75593e026aaca3923726092cfd8f16258f1db3416d",
+    "delivery-phases.json": "933280d3d388f2ff56c02f3de14aa4a3e481e375b845941eb96a50d94309db08",
+    "MODULES.md": "d1f8babcdda4853cfe5ce5e72a1db3e619f1931c7f9ed6161923ad4fb84e9fc5",
     "TRACEABILITY.md": "d4738a52c8ff6b2111e2e6723ceeb080806d8be96e949bca66b66d5175995ff9",
     "HANDLER-CONTRACTS.md": "fc845a172b5360321333b3e274c8d79c8537f264ae28e3b72f804891f350ce0e",
     "TEST-PLAN.md": "9802730bdb2ee1993321800634577a8cb6c9ea8a6e504b11f29ae3b0b4587a8a",
-    "TASKS.md": "abf862022d26db588910057b63e796c4e36f735b9efd548b3ab2b1adf6c022a8",
-    "IMPLEMENTATION-PLAN.md": "e11b9d9b9cd548de91aae6bfefa9b07466b9ea3f8caab22e82330e2f4df6485a",
+    "TASKS.md": "18bd0c601be8f99ff98b1b07c4a3cbe6402a266ddefddd0d561747a5793e0311",
+    "IMPLEMENTATION-PLAN.md": "f44577079f1a82e81f845a6230eec2a154be3499d67e602f8ee2652cfa871c5b",
     "module-structure.drawio": "3db24f7f4f13cff20d34834b6cad2a5b48c1526e176d1a27ea0a0aa3e50a93b4",
     "core-flows.drawio": "af62be1624fe1141d5f6c472859e8ed0f7ff07363077ea1a2fa28c6fa206921f"
   }
