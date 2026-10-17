@@ -96,8 +96,12 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
         estimateHours=dict(zip(('low','likely','high'),estimate)),
         reviewHours=dict.fromkeys(('low','likely','high'),0) if foundation else {'low':0.25,'likely':0.5,'high':1},dependencies=[f'BE-{x:02}' for x in deps],
         modules=mods.split(),operations=ops.split(),acceptance=[f'AT-{x:02}' for x in cases],
-        deliverable=deliverable,notes=notes,status='IN_PROGRESS' if n==1 else ('IMPLEMENTED_PENDING_OWNER_ACCEPTANCE' if n==2 else 'PLANNED'),milestone='后端全范围可部署演示（拟建）',
+        deliverable=deliverable,notes=notes,status='IN_PROGRESS' if n==1 else ('OWNER_ACCEPTED' if n==2 else 'PLANNED'),milestone='后端全范围可部署演示（拟建）',
         labels=['backend','design-ready'],remoteIssueNumber=None,remotePrNumber=None))
+    if n == 2:
+        TASKS[-1]['ownerAcceptance'] = dict(acceptedBy='USER',date='2026-10-17',
+            scope='BE-02',implementationCommit='f911c60',source='USER_MESSAGE',message='确认通过',
+            mergedToMain=False,evidence='BE-02-IMPLEMENTATION.md')
 
 t(1,'基座开发准备与协作条件核验','A',(1,2,3),[], 'M00 M12','',[1,39], '用户负责并确认基座，使用本机MySQL服务；JDK21可在IDE引用，命令行未配置；云服务器已具备，Docker数据库留后续；核验实际版本/隔离条件及工具。','用户已明确基座无需他人评审；本机MySQL版本、连接及独立测试schema待核验，当前未连接/执行SQL；不把云服务器存在当Docker数据库已部署。')
 t(2,'应用骨架、契约边界与健康检查','A',(1.5,3,5),[1],'M00 M12','',[1,37], 'backend单Maven工程、按模块分包、配置绑定、统一Problem/请求ID、未知字段拒绝、Actuator健康。')
@@ -184,7 +188,8 @@ def generate():
         dependencies=m[4],responsibility=m[5]) for m in MODULES]
     phase_plan=dict(revision='1.2',decision='D-039',organizationDecision='D-038',foundation=dict(
         ownerSlot='USER',taskIds=sorted(FOUNDATION_IDS),status='IN_PROGRESS',reviewRequired=False,reviewPolicy='OWNER_ACCEPTANCE',
-        acceptanceOwnerSlot='USER',acceptanceGate='FOUNDATION_ACCEPTED',reviewerSlot=None),business=dict(
+        acceptanceOwnerSlot='USER',acceptanceGate='FOUNDATION_ACCEPTED',reviewerSlot=None,
+        ownerAcceptedTaskIds=['BE-02']),business=dict(
         taskIds=[t['id'] for t in TASKS if t['phase']=='BUSINESS'],ownerSlot=None,
         assignmentStatus='UNASSIGNED',startConditions=BUSINESS_START,reviewPolicy='INDEPENDENT_REVIEW'),
         gateStatus='NOT_EVALUATED',gateEvidence=[],reviewRule='基座由用户确认，无需他人评审；业务阶段原独立评审规则保留，人员以后登记')
@@ -263,7 +268,7 @@ def generate():
     for case in CASES:tests.append(f"| {case['id']} {case['title']} | {case['fixture']} | {case['expected']} | {','.join(case['operations']) or '内部/部署'} | {case['reviewScenario'] or '新增验收准备'} |")
     tests+=['','## 测试层次与运行证据','','- 单元：纯策略/集合差异/规范化/目录无环，不以mock调用次数替代行为。','- HTTP：真实DTO/认证链/Problem与全部67入站响应Schema；单项管理上下文、旧token和三类JWT交叉调用。','- MySQL集成：Testcontainers MySQL8.4；无容器时使用团队批准的独立测试实例和唯一测试schema，绝不指向共享/业务库。H2不替代即时FK、JSON、触发器、生成槽与事务测试。','- 并发：两个独立连接/事务，以barrier控制锁取得/提交先后；测试方超时保证清理。既测执行先也测关权先，观察最终授权/epoch/success/audit，而不是仅断言抛异常。','- 故障：在业务第N项、audit、success及完成幂等结果前注入异常，另连接检查全回滚；结果可靠提交后模拟进程中断/响应丢失，恢复不覆盖成功。','- 部署：候选产物在实际目标服务器启动、迁移、重启、HTTPS与全链路演示；本机Mock不能替代。','','Issue的验收AT列表是最低必测行为；具体负责部分见每卡acceptanceScope。AT-37覆盖每项所属API，包括未单独列出的列表/详情/预览。基础任务可按其负责部分验收合并，不能据此把整个AT标为通过；BE-33汇总后端完整行为与契约证据，BE-34完成目标服务器，BE-35汇总发布证据。BE-01只核验准备清单，不要求先有构建或发布包，因而不形成实现前置条件循环。测试类和断言在对应模块实现时按writing-good-tests设计，BE-02已有公共适配的RED/GREEN及打包HTTP证据，见[BE-02-IMPLEMENTATION.md](BE-02-IMPLEMENTATION.md)；其余业务尚无运行结果。','','拟定构建命令为`./mvnw verify`，其中unit走Surefire、*IT走Failsafe、集成测试不得静默skip；另生成JUnit/契约验证报告。当前backend已有Wrapper及实际构建结果；BE-02的30项测试不等于完整业务验收通过。外部真实OA改为演示适配，信任及回调边界仍保留。']
     write('TEST-PLAN.md','\n'.join(tests))
-    cards=['# 本地Issue草案与验收卡','','修订1.2/D-041实施更新：BE-01为IN_PROGRESS（数据库准备待办）；BE-02为IMPLEMENTED_PENDING_OWNER_ACCEPTANCE，见BE-02-IMPLEMENTATION；其余33项PLANNED。BE-01～05为用户先实现的基座；BE-06～35为验收基座后待分派的业务/交付任务，ownerSlot和reviewerSlot为null时绝不表示已指派。基座reviewPolicy=OWNER_ACCEPTANCE、独立评审工时为0；业务保留INDEPENDENT_REVIEW。suggestedOwnerSlot/suggestedReviewerSlot只是旧方案参考。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。','','业务任务启动须同时满足FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED和原dependencies；这两个阶段门槛不是额外业务需求。基座验收见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。开发估算含设计细化/TDD/自测/文档，基座自检/本人确认含开发估算，业务独立评审另计，外部等待不计。','','通用DoD：对应设计已读且引用准确→业务/可执行基础能力RED失败原因留证→最小实现→GREEN及重构→对应安全/事务验收→基座由用户确认、业务由未参与改动的成员评审→集成与文档更新。环境/协作/发布核验使用真实记录。未运行验证不得勾选通过；依赖只有合并且本任务负责部分通过才解除，完整跨域证据由BE-33/34/35汇总。秘密不进Issue正文。']
+    cards=['# 本地Issue草案与验收卡','','修订1.2/D-041实施更新：BE-01为IN_PROGRESS（数据库准备待办）；BE-02为OWNER_ACCEPTED（D-042/f911c60，本人确认通过，尚未合并主线），见BE-02-IMPLEMENTATION；其余33项PLANNED。BE-01～05为用户先实现的基座；BE-06～35为验收基座后待分派的业务/交付任务，ownerSlot和reviewerSlot为null时绝不表示已指派。基座reviewPolicy=OWNER_ACCEPTANCE、独立评审工时为0；业务保留INDEPENDENT_REVIEW。suggestedOwnerSlot/suggestedReviewerSlot只是旧方案参考。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。','','业务任务启动须同时满足FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED和原dependencies；这两个阶段门槛不是额外业务需求。基座验收见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。开发估算含设计细化/TDD/自测/文档，基座自检/本人确认含开发估算，业务独立评审另计，外部等待不计。','','通用DoD：对应设计已读且引用准确→业务/可执行基础能力RED失败原因留证→最小实现→GREEN及重构→对应安全/事务验收→基座由用户确认、业务由未参与改动的成员评审→集成与文档更新。环境/协作/发布核验使用真实记录。未运行验证不得勾选通过；依赖只有合并且本任务负责部分通过才解除，完整跨域证据由BE-33/34/35汇总。秘密不进Issue正文。']
     for task in TASKS:
         est=task['estimateHours'];review=task['reviewHours']
         cards += [f"\n## {task['id']} {task['title']}", '',

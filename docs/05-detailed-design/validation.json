@@ -87,7 +87,7 @@
   "diagramEdges": 57,
   "localLinks": 209,
   "pythonSyntaxFiles": 2,
-  "decisionIds": 41,
+  "decisionIds": 42,
   "upstreamSha256": {
     "docs/03-api/openapi.yaml": "9910ceafadea88d85793d00f7bb4e6e5673700a8565366a407185c4517e0cbdf",
     "docs/03-api/apifox-export.json": "67fd08c024a365cfef26485a5984be28c7941cfc9662e1ae8d3ddac558fd5501",
@@ -119,16 +119,16 @@
   "businessOperationsAwaitingAssignment": 68,
   "artifactSha256": {
     "modules.json": "dc99695be5d2294525f5110735c0675a5d172461ae24974cffa15bc2a77af565",
-    "issues.json": "bea6d7c64e0809a82b361f927f393f6a9209ce7b4d44fe609aeff388087e9644",
+    "issues.json": "aeb0aaa5c954b11367c6457966c08c9ac371b3c6756ee361d255bc6db4323813",
     "acceptance.json": "3d31ced351b998f7d0dbff18557cf6b9fc969179818b8ce602b9c0456f8f0d18",
     "operation-map.json": "262cae257ef96fe807c55d93f3a332c176e115a09f46313d96901610df654131",
     "estimates.json": "3bd31b2b62f60d167409cb75593e026aaca3923726092cfd8f16258f1db3416d",
-    "delivery-phases.json": "0a3d2ea7c5b56bc8866d6a3bee82f1d91d77d23f907a6d10aeafdb0d0d1e59ce",
+    "delivery-phases.json": "c4e298c04dca80830e2297a9a59f7c2d5d8af7ac33a1a77577f7922889f65a58",
     "MODULES.md": "64437e3256e78e13aa9e6f34ee99d27080d502cbf7e4ae9fb2dd1856a39d16d9",
     "TRACEABILITY.md": "d4738a52c8ff6b2111e2e6723ceeb080806d8be96e949bca66b66d5175995ff9",
     "HANDLER-CONTRACTS.md": "fc845a172b5360321333b3e274c8d79c8537f264ae28e3b72f804891f350ce0e",
     "TEST-PLAN.md": "706c3ecd2119562982d880b5b103dd691e2be34737794d97803d46c2bf27f819",
-    "TASKS.md": "199ce5f8e4fa8bb755ca44c1dacb79ef77a8e703852ef40ed6b3533750517108",
+    "TASKS.md": "b7ee608861f84fb231823185ff5ab4d917ca856b024e21034c4f3d33f6ec743a",
     "IMPLEMENTATION-PLAN.md": "e8fe3c10eb2e6c795dc5cc6c196c0d2ee076d42d091a692124fbcd1abb11c137",
     "module-structure.drawio": "3db24f7f4f13cff20d34834b6cad2a5b48c1526e176d1a27ea0a0aa3e50a93b4",
     "core-flows.drawio": "af62be1624fe1141d5f6c472859e8ed0f7ff07363077ea1a2fa28c6fa206921f"

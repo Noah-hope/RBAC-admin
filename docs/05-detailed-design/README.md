@@ -2,11 +2,11 @@
 
 设计/实施计划修订1.2；2026-10-17。技术输入仍为需求V1.3、API1.2.0、数据库1.1；D-038先基座后分派，D-039基座本人确认，D-040确定IDE/工程与账号约定，D-041授权完成BE-02公共骨架，不改变业务契约。
 
-当前：JDK21/Wrapper3.9.11、Boot4.0.8实际构建和BE-02自测通过，使用com.adgn.backend/YAML；用户本人确认尚待完成。用户报告本机MySQL8.4.8和开发空库，专用账号、应用连接、测试库及云端部署仍待核验。真实OA不存在，继续示例方案；正式前端后置。运行见[后端README](../../backend/README.md)，证据见[BE-02实施记录](BE-02-IMPLEMENTATION.md)。
+当前：JDK21/Wrapper3.9.11、Boot4.0.8实际构建和BE-02自测通过，使用com.adgn.backend/YAML；D-042已由用户本人确认通过（实现提交f911c60）。用户报告本机MySQL8.4.8和开发空库，专用账号、应用连接、测试库及云端部署仍待核验。真实OA不存在，继续示例方案；正式前端后置。运行见[后端README](../../backend/README.md)，证据见[BE-02实施记录](BE-02-IMPLEMENTATION.md)。
 
 完整任务低/中/高估算仍为78/145.5/239人时，高于40～72预算，不以当前局部实测重估全量。41项验收中AT-01/37仅BE-02部分为PARTIALLY_VERIFIED，其余39项仍未运行。不能把公共骨架通过视为完整后端或全量交付承诺。
 
-**当前分工不变：用户先实现BE-01～05，整体验收并交付共同主线后再分派BE-06～35。** BE-01数据库准备仍开放，BE-02实现待本人确认，其余33项PLANNED；基座总门槛未评估，业务仍未分派。真实身份留第二阶段，13逻辑模块和原依赖保留。范围及门槛见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)，机器阶段见[delivery-phases.json](delivery-phases.json)，实际环境见[ENVIRONMENT.md](ENVIRONMENT.md)。
+**当前分工不变：用户先实现BE-01～05，整体验收并交付共同主线后再分派BE-06～35。** BE-01数据库准备仍开放，BE-02本人确认通过（OWNER_ACCEPTED），其余33项PLANNED；基座总门槛未评估，业务仍未分派。真实身份留第二阶段，13逻辑模块和原依赖保留。范围及门槛见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)，机器阶段见[delivery-phases.json](delivery-phases.json)，实际环境见[ENVIRONMENT.md](ENVIRONMENT.md)。
 
 | 阅读顺序 | 文件与用途 |
 | --- | --- |

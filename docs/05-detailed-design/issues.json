@@ -81,7 +81,7 @@
     ],
     "deliverable": "backend单Maven工程、按模块分包、配置绑定、统一Problem/请求ID、未知字段拒绝、Actuator健康。",
     "notes": "",
-    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE",
+    "status": "OWNER_ACCEPTED",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -89,6 +89,16 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "ownerAcceptance": {
+      "acceptedBy": "USER",
+      "date": "2026-10-17",
+      "scope": "BE-02",
+      "implementationCommit": "f911c60",
+      "source": "USER_MESSAGE",
+      "message": "确认通过",
+      "mergedToMain": false,
+      "evidence": "BE-02-IMPLEMENTATION.md"
+    },
     "acceptanceScope": "AT-01验固定Wrapper构建、配置失败和骨架健康；AT-37验公共DTO/Problem适配的样例。完整67入站契约由各接口任务及BE-33验收，不阻塞骨架先合并。",
     "useCases": [],
     "tables": [],

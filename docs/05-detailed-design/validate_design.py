@@ -94,8 +94,15 @@ def checks(report):
         require(module['ownerSlot']==('USER' if module['id']=='M00' else None),'模块人员误记已分派')
     referenced=set()
     for task in tasks:
-        expected_status={'BE-01':'IN_PROGRESS','BE-02':'IMPLEMENTED_PENDING_OWNER_ACCEPTANCE'}.get(task['id'],'PLANNED')
+        expected_status={'BE-01':'IN_PROGRESS','BE-02':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
         require(task['status']==expected_status,'任务准备/实现状态不符')
+        if task['id']=='BE-02':
+            acceptance=task.get('ownerAcceptance',{})
+            require(acceptance.get('acceptedBy')=='USER' and acceptance.get('scope')=='BE-02'
+                    and acceptance.get('date')=='2026-10-17' and acceptance.get('source')=='USER_MESSAGE'
+                    and acceptance.get('message')=='确认通过' and acceptance.get('implementationCommit')=='f911c60'
+                    and acceptance.get('mergedToMain') is False,'BE-02本人确认依据/主线状态不符')
+            require(phase_plan['foundation'].get('ownerAcceptedTaskIds')==['BE-02'],'单项确认错误扩展到整个基座')
         require(task['remoteIssueNumber'] is None and task['remotePrNumber'] is None,'伪造远程事项')
         require(task['suggestedOwnerSlot'] in 'ABCD','建议组无效')
         require(task['reviewerSlot'] is None,'评审人尚未登记，不应伪造')

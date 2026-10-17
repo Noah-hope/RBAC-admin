@@ -2,6 +2,10 @@
 
 2026-10-17（Asia/Shanghai）；D-041；本轮用户明确授权执行BE-02公共骨架。沿用需求V1.3、API1.2.0、数据库草案1.1，不修改权威契约、需求或DDL。分支codex/foundation-environment，起点ee743dd；不合并main、不推送、不创建远程Issue/PR。用户本人确认安排仍有效。
 
+## 本人确认通过（D-042）
+
+2026-10-17，用户在上一轮明确说明的Maven重新加载、应用启动、健康UP、未知接口Problem检查范围之后，直接回复“确认通过”。据此记录BE-02/f911c60已获本人确认，状态OWNER_ACCEPTED；此前30项测试及打包HTTP证据沿用，不在本轮重复执行。当前尚未合并main或推送，单项确认不表示BE-01/03～05、完整AT-01/37或基座总门槛通过。
+
 ## 交付与边界
 
 正式工程使用用户确认的com.adgn/backend及基础包com.adgn.backend，配置YAML；旧设计中的com.noah包名前缀同步替换。M00/core承载配置，M12/web承载严格JSON、请求ID及Problem，13逻辑模块和原业务依赖不变；不为未实现模块创建空业务接口。
@@ -44,9 +48,9 @@ dependency:tree与help:effective-pom实际执行通过，完整输出在忽略�
 | 依据 | 本轮覆盖 | 后续责任 |
 | --- | --- | --- |
 | CONVENTIONS及OpenAPI Problem/FieldError/X-Request-Id | 公共形状、头、安全值、语法/语义区分、无敏感输出 | 每个业务DTO、联合/长度/版本/权限边界由对应任务补齐 |
-| BE-02 / M00、M12 | 固定Wrapper、配置失败、健康、公共错误/日志及运行说明 | 当前实现待用户本人确认；无独立评审要求，不等于整个基座验收 |
+| BE-02 / M00、M12 | 固定Wrapper、配置失败、健康、公共错误/日志及运行说明 | D-042用户已确认实现提交f911c60；无独立评审要求，不等于整个基座验收 |
 | AT-01 | 本机构建、配置及jar健康的局部证据 | 最小部署/初始化在BE-32/34补齐 |
 | AT-37 | 公共HTTP样例与Problem局部证据 | 67入站、401/403及各业务响应在对应任务和BE-33验收 |
 | BE-01 / BE-03 | 用户报告MySQL8.4.8和开发空库 | 专用运行账号、独立迁移身份、隔离测试库与实际迁移/JPA验证仍待落实 |
 
-机器状态：BE-01仍IN_PROGRESS；BE-02为IMPLEMENTED_PENDING_OWNER_ACCEPTANCE；BE-03～35仍PLANNED。AT-01/37为PARTIALLY_VERIFIED，其余39项仍DESIGNED_NOT_RUN。基座IN_PROGRESS但总门槛NOT_EVALUATED，30项业务仍未分派。后续先完成BE-01数据库准备并由用户确认BE-02，再按依赖开展BE-03；不能静默跳过验收或提前宣称全后端完成。
+机器状态：BE-01仍IN_PROGRESS；BE-02为OWNER_ACCEPTED（D-042）；BE-03～35仍PLANNED。AT-01/37为PARTIALLY_VERIFIED，其余39项仍DESIGNED_NOT_RUN。基座IN_PROGRESS但总门槛NOT_EVALUATED，30项业务仍未分派。后续先完成BE-01数据库准备，再按依赖开展BE-03；BE-02已获本人确认但尚未合并主线；不能静默跳过验收或提前宣称全后端完成。

@@ -16,7 +16,10 @@
     "reviewPolicy": "OWNER_ACCEPTANCE",
     "acceptanceOwnerSlot": "USER",
     "acceptanceGate": "FOUNDATION_ACCEPTED",
-    "reviewerSlot": null
+    "reviewerSlot": null,
+    "ownerAcceptedTaskIds": [
+      "BE-02"
+    ]
   },
   "business": {
     "taskIds": [

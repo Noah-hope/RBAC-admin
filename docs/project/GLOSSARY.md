@@ -132,3 +132,4 @@
 | 业务已分派 | BUSINESS_OWNER_ASSIGNED | 基座验收后用户为相应任务明确真实Owner及独立Reviewer；当前30项业务/交付任务未分派，A～D及suggested字段仅参考 |
 | 基座负责人计划代号 | USER | 机器计划表示用户负责基座；不是权限中心账号、员工身份或JWT主体，不携带凭据 |
 | 基座本人确认 | OWNER_ACCEPTANCE | D-039仅对BE-01～05免除他人评审，自检/TDD/真实验证保留；不是基座已通过，也不改变后续业务INDEPENDENT_REVIEW规则 |
+| 单项已获本人确认 | OWNER_ACCEPTED | 任务已由用户明确确认；D-042仅适用于BE-02/f911c60，不等于已合并主线、整个基座门槛通过或业务可分派 |

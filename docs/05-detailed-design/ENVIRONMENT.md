@@ -15,7 +15,7 @@
 
 ## 接下来怎样准备
 
-D-041后续：BE-02公共骨架已实际按TDD实现并完成30项测试及jar随机端口HTTP验证，待用户本人确认；当前用户名/权限、数据库连接/隔离测试库准备继续留BE-01/03，不将其写成通过。运行说明见[后端README](../../backend/README.md)，完整命令/版本/环境限制见[BE-02实施记录](BE-02-IMPLEMENTATION.md)。
+D-041后续：BE-02公共骨架已实际按TDD实现并完成30项测试及jar随机端口HTTP验证，D-042用户已本人确认通过；当前用户名/权限、数据库连接/隔离测试库准备继续留BE-01/03，不将其写成通过。运行说明见[后端README](../../backend/README.md)，完整命令/版本/环境限制见[BE-02实施记录](BE-02-IMPLEMENTATION.md)。
 
 1. 在IntelliJ IDEA中确认Project SDK、Maven导入/运行JDK和应用运行JRE均为21，记录实际构建使用的JDK。可通过IDE验证，或在受控命令会话显式指定JDK；永久修改系统JAVA_HOME/PATH不是硬性前置，不要求团队统一个人安装目录。
 2. 已生成Maven Wrapper，当前固定Maven3.9.11；在backend目录、JDK21可用的会话运行`./mvnw.cmd --version`及`./mvnw.cmd --batch-mode --no-transfer-progress verify`。本次实际构建通过，后续BE-02继续补齐公共行为及测试。
