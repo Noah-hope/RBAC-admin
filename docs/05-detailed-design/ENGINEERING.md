@@ -16,7 +16,9 @@
 | 规范摘要 | RFC8785兼容CanonicalPayloadCodec，普通DTO JSON不是规范化算法 | [RFC8785](https://www.rfc-editor.org/rfc/rfc8785)向量＋本项目固定摘要包；BE-21记录选定实现/版本/向量结果再使用 |
 | 数据库 | MySQL8.4 LTS/InnoDB，UTC；候选补丁沿用本机可见8.4.8，部署前固定真实版本 | 用户确认已有云服务器，当前先用本机MySQL；实际本机服务版本未核验，云端Docker数据库未部署，候选不是实测版本 |
 
-## 正式工程拟定布局
+## 正式工程布局
+
+D-040：用户确认使用IntelliJ IDEA配置JDK21，后端位置确定为`rbac-admin/backend`。IDE向导最终目标应为该目录，避免生成`backend/backend`；沿用根Git仓库，不勾选创建新Git仓库。Project SDK、Maven导入/运行JDK及应用运行JRE均设为21；pom编译release21和Wrapper仍须在BE-02落实并实测。IDE配置不代表外部命令行已有Java环境。参考[IDE SDK配置](https://www.jetbrains.com/help/idea/sdk.html)、[Maven项目](https://www.jetbrains.com/help/idea/maven-support.html)。
 
 以下仅是后续创建清单，本轮不建立这些目录：
 
@@ -50,6 +52,8 @@ tools/demo/
 Boot/Jackson默认行为不可代替OpenAPI严格约束；DTO校验显式拒绝未知字段/非法联合/越界版本，字符串长度按code point。Web层将异常映射成既有Problem，不新增“万能200失败”或管理员批准/强制执行接口。
 
 ## 运行配置责任
+
+D-040：用户报告开发空库`rbac_admin_dev`已创建，Navicat截图显示服务端8.4.8；agent未连接/执行SQL。后端使用项目专用数据库用户，团队共享密码经私下渠道分发，各自本机注入；共享配置只留占位符。具体用户名/Host和授权待配置验证，迁移与运行身份分离约定保留，云端凭据部署时独立配置。
 
 BE-01先核验用户基座开发所需工具和隔离MySQL，记录已有云服务器和后续Docker数据库部署待核验条件；OS/架构、网络/证书和部署存储在后续BE-32/34落实，不要求买好服务器才完成基座。当前建议Linux+systemd+jar作为演示目标，属于部署设计取值，未确认实际宿主。不引入Kubernetes/消息队列/Redis。单实例内存限流承担初始基础限制，当前资格和权限不能用该缓存；未来多实例需重新设计共享限流。
 
