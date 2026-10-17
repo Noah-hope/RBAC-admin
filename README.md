@@ -21,7 +21,7 @@
 | 身份认证凭证 | JWT；功能授权仍按 RBAC 规则判断 |
 | 分析与设计方法 | 结构化分析与结构化设计 |
 
-选型已确认，[API 契约 1.2.0](docs/03-api/README.md) 已完成正式跨阶段评审修订及静态校验，设计层面有条件通过；Apifox1.2.0指定客户端导出核心一致已核对，历史证据及MCP限制保留；JWT 生命周期及失效规则已有接口设计。[数据库设计草案](docs/04-database/README.md)已交付，MySQL8.4及后端具体版本已有可评审技术取值；正式数据库/后端/认证未实现，未建库或执行SQL，[正式需求—API—数据库一致性评审](docs/04-database/CONSISTENCY-REVIEW.md)已完成修订，数据库草案1.1；真实引擎/并发验证、测试框架及最终工程布局仍待后续阶段开展。
+选型已确认，[API 契约 1.2.0](docs/03-api/README.md) 已完成正式跨阶段评审修订及静态校验，设计层面有条件通过；Apifox1.2.0指定客户端导出核心一致已核对，历史证据及MCP限制保留；JWT 生命周期及失效规则已有接口设计。[数据库设计草案](docs/04-database/README.md)已交付，MySQL8.4及后端具体版本已有可评审技术取值；正式数据库/后端/认证未实现，未建库或执行SQL，[正式需求—API—数据库一致性评审](docs/04-database/CONSISTENCY-REVIEW.md)已完成修订，数据库草案1.1；[后端详细设计1.0](docs/05-detailed-design/README.md)及35个本地Issue草案已交付，迁移/测试/工程布局已有设计取值；真实引擎/并发与服务器验收仍待实现阶段开展。
 
 ## 分析与设计方法
 
@@ -49,6 +49,7 @@
 - [Material 3 界面方案](docs/02-ui-design/MATERIAL3-PLAN.md)：已确认并实施的页面、导航、Token 与改造清单。
 - [阶段评审](docs/02-ui-design/STAGE-REVIEW.md)：原型有条件通过，可作为 API 设计输入；3 项原型缺口及契约同步待办。
 - [数据库设计](docs/04-database/README.md)：实体关系、数据字典、并发/幂等/JPA、DDL草案、静态自查及交接。
+- [后端详细设计与实施任务](docs/05-detailed-design/README.md)：模块/流程/部署、35个本地Issue草案、四人估算及未运行验收。
 - [项目技能](docs/project/SKILLS.md)：仓库内四个技能的入口、来源、版本和文件摘要。
 
 ## 当前目录
@@ -72,7 +73,7 @@ rbac-admin/
     └── 05-detailed-design/
 ```
 
-界面阶段已有可运行交互原型，位于 `docs/02-ui-design/prototype/`，可作为 API 设计输入。API 本地设计与[评审修订](docs/03-api/REVIEW.md)已交付于 `docs/03-api/`，已导入Apifox并核对指定客户端导出，MCP暴露差异见同步记录；数据库设计已交付于`docs/04-database/`，已完成正式跨阶段设计评审修订，仍只做静态检查与设计推演、未建库/执行SQL；详细设计尚未开展；按 D-029，3 项原型展示/演示补齐后续跟踪，不作为 API 启动或契约定稿前置，对应业务规则保留。目录约定及迁移说明见 [LAYOUT.md](docs/project/LAYOUT.md)。
+界面阶段已有可运行交互原型，位于 `docs/02-ui-design/prototype/`，可作为 API 设计输入。API 本地设计与[评审修订](docs/03-api/REVIEW.md)已交付于 `docs/03-api/`，已导入Apifox并核对指定客户端导出，MCP暴露差异见同步记录；数据库设计已交付于`docs/04-database/`，已完成正式跨阶段设计评审修订，仍只做静态检查与设计推演、未建库/执行SQL；后端详细设计与四人任务估算已交付，正式实现/部署尚未开始；按 D-029，3 项原型展示/演示补齐后续跟踪，不作为 API 启动或契约定稿前置，对应业务规则保留。目录约定及迁移说明见 [LAYOUT.md](docs/project/LAYOUT.md)。
 
 ## 规定的项目流程
 

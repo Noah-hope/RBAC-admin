@@ -1,0 +1,2354 @@
+[
+  {
+    "id": "BE-01",
+    "title": "协作基线、开发环境与部署目标确认",
+    "ownerSlot": "A",
+    "reviewerSlot": "B",
+    "estimateHours": {
+      "low": 1,
+      "likely": 2,
+      "high": 3
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [],
+    "modules": [
+      "M00",
+      "M12"
+    ],
+    "operations": [],
+    "acceptance": [
+      "AT-01",
+      "AT-39"
+    ],
+    "deliverable": "确定四人账号/远程平台/分支规则、JDK/构建/MySQL隔离条件和服务器OS/访问方式；记录实际工具清单。",
+    "notes": "无服务器时只可完成本地准备，BE-34仍阻塞；不默认已有GitHub远程或Docker。",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "只核验协作/工具/环境清单、负责人和未就绪条件；AT-01/39在此为准备证据，不要求尚不存在的构建产物或发布包。服务器未到位须保留BE-34前置条件，不能声称部署已完成。",
+    "useCases": [],
+    "tables": [],
+    "transactions": [],
+    "invariants": []
+  },
+  {
+    "id": "BE-02",
+    "title": "应用骨架、契约边界与健康检查",
+    "ownerSlot": "A",
+    "reviewerSlot": "B",
+    "estimateHours": {
+      "low": 1.5,
+      "likely": 3,
+      "high": 5
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-01"
+    ],
+    "modules": [
+      "M00",
+      "M12"
+    ],
+    "operations": [],
+    "acceptance": [
+      "AT-01",
+      "AT-37"
+    ],
+    "deliverable": "backend单Maven工程、按模块分包、配置绑定、统一Problem/请求ID、未知字段拒绝、Actuator健康。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "AT-01验固定Wrapper构建、配置失败和骨架健康；AT-37验公共DTO/Problem适配的样例。完整67入站契约由各接口任务及BE-33验收，不阻塞骨架先合并。",
+    "useCases": [],
+    "tables": [],
+    "transactions": [],
+    "invariants": []
+  },
+  {
+    "id": "BE-03",
+    "title": "迁移、UUID/版本及JPA基础适配",
+    "ownerSlot": "A",
+    "reviewerSlot": "B",
+    "estimateHours": {
+      "low": 2.5,
+      "likely": 5,
+      "high": 8
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-02"
+    ],
+    "modules": [
+      "M00"
+    ],
+    "operations": [],
+    "acceptance": [
+      "AT-02"
+    ],
+    "deliverable": "Flyway初始表/约束/触发器/guard、UUID字符映射、UTC和版本边界；各域实体仍在对应业务Issue实现。",
+    "notes": "schema.sql是待引擎审查草案，不能原样运行后直接宣布所有业务正确。",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "AT-02在此实际运行43表/触发器迁移及基础UUID/UTC/版本映射样例；各域实体映射由所属任务补齐，BE-33汇总集成，不要求本任务提前实现全部域实体。",
+    "useCases": [],
+    "tables": [
+      "admin_account",
+      "admin_appointment",
+      "admin_session",
+      "audit_event",
+      "audit_subject",
+      "authorization_source",
+      "business_role",
+      "business_system",
+      "change_request",
+      "change_target",
+      "company",
+      "department",
+      "directory_node",
+      "employee",
+      "employee_source_identity",
+      "employment",
+      "execution_attempt",
+      "execution_success",
+      "grant_baseline",
+      "grant_employment_evidence",
+      "http_idempotency",
+      "impact_preview",
+      "import_batch",
+      "import_file",
+      "import_issue",
+      "import_plan_row",
+      "management_scope",
+      "mutation_guard",
+      "oa_callback_event",
+      "oa_final_result",
+      "oa_link",
+      "oa_outbox",
+      "organization_mapping",
+      "permission",
+      "position",
+      "preview_item",
+      "relation_change_claim",
+      "role_change_claim",
+      "role_configuration_history",
+      "role_grant",
+      "role_permission",
+      "scope_system",
+      "service_identity"
+    ],
+    "transactions": [],
+    "invariants": []
+  },
+  {
+    "id": "BE-04",
+    "title": "统一写事务、读快照与审计追加",
+    "ownerSlot": "A",
+    "reviewerSlot": "B",
+    "estimateHours": {
+      "low": 2,
+      "likely": 4,
+      "high": 6
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-03"
+    ],
+    "modules": [
+      "M00",
+      "M11"
+    ],
+    "operations": [],
+    "acceptance": [
+      "AT-03",
+      "AT-33"
+    ],
+    "deliverable": "CommandBoundary/ReadBoundary、WriteContext及同事务AuditAppender、锁等待与错误分类；两个连接的屏障测试。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "验证公共读写边界、两个连接和故障回滚；AT-33先验新鲜快照基础机制，有效权限查询的完整业务结果由BE-18/33覆盖。",
+    "useCases": [
+      "UC-05",
+      "UC-06"
+    ],
+    "tables": [
+      "audit_event",
+      "audit_subject",
+      "mutation_guard"
+    ],
+    "transactions": [],
+    "invariants": []
+  },
+  {
+    "id": "BE-05",
+    "title": "HTTP幂等预留、栅栏与删除后重放",
+    "ownerSlot": "A",
+    "reviewerSlot": "B",
+    "estimateHours": {
+      "low": 2,
+      "likely": 4,
+      "high": 6
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-04"
+    ],
+    "modules": [
+      "M00"
+    ],
+    "operations": [],
+    "acceptance": [
+      "AT-04"
+    ],
+    "deliverable": "请求HMAC/租约/安全结果/authorization_basis、同token提交和过期接管、敏感响应过滤。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04"
+    ],
+    "tables": [
+      "http_idempotency"
+    ],
+    "transactions": [],
+    "invariants": []
+  },
+  {
+    "id": "BE-06",
+    "title": "三类JWT与后台登录、退出、本人改密",
+    "ownerSlot": "A",
+    "reviewerSlot": "B",
+    "estimateHours": {
+      "low": 2.5,
+      "likely": 5,
+      "high": 8
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-04"
+    ],
+    "modules": [
+      "M01",
+      "M12"
+    ],
+    "operations": [
+      "login",
+      "currentSession",
+      "logout",
+      "changeOwnPassword"
+    ],
+    "acceptance": [
+      "AT-05",
+      "AT-06",
+      "AT-07"
+    ],
+    "deliverable": "RS256三类入口、当前资格、会话持久化、受限改密token与限速，普通员工拒绝。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-05",
+      "UC-06",
+      "UC-09",
+      "UC-11"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_appointment",
+      "admin_session",
+      "employee",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T0",
+      "T11",
+      "T12",
+      "T9"
+    ],
+    "invariants": [
+      "I-04",
+      "I-20",
+      "I-22"
+    ]
+  },
+  {
+    "id": "BE-07",
+    "title": "后台账号管理与密码重置",
+    "ownerSlot": "A",
+    "reviewerSlot": "B",
+    "estimateHours": {
+      "low": 1.5,
+      "likely": 3,
+      "high": 5
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-05",
+      "BE-06"
+    ],
+    "modules": [
+      "M01",
+      "M12"
+    ],
+    "operations": [
+      "listAccounts",
+      "createAccount",
+      "getAccount",
+      "setAccountState",
+      "resetAccountPassword"
+    ],
+    "acceptance": [
+      "AT-06",
+      "AT-07"
+    ],
+    "deliverable": "账号查询/创建/停用启用/重置，不改变员工业务授权，临时密码响应遵循契约且不缓存秘密。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-05",
+      "UC-06",
+      "UC-09",
+      "UC-11"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_session",
+      "audit_event",
+      "employee",
+      "http_idempotency"
+    ],
+    "transactions": [
+      "T0",
+      "T11",
+      "T9"
+    ],
+    "invariants": [
+      "I-01",
+      "I-04",
+      "I-16",
+      "I-20"
+    ]
+  },
+  {
+    "id": "BE-08",
+    "title": "当前单项任命、范围读模型与覆盖策略",
+    "ownerSlot": "A",
+    "reviewerSlot": "B",
+    "estimateHours": {
+      "low": 1.5,
+      "likely": 3,
+      "high": 5
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-06",
+      "BE-10"
+    ],
+    "modules": [
+      "M03",
+      "M11",
+      "M12"
+    ],
+    "operations": [
+      "myAppointments",
+      "listScopes",
+      "getScope",
+      "listScopeAppointments"
+    ],
+    "acceptance": [
+      "AT-08",
+      "AT-19"
+    ],
+    "deliverable": "三上下文头、当前单项覆盖、列表/详情边界、任命版本与范围版本独立。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-07",
+      "UC-09",
+      "UC-11"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_appointment",
+      "employee",
+      "employment",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T11",
+      "T9"
+    ],
+    "invariants": [
+      "I-03",
+      "I-04",
+      "I-20"
+    ]
+  },
+  {
+    "id": "BE-09",
+    "title": "创建管理范围及任命、创建预览",
+    "ownerSlot": "A",
+    "reviewerSlot": "B",
+    "estimateHours": {
+      "low": 1.5,
+      "likely": 3,
+      "high": 5
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-05",
+      "BE-08",
+      "BE-17"
+    ],
+    "modules": [
+      "M03",
+      "M12"
+    ],
+    "operations": [
+      "createScope",
+      "scopeCreatePreview"
+    ],
+    "acceptance": [
+      "AT-08",
+      "AT-31"
+    ],
+    "deliverable": "总管理员创建完整范围/名单，当前部门任职及系统合法，失败全回滚。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-01",
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-07",
+      "UC-09",
+      "UC-10"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_appointment",
+      "audit_event",
+      "change_request",
+      "change_target",
+      "employee",
+      "employment",
+      "http_idempotency",
+      "impact_preview",
+      "management_scope",
+      "preview_item",
+      "scope_system"
+    ],
+    "transactions": [
+      "T0",
+      "T11",
+      "T6"
+    ],
+    "invariants": [
+      "I-04",
+      "I-12",
+      "I-16",
+      "I-18",
+      "I-20"
+    ]
+  },
+  {
+    "id": "BE-10",
+    "title": "组织、员工与任职读取及基础变更端口",
+    "ownerSlot": "D",
+    "reviewerSlot": "C",
+    "estimateHours": {
+      "low": 1.5,
+      "likely": 3,
+      "high": 5
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-03",
+      "BE-04"
+    ],
+    "modules": [
+      "M02",
+      "M11",
+      "M12"
+    ],
+    "operations": [
+      "listCompanies",
+      "listDepartments",
+      "listPositions",
+      "listEmployees",
+      "getEmployee",
+      "listEmployments"
+    ],
+    "acceptance": [
+      "AT-13",
+      "AT-27",
+      "AT-29"
+    ],
+    "deliverable": "稳定员工/源身份/公司部门岗位映射及任职读取，EmploymentWriter仅供受控导入调用；无新增组织写API。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-03",
+      "UC-07",
+      "UC-10"
+    ],
+    "tables": [
+      "authorization_source",
+      "business_role",
+      "company",
+      "department",
+      "employee",
+      "employment",
+      "grant_baseline",
+      "grant_employment_evidence",
+      "position",
+      "role_grant"
+    ],
+    "transactions": [
+      "T11",
+      "T9"
+    ],
+    "invariants": [
+      "I-01",
+      "I-03",
+      "I-08",
+      "I-09",
+      "I-21"
+    ]
+  },
+  {
+    "id": "BE-11",
+    "title": "系统登记及查询",
+    "ownerSlot": "B",
+    "reviewerSlot": "D",
+    "estimateHours": {
+      "low": 1.5,
+      "likely": 3,
+      "high": 5
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-03",
+      "BE-04",
+      "BE-05",
+      "BE-06"
+    ],
+    "modules": [
+      "M04",
+      "M12"
+    ],
+    "operations": [
+      "listSystems",
+      "createSystem",
+      "getSystem"
+    ],
+    "acceptance": [
+      "AT-09",
+      "AT-37"
+    ],
+    "deliverable": "稳定系统编码和唯一SYSTEM_ACCESS，登记同事务，分页/详情权限与契约一致。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-01"
+    ],
+    "tables": [
+      "audit_event",
+      "business_role",
+      "business_system",
+      "directory_node",
+      "http_idempotency",
+      "impact_preview",
+      "management_scope",
+      "permission",
+      "preview_item",
+      "role_permission",
+      "scope_system"
+    ],
+    "transactions": [
+      "T0",
+      "T1",
+      "T11",
+      "T9"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "id": "BE-12",
+    "title": "目录原子编辑、系统启停及影响预览",
+    "ownerSlot": "B",
+    "reviewerSlot": "D",
+    "estimateHours": {
+      "low": 3,
+      "likely": 5,
+      "high": 8
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-11",
+      "BE-17"
+    ],
+    "modules": [
+      "M04",
+      "M12"
+    ],
+    "operations": [
+      "updateSystem",
+      "systemStatePreview",
+      "listDirectoryNodes",
+      "listPermissions",
+      "catalogPreview",
+      "saveCatalog"
+    ],
+    "acceptance": [
+      "AT-09",
+      "AT-10",
+      "AT-31"
+    ],
+    "deliverable": "完整最终树/本地引用/绑定/稳定排序/无环，合法即时FK顺序、整批/no-change及预览依赖。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-01",
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-05",
+      "UC-06",
+      "UC-07",
+      "UC-10"
+    ],
+    "tables": [
+      "audit_event",
+      "business_role",
+      "business_system",
+      "directory_node",
+      "http_idempotency",
+      "impact_preview",
+      "management_scope",
+      "permission",
+      "preview_item",
+      "role_permission",
+      "scope_system"
+    ],
+    "transactions": [
+      "T0",
+      "T1",
+      "T11",
+      "T9"
+    ],
+    "invariants": [
+      "I-05",
+      "I-06",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "id": "BE-13",
+    "title": "角色元数据和当前配置读取",
+    "ownerSlot": "B",
+    "reviewerSlot": "D",
+    "estimateHours": {
+      "low": 1.5,
+      "likely": 2.5,
+      "high": 4
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-03",
+      "BE-05",
+      "BE-06",
+      "BE-11"
+    ],
+    "modules": [
+      "M05",
+      "M12"
+    ],
+    "operations": [
+      "listRoles",
+      "getRole",
+      "updateRoleMetadata"
+    ],
+    "acceptance": [
+      "AT-11",
+      "AT-12"
+    ],
+    "deliverable": "固定归属、共享角色维护边界、元数据版本与配置版本，当前配置与待审批状态分开显示。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-02"
+    ],
+    "tables": [
+      "audit_event",
+      "business_role",
+      "change_request",
+      "change_target",
+      "http_idempotency",
+      "role_change_claim",
+      "role_permission"
+    ],
+    "transactions": [
+      "T0",
+      "T11",
+      "T2",
+      "T9"
+    ],
+    "invariants": [
+      "I-01",
+      "I-07",
+      "I-10",
+      "I-16"
+    ]
+  },
+  {
+    "id": "BE-14",
+    "title": "来源和关系基线、授权历史及当前资格",
+    "ownerSlot": "D",
+    "reviewerSlot": "C",
+    "estimateHours": {
+      "low": 2,
+      "likely": 3.5,
+      "high": 6
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-04",
+      "BE-10",
+      "BE-11"
+    ],
+    "modules": [
+      "M06",
+      "M11",
+      "M12"
+    ],
+    "operations": [
+      "listGrants",
+      "grantBaselines",
+      "sourceBaselines"
+    ],
+    "acceptance": [
+      "AT-13",
+      "AT-14",
+      "AT-15"
+    ],
+    "deliverable": "缺失逻辑0基线、全部适用任职、同来源去重/异源并存、准确历史grant版本。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-03",
+      "UC-04",
+      "UC-11"
+    ],
+    "tables": [
+      "authorization_source",
+      "business_role",
+      "employee",
+      "employment",
+      "grant_baseline",
+      "grant_employment_evidence",
+      "role_grant"
+    ],
+    "transactions": [
+      "T11",
+      "T9"
+    ],
+    "invariants": [
+      "I-03",
+      "I-08",
+      "I-09"
+    ]
+  },
+  {
+    "id": "BE-15",
+    "title": "有效角色配置应用器",
+    "ownerSlot": "B",
+    "reviewerSlot": "D",
+    "estimateHours": {
+      "low": 1.5,
+      "likely": 3,
+      "high": 5
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-04",
+      "BE-13"
+    ],
+    "modules": [
+      "M05"
+    ],
+    "operations": [],
+    "acceptance": [
+      "AT-11",
+      "AT-12",
+      "AT-18"
+    ],
+    "deliverable": "仅执行器可用的配置差集校验/替换/版本和历史写入，保留停用项合法，全部非空。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-11"
+    ],
+    "tables": [
+      "business_role",
+      "role_configuration_history",
+      "role_permission"
+    ],
+    "transactions": [],
+    "invariants": []
+  },
+  {
+    "id": "BE-16",
+    "title": "授予/撤销及关闭来源底层原子操作",
+    "ownerSlot": "D",
+    "reviewerSlot": "C",
+    "estimateHours": {
+      "low": 2,
+      "likely": 3.5,
+      "high": 6
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-04",
+      "BE-14"
+    ],
+    "modules": [
+      "M06"
+    ],
+    "operations": [],
+    "acceptance": [
+      "AT-14",
+      "AT-15",
+      "AT-22",
+      "AT-41"
+    ],
+    "deliverable": "WriteContext内物化源/永久baseline、ACTIVE槽、新grantID、结束与证据，返回受影响事实供编排器失效申请。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-03",
+      "UC-04",
+      "UC-10",
+      "UC-11"
+    ],
+    "tables": [
+      "authorization_source",
+      "grant_baseline",
+      "grant_employment_evidence",
+      "role_grant"
+    ],
+    "transactions": [],
+    "invariants": []
+  },
+  {
+    "id": "BE-17",
+    "title": "安全影响预览与分页、依赖集合快照",
+    "ownerSlot": "B",
+    "reviewerSlot": "D",
+    "estimateHours": {
+      "low": 2.5,
+      "likely": 5,
+      "high": 8
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-04",
+      "BE-08",
+      "BE-10"
+    ],
+    "modules": [
+      "M11",
+      "M12"
+    ],
+    "operations": [
+      "listPreviewEmployees",
+      "listPreviewTargets"
+    ],
+    "acceptance": [
+      "AT-31",
+      "AT-32"
+    ],
+    "deliverable": "各业务预览共用纯影响计算及数据投影，5分钟、当前上下文重查、集合新增检测，混合申请安全计数。",
+    "notes": "仅依赖表和读投影，不依赖目录/角色命令已实现，避免与BE-12形成依赖环。",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-01",
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-07",
+      "UC-08",
+      "UC-10"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_appointment",
+      "impact_preview",
+      "management_scope",
+      "preview_item",
+      "scope_system"
+    ],
+    "transactions": [
+      "T11",
+      "T9"
+    ],
+    "invariants": [
+      "I-18",
+      "I-20"
+    ]
+  },
+  {
+    "id": "BE-18",
+    "title": "业务系统有效权限和单项检查",
+    "ownerSlot": "B",
+    "reviewerSlot": "D",
+    "estimateHours": {
+      "low": 2,
+      "likely": 4,
+      "high": 6
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-06",
+      "BE-10",
+      "BE-14"
+    ],
+    "modules": [
+      "M11",
+      "M12"
+    ],
+    "operations": [
+      "authorizationQuery",
+      "permissionCheck"
+    ],
+    "acceptance": [
+      "AT-07",
+      "AT-10",
+      "AT-30",
+      "AT-33"
+    ],
+    "deliverable": "主库新快照、完整有效来源并集、进入资格、独立菜单/操作、未知编码与存储错误区分。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-01",
+      "UC-05",
+      "UC-06",
+      "UC-11"
+    ],
+    "tables": [
+      "authorization_source",
+      "business_role",
+      "business_system",
+      "directory_node",
+      "employee",
+      "employment",
+      "grant_baseline",
+      "permission",
+      "role_grant",
+      "role_permission",
+      "service_identity"
+    ],
+    "transactions": [
+      "T11"
+    ],
+    "invariants": [
+      "I-03",
+      "I-05",
+      "I-06",
+      "I-07",
+      "I-08"
+    ]
+  },
+  {
+    "id": "BE-19",
+    "title": "审计列表、详情与敏感访问",
+    "ownerSlot": "C",
+    "reviewerSlot": "A",
+    "estimateHours": {
+      "low": 1.5,
+      "likely": 2.5,
+      "high": 4
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-04",
+      "BE-06",
+      "BE-08"
+    ],
+    "modules": [
+      "M11",
+      "M12"
+    ],
+    "operations": [
+      "listAudit",
+      "getAudit"
+    ],
+    "acceptance": [
+      "AT-32",
+      "AT-34"
+    ],
+    "deliverable": "原事件append-only，混合不可安全分割事件仅总管理员，列表total和详情当前授权一致。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-04",
+      "UC-08",
+      "UC-11"
+    ],
+    "tables": [
+      "admin_appointment",
+      "audit_event",
+      "audit_subject",
+      "management_scope",
+      "scope_system"
+    ],
+    "transactions": [
+      "T11",
+      "T9"
+    ],
+    "invariants": [
+      "I-19",
+      "I-20"
+    ]
+  },
+  {
+    "id": "BE-20",
+    "title": "角色创建与配置/授予/撤销草稿、占用",
+    "ownerSlot": "C",
+    "reviewerSlot": "A",
+    "estimateHours": {
+      "low": 3,
+      "likely": 5,
+      "high": 8
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-05",
+      "BE-08",
+      "BE-13",
+      "BE-14"
+    ],
+    "modules": [
+      "M07",
+      "M12"
+    ],
+    "operations": [
+      "createRole",
+      "createChangeDraft",
+      "updateChangeDraft",
+      "deleteChangeDraft"
+    ],
+    "acceptance": [
+      "AT-11",
+      "AT-13",
+      "AT-16",
+      "AT-17"
+    ],
+    "deliverable": "新角色+初始草稿/claim原子，草稿完整投影与并发版本；删除安全快照、幂等授权依据及占用释放。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04"
+    ],
+    "tables": [
+      "audit_event",
+      "authorization_source",
+      "business_role",
+      "change_request",
+      "change_target",
+      "grant_baseline",
+      "http_idempotency",
+      "impact_preview",
+      "oa_outbox",
+      "preview_item",
+      "relation_change_claim",
+      "role_change_claim"
+    ],
+    "transactions": [
+      "T0",
+      "T11",
+      "T2",
+      "T3"
+    ],
+    "invariants": [
+      "I-01",
+      "I-07",
+      "I-08",
+      "I-10",
+      "I-11",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "id": "BE-21",
+    "title": "预览确认、固定申请与OA待办",
+    "ownerSlot": "C",
+    "reviewerSlot": "A",
+    "estimateHours": {
+      "low": 3,
+      "likely": 5,
+      "high": 8
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-17",
+      "BE-20"
+    ],
+    "modules": [
+      "M07",
+      "M12"
+    ],
+    "operations": [
+      "changePreview",
+      "submitChange"
+    ],
+    "acceptance": [
+      "AT-12",
+      "AT-13",
+      "AT-16",
+      "AT-18"
+    ],
+    "deliverable": "先当前授权再无变化/仍需版本/预览依赖，JCS固定摘要包/目标投影/原资格/outbox同事务，提交不授权。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-11"
+    ],
+    "tables": [
+      "audit_event",
+      "authorization_source",
+      "change_request",
+      "change_target",
+      "grant_baseline",
+      "http_idempotency",
+      "impact_preview",
+      "oa_outbox",
+      "preview_item",
+      "relation_change_claim",
+      "role_change_claim"
+    ],
+    "transactions": [
+      "T0",
+      "T11",
+      "T2",
+      "T3"
+    ],
+    "invariants": [
+      "I-08",
+      "I-10",
+      "I-11",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "id": "BE-22",
+    "title": "申请列表、详情及安全时间线",
+    "ownerSlot": "C",
+    "reviewerSlot": "A",
+    "estimateHours": {
+      "low": 1,
+      "likely": 2,
+      "high": 3
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-20"
+    ],
+    "modules": [
+      "M07",
+      "M11",
+      "M12"
+    ],
+    "operations": [
+      "listChangeRequests",
+      "getChangeRequest",
+      "listChangeEvents"
+    ],
+    "acceptance": [
+      "AT-17",
+      "AT-18",
+      "AT-19",
+      "AT-34"
+    ],
+    "deliverable": "整份当前单项范围覆盖，三轴状态/历史与安全失败码，驳回复制仅新草稿。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-07",
+      "UC-08",
+      "UC-11"
+    ],
+    "tables": [
+      "audit_event",
+      "change_request",
+      "change_target",
+      "execution_success",
+      "oa_final_result",
+      "oa_link"
+    ],
+    "transactions": [
+      "T11",
+      "T9"
+    ],
+    "invariants": [
+      "I-11",
+      "I-12",
+      "I-19"
+    ]
+  },
+  {
+    "id": "BE-23",
+    "title": "OA可靠投递、关联及人工投递重试",
+    "ownerSlot": "C",
+    "reviewerSlot": "A",
+    "estimateHours": {
+      "low": 2,
+      "likely": 4,
+      "high": 6
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-21"
+    ],
+    "modules": [
+      "M08",
+      "M12"
+    ],
+    "operations": [
+      "retryOaDelivery",
+      "deliverOaSubmission"
+    ],
+    "acceptance": [
+      "AT-20",
+      "AT-35"
+    ],
+    "deliverable": "租约领取/发送前复核/事务外适配器/关联回写，超时同requestId，不重投已失效申请。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-11"
+    ],
+    "tables": [
+      "audit_event",
+      "change_request",
+      "http_idempotency",
+      "oa_link",
+      "oa_outbox",
+      "service_identity"
+    ],
+    "transactions": [
+      "T0",
+      "T10"
+    ],
+    "invariants": [
+      "I-11",
+      "I-12",
+      "I-14",
+      "I-16"
+    ]
+  },
+  {
+    "id": "BE-24",
+    "title": "OA最终结果接收与三层去重",
+    "ownerSlot": "C",
+    "reviewerSlot": "A",
+    "estimateHours": {
+      "low": 2,
+      "likely": 3.5,
+      "high": 6
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-21",
+      "BE-23",
+      "BE-06"
+    ],
+    "modules": [
+      "M08",
+      "M12"
+    ],
+    "operations": [
+      "receiveOaResult"
+    ],
+    "acceptance": [
+      "AT-07",
+      "AT-20",
+      "AT-21"
+    ],
+    "deliverable": "可信服务身份和可靠关联，事件/最终结果冲突检测、可靠接收独立提交，批准不直接变更权限。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-05",
+      "UC-06",
+      "UC-11"
+    ],
+    "tables": [
+      "audit_event",
+      "change_request",
+      "execution_attempt",
+      "execution_success",
+      "oa_callback_event",
+      "oa_final_result",
+      "oa_link",
+      "oa_outbox",
+      "service_identity"
+    ],
+    "transactions": [
+      "T0",
+      "T10"
+    ],
+    "invariants": [
+      "I-11",
+      "I-12",
+      "I-14",
+      "I-15"
+    ]
+  },
+  {
+    "id": "BE-25",
+    "title": "自动执行、整份失效与失败恢复",
+    "ownerSlot": "C",
+    "reviewerSlot": "A",
+    "estimateHours": {
+      "low": 3,
+      "likely": 5,
+      "high": 8
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-15",
+      "BE-16",
+      "BE-24"
+    ],
+    "modules": [
+      "M09"
+    ],
+    "operations": [],
+    "acceptance": [
+      "AT-12",
+      "AT-19",
+      "AT-22",
+      "AT-23"
+    ],
+    "deliverable": "完整固定清单复核→全部业务/audit/success/状态同事务，失败后另事务复核记录，启动/定时扫描恢复。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-02",
+      "UC-07",
+      "UC-11"
+    ],
+    "tables": [
+      "audit_event",
+      "change_request",
+      "change_target",
+      "execution_attempt",
+      "execution_success",
+      "grant_baseline",
+      "oa_final_result",
+      "role_grant",
+      "role_permission"
+    ],
+    "transactions": [],
+    "invariants": []
+  },
+  {
+    "id": "BE-26",
+    "title": "直接来源关闭与统一申请失效编排",
+    "ownerSlot": "D",
+    "reviewerSlot": "C",
+    "estimateHours": {
+      "low": 2.5,
+      "likely": 4.5,
+      "high": 7
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-05",
+      "BE-16",
+      "BE-20",
+      "BE-17"
+    ],
+    "modules": [
+      "M10",
+      "M12"
+    ],
+    "operations": [
+      "sourceClosePreview",
+      "closeSource"
+    ],
+    "acceptance": [
+      "AT-15",
+      "AT-16",
+      "AT-19",
+      "AT-32",
+      "AT-41"
+    ],
+    "deliverable": "统一RequestInvalidator，关权/关系结束触发整份已提交申请失效，安全计数/可见审计及幂等原子，DRAFT不伪终态。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-07",
+      "UC-08",
+      "UC-10",
+      "UC-11"
+    ],
+    "tables": [
+      "audit_event",
+      "authorization_source",
+      "change_request",
+      "change_target",
+      "grant_baseline",
+      "http_idempotency",
+      "impact_preview",
+      "preview_item",
+      "relation_change_claim",
+      "role_grant"
+    ],
+    "transactions": [
+      "T0",
+      "T11",
+      "T5"
+    ],
+    "invariants": [
+      "I-08",
+      "I-09",
+      "I-13",
+      "I-16",
+      "I-18"
+    ]
+  },
+  {
+    "id": "BE-27",
+    "title": "员工状态及管理范围替换的跨域失效",
+    "ownerSlot": "A",
+    "reviewerSlot": "B",
+    "estimateHours": {
+      "low": 2,
+      "likely": 4,
+      "high": 6
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-07",
+      "BE-08",
+      "BE-09",
+      "BE-26"
+    ],
+    "modules": [
+      "M10",
+      "M03",
+      "M01",
+      "M12"
+    ],
+    "operations": [
+      "employeeStatePreview",
+      "setEmployeeState",
+      "scopeEditPreview",
+      "replaceScope"
+    ],
+    "acceptance": [
+      "AT-08",
+      "AT-19",
+      "AT-24",
+      "AT-31"
+    ],
+    "deliverable": "来源/关系/任命/会话/原范围申请同事务持久失效，恢复不复权，范围扩回不复活、防总管理员自锁。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-01",
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-07",
+      "UC-09",
+      "UC-10",
+      "UC-11"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_appointment",
+      "audit_event",
+      "authorization_source",
+      "change_request",
+      "change_target",
+      "employee",
+      "employment",
+      "grant_baseline",
+      "http_idempotency",
+      "impact_preview",
+      "management_scope",
+      "preview_item",
+      "role_grant",
+      "scope_system"
+    ],
+    "transactions": [
+      "T0",
+      "T11",
+      "T6",
+      "T7"
+    ],
+    "invariants": [
+      "I-03",
+      "I-04",
+      "I-12",
+      "I-13",
+      "I-16",
+      "I-18",
+      "I-20"
+    ]
+  },
+  {
+    "id": "BE-28",
+    "title": "CSV/XLSX文件上传、元数据及解析",
+    "ownerSlot": "D",
+    "reviewerSlot": "C",
+    "estimateHours": {
+      "low": 2,
+      "likely": 3.5,
+      "high": 6
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-03",
+      "BE-05",
+      "BE-06"
+    ],
+    "modules": [
+      "M10",
+      "M12"
+    ],
+    "operations": [
+      "uploadImportFile",
+      "getImportFile"
+    ],
+    "acceptance": [
+      "AT-26"
+    ],
+    "deliverable": "正式文件边界、受控不可变存储/摘要/工作表/宏公式限制，不沿用原型上传限制。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-10"
+    ],
+    "tables": [
+      "admin_account",
+      "audit_event",
+      "http_idempotency",
+      "import_file"
+    ],
+    "transactions": [
+      "T0",
+      "T11",
+      "T8",
+      "T9"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-16",
+      "I-17",
+      "I-21"
+    ]
+  },
+  {
+    "id": "BE-29",
+    "title": "冻结导入预检、差异与问题报告",
+    "ownerSlot": "D",
+    "reviewerSlot": "C",
+    "estimateHours": {
+      "low": 3,
+      "likely": 5,
+      "high": 8
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-10",
+      "BE-17",
+      "BE-28"
+    ],
+    "modules": [
+      "M10",
+      "M12"
+    ],
+    "operations": [
+      "precheckImport",
+      "listImportBatches",
+      "getImportBatch",
+      "listImportIssues",
+      "listImportPlanChanges"
+    ],
+    "acceptance": [
+      "AT-25",
+      "AT-26",
+      "AT-27",
+      "AT-29"
+    ],
+    "deliverable": "冻结完整输入/映射/规范前后值/动作顺序/候选ID-code/依赖/唯一性断言，无正式数据副作用。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-10",
+      "UC-11"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_appointment",
+      "audit_event",
+      "authorization_source",
+      "change_request",
+      "change_target",
+      "company",
+      "department",
+      "employee",
+      "employee_source_identity",
+      "employment",
+      "grant_baseline",
+      "http_idempotency",
+      "import_batch",
+      "import_file",
+      "import_issue",
+      "import_plan_row",
+      "organization_mapping",
+      "position",
+      "role_grant"
+    ],
+    "transactions": [
+      "T0",
+      "T11",
+      "T8",
+      "T9"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-16",
+      "I-17",
+      "I-21"
+    ]
+  },
+  {
+    "id": "BE-30",
+    "title": "导入整批提交、历史与失败恢复",
+    "ownerSlot": "D",
+    "reviewerSlot": "C",
+    "estimateHours": {
+      "low": 3,
+      "likely": 5,
+      "high": 8
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-27",
+      "BE-29"
+    ],
+    "modules": [
+      "M10",
+      "M12"
+    ],
+    "operations": [
+      "commitImport"
+    ],
+    "acceptance": [
+      "AT-24",
+      "AT-25",
+      "AT-27",
+      "AT-28",
+      "AT-29",
+      "AT-41"
+    ],
+    "deliverable": "1000源行一个事务，嵌入同一生命周期操作；STALE/FAILED后另事务防覆盖成功；同批防重及新批无变化。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "useCases": [
+      "UC-03",
+      "UC-10",
+      "UC-11"
+    ],
+    "tables": [
+      "admin_account",
+      "admin_appointment",
+      "audit_event",
+      "authorization_source",
+      "change_request",
+      "change_target",
+      "company",
+      "department",
+      "employee",
+      "employee_source_identity",
+      "employment",
+      "grant_baseline",
+      "http_idempotency",
+      "import_batch",
+      "import_file",
+      "import_issue",
+      "import_plan_row",
+      "organization_mapping",
+      "position",
+      "role_grant"
+    ],
+    "transactions": [
+      "T0",
+      "T7",
+      "T8"
+    ],
+    "invariants": [
+      "I-01",
+      "I-02",
+      "I-03",
+      "I-13",
+      "I-16",
+      "I-17",
+      "I-21"
+    ]
+  },
+  {
+    "id": "BE-31",
+    "title": "演示OA适配器及受控服务身份工具",
+    "ownerSlot": "C",
+    "reviewerSlot": "A",
+    "estimateHours": {
+      "low": 1.5,
+      "likely": 3,
+      "high": 5
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-06",
+      "BE-23",
+      "BE-24"
+    ],
+    "modules": [
+      "M08",
+      "M12"
+    ],
+    "operations": [],
+    "acceptance": [
+      "AT-07",
+      "AT-20",
+      "AT-21",
+      "AT-35"
+    ],
+    "deliverable": "demo-only受理端口和可信服务JWT离线工具；固定申请回执，批准/驳回仍调用原回调，不增加公开审批入口。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "验证演示受理、可信JWT、正式结果回调及防重；自动执行结果由BE-25/33验收。未实现执行器时不得把已接收批准写成权限已生效。",
+    "useCases": [
+      "UC-05",
+      "UC-06",
+      "UC-11"
+    ],
+    "tables": [
+      "change_request",
+      "oa_link",
+      "service_identity"
+    ],
+    "transactions": [],
+    "invariants": []
+  },
+  {
+    "id": "BE-32",
+    "title": "部署产物、配置与管理员初始化",
+    "ownerSlot": "A",
+    "reviewerSlot": "B",
+    "estimateHours": {
+      "low": 2,
+      "likely": 4,
+      "high": 6
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-01",
+      "BE-02",
+      "BE-03",
+      "BE-06"
+    ],
+    "modules": [
+      "M00",
+      "M12"
+    ],
+    "operations": [],
+    "acceptance": [
+      "AT-01",
+      "AT-02",
+      "AT-36"
+    ],
+    "deliverable": "可执行jar、独立迁移步骤/运行账号、受控bootstrap命令、持久目录、HTTPS代理/服务管理与回退说明。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "验证产物/配置/初始化及隔离环境演练；AT-36在本任务覆盖可交付部署能力，实际目标服务器、重启与恢复证据由BE-34完成。",
+    "useCases": [],
+    "tables": [],
+    "transactions": [],
+    "invariants": []
+  },
+  {
+    "id": "BE-33",
+    "title": "完整业务链路及并发/失败集成验收",
+    "ownerSlot": "B",
+    "reviewerSlot": "D",
+    "estimateHours": {
+      "low": 3,
+      "likely": 5,
+      "high": 8
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-12",
+      "BE-18",
+      "BE-19",
+      "BE-22",
+      "BE-25",
+      "BE-27",
+      "BE-30",
+      "BE-31"
+    ],
+    "modules": [
+      "M00",
+      "M09",
+      "M10",
+      "M11",
+      "M12"
+    ],
+    "operations": [],
+    "acceptance": [
+      "AT-03",
+      "AT-04",
+      "AT-07",
+      "AT-15",
+      "AT-19",
+      "AT-22",
+      "AT-23",
+      "AT-24",
+      "AT-25",
+      "AT-28",
+      "AT-30",
+      "AT-31",
+      "AT-32",
+      "AT-33",
+      "AT-37",
+      "AT-38"
+    ],
+    "deliverable": "执行器/停用/来源关闭/导入双连接屏障与故障注入，逐操作契约覆盖，补跨模块遗漏。",
+    "notes": "各Issue已有自身失败/通过测试；本项只计算新增跨模块集成和系统验收，不代替各模块测试。",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "对照全部后端AT收集各模块证据并运行跨模块场景，补齐全67入站契约及AT-38全链路；AT-36目标服务器和AT-39发布证据分别仍由BE-34/35完成。",
+    "useCases": [
+      "UC-01",
+      "UC-02",
+      "UC-03",
+      "UC-04",
+      "UC-05",
+      "UC-06",
+      "UC-07",
+      "UC-08",
+      "UC-10",
+      "UC-11"
+    ],
+    "tables": [],
+    "transactions": [],
+    "invariants": []
+  },
+  {
+    "id": "BE-34",
+    "title": "实际服务器部署、重启与演示验收",
+    "ownerSlot": "A",
+    "reviewerSlot": "B",
+    "estimateHours": {
+      "low": 1.5,
+      "likely": 3,
+      "high": 5
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-32",
+      "BE-33"
+    ],
+    "modules": [
+      "M12"
+    ],
+    "operations": [],
+    "acceptance": [
+      "AT-36",
+      "AT-38"
+    ],
+    "deliverable": "真实目标服务器的版本/提交/校验和、迁移/健康/HTTP演示/重启持久化/恢复证据与未通过项。",
+    "notes": "服务器/数据库/访问方式未就绪则阻塞；本地Mock或生成部署文档不能关闭此Issue。",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "在实际目标服务器完成完整AT-36/38，不以BE-32的本地演练替代；环境未就绪保持开放。",
+    "useCases": [],
+    "tables": [],
+    "transactions": [],
+    "invariants": []
+  },
+  {
+    "id": "BE-35",
+    "title": "交接、任务证据与发布收尾",
+    "ownerSlot": "B",
+    "reviewerSlot": "D",
+    "estimateHours": {
+      "low": 1,
+      "likely": 2,
+      "high": 3
+    },
+    "reviewHours": {
+      "low": 0.25,
+      "likely": 0.5,
+      "high": 1
+    },
+    "dependencies": [
+      "BE-34"
+    ],
+    "modules": [
+      "M12"
+    ],
+    "operations": [],
+    "acceptance": [
+      "AT-39"
+    ],
+    "deliverable": "README/共享记忆、任务与验收追踪、发布说明及已知限制，所有未完成项保留开放。",
+    "notes": "",
+    "status": "PLANNED",
+    "milestone": "后端全范围可部署演示（拟建）",
+    "labels": [
+      "backend",
+      "design-ready"
+    ],
+    "remoteIssueNumber": null,
+    "remotePrNumber": null,
+    "acceptanceScope": "汇总AT-39完整Issue/PR/commit/候选包与发布证据，检查其他后端AT均有实际结果；有未通过项时不得宣布全量发布完成。",
+    "useCases": [],
+    "tables": [],
+    "transactions": [],
+    "invariants": []
+  }
+]

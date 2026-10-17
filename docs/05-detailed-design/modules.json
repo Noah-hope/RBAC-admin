@@ -1,0 +1,164 @@
+[
+  {
+    "id": "M00",
+    "package": "core",
+    "name": "事务、幂等、审计追加与公共契约",
+    "ownerSlot": "A",
+    "dependencies": [],
+    "responsibility": "CommandBoundary/ReadBoundary、WriteContext、HttpIdempotency、AuditAppender、CanonicalPayloadCodec；只定义公共能力，不调用具体业务服务"
+  },
+  {
+    "id": "M01",
+    "package": "identity",
+    "name": "后台账号、JWT与会话",
+    "ownerSlot": "A",
+    "dependencies": [
+      "M00",
+      "M11"
+    ],
+    "responsibility": "LoginService、AccountService、SessionRevoker；当前身份SQL投影，不以JWT内范围作为授权"
+  },
+  {
+    "id": "M02",
+    "package": "people",
+    "name": "组织、员工与任职基础操作",
+    "ownerSlot": "D",
+    "dependencies": [
+      "M00",
+      "M11"
+    ],
+    "responsibility": "OrganizationReader、EmploymentWriter；维护稳定ID/映射及单项状态，跨域失效由M10编排"
+  },
+  {
+    "id": "M03",
+    "package": "scope",
+    "name": "范围与管理员任命基础操作",
+    "ownerSlot": "A",
+    "dependencies": [
+      "M00",
+      "M11"
+    ],
+    "responsibility": "ScopeWriter、AppointmentWriter、ScopeCoveragePolicy；资格读取投影，不回调人员命令服务"
+  },
+  {
+    "id": "M04",
+    "package": "catalog",
+    "name": "系统、目录和权限",
+    "ownerSlot": "B",
+    "dependencies": [
+      "M00",
+      "M11"
+    ],
+    "responsibility": "CatalogCommandService、FinalTreeValidator；同系统/无环/进入槽/菜单绑定及稳定排序"
+  },
+  {
+    "id": "M05",
+    "package": "role",
+    "name": "角色元数据与有效配置",
+    "ownerSlot": "B",
+    "dependencies": [
+      "M00",
+      "M11"
+    ],
+    "responsibility": "RoleWriter、RoleConfigurationApplier；只接受受控写上下文，有效配置仅由M09调用应用器"
+  },
+  {
+    "id": "M06",
+    "package": "grant",
+    "name": "来源、永久关系基线与授权历史",
+    "ownerSlot": "D",
+    "dependencies": [
+      "M00",
+      "M11"
+    ],
+    "responsibility": "BaselineWriter、GrantApplier、SourceCloser；返回失效事实，不自行调用申请服务"
+  },
+  {
+    "id": "M07",
+    "package": "change",
+    "name": "草稿、固定申请与占用",
+    "ownerSlot": "C",
+    "dependencies": [
+      "M00",
+      "M11",
+      "M05",
+      "M06"
+    ],
+    "responsibility": "RoleDraftCoordinator、ChangeService、ClaimService、WorkflowStateWriter、RequestInvalidator；提交同事务创建outbox事实，不调用发送器"
+  },
+  {
+    "id": "M08",
+    "package": "approval",
+    "name": "OA投递、关联和最终结果接收",
+    "ownerSlot": "C",
+    "dependencies": [
+      "M00",
+      "M11",
+      "M07"
+    ],
+    "responsibility": "DeliveryWorker、OaSubmissionPort、FinalResultReceiver；网络/模拟受理在事务外，可靠结果独立提交"
+  },
+  {
+    "id": "M09",
+    "package": "execution",
+    "name": "已批准申请自动执行与恢复",
+    "ownerSlot": "C",
+    "dependencies": [
+      "M00",
+      "M11",
+      "M03",
+      "M04",
+      "M05",
+      "M06",
+      "M07"
+    ],
+    "responsibility": "ExecutionWorker、ExecutionCoordinator、FailureRecorder；全清单预检后全写，一份申请一次成功"
+  },
+  {
+    "id": "M10",
+    "package": "lifecycle",
+    "name": "关权、员工/范围变更及HR原子导入",
+    "ownerSlot": "D",
+    "dependencies": [
+      "M00",
+      "M11",
+      "M01",
+      "M02",
+      "M03",
+      "M06",
+      "M07"
+    ],
+    "responsibility": "LifecycleCoordinator、ImportPlanner/Committer；统一编排来源/任命/会话/申请持久失效；scope/员工入口由A共同实现"
+  },
+  {
+    "id": "M11",
+    "package": "query",
+    "name": "安全读取、有效权限与影响投影",
+    "ownerSlot": "B",
+    "dependencies": [
+      "M00"
+    ],
+    "responsibility": "IdentitySnapshotReader、QualificationReader、EffectivePermissionEvaluator、ImpactService、AuditReader；按功能拆投影文件，可读多域表，不调用各域命令或引用其JPA实体"
+  },
+  {
+    "id": "M12",
+    "package": "web",
+    "name": "HTTP适配与装配入口",
+    "ownerSlot": "A",
+    "dependencies": [
+      "M00",
+      "M01",
+      "M02",
+      "M03",
+      "M04",
+      "M05",
+      "M06",
+      "M07",
+      "M08",
+      "M09",
+      "M10",
+      "M11"
+    ],
+    "responsibility": "按功能分控制器/DTO；路由到应用服务，不直接改实体；每个控制器由对应Issue成员维护，A负责公共装配"
+  }
+]
