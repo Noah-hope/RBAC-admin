@@ -1,9 +1,14 @@
 [
   {
     "id": "BE-01",
-    "title": "协作基线、开发环境与部署目标确认",
-    "ownerSlot": "A",
-    "reviewerSlot": "B",
+    "title": "基座开发准备与协作条件核验",
+    "phase": "FOUNDATION",
+    "ownerSlot": "USER",
+    "reviewerSlot": null,
+    "assignmentStatus": "OWNER_CONFIRMED",
+    "suggestedOwnerSlot": "A",
+    "suggestedReviewerSlot": "B",
+    "startConditions": [],
     "estimateHours": {
       "low": 1,
       "likely": 2,
@@ -24,8 +29,8 @@
       "AT-01",
       "AT-39"
     ],
-    "deliverable": "确定四人账号/远程平台/分支规则、JDK/构建/MySQL隔离条件和服务器OS/访问方式；记录实际工具清单。",
-    "notes": "无服务器时只可完成本地准备，BE-34仍阻塞；不默认已有GitHub远程或Docker。",
+    "deliverable": "用户负责基座，核对最新main、JDK/构建/隔离MySQL、评审安排和实际工具；登记后续人员/服务器未就绪条件。",
+    "notes": "GitHub及设计主线已就绪；30项业务的人员分派在基座验收后完成，服务器不作为本地基座门槛；不默认Docker已可用。",
     "status": "PLANNED",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
@@ -34,7 +39,7 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
-    "acceptanceScope": "只核验协作/工具/环境清单、负责人和未就绪条件；AT-01/39在此为准备证据，不要求尚不存在的构建产物或发布包。服务器未到位须保留BE-34前置条件，不能声称部署已完成。",
+    "acceptanceScope": "核验用户的基座开发环境、共同main和非作者评审方式；AT-01/39只为准备证据。业务分派和服务器验收留后续，不要求先有发布包或四人业务任务已分配。",
     "useCases": [],
     "tables": [],
     "transactions": [],
@@ -43,8 +48,13 @@
   {
     "id": "BE-02",
     "title": "应用骨架、契约边界与健康检查",
-    "ownerSlot": "A",
-    "reviewerSlot": "B",
+    "phase": "FOUNDATION",
+    "ownerSlot": "USER",
+    "reviewerSlot": null,
+    "assignmentStatus": "OWNER_CONFIRMED",
+    "suggestedOwnerSlot": "A",
+    "suggestedReviewerSlot": "B",
+    "startConditions": [],
     "estimateHours": {
       "low": 1.5,
       "likely": 3,
@@ -86,8 +96,13 @@
   {
     "id": "BE-03",
     "title": "迁移、UUID/版本及JPA基础适配",
-    "ownerSlot": "A",
-    "reviewerSlot": "B",
+    "phase": "FOUNDATION",
+    "ownerSlot": "USER",
+    "reviewerSlot": null,
+    "assignmentStatus": "OWNER_CONFIRMED",
+    "suggestedOwnerSlot": "A",
+    "suggestedReviewerSlot": "B",
+    "startConditions": [],
     "estimateHours": {
       "low": 2.5,
       "likely": 5,
@@ -171,8 +186,13 @@
   {
     "id": "BE-04",
     "title": "统一写事务、读快照与审计追加",
-    "ownerSlot": "A",
-    "reviewerSlot": "B",
+    "phase": "FOUNDATION",
+    "ownerSlot": "USER",
+    "reviewerSlot": null,
+    "assignmentStatus": "OWNER_CONFIRMED",
+    "suggestedOwnerSlot": "A",
+    "suggestedReviewerSlot": "B",
+    "startConditions": [],
     "estimateHours": {
       "low": 2,
       "likely": 4,
@@ -221,8 +241,13 @@
   {
     "id": "BE-05",
     "title": "HTTP幂等预留、栅栏与删除后重放",
-    "ownerSlot": "A",
-    "reviewerSlot": "B",
+    "phase": "FOUNDATION",
+    "ownerSlot": "USER",
+    "reviewerSlot": null,
+    "assignmentStatus": "OWNER_CONFIRMED",
+    "suggestedOwnerSlot": "A",
+    "suggestedReviewerSlot": "B",
+    "startConditions": [],
     "estimateHours": {
       "low": 2,
       "likely": 4,
@@ -253,7 +278,7 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
-    "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
+    "acceptanceScope": "验证公共幂等状态机、租约栅栏、结果回放及当前授权回调；删除后重放用隔离测试夹具证明机制，不提前实现deleteChangeDraft。正式草稿端到端行为在BE-20/33补齐，不能把局部通过标记为完整AT-04通过。",
     "useCases": [
       "UC-02",
       "UC-03",
@@ -268,8 +293,16 @@
   {
     "id": "BE-06",
     "title": "三类JWT与后台登录、退出、本人改密",
-    "ownerSlot": "A",
-    "reviewerSlot": "B",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "A",
+    "suggestedReviewerSlot": "B",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 2.5,
       "likely": 5,
@@ -338,8 +371,16 @@
   {
     "id": "BE-07",
     "title": "后台账号管理与密码重置",
-    "ownerSlot": "A",
-    "reviewerSlot": "B",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "A",
+    "suggestedReviewerSlot": "B",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 1.5,
       "likely": 3,
@@ -408,8 +449,16 @@
   {
     "id": "BE-08",
     "title": "当前单项任命、范围读模型与覆盖策略",
-    "ownerSlot": "A",
-    "reviewerSlot": "B",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "A",
+    "suggestedReviewerSlot": "B",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 1.5,
       "likely": 3,
@@ -476,8 +525,16 @@
   {
     "id": "BE-09",
     "title": "创建管理范围及任命、创建预览",
-    "ownerSlot": "A",
-    "reviewerSlot": "B",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "A",
+    "suggestedReviewerSlot": "B",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 1.5,
       "likely": 3,
@@ -555,8 +612,16 @@
   {
     "id": "BE-10",
     "title": "组织、员工与任职读取及基础变更端口",
-    "ownerSlot": "D",
-    "reviewerSlot": "C",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "D",
+    "suggestedReviewerSlot": "C",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 1.5,
       "likely": 3,
@@ -632,8 +697,16 @@
   {
     "id": "BE-11",
     "title": "系统登记及查询",
-    "ownerSlot": "B",
-    "reviewerSlot": "D",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "B",
+    "suggestedReviewerSlot": "D",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 1.5,
       "likely": 3,
@@ -706,8 +779,16 @@
   {
     "id": "BE-12",
     "title": "目录原子编辑、系统启停及影响预览",
-    "ownerSlot": "B",
-    "reviewerSlot": "D",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "B",
+    "suggestedReviewerSlot": "D",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 3,
       "likely": 5,
@@ -789,8 +870,16 @@
   {
     "id": "BE-13",
     "title": "角色元数据和当前配置读取",
-    "ownerSlot": "B",
-    "reviewerSlot": "D",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "B",
+    "suggestedReviewerSlot": "D",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 1.5,
       "likely": 2.5,
@@ -859,8 +948,16 @@
   {
     "id": "BE-14",
     "title": "来源和关系基线、授权历史及当前资格",
-    "ownerSlot": "D",
-    "reviewerSlot": "C",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "D",
+    "suggestedReviewerSlot": "C",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 2,
       "likely": 3.5,
@@ -929,8 +1026,16 @@
   {
     "id": "BE-15",
     "title": "有效角色配置应用器",
-    "ownerSlot": "B",
-    "reviewerSlot": "D",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "B",
+    "suggestedReviewerSlot": "D",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 1.5,
       "likely": 3,
@@ -982,8 +1087,16 @@
   {
     "id": "BE-16",
     "title": "授予/撤销及关闭来源底层原子操作",
-    "ownerSlot": "D",
-    "reviewerSlot": "C",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "D",
+    "suggestedReviewerSlot": "C",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 2,
       "likely": 3.5,
@@ -1037,8 +1150,16 @@
   {
     "id": "BE-17",
     "title": "安全影响预览与分页、依赖集合快照",
-    "ownerSlot": "B",
-    "reviewerSlot": "D",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "B",
+    "suggestedReviewerSlot": "D",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 2.5,
       "likely": 5,
@@ -1106,8 +1227,16 @@
   {
     "id": "BE-18",
     "title": "业务系统有效权限和单项检查",
-    "ownerSlot": "B",
-    "reviewerSlot": "D",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "B",
+    "suggestedReviewerSlot": "D",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 2,
       "likely": 4,
@@ -1181,8 +1310,16 @@
   {
     "id": "BE-19",
     "title": "审计列表、详情与敏感访问",
-    "ownerSlot": "C",
-    "reviewerSlot": "A",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "C",
+    "suggestedReviewerSlot": "A",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 1.5,
       "likely": 2.5,
@@ -1245,8 +1382,16 @@
   {
     "id": "BE-20",
     "title": "角色创建与配置/授予/撤销草稿、占用",
-    "ownerSlot": "C",
-    "reviewerSlot": "A",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "C",
+    "suggestedReviewerSlot": "A",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 3,
       "likely": 5,
@@ -1328,8 +1473,16 @@
   {
     "id": "BE-21",
     "title": "预览确认、固定申请与OA待办",
-    "ownerSlot": "C",
-    "reviewerSlot": "A",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "C",
+    "suggestedReviewerSlot": "A",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 3,
       "likely": 5,
@@ -1405,8 +1558,16 @@
   {
     "id": "BE-22",
     "title": "申请列表、详情及安全时间线",
-    "ownerSlot": "C",
-    "reviewerSlot": "A",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "C",
+    "suggestedReviewerSlot": "A",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 1,
       "likely": 2,
@@ -1476,8 +1637,16 @@
   {
     "id": "BE-23",
     "title": "OA可靠投递、关联及人工投递重试",
-    "ownerSlot": "C",
-    "reviewerSlot": "A",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "C",
+    "suggestedReviewerSlot": "A",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 2,
       "likely": 4,
@@ -1542,8 +1711,16 @@
   {
     "id": "BE-24",
     "title": "OA最终结果接收与三层去重",
-    "ownerSlot": "C",
-    "reviewerSlot": "A",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "C",
+    "suggestedReviewerSlot": "A",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 2,
       "likely": 3.5,
@@ -1612,8 +1789,16 @@
   {
     "id": "BE-25",
     "title": "自动执行、整份失效与失败恢复",
-    "ownerSlot": "C",
-    "reviewerSlot": "A",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "C",
+    "suggestedReviewerSlot": "A",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 3,
       "likely": 5,
@@ -1672,8 +1857,16 @@
   {
     "id": "BE-26",
     "title": "直接来源关闭与统一申请失效编排",
-    "ownerSlot": "D",
-    "reviewerSlot": "C",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "D",
+    "suggestedReviewerSlot": "C",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 2.5,
       "likely": 4.5,
@@ -1753,8 +1946,16 @@
   {
     "id": "BE-27",
     "title": "员工状态及管理范围替换的跨域失效",
-    "ownerSlot": "A",
-    "reviewerSlot": "B",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "A",
+    "suggestedReviewerSlot": "B",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 2,
       "likely": 4,
@@ -1846,8 +2047,16 @@
   {
     "id": "BE-28",
     "title": "CSV/XLSX文件上传、元数据及解析",
-    "ownerSlot": "D",
-    "reviewerSlot": "C",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "D",
+    "suggestedReviewerSlot": "C",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 2,
       "likely": 3.5,
@@ -1913,8 +2122,16 @@
   {
     "id": "BE-29",
     "title": "冻结导入预检、差异与问题报告",
-    "ownerSlot": "D",
-    "reviewerSlot": "C",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "D",
+    "suggestedReviewerSlot": "C",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 3,
       "likely": 5,
@@ -2003,8 +2220,16 @@
   {
     "id": "BE-30",
     "title": "导入整批提交、历史与失败恢复",
-    "ownerSlot": "D",
-    "reviewerSlot": "C",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "D",
+    "suggestedReviewerSlot": "C",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 3,
       "likely": 5,
@@ -2090,8 +2315,16 @@
   {
     "id": "BE-31",
     "title": "演示OA适配器及受控服务身份工具",
-    "ownerSlot": "C",
-    "reviewerSlot": "A",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "C",
+    "suggestedReviewerSlot": "A",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 1.5,
       "likely": 3,
@@ -2145,8 +2378,16 @@
   {
     "id": "BE-32",
     "title": "部署产物、配置与管理员初始化",
-    "ownerSlot": "A",
-    "reviewerSlot": "B",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "A",
+    "suggestedReviewerSlot": "B",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 2,
       "likely": 4,
@@ -2192,8 +2433,16 @@
   {
     "id": "BE-33",
     "title": "完整业务链路及并发/失败集成验收",
-    "ownerSlot": "B",
-    "reviewerSlot": "D",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "B",
+    "suggestedReviewerSlot": "D",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 3,
       "likely": 5,
@@ -2270,8 +2519,16 @@
   {
     "id": "BE-34",
     "title": "实际服务器部署、重启与演示验收",
-    "ownerSlot": "A",
-    "reviewerSlot": "B",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "A",
+    "suggestedReviewerSlot": "B",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 1.5,
       "likely": 3,
@@ -2313,8 +2570,16 @@
   {
     "id": "BE-35",
     "title": "交接、任务证据与发布收尾",
-    "ownerSlot": "B",
-    "reviewerSlot": "D",
+    "phase": "BUSINESS",
+    "ownerSlot": null,
+    "reviewerSlot": null,
+    "assignmentStatus": "UNASSIGNED",
+    "suggestedOwnerSlot": "B",
+    "suggestedReviewerSlot": "D",
+    "startConditions": [
+      "FOUNDATION_ACCEPTED",
+      "BUSINESS_OWNER_ASSIGNED"
+    ],
     "estimateHours": {
       "low": 1,
       "likely": 2,

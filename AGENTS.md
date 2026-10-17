@@ -18,6 +18,8 @@
 4. 数据库设计：依据需求与 API 契约形成实体、关系、约束、索引及事务设计。
 5. 详细设计与实现：先产出设计文档，分解流程、模块和依赖，再使用 TDD skill，先编写并运行失败测试，再按模块实现、重构并验证。
 
+当前实施组织按 D-038：先由用户实现 BE-01～05 公共基座，按 `docs/05-detailed-design/FOUNDATION-HANDOFF.md` 验收并纳入共同主线后，再分派 BE-06～35 的业务/交付任务。A～D 只作职责建议，业务实际负责人和评审人待登记；不将文档修订或基座静态检查记为已实现/已验收。正式业务启动仍须满足原技术依赖。
+
 完整阶段交付要求见 `docs/project/WORKFLOW.md`，当前阶段及交接事实见 `docs/project/MEMORY.md`。不因目录或文档存在就宣布阶段完成。尚未选定的技术不自行记为既定方案。
 
 项目技能统一从 `.agents/skills/<技能名>/SKILL.md` 读取，包含 `grill-me`、`grilling`、`frontend-design`、`test-driven-development`；优先使用仓库副本，来源与版本见 `docs/project/SKILLS.md`。`grill-me` 是委托入口，实际访谈同时读取 `grilling`。后续正式业务逻辑的新功能、缺陷修复及行为变更使用 TDD，编写或修改测试时同时读取其 `writing-good-tests.md`。

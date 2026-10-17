@@ -1,4 +1,6 @@
 {
+  "revision": "1.1",
+  "decision": "D-038",
   "capacityHours": {
     "minimum": 40,
     "maximum": 72
@@ -8,44 +10,72 @@
     "likely": 148.0,
     "high": 244
   },
-  "personLoad": {
-    "A": {
-      "low": 23.5,
-      "likely": 47.0,
-      "high": 76
+  "phaseTotals": {
+    "FOUNDATION": {
+      "taskCount": 5,
+      "developmentHours": {
+        "low": 9.0,
+        "likely": 18,
+        "high": 28
+      },
+      "reviewHours": {
+        "low": 1.25,
+        "likely": 2.5,
+        "high": 5
+      },
+      "totalHours": {
+        "low": 10.25,
+        "likely": 20.5,
+        "high": 33
+      }
     },
-    "B": {
-      "low": 19.0,
-      "likely": 35.5,
-      "high": 59
-    },
-    "C": {
-      "low": 18.75,
-      "likely": 33.5,
-      "high": 55
-    },
-    "D": {
-      "low": 18.0,
-      "likely": 32.0,
-      "high": 54
+    "BUSINESS": {
+      "taskCount": 30,
+      "developmentHours": {
+        "low": 61.5,
+        "likely": 112.5,
+        "high": 181
+      },
+      "reviewHours": {
+        "low": 7.5,
+        "likely": 15.0,
+        "high": 30
+      },
+      "totalHours": {
+        "low": 69.0,
+        "likely": 127.5,
+        "high": 211
+      }
     }
   },
-  "assumption": "人工有效小时、含任务评审；仅算容量下界，不假装精确工期；外部采购/等待未计；均为估算非实测",
+  "foundationOwnerDevelopmentHours": {
+    "low": 9.0,
+    "likely": 18,
+    "high": 28
+  },
+  "businessPersonLoad": null,
+  "assumption": "沿用逐任务技术工作量，按两阶段重算；基座开发仅用户，基座评审可由其他人并行，业务阶段仅假设四人可投入但尚未分派。容量下界非工期承诺，不含外部等待/依赖/评审交接停顿。",
   "capacityLowerBounds": {
     "low": {
       "hoursPerPersonPerDay": 3,
       "pooledCapacityDays": 7,
-      "fixedAssignmentCapacityDays": 8
+      "foundationOwnerDevelopmentDayEquivalent": 3.0,
+      "businessPooledDayEquivalent": 5.75,
+      "stagedCapacityDays": 9
     },
     "likely": {
       "hoursPerPersonPerDay": 2.5,
       "pooledCapacityDays": 15,
-      "fixedAssignmentCapacityDays": 19
+      "foundationOwnerDevelopmentDayEquivalent": 7.2,
+      "businessPooledDayEquivalent": 12.75,
+      "stagedCapacityDays": 20
     },
     "high": {
       "hoursPerPersonPerDay": 2,
       "pooledCapacityDays": 31,
-      "fixedAssignmentCapacityDays": 38
+      "foundationOwnerDevelopmentDayEquivalent": 14.0,
+      "businessPooledDayEquivalent": 26.375,
+      "stagedCapacityDays": 41
     }
   }
 }

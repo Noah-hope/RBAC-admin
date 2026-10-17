@@ -13,7 +13,7 @@ import yaml
 ROOT=Path(__file__).resolve().parent
 REPO=ROOT.parent.parent
 BASELINE='bd26465'
-GENERATED=['modules.json','issues.json','acceptance.json','operation-map.json','estimates.json',
+GENERATED=['modules.json','issues.json','acceptance.json','operation-map.json','estimates.json','delivery-phases.json',
            'MODULES.md','TRACEABILITY.md','HANDLER-CONTRACTS.md','TEST-PLAN.md','TASKS.md',
            'IMPLEMENTATION-PLAN.md','module-structure.drawio','core-flows.drawio']
 
@@ -76,11 +76,32 @@ def checks(report):
     require(all(c['status']=='DESIGNED_NOT_RUN' for c in cases),'误记业务验收已运行')
     deferred={c['id'] for c in cases if c['delivery']=='FRONTEND_DEFERRED'}
     require(deferred=={'AT-40'},'前端后置边界不符')
+    phase_plan=read('delivery-phases.json')
+    foundation_ids={f'BE-{n:02}' for n in range(1,6)}
+    business_ids=tids-foundation_ids
+    required_gates=['FOUNDATION_ACCEPTED','BUSINESS_OWNER_ASSIGNED']
+    require(phase_plan['revision']=='1.1' and phase_plan['decision']=='D-038','分工决策/修订不符')
+    require(set(phase_plan['foundation']['taskIds'])==foundation_ids and phase_plan['foundation']['ownerSlot']=='USER','基座阶段边界/负责人不符')
+    require(set(phase_plan['business']['taskIds'])==business_ids and phase_plan['business']['ownerSlot'] is None,'业务阶段错误指派')
+    require(phase_plan['business']['startConditions']==required_gates,'阶段门槛缺失')
+    require(phase_plan['foundation']['status']=='PLANNED_NOT_RUN' and phase_plan['gateStatus']=='NOT_EVALUATED' and not phase_plan['gateEvidence'],'误记基座已实现/验收')
+    require(phase_plan['foundation']['reviewerSlot'] is None,'虚构基座评审人')
+    for module in modules:
+        require(module['suggestedOwnerSlot'] in 'ABCD','模块建议组无效')
+        require(module['ownerSlot']==('USER' if module['id']=='M00' else None),'模块人员误记已分派')
     referenced=set()
     for task in tasks:
         require(task['status']=='PLANNED','任务误记已实现')
         require(task['remoteIssueNumber'] is None and task['remotePrNumber'] is None,'伪造远程事项')
-        require(task['ownerSlot'] in 'ABCD' and task['reviewerSlot'] in 'ABCD' and task['ownerSlot']!=task['reviewerSlot'],'负责人/非作者评审无效')
+        require(task['suggestedOwnerSlot'] in 'ABCD' and task['suggestedReviewerSlot'] in 'ABCD','建议组无效')
+        require(task['reviewerSlot'] is None,'评审人尚未登记，不应伪造')
+        if task['id'] in foundation_ids:
+            require(task['phase']=='FOUNDATION' and task['ownerSlot']=='USER' and task['assignmentStatus']=='OWNER_CONFIRMED','基座归属不符')
+            require(not task['startConditions'] and set(task['dependencies'])<=foundation_ids,'基座反向依赖业务')
+            require(not task['operations'],'提前将业务API纳入基座')
+        else:
+            require(task['phase']=='BUSINESS' and task['ownerSlot'] is None and task['assignmentStatus']=='UNASSIGNED','提前分派业务任务')
+            require(task['startConditions']==required_gates,'业务缺阶段启动门槛')
         require(set(task['modules'])<=mids,'任务引用未知模块')
         require(task['acceptance'] and set(task['acceptance'])<=cids,'任务缺验收/引用未知')
         require(bool(task.get('acceptanceScope','').strip()),'任务缺具体验收边界')
@@ -90,6 +111,11 @@ def checks(report):
             require(all(isinstance(n,(int,float)) and n>=0 for n in values) and values==sorted(values),'人时不合法')
         referenced.update(task['acceptance'])
     require(referenced==cids-deferred,'后端验收没有主责任务')
+    previous_tasks=json.loads(subprocess.check_output(['git','show','9416980:docs/05-detailed-design/issues.json'],cwd=REPO))
+    previous_by_id={t['id']:t for t in previous_tasks}
+    for task in tasks:
+        for field in ('dependencies','operations','modules','acceptance','estimateHours','reviewHours','tables','transactions','invariants'):
+            require(task[field]==previous_by_id[task['id']][field],'组织修订意外改变原业务/技术任务 '+task['id']+'/'+field)
     api_path=REPO/'docs/03-api/openapi.yaml'
     api=yaml.safe_load(api_path.read_text(encoding='utf-8'))
     require(api['info']['version']=='1.2.0','API版本不符')
@@ -115,6 +141,8 @@ def checks(report):
             require(row[field]==old[name][field],'改写数据库追踪 '+name+'/'+field)
         task=by_task[row['issue']]
         require(name in task['operations'] and row['module'] in task['modules'] and row['ownerSlot']==task['ownerSlot'],'操作主责不符')
+        require(row['ownerSlot'] is None and row['assignmentStatus']=='UNASSIGNED' and row['phase']=='BUSINESS','业务操作误记已指派')
+        require(row['suggestedOwnerSlot']==task['suggestedOwnerSlot'] and row['startConditions']==required_gates,'操作与任务分工/阶段不一致')
         require(set(row['tables'])<=tables,'操作引用未知表')
         require(set(row['acceptance'])<=cids and row['status']=='PLANNED_NOT_IMPLEMENTED','验收引用/实施状态不符')
         if direction=='INBOUND':require('AT-37'in row['acceptance'],'入站缺全契约验收')
@@ -136,19 +164,29 @@ def checks(report):
     require({table for t in tasks for table in t['tables']}==tables,'43表未被任务覆盖或引入未知表')
     estimate=read('estimates.json')
     require(estimate['capacityHours']==dict(minimum=4*5*2,maximum=4*6*3),'团队容量错误')
+    require(estimate['businessPersonLoad'] is None and 'personLoad' not in estimate,'未分派业务却计算固定个人负载')
     for s,expected in [('low',79.25),('likely',148),('high',244)]:
         total=sum(t['estimateHours'][s]+t['reviewHours'][s] for t in tasks)
         require(total==expected==estimate['totalHours'][s],'估算总量错误')
-        for p in 'ABCD':
-            load=sum(t['estimateHours'][s] for t in tasks if t['ownerSlot']==p)+sum(t['reviewHours'][s] for t in tasks if t['reviewerSlot']==p)
-            require(load==estimate['personLoad'][p][s],'人员负载错误')
-        require(sum(estimate['personLoad'][p][s] for p in 'ABCD')==total,'负载漏计或双计')
+        for phase,ids in [('FOUNDATION',foundation_ids),('BUSINESS',business_ids)]:
+            phase_estimate=estimate['phaseTotals'][phase]
+            dev=sum(t['estimateHours'][s] for t in tasks if t['id'] in ids)
+            review=sum(t['reviewHours'][s] for t in tasks if t['id'] in ids)
+            require(phase_estimate['taskCount']==len(ids),'阶段任务数错误')
+            require((dev,review,dev+review)==(phase_estimate['developmentHours'][s],phase_estimate['reviewHours'][s],phase_estimate['totalHours'][s]),'阶段估算错误')
+        require(sum(p['totalHours'][s] for p in estimate['phaseTotals'].values())==total,'阶段漏计/双计')
+        foundation_dev=sum(t['estimateHours'][s] for t in tasks if t['id'] in foundation_ids)
+        require(estimate['foundationOwnerDevelopmentHours'][s]==foundation_dev,'基座用户负载错误')
         bound=estimate['capacityLowerBounds'][s];hpd=bound['hoursPerPersonPerDay']
         require(bound['pooledCapacityDays']==math.ceil(total/(4*hpd)),'总容量下界错误')
-        require(bound['fixedAssignmentCapacityDays']==math.ceil(max(estimate['personLoad'][p][s] for p in 'ABCD')/hpd),'分工容量下界错误')
+        business_total=sum(t['estimateHours'][s]+t['reviewHours'][s] for t in tasks if t['id'] in business_ids)
+        require(bound['foundationOwnerDevelopmentDayEquivalent']==foundation_dev/hpd and bound['businessPooledDayEquivalent']==business_total/(4*hpd),'阶段小时折算错误')
+        require(bound['stagedCapacityDays']==math.ceil(foundation_dev/hpd+business_total/(4*hpd)),'两阶段容量下界错误')
     require(estimate['totalHours']['low']>72,'不应伪称预算内全量可交付')
     diagram_pages=vertices=edges=0
     for name in ('module-structure.drawio','core-flows.drawio'):
+        original_graph=subprocess.check_output(['git','show','9416980:docs/05-detailed-design/'+name],cwd=REPO)
+        require(hashlib.sha256(original_graph).hexdigest()==sha(ROOT/name),'组织调整意外重绘技术图源')
         text=(ROOT/name).read_text(encoding='utf-8');require('<!--'not in text,'图源含XML注释')
         mx=ET.fromstring(text);require(mx.tag=='mxfile','不是原生图源')
         for page in mx.findall('diagram'):
@@ -192,6 +230,8 @@ def checks(report):
         estimatesHours=estimate['totalHours'],capacityHours=estimate['capacityHours'],diagramPages=diagram_pages,
         diagramVertices=vertices,diagramEdges=edges,localLinks=links,pythonSyntaxFiles=len(list(ROOT.glob('*.py'))),
         decisionIds=len(decisions),upstreamSha256=source_hashes,
+        planRevision='1.1',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=len(business_ids),
+        foundationGateStatus=phase_plan['gateStatus'],businessOperationsAwaitingAssignment=len(mapping),
         artifactSha256={n:sha(ROOT/n) for n in GENERATED}))
 
 
