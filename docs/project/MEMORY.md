@@ -1,10 +1,12 @@
 # 项目共享记忆
 
 更新日期：2026-10-17（Asia/Shanghai）。保存当前事实，历史通过 Git 查询。
-最新交付：2026-10-17（Asia/Shanghai），D-040补充IntelliJ IDEA/JDK21与backend工程位置，后端使用专用数据库用户、团队私下共享密码。用户确认开发空库rbac_admin_dev已创建，Navicat截图服务端8.4.8；agent未连接或执行SQL。计划1.2/D-039本人确认及D-038先基座后分派不变。1.1已在远程main/169556d，准备更新在独立分支；未创建后端工程或验收基座。
+最新交付：2026-10-17（Asia/Shanghai），用户已生成backend初始工程，本轮Wrapper固定Maven3.9.11，JDK21实际构建打包及生成的1项上下文测试通过；IDE同步/索引恢复仍待确认。D-040的IntelliJ IDEA、专用数据库用户与团队私下共享密码约定保留。开发空库由用户报告已创建，agent未连接数据库/执行SQL；基座未验收，业务未分派。main/169556d未变，准备与排障更新在独立分支，尚未推送。
 最新工具事实：用户确认前次误选旧导出规格；本次从指定RBAC权限中心API/1.2.0配置导出，核心契约核对通过，67入站＋1出站、120模型及104媒体示例全部通过。三路径覆盖及任命模型修复有效，仅余license/占位servers两处元数据差异；MCP旧暴露差异沿用，固定链接尚未验证。见APIFOX.md最新章节。
 
 ## 当前状态
+
+最新构建排障（2026-10-17）：用户已生成backend初始工程（Boot4.0.8/Java21、com.adgn.backend、YAML），本轮仅修复其Wrapper发行版3.10.0→原定3.9.11，保留Wrapper3.3.4及用户生成代码。实测java/javac21.0.12.1；会话临时JAVA_HOME下Wrapper --version通过、verify构建打包成功，生成的上下文测试1项通过、0失败/错误/跳过。存在Mockito动态agent及CDS警告，未屏蔽；不是业务TDD/BE-02完整验收或数据库验证。IDE截图Sync Finished但类仍标红，IDE恢复待确认；详情见[ENVIRONMENT.md](../05-detailed-design/ENVIRONMENT.md)。未改全局环境、连接数据库或推送；后续原文中的“未创建工程”是此前事实，现以本段为准。其他成员业务尚未分派，基座尚未验收。
 
 - 项目根目录：`rbac-admin`；当前文档分支`codex/foundation-environment`从main/169556d创建；main跟踪origin/main，原分支保留、未建worktree。本地origin为`https://github.com/Noah-hope/RBAC-admin.git`。
 - 已从原项目需求文档目录导入 396 个文件，39,073,839 字节；首次导入 SHA-256 全部一致。原目录未修改，导入清单保留为历史快照。

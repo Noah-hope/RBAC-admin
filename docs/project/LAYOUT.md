@@ -12,6 +12,10 @@ rbac-admin/
 │       ├── grilling/
 │       ├── frontend-design/
 │       └── test-driven-development/
+├── backend/                      # 用户已生成的Spring Boot单Maven工程
+│   ├── pom.xml
+│   ├── mvnw, mvnw.cmd, .mvn/wrapper/
+│   └── src/main/, src/test/
 └── docs/
     ├── README.md
     ├── project/
@@ -45,6 +49,8 @@ python docs/01-requirements/sync_usecase_folders.py
 界面原型现位于 `02-ui-design/prototype/`，设计说明、启动及验证文档在 `02-ui-design/`。`03-api/`已交付API1.2.0及指定Apifox导出核对，`04-database/`已交付数据库1.1与正式跨阶段评审，`05-detailed-design/`已交付后端详细设计1.0、本地Issue草案与静态验证。当前不创建根目录 `tasks/`、`frontend/`、`backend/`、`prototype/` 或 `.github/`；正式代码布局在详细设计ENGINEERING中提出backend单工程、deploy及tools/demo的拟定结构，当前只记录方案，待实施开始时更新约定并创建；本轮没有新增这些工程目录。
 
 ## 验证记录
+
+后续实际工程更新（2026-10-17）：用户已通过IDE创建backend，基础包为com.adgn.backend，配置为YAML；本次将Wrapper发行版固定回3.9.11，生成工程构建及1项上下文测试通过。只纳入可移植的生成文件，不纳入IDE个人设置、插件目录、构建产物或凭据；BE-02公共行为、业务TDD和基座验收尚未完成。下述创建前约定保留为历史，不表示应删除现有工程。
 
 D-040后续确认：正式后端位置确定为`rbac-admin/backend`，采用ENGINEERING中的单Maven工程；IDE使用IntelliJ IDEA、JDK21。沿用根Git仓库，不生成嵌套仓库或`backend/backend`。本次仅确认位置，未创建工程，以上目录树仍表示现有目录；BE-02实施时再同步实际目录树。
 
