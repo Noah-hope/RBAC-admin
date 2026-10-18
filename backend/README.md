@@ -52,6 +52,8 @@ New-Item -ItemType Directory -Path logs/build -Force | Out-Null
 
 ## 数据库运行与迁移
 
+2026-10-18用户本机开发库已确认V1～V3成功、guard(1,0)，普通后端日志明确连接rbac_admin_dev且健康UP；后续本机开发可继续使用该目标。以下未迁移空库的拒绝行为用于新成员环境，不表示当前开发库仍为空。迁移和运行账号保持分离，现有库无需再次初始化。
+
 普通`BackendApplication`的IDE运行配置使用以下变量：
 
 | 变量 | 本机取值 |

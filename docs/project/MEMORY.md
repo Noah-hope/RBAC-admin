@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+2026-10-18 15:44开发库核对通过：用户按开发库限定查询提供截图，Flyway版本1/2/3的success均为1，mutation_guard为id=1/revision=0；最新普通BackendApplication日志明确连接localhost:3306/rbac_admin_dev/MySQL8.4.8，Hikari/JPA完成、Tomcat8080启动、GET200，健康截图status=UP。开发库迁移、锚点及普通运行/健康这项准备已核对，不再视为待初始化；不从日志推断未展示的数据库用户名或迁移执行账号。agent本轮只读用户日志/截图，未连接已有库、执行SQL或读取凭据。BE-01保留其余协作条件及整体交接待核对，BE-02～05本人确认与基座总门槛不变；以下空库或初始化待办是此前历史。
+
 2026-10-18开发库现场核对：用户提供Navicat截图，当前rbac_admin_dev表列表为空、底部显示0 Tables；这是尚无表结构的截图证据，不是已有表但无业务记录。下一步在独立MigrationApplication配置中以RBAC_MIGRATION_URL明确指向该开发库，按既有管理员受控触发器初始化方案执行V1～V3；不复制测试数据、不清理现有测试库、不用rbac_app承担DDL。成功后普通BackendApplication仍用rbac_app、只改运行URL指向开发库并核对启动/健康。当前未收到开发库迁移或运行成功回报；agent本轮未连接数据库、执行SQL或读取凭据，BE-01仍IN_PROGRESS、整体门槛未评估。
 
 D-049静态收尾PASS：316处本地链接、49个唯一决策、生成器确定性及确认/任务/来源一致性通过，UTF-8/代码围栏/共享文档无本机路径及Git空白检查通过。该检查不执行Java、数据库或业务测试。

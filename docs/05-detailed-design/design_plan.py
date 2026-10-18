@@ -144,7 +144,7 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             interpretation='ENABLED_LOCAL_UP_CONFIRMATION_AFTER_BE05_HANDOFF',
             mergedToMain=False,evidence='BE-05-IDEMPOTENCY.md')
 
-t(1,'基座开发准备与协作条件核验','A',(1,2,3),[], 'M00 M12','',[1,39], '用户负责并确认基座，使用本机MySQL服务；JDK21可在IDE引用，命令行未配置；云服务器已具备，Docker数据库留后续；核验实际版本/隔离条件及工具。','用户已明确基座无需他人评审；JDK/Wrapper构建、本机MySQL8.4.8测试库迁移/启动/账号及独立实例机制已验证。开发库初始化、其余协作条件和全基座交付待完成；不把云服务器存在当Docker数据库已部署。')
+t(1,'基座开发准备与协作条件核验','A',(1,2,3),[], 'M00 M12','',[1,39], '用户负责并确认基座，使用本机MySQL服务；JDK21可在IDE引用，命令行未配置；云服务器已具备，Docker数据库留后续；核验实际版本/隔离条件及工具。','用户已明确基座无需他人评审；JDK/Wrapper构建、本机MySQL8.4.8测试库迁移/启动/账号及独立实例机制已验证。开发库迁移/guard/启动/健康已获用户截图及日志确认；其余协作条件和全基座交付待完成；不把云服务器存在当Docker数据库已部署。')
 t(2,'应用骨架、契约边界与健康检查','A',(1.5,3,5),[1],'M00 M12','',[1,37], 'backend单Maven工程、按模块分包、配置绑定、统一Problem/请求ID、未知字段拒绝、Actuator健康。')
 t(3,'迁移、UUID/版本及JPA基础适配','A',(2.5,5,8),[2],'M00','',[2], 'Flyway初始表/约束/触发器/guard、UUID字符映射、UTC和版本边界；各域实体仍在对应业务Issue实现。','schema.sql是待引擎审查草案，不能原样运行后直接宣布所有业务正确。')
 t(4,'统一写事务、读快照与审计追加','A',(2,4,6),[3],'M00 M11','',[3,33], 'CommandBoundary/ReadBoundary、WriteContext及同事务AuditAppender、锁等待与错误分类；两个连接的屏障测试。')

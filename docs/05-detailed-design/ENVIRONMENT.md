@@ -1,5 +1,7 @@
 # BE-01环境与基座确认记录
 
+2026-10-18 15:44开发库核对通过：用户按开发库限定查询提供截图，Flyway版本1/2/3的success均为1，mutation_guard为id=1/revision=0；最新普通BackendApplication日志明确连接localhost:3306/rbac_admin_dev/MySQL8.4.8，Hikari/JPA完成、Tomcat8080启动、GET200，健康截图status=UP。开发库迁移、锚点及普通运行/健康这项准备已核对，不再视为待初始化；不从日志推断未展示的数据库用户名或迁移执行账号。agent本轮只读用户日志/截图，未连接已有库、执行SQL或读取凭据。BE-01保留其余协作条件及整体交接待核对，BE-02～05本人确认与基座总门槛不变；以下空库或初始化待办是此前历史。
+
 2026-10-18开发库现场核对：用户提供Navicat截图，当前rbac_admin_dev表列表为空、底部显示0 Tables；这是尚无表结构的截图证据，不是已有表但无业务记录。下一步在独立MigrationApplication配置中以RBAC_MIGRATION_URL明确指向该开发库，按既有管理员受控触发器初始化方案执行V1～V3；不复制测试数据、不清理现有测试库、不用rbac_app承担DDL。成功后普通BackendApplication仍用rbac_app、只改运行URL指向开发库并核对启动/健康。当前未收到开发库迁移或运行成功回报；agent本轮未连接数据库、执行SQL或读取凭据，BE-01仍IN_PROGRESS、整体门槛未评估。
 
 2026-10-18/D-049：用户已确认健康status=UP，并明确回复RBAC_IDEMPOTENCY_ENABLED“是，已设为 true”。结合15:28本机启动/测试库连接日志，按BE-05交接范围记录d059d11为OWNER_ACCEPTED；不是仅凭UP推断启用。BE-02～05单项已本人确认，BE-01仍IN_PROGRESS、其余30项PLANNED，基座总门槛NOT_EVALUATED；下一步核对BE-01剩余条件和F-01～06整体交接，不自行开始业务、合并或推送。见[BE-05确认记录](BE-05-IDEMPOTENCY.md)。下方待确认/待核验描述是此前历史，以本段及机器清单为准。
