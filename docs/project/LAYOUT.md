@@ -1,5 +1,7 @@
 # 仓库目录约定
 
+2026-10-18/D-056业务代码样例：web/identity/controller与dto放HTTP适配；identity/service、repository、security、config放身份应用流程、受控SQL和认证配置。其他成员按各自业务域建立对应文件，沿用单Maven和原逻辑模块。具体文件与调用说明见[BE-06记录](../05-detailed-design/BE-06-IDENTITY.md)，不要求为未实现业务建立空接口或空实现。
+
 确认日期：2026-10-15。依据：用户确认目前只采用以下目录，项目团队共享记忆统一由 `docs/` 维护。
 
 ```text

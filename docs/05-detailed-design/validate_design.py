@@ -74,6 +74,7 @@ def checks(report):
     require((len(modules),len(tasks),len(cases),len(mapping))==(13,35,41,68),'冻结设计规模不符')
     require(len(cids)==len(cases),'重复验收编号')
     partial_evidence={'AT-01':'BE-02-IMPLEMENTATION.md','AT-02':'BE-03-PERSISTENCE.md',
+                      'AT-05':'BE-06-IDENTITY.md','AT-06':'BE-06-IDENTITY.md','AT-07':'BE-06-IDENTITY.md',
                       'AT-04':'BE-05-IDEMPOTENCY.md','AT-03':'BE-04-TRANSACTIONS.md','AT-33':'BE-04-TRANSACTIONS.md','AT-37':'BE-02-IMPLEMENTATION.md'}
     require(all(c['status']==('PARTIALLY_VERIFIED' if c['id'] in partial_evidence else 'DESIGNED_NOT_RUN') for c in cases),'验收局部/完整状态不符')
     require(all(c.get('evidence')==partial_evidence[c['id']] for c in cases if c['status']=='PARTIALLY_VERIFIED'),'局部验收缺实施证据')
@@ -94,6 +95,8 @@ def checks(report):
     require([m['alias'] for m in members]==list('ABCD') and all(
         m['realName'] is None and m['githubLogin'] is None and not m['repositoryAccessVerified']
         and not m['localEnvironmentVerified'] for m in members),'虚构成员身份/接入证据')
+    require(members[0].get('claimedBy')=='USER' and members[0].get('claimDecision')=='D-056'
+            and all(m.get('claimedBy') is None for m in members[1:]),'用户认领A或其他成员状态不符')
     require(phase_plan['business']['assignmentSource']['evidence']=='TEAM-ASSIGNMENT.md','分工缺依据')
     assignment_doc=(ROOT/'TEAM-ASSIGNMENT.md').read_text(encoding='utf-8')
     summary_at=assignment_doc.index('## 分工汇总')
@@ -146,8 +149,14 @@ def checks(report):
         require(module['assignmentStatus']==('OWNER_CONFIRMED' if module['id']=='M00' else ('SHARED_BY_TASK' if module['id'] in shared else 'ASSIGNED')),'共享模块未按任务区分责任')
     referenced=set()
     for task in tasks:
-        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
+        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'IN_PROGRESS'}.get(task['id'],'PLANNED')
         require(task['status']==expected_status,'任务准备/实现状态不符')
+        if task['id']=='BE-06':
+            progress=task['implementationProgress']
+            require(progress.get('decision')=='D-056' and progress.get('evidence')=='BE-06-IDENTITY.md'
+                    and progress.get('claimedBy')=='USER' and progress.get('implemented') is True
+                    and progress.get('ownerAccepted') is False and progress.get('mergedToMain') is False,
+                    'BE-06实施与本人确认/主线边界不符')
         if task['id']=='BE-01':
             acceptance=task.get('ownerAcceptance',{})
             require(acceptance.get('acceptedBy')=='USER' and acceptance.get('scope')=='BE-01'
@@ -280,7 +289,7 @@ def checks(report):
         require(row['ownerSlot']==assignments[task['id']] and row['assignmentStatus']=='ASSIGNED' and row['phase']=='BUSINESS','业务操作与任务负责人不符')
         require(row['suggestedOwnerSlot']==task['suggestedOwnerSlot'] and row['startConditions']==required_gates,'操作与任务分工/阶段不一致')
         require(set(row['tables'])<=tables,'操作引用未知表')
-        require(set(row['acceptance'])<=cids and row['status']=='PLANNED_NOT_IMPLEMENTED','验收引用/实施状态不符')
+        require(set(row['acceptance'])<=cids and row['status']==('IMPLEMENTED_PENDING_OWNER_ACCEPTANCE' if task['id']=='BE-06' else 'PLANNED_NOT_IMPLEMENTED'),'验收引用/实施状态不符')
         if direction=='INBOUND':require('AT-37'in row['acceptance'],'入站缺全契约验收')
         require(set(row['requestModels'])<=api['components']['schemas'].keys(),'未知输入模型')
         require(set(model for values in row['successResponseModels'].values() for model in values)<=api['components']['schemas'].keys(),'未知输出模型')
@@ -428,6 +437,7 @@ def checks(report):
         decisionIds=len(decisions),upstreamSha256=source_hashes,
         planRevision='1.4',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=0,
         businessTasksAssigned=len(assignments),assignmentDecision='D-055',memberIdentitiesPending=4,
+        confirmedUserAlias='A',implementationDecision='D-056',implementedBusinessTasksPendingOwner=['BE-06'],
         foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:OWNER_ACCEPTED',
         foundationGateStatus=phase_plan['gateStatus'],businessOperationsAwaitingAssignment=0,businessOperationsAssigned=len(mapping),
         artifactSha256={n:sha(ROOT/n) for n in GENERATED}))

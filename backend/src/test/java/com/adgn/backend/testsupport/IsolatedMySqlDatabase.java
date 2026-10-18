@@ -69,6 +69,16 @@ public final class IsolatedMySqlDatabase implements AutoCloseable {
                 "--SPRING_DATASOURCE_USERNAME=" + runtime, "--SPRING_DATASOURCE_PASSWORD=" + password);
     }
 
+    public ConfigurableApplicationContext startWeb(String... arguments) {
+        var application = new SpringApplication(com.adgn.backend.BackendApplication.class);
+        application.setRegisterShutdownHook(false);
+        var args = new java.util.ArrayList<>(java.util.List.of("--spring.profiles.active=dev", "--server.port=0",
+                "--SPRING_DATASOURCE_URL=" + url, "--SPRING_DATASOURCE_USERNAME=" + runtime,
+                "--SPRING_DATASOURCE_PASSWORD=" + password));
+        args.addAll(java.util.List.of(arguments));
+        return application.run(args.toArray(String[]::new));
+    }
+
     public void execute(String sql) throws SQLException {
         try (var statement = admin.createStatement()) { statement.execute(sql); }
     }

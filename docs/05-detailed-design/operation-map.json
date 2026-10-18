@@ -56,7 +56,7 @@
         "Session"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
   },
   {
     "operationId": "currentSession",
@@ -112,7 +112,7 @@
         "SessionView"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
   },
   {
     "operationId": "logout",
@@ -167,7 +167,7 @@
     "successResponseModels": {
       "204": []
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
   },
   {
     "operationId": "changeOwnPassword",
@@ -224,7 +224,7 @@
     "successResponseModels": {
       "204": []
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
   },
   {
     "operationId": "myAppointments",

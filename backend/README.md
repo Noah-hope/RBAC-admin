@@ -1,5 +1,7 @@
 # 后端工程
 
+BE-06业务接入（D-056）：登录、当前会话、退出和本人改密在开发分支实现，待本人确认；运行前按[本机启用](../docs/05-detailed-design/BE-06-LOCAL-SETUP.md)配置独立RSA密钥及RBAC_IDENTITY_ENABLED。关闭时admin/integration/oa路径503，不提供绕过认证入口。Controller/DTO及Service/Repository结构、TDD和真实验证见[身份记录](../docs/05-detailed-design/BE-06-IDENTITY.md)。原64离线＋42引擎为BE-05历史结果，当前数量以最新报告为准。
+
 D-053：公共基座已本人整体确认并合入main/b68aa9a，推送与远程回查一致。成员可拉取共同main按本机配置指南接入；业务任务仍须实际分派及满足依赖。
 
 团队业务接入先读[简明使用指南](../docs/05-detailed-design/FOUNDATION-USAGE.md)，交接事实见[整体核对报告](../docs/05-detailed-design/FOUNDATION-REVIEW.md)。
@@ -23,7 +25,7 @@ Java 21、Spring Boot 4.0.8、Maven Wrapper 3.9.11（Wrapper脚本3.3.4）。基
 
 Linux/macOS使用`./mvnw`。打包后可执行`java -jar target/backend-0.0.1-SNAPSHOT.jar`。Wrapper首次需要下载Maven及依赖；发行包SHA256已固定。Spring Boot父BOM管理依赖和插件版本，不单独升级其中一个组件。
 
-默认verify运行64项离线测试。真实MySQL检查须显式使用`./mvnw.cmd -Pmysql-check clean verify`，并先准备独立临时8.4实例、设置RBAC_ISOLATED_MYSQL_PORT（非3306）和RBAC_ISOLATED_MYSQL_DATADIR（必须在backend/.tmp中）；共追加42项引擎检查，JVM为Asia/Shanghai。缺参数会失败，不静默跳过、不连接开发/共享测试库。实际结果及隔离步骤见[持久化验证](../docs/05-detailed-design/BE-03-PERSISTENCE.md)。
+默认verify运行74项离线测试（含原64项回归）。真实MySQL检查须显式使用`./mvnw.cmd -Pmysql-check clean verify`，并先准备独立临时8.4实例、设置RBAC_ISOLATED_MYSQL_PORT（非3306）和RBAC_ISOLATED_MYSQL_DATADIR（必须在backend/.tmp中）；共追加59项引擎检查（含原42项回归），JVM为Asia/Shanghai。缺参数会失败，不静默跳过、不连接开发/共享测试库。实际结果及隔离步骤见[持久化验证](../docs/05-detailed-design/BE-03-PERSISTENCE.md)。
 
 ## 本机日志存放
 

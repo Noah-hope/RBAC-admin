@@ -66,8 +66,9 @@
       "UC-09"
     ],
     "reviewScenario": "S21",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-06-IDENTITY.md"
   },
   {
     "id": "AT-06",
@@ -84,8 +85,9 @@
       "UC-09"
     ],
     "reviewScenario": "S21/S22",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-06-IDENTITY.md"
   },
   {
     "id": "AT-07",
@@ -103,8 +105,9 @@
       "UC-11"
     ],
     "reviewScenario": "",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-06-IDENTITY.md"
   },
   {
     "id": "AT-08",

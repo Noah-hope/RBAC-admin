@@ -458,7 +458,7 @@
     ],
     "deliverable": "RS256三类入口、当前资格、会话持久化、受限改密token与限速，普通员工拒绝。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -466,6 +466,19 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-06-IDENTITY.md",
+      "decision": "D-056",
+      "scope": "LOGIN_SESSION_PASSWORD_AND_THREE_JWT_FAMILIES",
+      "implemented": true,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "setup": "BE-06-LOCAL-SETUP.md",
+      "claimedBy": "USER",
+      "claimSource": "USER_MESSAGE"
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-05",

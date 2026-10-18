@@ -63,3 +63,14 @@ management:
 logging:
   pattern:
     level: "%5p [instance=${rbac.runtime.instance-id:unconfigured},requestId=%X{requestId:-none}]"
+
+rbac:
+  identity:
+    enabled: ${RBAC_IDENTITY_ENABLED:false}
+    admin-key-id: ${RBAC_ADMIN_KEY_ID:}
+    admin-jwk-set: ${RBAC_ADMIN_JWK_SET:}
+    business-jwk-set: ${RBAC_BUSINESS_JWK_SET:}
+    oa-jwk-set: ${RBAC_OA_JWK_SET:}
+    admin-issuer: ${RBAC_ADMIN_ISSUER:urn:rbac:admin}
+    business-issuer: ${RBAC_BUSINESS_ISSUER:urn:rbac:business}
+    oa-issuer: ${RBAC_OA_ISSUER:urn:rbac:oa}
