@@ -42,12 +42,16 @@ jar中包含3个公共持久化类和自动配置注册资源，不含Persistenc
 
 ## 本人确认和剩余边界
 
+用户随后提供CURRENT_USER()/SHOW GRANTS四张截图，核实Navicat身份rbac_app@localhost与rbac_migrator@localhost：前者仅在rbac_admin_dev/rbac_admin_test具有SELECT、INSERT、UPDATE、DELETE；后者在这两个库另有CREATE、DROP、REFERENCES、INDEX、ALTER、TRIGGER。USAGE ON *.*不代表拥有全局管理权限，截图未显示SUPER或GRANT OPTION。库内授权符合运行/迁移分离；不需扩权。保留此前binlog=1/trust_creators=0时含触发器迁移由管理员受控处理的边界，不声称rbac_migrator已成功执行整个V1～V3，也不改全局策略。
+
+本机迁移/guard/重放、普通后端启动/健康及两个账号的库内授权技术核对已齐；BE-03仍待本人阶段确认及主线交付，尚未标OWNER_ACCEPTED。下一开发任务为BE-04公共写事务/读快照/同事务审计，BE-05随后。以下“GRANTS尚未核验”等仅描述此前证据；本轮只读截图核对、文档同步，未执行SQL或新Java测试。
+
 用户后续提供2026-10-18 10:52启动日志及健康截图：BackendApplication、默认dev、Java21.0.12.1连接localhost:3306/rbac_admin_test/MySQL8.4.8，Hikari/JPA完成初始化、Tomcat8080启动，HTTP GET记录200，健康status=UP。确认本机普通后端连接/启动/健康检查成功；日志没有输出实际数据库用户名或GRANTS，不能据此认定确实使用rbac_app或迁移账号权限已齐全。没有把这次运行回报标记为BE-03整项OWNER_ACCEPTED或基座验收；以下IDE步骤已完成运行结果核对，当前先核验两个账号权限，再收尾BE-03。
 
 IDE重载Maven后，普通Spring Boot配置BackendApplication可临时连接已迁移的rbac_admin_test，使用rbac_app及本机密码，确认启动与/actuator/health。不要切到root作为运行账号，也不要让新启动检查自动补空开发库；开发库初始化另用独立迁移入口开展。本轮未读取IDE口令或操作用户库。
 
-迁移账号仍保留rbac_migrator职责。库内DDL/TRIGGER权限与binlog额外策略需同时满足；root是此前本机首次触发器初始化的临时管理身份，不是所有迁移必须使用root。当前不改变共享本机MySQL的全局trust_creators，不给rbac_app或迁移账号无依据授予全局SUPER。项目专用MySQL实例可由管理员评估配置trust_creators=1并让受限迁移账号执行；保留0的实例则由管理员受控处理触发器迁移。两类方案都会影响触发器DEFINER与后续权限维护，云端落地时核验，不由普通后端设置。实际rbac_migrator完整GRANTS仍未核验，不把技术说明记成已授权/已执行。
+迁移账号仍保留rbac_migrator职责。库内DDL/TRIGGER权限与binlog额外策略需同时满足；root是此前本机首次触发器初始化的临时管理身份，不是所有迁移必须使用root。当前不改变共享本机MySQL的全局trust_creators，不给rbac_app或迁移账号无依据授予全局SUPER。项目专用MySQL实例可由管理员评估配置trust_creators=1并让受限迁移账号执行；保留0的实例则由管理员受控处理触发器迁移。两类方案都会影响触发器DEFINER与后续权限维护，云端落地时核验，不由普通后端设置。库内GRANTS现已按上述截图核实，未把触发器额外策略或迁移身份实际执行记成已验证。
 
-AT-02维持PARTIALLY_VERIFIED：这些样例只证明基础适配，不代表全部领域映射、41触发器逐项业务保护或跨域并发已通过。BE-03仍IN_PROGRESS，保留用户本人运行确认及账号配置核验；BE-04写上下文/审计、BE-05幂等尚未实现，整个基座未验收，也未合并或推送。
+AT-02维持PARTIALLY_VERIFIED：这些样例只证明基础适配，不代表全部领域映射、41触发器逐项业务保护或跨域并发已通过。BE-03仍IN_PROGRESS，技术运行和账号授权已核对、待本人阶段确认及主线交付；BE-04写上下文/审计、BE-05幂等尚未实现，整个基座未验收，也未合并或推送。
 
 官方依据：[Spring Data JPA实体新旧识别](https://docs.spring.io/spring-data/jpa/reference/4.0/jpa/entity-persistence.html)、[Hibernate ORM7.2映射与JDBC时区](https://docs.hibernate.org/orm/7.2/userguide/html_single/)、[MySQL触发器权限与DEFINER](https://dev.mysql.com/doc/refman/8.4/en/create-trigger.html)。文档说明不是本项目的执行证据。

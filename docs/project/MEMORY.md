@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+2026-10-18账号截图核对：rbac_app@localhost在rbac_admin_dev/test仅SELECT/INSERT/UPDATE/DELETE；rbac_migrator@localhost在相同两库有上述DML及CREATE/DROP/REFERENCES/INDEX/ALTER/TRIGGER，无截图所示全局SUPER或GRANT OPTION，USAGE不表示全局管理权限。运行/迁移库内授权符合分工，无需补授权；此前binlog=1/trust_creators=0的额外触发器策略仍按管理员受控处理，不声称该迁移账号已成功执行全套迁移。BE-03基础迁移、JPA、启动/健康和账号技术核对已齐，待本人阶段确认及主线交付，尚不标OWNER_ACCEPTED；下一开发任务BE-04，未自行开始实现或合并/推送。agent本轮只整理截图证据，未连接用户数据库、执行SQL或新Java测试。下方账号“待核验”等是此前记录。
+
 2026-10-18 10:52用户本机运行回报：BackendApplication默认dev成功连接rbac_admin_test/MySQL8.4.8，Hikari/JPA/Tomcat8080正常启动，GET200且健康截图status=UP。普通后端连接/启动/健康检查已确认；日志未显示实际数据库用户名，rbac_app和rbac_migrator的CURRENT_USER/GRANTS仍需核验，不能因健康UP声明账号权限齐全或整个BE-03/基座本人验收完成。下一步先只读核验账号，收尾BE-03，再按原依赖推进BE-04写事务/读快照/同事务审计。agent未连接或改动用户库，本轮只记录用户日志/截图。
 
 D-045实施：VersionedUuidEntity只用于专用row_version表，UUID CHAR和可空Long @Version保证预分配新ID走persist；API业务版本独立维护。UtcInstantConverter显式应用于DATETIME(6)，Timestamp时间点＋UTC绑定，截断微秒；真实Asia/Shanghai JVM捕获并修复八小时偏移。生成列只读映射样例不进入正式jar。普通启动只读检查guard，缺表/记录即失败，不补建、不重置非零revision；独立迁移和离线profile不装配。44离线＋9项隔离MySQL检查均通过，已有库未连接/操作。BE-03保持IN_PROGRESS，AT-02局部验证，待本人用rbac_app连接已迁移测试库确认启动和健康、核验迁移账号；开发库初始化/领域映射/业务并发及BE-04/05仍待后续。详见[持久化基础](../05-detailed-design/BE-03-PERSISTENCE.md)。

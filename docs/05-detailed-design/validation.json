@@ -88,7 +88,7 @@
   "diagramPages": 6,
   "diagramVertices": 59,
   "diagramEdges": 57,
-  "localLinks": 265,
+  "localLinks": 266,
   "pythonSyntaxFiles": 2,
   "decisionIds": 45,
   "upstreamSha256": {
@@ -131,7 +131,7 @@
     "TRACEABILITY.md": "d4738a52c8ff6b2111e2e6723ceeb080806d8be96e949bca66b66d5175995ff9",
     "HANDLER-CONTRACTS.md": "fc845a172b5360321333b3e274c8d79c8537f264ae28e3b72f804891f350ce0e",
     "TEST-PLAN.md": "8235dfce70f3ad03184c2d5b7c01e34d744dd1f087762d288eaf72d3d22ce639",
-    "TASKS.md": "7c96556e4a7ae263efd8e5a6a2893b9e88ca984e0d631a0f8333b1957d9c5987",
+    "TASKS.md": "06659ba2e4e595cb5c177b4a6b1664af026c127eb2371be3fdba544007db1dcf",
     "IMPLEMENTATION-PLAN.md": "e8fe3c10eb2e6c795dc5cc6c196c0d2ee076d42d091a692124fbcd1abb11c137",
     "module-structure.drawio": "3db24f7f4f13cff20d34834b6cad2a5b48c1526e176d1a27ea0a0aa3e50a93b4",
     "core-flows.drawio": "af62be1624fe1141d5f6c472859e8ed0f7ff07363077ea1a2fa28c6fa206921f"
