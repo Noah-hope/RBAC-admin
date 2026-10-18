@@ -254,7 +254,7 @@
     ],
     "deliverable": "CommandBoundary/ReadBoundary、WriteContext及同事务AuditAppender、锁等待与错误分类；两个连接的屏障测试。",
     "notes": "",
-    "status": "IN_PROGRESS",
+    "status": "OWNER_ACCEPTED",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -269,7 +269,18 @@
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "authorizationImplementation": "CALLBACK_ONLY",
       "crossDomainBusinessVerified": false,
-      "ownerAccepted": false
+      "ownerAccepted": true
+    },
+    "ownerAcceptance": {
+      "acceptedBy": "USER",
+      "date": "2026-10-18",
+      "scope": "BE-04",
+      "implementationCommit": "58b556a",
+      "source": "USER_MESSAGE",
+      "message": "BE-04 确认服务为up状态，接下来做什么",
+      "interpretation": "LOCAL_UP_CONFIRMATION_AFTER_BE04_HANDOFF",
+      "mergedToMain": false,
+      "evidence": "BE-04-TRANSACTIONS.md"
     },
     "acceptanceScope": "验证公共读写边界、两个连接和故障回滚；AT-33先验新鲜快照基础机制，有效权限查询的完整业务结果由BE-18/33覆盖。",
     "useCases": [

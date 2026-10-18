@@ -1,6 +1,6 @@
 # 后端工程
 
-Java 21、Spring Boot 4.0.8、Maven Wrapper 3.9.11（Wrapper脚本3.3.4）。基础包`com.adgn.backend`；配置使用YAML。BE-02公共骨架已本人确认，BE-03初始迁移已在独立MySQL8.4.8验证；用户测试库迁移及重复运行已成功，基础JPA和启动guard检查已实测（D-045），详见[持久化基础](../docs/05-detailed-design/BE-03-PERSISTENCE.md)。本机运行/健康和账号库内授权已核对，BE-03已按D-046记录阶段本人确认。BE-04公共事务/审计已实现并自测，待本人确认，见[实施与接入记录](../docs/05-detailed-design/BE-04-TRANSACTIONS.md)。正式身份、授权和审批仍按任务实现。状态与任务统一见[共享记忆](../docs/project/MEMORY.md)和[任务清单](../docs/05-detailed-design/TASKS.md)，本页只说明使用方式。
+Java 21、Spring Boot 4.0.8、Maven Wrapper 3.9.11（Wrapper脚本3.3.4）。基础包`com.adgn.backend`；配置使用YAML。BE-02公共骨架已本人确认，BE-03初始迁移已在独立MySQL8.4.8验证；用户测试库迁移及重复运行已成功，基础JPA和启动guard检查已实测（D-045），详见[持久化基础](../docs/05-detailed-design/BE-03-PERSISTENCE.md)。本机运行/健康和账号库内授权已核对，BE-03已按D-046记录阶段本人确认。BE-04公共事务/审计已实现并自测，用户确认服务UP，已按D-047记录单项本人确认，见[实施与接入记录](../docs/05-detailed-design/BE-04-TRANSACTIONS.md)。正式身份、授权和审批仍按任务实现。状态与任务统一见[共享记忆](../docs/project/MEMORY.md)和[任务清单](../docs/05-detailed-design/TASKS.md)，本页只说明使用方式。
 
 ## 在IntelliJ IDEA运行
 

@@ -43,7 +43,7 @@ AuditRecord.snapshotJson必须是schemaVersion=1的JSON对象，subject列表在
 
 测试以真实JpaTransactionManager/JDBC/JPA及数据库审计表运行。并发使用两个线程/连接和CountDownLatch，实际performance_schema.data_lock_waits确认第二写者在等guard后才释放第一写者；覆盖第一写者提交与回滚，第二资格读取看到相应已提交结果。不是依赖sleep猜测锁已取得，也不是吞吐/压力测试。死锁1213本轮是分类单元测试，不伪称实际诱发了死锁；锁超时1205是真实两连接实测。
 
-AT-03/33仅公共基础PARTIALLY_VERIFIED：没有真实授权执行与关权竞争、批量业务清单或权限并集响应。AT-02/01/37保留原局部范围。BE-04尚未获本人确认，BE-05未实现，整个基座仍未验收；不新增业务HTTP路由，不修改API/DDL/迁移，不创建远程Issue/PR、合并或推送。
+AT-03/33仅公共基础PARTIALLY_VERIFIED：没有真实授权执行与关权竞争、批量业务清单或权限并集响应。AT-02/01/37保留原局部范围。BE-04已按下方D-047记录本人确认，BE-05未实现，整个基座仍未验收；不新增业务HTTP路由，不修改API/DDL/迁移，不创建远程Issue/PR、合并或推送。
 
 ## 最终构建与隔离实例收尾
 
@@ -58,3 +58,9 @@ AT-03/33仅公共基础PARTIALLY_VERIFIED：没有真实授权执行与关权竞
 静态收尾检查PASS：生成器确定性、35项任务/41项验收状态、288处本地链接、46个唯一决策及上游来源摘要一致。改动文档UTF-8、代码围栏、无成员本机绝对路径与Git空白检查通过；正式jar含公共事务/审计类，不含测试映射、控制器或MySqlCheck夹具。该静态检查不执行SQL、HTTP或业务测试，不能替代上述实际构建与引擎结果。
 
 官方依据：[Spring程序化事务](https://docs.spring.io/spring-framework/reference/data-access/transaction/programmatic.html)、[事务传播与rollback-only](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html)、[MySQL一致性非锁定读取](https://dev.mysql.com/doc/refman/8.4/en/innodb-consistent-read.html)。这些是机制依据，不代替本项目执行证据。
+
+## 本机运行及本人确认（D-047，2026-10-18）
+
+用户在交接步骤后回复“BE-04 确认服务为up状态，接下来做什么”，截图显示/actuator/health返回status=UP及liveness/readiness分组。按该单项交接上下文记录BE-04/58b556a为OWNER_ACCEPTED；仅确认本机运行与本任务公共机制交付，不把健康UP本身当作事务测试或完整权限业务验收。原51离线＋25项隔离MySQL结果沿用，本轮未重跑Java测试、连接数据库或执行SQL。截图不显示数据库名/账号，不由本次健康响应推断新账号或开发库已迁移。
+
+下一项为BE-05的HTTP幂等预留、租约栅栏和安全结果重放，仍PLANNED，尚未开始编码。BE-01其他协作条件、整个基座验收及共同主线交付保持开放；未合并或推送。
