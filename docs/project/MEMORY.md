@@ -6,6 +6,10 @@
 
 ## 当前状态
 
+2026-10-18本机日志整理：按用户指出的根目录日志问题，将backend下三份be02构建检查日志移至backend/logs/build/，移动前后SHA256全部一致；backend/.gitignore明确忽略logs/，运行说明和目录导航已同步。它们是手工保存的Maven输出，应用仍默认使用控制台；本次没有配置文件日志、重跑构建或执行SQL，BE-03尚未开始。仅提交约定文档和忽略规则，原始日志不入Git。
+
+整理核验通过：backend根目录无残留.log，三份归档日志均被Git忽略；静态设计/任务检查及Git空白检查通过。没有运行Java或数据库测试，不改变已有验收状态。
+
 2026-10-18数据库准备进展：用户回复“完成”，截图CURRENT_USER()显示rbac_app@localhost，连接树列出rbac_admin_dev/rbac_admin_test，另有local_mysql_rbactest连接名称。具体授权及两个SHOW TABLES结果未展开，按用户报告记录准备完成，不从连接名称推断真实账号或独立迁移身份。下一步为BE-03的Flyway/JPA适配、凭据本机注入及受控连接/迁移验证；尚未实施或执行。BE-01仍IN_PROGRESS，BE-02的OWNER_ACCEPTED、基座总门槛和业务状态保持不变；本轮仅更新文档，agent未连接数据库或执行SQL。详情见[环境准备记录](../05-detailed-design/ENVIRONMENT.md)。
 
 本轮文档静态检查通过：210处本地链接、42个唯一决策、生成器确定性及任务/基线一致性；Git空白检查通过。未运行应用、数据库或业务测试，不扩展既有验收结论。

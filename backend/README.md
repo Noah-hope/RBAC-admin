@@ -20,6 +20,19 @@ Java 21、Spring Boot 4.0.8、Maven Wrapper 3.9.11（Wrapper脚本3.3.4）。基
 
 Linux/macOS使用`./mvnw`。打包后可执行`java -jar target/backend-0.0.1-SNAPSHOT.jar`。Wrapper首次需要下载Maven及依赖；发行包SHA256已固定。Spring Boot父BOM管理依赖和插件版本，不单独升级其中一个组件。
 
+## 本机日志存放
+
+应用当前输出到IDE/终端控制台，没有配置自动写入日志文件。手工保存的构建、测试或依赖检查输出统一放在`logs/build/`，不散放工程根目录；BE-02的三份历史构建日志已移入此目录，内容未改动。整个`logs/`目录由Git忽略，不提交原始本机日志。`target/`仍用于Maven构建产物和测试报告。
+
+需要保存完整`clean verify`输出时，在backend目录执行：
+
+```powershell
+New-Item -ItemType Directory -Path logs/build -Force | Out-Null
+.\mvnw.cmd --batch-mode --no-transfer-progress clean verify *> logs/build/verify.log
+```
+
+日志位于`target/`之外，避免`clean`删除或占用当前输出文件。该命令会覆盖同名日志，需保留多轮证据时使用不同文件名；本轮整理没有重跑构建。
+
 ## 配置边界
 
 | profile | 配置及用途 |

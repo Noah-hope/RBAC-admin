@@ -27,6 +27,8 @@
 
 一次clean验证因日志文件被重定向到正在清理的target而失败；将日志放在被忽略的backend根目录后完整重跑通过。预期的缺配置、非法方法测试会产生对应WARN；Mockito动态agent/CDS诊断已通过显式测试agent及测试JVM配置解决。没有屏蔽业务失败或skipTests。
 
+2026-10-18日志归档：上述根目录位置是当时的临时安排；现将三份be02构建检查日志统一移至backend/logs/build/，移动前后SHA256全部一致。logs/整体忽略，后续手工保存构建输出沿用该目录，不放target/或工程根目录。应用仍默认输出控制台；本次未新增文件日志配置或重跑构建。
+
 ## 实际构建基线
 
 JDK/javac为Amazon Corretto21.0.12.1；Wrapper脚本3.3.4、Maven3.9.11；会话临时指定JDK，无永久JAVA_HOME/PATH修改。Maven发行包SHA512与Central提供值核对后固定SHA256：0d7125e8c91097b36edb990ea5934e6c68b4440eef4ea96510a0f6815e7eeadb。缓存已有解压目录时Wrapper可能复用；校验不代替团队对构建来源的管理。

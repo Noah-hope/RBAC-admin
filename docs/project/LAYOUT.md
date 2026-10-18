@@ -16,6 +16,7 @@ rbac-admin/
 │   ├── pom.xml
 │   ├── mvnw, mvnw.cmd, .mvn/wrapper/
 │   ├── README.md
+│   ├── logs/build/               # 本机手工保存的构建检查日志，Git忽略
 │   └── src/main/, src/test/      # 入口、core/config、web公共HTTP及配置/测试
 └── docs/
     ├── README.md
