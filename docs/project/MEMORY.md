@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+2026-10-18用户补充截图：历史versions 1/2/3的success均1；mutation_guard仅一行id=1/revision=0；再次运行迁移显示校验3条成功、当前版本3、up to date/No migration necessary。三项核对通过，重复运行截图未展示退出码。下一步继续BE-03的UUID/JPA版本/UTC映射、guard缺失启动检查和迁移账号长期权限配置；表/触发器数量未收到用户库查询，开发库未初始化验证。agent本轮只更新记录，不连接数据库或运行Java测试；BE-03仍IN_PROGRESS，AT-02局部验证、基座未验收。下方关于guard/重复迁移“未展示”的说法为此前日志边界，以上述截图更新为准。
+
 2026-10-18本机测试库迁移成功（用户日志）：10:21:22～10:21:37，Java21.0.12.1/Boot4.0.8、migrate profile连接localhost:3306/rbac_admin_test（MySQL8.4），从Empty Schema依次完成三条迁移，版本v3，退出码0。此前10:19日志仍有V2失败历史，本次成功日志已替代该阻塞。日志未展示实际迁移账号、对象数量/guard内容或重复执行，agent未连接现有库核查，亦未改变全局配置；保留Flyway兼容性WARN和已有独立实例验证边界。下一步先只读核对历史/对象/guard和重复迁移，再继续UUID/JPA版本/UTC映射、缺guard启动失败检查；开发库尚无迁移成功证据，BE-03/AT-02及基座总门槛不扩展。以下用户库“失败待恢复”等为此前记录，最新证据见[真实MySQL验证](../05-detailed-design/BE-03-MYSQL-VALIDATION.md)。
 
 D-044真实引擎进展：用户日志显示rbac_admin_test/MySQL8.4的V1在CHECK中未引用ROW_NUMBER而1064失败，可能已有部分表。仅修复两处反引号并回补schema_model/schema.sql/V1，逻辑模型、字段、API及其业务约束不变。使用本机8.4.8程序、全新backend/.tmp数据目录和动态回环非3306端口，--no-defaults且binlog关闭；先在随机schema复现1项失败，再完整41项离线＋1项MySQL集成检查通过。实测43业务表＋历史、79FK、41触发器、三条成功历史及guard，重复迁移无变化，CHECK/重复主键/FK/运行账号DDL拒绝均实测；临时进程已正常关闭，用户已有库未连接/清理。AT-02仅PARTIALLY_VERIFIED，BE-03 IN_PROGRESS；用户库恢复、binlog开启条件、JPA/全部触发器行为及并发仍待后续。恢复步骤和限制见[真实MySQL验证](../05-detailed-design/BE-03-MYSQL-VALIDATION.md)。以下“未执行SQL”的记录为之前阶段历史或仅指相应静态检查。

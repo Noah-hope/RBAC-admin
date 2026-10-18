@@ -6,9 +6,11 @@
 
 用户提供的2026-10-18 10:21:22～10:21:37（Asia/Shanghai）控制台日志显示：MigrationApplication使用Java21.0.12.1、Boot4.0.8和migrate profile，连接localhost:3306/rbac_admin_test（MySQL8.4）；原本无Flyway历史表、schema为空，校验3条迁移后依次执行V1表/约束、V2触发器及V3 guard，最终Successfully applied 3 migrations、版本v3，退出码0。这次初始化成功，旧失败不再作为当前阻塞。
 
-证据来自用户实际运行日志，本轮agent未连接或重跑其数据库；日志未展示实际数据库账号、表/触发器数量查询、guard内容、重复迁移或JPA映射结果，不将独立实例的这些验证转记为用户库已逐项核验。用户此前反馈binlog=1/trust_creators=0，但本次日志未输出这两个值或证明配置始终未变。Flyway版本WARN仍存在，未导致本次失败。原始附件含本机启动路径，不复制入共享仓库。
+用户随后提供三张实际操作截图：Flyway历史versions 1/2/3的success均为1；mutation_guard恰一行、id=1/revision=0；再次运行MigrationApplication、migrate profile连接rbac_admin_test，Successfully validated 3 migrations、Current version为3、Schema is up to date. No migration necessary。确认历史、guard初始值及重复迁移无待执行项均符合预期；最后截图没有进程结束行，不额外声称已看到该次退出码。
 
-下一步可在用户库只读核对历史、对象数量及guard，再重跑同一迁移配置确认无待执行项；无需再次清库。之后继续BE-03的UUID/JPA版本/UTC映射与guard缺失启动检查，BE-03、AT-02和基座验收状态保持原范围。下方失败恢复步骤仅供历史排障参考，不是要求对已成功库重建。
+证据来自用户实际运行日志及截图，本轮agent未连接或重跑其数据库；未展示实际数据库账号、表/触发器数量查询或JPA映射结果，不将独立实例的这些验证转记为用户库已逐项核验。用户此前反馈binlog=1/trust_creators=0，但成功日志未输出这两个值或证明配置始终未变。Flyway版本WARN仍存在，未导致本次失败。原始附件含本机启动路径，不复制入共享仓库。
+
+下一步继续BE-03的UUID/JPA版本/UTC映射与guard缺失启动检查，并落实迁移账号的长期权限方案；BE-03、AT-02和基座验收状态保持原范围。用户测试库的表/触发器数量尚无查询回报，开发库尚无迁移成功证据。下方失败恢复步骤仅供历史排障参考，不是要求对已成功库重建。
 
 本次仅同步日志结论和项目导航；静态设计/追踪检查PASS（249处本地链接、44个唯一决策）及Git空白检查通过。没有修改代码、重跑Java测试或执行SQL。
 
