@@ -148,8 +148,10 @@
     "remotePrNumber": null,
     "implementationProgress": {
       "evidence": "BE-03-PREPARATION.md",
-      "scope": "DEPENDENCIES_CONFIGURATION_MIGRATION_SCRIPTS",
-      "databaseExecuted": false,
+      "scope": "DEPENDENCIES_CONFIGURATION_MIGRATION_SCRIPTS_AND_ISOLATED_MYSQL",
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "databaseEvidence": "BE-03-MYSQL-VALIDATION.md",
       "jpaMappingVerified": false,
       "ownerAccepted": false
     },

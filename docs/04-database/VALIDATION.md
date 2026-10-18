@@ -1,5 +1,9 @@
 # 数据库设计验证记录
 
+## 实现阶段D-044修正（2026-10-18）
+
+schema.sql两处CHECK对ROW_NUMBER补反引号，逻辑模型/字段/约束含义不变；生成器同步。数据库静态检查重新运行通过，报告只说明该检查未执行SQL。另有独立8.4.8实例的真实Flyway/基础约束证据，见[BE-03验证](../05-detailed-design/BE-03-MYSQL-VALIDATION.md)，不能把下文历史“不执行”或静态报告的false字段误当作后续始终未运行引擎。JPA和完整并发仍未通过。
+
 ## 正式跨阶段评审修订验证（数据库1.1 / API1.2.0）
 
 日期：2026-10-17；起点codex/database-design/e3fa818且工作区干净。正式结论、6项问题和25个文档场景见[CONSISTENCY-REVIEW.md](CONSISTENCY-REVIEW.md)。没有建库、连接数据库、执行SQL或业务实现。

@@ -19,8 +19,9 @@
     "operations": [],
     "useCases": [],
     "reviewScenario": "",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-03-MYSQL-VALIDATION.md"
   },
   {
     "id": "AT-03",

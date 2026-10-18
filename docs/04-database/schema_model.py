@@ -380,6 +380,8 @@ def generate():
                 cols += [f"  {'UNIQUE KEY' if typ=='unique' else 'KEY'} `{name}` ({key(ks)})"]
                 idx += [f"- {name} ({', '.join(ks)})：{'唯一性/被引用复合候选键' if typ=='unique' else 'FK支撑/典型查询访问路径'}。"]
         for i,expr in enumerate(tab['checks'],1):
+            # ROW_NUMBER is reserved in MySQL 8.4; keep logical metadata unchanged.
+            expr = expr.replace('row_number>', '`row_number`>')
             cols += [f'  CONSTRAINT `ck_{n}_{i}` CHECK ({expr})']
         sql += [f'\nCREATE TABLE `{n}` (\n'+',\n'.join(cols)+f'\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin COMMENT={q(tab["meaning"])};']
         dd += ['',f"主键：`{', '.join(tab['pk'])}`。", '']

@@ -73,8 +73,9 @@ def checks(report):
     module_order=dag(modules,'dependencies');task_order=dag(tasks,'dependencies')
     require((len(modules),len(tasks),len(cases),len(mapping))==(13,35,41,68),'冻结设计规模不符')
     require(len(cids)==len(cases),'重复验收编号')
-    require(all(c['status']==('PARTIALLY_VERIFIED' if c['id'] in {'AT-01','AT-37'} else 'DESIGNED_NOT_RUN') for c in cases),'验收局部/完整状态不符')
-    require(all(c.get('evidence')=='BE-02-IMPLEMENTATION.md' for c in cases if c['status']=='PARTIALLY_VERIFIED'),'局部验收缺实施证据')
+    partial_evidence={'AT-01':'BE-02-IMPLEMENTATION.md','AT-02':'BE-03-MYSQL-VALIDATION.md','AT-37':'BE-02-IMPLEMENTATION.md'}
+    require(all(c['status']==('PARTIALLY_VERIFIED' if c['id'] in partial_evidence else 'DESIGNED_NOT_RUN') for c in cases),'验收局部/完整状态不符')
+    require(all(c.get('evidence')==partial_evidence[c['id']] for c in cases if c['status']=='PARTIALLY_VERIFIED'),'局部验收缺实施证据')
     deferred={c['id'] for c in cases if c['delivery']=='FRONTEND_DEFERRED'}
     require(deferred=={'AT-40'},'前端后置边界不符')
     phase_plan=read('delivery-phases.json')
@@ -99,7 +100,9 @@ def checks(report):
         if task['id']=='BE-03':
             progress=task.get('implementationProgress',{})
             require(progress.get('evidence')=='BE-03-PREPARATION.md'
-                    and progress.get('databaseExecuted') is False
+                    and progress.get('databaseExecuted') is True
+                    and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
+                    and progress.get('databaseEvidence')=='BE-03-MYSQL-VALIDATION.md'
                     and progress.get('jpaMappingVerified') is False
                     and progress.get('ownerAccepted') is False,'BE-03准备被错误记成数据库验收')
         if task['id']=='BE-02':
@@ -240,10 +243,18 @@ def checks(report):
     source_hashes={}
     for name in source_paths:
         original=subprocess.check_output(['git','show',f'{BASELINE}:{name}'],cwd=REPO)
-        require(hashlib.sha256(original).hexdigest()==sha(REPO/name),'意外改变上游 '+name);source_hashes[name]=sha(REPO/name)
+        if name=='docs/04-database/schema.sql':
+            expected=original.decode('utf-8').replace('CHECK (row_number>0','CHECK (`row_number`>0')
+            require(original.decode('utf-8').count('CHECK (row_number>0')==2,'D-044修订范围不符')
+            require((REPO/name).read_text(encoding='utf-8')==expected.replace('\r\n','\n'),'超出D-044的上游SQL变更')
+            report['upstreamCorrection']='D-044: quote reserved ROW_NUMBER in exactly two CHECK expressions'
+        else:
+            require(hashlib.sha256(original).hexdigest()==sha(REPO/name),'意外改变上游 '+name)
+        source_hashes[name]=sha(REPO/name)
     require((REPO/'backend/pom.xml').exists(),'BE-02工程缺失')
     migration_manifest=read('BE-03-MIGRATIONS.json')
-    require(migration_manifest['databaseExecuted'] is False,'误记迁移已执行')
+    require(migration_manifest['databaseExecuted'] is True
+            and migration_manifest.get('existingUserDatabasesTouched') is False,'隔离迁移证据/边界不符')
     require(len(migration_manifest['migrations'])==3,'初始迁移范围不符')
     for entry in migration_manifest['migrations']:
         require(sha(REPO/'backend/src/main/resources/db/migration'/entry['file'])==entry['sha256'],'迁移摘要变化未同步来源记录')

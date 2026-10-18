@@ -1,6 +1,6 @@
 # 后端工程
 
-Java 21、Spring Boot 4.0.8、Maven Wrapper 3.9.11（Wrapper脚本3.3.4）。基础包`com.adgn.backend`；配置使用YAML。BE-02公共骨架已本人确认，BE-03已加入数据库依赖、配置和迁移脚本，真实迁移/JPA映射尚未验证。正式身份、授权和审批仍按任务实现。状态与任务统一见[共享记忆](../docs/project/MEMORY.md)和[任务清单](../docs/05-detailed-design/TASKS.md)，本页只说明使用方式。
+Java 21、Spring Boot 4.0.8、Maven Wrapper 3.9.11（Wrapper脚本3.3.4）。基础包`com.adgn.backend`；配置使用YAML。BE-02公共骨架已本人确认，BE-03初始迁移已在独立MySQL8.4.8验证；用户现有测试库V1失败待恢复，JPA映射仍未验证。正式身份、授权和审批仍按任务实现。状态与任务统一见[共享记忆](../docs/project/MEMORY.md)和[任务清单](../docs/05-detailed-design/TASKS.md)，本页只说明使用方式。
 
 ## 在IntelliJ IDEA运行
 
@@ -72,13 +72,15 @@ New-Item -ItemType Directory -Path logs/build -Force | Out-Null
 
 `MigrationApplication`是代码入口；`MigrateTestDatabase`是IDE运行配置的自定义名称，里面保存该主类、JDK和变量，并非另一个测试类。目标库由RBAC_MIGRATION_URL决定，不由配置名称决定。连接初始化的两条SET均须带分号，Boot拼接init-sqls时只插入换行。
 
-打包后的等价入口如下；实际执行将连接目标库并改变结构，需先核对目标、备份和独立迁移账号。本轮只实测了缺配置时该入口以非零码拒绝启动，未执行迁移：
+打包后的等价入口如下；实际执行将连接目标库并改变结构，需先核对目标、备份和独立迁移账号。缺配置的jar入口拒绝启动已实测；完整迁移在独立实例中使用同一迁移代码验证，用户已有数据库没有由agent操作：
 
 ```powershell
 java "-Dloader.main=com.adgn.backend.migration.MigrationApplication" -cp target/backend-0.0.1-SNAPSHOT.jar org.springframework.boot.loader.launch.PropertiesLauncher
 ```
 
 成功时按V1表/约束→V2触发器→V3写入锚点执行并关闭进程；Flyway另建schema history表。V1/V2明确不使用事务包装，MySQL DDL可能部分提交；失败后保留现场诊断，禁止直接clean/repair或重复手工运行脚本。先完成测试库真实约束/JPA验证，再初始化开发库。详细证据和后续清单见[BE-03准备记录](../docs/05-detailed-design/BE-03-PREPARATION.md)。
+
+用户测试库V1在两处ROW_NUMBER保留字引用修复前失败，必须先处理部分结构及失败历史；恢复步骤和真实引擎结果见[MySQL验证与恢复](../docs/05-detailed-design/BE-03-MYSQL-VALIDATION.md)。没有需要保留数据的测试库可由用户在Navicat管理连接重建；agent未执行该操作，不自动clean或repair。
 
 ## 公共能力怎样接入
 
@@ -90,9 +92,11 @@ java "-Dloader.main=com.adgn.backend.migration.MigrationApplication" -cp target/
 
 ## 测试与验收范围
 
-`clean verify`运行所有当前测试并打包：上下文1项、实例配置3项、Spring MVC/Servlet请求链26项，新增数据库profile4项、迁移入口/初始化4项、Flyway/MySQL离线解析3项，共41项；失败0、错误0、跳过0。测试用控制器仅位于`src/test`，不会加入正式jar。Surefire负责`*Test`；Failsafe的`*IT`生命周期已配置，当前没有IT类，明确报告No tests to run，因此不能宣称MySQL集成测试已通过。
+`clean verify`运行所有当前测试并打包：上下文1项、实例配置3项、Spring MVC/Servlet请求链26项，新增数据库profile4项、迁移入口/初始化4项、Flyway/MySQL离线解析3项，共41项；失败0、错误0、跳过0。测试用控制器仅位于`src/test`，不会加入正式jar。Surefire负责`*Test`；Failsafe生命周期已配置；默认verify仅运行离线测试，真实MySqlCheck须显式选择mysql-check，结果按下段单列。
 
 迁移入口测试通过测试专用策略阻止`Flyway.migrate()`，只验证装配、独立身份、缺配置/HTTP拒绝及业务隔离；脚本测试调用Flyway11.14.1实际MySQL解析器，仅确认语句边界，不证明MySQL语法、约束执行或业务正确。解析器为内部API，只用于测试，版本变更时需复核。
+
+真实MySQL检查另用显式profile：`./mvnw.cmd -Pmysql-check clean verify`。必须先准备全新临时MySQL8.4实例（数据目录位于backend/.tmp、回环非3306端口、binlog关闭、仅临时root空口令），注入RBAC_ISOLATED_MYSQL_PORT与RBAC_ISOLATED_MYSQL_DATADIR；测试在任何写操作前核验服务端datadir，随后创建并清理随机schema/账号。缺参数或指向错误实例会失败，不跳过，不连接开发库。实测该命令为41项离线＋1项真实引擎检查通过；服务生命周期及环境限制见上述验证记录。它不替代JPA或全部业务约束验收。
 
 测试覆盖安全/自动请求ID、头重复、严格JSON、嵌套字段指针、400/404/405/409/415/422/500、缺配置失败、日志脱敏和健康暴露边界。Mockito采用显式测试Java agent，测试JVM关闭CDS，避免动态自附加警告；不是跳过测试。
 

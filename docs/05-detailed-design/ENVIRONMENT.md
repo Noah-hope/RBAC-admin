@@ -15,6 +15,10 @@
 
 ## 接下来怎样准备
 
+D-044更新：用户实际日志确认rbac_admin_test/MySQL8.4的V1失败；两处ROW_NUMBER引用已修复，agent在独立8.4.8临时datadir/非3306回环端口实测迁移通过并关闭进程，未操作已有库。先恢复用户测试库的失败状态，再继续JPA/事务核验；见[恢复与验证记录](BE-03-MYSQL-VALIDATION.md)。以下初始化1064是前一轮故障。
+
+用户只读查询反馈log_bin=1、log_bin_trust_function_creators=0；本机实际binlog环境不等于本轮关闭binlog的临时实例。当前建议本机首次测试库迁移单独使用root管理身份，正常BackendApplication仍rbac_app，保留全局设置；该操作建议未由agent执行，不能写成现有库已恢复或迁移成功。
+
 2026-10-18连接初始化反馈：用户提供真实运行日志，已建立MySQL连接但initSql阶段1064失败；未见V1～V3成功记录。已修复迁移配置两条SET缺分号的问题，41项离线回归通过；用户需在原MigrateTestDatabase配置重新构建/运行继续验证。agent没有连接数据库；具体目标schema/授权和迁移结果仍待受控核验。
 
 D-043更新（2026-10-18）：用户已在IDE配置运行账号环境变量并授权添加依赖、补配置和整理迁移脚本。BE-03已准备这些内容，40项离线测试/打包通过；迁移专用变量RBAC_MIGRATION_URL/USER/PASSWORD需在本机独立运行配置中注入，当前没有读取IDE密码、连接MySQL或执行DDL。先核验迁移账号和隔离目标再开展真实验证，见[BE-03准备记录](BE-03-PREPARATION.md)。

@@ -1,5 +1,7 @@
 # BE-03依赖、配置与迁移脚本准备
 
+最新D-044：已修复两处ROW_NUMBER保留字引用，独立MySQL8.4.8真实迁移及基础约束检查通过，AT-02推进为局部验证；用户现有测试库V1失败现场保留，JPA和其他BE-03待办继续开放。见[真实验证与恢复步骤](BE-03-MYSQL-VALIDATION.md)。下文为首次准备及初始化修复历史，不再表示所有环境均未执行SQL。
+
 ## 连接初始化SQL修复（2026-10-18）
 
 用户提供IDE控制台日志：migrate profile已激活，MySQL返回1064，失败发生在JdbcConnectionFactory.openConnection的initSql阶段，报错位置为第二条SET time_zone。该证据说明用户本机已建立数据库连接并尝试执行初始化SQL；没有V1～V3迁移成功证据，不代表真实约束/JPA通过。agent没有连接或操作用户数据库，原始日志含本机路径，不纳入Git。

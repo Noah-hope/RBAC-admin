@@ -1,5 +1,7 @@
 # 工程布局与技术设计取值
 
+2026-10-18/D-044：补充显式mysql-check profile，在已安装MySQL8.4.8的独立临时实例中运行真实迁移/基础约束，41离线＋1引擎检查通过；没有依赖Docker或改变已有数据库服务。两处CHECK引用修复及binlog/版本WARN等限制见[MySQL记录](BE-03-MYSQL-VALIDATION.md)，JPA/并发仍待验证。
+
 2026-10-18/D-043：BE-03依赖/配置/迁移脚本已加入工程，JPA4.0.7/Hibernate7.2.24.Final/Connector9.7.0/Flyway11.14.1为实际BOM解析版本；41项离线测试及打包通过。迁移入口未连接数据库，真实MySQL/JPA仍待验证，详见[BE-03准备记录](BE-03-PREPARATION.md)。
 
 产品选型沿用D-028；原版本/布局/工具为技术设计取值。D-041后BE-02已在backend实际实现公共骨架，固定Boot4.0.8/Java21、Maven3.9.11及发行包校验和，记录实际解析版本和RED/GREEN结果，见[BE-02实施记录](BE-02-IMPLEMENTATION.md)。下列业务/持久化部分仍为后续设计，不能因骨架通过就视为全部组合已运行。
