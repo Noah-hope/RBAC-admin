@@ -318,6 +318,37 @@ def checks(report):
                 if cell.get('edge')=='1':
                     edges+=1;require(cell.get('source')in ids and cell.get('target')in ids and cell.find('mxGeometry')is not None,'图源悬空连线')
     require(diagram_pages==6,'图页数量不符')
+    root_readme=(REPO/'README.md').read_text(encoding='utf-8')
+    require('## 业务开发顺序' in root_readme,'根README缺业务开发流程图')
+    diagram_section=root_readme.split('## 业务开发顺序',1)[1].split('\n## ',1)[0]
+    diagram_match=re.search(r'```mermaid\n(.*?)\n```',diagram_section,re.S)
+    require(diagram_match is not None,'业务流程图缺Mermaid代码块')
+    diagram_text=diagram_match.group(1)
+    require(diagram_text.startswith('flowchart TD\n'),'业务流程图不是自上而下树状布局')
+    diagram_nodes=re.findall(r'^    (BE\d{2})\["([^"\n]+)"\]$',diagram_text,re.M)
+    expected_nodes={t['id'].replace('-',''):t['id']+t['title'] for t in tasks if t['phase']=='BUSINESS'}
+    require(len(diagram_nodes)==len(expected_nodes)
+            and {key:label.replace('<br/>','') for key,label in diagram_nodes}==expected_nodes,'业务图编号/名称/覆盖不符')
+    diagram_edges=set(re.findall(r'^    (BE\d{2}) --> (BE\d{2})$',diagram_text,re.M))
+    original_edges={(d.replace('-',''),t['id'].replace('-','')) for t in tasks if t['phase']=='BUSINESS'
+                    for d in t['dependencies'] if d in business_ids}
+    require(diagram_edges<=original_edges,'业务图增加未声明的前置依赖')
+    def dependency_closure(edge_set):
+        closure=set()
+        for start in expected_nodes:
+            pending=[start];seen={start}
+            while pending:
+                node=pending.pop()
+                for source,target in edge_set:
+                    if source==node:
+                        closure.add((start,target))
+                        if target not in seen:seen.add(target);pending.append(target)
+        return closure
+    require(dependency_closure(diagram_edges)==dependency_closure(original_edges),'精简连线改变了业务任务等待/并行关系')
+    roots=set(expected_nodes)-{target for _,target in diagram_edges}
+    require(roots=={'BE06','BE10'},'业务起点不符')
+    report.update(businessDiagramNodes=len(diagram_nodes),businessDiagramEdges=len(diagram_edges),
+                  businessDiagramDependenciesEquivalent=True,businessDiagramRenderedByThisCheck=False)
     links=0
     docs=list(ROOT.glob('*.md'))+[REPO/'README.md',REPO/'docs/README.md',REPO/'backend/README.md']+list((REPO/'docs/project').glob('*.md'))
     for p in docs:
