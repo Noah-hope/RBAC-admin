@@ -60,3 +60,7 @@ HTTP安全结果只保存body封装、status和相对Location；没有任意head
 静态设计/任务/来源校验PASS：309处本地链接、48个唯一决策、生成器确定性及冻结API/DDL/迁移来源一致。改动UTF-8、Markdown围栏/无本机绝对路径和Git空白检查通过；该静态校验不执行SQL/HTTP/业务测试。代码、测试与文档同一提交，未合并或推送。
 
 BE-05保持IN_PROGRESS，等待用户本人按交付记录确认；AT-04仅PARTIALLY_VERIFIED，全部基座门槛仍NOT_EVALUATED。无需清库或重跑迁移；默认关闭时保留原启动配置，启用核对按backend/README添加独立HMAC环境变量后重启看健康UP。UP只证明本机装配/启动，不替代上述幂等行为测试。下一步是本人确认BE-05、核对BE-01剩余环境/协作条件及整体基座交付，再由用户安排共同主线与业务分派，不自行启动BE-06。
+
+## 本机启动回报（2026-10-18）
+
+2026-10-18 15:28用户本机运行核对：最新日志显示BackendApplication/dev成功连接localhost:3306/rbac_admin_test（MySQL8.4.8），Hikari与JPA初始化完成、Tomcat8080启动，GET记录200；用户明确确认健康status=UP。此前15:27的Connection refused已不再出现在本次日志，原失败不能解释为HMAC错误。日志未展示RBAC_IDEMPOTENCY_ENABLED或幂等Bean装配，故只确认服务启动/健康，不由UP推断HMAC启用已验证；当前等待用户仅确认开关是否true，不读取IDE口令/密钥。BE-05保持IN_PROGRESS及待本人确认，既有64离线＋42引擎结果沿用，基座总门槛不变。agent本轮只读用户日志并同步文档，未连接数据库、执行SQL或运行新Java测试。
