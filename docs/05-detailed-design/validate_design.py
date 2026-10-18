@@ -73,7 +73,7 @@ def checks(report):
     module_order=dag(modules,'dependencies');task_order=dag(tasks,'dependencies')
     require((len(modules),len(tasks),len(cases),len(mapping))==(13,35,41,68),'冻结设计规模不符')
     require(len(cids)==len(cases),'重复验收编号')
-    partial_evidence={'AT-01':'BE-02-IMPLEMENTATION.md','AT-02':'BE-03-MYSQL-VALIDATION.md','AT-37':'BE-02-IMPLEMENTATION.md'}
+    partial_evidence={'AT-01':'BE-02-IMPLEMENTATION.md','AT-02':'BE-03-PERSISTENCE.md','AT-37':'BE-02-IMPLEMENTATION.md'}
     require(all(c['status']==('PARTIALLY_VERIFIED' if c['id'] in partial_evidence else 'DESIGNED_NOT_RUN') for c in cases),'验收局部/完整状态不符')
     require(all(c.get('evidence')==partial_evidence[c['id']] for c in cases if c['status']=='PARTIALLY_VERIFIED'),'局部验收缺实施证据')
     deferred={c['id'] for c in cases if c['delivery']=='FRONTEND_DEFERRED'}
@@ -103,7 +103,10 @@ def checks(report):
                     and progress.get('databaseExecuted') is True
                     and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
                     and progress.get('databaseEvidence')=='BE-03-MYSQL-VALIDATION.md'
-                    and progress.get('jpaMappingVerified') is False
+                    and progress.get('jpaMappingVerified') is True
+                    and progress.get('jpaMappingScope')=='BASIC_SAMPLES_ONLY'
+                    and progress.get('persistenceEvidence')=='BE-03-PERSISTENCE.md'
+                    and progress.get('startupGuardVerified') is True
                     and progress.get('ownerAccepted') is False,'BE-03准备被错误记成数据库验收')
         if task['id']=='BE-02':
             acceptance=task.get('ownerAcceptance',{})

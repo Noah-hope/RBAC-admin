@@ -1,10 +1,14 @@
 # 项目共享记忆
 
 更新日期：2026-10-18（Asia/Shanghai）。保存当前事实，历史通过 Git 查询。
-最新交付：2026-10-18用户10:21控制台日志确认rbac_admin_test从空库成功执行V1～V3、当前v3、退出码0；旧V1/V2失败已不作为当前阻塞。D-044独立MySQL8.4.8的41离线＋1引擎检查证据保留；agent未连接或操作用户已有库。BE-03仍进行中、AT-02仅局部验证，JPA/基座未验收，不合并或推送。
+最新交付：2026-10-18/D-045补齐BE-03基础UUID/可空Long存储版本、显式UTC微秒转换和缺guard启动保护；完整44离线＋9项隔离MySQL8.4.8检查/打包通过。用户测试库迁移/guard/重复运行已核对，agent未操作已有库。BE-03仍进行中、AT-02仅基础样例局部验证，保留本人运行确认及账号权限，其他基座/领域业务未验收，不合并或推送。
 最新工具事实：用户确认前次误选旧导出规格；本次从指定RBAC权限中心API/1.2.0配置导出，核心契约核对通过，67入站＋1出站、120模型及104媒体示例全部通过。三路径覆盖及任命模型修复有效，仅余license/占位servers两处元数据差异；MCP旧暴露差异沿用，固定链接尚未验证。见APIFOX.md最新章节。
 
 ## 当前状态
+
+D-045实施：VersionedUuidEntity只用于专用row_version表，UUID CHAR和可空Long @Version保证预分配新ID走persist；API业务版本独立维护。UtcInstantConverter显式应用于DATETIME(6)，Timestamp时间点＋UTC绑定，截断微秒；真实Asia/Shanghai JVM捕获并修复八小时偏移。生成列只读映射样例不进入正式jar。普通启动只读检查guard，缺表/记录即失败，不补建、不重置非零revision；独立迁移和离线profile不装配。44离线＋9项隔离MySQL检查均通过，已有库未连接/操作。BE-03保持IN_PROGRESS，AT-02局部验证，待本人用rbac_app连接已迁移测试库确认启动和健康、核验迁移账号；开发库初始化/领域映射/业务并发及BE-04/05仍待后续。详见[持久化基础](../05-detailed-design/BE-03-PERSISTENCE.md)。
+
+D-045收尾核验：实际可执行jar在随机最小guard夹具、DML账号及非Web模式下，有guard(1,9)退出0且值不变，缺行退出1并有RBAC_DB_NOT_INITIALIZED且不补建；不是HTTP/全量schema或部署验收。所有临时schema/账号清理，独立MySQL正常关闭。生成器/来源/迁移/状态静态检查PASS（265链接、45决策），UTF-8/无本机路径/围栏及Git空白检查通过。实际证据与静态校验分开，不扩展BE-03本人确认或全基座验收。
 
 2026-10-18用户补充截图：历史versions 1/2/3的success均1；mutation_guard仅一行id=1/revision=0；再次运行迁移显示校验3条成功、当前版本3、up to date/No migration necessary。三项核对通过，重复运行截图未展示退出码。下一步继续BE-03的UUID/JPA版本/UTC映射、guard缺失启动检查和迁移账号长期权限配置；表/触发器数量未收到用户库查询，开发库未初始化验证。agent本轮只更新记录，不连接数据库或运行Java测试；BE-03仍IN_PROGRESS，AT-02局部验证、基座未验收。下方关于guard/重复迁移“未展示”的说法为此前日志边界，以上述截图更新为准。
 

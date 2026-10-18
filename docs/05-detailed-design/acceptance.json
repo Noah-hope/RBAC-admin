@@ -21,7 +21,7 @@
     "reviewScenario": "",
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
-    "evidence": "BE-03-MYSQL-VALIDATION.md"
+    "evidence": "BE-03-PERSISTENCE.md"
   },
   {
     "id": "AT-03",

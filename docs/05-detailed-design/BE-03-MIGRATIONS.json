@@ -31,6 +31,9 @@
     "scope": "DISPOSABLE_INSTANCE_ONLY",
     "binaryLogging": false,
     "migrationSuccess": true,
-    "jpaMappingVerified": false
+    "jpaMappingVerified": true,
+    "jpaMappingScope": "BASIC_SAMPLES_ONLY",
+    "persistenceEvidence": "BE-03-PERSISTENCE.md",
+    "startupGuardVerified": true
   }
 }

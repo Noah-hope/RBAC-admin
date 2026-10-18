@@ -148,11 +148,14 @@
     "remotePrNumber": null,
     "implementationProgress": {
       "evidence": "BE-03-PREPARATION.md",
-      "scope": "DEPENDENCIES_CONFIGURATION_MIGRATION_SCRIPTS_AND_ISOLATED_MYSQL",
+      "scope": "MIGRATIONS_BASIC_JPA_AND_STARTUP_GUARD",
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "databaseEvidence": "BE-03-MYSQL-VALIDATION.md",
-      "jpaMappingVerified": false,
+      "jpaMappingVerified": true,
+      "jpaMappingScope": "BASIC_SAMPLES_ONLY",
+      "persistenceEvidence": "BE-03-PERSISTENCE.md",
+      "startupGuardVerified": true,
       "ownerAccepted": false
     },
     "acceptanceScope": "AT-02在此实际运行43表/触发器迁移及基础UUID/UTC/版本映射样例；各域实体映射由所属任务补齐，BE-33汇总集成，不要求本任务提前实现全部域实体。",

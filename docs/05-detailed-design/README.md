@@ -1,14 +1,14 @@
 # 后端详细设计与协作实施入口
 
-2026-10-18/D-044：修复两处保留字引用并在独立MySQL8.4.8验证V1～V3、基础约束及重复迁移，41离线＋1引擎检查通过；用户10:21日志确认本机rbac_admin_test从空库完成V1～V3、退出码0。AT-02仅局部验证，JPA/并发与完整基座仍未验收，见[真实验证与恢复](BE-03-MYSQL-VALIDATION.md)。下述首次准备中“未执行MySQL”以本段更新。
+2026-10-18/D-045：已实现UUID/可空Long存储版本/UTC微秒转换和缺guard启动保护，44离线＋9项隔离MySQL检查及打包通过；包含真实旧版本覆盖拒绝、生成列只读与非UTC JVM写入值核验。用户测试库迁移/历史/guard/重复运行已成功。AT-02仍局部验证，BE-03保留本人运行确认及账号权限核验，完整领域/跨域并发和基座未验收，见[持久化基础](BE-03-PERSISTENCE.md)。下文早期“未执行MySQL/JPA”等为历史。
 
 设计/实施计划修订1.2；2026-10-17。技术输入仍为需求V1.3、API1.2.0、数据库1.1；D-038先基座后分派，D-039基座本人确认，D-040确定IDE/工程与账号约定，D-041授权完成BE-02公共骨架，不改变业务契约。
 
-当前：JDK21/Wrapper3.9.11、Boot4.0.8实际构建和BE-02自测通过，使用com.adgn.backend/YAML；D-042已由用户本人确认通过（实现提交f911c60）。用户报告本机MySQL8.4.8和开发空库，专用账号、应用连接、测试库及云端部署仍待核验。真实OA不存在，继续示例方案；正式前端后置。运行见[后端README](../../backend/README.md)，证据见[BE-02实施记录](BE-02-IMPLEMENTATION.md)。
+当前：JDK21/Wrapper3.9.11、Boot4.0.8实际构建和BE-02自测通过，使用com.adgn.backend/YAML；D-042已由用户本人确认通过（实现提交f911c60）。用户本机测试库迁移和guard/重复运行已核对；普通后端运行确认、迁移账号完整权限、开发库初始化和云端部署仍待核验。真实OA不存在，继续示例方案；正式前端后置。运行见[后端README](../../backend/README.md)，证据见[BE-02实施记录](BE-02-IMPLEMENTATION.md)。
 
 完整任务低/中/高估算仍为78/145.5/239人时，高于40～72预算，不以当前局部实测重估全量。41项验收中AT-01/37的BE-02部分及AT-02的独立引擎部分为PARTIALLY_VERIFIED，其余38项仍未运行。不能把公共骨架通过视为完整后端或全量交付承诺。
 
-**当前分工不变：用户先实现BE-01～05，整体验收并交付共同主线后再分派BE-06～35。** BE-01/03为IN_PROGRESS，BE-02本人确认通过（OWNER_ACCEPTED），其余32项PLANNED；基座总门槛未评估，业务仍未分派。D-043已准备数据库依赖/配置/V1～V3脚本，41项离线测试及打包通过，但未连接MySQL或执行迁移，见[BE-03准备记录](BE-03-PREPARATION.md)。真实身份留第二阶段，13逻辑模块和原依赖保留。范围及门槛见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)，机器阶段见[delivery-phases.json](delivery-phases.json)，实际环境见[ENVIRONMENT.md](ENVIRONMENT.md)。
+**当前分工不变：用户先实现BE-01～05，整体验收并交付共同主线后再分派BE-06～35。** BE-01/03为IN_PROGRESS，BE-02本人确认通过（OWNER_ACCEPTED），其余32项PLANNED；基座总门槛未评估，业务仍未分派。D-045已补齐基础JPA和启动保护，44项离线＋9项隔离引擎检查通过；用户已有库未由agent操作。首次依赖/脚本准备历史见[BE-03准备记录](BE-03-PREPARATION.md)。真实身份留第二阶段，13逻辑模块和原依赖保留。范围及门槛见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)，机器阶段见[delivery-phases.json](delivery-phases.json)，实际环境见[ENVIRONMENT.md](ENVIRONMENT.md)。
 
 | 阅读顺序 | 文件与用途 |
 | --- | --- |
