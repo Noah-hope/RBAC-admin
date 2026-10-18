@@ -1,6 +1,6 @@
 # 后端详细设计与协作实施入口
 
-2026-10-18/D-053：用户明确确认基座整体交接通过，并授权合并main及推送。BE-01～05均OWNER_ACCEPTED、F-01～06通过，门槛FOUNDATION_ACCEPTED；main/b68aa9a已推送GitHub且回查一致。D-055已登记30项业务的A～D分工，BE-06在D-056按用户认领A后实施、待本人确认/合入，其余29项PLANNED；各成员GitHub账号及其余接入证据待补，开工仍须原技术依赖。
+2026-10-18/D-053：用户明确确认基座整体交接通过，并授权合并main及推送。BE-01～05均OWNER_ACCEPTED、F-01～06通过，门槛FOUNDATION_ACCEPTED；main/b68aa9a已推送GitHub且回查一致。D-055已登记30项业务的A～D分工，BE-06在D-056按用户认领A后实施、D-057本人确认，待合入，其余29项PLANNED；各成员GitHub账号及其余接入证据待补，开工仍须原技术依赖。
 
 先读[整体交接核对](FOUNDATION-REVIEW.md)和[团队使用指南](FOUNDATION-USAGE.md)，实际环境操作见[后端运行说明](../../backend/README.md)。公共HTTP、迁移/基础JPA、读写事务/审计及幂等机制已实现；BE-06最终74离线＋59隔离MySQL检查全通过（保留基座64＋42回归），开发/测试库迁移和普通启动也有用户证据。D-056本轮已按TDD运行Java和专属临时MySQL验证；用户现有库未操作。
 

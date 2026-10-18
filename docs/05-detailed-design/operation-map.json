@@ -56,7 +56,7 @@
         "Session"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
+    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
   },
   {
     "operationId": "currentSession",
@@ -112,7 +112,7 @@
         "SessionView"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
+    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
   },
   {
     "operationId": "logout",
@@ -167,7 +167,7 @@
     "successResponseModels": {
       "204": []
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
+    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
   },
   {
     "operationId": "changeOwnPassword",
@@ -224,7 +224,7 @@
     "successResponseModels": {
       "204": []
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
+    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
   },
   {
     "operationId": "myAppointments",
