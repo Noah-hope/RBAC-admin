@@ -1,6 +1,6 @@
 # 本地Issue草案与验收卡
 
-修订1.3/D-053主线交付，沿用D-051协作规则与D-050核对：D-053已确认F-01～06，基座已合并并推送main/b68aa9a（见FOUNDATION-REVIEW.md）；BE-01为OWNER_ACCEPTED（D-053整体交接确认，成员接入待办保留）；BE-02为OWNER_ACCEPTED（D-042/f911c60）；BE-03为OWNER_ACCEPTED（用户核对后回复继续，D-046/b8caeb2，见BE-03-PERSISTENCE）；BE-04为OWNER_ACCEPTED（D-047/58b556a，用户确认服务UP；公共事务/审计/快照证据见BE-04-TRANSACTIONS），BE-05为OWNER_ACCEPTED（D-049/d059d11，用户确认启用true及本机健康UP，见BE-05-IDEMPOTENCY），其余30项PLANNED。BE-01～05已由D-053整体确认，合并main/b68aa9a并推送回查通过。BE-01～05为用户先实现的基座；BE-06～35为验收基座后待分派的业务/交付任务，ownerSlot为null时表示未分派。D-051统一所有任务reviewPolicy=OWNER_ACCEPTANCE，不设置独立评审人，reviewerSlot/suggestedReviewerSlot保留null仅作格式兼容、不是待填写；单列评审工时为0。suggestedOwnerSlot仅为建议组。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。
+修订1.4/D-055四人分工，沿用D-053主线交付、D-051协作规则与D-050核对：D-053已确认F-01～06，基座已合并并推送main/b68aa9a（见FOUNDATION-REVIEW.md）；BE-01为OWNER_ACCEPTED（D-053整体交接确认，成员接入待办保留）；BE-02为OWNER_ACCEPTED（D-042/f911c60）；BE-03为OWNER_ACCEPTED（用户核对后回复继续，D-046/b8caeb2，见BE-03-PERSISTENCE）；BE-04为OWNER_ACCEPTED（D-047/58b556a，用户确认服务UP；公共事务/审计/快照证据见BE-04-TRANSACTIONS），BE-05为OWNER_ACCEPTED（D-049/d059d11，用户确认启用true及本机健康UP，见BE-05-IDEMPOTENCY），其余30项PLANNED。BE-01～05已由D-053整体确认，合并main/b68aa9a并推送回查通过。BE-01～05为用户先实现的基座；BE-06～35已按D-055登记A～D唯一成员代号，assignmentStatus为ASSIGNED，仍为PLANNED；实名/GitHub账号及成员环境待补，详见TEAM-ASSIGNMENT.md。D-051统一所有任务reviewPolicy=OWNER_ACCEPTANCE，不设置独立评审人，reviewerSlot/suggestedReviewerSlot保留null仅作格式兼容、不是待填写；单列评审工时为0。suggestedOwnerSlot保留为历史建议组，以ownerSlot为准。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。
 
 业务任务启动须同时满足FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED和原dependencies；这两个阶段门槛不是额外业务需求。基座验收见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。开发估算含设计细化/TDD/自测/文档及负责人核对确认；不再单列他人评审，外部等待不计。
 
@@ -9,7 +9,7 @@
 ## BE-01 基座开发准备与协作条件核验
 
 - 状态：OWNER_ACCEPTED；阶段FOUNDATION；负责人用户（已确认），本人确认无需他人评审；模块M00,M12。
-- 分派参考：建议组A，不是已确认人员；启动条件基座任务按下列依赖推进。
+- 分派依据：D-053；启动条件基座任务按下列依赖推进。
 - 依赖：无；开发估算1/2/3h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：全用例公共/部署基础；公共事务设计；见对应AT及数据库不变量。
@@ -22,7 +22,7 @@
 ## BE-02 应用骨架、契约边界与健康检查
 
 - 状态：OWNER_ACCEPTED；阶段FOUNDATION；负责人用户（已确认），本人确认无需他人评审；模块M00,M12。
-- 分派参考：建议组A，不是已确认人员；启动条件基座任务按下列依赖推进。
+- 分派依据：D-053；启动条件基座任务按下列依赖推进。
 - 依赖：BE-01；开发估算1.5/3/5h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：全用例公共/部署基础；公共事务设计；见对应AT及数据库不变量。
@@ -34,7 +34,7 @@
 ## BE-03 迁移、UUID/版本及JPA基础适配
 
 - 状态：OWNER_ACCEPTED；阶段FOUNDATION；负责人用户（已确认），本人确认无需他人评审；模块M00。
-- 分派参考：建议组A，不是已确认人员；启动条件基座任务按下列依赖推进。
+- 分派依据：D-053；启动条件基座任务按下列依赖推进。
 - 依赖：BE-02；开发估算2.5/5/8h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：全用例公共/部署基础；公共事务设计；见对应AT及数据库不变量。
@@ -47,7 +47,7 @@
 ## BE-04 统一写事务、读快照与审计追加
 
 - 状态：OWNER_ACCEPTED；阶段FOUNDATION；负责人用户（已确认），本人确认无需他人评审；模块M00,M11。
-- 分派参考：建议组A，不是已确认人员；启动条件基座任务按下列依赖推进。
+- 分派依据：D-053；启动条件基座任务按下列依赖推进。
 - 依赖：BE-03；开发估算2/4/6h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：UC-05,UC-06；公共事务设计；见对应AT及数据库不变量。
@@ -59,7 +59,7 @@
 ## BE-05 HTTP幂等预留、栅栏与删除后重放
 
 - 状态：OWNER_ACCEPTED；阶段FOUNDATION；负责人用户（已确认），本人确认无需他人评审；模块M00。
-- 分派参考：建议组A，不是已确认人员；启动条件基座任务按下列依赖推进。
+- 分派依据：D-053；启动条件基座任务按下列依赖推进。
 - 依赖：BE-04；开发估算2/4/6h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：UC-02,UC-03,UC-04；公共事务设计；见对应AT及数据库不变量。
@@ -70,8 +70,8 @@
 
 ## BE-06 三类JWT与后台登录、退出、本人改密
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M01,M12。
-- 分派参考：建议组A，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人A（成员代号），由负责人自检确认；模块M01,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-04；开发估算2.5/5/8h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：login, currentSession, logout, changeOwnPassword。
 - 需求/数据库：UC-05,UC-06,UC-09,UC-11；T0,T11,T12,T9；I-04,I-20,I-22。
@@ -82,8 +82,8 @@
 
 ## BE-07 后台账号管理与密码重置
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M01,M12。
-- 分派参考：建议组A，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人A（成员代号），由负责人自检确认；模块M01,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-05,BE-06；开发估算1.5/3/5h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：listAccounts, createAccount, getAccount, setAccountState, resetAccountPassword。
 - 需求/数据库：UC-05,UC-06,UC-09,UC-11；T0,T11,T9；I-01,I-04,I-16,I-20。
@@ -94,8 +94,8 @@
 
 ## BE-08 当前单项任命、范围读模型与覆盖策略
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M03,M11,M12。
-- 分派参考：建议组A，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人A（成员代号），由负责人自检确认；模块M03,M11,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-06,BE-10；开发估算1.5/3/5h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：myAppointments, listScopes, getScope, listScopeAppointments。
 - 需求/数据库：UC-07,UC-09,UC-11；T11,T9；I-03,I-04,I-20。
@@ -106,8 +106,8 @@
 
 ## BE-09 创建管理范围及任命、创建预览
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M03,M12。
-- 分派参考：建议组A，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人A（成员代号），由负责人自检确认；模块M03,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-05,BE-08,BE-17；开发估算1.5/3/5h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：createScope, scopeCreatePreview。
 - 需求/数据库：UC-01,UC-02,UC-03,UC-04,UC-07,UC-09,UC-10；T0,T11,T6；I-04,I-12,I-16,I-18,I-20。
@@ -118,8 +118,8 @@
 
 ## BE-10 组织、员工与任职读取及基础变更端口
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M02,M11,M12。
-- 分派参考：建议组D，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人D（成员代号），由负责人自检确认；模块M02,M11,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-03,BE-04；开发估算1.5/3/5h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：listCompanies, listDepartments, listPositions, listEmployees, getEmployee, listEmployments。
 - 需求/数据库：UC-03,UC-07,UC-10；T11,T9；I-01,I-03,I-08,I-09,I-21。
@@ -130,8 +130,8 @@
 
 ## BE-11 系统登记及查询
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M04,M12。
-- 分派参考：建议组B，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人B（成员代号），由负责人自检确认；模块M04,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-03,BE-04,BE-05,BE-06；开发估算1.5/3/5h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：listSystems, createSystem, getSystem。
 - 需求/数据库：UC-01；T0,T1,T11,T9；I-05,I-06,I-16,I-18。
@@ -142,8 +142,8 @@
 
 ## BE-12 目录原子编辑、系统启停及影响预览
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M04,M12。
-- 分派参考：建议组B，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人B（成员代号），由负责人自检确认；模块M04,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-11,BE-17；开发估算3/5/8h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：updateSystem, systemStatePreview, listDirectoryNodes, listPermissions, catalogPreview, saveCatalog。
 - 需求/数据库：UC-01,UC-02,UC-03,UC-04,UC-05,UC-06,UC-07,UC-10；T0,T1,T11,T9；I-05,I-06,I-16,I-18。
@@ -154,8 +154,8 @@
 
 ## BE-13 角色元数据和当前配置读取
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M05,M12。
-- 分派参考：建议组B，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人B（成员代号），由负责人自检确认；模块M05,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-03,BE-05,BE-06,BE-11；开发估算1.5/2.5/4h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：listRoles, getRole, updateRoleMetadata。
 - 需求/数据库：UC-02；T0,T11,T2,T9；I-01,I-07,I-10,I-16。
@@ -166,8 +166,8 @@
 
 ## BE-14 来源和关系基线、授权历史及当前资格
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M06,M11,M12。
-- 分派参考：建议组D，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人D（成员代号），由负责人自检确认；模块M06,M11,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-04,BE-10,BE-11；开发估算2/3.5/6h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：listGrants, grantBaselines, sourceBaselines。
 - 需求/数据库：UC-03,UC-04,UC-11；T11,T9；I-03,I-08,I-09。
@@ -178,8 +178,8 @@
 
 ## BE-15 有效角色配置应用器
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M05。
-- 分派参考：建议组B，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人B（成员代号），由负责人自检确认；模块M05。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-04,BE-13；开发估算1.5/3/5h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：UC-02,UC-03,UC-04,UC-11；公共事务设计；见对应AT及数据库不变量。
@@ -190,8 +190,8 @@
 
 ## BE-16 授予/撤销及关闭来源底层原子操作
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M06。
-- 分派参考：建议组D，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人D（成员代号），由负责人自检确认；模块M06。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-04,BE-14；开发估算2/3.5/6h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：UC-03,UC-04,UC-10,UC-11；公共事务设计；见对应AT及数据库不变量。
@@ -202,8 +202,8 @@
 
 ## BE-17 安全影响预览与分页、依赖集合快照
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M11,M12。
-- 分派参考：建议组B，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人B（成员代号），由负责人自检确认；模块M11,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-04,BE-08,BE-10；开发估算2.5/5/8h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：listPreviewEmployees, listPreviewTargets。
 - 需求/数据库：UC-01,UC-02,UC-03,UC-04,UC-07,UC-08,UC-10；T11,T9；I-18,I-20。
@@ -215,8 +215,8 @@
 
 ## BE-18 业务系统有效权限和单项检查
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M11,M12。
-- 分派参考：建议组B，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人B（成员代号），由负责人自检确认；模块M11,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-06,BE-10,BE-14；开发估算2/4/6h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：authorizationQuery, permissionCheck。
 - 需求/数据库：UC-01,UC-05,UC-06,UC-11；T11；I-03,I-05,I-06,I-07,I-08。
@@ -227,8 +227,8 @@
 
 ## BE-19 审计列表、详情与敏感访问
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M11,M12。
-- 分派参考：建议组C，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M11,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-04,BE-06,BE-08；开发估算1.5/2.5/4h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：listAudit, getAudit。
 - 需求/数据库：UC-04,UC-08,UC-11；T11,T9；I-19,I-20。
@@ -239,8 +239,8 @@
 
 ## BE-20 角色创建与配置/授予/撤销草稿、占用
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M07,M12。
-- 分派参考：建议组C，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M07,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-05,BE-08,BE-13,BE-14；开发估算3/5/8h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：createRole, createChangeDraft, updateChangeDraft, deleteChangeDraft。
 - 需求/数据库：UC-02,UC-03,UC-04；T0,T11,T2,T3；I-01,I-07,I-08,I-10,I-11,I-16,I-18。
@@ -251,8 +251,8 @@
 
 ## BE-21 预览确认、固定申请与OA待办
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M07,M12。
-- 分派参考：建议组C，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M07,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-17,BE-20；开发估算3/5/8h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：changePreview, submitChange。
 - 需求/数据库：UC-02,UC-03,UC-04,UC-11；T0,T11,T2,T3；I-08,I-10,I-11,I-16,I-18。
@@ -263,8 +263,8 @@
 
 ## BE-22 申请列表、详情及安全时间线
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M07,M11,M12。
-- 分派参考：建议组C，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M07,M11,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-20；开发估算1/2/3h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：listChangeRequests, getChangeRequest, listChangeEvents。
 - 需求/数据库：UC-02,UC-03,UC-04,UC-07,UC-08,UC-11；T11,T9；I-11,I-12,I-19。
@@ -275,8 +275,8 @@
 
 ## BE-23 OA可靠投递、关联及人工投递重试
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M08,M12。
-- 分派参考：建议组C，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M08,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-21；开发估算2/4/6h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：retryOaDelivery, deliverOaSubmission。
 - 需求/数据库：UC-02,UC-03,UC-04,UC-11；T0,T10；I-11,I-12,I-14,I-16。
@@ -287,8 +287,8 @@
 
 ## BE-24 OA最终结果接收与三层去重
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M08,M12。
-- 分派参考：建议组C，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M08,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-21,BE-23,BE-06；开发估算2/3.5/6h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：receiveOaResult。
 - 需求/数据库：UC-05,UC-06,UC-11；T0,T10；I-11,I-12,I-14,I-15。
@@ -299,8 +299,8 @@
 
 ## BE-25 自动执行、整份失效与失败恢复
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M09。
-- 分派参考：建议组C，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M09。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-15,BE-16,BE-24；开发估算3/5/8h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：UC-02,UC-07,UC-11；公共事务设计；见对应AT及数据库不变量。
@@ -311,8 +311,8 @@
 
 ## BE-26 直接来源关闭与统一申请失效编排
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M10,M12。
-- 分派参考：建议组D，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人D（成员代号），由负责人自检确认；模块M10,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-05,BE-16,BE-20,BE-17；开发估算2.5/4.5/7h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：sourceClosePreview, closeSource。
 - 需求/数据库：UC-02,UC-03,UC-04,UC-07,UC-08,UC-10,UC-11；T0,T11,T5；I-08,I-09,I-13,I-16,I-18。
@@ -323,8 +323,8 @@
 
 ## BE-27 员工状态及管理范围替换的跨域失效
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M10,M03,M01,M12。
-- 分派参考：建议组A，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人A（成员代号），由负责人自检确认；模块M10,M03,M01,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-07,BE-08,BE-09,BE-26；开发估算2/4/6h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：employeeStatePreview, setEmployeeState, scopeEditPreview, replaceScope。
 - 需求/数据库：UC-01,UC-02,UC-03,UC-04,UC-07,UC-09,UC-10,UC-11；T0,T11,T6,T7；I-03,I-04,I-12,I-13,I-16,I-18,I-20。
@@ -335,8 +335,8 @@
 
 ## BE-28 CSV/XLSX文件上传、元数据及解析
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M10,M12。
-- 分派参考：建议组D，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人D（成员代号），由负责人自检确认；模块M10,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-03,BE-05,BE-06；开发估算2/3.5/6h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：uploadImportFile, getImportFile。
 - 需求/数据库：UC-10；T0,T11,T8,T9；I-01,I-02,I-03,I-13,I-16,I-17,I-21。
@@ -347,8 +347,8 @@
 
 ## BE-29 冻结导入预检、差异与问题报告
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M10,M12。
-- 分派参考：建议组D，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人D（成员代号），由负责人自检确认；模块M10,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-10,BE-17,BE-28；开发估算3/5/8h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：precheckImport, listImportBatches, getImportBatch, listImportIssues, listImportPlanChanges。
 - 需求/数据库：UC-10,UC-11；T0,T11,T8,T9；I-01,I-02,I-03,I-13,I-16,I-17,I-21。
@@ -359,8 +359,8 @@
 
 ## BE-30 导入整批提交、历史与失败恢复
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M10,M12。
-- 分派参考：建议组D，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人D（成员代号），由负责人自检确认；模块M10,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-27,BE-29；开发估算3/5/8h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：commitImport。
 - 需求/数据库：UC-03,UC-10,UC-11；T0,T7,T8；I-01,I-02,I-03,I-13,I-16,I-17,I-21。
@@ -371,8 +371,8 @@
 
 ## BE-31 演示OA适配器及受控服务身份工具
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M08,M12。
-- 分派参考：建议组C，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M08,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-06,BE-23,BE-24；开发估算1.5/3/5h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：UC-05,UC-06,UC-11；公共事务设计；见对应AT及数据库不变量。
@@ -383,8 +383,8 @@
 
 ## BE-32 部署产物、配置与管理员初始化
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M00,M12。
-- 分派参考：建议组A，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人A（成员代号），由负责人自检确认；模块M00,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-01,BE-02,BE-03,BE-06；开发估算2/4/6h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：全用例公共/部署基础；公共事务设计；见对应AT及数据库不变量。
@@ -395,8 +395,8 @@
 
 ## BE-33 完整业务链路及并发/失败集成验收
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M00,M09,M10,M11,M12。
-- 分派参考：建议组B，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人B（成员代号），由负责人自检确认；模块M00,M09,M10,M11,M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-12,BE-18,BE-19,BE-22,BE-25,BE-27,BE-30,BE-31；开发估算3/5/8h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：UC-01,UC-02,UC-03,UC-04,UC-05,UC-06,UC-07,UC-08,UC-10,UC-11；公共事务设计；见对应AT及数据库不变量。
@@ -408,8 +408,8 @@
 
 ## BE-34 实际服务器部署、重启与演示验收
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M12。
-- 分派参考：建议组A，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人A（成员代号），由负责人自检确认；模块M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-32,BE-33；开发估算1.5/3/5h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：全用例公共/部署基础；公共事务设计；见对应AT及数据库不变量。
@@ -421,8 +421,8 @@
 
 ## BE-35 交接、任务证据与发布收尾
 
-- 状态：PLANNED；阶段BUSINESS；负责人待基座验收后分派，由负责人自检确认；模块M12。
-- 分派参考：建议组B，不是已确认人员；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
+- 状态：PLANNED；阶段BUSINESS；负责人B（成员代号），由负责人自检确认；模块M12。
+- 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-34；开发估算1/2/3h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。
 - 需求/数据库：全用例公共/部署基础；公共事务设计；见对应AT及数据库不变量。

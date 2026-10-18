@@ -1,10 +1,10 @@
 # 后端详细设计与协作实施入口
 
-2026-10-18/D-053：用户明确确认基座整体交接通过，并授权合并main及推送。BE-01～05均OWNER_ACCEPTED、F-01～06通过，门槛FOUNDATION_ACCEPTED；main/b68aa9a已推送GitHub且回查一致。30项业务仍未分派，开工须另登记负责人并满足原技术依赖。
+2026-10-18/D-053：用户明确确认基座整体交接通过，并授权合并main及推送。BE-01～05均OWNER_ACCEPTED、F-01～06通过，门槛FOUNDATION_ACCEPTED；main/b68aa9a已推送GitHub且回查一致。D-055已登记30项业务的A～D分工，均PLANNED；实名/账号及成员接入证据待补，开工仍须满足原技术依赖。
 
 先读[整体交接核对](FOUNDATION-REVIEW.md)和[团队使用指南](FOUNDATION-USAGE.md)，实际环境操作见[后端运行说明](../../backend/README.md)。公共HTTP、迁移/基础JPA、读写事务/审计及幂等机制已实现；最新64离线＋42隔离MySQL检查全通过，开发/测试库迁移和普通启动也有用户证据。本轮只复核既有报告及产物，未重跑Java或SQL。
 
-设计/实施计划修订1.3（D-051任务负责人确认）；输入仍为需求V1.3、API1.2.0、数据库1.1。13模块、35个本地任务，取消独立评审单列工时后，完整工作量70.5/130.5/209人时，低估接近72上限、中估仍高于40～72容量，不以基座结果承诺完整后端。AT-01/02/03/04/33/37仅局部验证，其余35项未运行。真实身份、各域业务及服务器验收留后续，正式前端后置、OA采用演示方案。
+设计/实施计划修订1.4（D-055四人分工，沿用D-051负责人确认）；输入仍为需求V1.3、API1.2.0、数据库1.1。13模块、35个本地任务，取消独立评审单列工时后，完整工作量70.5/130.5/209人时，低估接近72上限、中估仍高于40～72容量，不以基座结果承诺完整后端。AT-01/02/03/04/33/37仅局部验证，其余35项未运行。真实身份、各域业务及服务器验收留后续，正式前端后置、OA采用演示方案。
 
 组织及门槛见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)，机器状态见[delivery-phases.json](delivery-phases.json)，BE-01环境/协作待办见[ENVIRONMENT.md](ENVIRONMENT.md)。
 
@@ -16,7 +16,7 @@
 | 4 | [PERSISTENCE.md](PERSISTENCE.md)：JPA映射、查询投影、版本、锁和事务适配 |
 | 5 | [OA-DEMO.md](OA-DEMO.md)：演示OA受理、可信最终回调及场景脚本设计 |
 | 6 | [ENGINEERING.md](ENGINEERING.md)、[DEPLOYMENT.md](DEPLOYMENT.md)：工程/依赖技术取值和后续部署/初始化/回退验收 |
-| 7 | [TEAM-WORKFLOW.md](TEAM-WORKFLOW.md)：Issue/PR协作、分支、评审、CI和完成条件 |
+| 7 | [TEAM-ASSIGNMENT.md](TEAM-ASSIGNMENT.md)：先汇总、再按A/B/C/D展开任务与交接；[TEAM-WORKFLOW.md](TEAM-WORKFLOW.md)：分支、CI和负责人确认 |
 | 8 | [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md)、[TASKS.md](TASKS.md)：35个可复制本地Issue草案、依赖、分工和估算 |
 | 9 | [TEST-PLAN.md](TEST-PLAN.md)、[TRACEABILITY.md](TRACEABILITY.md)：41项验收及67入站＋1出站逐操作主责追踪 |
 | 10 | [FRONTEND-HANDOFF.md](FRONTEND-HANDOFF.md)、[REVIEW.md](REVIEW.md)、[VALIDATION.md](VALIDATION.md)：前端后置、自查/待办及实际验证边界 |

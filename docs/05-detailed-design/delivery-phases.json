@@ -1,9 +1,10 @@
 {
-  "revision": "1.3",
+  "revision": "1.4",
   "decision": "D-039",
   "organizationDecision": "D-038",
   "collaborationDecision": "D-051",
   "deliveryDecision": "D-053",
+  "assignmentDecision": "D-055",
   "foundation": {
     "ownerSlot": "USER",
     "taskIds": [
@@ -79,7 +80,53 @@
       "BE-35"
     ],
     "ownerSlot": null,
-    "assignmentStatus": "UNASSIGNED",
+    "ownerSlots": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "assignmentStatus": "ASSIGNED",
+    "members": [
+      {
+        "alias": "A",
+        "area": "身份与管理范围、运行交付",
+        "realName": null,
+        "githubLogin": null,
+        "repositoryAccessVerified": false,
+        "localEnvironmentVerified": false
+      },
+      {
+        "alias": "B",
+        "area": "系统、角色与功能权限、集成验收",
+        "realName": null,
+        "githubLogin": null,
+        "repositoryAccessVerified": false,
+        "localEnvironmentVerified": false
+      },
+      {
+        "alias": "C",
+        "area": "申请、OA审批与执行、审计",
+        "realName": null,
+        "githubLogin": null,
+        "repositoryAccessVerified": false,
+        "localEnvironmentVerified": false
+      },
+      {
+        "alias": "D",
+        "area": "组织、人员与授权来源、导入",
+        "realName": null,
+        "githubLogin": null,
+        "repositoryAccessVerified": false,
+        "localEnvironmentVerified": false
+      }
+    ],
+    "assignmentSource": {
+      "date": "2026-10-18",
+      "source": "USER_REQUEST",
+      "evidence": "TEAM-ASSIGNMENT.md",
+      "message": "现在给出四个人的分工，并且形成文档，说明ABCD四个人分别负责哪一块"
+    },
     "startConditions": [
       "FOUNDATION_ACCEPTED",
       "BUSINESS_OWNER_ASSIGNED"

@@ -15,7 +15,7 @@ REPO=ROOT.parent.parent
 BASELINE='bd26465'
 GENERATED=['modules.json','issues.json','acceptance.json','operation-map.json','estimates.json','delivery-phases.json',
            'MODULES.md','TRACEABILITY.md','HANDLER-CONTRACTS.md','TEST-PLAN.md','TASKS.md',
-           'IMPLEMENTATION-PLAN.md','module-structure.drawio','core-flows.drawio']
+           'IMPLEMENTATION-PLAN.md','TEAM-ASSIGNMENT.md','module-structure.drawio','core-flows.drawio']
 
 
 def require(ok, message):
@@ -83,7 +83,27 @@ def checks(report):
     foundation_ids={f'BE-{n:02}' for n in range(1,6)}
     business_ids=tids-foundation_ids
     required_gates=['FOUNDATION_ACCEPTED','BUSINESS_OWNER_ASSIGNED']
-    require(phase_plan['revision']=='1.3' and phase_plan['decision']=='D-039' and phase_plan['organizationDecision']=='D-038' and phase_plan['collaborationDecision']=='D-051','分工/验收决策不符')
+    require(phase_plan['revision']=='1.4' and phase_plan['decision']=='D-039' and phase_plan['organizationDecision']=='D-038' and phase_plan['collaborationDecision']=='D-051' and phase_plan['assignmentDecision']=='D-055','分工/验收决策不符')
+    assignment_numbers = {'A':[6,7,8,9,27,32,34], 'B':[11,12,13,15,17,18,33,35],
+                          'C':[19,20,21,22,23,24,25,31], 'D':[10,14,16,26,28,29,30]}
+    assignments = {f'BE-{n:02}': owner for owner, numbers in assignment_numbers.items() for n in numbers}
+    require(len(assignments)==sum(map(len,assignment_numbers.values()))==30 and set(assignments)==business_ids,'四人分工遗漏或重复任务')
+    require(phase_plan['business']['ownerSlots']==list('ABCD')
+            and phase_plan['business']['assignmentStatus']=='ASSIGNED','业务未登记四人分工')
+    members=phase_plan['business']['members']
+    require([m['alias'] for m in members]==list('ABCD') and all(
+        m['realName'] is None and m['githubLogin'] is None and not m['repositoryAccessVerified']
+        and not m['localEnvironmentVerified'] for m in members),'虚构成员身份/接入证据')
+    require(phase_plan['business']['assignmentSource']['evidence']=='TEAM-ASSIGNMENT.md','分工缺依据')
+    assignment_doc=(ROOT/'TEAM-ASSIGNMENT.md').read_text(encoding='utf-8')
+    summary_at=assignment_doc.index('## 分工汇总')
+    sections=[assignment_doc.index(f'## {owner}：') for owner in 'ABCD']
+    require(summary_at < sections[0] and sections==sorted(sections),'分工说明未先汇总、再依次按A/B/C/D展开')
+    for i, owner in enumerate('ABCD'):
+        end=sections[i+1] if i<3 else assignment_doc.index('## 四人共同遵守')
+        rows=re.findall(r'^\| (BE-\d{2}) ',assignment_doc[sections[i]:end],re.M)
+        expected=[f'BE-{n:02}' for n in assignment_numbers[owner]]
+        require(rows==expected,'分工文档任务与登记不符 '+owner)
     require(set(phase_plan['foundation']['taskIds'])==foundation_ids and phase_plan['foundation']['ownerSlot']=='USER','基座阶段边界/负责人不符')
     require(set(phase_plan['business']['taskIds'])==business_ids and phase_plan['business']['ownerSlot'] is None,'业务阶段错误指派')
     require(phase_plan['business']['startConditions']==required_gates,'阶段门槛缺失')
@@ -120,7 +140,10 @@ def checks(report):
             and phase_plan['business']['acceptanceOwnerPolicy']=='TASK_OWNER','未落实D-051业务负责人确认')
     for module in modules:
         require(module['suggestedOwnerSlot'] in 'ABCD','模块建议组无效')
-        require(module['ownerSlot']==('USER' if module['id']=='M00' else None),'模块人员误记已分派')
+        shared={'M10':['A','D'],'M11':list('ABCD'),'M12':list('ABCD')}
+        expected_owner='USER' if module['id']=='M00' else (None if module['id'] in shared else module['suggestedOwnerSlot'])
+        require(module['ownerSlot']==expected_owner and module['ownerSlots']==shared.get(module['id'],[expected_owner]),'模块归属与任务分工不符')
+        require(module['assignmentStatus']==('OWNER_CONFIRMED' if module['id']=='M00' else ('SHARED_BY_TASK' if module['id'] in shared else 'ASSIGNED')),'共享模块未按任务区分责任')
     referenced=set()
     for task in tasks:
         expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
@@ -211,7 +234,8 @@ def checks(report):
             require(not task['operations'],'提前将业务API纳入基座')
             require(task['reviewPolicy']=='OWNER_ACCEPTANCE' and task['suggestedReviewerSlot'] is None and all(v==0 for v in task['reviewHours'].values()),'基座仍要求他人评审或重复计工时')
         else:
-            require(task['phase']=='BUSINESS' and task['ownerSlot'] is None and task['assignmentStatus']=='UNASSIGNED','提前分派业务任务')
+            require(task['phase']=='BUSINESS' and task['ownerSlot']==assignments[task['id']]
+                    and task['assignmentStatus']=='ASSIGNED' and task['assignmentDecision']=='D-055','业务任务分工不符')
             require(task['startConditions']==required_gates,'业务缺阶段启动门槛')
             require(task['reviewPolicy']=='OWNER_ACCEPTANCE','业务任务未落实负责人确认')
         require(set(task['modules'])<=mids,'任务引用未知模块')
@@ -253,7 +277,7 @@ def checks(report):
             require(row[field]==old[name][field],'改写数据库追踪 '+name+'/'+field)
         task=by_task[row['issue']]
         require(name in task['operations'] and row['module'] in task['modules'] and row['ownerSlot']==task['ownerSlot'],'操作主责不符')
-        require(row['ownerSlot'] is None and row['assignmentStatus']=='UNASSIGNED' and row['phase']=='BUSINESS','业务操作误记已指派')
+        require(row['ownerSlot']==assignments[task['id']] and row['assignmentStatus']=='ASSIGNED' and row['phase']=='BUSINESS','业务操作与任务负责人不符')
         require(row['suggestedOwnerSlot']==task['suggestedOwnerSlot'] and row['startConditions']==required_gates,'操作与任务分工/阶段不一致')
         require(set(row['tables'])<=tables,'操作引用未知表')
         require(set(row['acceptance'])<=cids and row['status']=='PLANNED_NOT_IMPLEMENTED','验收引用/实施状态不符')
@@ -276,7 +300,16 @@ def checks(report):
     require({table for t in tasks for table in t['tables']}==tables,'43表未被任务覆盖或引入未知表')
     estimate=read('estimates.json')
     require(estimate['capacityHours']==dict(minimum=4*5*2,maximum=4*6*3),'团队容量错误')
-    require(estimate['businessPersonLoad'] is None and 'personLoad' not in estimate,'未分派业务却计算固定个人负载')
+    require(set(estimate['businessPersonLoad'])==set('ABCD') and 'personLoad' not in estimate,'四人业务估算缺失或混入基座负载')
+    for owner, load in estimate['businessPersonLoad'].items():
+        selected=[t for t in tasks if t['ownerSlot']==owner]
+        require(load['taskIds']==[t['id'] for t in selected] and load['taskCount']==len(selected),'个人任务汇总不符')
+        for scenario in ('low','likely','high'):
+            dev=sum(t['estimateHours'][scenario] for t in selected)
+            require(load['developmentHours'][scenario]==load['totalHours'][scenario]==dev
+                    and load['reviewHours'][scenario]==0,'个人负载计算不符')
+    require(all(sum(p['totalHours'][s] for p in estimate['businessPersonLoad'].values())==estimate['phaseTotals']['BUSINESS']['totalHours'][s]
+                for s in ('low','likely','high')),'四人负载漏计或重复')
     for s,expected in [('low',70.5),('likely',130.5),('high',209)]:
         total=sum(t['estimateHours'][s]+t['reviewHours'][s] for t in tasks)
         require(total==expected==estimate['totalHours'][s],'估算总量错误')
@@ -294,7 +327,7 @@ def checks(report):
         business_total=sum(t['estimateHours'][s]+t['reviewHours'][s] for t in tasks if t['id'] in business_ids)
         require(bound['foundationOwnerDevelopmentDayEquivalent']==foundation_dev/hpd and bound['businessPooledDayEquivalent']==business_total/(4*hpd),'阶段小时折算错误')
         require(bound['stagedCapacityDays']==math.ceil(foundation_dev/hpd+business_total/(4*hpd)),'两阶段容量下界错误')
-    require(estimate['decision']=='D-051' and estimate['revision']=='1.3','估算协作规则来源不符')
+    require(estimate['decision']=='D-051' and estimate['revision']=='1.4' and estimate['assignmentDecision']=='D-055','估算协作规则来源不符')
     require(estimate['totalHours']=={'low':70.5,'likely':130.5,'high':209},'取消单列评审后的估算不符')
     require(estimate['totalHours']['likely']>72,'不应以乐观估算承诺预算内全量交付')
     diagram_pages=vertices=edges=0
@@ -318,6 +351,37 @@ def checks(report):
                 if cell.get('edge')=='1':
                     edges+=1;require(cell.get('source')in ids and cell.get('target')in ids and cell.find('mxGeometry')is not None,'图源悬空连线')
     require(diagram_pages==6,'图页数量不符')
+    root_readme=(REPO/'README.md').read_text(encoding='utf-8')
+    require('## 业务开发顺序' in root_readme,'根README缺业务开发流程图')
+    diagram_section=root_readme.split('## 业务开发顺序',1)[1].split('\n## ',1)[0]
+    diagram_match=re.search(r'```mermaid\n(.*?)\n```',diagram_section,re.S)
+    require(diagram_match is not None,'业务流程图缺Mermaid代码块')
+    diagram_text=diagram_match.group(1)
+    require(diagram_text.startswith('flowchart TD\n'),'业务流程图不是自上而下树状布局')
+    diagram_nodes=re.findall(r'^    (BE\d{2})\["([^"\n]+)"\]$',diagram_text,re.M)
+    expected_nodes={t['id'].replace('-',''):t['id']+t['title'] for t in tasks if t['phase']=='BUSINESS'}
+    require(len(diagram_nodes)==len(expected_nodes)
+            and {key:label.replace('<br/>','') for key,label in diagram_nodes}==expected_nodes,'业务图编号/名称/覆盖不符')
+    diagram_edges=set(re.findall(r'^    (BE\d{2}) --> (BE\d{2})$',diagram_text,re.M))
+    original_edges={(d.replace('-',''),t['id'].replace('-','')) for t in tasks if t['phase']=='BUSINESS'
+                    for d in t['dependencies'] if d in business_ids}
+    require(diagram_edges<=original_edges,'业务图增加未声明的前置依赖')
+    def dependency_closure(edge_set):
+        closure=set()
+        for start in expected_nodes:
+            pending=[start];seen={start}
+            while pending:
+                node=pending.pop()
+                for source,target in edge_set:
+                    if source==node:
+                        closure.add((start,target))
+                        if target not in seen:seen.add(target);pending.append(target)
+        return closure
+    require(dependency_closure(diagram_edges)==dependency_closure(original_edges),'精简连线改变了业务任务等待/并行关系')
+    roots=set(expected_nodes)-{target for _,target in diagram_edges}
+    require(roots=={'BE06','BE10'},'业务起点不符')
+    report.update(businessDiagramNodes=len(diagram_nodes),businessDiagramEdges=len(diagram_edges),
+                  businessDiagramDependenciesEquivalent=True,businessDiagramRenderedByThisCheck=False)
     links=0
     docs=list(ROOT.glob('*.md'))+[REPO/'README.md',REPO/'docs/README.md',REPO/'backend/README.md']+list((REPO/'docs/project').glob('*.md'))
     for p in docs:
@@ -362,9 +426,10 @@ def checks(report):
         estimatesHours=estimate['totalHours'],capacityHours=estimate['capacityHours'],diagramPages=diagram_pages,
         diagramVertices=vertices,diagramEdges=edges,localLinks=links,pythonSyntaxFiles=len(list(ROOT.glob('*.py'))),
         decisionIds=len(decisions),upstreamSha256=source_hashes,
-        planRevision='1.3',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=len(business_ids),
+        planRevision='1.4',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=0,
+        businessTasksAssigned=len(assignments),assignmentDecision='D-055',memberIdentitiesPending=4,
         foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:OWNER_ACCEPTED',
-        foundationGateStatus=phase_plan['gateStatus'],businessOperationsAwaitingAssignment=len(mapping),
+        foundationGateStatus=phase_plan['gateStatus'],businessOperationsAwaitingAssignment=0,businessOperationsAssigned=len(mapping),
         artifactSha256={n:sha(ROOT/n) for n in GENERATED}))
 
 

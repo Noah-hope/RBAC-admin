@@ -1,10 +1,111 @@
 # rbac-admin · 集中权限管理系统
 
-公共基座已完成本人整体确认：BE-01～05为OWNER_ACCEPTED，F-01～06通过，FOUNDATION_ACCEPTED；2026-10-18已合并并推送main/b68aa9a，远程回查一致。最新64离线＋42真实MySQL检查通过，开发/测试库迁移和普通启动已确认；30项业务尚未分派。见[整体核对报告](docs/05-detailed-design/FOUNDATION-REVIEW.md)和[后续开发简明指南](docs/05-detailed-design/FOUNDATION-USAGE.md)。
+公共基座已完成本人整体确认：BE-01～05为OWNER_ACCEPTED，F-01～06通过，FOUNDATION_ACCEPTED；2026-10-18已合并并推送main/b68aa9a，远程回查一致。最新64离线＋42真实MySQL检查通过，开发/测试库迁移和普通启动已确认；30项业务已按D-055登记A～D分工，均待实现；成员实名/账号与接入证据待补。见[整体核对报告](docs/05-detailed-design/FOUNDATION-REVIEW.md)和[后续开发简明指南](docs/05-detailed-design/FOUNDATION-USAGE.md)。
 
 当前业务范围：**仅管理功能权限**。员工经角色获得系统进入及查看、编辑、新增等操作权限；不设计业务数据权限。需求于 2026-10-15 按用户要求修订，说明见[变更记录](docs/project/FUNCTION_PERMISSIONS.md)。
 
 权限管理员按公司、指定部门及系统范围管理；员工离岗关权直接生效。规则见[管理范围与人员权限](docs/01-requirements/usecases-v1/管理范围与人员权限规则.md)。PNG/SVG 按需生成，现有 V1.1 预览已标记，详见[预览维护规则](docs/project/PREVIEWS.md)。
+
+## 四人分工
+
+| 成员 | 负责领域 | 全部任务 |
+| --- | --- | --- |
+| A | 身份与管理范围、运行交付 | BE-06、07、08、09、27、32、34 |
+| B | 系统、角色与功能权限、集成验收 | BE-11、12、13、15、17、18、33、35 |
+| C | 申请、OA审批与执行、审计 | BE-19、20、21、22、23、24、25、31 |
+| D | 组织、人员与授权来源、导入 | BE-10、14、16、26、28、29、30 |
+
+具体交付、各人推进顺序与接口交接见[四人分工说明](docs/05-detailed-design/TEAM-ASSIGNMENT.md)。A～D为成员代号，姓名/GitHub账号待补；各任务由负责人自行确认完成，不另设评审人。
+
+## 业务开发顺序
+
+基座BE-01～05已通过，图中只展示后续任务。箭头从前置任务指向后续任务；多个箭头汇入同一节点时，须等待全部前置完成。没有前后依赖路径的分支可以并行，当前可先推进A的BE-06和D的BE-10；仍须各成员完成本机接入。
+
+为便于阅读，省略了已经由路径表达的重复前置依赖；完整依赖以[任务清单](docs/05-detailed-design/TASKS.md)和[任务数据](docs/05-detailed-design/issues.json)为准。
+
+```mermaid
+flowchart TD
+    BE06["BE-06<br/>三类JWT与后台登录、<br/>退出、本人改密"]
+    BE07["BE-07<br/>后台账号管理与密码重置"]
+    BE08["BE-08<br/>当前单项任命、<br/>范围读模型与覆盖策略"]
+    BE09["BE-09<br/>创建管理范围及任命、<br/>创建预览"]
+    BE10["BE-10<br/>组织、员工与任职读取<br/>及基础变更端口"]
+    BE11["BE-11<br/>系统登记及查询"]
+    BE12["BE-12<br/>目录原子编辑、<br/>系统启停及影响预览"]
+    BE13["BE-13<br/>角色元数据和当前配置读取"]
+    BE14["BE-14<br/>来源和关系基线、<br/>授权历史及当前资格"]
+    BE15["BE-15<br/>有效角色配置应用器"]
+    BE16["BE-16<br/>授予/撤销及关闭来源<br/>底层原子操作"]
+    BE17["BE-17<br/>安全影响预览与分页、<br/>依赖集合快照"]
+    BE18["BE-18<br/>业务系统有效权限<br/>和单项检查"]
+    BE19["BE-19<br/>审计列表、详情与敏感访问"]
+    BE20["BE-20<br/>角色创建与配置/<br/>授予/撤销草稿、占用"]
+    BE21["BE-21<br/>预览确认、固定申请<br/>与OA待办"]
+    BE22["BE-22<br/>申请列表、详情<br/>及安全时间线"]
+    BE23["BE-23<br/>OA可靠投递、关联<br/>及人工投递重试"]
+    BE24["BE-24<br/>OA最终结果接收<br/>与三层去重"]
+    BE25["BE-25<br/>自动执行、整份失效<br/>与失败恢复"]
+    BE26["BE-26<br/>直接来源关闭<br/>与统一申请失效编排"]
+    BE27["BE-27<br/>员工状态及管理范围替换<br/>的跨域失效"]
+    BE28["BE-28<br/>CSV/XLSX文件上传、<br/>元数据及解析"]
+    BE29["BE-29<br/>冻结导入预检、<br/>差异与问题报告"]
+    BE30["BE-30<br/>导入整批提交、历史<br/>与失败恢复"]
+    BE31["BE-31<br/>演示OA适配器<br/>及受控服务身份工具"]
+    BE32["BE-32<br/>部署产物、配置<br/>与管理员初始化"]
+    BE33["BE-33<br/>完整业务链路<br/>及并发/失败集成验收"]
+    BE34["BE-34<br/>实际服务器部署、<br/>重启与演示验收"]
+    BE35["BE-35<br/>交接、任务证据与发布收尾"]
+
+    BE06 --> BE07
+    BE06 --> BE08
+    BE06 --> BE11
+    BE06 --> BE28
+    BE06 --> BE32
+    BE07 --> BE27
+    BE08 --> BE17
+    BE08 --> BE19
+    BE08 --> BE20
+    BE09 --> BE27
+    BE10 --> BE08
+    BE10 --> BE14
+    BE11 --> BE12
+    BE11 --> BE13
+    BE11 --> BE14
+    BE12 --> BE33
+    BE13 --> BE15
+    BE13 --> BE20
+    BE14 --> BE16
+    BE14 --> BE18
+    BE14 --> BE20
+    BE15 --> BE25
+    BE16 --> BE25
+    BE16 --> BE26
+    BE17 --> BE09
+    BE17 --> BE12
+    BE17 --> BE21
+    BE17 --> BE26
+    BE17 --> BE29
+    BE18 --> BE33
+    BE19 --> BE33
+    BE20 --> BE21
+    BE20 --> BE22
+    BE20 --> BE26
+    BE21 --> BE23
+    BE22 --> BE33
+    BE23 --> BE24
+    BE24 --> BE25
+    BE24 --> BE31
+    BE25 --> BE33
+    BE26 --> BE27
+    BE27 --> BE30
+    BE28 --> BE29
+    BE29 --> BE30
+    BE30 --> BE33
+    BE31 --> BE33
+    BE32 --> BE34
+    BE33 --> BE34
+    BE34 --> BE35
+```
 
 ## 已确认技术栈
 
@@ -61,6 +162,7 @@ rbac-admin/
 │   ├── grilling/
 │   ├── frontend-design/
 │   └── test-driven-development/
+├── backend/                 # 正式后端Maven工程
 └── docs/
     ├── README.md
     ├── project/
@@ -71,7 +173,7 @@ rbac-admin/
     └── 05-detailed-design/
 ```
 
-界面阶段已有可运行交互原型，位于 `docs/02-ui-design/prototype/`，可作为 API 设计输入。API 本地设计与[评审修订](docs/03-api/REVIEW.md)已交付于 `docs/03-api/`，已导入Apifox并核对指定客户端导出，MCP暴露差异见同步记录；数据库设计已交付于`docs/04-database/`，已完成正式跨阶段设计评审修订，仍只做静态检查与设计推演、未建库/执行SQL；后端详细设计与四人任务估算已交付，正式实现/部署尚未开始；按 D-029，3 项原型展示/演示补齐后续跟踪，不作为 API 启动或契约定稿前置，对应业务规则保留。目录约定及迁移说明见 [LAYOUT.md](docs/project/LAYOUT.md)。
+界面阶段已有可运行交互原型，位于 `docs/02-ui-design/prototype/`，可作为 API 设计输入。API 本地设计与[评审修订](docs/03-api/REVIEW.md)已交付于 `docs/03-api/`，已导入Apifox并核对指定客户端导出，MCP暴露差异见同步记录；数据库设计已交付于`docs/04-database/`，初始迁移及基础持久化/事务/幂等已有真实隔离MySQL验证；BE-01～05公共基座已实现、本人确认并交付main，BE-06～35业务/交付任务仍待分派和实现；按 D-029，3 项原型展示/演示补齐后续跟踪，不作为 API 启动或契约定稿前置，对应业务规则保留。目录约定及迁移说明见 [LAYOUT.md](docs/project/LAYOUT.md)。
 
 ## 规定的项目流程
 
@@ -81,10 +183,10 @@ rbac-admin/
 4. 数据库设计：依据已确定的需求与接口契约设计。
 5. 详细设计与实现：先生成设计文档、分解业务流程和模块，再使用 TDD skill，逐模块执行“失败测试 → 最小实现 → 重构”。
 
-各阶段的交付内容见[开发流程](docs/project/WORKFLOW.md)。技术栈已按 D-028 确认，具体版本、工程布局与测试框架已有详细设计取值，实际组合待实现阶段验证。
+各阶段的交付内容见[开发流程](docs/project/WORKFLOW.md)。技术栈已按 D-028 确认，具体版本、工程布局与测试框架已有详细设计取值，公共基座组合已验证，完整业务与目标服务器部署继续按对应任务验收。
 
 ## Git 共享记忆
 
 阶段状态、待办、设计决策、需求和验证证据统一写入 `docs/`，与对应改动一起提交。其他协作者或新的会话从 `AGENTS.md` 进入并读取 `docs/project/`，不另建根目录状态文件。`.agents/skills/` 仅保存技能，不作为项目事实记忆。
 
-远程仓库：[Noah-hope/RBAC-admin](https://github.com/Noah-hope/RBAC-admin)。设计已合并并推送至 `main`；后续任务按 Issue、任务分支和 PR 评审协作。
+远程仓库：[Noah-hope/RBAC-admin](https://github.com/Noah-hope/RBAC-admin)。设计与公共基座已合并并推送至 `main`；后续任务使用任务分支和Issue/PR记录协作，按D-051由唯一负责人核对证据并确认完成，不设置独立评审人。
