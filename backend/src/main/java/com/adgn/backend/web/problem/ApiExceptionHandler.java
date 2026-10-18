@@ -1,6 +1,7 @@
 package com.adgn.backend.web.problem;
 
 import com.adgn.backend.core.transaction.PersistenceFailure;
+import com.adgn.backend.core.idempotency.IdempotencyFailure;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,6 +89,22 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         // Exception messages and stack traces can contain SQL, payloads or credentials.
         LOG.error("http_failure category={}", ex.getClass().getSimpleName());
         return problems.entity(HttpStatus.INTERNAL_SERVER_ERROR, HttpHeaders.EMPTY, List.of(), request);
+    }
+
+    @ExceptionHandler(IdempotencyFailure.class)
+    ResponseEntity<Object> idempotencyFailure(IdempotencyFailure failure,HttpServletRequest request) {
+        var status=switch(failure.code()) {
+            case AUTHENTICATION_FAILED -> HttpStatus.UNAUTHORIZED;
+            case FORBIDDEN -> HttpStatus.FORBIDDEN;
+            default -> HttpStatus.CONFLICT;
+        };
+        var template=problems.body(status,List.of(),request);
+        String code=failure.code().name();
+        var body=new ApiProblem("urn:rbac-admin:problem:"+code.toLowerCase(java.util.Locale.ROOT).replace('_','-'),
+                template.title(),status.value(),code,template.detail(),template.requestId(),template.errors());
+        var headers=new HttpHeaders();headers.setContentType(org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON);headers.setCacheControl("no-store");
+        if(failure.code()==IdempotencyFailure.Code.REQUEST_IN_PROGRESS)headers.set(HttpHeaders.RETRY_AFTER,Long.toString(Math.max(1,failure.retryAfter())));
+        return new ResponseEntity<>(body,headers,status);
     }
 
     @ExceptionHandler(PersistenceFailure.class)

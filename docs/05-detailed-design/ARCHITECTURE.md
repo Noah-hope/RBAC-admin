@@ -1,5 +1,7 @@
 # 模块结构、接口与责任
 
+D-048补充：core/idempotency提供显式两阶段协调器、CanonicalRequestCodec端口、授权事实和安全结果类型，见[BE-05](BE-05-IDEMPOTENCY.md)。没有全局Servlet缓存或默认管理员身份；正式领域必须提供当前资格/完整覆盖检查及安全投影。
+
 D-046实施范围：M00公共CommandBoundary/ReadBoundary/WriteContext和AuditAppender已有实现及隔离引擎自测，见[BE-04记录](BE-04-TRANSACTIONS.md)。正式资格、业务受控写端口、幂等和审计查询仍由相应任务实现，下文接口设计不表示这些业务已实现。
 
 ## 设计取值与分层

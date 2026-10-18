@@ -328,7 +328,7 @@
     ],
     "deliverable": "请求HMAC/租约/安全结果/authorization_basis、同token提交和过期接管、敏感响应过滤。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -336,6 +336,17 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-05-IDEMPOTENCY.md",
+      "scope": "HTTP_IDEMPOTENCY_RESERVATION_FENCING_AND_SAFE_REPLAY",
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "authorizationImplementation": "CALLBACK_ONLY",
+      "canonicalizationScope": "CALLER_SUPPLIED_CANONICAL_BYTES_NOT_JCS",
+      "defaultEnabled": false,
+      "crossDomainBusinessVerified": false,
+      "ownerAccepted": false
+    },
     "acceptanceScope": "验证公共幂等状态机、租约栅栏、结果回放及当前授权回调；删除后重放用隔离测试夹具证明机制，不提前实现deleteChangeDraft。正式草稿端到端行为在BE-20/33补齐，不能把局部通过标记为完整AT-04通过。",
     "useCases": [
       "UC-02",

@@ -74,7 +74,7 @@ def checks(report):
     require((len(modules),len(tasks),len(cases),len(mapping))==(13,35,41,68),'冻结设计规模不符')
     require(len(cids)==len(cases),'重复验收编号')
     partial_evidence={'AT-01':'BE-02-IMPLEMENTATION.md','AT-02':'BE-03-PERSISTENCE.md',
-                      'AT-03':'BE-04-TRANSACTIONS.md','AT-33':'BE-04-TRANSACTIONS.md','AT-37':'BE-02-IMPLEMENTATION.md'}
+                      'AT-04':'BE-05-IDEMPOTENCY.md','AT-03':'BE-04-TRANSACTIONS.md','AT-33':'BE-04-TRANSACTIONS.md','AT-37':'BE-02-IMPLEMENTATION.md'}
     require(all(c['status']==('PARTIALLY_VERIFIED' if c['id'] in partial_evidence else 'DESIGNED_NOT_RUN') for c in cases),'验收局部/完整状态不符')
     require(all(c.get('evidence')==partial_evidence[c['id']] for c in cases if c['status']=='PARTIALLY_VERIFIED'),'局部验收缺实施证据')
     deferred={c['id'] for c in cases if c['delivery']=='FRONTEND_DEFERRED'}
@@ -96,7 +96,7 @@ def checks(report):
         require(module['ownerSlot']==('USER' if module['id']=='M00' else None),'模块人员误记已分派')
     referenced=set()
     for task in tasks:
-        expected_status={'BE-01':'IN_PROGRESS','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
+        expected_status={'BE-01':'IN_PROGRESS','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'IN_PROGRESS'}.get(task['id'],'PLANNED')
         require(task['status']==expected_status,'任务准备/实现状态不符')
         if task['id']=='BE-03':
             progress=task.get('implementationProgress',{})
@@ -116,6 +116,16 @@ def checks(report):
                     and acceptance.get('interpretation')=='CONTINUE_AFTER_BE03_REVIEW'
                     and acceptance.get('date')=='2026-10-18' and acceptance.get('mergedToMain') is False,
                     'BE-03本人确认或主线状态不符')
+        if task['id']=='BE-05':
+            progress=task.get('implementationProgress',{})
+            require(progress.get('evidence')=='BE-05-IDEMPOTENCY.md'
+                    and progress.get('scope')=='HTTP_IDEMPOTENCY_RESERVATION_FENCING_AND_SAFE_REPLAY'
+                    and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
+                    and progress.get('authorizationImplementation')=='CALLBACK_ONLY'
+                    and progress.get('canonicalizationScope')=='CALLER_SUPPLIED_CANONICAL_BYTES_NOT_JCS'
+                    and progress.get('defaultEnabled') is False
+                    and progress.get('crossDomainBusinessVerified') is False
+                    and progress.get('ownerAccepted') is False,'BE-05公共机制误记为完整业务或本人验收')
         if task['id']=='BE-04':
             progress=task.get('implementationProgress',{})
             require(progress.get('evidence')=='BE-04-TRANSACTIONS.md'

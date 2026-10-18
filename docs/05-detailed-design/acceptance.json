@@ -49,8 +49,9 @@
       "UC-04"
     ],
     "reviewScenario": "S16",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-05-IDEMPOTENCY.md"
   },
   {
     "id": "AT-05",

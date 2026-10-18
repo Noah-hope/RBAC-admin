@@ -20,7 +20,7 @@ Java 21、Spring Boot 4.0.8、Maven Wrapper 3.9.11（Wrapper脚本3.3.4）。基
 
 Linux/macOS使用`./mvnw`。打包后可执行`java -jar target/backend-0.0.1-SNAPSHOT.jar`。Wrapper首次需要下载Maven及依赖；发行包SHA256已固定。Spring Boot父BOM管理依赖和插件版本，不单独升级其中一个组件。
 
-默认verify运行51项离线测试。真实MySQL检查须显式使用`./mvnw.cmd -Pmysql-check clean verify`，并先准备独立临时8.4实例、设置RBAC_ISOLATED_MYSQL_PORT（非3306）和RBAC_ISOLATED_MYSQL_DATADIR（必须在backend/.tmp中）；共追加25项引擎检查，JVM为Asia/Shanghai。缺参数会失败，不静默跳过、不连接开发/共享测试库。实际结果及隔离步骤见[持久化验证](../docs/05-detailed-design/BE-03-PERSISTENCE.md)。
+默认verify运行64项离线测试。真实MySQL检查须显式使用`./mvnw.cmd -Pmysql-check clean verify`，并先准备独立临时8.4实例、设置RBAC_ISOLATED_MYSQL_PORT（非3306）和RBAC_ISOLATED_MYSQL_DATADIR（必须在backend/.tmp中）；共追加42项引擎检查，JVM为Asia/Shanghai。缺参数会失败，不静默跳过、不连接开发/共享测试库。实际结果及隔离步骤见[持久化验证](../docs/05-detailed-design/BE-03-PERSISTENCE.md)。
 
 ## 本机日志存放
 
@@ -104,13 +104,41 @@ java "-Dloader.main=com.adgn.backend.migration.MigrationApplication" -cp target/
 
 BE-04没有DDL变化，已完成V1～V3的测试库无需清库或重新迁移。IDE重载Maven后，继续用rbac_app及本机密码重启BackendApplication，访问健康接口确认装配；未迁移开发空库仍会被启动保护拒绝。具体失败语义、同事务回滚、测试证据与后续责任见[BE-04记录](../docs/05-detailed-design/BE-04-TRANSACTIONS.md)。
 
+## BE-05幂等功能启用
+
+幂等默认关闭，不要求现在修改已有BackendApplication配置；关闭时不注册IdempotencyCoordinator，也不提供忽略幂等的执行入口。后续业务接入需要显式启用并使用统一协调器。BE-05只提供公共机制，当前没有新增业务接口；设计、TDD与结果见[幂等实施记录](../docs/05-detailed-design/BE-05-IDEMPOTENCY.md)。
+
+在IDE的Spring Boot → BackendApplication → 环境变量中添加：
+
+| 变量 | 配置 |
+| --- | --- |
+| RBAC_IDEMPOTENCY_ENABLED | `true` |
+| RBAC_IDEMPOTENCY_CURRENT_KEY_ID | 自定密钥版本名，例如`local-v1` |
+| RBAC_IDEMPOTENCY_KEYS_JSON | JSON对象：版本名映射至随机密钥的Base64文本；当前版本必须存在，每把密钥至少32字节 |
+
+密钥由团队在私下渠道保管，不复用数据库密码/JWT密钥，不截图、粘贴到聊天或提交Git。需要生成时，可在自己的PowerShell会话运行下列代码（不会打印密钥）；此会话启动的应用才继承这些变量，已打开IDE的运行配置仍需单独填入相同值。重启时保留原密钥，不每次重新生成，否则已有记录无法比较。
+
+```powershell
+$taskIdempotencyBytes = New-Object byte[] 32
+$taskIdempotencyRandom = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+$taskIdempotencyRandom.GetBytes($taskIdempotencyBytes)
+$taskIdempotencyRandom.Dispose()
+$env:RBAC_IDEMPOTENCY_ENABLED = 'true'
+$env:RBAC_IDEMPOTENCY_CURRENT_KEY_ID = 'local-v1'
+$env:RBAC_IDEMPOTENCY_KEYS_JSON = (@{ 'local-v1' = [Convert]::ToBase64String($taskIdempotencyBytes) } | ConvertTo-Json -Compress)
+```
+
+启用后缺失、格式错误、当前版本不存在或密钥过短会以通用配置错误拒绝启动；不会在异常中回显配置值。轮换时新增版本并切换current-key-id，保留仍有记录引用的旧版本；本轮没有自动删除任务，不能仅按七天时间就删除旧密钥。缺历史版本返回503安全失败，不会重新执行旧请求。独立迁移入口不要求幂等密钥。
+
+Java接入通过reserve/complete或组合execute，身份和授权回调必须在锁内读取当前状态；显式领域端口提供规范请求字节与安全结果，不能捕获任意Servlet响应作为缓存。租约60秒、完成后至少七天保留；业务失败回滚后预留仍存在，不能换内容重用同一个key。正式业务须按契约声明的Idempotency-Key入口接入，登录/改密/退出、只读POST及OA回调不使用本机制。
+
 ## 测试与验收范围
 
-`clean verify`运行当前51项离线测试并打包，失败0、错误0、跳过0。包括原44项回归、6项持久化异常分类及新增1项安全503；HTTP请求链共27项。测试用控制器仅位于`src/test`，不会加入正式jar。Surefire负责`*Test`；Failsafe生命周期已配置；默认verify仅运行离线测试，真实MySqlCheck须显式选择mysql-check，结果按下段单列。
+`clean verify`运行当前64项离线测试并打包，失败0、错误0、跳过0。包括原51项回归及BE-05新增13项（摘要/响应4、配置5、HTTP4）；原HTTP请求链27项继续回归。测试用控制器仅位于`src/test`，不会加入正式jar。Surefire负责`*Test`；Failsafe生命周期已配置；默认verify仅运行离线测试，真实MySqlCheck须显式选择mysql-check，结果按下段单列。
 
 迁移入口测试通过测试专用策略阻止`Flyway.migrate()`，只验证装配、独立身份、缺配置/HTTP拒绝及业务隔离；脚本测试调用Flyway11.14.1实际MySQL解析器，仅确认语句边界，不证明MySQL语法、约束执行或业务正确。解析器为内部API，只用于测试，版本变更时需复核。
 
-真实MySQL检查另用显式profile：`./mvnw.cmd -Pmysql-check clean verify`。必须先准备全新临时MySQL8.4实例（数据目录位于backend/.tmp、回环非3306端口、binlog关闭、仅临时root空口令），注入RBAC_ISOLATED_MYSQL_PORT与RBAC_ISOLATED_MYSQL_DATADIR；测试在任何写操作前核验服务端datadir，随后创建并清理随机schema/账号。缺参数或指向错误实例会失败，不跳过，不连接开发库。最新实测该命令为51项离线＋25项真实引擎检查通过，其中16项公共事务检查、9项迁移/JPA/启动回归。临时schema/账号清理及本轮独立进程关闭已确认；服务生命周期、RED/GREEN及限制见[BE-04记录](../docs/05-detailed-design/BE-04-TRANSACTIONS.md)。它不替代正式领域授权、全部业务约束或云端部署验收。
+真实MySQL检查另用显式profile：`./mvnw.cmd -Pmysql-check clean verify`。必须先准备全新临时MySQL8.4实例（数据目录位于backend/.tmp、回环非3306端口、binlog关闭、仅临时root空口令），注入RBAC_ISOLATED_MYSQL_PORT与RBAC_ISOLATED_MYSQL_DATADIR；测试在任何写操作前核验服务端datadir，随后创建并清理随机schema/账号。缺参数或指向错误实例会失败，不跳过，不连接开发库。最新实测为64项离线＋42项真实引擎检查通过：BE-05新增17项引擎检查，原BE-04的25项（16公共事务、9迁移/JPA/启动）保持回归。临时schema/账号清理及本轮独立进程关闭已确认；服务生命周期、RED/GREEN及限制见[BE-04记录](../docs/05-detailed-design/BE-04-TRANSACTIONS.md)。它不替代正式领域授权、全部业务约束或云端部署验收。
 
 测试覆盖安全/自动请求ID、头重复、严格JSON、嵌套字段指针、400/404/405/409/415/422/500/503、缺配置失败、日志脱敏和健康暴露边界。Mockito采用显式测试Java agent，测试JVM关闭CDS，避免动态自附加警告；不是跳过测试。
 
