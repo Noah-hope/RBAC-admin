@@ -1,5 +1,7 @@
 # Clone 后的本机配置与协作开发指南
 
+任务接入：先在[四人分工说明](TEAM-ASSIGNMENT.md)查看自己对应A/B/C/D的任务。30项已登记成员代号，具体姓名/GitHub账号由团队补充；完成本文环境配置并满足所属任务原前置后再开工，各任务由负责人自己确认完成。
+
 适用于首次加入项目的成员。按下面顺序完成一次配置，即可在自己的电脑构建、初始化数据库、启动后端，并从共同基线领取任务开发。主流程使用 Windows、IntelliJ IDEA 和本机 MySQL；PowerShell只用于Git命令、生成本机密钥及可选的终端构建。所有路径均相对项目根目录 `rbac-admin`。
 
 每位成员使用自己的本机数据库、密码和幂等密钥；不需要复制其他成员的数据库文件或个人 IDEA 配置。公共基座已按D-053交付main，具体提交及后续状态以[共享记忆](../project/MEMORY.md)为准；正式业务开工还需实际任务已分派及对应依赖就绪。
@@ -263,7 +265,7 @@ git pull --ff-only
 git switch -c codex/be-06-login
 ```
 
-先由项目负责人登记任务的唯一Owner，并确认依赖就绪；随后按[任务清单](TASKS.md)阅读对应UC、[OpenAPI契约](../03-api/openapi.yaml)、数据库和模块设计，使用[项目TDD技能](../../.agents/skills/test-driven-development/SKILL.md)及配套writing-good-tests开展开发。需要Apifox时按[契约同步说明](../03-api/APIFOX.md)导入；Git中的契约是共同依据。
+先按[四人分工](TEAM-ASSIGNMENT.md)明确自己的成员代号与任务，补姓名/GitHub账号并确认依赖就绪；随后按[任务清单](TASKS.md)阅读对应UC、[OpenAPI契约](../03-api/openapi.yaml)、数据库和模块设计，使用[项目TDD技能](../../.agents/skills/test-driven-development/SKILL.md)及配套writing-good-tests开展开发。需要Apifox时按[契约同步说明](../03-api/APIFOX.md)导入；Git中的契约是共同依据。
 
 每次拉到新迁移，先在本机测试库执行迁移、核对成功，再对开发库迁移并重启后端。新增迁移与其他任务协调版本号，不改已经执行的V1～V3。普通应用不会自动建表或迁移。
 

@@ -1,6 +1,7 @@
 {
-  "revision": "1.3",
+  "revision": "1.4",
   "decision": "D-051",
+  "assignmentDecision": "D-055",
   "capacityHours": {
     "minimum": 40,
     "maximum": 72
@@ -53,8 +54,119 @@
     "likely": 18,
     "high": 28
   },
-  "businessPersonLoad": null,
-  "assumption": "沿用逐任务技术工作量，按两阶段重算；基座开发及本人确认由用户，全部任务按D-051由负责人确认，取消全部单列独立评审工时，业务阶段暂假设四人可投入。原开发估算含TDD/自检/确认，不假设agent开发一定更快。容量下界非工期承诺，不含外部等待/依赖停顿。",
+  "businessPersonLoad": {
+    "A": {
+      "taskIds": [
+        "BE-06",
+        "BE-07",
+        "BE-08",
+        "BE-09",
+        "BE-27",
+        "BE-32",
+        "BE-34"
+      ],
+      "taskCount": 7,
+      "developmentHours": {
+        "low": 12.5,
+        "likely": 25,
+        "high": 40
+      },
+      "reviewHours": {
+        "low": 0,
+        "likely": 0,
+        "high": 0
+      },
+      "totalHours": {
+        "low": 12.5,
+        "likely": 25,
+        "high": 40
+      }
+    },
+    "B": {
+      "taskIds": [
+        "BE-11",
+        "BE-12",
+        "BE-13",
+        "BE-15",
+        "BE-17",
+        "BE-18",
+        "BE-33",
+        "BE-35"
+      ],
+      "taskCount": 8,
+      "developmentHours": {
+        "low": 16.0,
+        "likely": 29.5,
+        "high": 47
+      },
+      "reviewHours": {
+        "low": 0,
+        "likely": 0,
+        "high": 0
+      },
+      "totalHours": {
+        "low": 16.0,
+        "likely": 29.5,
+        "high": 47
+      }
+    },
+    "C": {
+      "taskIds": [
+        "BE-19",
+        "BE-20",
+        "BE-21",
+        "BE-22",
+        "BE-23",
+        "BE-24",
+        "BE-25",
+        "BE-31"
+      ],
+      "taskCount": 8,
+      "developmentHours": {
+        "low": 17.0,
+        "likely": 30.0,
+        "high": 48
+      },
+      "reviewHours": {
+        "low": 0,
+        "likely": 0,
+        "high": 0
+      },
+      "totalHours": {
+        "low": 17.0,
+        "likely": 30.0,
+        "high": 48
+      }
+    },
+    "D": {
+      "taskIds": [
+        "BE-10",
+        "BE-14",
+        "BE-16",
+        "BE-26",
+        "BE-28",
+        "BE-29",
+        "BE-30"
+      ],
+      "taskCount": 7,
+      "developmentHours": {
+        "low": 16.0,
+        "likely": 28.0,
+        "high": 46
+      },
+      "reviewHours": {
+        "low": 0,
+        "likely": 0,
+        "high": 0
+      },
+      "totalHours": {
+        "low": 16.0,
+        "likely": 28.0,
+        "high": 46
+      }
+    }
+  },
+  "assumption": "沿用逐任务技术工作量，D-055按A～D成员代号汇总负载，实名/账号及实际可投入时间待补；全部任务按D-051由负责人确认，不另设评审。原估算含TDD/自检/确认，不假设agent一定更快。容量下界非工期承诺，不含外部等待/依赖停顿。",
   "capacityLowerBounds": {
     "low": {
       "hoursPerPersonPerDay": 3,

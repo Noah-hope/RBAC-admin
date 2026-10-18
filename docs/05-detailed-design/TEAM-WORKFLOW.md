@@ -2,11 +2,11 @@
 
 修订1.3/D-051，2026-10-18：每项任务登记唯一负责人，由负责人自己核对证据并确认完成，不设置独立评审人。Agent编写代码不改变负责人的交付责任；TDD、自检、真实数据库/事务验证、集成及发布证据继续保留。
 
-D-053已完成基座整体确认和main/b68aa9a交付，30项业务负责人仍未分派，详见[基座核对报告](FOUNDATION-REVIEW.md)。后续接入见[简明指南](FOUNDATION-USAGE.md)。没有创建远程Issue/PR、修改GitHub保护规则或运行CI。
+D-053已完成基座整体确认和main/b68aa9a交付，D-055已将30项业务登记到A～D成员代号，具体分工见[分工说明](TEAM-ASSIGNMENT.md)，实名/账号与成员接入证据待补，详见[基座核对报告](FOUNDATION-REVIEW.md)。后续接入见[简明指南](FOUNDATION-USAGE.md)。没有创建远程Issue/PR、修改GitHub保护规则或运行CI。
 
 ## 分派与依赖
 
-1. 用户先完成并确认BE-01～05基座，纳入共同主线，再分批将BE-06～35分给真实成员。A～D只是职责建议，不能视为已派工。
+1. 用户先完成并确认BE-01～05基座，纳入共同主线，D-055已将BE-06～35分给A～D四位成员代号，具体身份映射由团队补充；任务仍PLANNED，分工不解除技术依赖。
 2. 每项登记唯一Owner、实际Issue或本地任务编号、涉及API/模块、依赖提交和验收范围；不登记Reviewer。
 3. 业务正式开工仍要求FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED及原技术依赖同时满足。政策调整不自动接受任务、解除依赖或授权合并推送。
 4. 团队成员验证仓库访问权限，从最新共同主线创建`codex/be-xx-主题`分支。PR用于集中呈现差异、测试和集成记录，不要求另一成员批准。
@@ -24,9 +24,9 @@ Agent可执行代码检查、测试和文档整理，但不凭“代码已生成
 
 ## 任务数据约定
 
-所有任务采用`reviewPolicy=OWNER_ACCEPTANCE`、`reviewRequired=false`、`acceptanceOwnerPolicy=TASK_OWNER`。`reviewerSlot`及`suggestedReviewerSlot`暂保留为null以兼容现有资料，不是待分配字段；`reviewHours`均0。业务ownerSlot=null仍表示未分派。
+所有任务采用`reviewPolicy=OWNER_ACCEPTANCE`、`reviewRequired=false`、`acceptanceOwnerPolicy=TASK_OWNER`。`reviewerSlot`及`suggestedReviewerSlot`暂保留为null以兼容现有资料，不是待分配字段；`reviewHours`均0。D-055业务ownerSlot已登记A/B/C/D，assignmentStatus=ASSIGNED；suggestedOwnerSlot仅作历史参考。模块M10/M11/M12按任务共同维护，不代表一项任务有多个负责人。
 
-TASKS、issues、API/模块追踪及共享记忆同步维护。先更新[design_plan.py](design_plan.py)，再生成资料并运行[validate_design.py](validate_design.py)，避免手改JSON被覆盖。
+TASKS、issues、API/模块追踪及共享记忆同步维护。实名/账号登记到delivery-phases.json的members来源配置，不填写凭据。先更新[design_plan.py](design_plan.py)，再生成资料并运行[validate_design.py](validate_design.py)，避免手改JSON被覆盖。
 
 原开发估算包含设计细化、TDD、自测、文档和负责人核对。取消独立评审单列工时后，总量低/中/高为70.5/130.5/209人时；未依据agent速度下调技术工作量。低估接近72人时上限，中估仍超预算，不承诺5～6天全量交付。
 

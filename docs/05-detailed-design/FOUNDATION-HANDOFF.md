@@ -1,6 +1,6 @@
 # 公共基座范围与交接验收
 
-2026-10-18/D-053：整体证据已核对，用户明确确认基座通过并授权主线交付；main/b68aa9a已推送GitHub且远程回查一致，F-01～06均VERIFIED，门槛为FOUNDATION_ACCEPTED。结果与限制见[整体核对报告](FOUNDATION-REVIEW.md)，后续开发见[团队使用指南](FOUNDATION-USAGE.md)。BE-01～05均已本人确认（OWNER_ACCEPTED），30项业务未分派。
+2026-10-18/D-053：整体证据已核对，用户明确确认基座通过并授权主线交付；main/b68aa9a已推送GitHub且远程回查一致，F-01～06均VERIFIED，门槛为FOUNDATION_ACCEPTED。结果与限制见[整体核对报告](FOUNDATION-REVIEW.md)，后续开发见[团队使用指南](FOUNDATION-USAGE.md)。BE-01～05均已本人确认（OWNER_ACCEPTED），D-055已登记30项业务的A～D分工，详见[分工说明](TEAM-ASSIGNMENT.md)，实名/账号与成员接入证据待补。
 
 D-038/D-039组织规则保持：用户先实现BE-01～05公共基座，由用户本人确认，无需他人评审；纳入共同主线后再分派业务。D-051补充：业务任务也由唯一负责人自行确认完成，不设置独立评审人，测试与自检要求保留。USER是计划负责人代号，不是后台账号、JWT主体或业务角色。
 
@@ -37,14 +37,14 @@ CanonicalPayloadCodec先明确规范摘要接口和调用边界；固定申请�
 
 BE-01/02/03/04/05各按TASKS的acceptanceScope验收，部分AT包含业务阶段补充项：例如BE-05证明公共机制，不代表整个AT-04及草稿业务已通过。全量行为和服务器仍由BE-33/34/35汇总，不借基座交接关闭后续任务。
 
-F-01～F-06实际满足后，在`delivery-phases.json`记录基座验收证据及FOUNDATION_ACCEPTED，由用户据此分派后续任务。当前生成器已保存F-01～06核对、用户整体确认和实际main交付提交，门槛为FOUNDATION_ACCEPTED；后续业务仍须登记实际负责人和满足原依赖。状态变化同步维护生成器及校验器，不能只手改JSON。尚未满足的必需门槛不得以“有说明”替代；确有范围调整先明确修订设计和交接边界。
+F-01～F-06实际满足后，在`delivery-phases.json`记录基座验收证据及FOUNDATION_ACCEPTED，由用户据此分派后续任务。当前生成器已保存F-01～06核对、用户整体确认和实际main交付提交，门槛为FOUNDATION_ACCEPTED；业务已登记成员代号，仍须完成成员接入并满足原依赖。状态变化同步维护生成器及校验器，不能只手改JSON。尚未满足的必需门槛不得以“有说明”替代；确有范围调整先明确修订设计和交接边界。
 
-## 分派业务任务时要补什么
+## 分工登记后要补什么
 
-1. 用户把BE-06～35分配给实际成员，填写唯一Owner、真实Issue链接、实际API/模块改动范围和依赖PR。可以分批分派，不要求每项同时开工。
-2. 同步TASKS、issues、操作追踪及模块的真实人员信息；suggested字段保留参考身份，不能把建议组当账号。当前NULL不等于“大家共同负责”。
+1. D-055已登记BE-06～35的唯一Owner代号；团队补代号对应的真实成员/GitHub账号及仓库权限，记录实际API/模块范围和依赖提交。有真实Issue/PR再填写链接，不要求每项同时开工。
+2. TASKS、issues及操作追踪均已登记A～D；suggested字段仅历史参考，不是账号。M10/M11/M12的ownerSlot为空表示按任务分别维护，应读取ownerSlots和任务Owner，不是无人负责。
 3. 每项业务同时满足FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED和原dependencies才进入正式实现；基座通过不替代BE-06/10等业务前置。
-4. 分派后按实际负载更新估算。B协助账号、C协助打包等此前讨论只是可选建议，本轮不固化为任命或分配。
+4. 当前已按四人任务汇总负载，见IMPLEMENTATION-PLAN.md；成员实际投入时间待补，不将工时汇总当作工期承诺。
 5. 正式业务仍逐任务TDD、自检、负责人确认及集成验收。服务器可并行准备；前端后置、演示OA及全量需求边界不变。
 
 任务及机器状态见[TASKS.md](TASKS.md)、[delivery-phases.json](delivery-phases.json)；阶段估算见[IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md)。
