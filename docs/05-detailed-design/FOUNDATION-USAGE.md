@@ -2,7 +2,7 @@
 
 适用于首次加入项目的成员。按下面顺序完成一次配置，即可在自己的电脑构建、初始化数据库、启动后端，并从共同基线领取任务开发。主流程使用 Windows、IntelliJ IDEA 和本机 MySQL；PowerShell只用于Git命令、生成本机密钥及可选的终端构建。所有路径均相对项目根目录 `rbac-admin`。
 
-每位成员使用自己的本机数据库、密码和幂等密钥；不需要复制其他成员的数据库文件或个人 IDEA 配置。当前公共基座交付状态以[共享记忆](../project/MEMORY.md)为准；正式业务开工还需基座交付主线、实际任务已分派及对应依赖就绪。
+每位成员使用自己的本机数据库、密码和幂等密钥；不需要复制其他成员的数据库文件或个人 IDEA 配置。公共基座已按D-053交付main，具体提交及后续状态以[共享记忆](../project/MEMORY.md)为准；正式业务开工还需实际任务已分派及对应依赖就绪。
 
 **先明确：主流程在IDEA中选择自己的JDK21即可，不要求设置Windows的JAVA_HOME或PATH。** Project SDK、Maven使用的JDK及每份运行配置的JRE按下面界面核对；已经继承正确JDK的字段无需重复修改。后面使用PowerShell生成密钥也不依赖JAVA_HOME。
 
@@ -35,7 +35,7 @@ git pull --ff-only
 git rev-parse --short HEAD
 ```
 
-确认目录内有 `backend/pom.xml`、`backend/mvnw.cmd` 和 `docs/project/MEMORY.md`，并与项目负责人公布的交付版本一致。若 main 尚无公共基座，先使用负责人指定的基座分支/提交熟悉配置，正式任务从交付后的共同主线开始，不从各自不同的旧版本开发。
+确认目录内有 `backend/pom.xml`、`backend/mvnw.cmd` 和 `docs/project/MEMORY.md`，并与项目负责人公布的交付版本一致。若拉取后仍看不到backend，先核对origin是否为团队仓库及当前分支是否为更新后的main；正式任务从共同主线创建分支。
 
 设置当前仓库的提交身份，替换下面两项为自己的信息：
 

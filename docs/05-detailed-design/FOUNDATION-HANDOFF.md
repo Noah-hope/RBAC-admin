@@ -1,6 +1,6 @@
 # 公共基座范围与交接验收
 
-2026-10-18/D-050：整体证据已按下列门槛核对，F-01～05为VERIFIED，F-06待本人整体确认与共同主线交付；当前尚非FOUNDATION_ACCEPTED。结果与限制见[整体核对报告](FOUNDATION-REVIEW.md)，后续开发见[团队使用指南](FOUNDATION-USAGE.md)。BE-02～05单项已本人确认，BE-01保持IN_PROGRESS，30项业务未分派。
+2026-10-18/D-053：整体证据已核对，用户明确确认基座通过并授权主线交付；main/b68aa9a已推送GitHub且远程回查一致，F-01～06均VERIFIED，门槛为FOUNDATION_ACCEPTED。结果与限制见[整体核对报告](FOUNDATION-REVIEW.md)，后续开发见[团队使用指南](FOUNDATION-USAGE.md)。BE-01～05均已本人确认（OWNER_ACCEPTED），30项业务未分派。
 
 D-038/D-039组织规则保持：用户先实现BE-01～05公共基座，由用户本人确认，无需他人评审；纳入共同主线后再分派业务。D-051补充：业务任务也由唯一负责人自行确认完成，不设置独立评审人，测试与自检要求保留。USER是计划负责人代号，不是后台账号、JWT主体或业务角色。
 
@@ -37,7 +37,7 @@ CanonicalPayloadCodec先明确规范摘要接口和调用边界；固定申请�
 
 BE-01/02/03/04/05各按TASKS的acceptanceScope验收，部分AT包含业务阶段补充项：例如BE-05证明公共机制，不代表整个AT-04及草稿业务已通过。全量行为和服务器仍由BE-33/34/35汇总，不借基座交接关闭后续任务。
 
-F-01～F-06实际满足后，在`delivery-phases.json`记录基座验收证据及FOUNDATION_ACCEPTED，由用户据此分派后续任务。当前生成器已保存F-01～05技术核对和F-06待办，门槛为PENDING_OWNER_ACCEPTANCE_AND_MAIN_DELIVERY；不是全部通过。状态变化同步维护生成器及校验器，不能只手改JSON。尚未满足的必需门槛不得以“有说明”替代；确有范围调整先明确修订设计和交接边界。
+F-01～F-06实际满足后，在`delivery-phases.json`记录基座验收证据及FOUNDATION_ACCEPTED，由用户据此分派后续任务。当前生成器已保存F-01～06核对、用户整体确认和实际main交付提交，门槛为FOUNDATION_ACCEPTED；后续业务仍须登记实际负责人和满足原依赖。状态变化同步维护生成器及校验器，不能只手改JSON。尚未满足的必需门槛不得以“有说明”替代；确有范围调整先明确修订设计和交接边界。
 
 ## 分派业务任务时要补什么
 

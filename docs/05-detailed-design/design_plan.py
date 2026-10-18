@@ -13,6 +13,8 @@ ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parent.parent
 FOUNDATION_IDS = {f'BE-{n:02}' for n in range(1, 6)}
 BUSINESS_START = ['FOUNDATION_ACCEPTED', 'BUSINESS_OWNER_ASSIGNED']
+FOUNDATION_SOURCE_COMMIT = '379ad438220a478093947f657d04eb56a6a2efcb'
+FOUNDATION_MERGE_COMMIT = 'b68aa9aee6e78dd0b2cc1922d68028ce68ddeb11'
 
 MODULES = [
     ('M00', 'core', '事务、幂等、审计追加与公共契约', 'A', [], 'CommandBoundary/ReadBoundary、WriteContext、HttpIdempotency、AuditAppender、CanonicalPayloadCodec；只定义公共能力，不调用具体业务服务'),
@@ -108,17 +110,21 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
         estimateHours=dict(zip(('low','likely','high'),estimate)),
         reviewHours=dict.fromkeys(('low','likely','high'),0),dependencies=[f'BE-{x:02}' for x in deps],
         modules=mods.split(),operations=ops.split(),acceptance=[f'AT-{x:02}' for x in cases],
-        deliverable=deliverable,notes=notes,status='IN_PROGRESS' if n == 1 else ('OWNER_ACCEPTED' if n in (2,3,4,5) else 'PLANNED'),milestone='后端全范围可部署演示（拟建）',
+        deliverable=deliverable,notes=notes,status='OWNER_ACCEPTED' if foundation else 'PLANNED',milestone='后端全范围可部署演示（拟建）',
         labels=['backend','design-ready'],remoteIssueNumber=None,remotePrNumber=None))
     if n == 1:
         TASKS[-1]['implementationProgress'] = dict(evidence='FOUNDATION-REVIEW.md',
             scope='LOCAL_ENVIRONMENT_AND_FOUNDATION_HANDOFF_REVIEW',
             localTechnicalPreparationVerified=True,teamRepositoryAccessVerified=False,
-            mergedToMain=False,ownerAccepted=False)
+            mergedToMain=True,ownerAccepted=True)
+        TASKS[-1]['ownerAcceptance'] = dict(acceptedBy='USER',date='2026-10-18',scope='BE-01',
+            implementationCommit=FOUNDATION_SOURCE_COMMIT,source='USER_MESSAGE',
+            message='确认基座通过，合并 main 并推送',interpretation='OVERALL_FOUNDATION_HANDOFF_ACCEPTANCE',
+            mergedToMain=True,evidence='FOUNDATION-REVIEW.md')
     if n == 2:
         TASKS[-1]['ownerAcceptance'] = dict(acceptedBy='USER',date='2026-10-17',
             scope='BE-02',implementationCommit='f911c60',source='USER_MESSAGE',message='确认通过',
-            mergedToMain=False,evidence='BE-02-IMPLEMENTATION.md')
+            mergedToMain=True,evidence='BE-02-IMPLEMENTATION.md')
     if n == 3:
         TASKS[-1]['implementationProgress'] = dict(evidence='BE-03-PREPARATION.md',
             scope='MIGRATIONS_BASIC_JPA_AND_STARTUP_GUARD',databaseExecuted=True,
@@ -127,7 +133,7 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             persistenceEvidence='BE-03-PERSISTENCE.md',startupGuardVerified=True,ownerAccepted=True)
         TASKS[-1]['ownerAcceptance'] = dict(acceptedBy='USER',date='2026-10-18',scope='BE-03',
             implementationCommit='b8caeb2',source='USER_MESSAGE',message='继续',
-            interpretation='CONTINUE_AFTER_BE03_REVIEW',mergedToMain=False,evidence='BE-04-TRANSACTIONS.md')
+            interpretation='CONTINUE_AFTER_BE03_REVIEW',mergedToMain=True,evidence='BE-04-TRANSACTIONS.md')
     if n == 4:
         TASKS[-1]['implementationProgress'] = dict(evidence='BE-04-TRANSACTIONS.md',
             scope='PUBLIC_TRANSACTION_SNAPSHOT_AND_AUDIT_MECHANISMS',databaseExecuted=True,
@@ -135,7 +141,7 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             crossDomainBusinessVerified=False,ownerAccepted=True)
         TASKS[-1]['ownerAcceptance'] = dict(acceptedBy='USER',date='2026-10-18',scope='BE-04',
             implementationCommit='58b556a',source='USER_MESSAGE',message='BE-04 确认服务为up状态，接下来做什么',
-            interpretation='LOCAL_UP_CONFIRMATION_AFTER_BE04_HANDOFF',mergedToMain=False,
+            interpretation='LOCAL_UP_CONFIRMATION_AFTER_BE04_HANDOFF',mergedToMain=True,
             evidence='BE-04-TRANSACTIONS.md')
 
     if n == 5:
@@ -148,9 +154,9 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             implementationCommit='d059d11',source='USER_MESSAGE',message='是，已设为 true',
             precedingHealthConfirmation='确认status状态为up',idempotencyEnabledConfirmed=True,
             interpretation='ENABLED_LOCAL_UP_CONFIRMATION_AFTER_BE05_HANDOFF',
-            mergedToMain=False,evidence='BE-05-IDEMPOTENCY.md')
+            mergedToMain=True,evidence='BE-05-IDEMPOTENCY.md')
 
-t(1,'基座开发准备与协作条件核验','A',(1,2,3),[], 'M00 M12','',[1,39], '用户负责并确认基座，使用本机MySQL服务；JDK21可在IDE引用，命令行未配置；云服务器已具备，Docker数据库留后续；核验实际版本/隔离条件及工具。','用户已明确基座无需他人评审；JDK/Wrapper构建、本机MySQL8.4.8测试库迁移/启动/账号及独立实例机制已验证。开发库迁移/guard/启动/健康已获用户截图及日志确认；D-050已完成F-01～05证据核对，团队访问、本人整体确认及共同主线交付等协作事项仍待完成（见FOUNDATION-REVIEW.md）；不把云服务器存在当Docker数据库已部署。')
+t(1,'基座开发准备与协作条件核验','A',(1,2,3),[], 'M00 M12','',[1,39], '用户负责并确认基座，使用本机MySQL服务；JDK21可在IDE引用，命令行未配置；云服务器已具备，Docker数据库留后续；核验实际版本/隔离条件及工具。','用户已明确基座无需他人评审；JDK/Wrapper构建、本机MySQL8.4.8测试库迁移/启动/账号及独立实例机制已验证。开发库迁移/guard/启动/健康已获用户截图及日志确认；D-053用户已整体确认并交付main/b68aa9a（远程回查通过）；成员访问与实际业务任务登记留团队接入继续核对（见FOUNDATION-REVIEW.md）；不把云服务器存在当Docker数据库已部署。')
 t(2,'应用骨架、契约边界与健康检查','A',(1.5,3,5),[1],'M00 M12','',[1,37], 'backend单Maven工程、按模块分包、配置绑定、统一Problem/请求ID、未知字段拒绝、Actuator健康。')
 t(3,'迁移、UUID/版本及JPA基础适配','A',(2.5,5,8),[2],'M00','',[2], 'Flyway初始表/约束/触发器/guard、UUID字符映射、UTC和版本边界；各域实体仍在对应业务Issue实现。','schema.sql是待引擎审查草案，不能原样运行后直接宣布所有业务正确。')
 t(4,'统一写事务、读快照与审计追加','A',(2,4,6),[3],'M00 M11','',[3,33], 'CommandBoundary/ReadBoundary、WriteContext及同事务AuditAppender、锁等待与错误分类；两个连接的屏障测试。')
@@ -199,6 +205,8 @@ ACCEPTANCE_SCOPES = {
     35: '汇总AT-39完整Issue/PR/commit/候选包与发布证据，检查其他后端AT均有实际结果；有未通过项时不得宣布全量发布完成。',
 }
 for task in TASKS:
+    if task['phase']=='FOUNDATION':
+        task['ownerAcceptance']['mainMergeCommit']=FOUNDATION_MERGE_COMMIT
     task['acceptanceScope'] = ACCEPTANCE_SCOPES.get(int(task['id'][-2:]),
         '完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。')
 
@@ -233,15 +241,21 @@ def generate():
     modules=[dict(id=m[0],package=m[1],name=m[2],ownerSlot='USER' if m[0]=='M00' else None,
         suggestedOwnerSlot=m[3],assignmentStatus='OWNER_CONFIRMED' if m[0]=='M00' else 'UNASSIGNED',
         dependencies=m[4],responsibility=m[5]) for m in MODULES]
-    phase_plan=dict(revision='1.3',decision='D-039',organizationDecision='D-038',collaborationDecision='D-051',foundation=dict(
-        ownerSlot='USER',taskIds=sorted(FOUNDATION_IDS),status='IN_PROGRESS',reviewRequired=False,reviewPolicy='OWNER_ACCEPTANCE',
+    phase_plan=dict(revision='1.3',decision='D-039',organizationDecision='D-038',collaborationDecision='D-051',deliveryDecision='D-053',foundation=dict(
+        ownerSlot='USER',taskIds=sorted(FOUNDATION_IDS),status='OWNER_ACCEPTED',reviewRequired=False,reviewPolicy='OWNER_ACCEPTANCE',
         acceptanceOwnerSlot='USER',acceptanceGate='FOUNDATION_ACCEPTED',reviewerSlot=None,
-        ownerAcceptedTaskIds=['BE-02','BE-03','BE-04','BE-05']),business=dict(
+        ownerAcceptedTaskIds=sorted(FOUNDATION_IDS),
+        ownerAcceptance=dict(acceptedBy='USER',date='2026-10-18',source='USER_MESSAGE',
+            message='确认基座通过，合并 main 并推送',acceptedSourceCommit=FOUNDATION_SOURCE_COMMIT,
+            evidence='FOUNDATION-REVIEW.md'),
+        mainDelivery=dict(branch='main',mergeCommit=FOUNDATION_MERGE_COMMIT,sourceCommit=FOUNDATION_SOURCE_COMMIT,
+            remote='origin',remoteRef='refs/heads/main',pushVerified=True,
+            verifiedRemoteCommit=FOUNDATION_MERGE_COMMIT,evidence='FOUNDATION-REVIEW.md')),business=dict(
         taskIds=[t['id'] for t in TASKS if t['phase']=='BUSINESS'],ownerSlot=None,
         assignmentStatus='UNASSIGNED',startConditions=BUSINESS_START,reviewPolicy='OWNER_ACCEPTANCE',
         reviewRequired=False,reviewerSlot=None,acceptanceOwnerPolicy='TASK_OWNER'),
-        gateStatus='PENDING_OWNER_ACCEPTANCE_AND_MAIN_DELIVERY',
-        gateEvidence=[dict(id=f'F-{n:02}',status='VERIFIED' if n <= 5 else 'PENDING',
+        gateStatus='FOUNDATION_ACCEPTED',
+        gateEvidence=[dict(id=f'F-{n:02}',status='VERIFIED',
             evidence='FOUNDATION-REVIEW.md',date='2026-10-18',
             scope='PUBLIC_FOUNDATION_ONLY' if n <= 5 else 'OWNER_ACCEPTANCE_AND_MAIN_DELIVERY')
             for n in range(1,7)],
@@ -317,11 +331,11 @@ def generate():
         handlers.append(f"| {row['method']} {row['operationId']} | {row['module']} / {row['issue']} | {','.join(row['requestModels']) or ('无body' if not ops_with_body.get(row['operationId']) else '内联multipart/JSON')} | {responses} | {params} |")
     handlers+=['','星号为参数必填；条件必填的管理员上下文仍需结合当前身份校验。204为空响应，幂等内部缓存保存安全空结果及授权事实。error Problem、fieldErrors和认证安全头由公共适配统一处理，不能从成功模型数量推断错误语义。']
     write('HANDLER-CONTRACTS.md','\n'.join(handlers))
-    tests=['# 后端验收与TDD交接','','下表为验收目标：AT-01/37的BE-02部分、AT-02的基础持久化及AT-03/33的公共事务/快照及AT-04的公共幂等部分为PARTIALLY_VERIFIED，其余35项DESIGNED_NOT_RUN；完整业务仍未验收，局部证据见[BE-02实施记录](BE-02-IMPLEMENTATION.md)、[持久化基础验证](BE-03-PERSISTENCE.md)、[公共事务](BE-04-TRANSACTIONS.md)和[幂等机制](BE-05-IDEMPOTENCY.md)。其中AT-40为前端后置交接，不计本期后端验收；其余40项覆盖后端、部署及协作。实际执行需对应Issue按项目TDD技能记录失败→实现→通过，并在隔离MySQL8.4运行关键事务/并发/故障场景。','','D-038阶段约定：用户先验证BE-01～05的公共机制和对应acceptanceScope，F-01～06为基座交接检查，不新增业务测试编号。真实身份、草稿删除、审批、导入等端到端场景留业务分派后补齐；夹具证明机制不能标记整个AT或业务已通过。F-01～05证据已核对，F-06待本人整体确认与共同主线交付；见FOUNDATION-REVIEW.md。','','| 用例 | 行为/准备 | 必须观察到的结果 | 操作 | 评审追踪 |','| --- | --- | --- | --- | --- |']
+    tests=['# 后端验收与TDD交接','','下表为验收目标：AT-01/37的BE-02部分、AT-02的基础持久化及AT-03/33的公共事务/快照及AT-04的公共幂等部分为PARTIALLY_VERIFIED，其余35项DESIGNED_NOT_RUN；完整业务仍未验收，局部证据见[BE-02实施记录](BE-02-IMPLEMENTATION.md)、[持久化基础验证](BE-03-PERSISTENCE.md)、[公共事务](BE-04-TRANSACTIONS.md)和[幂等机制](BE-05-IDEMPOTENCY.md)。其中AT-40为前端后置交接，不计本期后端验收；其余40项覆盖后端、部署及协作。实际执行需对应Issue按项目TDD技能记录失败→实现→通过，并在隔离MySQL8.4运行关键事务/并发/故障场景。','','D-038阶段约定：用户先验证BE-01～05的公共机制和对应acceptanceScope，F-01～06为基座交接检查，不新增业务测试编号。真实身份、草稿删除、审批、导入等端到端场景留业务分派后补齐；夹具证明机制不能标记整个AT或业务已通过。D-053已确认F-01～06，基座已合并并推送main/b68aa9a；见FOUNDATION-REVIEW.md。','','| 用例 | 行为/准备 | 必须观察到的结果 | 操作 | 评审追踪 |','| --- | --- | --- | --- | --- |']
     for case in CASES:tests.append(f"| {case['id']} {case['title']} | {case['fixture']} | {case['expected']} | {','.join(case['operations']) or '内部/部署'} | {case['reviewScenario'] or '新增验收准备'} |")
     tests+=['','## 测试层次与运行证据','','- 单元：纯策略/集合差异/规范化/目录无环，不以mock调用次数替代行为。','- HTTP：真实DTO/认证链/Problem与全部67入站响应Schema；单项管理上下文、旧token和三类JWT交叉调用。','- MySQL集成：Testcontainers MySQL8.4；无容器时使用团队批准的独立测试实例和唯一测试schema，绝不指向共享/业务库。H2不替代即时FK、JSON、触发器、生成槽与事务测试。','- 并发：两个独立连接/事务，以barrier控制锁取得/提交先后；测试方超时保证清理。既测执行先也测关权先，观察最终授权/epoch/success/audit，而不是仅断言抛异常。','- 故障：在业务第N项、audit、success及完成幂等结果前注入异常，另连接检查全回滚；结果可靠提交后模拟进程中断/响应丢失，恢复不覆盖成功。','- 部署：候选产物在实际目标服务器启动、迁移、重启、HTTPS与全链路演示；本机Mock不能替代。','','Issue的验收AT列表是最低必测行为；具体负责部分见每卡acceptanceScope。AT-37覆盖每项所属API，包括未单独列出的列表/详情/预览。基础任务可按其负责部分验收合并，不能据此把整个AT标为通过；BE-33汇总后端完整行为与契约证据，BE-34完成目标服务器，BE-35汇总发布证据。BE-01只核验准备清单，不要求先有构建或发布包，因而不形成实现前置条件循环。测试类和断言在对应模块实现时按writing-good-tests设计，BE-02已有公共适配的RED/GREEN及打包HTTP证据，见[BE-02-IMPLEMENTATION.md](BE-02-IMPLEMENTATION.md)；其余业务尚无运行结果。','','拟定构建命令为`./mvnw verify`，其中unit走Surefire、*IT走Failsafe、集成测试不得静默skip；另生成JUnit/契约验证报告。当前backend已有Wrapper及实际构建结果；BE-03准备后完整构建41项离线测试通过，包含原BE-02的30项，不等于真实数据库或完整业务验收通过，见BE-03-PREPARATION.md；最新BE-05幂等公共机制验证结果见BE-05-IDEMPOTENCY.md；51离线＋25引擎是此前BE-04结果，44离线＋9引擎是此前BE-03结果，领域映射/完整业务并发尚未验收。外部真实OA改为演示适配，信任及回调边界仍保留。']
     write('TEST-PLAN.md','\n'.join(tests))
-    cards=['# 本地Issue草案与验收卡','','修订1.3/D-051协作更新，沿用D-050整体核对：F-01～05证据已核对，F-06待本人整体确认与共同主线交付（见FOUNDATION-REVIEW.md）；BE-01为IN_PROGRESS（本机技术准备已核对，团队访问/主线交付等协作待办）；BE-02为OWNER_ACCEPTED（D-042/f911c60）；BE-03为OWNER_ACCEPTED（用户核对后回复继续，D-046/b8caeb2，见BE-03-PERSISTENCE）；BE-04为OWNER_ACCEPTED（D-047/58b556a，用户确认服务UP；公共事务/审计/快照证据见BE-04-TRANSACTIONS），BE-05为OWNER_ACCEPTED（D-049/d059d11，用户确认启用true及本机健康UP，见BE-05-IDEMPOTENCY），其余30项PLANNED。以上均未合并主线。BE-01～05为用户先实现的基座；BE-06～35为验收基座后待分派的业务/交付任务，ownerSlot为null时表示未分派。D-051统一所有任务reviewPolicy=OWNER_ACCEPTANCE，不设置独立评审人，reviewerSlot/suggestedReviewerSlot保留null仅作格式兼容、不是待填写；单列评审工时为0。suggestedOwnerSlot仅为建议组。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。','','业务任务启动须同时满足FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED和原dependencies；这两个阶段门槛不是额外业务需求。基座验收见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。开发估算含设计细化/TDD/自测/文档及负责人核对确认；不再单列他人评审，外部等待不计。','','通用DoD：对应设计已读且引用准确→业务/可执行基础能力RED失败原因留证→最小实现→GREEN及重构→对应安全/事务验收→任务负责人核对行为/权限/事务/恢复及测试证据后明确确认完成→集成与文档更新。环境/协作/发布核验使用真实记录。未运行验证不得勾选通过；依赖只有合并且本任务负责部分通过才解除，完整跨域证据由BE-33/34/35汇总。秘密不进Issue正文。']
+    cards=['# 本地Issue草案与验收卡','','修订1.3/D-053主线交付，沿用D-051协作规则与D-050核对：D-053已确认F-01～06，基座已合并并推送main/b68aa9a（见FOUNDATION-REVIEW.md）；BE-01为OWNER_ACCEPTED（D-053整体交接确认，成员接入待办保留）；BE-02为OWNER_ACCEPTED（D-042/f911c60）；BE-03为OWNER_ACCEPTED（用户核对后回复继续，D-046/b8caeb2，见BE-03-PERSISTENCE）；BE-04为OWNER_ACCEPTED（D-047/58b556a，用户确认服务UP；公共事务/审计/快照证据见BE-04-TRANSACTIONS），BE-05为OWNER_ACCEPTED（D-049/d059d11，用户确认启用true及本机健康UP，见BE-05-IDEMPOTENCY），其余30项PLANNED。BE-01～05已由D-053整体确认，合并main/b68aa9a并推送回查通过。BE-01～05为用户先实现的基座；BE-06～35为验收基座后待分派的业务/交付任务，ownerSlot为null时表示未分派。D-051统一所有任务reviewPolicy=OWNER_ACCEPTANCE，不设置独立评审人，reviewerSlot/suggestedReviewerSlot保留null仅作格式兼容、不是待填写；单列评审工时为0。suggestedOwnerSlot仅为建议组。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。','','业务任务启动须同时满足FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED和原dependencies；这两个阶段门槛不是额外业务需求。基座验收见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。开发估算含设计细化/TDD/自测/文档及负责人核对确认；不再单列他人评审，外部等待不计。','','通用DoD：对应设计已读且引用准确→业务/可执行基础能力RED失败原因留证→最小实现→GREEN及重构→对应安全/事务验收→任务负责人核对行为/权限/事务/恢复及测试证据后明确确认完成→集成与文档更新。环境/协作/发布核验使用真实记录。未运行验证不得勾选通过；依赖只有合并且本任务负责部分通过才解除，完整跨域证据由BE-33/34/35汇总。秘密不进Issue正文。']
     for task in TASKS:
         est=task['estimateHours']
         cards += [f"\n## {task['id']} {task['title']}", '',
@@ -371,7 +385,7 @@ def generate_schedule():
         lines.append(f"| {label} | {fmt('developmentHours')} | {fmt('reviewHours')} | {fmt('totalHours')} |")
     lines+=['','用户基座开发及本人确认估算为9/18/28小时；全部任务由负责人确认，不另设评审人，单列评审为0。业务负责人未分派，businessPersonLoad=null；删除旧方案A～D个人负载和固定分工日历，不把建议组当真实人员。','','**完整范围低估算70.5人时接近72上限，中估130.5人时仍超出预算，不能据此保证5～6天全量交付。** 增加投入或顺延需团队协调，业务范围变化另确认。','','## 两阶段容量下界','','基座阶段由用户开发并确认，其他人可准备场景；业务阶段暂以四人可投入计算容量，尚不代表业务已分派。粗下界=向上取整〔基座开发人时/每人每日小时＋业务阶段开发及负责人自检确认总人时/(4×每人每日小时)〕。该式不含依赖和环境延迟；不是可执行日历。','','| 情境 | 每人每天小时 | 仅看总量的容量下界 | 加入基座单人先行的下界 |','| --- | --- | --- | --- |']
     for s,label in [('low','低'),('likely','中'),('high','高')]:lines.append(f"| {label} | {bounds[s]['hoursPerPersonPerDay']} | {bounds[s]['pooledCapacityDays']}工作日 | {bounds[s]['stagedCapacityDays']}工作日 |")
-    lines+=['','公式与阶段汇总见[estimates.json](estimates.json)。基座未验收不能将30项业务改为已分派/已开工；其他人可先阅读和准备数据，不承诺实际编码分工。','','## 实际推进顺序','','1. 用户按BE-01→02→03→04→05实施基座，逐项TDD并保留可评审的小PR；这份计划修订本身没有开始实现。','2. 按[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)完成真实环境验证、说明、用户本人确认和主线交付，记录基座验收证据；不是以文件生成或Mock摘要通过门槛。','3. 基座通过后，由用户把30项任务分派到真实成员，补负责人、真实Issue及依赖PR，重新核算个人负载和排期。','4. 业务阶段按既有依赖并行，BE-06/10等基础业务先行，之后目录角色、申请OA、来源导入按条件接入；完整闭环是集成里程碑，不要求所有人等整条闭环才开始自己的就绪任务。','5. BE-33汇总业务实证，BE-34目标服务器验收，BE-35发布交接；未完成项保持开放。','','## 外部条件','','用户确认已有云服务器可后续部署Docker数据库，目前用本机MySQL。JDK21可在IDE引用，命令行java/javac/JAVA_HOME尚不可用；不要求永久环境变量，实施时明确IDE/显式JDK方式。用户截图显示MySQL8.4.8，已报告创建开发空库；应用连接、专用账号、测试库及云端部署仍待核验。JDK21/Wrapper3.9.11及BE-02已实测，见ENVIRONMENT.md和BE-02-IMPLEMENTATION.md。演示OA按既定方案，真实OA不是本期前置。外部等待未计入估算。']
+    lines+=['','公式与阶段汇总见[estimates.json](estimates.json)。基座已通过并交付main，但未登记负责人或技术依赖未就绪的业务仍不能记为已分派/已开工；其他人可先阅读和准备数据，不承诺实际编码分工。','','## 实际推进顺序','','1. 用户按BE-01→02→03→04→05实施基座，逐项TDD并保留可评审的小PR；这份计划修订本身没有开始实现。','2. 按[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)完成真实环境验证、说明、用户本人确认和主线交付，记录基座验收证据；不是以文件生成或Mock摘要通过门槛。','3. 基座通过后，由用户把30项任务分派到真实成员，补负责人、真实Issue及依赖PR，重新核算个人负载和排期。','4. 业务阶段按既有依赖并行，BE-06/10等基础业务先行，之后目录角色、申请OA、来源导入按条件接入；完整闭环是集成里程碑，不要求所有人等整条闭环才开始自己的就绪任务。','5. BE-33汇总业务实证，BE-34目标服务器验收，BE-35发布交接；未完成项保持开放。','','## 外部条件','','用户确认已有云服务器可后续部署Docker数据库，目前用本机MySQL。JDK21可在IDE引用，命令行java/javac/JAVA_HOME尚不可用；不要求永久环境变量，实施时明确IDE/显式JDK方式。用户截图显示MySQL8.4.8，已报告创建开发空库；应用连接、专用账号、测试库及云端部署仍待核验。JDK21/Wrapper3.9.11及BE-02已实测，见ENVIRONMENT.md和BE-02-IMPLEMENTATION.md。演示OA按既定方案，真实OA不是本期前置。外部等待未计入估算。']
     write('IMPLEMENTATION-PLAN.md','\n'.join(lines))
 
 

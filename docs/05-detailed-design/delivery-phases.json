@@ -3,6 +3,7 @@
   "decision": "D-039",
   "organizationDecision": "D-038",
   "collaborationDecision": "D-051",
+  "deliveryDecision": "D-053",
   "foundation": {
     "ownerSlot": "USER",
     "taskIds": [
@@ -12,18 +13,37 @@
       "BE-04",
       "BE-05"
     ],
-    "status": "IN_PROGRESS",
+    "status": "OWNER_ACCEPTED",
     "reviewRequired": false,
     "reviewPolicy": "OWNER_ACCEPTANCE",
     "acceptanceOwnerSlot": "USER",
     "acceptanceGate": "FOUNDATION_ACCEPTED",
     "reviewerSlot": null,
     "ownerAcceptedTaskIds": [
+      "BE-01",
       "BE-02",
       "BE-03",
       "BE-04",
       "BE-05"
-    ]
+    ],
+    "ownerAcceptance": {
+      "acceptedBy": "USER",
+      "date": "2026-10-18",
+      "source": "USER_MESSAGE",
+      "message": "确认基座通过，合并 main 并推送",
+      "acceptedSourceCommit": "379ad438220a478093947f657d04eb56a6a2efcb",
+      "evidence": "FOUNDATION-REVIEW.md"
+    },
+    "mainDelivery": {
+      "branch": "main",
+      "mergeCommit": "b68aa9aee6e78dd0b2cc1922d68028ce68ddeb11",
+      "sourceCommit": "379ad438220a478093947f657d04eb56a6a2efcb",
+      "remote": "origin",
+      "remoteRef": "refs/heads/main",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "b68aa9aee6e78dd0b2cc1922d68028ce68ddeb11",
+      "evidence": "FOUNDATION-REVIEW.md"
+    }
   },
   "business": {
     "taskIds": [
@@ -69,7 +89,7 @@
     "reviewerSlot": null,
     "acceptanceOwnerPolicy": "TASK_OWNER"
   },
-  "gateStatus": "PENDING_OWNER_ACCEPTANCE_AND_MAIN_DELIVERY",
+  "gateStatus": "FOUNDATION_ACCEPTED",
   "gateEvidence": [
     {
       "id": "F-01",
@@ -108,7 +128,7 @@
     },
     {
       "id": "F-06",
-      "status": "PENDING",
+      "status": "VERIFIED",
       "evidence": "FOUNDATION-REVIEW.md",
       "date": "2026-10-18",
       "scope": "OWNER_ACCEPTANCE_AND_MAIN_DELIVERY"

@@ -1,6 +1,6 @@
 # 本地Issue草案与验收卡
 
-修订1.3/D-051协作更新，沿用D-050整体核对：F-01～05证据已核对，F-06待本人整体确认与共同主线交付（见FOUNDATION-REVIEW.md）；BE-01为IN_PROGRESS（本机技术准备已核对，团队访问/主线交付等协作待办）；BE-02为OWNER_ACCEPTED（D-042/f911c60）；BE-03为OWNER_ACCEPTED（用户核对后回复继续，D-046/b8caeb2，见BE-03-PERSISTENCE）；BE-04为OWNER_ACCEPTED（D-047/58b556a，用户确认服务UP；公共事务/审计/快照证据见BE-04-TRANSACTIONS），BE-05为OWNER_ACCEPTED（D-049/d059d11，用户确认启用true及本机健康UP，见BE-05-IDEMPOTENCY），其余30项PLANNED。以上均未合并主线。BE-01～05为用户先实现的基座；BE-06～35为验收基座后待分派的业务/交付任务，ownerSlot为null时表示未分派。D-051统一所有任务reviewPolicy=OWNER_ACCEPTANCE，不设置独立评审人，reviewerSlot/suggestedReviewerSlot保留null仅作格式兼容、不是待填写；单列评审工时为0。suggestedOwnerSlot仅为建议组。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。
+修订1.3/D-053主线交付，沿用D-051协作规则与D-050核对：D-053已确认F-01～06，基座已合并并推送main/b68aa9a（见FOUNDATION-REVIEW.md）；BE-01为OWNER_ACCEPTED（D-053整体交接确认，成员接入待办保留）；BE-02为OWNER_ACCEPTED（D-042/f911c60）；BE-03为OWNER_ACCEPTED（用户核对后回复继续，D-046/b8caeb2，见BE-03-PERSISTENCE）；BE-04为OWNER_ACCEPTED（D-047/58b556a，用户确认服务UP；公共事务/审计/快照证据见BE-04-TRANSACTIONS），BE-05为OWNER_ACCEPTED（D-049/d059d11，用户确认启用true及本机健康UP，见BE-05-IDEMPOTENCY），其余30项PLANNED。BE-01～05已由D-053整体确认，合并main/b68aa9a并推送回查通过。BE-01～05为用户先实现的基座；BE-06～35为验收基座后待分派的业务/交付任务，ownerSlot为null时表示未分派。D-051统一所有任务reviewPolicy=OWNER_ACCEPTANCE，不设置独立评审人，reviewerSlot/suggestedReviewerSlot保留null仅作格式兼容、不是待填写；单列评审工时为0。suggestedOwnerSlot仅为建议组。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。
 
 业务任务启动须同时满足FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED和原dependencies；这两个阶段门槛不是额外业务需求。基座验收见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。开发估算含设计细化/TDD/自测/文档及负责人核对确认；不再单列他人评审，外部等待不计。
 
@@ -8,7 +8,7 @@
 
 ## BE-01 基座开发准备与协作条件核验
 
-- 状态：IN_PROGRESS；阶段FOUNDATION；负责人用户（已确认），本人确认无需他人评审；模块M00,M12。
+- 状态：OWNER_ACCEPTED；阶段FOUNDATION；负责人用户（已确认），本人确认无需他人评审；模块M00,M12。
 - 分派参考：建议组A，不是已确认人员；启动条件基座任务按下列依赖推进。
 - 依赖：无；开发估算1/2/3h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。
@@ -17,7 +17,7 @@
 - 验收：AT-01 可重复构建与最小部署；AT-39 PR与发布证据。
 - 验收边界：登记用户确认的JDK21/本机MySQL/已有云服务器和本人验收安排，补实际版本与使用方式；AT-01/39只为准备证据。无需他人批准，不要求永久JAVA_HOME/PATH；能用IDE或显式JDK运行构建即可。未运行的构建/数据库检查仍留待验证。
 - PR说明：关联真实Issue号；列明变更行为、契约/表版本、实际RED/GREEN命令及结果、待办；所有验收定义见TEST-PLAN。
-- 注意：用户已明确基座无需他人评审；JDK/Wrapper构建、本机MySQL8.4.8测试库迁移/启动/账号及独立实例机制已验证。开发库迁移/guard/启动/健康已获用户截图及日志确认；D-050已完成F-01～05证据核对，团队访问、本人整体确认及共同主线交付等协作事项仍待完成（见FOUNDATION-REVIEW.md）；不把云服务器存在当Docker数据库已部署。
+- 注意：用户已明确基座无需他人评审；JDK/Wrapper构建、本机MySQL8.4.8测试库迁移/启动/账号及独立实例机制已验证。开发库迁移/guard/启动/健康已获用户截图及日志确认；D-053用户已整体确认并交付main/b68aa9a（远程回查通过）；成员访问与实际业务任务登记留团队接入继续核对（见FOUNDATION-REVIEW.md）；不把云服务器存在当Docker数据库已部署。
 
 ## BE-02 应用骨架、契约边界与健康检查
 

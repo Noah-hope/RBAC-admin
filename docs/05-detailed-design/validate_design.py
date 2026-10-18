@@ -87,14 +87,30 @@ def checks(report):
     require(set(phase_plan['foundation']['taskIds'])==foundation_ids and phase_plan['foundation']['ownerSlot']=='USER','基座阶段边界/负责人不符')
     require(set(phase_plan['business']['taskIds'])==business_ids and phase_plan['business']['ownerSlot'] is None,'业务阶段错误指派')
     require(phase_plan['business']['startConditions']==required_gates,'阶段门槛缺失')
-    require(phase_plan['foundation']['status']=='IN_PROGRESS'
-            and phase_plan['gateStatus']=='PENDING_OWNER_ACCEPTANCE_AND_MAIN_DELIVERY','误记基座全部验收')
+    require(phase_plan['foundation']['status']=='OWNER_ACCEPTED'
+            and phase_plan['gateStatus']=='FOUNDATION_ACCEPTED'
+            and phase_plan['deliveryDecision']=='D-053','基座整体确认与交付状态不符')
     gate_evidence=phase_plan['gateEvidence']
     require([g['id'] for g in gate_evidence]==[f'F-{n:02}' for n in range(1,7)],'整体核对缺门槛项或重复')
-    require(all(g['status']==('PENDING' if g['id']=='F-06' else 'VERIFIED')
+    require(all(g['status']=='VERIFIED'
                 and g['evidence']=='FOUNDATION-REVIEW.md' and g['date']=='2026-10-18'
                 and g['scope']==('OWNER_ACCEPTANCE_AND_MAIN_DELIVERY' if g['id']=='F-06' else 'PUBLIC_FOUNDATION_ONLY')
                 for g in gate_evidence),'技术核对/本人确认/主线交付边界不符')
+    foundation_acceptance=phase_plan['foundation']['ownerAcceptance']
+    delivery=phase_plan['foundation']['mainDelivery']
+    require(foundation_acceptance.get('acceptedBy')=='USER'
+            and foundation_acceptance.get('source')=='USER_MESSAGE'
+            and foundation_acceptance.get('date')=='2026-10-18'
+            and foundation_acceptance.get('message')=='确认基座通过，合并 main 并推送'
+            and foundation_acceptance.get('acceptedSourceCommit')=='379ad438220a478093947f657d04eb56a6a2efcb','缺用户整体确认原始依据')
+    require(delivery.get('mergeCommit')=='b68aa9aee6e78dd0b2cc1922d68028ce68ddeb11'
+            and delivery.get('sourceCommit')==foundation_acceptance['acceptedSourceCommit']
+            and delivery.get('branch')=='main' and delivery.get('remote')=='origin'
+            and delivery.get('remoteRef')=='refs/heads/main' and delivery.get('pushVerified') is True
+            and delivery.get('verifiedRemoteCommit')==delivery['mergeCommit'],'缺实际主线推送回查记录')
+    require(subprocess.run(['git','merge-base','--is-ancestor',delivery['mergeCommit'],'HEAD'],cwd=REPO,capture_output=True).returncode==0,'交付合并不是当前代码祖先')
+    merge_parents=subprocess.check_output(['git','show','-s','--format=%P',delivery['mergeCommit']],cwd=REPO,text=True).split()
+    require(len(merge_parents)==2 and merge_parents[1]==delivery['sourceCommit'],'交付合并与本人确认版本不符')
     require((ROOT/'FOUNDATION-REVIEW.md').exists() and (ROOT/'FOUNDATION-USAGE.md').exists(),'缺交接核对或团队使用指南')
     require(phase_plan['foundation']['reviewerSlot'] is None,'虚构基座评审人')
     require(phase_plan['foundation']['reviewRequired'] is False and phase_plan['foundation']['reviewPolicy']=='OWNER_ACCEPTANCE' and phase_plan['foundation']['acceptanceOwnerSlot']=='USER','未落实基座本人确认')
@@ -107,16 +123,22 @@ def checks(report):
         require(module['ownerSlot']==('USER' if module['id']=='M00' else None),'模块人员误记已分派')
     referenced=set()
     for task in tasks:
-        expected_status={'BE-01':'IN_PROGRESS','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
+        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
         require(task['status']==expected_status,'任务准备/实现状态不符')
         if task['id']=='BE-01':
+            acceptance=task.get('ownerAcceptance',{})
+            require(acceptance.get('acceptedBy')=='USER' and acceptance.get('scope')=='BE-01'
+                    and acceptance.get('message')==foundation_acceptance['message']
+                    and acceptance.get('implementationCommit')==delivery['sourceCommit']
+                    and acceptance.get('source')=='USER_MESSAGE' and acceptance.get('date')=='2026-10-18'
+                    and acceptance.get('mergedToMain') is True,'BE-01本人确认不符')
             progress=task.get('implementationProgress',{})
             require(progress.get('evidence')=='FOUNDATION-REVIEW.md'
                     and progress.get('scope')=='LOCAL_ENVIRONMENT_AND_FOUNDATION_HANDOFF_REVIEW'
                     and progress.get('localTechnicalPreparationVerified') is True
                     and progress.get('teamRepositoryAccessVerified') is False
-                    and progress.get('mergedToMain') is False
-                    and progress.get('ownerAccepted') is False,'BE-01准备/协作待办状态不符')
+                    and progress.get('mergedToMain') is True
+                    and progress.get('ownerAccepted') is True,'BE-01准备/协作待办状态不符')
         if task['id']=='BE-03':
             progress=task.get('implementationProgress',{})
             require(progress.get('evidence')=='BE-03-PREPARATION.md'
@@ -133,7 +155,7 @@ def checks(report):
                     and acceptance.get('implementationCommit')=='b8caeb2'
                     and acceptance.get('message')=='继续' and acceptance.get('source')=='USER_MESSAGE'
                     and acceptance.get('interpretation')=='CONTINUE_AFTER_BE03_REVIEW'
-                    and acceptance.get('date')=='2026-10-18' and acceptance.get('mergedToMain') is False,
+                    and acceptance.get('date')=='2026-10-18' and acceptance.get('mergedToMain') is True,
                     'BE-03本人确认或主线状态不符')
         if task['id']=='BE-05':
             progress=task.get('implementationProgress',{})
@@ -152,7 +174,7 @@ def checks(report):
                     and acceptance.get('precedingHealthConfirmation')=='确认status状态为up'
                     and acceptance.get('idempotencyEnabledConfirmed') is True
                     and acceptance.get('interpretation')=='ENABLED_LOCAL_UP_CONFIRMATION_AFTER_BE05_HANDOFF'
-                    and acceptance.get('date')=='2026-10-18' and acceptance.get('mergedToMain') is False,
+                    and acceptance.get('date')=='2026-10-18' and acceptance.get('mergedToMain') is True,
                     'BE-05本人确认依据或主线状态不符')
         if task['id']=='BE-04':
             progress=task.get('implementationProgress',{})
@@ -166,15 +188,17 @@ def checks(report):
                     and acceptance.get('implementationCommit')=='58b556a'
                     and acceptance.get('source')=='USER_MESSAGE' and acceptance.get('message')=='BE-04 确认服务为up状态，接下来做什么'
                     and acceptance.get('interpretation')=='LOCAL_UP_CONFIRMATION_AFTER_BE04_HANDOFF'
-                    and acceptance.get('date')=='2026-10-18' and acceptance.get('mergedToMain') is False,
+                    and acceptance.get('date')=='2026-10-18' and acceptance.get('mergedToMain') is True,
                     'BE-04本人确认依据或主线状态不符')
         if task['id']=='BE-02':
             acceptance=task.get('ownerAcceptance',{})
             require(acceptance.get('acceptedBy')=='USER' and acceptance.get('scope')=='BE-02'
                     and acceptance.get('date')=='2026-10-17' and acceptance.get('source')=='USER_MESSAGE'
                     and acceptance.get('message')=='确认通过' and acceptance.get('implementationCommit')=='f911c60'
-                    and acceptance.get('mergedToMain') is False,'BE-02本人确认依据/主线状态不符')
-            require(phase_plan['foundation'].get('ownerAcceptedTaskIds')==['BE-02','BE-03','BE-04','BE-05'],'单项确认错误扩展到整个基座')
+                    and acceptance.get('mergedToMain') is True,'BE-02本人确认依据/主线状态不符')
+            require(phase_plan['foundation'].get('ownerAcceptedTaskIds')==['BE-01','BE-02','BE-03','BE-04','BE-05'],'基座五项本人确认清单不符')
+        if task['id'] in foundation_ids:
+            require(task['ownerAcceptance'].get('mainMergeCommit')==phase_plan['foundation']['mainDelivery']['mergeCommit'],'基座任务缺主线交付提交')
         require(task['remoteIssueNumber'] is None and task['remotePrNumber'] is None,'伪造远程事项')
         require(task['suggestedOwnerSlot'] in 'ABCD','建议组无效')
         require(task['reviewerSlot'] is None and task['suggestedReviewerSlot'] is None
@@ -339,7 +363,7 @@ def checks(report):
         diagramVertices=vertices,diagramEdges=edges,localLinks=links,pythonSyntaxFiles=len(list(ROOT.glob('*.py'))),
         decisionIds=len(decisions),upstreamSha256=source_hashes,
         planRevision='1.3',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=len(business_ids),
-        foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:IN_PROGRESS',
+        foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:OWNER_ACCEPTED',
         foundationGateStatus=phase_plan['gateStatus'],businessOperationsAwaitingAssignment=len(mapping),
         artifactSha256={n:sha(ROOT/n) for n in GENERATED}))
 

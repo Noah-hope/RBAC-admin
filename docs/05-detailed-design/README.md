@@ -1,6 +1,6 @@
 # 后端详细设计与协作实施入口
 
-2026-10-18/D-050：公共基座整体核对已完成，F-01～05证据VERIFIED，F-06待本人整体确认及共同主线交付。BE-02～05单项已本人确认；BE-01本机技术准备已核对，协作与整体交付仍IN_PROGRESS；30项业务仍未分派。当前门槛尚非FOUNDATION_ACCEPTED。
+2026-10-18/D-053：用户明确确认基座整体交接通过，并授权合并main及推送。BE-01～05均OWNER_ACCEPTED、F-01～06通过，门槛FOUNDATION_ACCEPTED；main/b68aa9a已推送GitHub且回查一致。30项业务仍未分派，开工须另登记负责人并满足原技术依赖。
 
 先读[整体交接核对](FOUNDATION-REVIEW.md)和[团队使用指南](FOUNDATION-USAGE.md)，实际环境操作见[后端运行说明](../../backend/README.md)。公共HTTP、迁移/基础JPA、读写事务/审计及幂等机制已实现；最新64离线＋42隔离MySQL检查全通过，开发/测试库迁移和普通启动也有用户证据。本轮只复核既有报告及产物，未重跑Java或SQL。
 

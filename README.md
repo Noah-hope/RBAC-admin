@@ -1,6 +1,6 @@
 # rbac-admin · 集中权限管理系统
 
-当前处于公共基座交接：BE-02～05单项已本人确认，BE-01环境与协作准备已开展核对；F-01～05证据已核对，F-06待本人整体确认与共同主线交付。最新64离线＋42真实MySQL检查通过，开发/测试库迁移和普通启动已确认；30项业务尚未分派。见[整体核对报告](docs/05-detailed-design/FOUNDATION-REVIEW.md)和[后续开发简明指南](docs/05-detailed-design/FOUNDATION-USAGE.md)。
+公共基座已完成本人整体确认：BE-01～05为OWNER_ACCEPTED，F-01～06通过，FOUNDATION_ACCEPTED；2026-10-18已合并并推送main/b68aa9a，远程回查一致。最新64离线＋42真实MySQL检查通过，开发/测试库迁移和普通启动已确认；30项业务尚未分派。见[整体核对报告](docs/05-detailed-design/FOUNDATION-REVIEW.md)和[后续开发简明指南](docs/05-detailed-design/FOUNDATION-USAGE.md)。
 
 当前业务范围：**仅管理功能权限**。员工经角色获得系统进入及查看、编辑、新增等操作权限；不设计业务数据权限。需求于 2026-10-15 按用户要求修订，说明见[变更记录](docs/project/FUNCTION_PERMISSIONS.md)。
 
