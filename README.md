@@ -2,6 +2,8 @@
 
 身份模块与后续目录样例：见[BE-06实现](docs/05-detailed-design/BE-06-IDENTITY.md)和[本机启用及组员接入](docs/05-detailed-design/BE-06-LOCAL-SETUP.md)。
 
+D-058：A已继续实现[BE-07后台账号管理与密码重置](docs/05-detailed-design/BE-07-ACCOUNTS.md)，包含5个既有接口及事务/幂等/审计接入，待本人确认；其余28项待实现。BE-06本人确认已完成，BE-06/07主线交付仍待办理；下方数量与状态中的旧29项为此前记录。
+
 公共基座已完成本人整体确认：BE-01～05为OWNER_ACCEPTED，F-01～06通过，FOUNDATION_ACCEPTED；2026-10-18已合并并推送main/b68aa9a，远程回查一致。BE-06最终74离线＋59真实MySQL检查通过（含基座原64＋42回归），开发/测试库迁移和普通启动已确认；30项业务已按D-055登记A～D分工；D-056用户认领A，BE-06在开发分支实现并获本人确认（D-057），待合入，其余29项待实现。见[整体核对报告](docs/05-detailed-design/FOUNDATION-REVIEW.md)和[后续开发简明指南](docs/05-detailed-design/FOUNDATION-USAGE.md)。
 
 当前业务范围：**仅管理功能权限**。员工经角色获得系统进入及查看、编辑、新增等操作权限；不设计业务数据权限。需求于 2026-10-15 按用户要求修订，说明见[变更记录](docs/project/FUNCTION_PERMISSIONS.md)。

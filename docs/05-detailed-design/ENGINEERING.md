@@ -1,5 +1,7 @@
 # 工程布局与技术设计取值
 
+D-058（2026-10-19）：BE-07在确认BE-06祖先上实现账号管理五个接口，75离线＋80真实MySQL全通过且专属实例已清理，待A本人确认。复用原RSA/HMAC配置、单Maven工程与identity/web分包，不新增依赖或迁移，详见[账号管理](BE-07-ACCOUNTS.md)。下方D-056待确认为BE-06实施时历史，已由D-057确认。
+
 D-056当前业务实施：用户认领A，BE-06身份模块已在开发分支实现，待本人确认与合入；四个正式接口、当前资格、会话、RS256与PBKDF2基于本页技术取值完成。实际代码按identity/service、repository、security、config与web/identity/controller、dto组织。启用需本地RSA配置，关闭时业务认证入口503；见[BE-06](BE-06-IDENTITY.md)及[本机配置](BE-06-LOCAL-SETUP.md)。下方D-049以前为历史。
 
 2026-10-18/D-049：用户已确认健康status=UP，并明确回复RBAC_IDEMPOTENCY_ENABLED“是，已设为 true”。结合15:28本机启动/测试库连接日志，按BE-05交接范围记录d059d11为OWNER_ACCEPTED；不是仅凭UP推断启用。BE-02～05单项已本人确认，BE-01仍IN_PROGRESS、其余30项PLANNED，基座总门槛NOT_EVALUATED；下一步核对BE-01剩余条件和F-01～06整体交接，不自行开始业务、合并或推送。见[BE-05确认记录](BE-05-IDEMPOTENCY.md)。下方待确认/待核验描述是此前历史，以本段及机器清单为准。

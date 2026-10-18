@@ -40,4 +40,13 @@ class IdempotencyValueTest {
         assertThatThrownBy(()->new SafeResult(200,"{\"value\":1,\"value\":2}",null)).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(()->new SafeResult(200,"{} {\"password\":\"fixture\"}",null)).isInstanceOf(IllegalArgumentException.class);
     }
+    @Test void accountPasswordChangeFlagIsSafeOnlyAsAnExactBooleanField() {
+        assertThatCode(()->new SafeResult(201,"{\"mustChangePassword\":true}","/api/v1/admin/accounts/demo"))
+                .doesNotThrowAnyException();
+        for(String value:List.of("\"private-fixture\"","null","{}","[]","1"))
+            assertThatThrownBy(()->new SafeResult(200,"{\"mustChangePassword\":"+value+"}",null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(()->new SafeResult(200,"{\"must_change_password\":true}",null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(()->new SafeResult(200,"{\"mustChangePassword\":true,\"nested\":{\"password\":\"private-fixture\"}}",null))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }

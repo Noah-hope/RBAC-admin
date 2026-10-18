@@ -1,5 +1,7 @@
 # 模块结构、接口与责任
 
+D-058：BE-07的AccountController/AccountDtos适配五个账号接口，AccountService在调用方RR/guard内复核当前总管理员，AccountRepository只返回安全账号投影；不以HTTP先前认证代替最终资格。状态/重置复用IdentityRepository撤销会话，写入、审计与幂等完成同事务。设计及真实验证见[账号管理](BE-07-ACCOUNTS.md)。
+
 D-056：BE-06在开发分支实现当前后台账号/员工/有效任命资格、会话、三类JWT及四个身份HTTP接口。CurrentIdentityReader必须在调用方读/写边界内再次调用，HTTP层校验不代替业务授权。完整单项范围覆盖仍归BE-08，其他领域按原技术依赖推进；见[身份设计与证据](BE-06-IDENTITY.md)及[团队接入](BE-06-LOCAL-SETUP.md)。
 
 D-048补充：core/idempotency提供显式两阶段协调器、CanonicalRequestCodec端口、授权事实和安全结果类型，见[BE-05](BE-05-IDEMPOTENCY.md)。没有全局Servlet缓存或默认管理员身份；正式领域必须提供当前资格/完整覆盖检查及安全投影。

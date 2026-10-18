@@ -87,7 +87,10 @@
     "reviewScenario": "S21/S22",
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
-    "evidence": "BE-06-IDENTITY.md"
+    "evidence": "BE-06-IDENTITY.md",
+    "additionalEvidence": [
+      "BE-07-ACCOUNTS.md"
+    ]
   },
   {
     "id": "AT-07",
@@ -107,7 +110,10 @@
     "reviewScenario": "",
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
-    "evidence": "BE-06-IDENTITY.md"
+    "evidence": "BE-06-IDENTITY.md",
+    "additionalEvidence": [
+      "BE-07-ACCOUNTS.md"
+    ]
   },
   {
     "id": "AT-08",

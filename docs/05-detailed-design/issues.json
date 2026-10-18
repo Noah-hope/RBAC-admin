@@ -567,7 +567,7 @@
     ],
     "deliverable": "账号查询/创建/停用启用/重置，不改变员工业务授权，临时密码响应遵循契约且不缓存秘密。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -575,6 +575,21 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-07-ACCOUNTS.md",
+      "decision": "D-058",
+      "scope": "SUPER_ADMIN_ACCOUNT_READ_CREATE_STATE_AND_PASSWORD_RESET",
+      "implemented": true,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "claimedBy": "USER",
+      "claimSource": "USER_MESSAGE",
+      "dependencyIntegrationPolicy": "ACCEPTED_ANCESTOR_WITH_EXPLICIT_CONTINUATION",
+      "acceptedDependency": "BE-06",
+      "acceptedDependencyCommit": "1907a63f23ab35ad85404c9bde6f7bb2648fc704"
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-05",
