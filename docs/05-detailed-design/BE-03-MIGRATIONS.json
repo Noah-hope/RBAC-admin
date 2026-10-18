@@ -1,0 +1,25 @@
+{
+  "baselineCommit": "fc2b98d",
+  "databaseDesignVersion": "1.1",
+  "apiVersion": "1.2.0",
+  "databaseExecuted": false,
+  "migrations": [
+    {
+      "file": "V1__create_tables_and_constraints.sql",
+      "source": "docs/04-database/schema.sql",
+      "sourceSha256": "6b2f25c44452b9222d1e3dad0c62a71f8befdc0b0c608852ba620329a6f7135a",
+      "sha256": "5500bdd58dbfc54ce32779eee91f287696ed7e1b1759c83e4be4ae255c80edab"
+    },
+    {
+      "file": "V2__create_immutability_triggers.sql",
+      "source": "docs/04-database/immutability.sql",
+      "sourceSha256": "1d36a1374144c1887ee785102adf9db157246c4e1bf30ef477d22c28c47fb4fc",
+      "sha256": "1f175592813306bc1598b4c68552fee5c97d5fbbd449963627c4165fc3ff7599"
+    },
+    {
+      "file": "V3__initialize_mutation_guard.sql",
+      "source": "docs/05-detailed-design/DEPLOYMENT.md: mutation_guard initialization",
+      "sha256": "3ecbca2080c5be1e2ccb9e608e8fbb2e2a4b1b1f26739f4e94f9b126506c3d55"
+    }
+  ]
+}

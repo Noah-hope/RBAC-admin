@@ -1,10 +1,14 @@
 # 项目共享记忆
 
 更新日期：2026-10-18（Asia/Shanghai）。保存当前事实，历史通过 Git 查询。
-最新交付：2026-10-18记录用户本机数据库准备完成反馈及Navicat截图：运行账号rbac_app@localhost，开发库rbac_admin_dev和测试库rbac_admin_test可见；具体授权、迁移身份和JDBC/迁移仍待核验。BE-02已按D-042本人确认通过；BE-01仍IN_PROGRESS、基座总门槛未评估、业务未分派。本轮只维护准备记录，不合并或推送，不连接数据库/执行SQL。
+最新交付：2026-10-18/D-043已添加数据库依赖、运行/独立迁移配置和V1～V3脚本，40项离线测试及打包通过，jar缺迁移配置拒绝启动。未连接MySQL或执行SQL，BE-01/03仍IN_PROGRESS，BE-02沿用本人确认，基座总门槛未评估、业务未分派；不合并或推送。
 最新工具事实：用户确认前次误选旧导出规格；本次从指定RBAC权限中心API/1.2.0配置导出，核心契约核对通过，67入站＋1出站、120模型及104媒体示例全部通过。三路径覆盖及任命模型修复有效，仅余license/占位servers两处元数据差异；MCP旧暴露差异沿用，固定链接尚未验证。见APIFOX.md最新章节。
 
 ## 当前状态
+
+D-043实施进展：用户授权添加依赖、补齐配置及整理脚本。BOM实际解析JPA4.0.7/Hibernate7.2.24.Final/Connector9.7.0/Flyway11.14.1；普通模式只validate、Flyway关闭，迁移入口非Web/不扫描业务并强制独立凭据；V1保留43表/79FK，V2保留41触发器，V3只初始化guard。两轮有效RED后完整clean verify为40测试通过、0失败/错误/跳过；离线解析和缺配置jar入口通过，未连接MySQL或执行SQL。BE-03仍进行中，UUID/版本/真实约束和guard缺失启动失败检查待补；AT-02仍未运行。证据见[BE-03准备记录](../05-detailed-design/BE-03-PREPARATION.md)。以下BE-03未开始的描述为此前历史。
+
+D-043静态检查通过：231处本地链接、43个唯一决策、生成器确定性、迁移来源摘要及任务状态一致；需求/API/数据库草案摘要不变。Markdown代码围栏、本机绝对路径和Git空白检查通过。静态检查不运行数据库；无远程Issue/PR、合并或推送。
 
 2026-10-18本机日志整理：按用户指出的根目录日志问题，将backend下三份be02构建检查日志移至backend/logs/build/，移动前后SHA256全部一致；backend/.gitignore明确忽略logs/，运行说明和目录导航已同步。它们是手工保存的Maven输出，应用仍默认使用控制台；本次没有配置文件日志、重跑构建或执行SQL，BE-03尚未开始。仅提交约定文档和忽略规则，原始日志不入Git。
 
@@ -18,7 +22,7 @@
 
 最新D-041实施交接：用户在健康UP后明确授权执行BE-02。公共HTTP/配置骨架已按项目TDD实现，包名com.adgn.backend/YAML已同步；固定Maven3.9.11/发行包SHA256，Boot4.0.8/Corretto21.0.12.1。全量clean verify为30测试通过、0失败/错误/跳过，jar真实随机端口健康/404 Problem/非法头422/无测试接口暴露，以及server必需配置缺失/提供两种启动结果均实测。具体RED/GREEN、插件版本、产物SHA及本机短socket目录限制见[BE-02实施记录](../05-detailed-design/BE-02-IMPLEMENTATION.md)，团队运行见[后端README](../../backend/README.md)。
 
-BE-02为OWNER_ACCEPTED（D-042），用户明确确认实现提交f911c60；尚未合并主线；BE-01专用数据库账号/实际连接/测试库准备仍IN_PROGRESS，其余33任务PLANNED。AT-01/37仅PARTIALLY_VERIFIED，其余39项未运行；基座IN_PROGRESS但总门槛NOT_EVALUATED，业务30项未分派。未创建远程Issue/PR、合并main、推送或连接数据库/执行SQL；.codeartsdoer等无关本机文件保留不纳入提交。以下此前“无工程/无HTTP运行”均为历史，以本段为准。
+BE-02为OWNER_ACCEPTED（D-042），用户明确确认实现提交f911c60；尚未合并主线；BE-01准备和BE-03适配仍IN_PROGRESS，其余32任务PLANNED。AT-01/37仅PARTIALLY_VERIFIED，其余39项未运行；基座IN_PROGRESS但总门槛NOT_EVALUATED，业务30项未分派。未创建远程Issue/PR、合并main、推送或连接数据库/执行SQL；.codeartsdoer等无关本机文件保留不纳入提交。以下此前“无工程/无HTTP运行”均为历史，以本段为准。
 
 D-041静态交接检查PASS：209处本地链接、41决策唯一、生成器确定性、任务/验收状态及上游摘要一致；新改共享文档和源码无本机绝对路径，Git空白检查通过。运行证据与静态报告分开记录，不将静态PASS当成完整业务或数据库验收。
 

@@ -1,0 +1,20 @@
+spring:
+  main:
+    web-application-type: none
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration
+      - org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration
+      - org.springframework.boot.data.jpa.autoconfigure.DataJpaRepositoriesAutoConfiguration
+  flyway:
+    enabled: true
+    url: ${RBAC_MIGRATION_URL}
+    user: ${RBAC_MIGRATION_USER}
+    password: ${RBAC_MIGRATION_PASSWORD}
+    fail-on-missing-locations: true
+    init-sqls:
+      - SET NAMES utf8mb4 COLLATE utf8mb4_0900_bin
+      - SET time_zone = '+00:00'
+rbac:
+  runtime:
+    instance-id: migration

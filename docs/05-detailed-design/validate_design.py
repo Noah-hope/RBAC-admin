@@ -94,8 +94,14 @@ def checks(report):
         require(module['ownerSlot']==('USER' if module['id']=='M00' else None),'模块人员误记已分派')
     referenced=set()
     for task in tasks:
-        expected_status={'BE-01':'IN_PROGRESS','BE-02':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
+        expected_status={'BE-01':'IN_PROGRESS','BE-02':'OWNER_ACCEPTED','BE-03':'IN_PROGRESS'}.get(task['id'],'PLANNED')
         require(task['status']==expected_status,'任务准备/实现状态不符')
+        if task['id']=='BE-03':
+            progress=task.get('implementationProgress',{})
+            require(progress.get('evidence')=='BE-03-PREPARATION.md'
+                    and progress.get('databaseExecuted') is False
+                    and progress.get('jpaMappingVerified') is False
+                    and progress.get('ownerAccepted') is False,'BE-03准备被错误记成数据库验收')
         if task['id']=='BE-02':
             acceptance=task.get('ownerAcceptance',{})
             require(acceptance.get('acceptedBy')=='USER' and acceptance.get('scope')=='BE-02'
@@ -236,6 +242,15 @@ def checks(report):
         original=subprocess.check_output(['git','show',f'{BASELINE}:{name}'],cwd=REPO)
         require(hashlib.sha256(original).hexdigest()==sha(REPO/name),'意外改变上游 '+name);source_hashes[name]=sha(REPO/name)
     require((REPO/'backend/pom.xml').exists(),'BE-02工程缺失')
+    migration_manifest=read('BE-03-MIGRATIONS.json')
+    require(migration_manifest['databaseExecuted'] is False,'误记迁移已执行')
+    require(len(migration_manifest['migrations'])==3,'初始迁移范围不符')
+    for entry in migration_manifest['migrations']:
+        require(sha(REPO/'backend/src/main/resources/db/migration'/entry['file'])==entry['sha256'],'迁移摘要变化未同步来源记录')
+        if 'sourceSha256' in entry:
+            require(sha(REPO/entry['source'])==entry['sourceSha256'],'迁移上游草案变化未核对')
+    report['migrationPreparationFiles']=3
+    report['migrationEngineExecutedByThisCheck']=False
     for directory in ('deploy','tools','.github'):
         require(not (REPO/directory).exists(),'本设计阶段提前创建工程/远程配置目录 '+directory)
     report.update(dict(modules=len(modules),backendIssueDrafts=len(tasks),acceptanceItems=len(cases),

@@ -3,6 +3,41 @@ spring:
     name: rbac-admin
   profiles:
     default: dev
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+      connection-init-sql: "SET time_zone = '+00:00'"
+      data-source-properties:
+        characterEncoding: UTF-8
+        connectionCollation: utf8mb4_0900_bin
+        connectionTimeZone: UTC
+        forceConnectionTimeZoneToSession: true
+  jpa:
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        type:
+          preferred_uuid_jdbc_type: CHAR
+  sql:
+    init:
+      mode: never
+  flyway:
+    enabled: false
+    locations: classpath:db/migration
+    clean-disabled: true
+    baseline-on-migrate: false
+    create-schemas: false
+    validate-on-migrate: true
+    out-of-order: false
 
 server:
   address: 127.0.0.1

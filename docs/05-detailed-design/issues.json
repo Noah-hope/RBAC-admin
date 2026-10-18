@@ -138,7 +138,7 @@
     ],
     "deliverable": "Flyway初始表/约束/触发器/guard、UUID字符映射、UTC和版本边界；各域实体仍在对应业务Issue实现。",
     "notes": "schema.sql是待引擎审查草案，不能原样运行后直接宣布所有业务正确。",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -146,6 +146,13 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-03-PREPARATION.md",
+      "scope": "DEPENDENCIES_CONFIGURATION_MIGRATION_SCRIPTS",
+      "databaseExecuted": false,
+      "jpaMappingVerified": false,
+      "ownerAccepted": false
+    },
     "acceptanceScope": "AT-02在此实际运行43表/触发器迁移及基础UUID/UTC/版本映射样例；各域实体映射由所属任务补齐，BE-33汇总集成，不要求本任务提前实现全部域实体。",
     "useCases": [],
     "tables": [
