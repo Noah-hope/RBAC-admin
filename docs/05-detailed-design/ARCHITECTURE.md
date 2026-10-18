@@ -1,5 +1,7 @@
 # 模块结构、接口与责任
 
+D-046实施范围：M00公共CommandBoundary/ReadBoundary/WriteContext和AuditAppender已有实现及隔离引擎自测，见[BE-04记录](BE-04-TRANSACTIONS.md)。正式资格、业务受控写端口、幂等和审计查询仍由相应任务实现，下文接口设计不表示这些业务已实现。
+
 ## 设计取值与分层
 
 实施组织修订1.1/D-038：先由用户实现BE-01～05公共基座，验收后再分派30项业务/交付任务。人员分组不替代下述13模块及依赖；common责任范围以M00/core为主，M11/M12仅其公共支撑部分先行。各业务负责人当前未指派，详见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。

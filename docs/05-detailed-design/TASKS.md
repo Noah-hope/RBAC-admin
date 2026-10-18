@@ -1,6 +1,6 @@
 # 本地Issue草案与验收卡
 
-修订1.2/D-041实施更新：BE-01为IN_PROGRESS（数据库准备待办）；BE-02为OWNER_ACCEPTED（D-042/f911c60，本人确认通过，尚未合并主线），见BE-02-IMPLEMENTATION；BE-03为IN_PROGRESS（依赖/配置/脚本已准备，迁移/基础JPA/启动保护已自测，用户测试库迁移已成功，本机运行和账号库内授权已核对，待本人阶段确认，见BE-03-PERSISTENCE）；其余32项PLANNED。BE-01～05为用户先实现的基座；BE-06～35为验收基座后待分派的业务/交付任务，ownerSlot和reviewerSlot为null时绝不表示已指派。基座reviewPolicy=OWNER_ACCEPTANCE、独立评审工时为0；业务保留INDEPENDENT_REVIEW。suggestedOwnerSlot/suggestedReviewerSlot只是旧方案参考。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。
+修订1.2/D-046实施更新：BE-01为IN_PROGRESS（协作条件待办）；BE-02为OWNER_ACCEPTED（D-042/f911c60）；BE-03为OWNER_ACCEPTED（用户核对后回复继续，D-046/b8caeb2，见BE-03-PERSISTENCE）；BE-04为IN_PROGRESS（公共事务/审计/快照已自测，见BE-04-TRANSACTIONS），其余31项PLANNED。以上均未合并主线。BE-01～05为用户先实现的基座；BE-06～35为验收基座后待分派的业务/交付任务，ownerSlot和reviewerSlot为null时绝不表示已指派。基座reviewPolicy=OWNER_ACCEPTANCE、独立评审工时为0；业务保留INDEPENDENT_REVIEW。suggestedOwnerSlot/suggestedReviewerSlot只是旧方案参考。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。
 
 业务任务启动须同时满足FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED和原dependencies；这两个阶段门槛不是额外业务需求。基座验收见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。开发估算含设计细化/TDD/自测/文档，基座自检/本人确认含开发估算，业务独立评审另计，外部等待不计。
 
@@ -17,7 +17,7 @@
 - 验收：AT-01 可重复构建与最小部署；AT-39 PR与发布证据。
 - 验收边界：登记用户确认的JDK21/本机MySQL/已有云服务器和本人验收安排，补实际版本与使用方式；AT-01/39只为准备证据。无需他人批准，不要求永久JAVA_HOME/PATH；能用IDE或显式JDK运行构建即可。未运行的构建/数据库检查仍留待验证。
 - PR说明：关联真实Issue号；列明变更行为、契约/表版本、实际RED/GREEN命令及结果、待办；所有验收定义见TEST-PLAN。
-- 注意：用户已明确基座无需他人评审；本机MySQL版本、连接及独立测试schema待核验，当前未连接/执行SQL；不把云服务器存在当Docker数据库已部署。
+- 注意：用户已明确基座无需他人评审；JDK/Wrapper构建、本机MySQL8.4.8测试库迁移/启动/账号及独立实例机制已验证。开发库初始化、其余协作条件和全基座交付待完成；不把云服务器存在当Docker数据库已部署。
 
 ## BE-02 应用骨架、契约边界与健康检查
 
@@ -33,7 +33,7 @@
 
 ## BE-03 迁移、UUID/版本及JPA基础适配
 
-- 状态：IN_PROGRESS；阶段FOUNDATION；负责人用户（已确认），本人确认无需他人评审；模块M00。
+- 状态：OWNER_ACCEPTED；阶段FOUNDATION；负责人用户（已确认），本人确认无需他人评审；模块M00。
 - 分派参考：建议组A、建议评审组不适用（基座本人确认），不是已确认人员；启动条件基座任务按下列依赖推进。
 - 依赖：BE-02；开发估算2.5/5/8h，评审0/0/0h（低/中/高）。
 - API：内部能力/部署，无新增公开业务API。
@@ -46,7 +46,7 @@
 
 ## BE-04 统一写事务、读快照与审计追加
 
-- 状态：PLANNED；阶段FOUNDATION；负责人用户（已确认），本人确认无需他人评审；模块M00,M11。
+- 状态：IN_PROGRESS；阶段FOUNDATION；负责人用户（已确认），本人确认无需他人评审；模块M00,M11。
 - 分派参考：建议组A、建议评审组不适用（基座本人确认），不是已确认人员；启动条件基座任务按下列依赖推进。
 - 依赖：BE-03；开发估算2/4/6h，评审0/0/0h（低/中/高）。
 - API：内部能力/部署，无新增公开业务API。

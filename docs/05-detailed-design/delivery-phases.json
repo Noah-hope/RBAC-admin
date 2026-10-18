@@ -18,7 +18,8 @@
     "acceptanceGate": "FOUNDATION_ACCEPTED",
     "reviewerSlot": null,
     "ownerAcceptedTaskIds": [
-      "BE-02"
+      "BE-02",
+      "BE-03"
     ]
   },
   "business": {

@@ -73,6 +73,10 @@ public final class IsolatedMySqlDatabase implements AutoCloseable {
         try (var statement = admin.createStatement()) { statement.execute(sql); }
     }
 
+    public Connection runtimeConnection() throws SQLException {
+        return DriverManager.getConnection(url, runtime, password);
+    }
+
     public String scalar(String sql) throws SQLException {
         try (var statement = admin.createStatement(); var rows = statement.executeQuery(sql)) {
             if (!rows.next()) throw new IllegalStateException("Expected one row");

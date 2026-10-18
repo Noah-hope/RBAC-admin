@@ -73,7 +73,8 @@ def checks(report):
     module_order=dag(modules,'dependencies');task_order=dag(tasks,'dependencies')
     require((len(modules),len(tasks),len(cases),len(mapping))==(13,35,41,68),'冻结设计规模不符')
     require(len(cids)==len(cases),'重复验收编号')
-    partial_evidence={'AT-01':'BE-02-IMPLEMENTATION.md','AT-02':'BE-03-PERSISTENCE.md','AT-37':'BE-02-IMPLEMENTATION.md'}
+    partial_evidence={'AT-01':'BE-02-IMPLEMENTATION.md','AT-02':'BE-03-PERSISTENCE.md',
+                      'AT-03':'BE-04-TRANSACTIONS.md','AT-33':'BE-04-TRANSACTIONS.md','AT-37':'BE-02-IMPLEMENTATION.md'}
     require(all(c['status']==('PARTIALLY_VERIFIED' if c['id'] in partial_evidence else 'DESIGNED_NOT_RUN') for c in cases),'验收局部/完整状态不符')
     require(all(c.get('evidence')==partial_evidence[c['id']] for c in cases if c['status']=='PARTIALLY_VERIFIED'),'局部验收缺实施证据')
     deferred={c['id'] for c in cases if c['delivery']=='FRONTEND_DEFERRED'}
@@ -95,7 +96,7 @@ def checks(report):
         require(module['ownerSlot']==('USER' if module['id']=='M00' else None),'模块人员误记已分派')
     referenced=set()
     for task in tasks:
-        expected_status={'BE-01':'IN_PROGRESS','BE-02':'OWNER_ACCEPTED','BE-03':'IN_PROGRESS'}.get(task['id'],'PLANNED')
+        expected_status={'BE-01':'IN_PROGRESS','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'IN_PROGRESS'}.get(task['id'],'PLANNED')
         require(task['status']==expected_status,'任务准备/实现状态不符')
         if task['id']=='BE-03':
             progress=task.get('implementationProgress',{})
@@ -107,14 +108,28 @@ def checks(report):
                     and progress.get('jpaMappingScope')=='BASIC_SAMPLES_ONLY'
                     and progress.get('persistenceEvidence')=='BE-03-PERSISTENCE.md'
                     and progress.get('startupGuardVerified') is True
-                    and progress.get('ownerAccepted') is False,'BE-03准备被错误记成数据库验收')
+                    and progress.get('ownerAccepted') is True,'BE-03实施范围与本人确认记录不符')
+            acceptance=task.get('ownerAcceptance',{})
+            require(acceptance.get('acceptedBy')=='USER' and acceptance.get('scope')=='BE-03'
+                    and acceptance.get('implementationCommit')=='b8caeb2'
+                    and acceptance.get('message')=='继续' and acceptance.get('source')=='USER_MESSAGE'
+                    and acceptance.get('interpretation')=='CONTINUE_AFTER_BE03_REVIEW'
+                    and acceptance.get('date')=='2026-10-18' and acceptance.get('mergedToMain') is False,
+                    'BE-03本人确认或主线状态不符')
+        if task['id']=='BE-04':
+            progress=task.get('implementationProgress',{})
+            require(progress.get('evidence')=='BE-04-TRANSACTIONS.md'
+                    and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
+                    and progress.get('authorizationImplementation')=='CALLBACK_ONLY'
+                    and progress.get('crossDomainBusinessVerified') is False
+                    and progress.get('ownerAccepted') is False,'BE-04公共机制误记为领域或本人验收')
         if task['id']=='BE-02':
             acceptance=task.get('ownerAcceptance',{})
             require(acceptance.get('acceptedBy')=='USER' and acceptance.get('scope')=='BE-02'
                     and acceptance.get('date')=='2026-10-17' and acceptance.get('source')=='USER_MESSAGE'
                     and acceptance.get('message')=='确认通过' and acceptance.get('implementationCommit')=='f911c60'
                     and acceptance.get('mergedToMain') is False,'BE-02本人确认依据/主线状态不符')
-            require(phase_plan['foundation'].get('ownerAcceptedTaskIds')==['BE-02'],'单项确认错误扩展到整个基座')
+            require(phase_plan['foundation'].get('ownerAcceptedTaskIds')==['BE-02','BE-03'],'单项确认错误扩展到整个基座')
         require(task['remoteIssueNumber'] is None and task['remotePrNumber'] is None,'伪造远程事项')
         require(task['suggestedOwnerSlot'] in 'ABCD','建议组无效')
         require(task['reviewerSlot'] is None,'评审人尚未登记，不应伪造')

@@ -1,1 +1,2 @@
 com.adgn.backend.core.persistence.DatabaseInitializationAutoConfiguration
+com.adgn.backend.core.transaction.TransactionBoundaryAutoConfiguration

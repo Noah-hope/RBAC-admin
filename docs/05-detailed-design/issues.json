@@ -31,7 +31,7 @@
       "AT-39"
     ],
     "deliverable": "用户负责并确认基座，使用本机MySQL服务；JDK21可在IDE引用，命令行未配置；云服务器已具备，Docker数据库留后续；核验实际版本/隔离条件及工具。",
-    "notes": "用户已明确基座无需他人评审；本机MySQL版本、连接及独立测试schema待核验，当前未连接/执行SQL；不把云服务器存在当Docker数据库已部署。",
+    "notes": "用户已明确基座无需他人评审；JDK/Wrapper构建、本机MySQL8.4.8测试库迁移/启动/账号及独立实例机制已验证。开发库初始化、其余协作条件和全基座交付待完成；不把云服务器存在当Docker数据库已部署。",
     "status": "IN_PROGRESS",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
@@ -138,7 +138,7 @@
     ],
     "deliverable": "Flyway初始表/约束/触发器/guard、UUID字符映射、UTC和版本边界；各域实体仍在对应业务Issue实现。",
     "notes": "schema.sql是待引擎审查草案，不能原样运行后直接宣布所有业务正确。",
-    "status": "IN_PROGRESS",
+    "status": "OWNER_ACCEPTED",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -156,7 +156,18 @@
       "jpaMappingScope": "BASIC_SAMPLES_ONLY",
       "persistenceEvidence": "BE-03-PERSISTENCE.md",
       "startupGuardVerified": true,
-      "ownerAccepted": false
+      "ownerAccepted": true
+    },
+    "ownerAcceptance": {
+      "acceptedBy": "USER",
+      "date": "2026-10-18",
+      "scope": "BE-03",
+      "implementationCommit": "b8caeb2",
+      "source": "USER_MESSAGE",
+      "message": "继续",
+      "interpretation": "CONTINUE_AFTER_BE03_REVIEW",
+      "mergedToMain": false,
+      "evidence": "BE-04-TRANSACTIONS.md"
     },
     "acceptanceScope": "AT-02在此实际运行43表/触发器迁移及基础UUID/UTC/版本映射样例；各域实体映射由所属任务补齐，BE-33汇总集成，不要求本任务提前实现全部域实体。",
     "useCases": [],
@@ -243,7 +254,7 @@
     ],
     "deliverable": "CommandBoundary/ReadBoundary、WriteContext及同事务AuditAppender、锁等待与错误分类；两个连接的屏障测试。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -251,6 +262,15 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-04-TRANSACTIONS.md",
+      "scope": "PUBLIC_TRANSACTION_SNAPSHOT_AND_AUDIT_MECHANISMS",
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "authorizationImplementation": "CALLBACK_ONLY",
+      "crossDomainBusinessVerified": false,
+      "ownerAccepted": false
+    },
     "acceptanceScope": "验证公共读写边界、两个连接和故障回滚；AT-33先验新鲜快照基础机制，有效权限查询的完整业务结果由BE-18/33覆盖。",
     "useCases": [
       "UC-05",

@@ -1,5 +1,6 @@
 package com.adgn.backend.web;
 
+import com.adgn.backend.core.transaction.PersistenceFailure;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Min;
@@ -198,6 +199,14 @@ class HttpBoundaryTest {
     }
 
     @Test
+    void storageFailureReturns503WithoutLeakingDatabaseDetails(CapturedOutput output) throws Exception {
+        var response = send("GET", "/__test/storage-failure", null, "storage-request");
+        assertProblem(response, 503, "DEPENDENCY_UNAVAILABLE");
+        assertThat(response.getContentAsString()).doesNotContain("private-storage-fixture", "SQLException", "SELECT");
+        assertThat(output.getAll()).doesNotContain("private-storage-fixture");
+    }
+
+    @Test
     void exposesHealthButNoDetailedEnvironment() throws Exception {
         var health = send("GET", "/actuator/health", null, "health-check");
         assertThat(health.getStatus()).isEqualTo(200);
@@ -239,6 +248,11 @@ class HttpBoundaryTest {
         void conflict() { throw new ResponseStatusException(HttpStatus.CONFLICT, "private-conflict-detail"); }
         @GetMapping("/__test/failure")
         void failure() { throw new IllegalStateException("SELECT private-password FROM secrets"); }
+        @GetMapping("/__test/storage-failure")
+        void storageFailure() {
+            throw new PersistenceFailure(PersistenceFailure.Kind.DEPENDENCY_UNAVAILABLE,
+                    new java.sql.SQLException("SELECT private-storage-fixture"));
+        }
         @GetMapping("/__test/context")
         Map<String, Long> context(@RequestHeader("X-Admin-Scope-Version") long version) { return Map.of("version", version); }
         @GetMapping("/__test/page")

@@ -10,7 +10,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       transaction-isolation: TRANSACTION_READ_COMMITTED
-      connection-init-sql: "SET time_zone = '+00:00'"
+      connection-init-sql: "SET time_zone = '+00:00', innodb_lock_wait_timeout = 5"
       data-source-properties:
         characterEncoding: UTF-8
         connectionCollation: utf8mb4_0900_bin

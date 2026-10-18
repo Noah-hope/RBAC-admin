@@ -31,8 +31,9 @@
     "operations": [],
     "useCases": [],
     "reviewScenario": "S08/S15/S20",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-04-TRANSACTIONS.md"
   },
   {
     "id": "AT-04",
@@ -545,8 +546,9 @@
       "UC-06"
     ],
     "reviewScenario": "S23",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-04-TRANSACTIONS.md"
   },
   {
     "id": "AT-34",

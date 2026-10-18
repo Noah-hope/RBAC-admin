@@ -1,5 +1,6 @@
 package com.adgn.backend.web.problem;
 
+import com.adgn.backend.core.transaction.PersistenceFailure;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,6 +88,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         // Exception messages and stack traces can contain SQL, payloads or credentials.
         LOG.error("http_failure category={}", ex.getClass().getSimpleName());
         return problems.entity(HttpStatus.INTERNAL_SERVER_ERROR, HttpHeaders.EMPTY, List.of(), request);
+    }
+
+    @ExceptionHandler(PersistenceFailure.class)
+    ResponseEntity<Object> persistenceFailure(PersistenceFailure failure, HttpServletRequest request) {
+        LOG.error("http_failure category={}", failure.kind());
+        var status = failure.kind() == PersistenceFailure.Kind.DEPENDENCY_UNAVAILABLE
+                ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.INTERNAL_SERVER_ERROR;
+        return problems.entity(status, HttpHeaders.EMPTY, List.of(), request);
     }
 
     private static HttpServletRequest servlet(WebRequest request) {

@@ -1,6 +1,6 @@
 # 后端工程
 
-Java 21、Spring Boot 4.0.8、Maven Wrapper 3.9.11（Wrapper脚本3.3.4）。基础包`com.adgn.backend`；配置使用YAML。BE-02公共骨架已本人确认，BE-03初始迁移已在独立MySQL8.4.8验证；用户测试库迁移及重复运行已成功，基础JPA和启动guard检查已实测（D-045），详见[持久化基础](../docs/05-detailed-design/BE-03-PERSISTENCE.md)。本机运行/健康和账号库内授权已核对，待BE-03阶段本人确认。正式身份、授权和审批仍按任务实现。状态与任务统一见[共享记忆](../docs/project/MEMORY.md)和[任务清单](../docs/05-detailed-design/TASKS.md)，本页只说明使用方式。
+Java 21、Spring Boot 4.0.8、Maven Wrapper 3.9.11（Wrapper脚本3.3.4）。基础包`com.adgn.backend`；配置使用YAML。BE-02公共骨架已本人确认，BE-03初始迁移已在独立MySQL8.4.8验证；用户测试库迁移及重复运行已成功，基础JPA和启动guard检查已实测（D-045），详见[持久化基础](../docs/05-detailed-design/BE-03-PERSISTENCE.md)。本机运行/健康和账号库内授权已核对，BE-03已按D-046记录阶段本人确认。BE-04公共事务/审计已实现并自测，待本人确认，见[实施与接入记录](../docs/05-detailed-design/BE-04-TRANSACTIONS.md)。正式身份、授权和审批仍按任务实现。状态与任务统一见[共享记忆](../docs/project/MEMORY.md)和[任务清单](../docs/05-detailed-design/TASKS.md)，本页只说明使用方式。
 
 ## 在IntelliJ IDEA运行
 
@@ -20,7 +20,7 @@ Java 21、Spring Boot 4.0.8、Maven Wrapper 3.9.11（Wrapper脚本3.3.4）。基
 
 Linux/macOS使用`./mvnw`。打包后可执行`java -jar target/backend-0.0.1-SNAPSHOT.jar`。Wrapper首次需要下载Maven及依赖；发行包SHA256已固定。Spring Boot父BOM管理依赖和插件版本，不单独升级其中一个组件。
 
-默认verify运行44项离线测试。真实MySQL检查须显式使用`./mvnw.cmd -Pmysql-check clean verify`，并先准备独立临时8.4实例、设置RBAC_ISOLATED_MYSQL_PORT（非3306）和RBAC_ISOLATED_MYSQL_DATADIR（必须在backend/.tmp中）；共追加9项引擎检查，JVM为Asia/Shanghai。缺参数会失败，不静默跳过、不连接开发/共享测试库。实际结果及隔离步骤见[持久化验证](../docs/05-detailed-design/BE-03-PERSISTENCE.md)。
+默认verify运行51项离线测试。真实MySQL检查须显式使用`./mvnw.cmd -Pmysql-check clean verify`，并先准备独立临时8.4实例、设置RBAC_ISOLATED_MYSQL_PORT（非3306）和RBAC_ISOLATED_MYSQL_DATADIR（必须在backend/.tmp中）；共追加25项引擎检查，JVM为Asia/Shanghai。缺参数会失败，不静默跳过、不连接开发/共享测试库。实际结果及隔离步骤见[持久化验证](../docs/05-detailed-design/BE-03-PERSISTENCE.md)。
 
 ## 本机日志存放
 
@@ -60,7 +60,7 @@ New-Item -ItemType Directory -Path logs/build -Force | Out-Null
 | SPRING_DATASOURCE_USERNAME | `rbac_app` |
 | SPRING_DATASOURCE_PASSWORD | 本机注入实际密码 |
 
-普通运行关闭Flyway和Spring SQL初始化，Hibernate只`validate`，不建表/改表；关闭open-in-view，JDBC会话和Hibernate按UTC，UUID偏好CHAR。当前尚无领域实体，`validate`不会替代43表结构检查；现已补齐启动前只读guard检查（缺表/缺记录均失败，不自动补建）及UUID/版本/UTC/生成列样例；普通运行接受已有非零revision，不重置。RC为连接默认隔离，未来RR读取和写事务边界由BE-04实现。
+普通运行关闭Flyway和Spring SQL初始化，Hibernate只`validate`，不建表/改表；关闭open-in-view，JDBC会话和Hibernate按UTC，UUID偏好CHAR。当前尚无领域实体，`validate`不会替代43表结构检查；现已补齐启动前只读guard检查（缺表/缺记录均失败，不自动补建）及UUID/版本/UTC/生成列样例；普通运行接受已有非零revision，不重置。运行连接默认RC；BE-04已提供独立RC写边界与RR只读快照，连接会话设置UTC及5秒InnoDB锁等待，不修改全局配置。
 
 迁移使用单独进程。IDE新增“应用程序”运行配置，例如`MigrateTestDatabase`，主类`com.adgn.backend.migration.MigrationApplication`、JDK21、工作目录backend，不存储为项目文件。该入口自动激活migrate，拒绝混合其他profile和HTTP模式，不扫描业务组件。使用以下独立变量；先针对已确认可用于测试的空库，不向运行配置提供迁移口令：
 
@@ -96,14 +96,22 @@ java "-Dloader.main=com.adgn.backend.migration.MigrationApplication" -cp target/
 - 错误为API1.2.0的`application/problem+json`：type/title/status/code/detail/requestId/errors；字段路径采用JSON Pointer，单次最多100项。未知路由404，未知服务异常按现有500契约返回DATA_INTEGRITY_ERROR；不披露原始异常、请求值、SQL或堆栈。领域专用冲突码/认证异常由对应业务任务显式接入，不能只按HTTP状态推断所有业务原因。
 - 请求日志只记录requestId、运行实例、方法、状态和耗时；不记录URL查询、原始body或异常消息。异常仅记录类别。MDC在请求结束恢复，避免线程复用串号。
 
+## 公共事务与审计接入
+
+通过构造注入CommandBoundary、ReadBoundary及AuditAppender。写命令使用`execute(qualify, work)`：在外层新RC事务锁guard后，qualify读取当前身份/范围并返回Identity，work复用同一WriteContext；内层写端口先requireActive，不再开启独立事务。Identity是内部资格投影，完整JWT/任命/权限判断由业务模块提供，不接受客户端自行声明。
+
+只读使用`read(qualify, project)`在新RR快照内完成资格和DTO查询；不要向序列化层返回懒加载实体。审计使用`append(context, record)`与业务共提交；快照是已脱敏、schemaVersion=1的JSON对象，调用方提供事件和subjects。JPA新行被后续JDBC或外键引用前，须在原事务先flush；审计追加器不替代领域插入顺序。边界拒绝嵌套、跨线程或已结束context，不自动重试，不在持锁期间等待网络。
+
+BE-04没有DDL变化，已完成V1～V3的测试库无需清库或重新迁移。IDE重载Maven后，继续用rbac_app及本机密码重启BackendApplication，访问健康接口确认装配；未迁移开发空库仍会被启动保护拒绝。具体失败语义、同事务回滚、测试证据与后续责任见[BE-04记录](../docs/05-detailed-design/BE-04-TRANSACTIONS.md)。
+
 ## 测试与验收范围
 
-`clean verify`运行所有当前测试并打包：上下文1项、实例配置3项、Spring MVC/Servlet请求链26项，新增数据库profile4项、迁移入口/初始化4项、Flyway/MySQL离线解析3项，共41项；失败0、错误0、跳过0。测试用控制器仅位于`src/test`，不会加入正式jar。Surefire负责`*Test`；Failsafe生命周期已配置；默认verify仅运行离线测试，真实MySqlCheck须显式选择mysql-check，结果按下段单列。
+`clean verify`运行当前51项离线测试并打包，失败0、错误0、跳过0。包括原44项回归、6项持久化异常分类及新增1项安全503；HTTP请求链共27项。测试用控制器仅位于`src/test`，不会加入正式jar。Surefire负责`*Test`；Failsafe生命周期已配置；默认verify仅运行离线测试，真实MySqlCheck须显式选择mysql-check，结果按下段单列。
 
 迁移入口测试通过测试专用策略阻止`Flyway.migrate()`，只验证装配、独立身份、缺配置/HTTP拒绝及业务隔离；脚本测试调用Flyway11.14.1实际MySQL解析器，仅确认语句边界，不证明MySQL语法、约束执行或业务正确。解析器为内部API，只用于测试，版本变更时需复核。
 
-真实MySQL检查另用显式profile：`./mvnw.cmd -Pmysql-check clean verify`。必须先准备全新临时MySQL8.4实例（数据目录位于backend/.tmp、回环非3306端口、binlog关闭、仅临时root空口令），注入RBAC_ISOLATED_MYSQL_PORT与RBAC_ISOLATED_MYSQL_DATADIR；测试在任何写操作前核验服务端datadir，随后创建并清理随机schema/账号。缺参数或指向错误实例会失败，不跳过，不连接开发库。实测该命令为41项离线＋1项真实引擎检查通过；服务生命周期及环境限制见上述验证记录。它不替代JPA或全部业务约束验收。
+真实MySQL检查另用显式profile：`./mvnw.cmd -Pmysql-check clean verify`。必须先准备全新临时MySQL8.4实例（数据目录位于backend/.tmp、回环非3306端口、binlog关闭、仅临时root空口令），注入RBAC_ISOLATED_MYSQL_PORT与RBAC_ISOLATED_MYSQL_DATADIR；测试在任何写操作前核验服务端datadir，随后创建并清理随机schema/账号。缺参数或指向错误实例会失败，不跳过，不连接开发库。最新实测该命令为51项离线＋25项真实引擎检查通过，其中16项公共事务检查、9项迁移/JPA/启动回归。临时schema/账号清理及本轮独立进程关闭已确认；服务生命周期、RED/GREEN及限制见[BE-04记录](../docs/05-detailed-design/BE-04-TRANSACTIONS.md)。它不替代正式领域授权、全部业务约束或云端部署验收。
 
-测试覆盖安全/自动请求ID、头重复、严格JSON、嵌套字段指针、400/404/405/409/415/422/500、缺配置失败、日志脱敏和健康暴露边界。Mockito采用显式测试Java agent，测试JVM关闭CDS，避免动态自附加警告；不是跳过测试。
+测试覆盖安全/自动请求ID、头重复、严格JSON、嵌套字段指针、400/404/405/409/415/422/500/503、缺配置失败、日志脱敏和健康暴露边界。Mockito采用显式测试Java agent，测试JVM关闭CDS，避免动态自附加警告；不是跳过测试。
 
 完整RED/GREEN、打包HTTP验证、依赖/插件实际版本与限制见[BE-02实施记录](../docs/05-detailed-design/BE-02-IMPLEMENTATION.md)。该记录不等于完整AT-01/AT-37或公共基座已经验收。
