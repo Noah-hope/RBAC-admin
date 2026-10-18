@@ -1,6 +1,10 @@
 package com.adgn.backend;
 
 import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.configuration.Configuration;
+import org.flywaydb.core.internal.parser.Parser;
+import org.flywaydb.core.internal.parser.ParsingContext;
+import org.flywaydb.core.internal.resource.StringResource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
@@ -11,6 +15,8 @@ import org.springframework.jdbc.datasource.AbstractDriverBasedDataSource;
 
 import javax.sql.DataSource;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -56,6 +62,26 @@ class MigrationEntryTest {
             assertThat(context.getBeansOfType(DataSource.class)).isEmpty();
             assertThat(context.getBeansOfType(BackendApplication.class)).isEmpty();
             assertThat(context.containsBean("requestIdFilter")).isFalse();
+        }
+    }
+
+    @Test
+    void connectionInitializationSeparatesCharsetAndTimeZoneStatements() throws Exception {
+        var app = application();
+        app.addPrimarySources(Set.of(DoNotExecuteSql.class));
+        try (var context = app.run("--RBAC_MIGRATION_URL=jdbc:mysql://localhost:3306/unused_migration",
+                "--RBAC_MIGRATION_USER=migration_fixture", "--RBAC_MIGRATION_PASSWORD=unused-migration-fixture")) {
+            var configuration = context.getBean(Flyway.class).getConfiguration();
+            var parserClass = Class.forName("org.flywaydb.database.mysql.MySQLParser");
+            Parser parser = (Parser) parserClass.getConstructor(Configuration.class, ParsingContext.class)
+                    .newInstance(configuration, new ParsingContext());
+            List<String> statements = new ArrayList<>();
+            // Parse the actual script assembled by Boot, not the original YAML list.
+            try (var iterator = parser.parse(new StringResource(configuration.getInitSql()))) {
+                while (iterator.hasNext()) statements.add(iterator.next().getSql().strip());
+            }
+            assertThat(statements).containsExactly(
+                    "SET NAMES utf8mb4 COLLATE utf8mb4_0900_bin", "SET time_zone = '+00:00'");
         }
     }
 

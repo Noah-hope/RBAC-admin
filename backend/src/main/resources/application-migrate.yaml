@@ -13,8 +13,8 @@ spring:
     password: ${RBAC_MIGRATION_PASSWORD}
     fail-on-missing-locations: true
     init-sqls:
-      - SET NAMES utf8mb4 COLLATE utf8mb4_0900_bin
-      - SET time_zone = '+00:00'
+      - "SET NAMES utf8mb4 COLLATE utf8mb4_0900_bin;"
+      - "SET time_zone = '+00:00';"
 rbac:
   runtime:
     instance-id: migration

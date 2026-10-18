@@ -6,7 +6,7 @@
 
 完整任务低/中/高估算仍为78/145.5/239人时，高于40～72预算，不以当前局部实测重估全量。41项验收中AT-01/37仅BE-02部分为PARTIALLY_VERIFIED，其余39项仍未运行。不能把公共骨架通过视为完整后端或全量交付承诺。
 
-**当前分工不变：用户先实现BE-01～05，整体验收并交付共同主线后再分派BE-06～35。** BE-01/03为IN_PROGRESS，BE-02本人确认通过（OWNER_ACCEPTED），其余32项PLANNED；基座总门槛未评估，业务仍未分派。D-043已准备数据库依赖/配置/V1～V3脚本，40项离线测试及打包通过，但未连接MySQL或执行迁移，见[BE-03准备记录](BE-03-PREPARATION.md)。真实身份留第二阶段，13逻辑模块和原依赖保留。范围及门槛见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)，机器阶段见[delivery-phases.json](delivery-phases.json)，实际环境见[ENVIRONMENT.md](ENVIRONMENT.md)。
+**当前分工不变：用户先实现BE-01～05，整体验收并交付共同主线后再分派BE-06～35。** BE-01/03为IN_PROGRESS，BE-02本人确认通过（OWNER_ACCEPTED），其余32项PLANNED；基座总门槛未评估，业务仍未分派。D-043已准备数据库依赖/配置/V1～V3脚本，41项离线测试及打包通过，但未连接MySQL或执行迁移，见[BE-03准备记录](BE-03-PREPARATION.md)。真实身份留第二阶段，13逻辑模块和原依赖保留。范围及门槛见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)，机器阶段见[delivery-phases.json](delivery-phases.json)，实际环境见[ENVIRONMENT.md](ENVIRONMENT.md)。
 
 | 阅读顺序 | 文件与用途 |
 | --- | --- |

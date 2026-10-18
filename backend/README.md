@@ -70,6 +70,8 @@ New-Item -ItemType Directory -Path logs/build -Force | Out-Null
 
 迁移身份由专用变量强制提供，不回退到运行账号。JDBC URL确定目标schema；配置禁止自动建库、clean、自动baseline或乱序迁移，普通进程不需要迁移口令。
 
+`MigrationApplication`是代码入口；`MigrateTestDatabase`是IDE运行配置的自定义名称，里面保存该主类、JDK和变量，并非另一个测试类。目标库由RBAC_MIGRATION_URL决定，不由配置名称决定。连接初始化的两条SET均须带分号，Boot拼接init-sqls时只插入换行。
+
 打包后的等价入口如下；实际执行将连接目标库并改变结构，需先核对目标、备份和独立迁移账号。本轮只实测了缺配置时该入口以非零码拒绝启动，未执行迁移：
 
 ```powershell
@@ -88,7 +90,7 @@ java "-Dloader.main=com.adgn.backend.migration.MigrationApplication" -cp target/
 
 ## 测试与验收范围
 
-`clean verify`运行所有当前测试并打包：上下文1项、实例配置3项、Spring MVC/Servlet请求链26项，新增数据库profile4项、迁移入口3项、Flyway/MySQL离线解析3项，共40项；失败0、错误0、跳过0。测试用控制器仅位于`src/test`，不会加入正式jar。Surefire负责`*Test`；Failsafe的`*IT`生命周期已配置，当前没有IT类，明确报告No tests to run，因此不能宣称MySQL集成测试已通过。
+`clean verify`运行所有当前测试并打包：上下文1项、实例配置3项、Spring MVC/Servlet请求链26项，新增数据库profile4项、迁移入口/初始化4项、Flyway/MySQL离线解析3项，共41项；失败0、错误0、跳过0。测试用控制器仅位于`src/test`，不会加入正式jar。Surefire负责`*Test`；Failsafe的`*IT`生命周期已配置，当前没有IT类，明确报告No tests to run，因此不能宣称MySQL集成测试已通过。
 
 迁移入口测试通过测试专用策略阻止`Flyway.migrate()`，只验证装配、独立身份、缺配置/HTTP拒绝及业务隔离；脚本测试调用Flyway11.14.1实际MySQL解析器，仅确认语句边界，不证明MySQL语法、约束执行或业务正确。解析器为内部API，只用于测试，版本变更时需复核。
 

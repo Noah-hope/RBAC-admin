@@ -1,6 +1,6 @@
 # rbac-admin · 集中权限管理系统
 
-2026-10-18：BE-03已准备数据库依赖、独立迁移配置和初始脚本，40项离线测试及打包通过；真实MySQL迁移/JPA验证仍待完成，见[准备记录](docs/05-detailed-design/BE-03-PREPARATION.md)。
+2026-10-18：BE-03已准备数据库依赖、独立迁移配置和初始脚本，41项离线测试及打包通过；真实MySQL迁移/JPA验证仍待完成，见[准备记录](docs/05-detailed-design/BE-03-PREPARATION.md)。
 
 项目根目录统一记为 `rbac-admin`，文中的文件位置均相对于项目根目录描述；本地存放位置由各成员自行选择。
 

@@ -1,5 +1,15 @@
 # BE-03依赖、配置与迁移脚本准备
 
+## 连接初始化SQL修复（2026-10-18）
+
+用户提供IDE控制台日志：migrate profile已激活，MySQL返回1064，失败发生在JdbcConnectionFactory.openConnection的initSql阶段，报错位置为第二条SET time_zone。该证据说明用户本机已建立数据库连接并尝试执行初始化SQL；没有V1～V3迁移成功证据，不代表真实约束/JPA通过。agent没有连接或操作用户数据库，原始日志含本机路径，不纳入Git。
+
+根因是application-migrate.yaml两条init-sqls都缺终止分号。[Boot4.0.8源码](https://raw.githubusercontent.com/spring-projects/spring-boot/v4.0.8/module/spring-boot-flyway/src/main/java/org/springframework/boot/flyway/autoconfigure/FlywayAutoConfiguration.java)按换行拼接列表，导致Flyway把两个SET作为单一语句提交。本次只为两项补齐分号，没有启用allowMultiQueries或修改V1～V3正文/校验和。
+
+按TDD新增connectionInitializationSeparatesCharsetAndTimeZoneStatements，取得真实Boot装配后Flyway的initSql并交由实际MySQL解析器解析：RED为1测试1失败/0错误（两条合成一条）；修复后完整clean verify为41测试通过，0失败/错误/跳过，打包成功。此回归离线运行，使用原测试专用策略阻止migrate，不替代MySQL重跑。原始日志为backend/logs/build/be03-red-init-sql.log及be03-verify-init-sql-fix.log，均忽略。
+
+本次jar SHA256为8afbf71fcc416d33417138dc590f3be422abe71929e1749c4dacfe87cf170bba；下文40项及旧摘要是首次准备的历史记录。用户可保留原MigrateTestDatabase配置，在IDE重新构建后运行同一配置继续验证，若再次失败保留错误诊断；不能由本次离线修复推断所有表/触发器已创建。MigrationApplication是代码入口，MigrateTestDatabase只是IDE配置名称，目标schema始终由URL决定。
+
 2026-10-18，D-043；需求V1.3、API1.2.0、数据库设计1.1。用户授权“添加、补齐配置、整理迁移脚本”。本轮实现这三项，不连接已有数据库、不执行迁移，不把BE-03或AT-02标为通过。
 
 ## 实际交付
