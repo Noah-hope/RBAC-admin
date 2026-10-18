@@ -87,7 +87,15 @@ def checks(report):
     require(set(phase_plan['foundation']['taskIds'])==foundation_ids and phase_plan['foundation']['ownerSlot']=='USER','基座阶段边界/负责人不符')
     require(set(phase_plan['business']['taskIds'])==business_ids and phase_plan['business']['ownerSlot'] is None,'业务阶段错误指派')
     require(phase_plan['business']['startConditions']==required_gates,'阶段门槛缺失')
-    require(phase_plan['foundation']['status']=='IN_PROGRESS' and phase_plan['gateStatus']=='NOT_EVALUATED' and not phase_plan['gateEvidence'],'误记基座全部验收')
+    require(phase_plan['foundation']['status']=='IN_PROGRESS'
+            and phase_plan['gateStatus']=='PENDING_OWNER_ACCEPTANCE_AND_MAIN_DELIVERY','误记基座全部验收')
+    gate_evidence=phase_plan['gateEvidence']
+    require([g['id'] for g in gate_evidence]==[f'F-{n:02}' for n in range(1,7)],'整体核对缺门槛项或重复')
+    require(all(g['status']==('PENDING' if g['id']=='F-06' else 'VERIFIED')
+                and g['evidence']=='FOUNDATION-REVIEW.md' and g['date']=='2026-10-18'
+                and g['scope']==('OWNER_ACCEPTANCE_AND_MAIN_DELIVERY' if g['id']=='F-06' else 'PUBLIC_FOUNDATION_ONLY')
+                for g in gate_evidence),'技术核对/本人确认/主线交付边界不符')
+    require((ROOT/'FOUNDATION-REVIEW.md').exists() and (ROOT/'FOUNDATION-USAGE.md').exists(),'缺交接核对或团队使用指南')
     require(phase_plan['foundation']['reviewerSlot'] is None,'虚构基座评审人')
     require(phase_plan['foundation']['reviewRequired'] is False and phase_plan['foundation']['reviewPolicy']=='OWNER_ACCEPTANCE' and phase_plan['foundation']['acceptanceOwnerSlot']=='USER','未落实基座本人确认')
     require(phase_plan['business']['reviewPolicy']=='INDEPENDENT_REVIEW','擅自扩大基座评审豁免')
@@ -98,6 +106,14 @@ def checks(report):
     for task in tasks:
         expected_status={'BE-01':'IN_PROGRESS','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
         require(task['status']==expected_status,'任务准备/实现状态不符')
+        if task['id']=='BE-01':
+            progress=task.get('implementationProgress',{})
+            require(progress.get('evidence')=='FOUNDATION-REVIEW.md'
+                    and progress.get('scope')=='LOCAL_ENVIRONMENT_AND_FOUNDATION_HANDOFF_REVIEW'
+                    and progress.get('localTechnicalPreparationVerified') is True
+                    and progress.get('teamRepositoryAccessVerified') is False
+                    and progress.get('mergedToMain') is False
+                    and progress.get('ownerAccepted') is False,'BE-01准备/协作待办状态不符')
         if task['id']=='BE-03':
             progress=task.get('implementationProgress',{})
             require(progress.get('evidence')=='BE-03-PREPARATION.md'

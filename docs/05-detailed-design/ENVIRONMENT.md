@@ -1,58 +1,33 @@
-# BE-01环境与基座确认记录
+# BE-01 环境与协作准备核对
 
-2026-10-18 15:44开发库核对通过：用户按开发库限定查询提供截图，Flyway版本1/2/3的success均为1，mutation_guard为id=1/revision=0；最新普通BackendApplication日志明确连接localhost:3306/rbac_admin_dev/MySQL8.4.8，Hikari/JPA完成、Tomcat8080启动、GET200，健康截图status=UP。开发库迁移、锚点及普通运行/健康这项准备已核对，不再视为待初始化；不从日志推断未展示的数据库用户名或迁移执行账号。agent本轮只读用户日志/截图，未连接已有库、执行SQL或读取凭据。BE-01保留其余协作条件及整体交接待核对，BE-02～05本人确认与基座总门槛不变；以下空库或初始化待办是此前历史。
+更新：2026-10-18/D-050。本文件保存当前环境事实，排障历史以 Git 和各 BE 实施记录为准。整体门槛及待办见[交接核对](FOUNDATION-REVIEW.md)，操作见[后端运行说明](../../backend/README.md)。
 
-2026-10-18开发库现场核对：用户提供Navicat截图，当前rbac_admin_dev表列表为空、底部显示0 Tables；这是尚无表结构的截图证据，不是已有表但无业务记录。下一步在独立MigrationApplication配置中以RBAC_MIGRATION_URL明确指向该开发库，按既有管理员受控触发器初始化方案执行V1～V3；不复制测试数据、不清理现有测试库、不用rbac_app承担DDL。成功后普通BackendApplication仍用rbac_app、只改运行URL指向开发库并核对启动/健康。当前未收到开发库迁移或运行成功回报；agent本轮未连接数据库、执行SQL或读取凭据，BE-01仍IN_PROGRESS、整体门槛未评估。
+## 已核对的本机技术准备
 
-2026-10-18/D-049：用户已确认健康status=UP，并明确回复RBAC_IDEMPOTENCY_ENABLED“是，已设为 true”。结合15:28本机启动/测试库连接日志，按BE-05交接范围记录d059d11为OWNER_ACCEPTED；不是仅凭UP推断启用。BE-02～05单项已本人确认，BE-01仍IN_PROGRESS、其余30项PLANNED，基座总门槛NOT_EVALUATED；下一步核对BE-01剩余条件和F-01～06整体交接，不自行开始业务、合并或推送。见[BE-05确认记录](BE-05-IDEMPOTENCY.md)。下方待确认/待核验描述是此前历史，以本段及机器清单为准。
-
-2026-10-18 15:28用户本机运行核对：最新日志显示BackendApplication/dev成功连接localhost:3306/rbac_admin_test（MySQL8.4.8），Hikari与JPA初始化完成、Tomcat8080启动，GET记录200；用户明确确认健康status=UP。此前15:27的Connection refused已不再出现在本次日志，原失败不能解释为HMAC错误。日志未展示RBAC_IDEMPOTENCY_ENABLED或幂等Bean装配，故只确认服务启动/健康，不由UP推断HMAC启用已验证；当前等待用户仅确认开关是否true，不读取IDE口令/密钥。BE-05保持IN_PROGRESS及待本人确认，既有64离线＋42引擎结果沿用，基座总门槛不变。agent本轮只读用户日志并同步文档，未连接数据库、执行SQL或运行新Java测试。
-
-2026-10-18/D-048：BE-05幂等预留、租约栅栏、当前授权后的安全重放及HTTP适配已实现，64项离线＋42项隔离MySQL检查全通过，临时实例已关闭；默认关闭，显式启用时要求独立HMAC密钥。BE-02/03/04已本人确认，BE-01/05保持IN_PROGRESS，30项业务未分派；BE-05待本人确认、基座总门槛未评估。详见[BE-05记录](BE-05-IDEMPOTENCY.md)。下方D-043～047保留为此前历史，以本段和机器清单为准。
-
-2026-10-18/D-047确认更新（沿用D-046实施证据）：BE-03在本机运行/健康及账号核对后，按用户“继续”的上下文记录阶段本人确认；BE-04公共RC写事务、RR读快照、有效WriteContext及同事务审计已实现，51离线＋25项隔离MySQL检查全部通过，临时实例已关闭、用户已有库未操作。BE-04已由用户确认服务UP并按D-047记录单项本人确认，BE-01仍开放、BE-05未实现，基座总门槛未评估；未合并或推送。见[BE-04记录](BE-04-TRANSACTIONS.md)。以下D-043～045的待核验/未实现描述保留为当时历史，以本段及机器清单为准。
-
-最新账号证据（2026-10-18）：用户CURRENT_USER/GRANTS截图确认rbac_app@localhost仅有开发/测试两库DML；rbac_migrator@localhost另有相同两库CREATE/DROP/REFERENCES/INDEX/ALTER/TRIGGER。无须给运行账号DDL或全局权限，含触发器的迁移仍受此前binlog策略限制。普通后端连接测试库/启动/健康已由日志与截图确认。技术核对已齐，BE-03待本人阶段确认/主线交付，不代表BE-01其余协作条件或全基座验收已通过；详见[持久化基础](BE-03-PERSISTENCE.md)。下方待核验描述按当时历史保留。
-
-2026-10-18/D-045最新实施：基础UUID/JPA版本/UTC/生成列与缺guard启动保护已实现，44离线＋9项真实隔离MySQL检查通过，用户测试库迁移及重复运行也已核对；本人运行确认、账号权限及完整领域/基座验收仍待后续。详见[持久化基础](BE-03-PERSISTENCE.md)。下文D-043/044失败现场、JPA未验证或未执行SQL等为当时历史，不覆盖本次进展。
-
-更新至2026-10-18；实施计划修订1.2，D-039/D-040。BE-01处于环境准备中，不表示公共基座已经构建或验收。本记录区分用户确认与工具实测；不保存个人安装路径、主机地址、数据库口令或密钥。
-
-| 事项 | 用户已确认的情况 | 本次实际核验及剩余事项 |
+| 项目 | 当前证据 | 使用边界 |
 | --- | --- | --- |
-| 云服务器 | 已有一台，可在后续通过Docker部署数据库服务 | 未连接服务器，Docker、数据库容器、网络、持久卷、版本和备份均未核验；不能记为已部署 |
-| 当前数据库 | 先用本机MySQL服务；此前截图显示服务端8.4.8、本机3306；2026-10-18用户报告准备完成，新截图列出rbac_admin_dev和rbac_admin_test | 属于截图及用户报告，agent未连接或执行SQL；当前截图未展示SHOW TABLES结果，空库状态沿用用户完成反馈。迁移、SQL mode、后端JDBC连接及真实测试仍待核验 |
-| 后端数据库账号 | 后端服务使用项目专用数据库用户，密码团队共享；2026-10-18截图的CURRENT_USER()为rbac_app@localhost | 已证实Navicat连接身份；截图另有local_mysql_rbactest连接名称，不能据此确定实际用户名或迁移身份。SHOW GRANTS结果未展开，具体授权待核验；root可用于建库/授权，服务运行使用专用账号。密码经私下渠道传递，各成员本机注入，禁止进入Git、文档、Issue、PR或日志；独立迁移身份保留 |
-| IDE与工程位置 | 用户已通过IntelliJ IDEA生成rbac-admin/backend；包名com.adgn.backend，配置YAML | D-041已实现并自测BE-02公共适配，完整构建30测试通过；用户此前截图已确认IDE启动和健康UP，本次变更后需重新加载/启动。实施自测不代替用户本人确认 |
-| JDK | 使用JDK 21，本地已下载，IDE可以引用 | java与javac实测21.0.12.1，Amazon Corretto；命令会话临时设置JAVA_HOME后实际构建，无永久系统环境变量修改 |
-| 命令行 | 尚未配置Java环境变量，java/javac查询不到 | 本次Get-Command确认java和javac均未在PATH，JAVA_HOME未配置；未修改用户或系统环境变量 |
-| 基座确认 | 基座由用户本人确认，不需要别人评审 | BE-01～05采用OWNER_ACCEPTANCE，不要求Reviewer；TDD、自检、真实约束/事务验证及交接证据仍保留 |
-| 业务阶段 | 基座验收后再分派 | 30项业务/交付任务仍未分派；基座不要求他人评审的安排不自动取消业务阶段原评审规则 |
+| 工程与 IDE | 单 Maven 工程 `backend`，包 `com.adgn.backend`，YAML；用户 IDEA 已成功运行 | 沿用项目根 Git；项目、Maven 导入/运行和应用 JDK 均选21 |
+| JDK / Maven / Boot | 实测 Corretto21.0.12.1、Wrapper3.3.4/Maven3.9.11、Boot4.0.8；构建和打包通过 | 使用 IDE 或会话显式 JDK，不要求永久修改 JAVA_HOME/PATH；个人安装位置不进入共享文档 |
+| 本机 MySQL | 用户日志/截图为8.4.8、3306；开发库 `rbac_admin_dev` 与测试库 `rbac_admin_test` 分开 | 数据库身份由 URL 和账号确定，不按 Navicat/IDE 显示名称推断 |
+| 测试库 | 用户 V1～V3 success均1、guard(1,0)、再次迁移 up to date；普通应用连接/启动/健康已确认 | 用户库检查不等于全部业务测试；不重复清库 |
+| 开发库 | 15:44用户截图显示 V1～V3 success均1、guard(1,0)；普通应用日志连接开发库、Hikari/JPA/Tomcat启动、健康UP | 已从此前空库状态完成初始化；运行日志没有展示账号，不据此推断实际用户名或迁移执行者 |
+| 运行账号 | 用户截图：`rbac_app@localhost` 对两个库仅 SELECT/INSERT/UPDATE/DELETE，另有 USAGE | 普通应用保持 DML 账号，不以 root 运行 |
+| 迁移账号 | 用户截图：`rbac_migrator@localhost` 对两个库有DML及CREATE/DROP/REFERENCES/INDEX/ALTER/TRIGGER；没有截图所示全局SUPER或GRANT OPTION | 具备库内DDL授权不等于绕过 binlog 的触发器额外限制 |
+| 触发器初始化策略 | 用户只读查询 `log_bin=1`、`log_bin_trust_function_creators=0`；迁移成功历史已确认 | 沿用管理员受控初始化方案，独立迁移配置使用实际授权身份；agent未修改用户库/全局参数，不声称普通迁移账号已独立成功执行全套迁移 |
+| 幂等启用 | D-049用户确认健康UP，并单独明确开关true；配置失败测试已有证据 | agent不读取IDE密钥；同库实例密钥环须一致，独立本机库可各自生成 |
+| 自动化隔离 | 最新64项离线＋42项专属MySQL8.4.8检查通过，实例身份/datadir写前核验、随机schema/账号清理及专属进程关闭已有记录 | 临时datadir位于backend/.tmp，回环非3306端口，binlog关闭；不指向已有开发/测试库；不是用户binlog环境的完全复现 |
 
-## 接下来怎样准备
+agent本轮只读复核既有报告、产物及用户日志/截图记录，未连接已有数据库、执行SQL或读取凭据，也未重新运行Java测试。健康UP只证明相应运行准备，不证明后续业务授权和端到端行为。
 
-D-044更新：用户实际日志确认rbac_admin_test/MySQL8.4的V1失败；两处ROW_NUMBER引用已修复，agent在独立8.4.8临时datadir/非3306回环端口实测迁移通过并关闭进程，未操作已有库。先恢复用户测试库的失败状态，再继续JPA/事务核验；见[恢复与验证记录](BE-03-MYSQL-VALIDATION.md)。以下初始化1064是前一轮故障。
+## BE-01 还剩什么
 
-用户只读查询反馈log_bin=1、log_bin_trust_function_creators=0；本机实际binlog环境不等于本轮关闭binlog的临时实例。当前建议本机首次测试库迁移单独使用root管理身份，正常BackendApplication仍rbac_app，保留全局设置；该操作建议未由agent执行，不能写成现有库已恢复或迁移成功。
+1. 本人核对[整体交付报告](FOUNDATION-REVIEW.md)并确认 BE-01 收尾及基座整体范围；BE-02～05单项确认沿用。当前BE-01仍IN_PROGRESS。
+2. 安排实际主线交付。当前分支 `codex/foundation-environment` 含公共实现，本地 main 为169556d、尚无本次基座；远程访问本轮未重新核验，不自动合并/推送。
+3. 登记团队实际账号并核验仓库访问/PR权限。业务分派时补实际Owner、独立Reviewer、真实Issue与依赖；当前30项仍未分派，不将A～D建议组当作真实人员。
+4. CI/保护规则按实际托管能力落实；云端Docker数据库、部署/备份恢复由后续交付任务验证，不反向要求本机基座先完成云端部署。
 
-2026-10-18连接初始化反馈：用户提供真实运行日志，已建立MySQL连接但initSql阶段1064失败；未见V1～V3成功记录。已修复迁移配置两条SET缺分号的问题，41项离线回归通过；用户需在原MigrateTestDatabase配置重新构建/运行继续验证。agent没有连接数据库；具体目标schema/授权和迁移结果仍待受控核验。
+不再要求反复提供健康截图、重建已经迁移成功的库或为验收填充正式业务数据。团队接入步骤见[简明使用指南](FOUNDATION-USAGE.md)。
 
-D-043更新（2026-10-18）：用户已在IDE配置运行账号环境变量并授权添加依赖、补配置和整理迁移脚本。BE-03已准备这些内容，40项离线测试/打包通过；迁移专用变量RBAC_MIGRATION_URL/USER/PASSWORD需在本机独立运行配置中注入，当前没有读取IDE密码、连接MySQL或执行DDL。先核验迁移账号和隔离目标再开展真实验证，见[BE-03准备记录](BE-03-PREPARATION.md)。
+## 已解决的 Wrapper 排障
 
-D-041后续：BE-02公共骨架已实际按TDD实现并完成30项测试及jar随机端口HTTP验证，D-042用户已本人确认通过；2026-10-18用户报告数据库账号和双库准备完成，截图已核实运行账号身份及双库可见。BE-01/03仍需核验具体授权、独立迁移身份、JDBC连接和迁移/测试，不将Navicat准备记成后端数据库适配通过。运行说明见[后端README](../../backend/README.md)，完整命令/版本/环境限制见[BE-02实施记录](BE-02-IMPLEMENTATION.md)。
-
-1. 在IntelliJ IDEA中确认Project SDK、Maven导入/运行JDK和应用运行JRE均为21，记录实际构建使用的JDK。可通过IDE验证，或在受控命令会话显式指定JDK；永久修改系统JAVA_HOME/PATH不是硬性前置，不要求团队统一个人安装目录。
-2. 已生成Maven Wrapper，当前固定Maven3.9.11；在backend目录、JDK21可用的会话运行`./mvnw.cmd --version`及`./mvnw.cmd --batch-mode --no-transfer-progress verify`。本次实际构建通过，后续BE-02继续补齐公共行为及测试。
-3. 保留用户已准备的rbac_admin_dev和rbac_admin_test，后者用于隔离测试，不清理开发库。BE-03核验rbac_app的目标库授权及独立迁移身份，配置本机凭据注入后验证JDBC连接，再按TDD落实Flyway/JPA。团队共享密码经私下渠道传递，各自本机注入。真实建表通过迁移，避免修改其他数据库；截图/完成反馈不等于迁移、约束或事务测试通过。
-4. 基座完成后由用户确认F-01～06的真实结果并交付共同主线，不要求另一成员审批。当前环境说明和用户对组织方式的确认，不等于公共基座验收通过。
-5. 云端Docker数据库作为后续部署事项，由BE-32/34落实版本、持久化、网络及恢复，不阻断本机基座开发；不在本次购买、安装或连接。
-
-状态与任务见[TASKS.md](TASKS.md)；基座结束条件见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。
-
-## Wrapper同步排障实测（2026-10-17）
-
-用户生成工程默认Wrapper3.3.4、Maven发行版3.10.0。IDE截图先出现JVM目标5，后出现Guice/MissingImplementation（ArtifactHandlerManager）；与[Maven开发者记录的IDE导入问题](https://www.mail-archive.com/dev%40maven.apache.org/msg137878.html)高度吻合，但未在本机复现IDE内部过程，不能断言所有IDE版本均不支持3.10。按既有设计将distributionUrl固定回3.9.11，Wrapper脚本版本保留3.3.4；不是取消Wrapper或更改JDK。
-
-实际结果：Wrapper --version输出Maven3.9.11/Java21.0.12.1；verify编译release21，生成的BackendApplicationTests上下文测试1项通过（失败0/错误0/跳过0），Spring Boot重新打包成功。保留Mockito动态附加agent、Byte Buddy动态加载及CDS警告，未用跳过测试/屏蔽警告处理。本次属于生成工程与构建配置排障，不宣称业务TDD或HTTP/数据库验收通过；未连接MySQL或执行SQL。
-
-用户后续截图显示Sync Finished且无同步错误，但Spring类仍标红；IDE项目模型/索引及实际运行仍需重新加载后确认，命令行成功不能代替IDE已恢复。沙箱首次运行因用户缓存目录写权限失败，获准在沙箱外运行后正常下载官方发行版并构建；没有修改全局Maven配置。
+初始工程引用Maven发行版3.10.0时，IDE导入出现Guice/MissingImplementation及JVM目标5提示；后来将发行版固定回既定3.9.11，保留Wrapper脚本3.3.4及JDK21，构建和IDE运行恢复。没有完整复现IDE内部根因，不能把时间上的恢复夸大为所有IDE均不支持某版本。最新配置与验证见[BE-02实施记录](BE-02-IMPLEMENTATION.md)。

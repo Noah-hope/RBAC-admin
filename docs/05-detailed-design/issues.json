@@ -31,7 +31,7 @@
       "AT-39"
     ],
     "deliverable": "用户负责并确认基座，使用本机MySQL服务；JDK21可在IDE引用，命令行未配置；云服务器已具备，Docker数据库留后续；核验实际版本/隔离条件及工具。",
-    "notes": "用户已明确基座无需他人评审；JDK/Wrapper构建、本机MySQL8.4.8测试库迁移/启动/账号及独立实例机制已验证。开发库迁移/guard/启动/健康已获用户截图及日志确认；其余协作条件和全基座交付待完成；不把云服务器存在当Docker数据库已部署。",
+    "notes": "用户已明确基座无需他人评审；JDK/Wrapper构建、本机MySQL8.4.8测试库迁移/启动/账号及独立实例机制已验证。开发库迁移/guard/启动/健康已获用户截图及日志确认；D-050已完成F-01～05证据核对，团队访问、本人整体确认及共同主线交付等协作事项仍待完成（见FOUNDATION-REVIEW.md）；不把云服务器存在当Docker数据库已部署。",
     "status": "IN_PROGRESS",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
@@ -40,6 +40,14 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "FOUNDATION-REVIEW.md",
+      "scope": "LOCAL_ENVIRONMENT_AND_FOUNDATION_HANDOFF_REVIEW",
+      "localTechnicalPreparationVerified": true,
+      "teamRepositoryAccessVerified": false,
+      "mergedToMain": false,
+      "ownerAccepted": false
+    },
     "acceptanceScope": "登记用户确认的JDK21/本机MySQL/已有云服务器和本人验收安排，补实际版本与使用方式；AT-01/39只为准备证据。无需他人批准，不要求永久JAVA_HOME/PATH；能用IDE或显式JDK运行构建即可。未运行的构建/数据库检查仍留待验证。",
     "useCases": [],
     "tables": [],

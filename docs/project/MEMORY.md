@@ -1,101 +1,38 @@
 # 项目共享记忆
 
-更新日期：2026-10-18（Asia/Shanghai）。保存当前事实，历史通过 Git 查询。
-最新交付：2026-10-18/D-049：用户已确认健康status=UP，并明确回复RBAC_IDEMPOTENCY_ENABLED“是，已设为 true”。结合15:28本机启动/测试库连接日志，按BE-05交接范围记录d059d11为OWNER_ACCEPTED；不是仅凭UP推断启用。BE-02～05单项已本人确认，BE-01仍IN_PROGRESS、其余30项PLANNED，基座总门槛NOT_EVALUATED；下一步核对BE-01剩余条件和F-01～06整体交接，不自行开始业务、合并或推送。详见[BE-05记录](../05-detailed-design/BE-05-IDEMPOTENCY.md)。
-最新工具事实：用户确认前次误选旧导出规格；本次从指定RBAC权限中心API/1.2.0配置导出，核心契约核对通过，67入站＋1出站、120模型及104媒体示例全部通过。三路径覆盖及任命模型修复有效，仅余license/占位servers两处元数据差异；MCP旧暴露差异沿用，固定链接尚未验证。见APIFOX.md最新章节。
+更新日期：2026-10-18（Asia/Shanghai）。这里只维护项目状态与事实，历史通过 Git 和下方明确标注的历史章节查询。
 
 ## 当前状态
 
-2026-10-18 15:44开发库核对通过：用户按开发库限定查询提供截图，Flyway版本1/2/3的success均为1，mutation_guard为id=1/revision=0；最新普通BackendApplication日志明确连接localhost:3306/rbac_admin_dev/MySQL8.4.8，Hikari/JPA完成、Tomcat8080启动、GET200，健康截图status=UP。开发库迁移、锚点及普通运行/健康这项准备已核对，不再视为待初始化；不从日志推断未展示的数据库用户名或迁移执行账号。agent本轮只读用户日志/截图，未连接已有库、执行SQL或读取凭据。BE-01保留其余协作条件及整体交接待核对，BE-02～05本人确认与基座总门槛不变；以下空库或初始化待办是此前历史。
+D-050：用户授权执行基座整体核对，并补充后续团队使用说明。已复核现有实现/测试报告/产物和本机运行证据，交付[整体核对报告](../05-detailed-design/FOUNDATION-REVIEW.md)及[简明使用指南](../05-detailed-design/FOUNDATION-USAGE.md)。F-01～05公共机制交接证据为VERIFIED，F-06待本人整体确认及共同主线交付，机器门槛为PENDING_OWNER_ACCEPTANCE_AND_MAIN_DELIVERY，尚非FOUNDATION_ACCEPTED。
 
-2026-10-18开发库现场核对：用户提供Navicat截图，当前rbac_admin_dev表列表为空、底部显示0 Tables；这是尚无表结构的截图证据，不是已有表但无业务记录。下一步在独立MigrationApplication配置中以RBAC_MIGRATION_URL明确指向该开发库，按既有管理员受控触发器初始化方案执行V1～V3；不复制测试数据、不清理现有测试库、不用rbac_app承担DDL。成功后普通BackendApplication仍用rbac_app、只改运行URL指向开发库并核对启动/健康。当前未收到开发库迁移或运行成功回报；agent本轮未连接数据库、执行SQL或读取凭据，BE-01仍IN_PROGRESS、整体门槛未评估。
-
-D-049静态收尾PASS：316处本地链接、49个唯一决策、生成器确定性及确认/任务/来源一致性通过，UTF-8/代码围栏/共享文档无本机路径及Git空白检查通过。该检查不执行Java、数据库或业务测试。
-
-D-049当前：2026-10-18/D-049：用户已确认健康status=UP，并明确回复RBAC_IDEMPOTENCY_ENABLED“是，已设为 true”。结合15:28本机启动/测试库连接日志，按BE-05交接范围记录d059d11为OWNER_ACCEPTED；不是仅凭UP推断启用。BE-02～05单项已本人确认，BE-01仍IN_PROGRESS、其余30项PLANNED，基座总门槛NOT_EVALUATED；下一步核对BE-01剩余条件和F-01～06整体交接，不自行开始业务、合并或推送。本轮只记录用户明确确认和静态追踪，不运行新Java测试/SQL、不连接数据库或读取密钥；64离线＋42引擎既有证据沿用，AT-01/02/03/04/33/37仍局部验证、其余35项未运行。以下待确认描述保留为历史。
-
-2026-10-18 15:28用户本机运行核对：最新日志显示BackendApplication/dev成功连接localhost:3306/rbac_admin_test（MySQL8.4.8），Hikari与JPA初始化完成、Tomcat8080启动，GET记录200；用户明确确认健康status=UP。此前15:27的Connection refused已不再出现在本次日志，原失败不能解释为HMAC错误。日志未展示RBAC_IDEMPOTENCY_ENABLED或幂等Bean装配，故只确认服务启动/健康，不由UP推断HMAC启用已验证；当前等待用户仅确认开关是否true，不读取IDE口令/密钥。BE-05保持IN_PROGRESS及待本人确认，既有64离线＋42引擎结果沿用，基座总门槛不变。agent本轮只读用户日志并同步文档，未连接数据库、执行SQL或运行新Java测试。
-
-D-048收尾：最终完整clean verify为64离线＋42真实引擎全通过，0失败/错误/跳过，新增13离线/17引擎；阶段性测试夹具扫描及安全反例已修复回归。静态校验PASS（309链接/48决策/来源和生成器一致），UTF-8/围栏/无本机路径/空白检查通过。正式jar含公共能力且排除测试夹具；随机schema/账号已清理、专属MySQL正常关闭，用户已有库未操作。BE-05本人确认、BE-01余项与整体门槛仍开放；不合并或推送。
-
-D-048当前：用户授权执行完整BE-05计划并选择启用时配置密钥；中断后继续。公共幂等已完成自测（64离线＋42隔离MySQL均通过，临时实例正常关闭），BE-01/05为IN_PROGRESS、BE-02/03/04为OWNER_ACCEPTED、其余30项PLANNED。AT-01/02/03/04/33/37仅PARTIALLY_VERIFIED，其余35项未运行。当前只定义规范化端口，不冒充RFC8785；真实JWT/当前范围/业务投影仍未实现。默认关闭幂等且无无保护入口，BE-05完成后仍需本人确认、基座总门槛仍NOT_EVALUATED。以下为此前历史。
-
-D-047静态收尾PASS：289处本地链接、47个唯一决策、生成器确定性及任务/来源一致性通过；改动文档UTF-8/围栏/无本机路径和Git空白核对通过。未执行新应用/数据库测试。
-
-D-047当前确认：用户消息“BE-04 确认服务为up状态，接下来做什么”，截图/actuator/health为UP；按BE-04交接上下文记录本人确认，具体范围见[BE-04记录](../05-detailed-design/BE-04-TRANSACTIONS.md)。本轮只同步记录、任务状态和静态检查，不运行新Java测试、不连接用户数据库或执行SQL。AT-01/02/03/33/37保持局部验证、其余36项未运行，基座总门槛NOT_EVALUATED，业务未分派；下一步先按既定设计/TDD实现BE-05，BE-01余项及主线交付仍开放。以下D-046及更早描述为此前阶段事实。
-
-D-046收尾：最终51离线＋25引擎全通过；静态校验PASS（288本地链接、46决策、生成器确定性及来源/任务一致），UTF-8/围栏/共享文档无本机路径/Git空白通过，正式jar不含测试夹具。仅本轮独立MySQL正常关闭、随机schema/账号已清理；现有用户数据库未操作。原始日志/临时数据与无关.codeartsdoer文件不纳入提交；不合并或推送。
-
-D-046当前：BE-02/03为OWNER_ACCEPTED，BE-01/04为IN_PROGRESS，其余31项PLANNED。BE-03依据为技术核对后的用户“继续”，不是新增“确认通过”消息。BE-04的RC锁后资格、RR快照、WriteContext和同事务审计完成自测；51项离线＋25项真实MySQL8.4.8检查全部通过，其中16项公共事务检查。AT-01/02/03/33/37仅PARTIALLY_VERIFIED、其余36项未运行；正式鉴权/跨域业务未实现，基座总门槛NOT_EVALUATED，30项业务未分派。临时schema/账号清理且专属MySQL正常关闭，用户已有库/口令未操作或读取；不合并/推送。下一步本人确认BE-04，再按依赖推进BE-05幂等，BE-01其他协作条件和开发库初始化继续跟踪。以下保留此前阶段事实。
-
-2026-10-18账号截图核对：rbac_app@localhost在rbac_admin_dev/test仅SELECT/INSERT/UPDATE/DELETE；rbac_migrator@localhost在相同两库有上述DML及CREATE/DROP/REFERENCES/INDEX/ALTER/TRIGGER，无截图所示全局SUPER或GRANT OPTION，USAGE不表示全局管理权限。运行/迁移库内授权符合分工，无需补授权；此前binlog=1/trust_creators=0的额外触发器策略仍按管理员受控处理，不声称该迁移账号已成功执行全套迁移。BE-03基础迁移、JPA、启动/健康和账号技术核对已齐，待本人阶段确认及主线交付，尚不标OWNER_ACCEPTED；下一开发任务BE-04，未自行开始实现或合并/推送。agent本轮只整理截图证据，未连接用户数据库、执行SQL或新Java测试。下方账号“待核验”等是此前记录。
-
-2026-10-18 10:52用户本机运行回报：BackendApplication默认dev成功连接rbac_admin_test/MySQL8.4.8，Hikari/JPA/Tomcat8080正常启动，GET200且健康截图status=UP。普通后端连接/启动/健康检查已确认；日志未显示实际数据库用户名，rbac_app和rbac_migrator的CURRENT_USER/GRANTS仍需核验，不能因健康UP声明账号权限齐全或整个BE-03/基座本人验收完成。下一步先只读核验账号，收尾BE-03，再按原依赖推进BE-04写事务/读快照/同事务审计。agent未连接或改动用户库，本轮只记录用户日志/截图。
-
-D-045实施：VersionedUuidEntity只用于专用row_version表，UUID CHAR和可空Long @Version保证预分配新ID走persist；API业务版本独立维护。UtcInstantConverter显式应用于DATETIME(6)，Timestamp时间点＋UTC绑定，截断微秒；真实Asia/Shanghai JVM捕获并修复八小时偏移。生成列只读映射样例不进入正式jar。普通启动只读检查guard，缺表/记录即失败，不补建、不重置非零revision；独立迁移和离线profile不装配。44离线＋9项隔离MySQL检查均通过，已有库未连接/操作。BE-03保持IN_PROGRESS，AT-02局部验证，待本人用rbac_app连接已迁移测试库确认启动和健康、核验迁移账号；开发库初始化/领域映射/业务并发及BE-04/05仍待后续。详见[持久化基础](../05-detailed-design/BE-03-PERSISTENCE.md)。
-
-D-045收尾核验：实际可执行jar在随机最小guard夹具、DML账号及非Web模式下，有guard(1,9)退出0且值不变，缺行退出1并有RBAC_DB_NOT_INITIALIZED且不补建；不是HTTP/全量schema或部署验收。所有临时schema/账号清理，独立MySQL正常关闭。生成器/来源/迁移/状态静态检查PASS（265链接、45决策），UTF-8/无本机路径/围栏及Git空白检查通过。实际证据与静态校验分开，不扩展BE-03本人确认或全基座验收。
-
-2026-10-18用户补充截图：历史versions 1/2/3的success均1；mutation_guard仅一行id=1/revision=0；再次运行迁移显示校验3条成功、当前版本3、up to date/No migration necessary。三项核对通过，重复运行截图未展示退出码。下一步继续BE-03的UUID/JPA版本/UTC映射、guard缺失启动检查和迁移账号长期权限配置；表/触发器数量未收到用户库查询，开发库未初始化验证。agent本轮只更新记录，不连接数据库或运行Java测试；BE-03仍IN_PROGRESS，AT-02局部验证、基座未验收。下方关于guard/重复迁移“未展示”的说法为此前日志边界，以上述截图更新为准。
-
-2026-10-18本机测试库迁移成功（用户日志）：10:21:22～10:21:37，Java21.0.12.1/Boot4.0.8、migrate profile连接localhost:3306/rbac_admin_test（MySQL8.4），从Empty Schema依次完成三条迁移，版本v3，退出码0。此前10:19日志仍有V2失败历史，本次成功日志已替代该阻塞。日志未展示实际迁移账号、对象数量/guard内容或重复执行，agent未连接现有库核查，亦未改变全局配置；保留Flyway兼容性WARN和已有独立实例验证边界。下一步先只读核对历史/对象/guard和重复迁移，再继续UUID/JPA版本/UTC映射、缺guard启动失败检查；开发库尚无迁移成功证据，BE-03/AT-02及基座总门槛不扩展。以下用户库“失败待恢复”等为此前记录，最新证据见[真实MySQL验证](../05-detailed-design/BE-03-MYSQL-VALIDATION.md)。
-
-D-044真实引擎进展：用户日志显示rbac_admin_test/MySQL8.4的V1在CHECK中未引用ROW_NUMBER而1064失败，可能已有部分表。仅修复两处反引号并回补schema_model/schema.sql/V1，逻辑模型、字段、API及其业务约束不变。使用本机8.4.8程序、全新backend/.tmp数据目录和动态回环非3306端口，--no-defaults且binlog关闭；先在随机schema复现1项失败，再完整41项离线＋1项MySQL集成检查通过。实测43业务表＋历史、79FK、41触发器、三条成功历史及guard，重复迁移无变化，CHECK/重复主键/FK/运行账号DDL拒绝均实测；临时进程已正常关闭，用户已有库未连接/清理。AT-02仅PARTIALLY_VERIFIED，BE-03 IN_PROGRESS；用户库恢复、binlog开启条件、JPA/全部触发器行为及并发仍待后续。恢复步骤和限制见[真实MySQL验证](../05-detailed-design/BE-03-MYSQL-VALIDATION.md)。以下“未执行SQL”的记录为之前阶段历史或仅指相应静态检查。
-
-D-044静态检查通过：数据库43表/356列/79FK及20个有限CHECK推演；实施追踪248处本地链接、44个唯一决策、生成器确定性和来源摘要一致。上游schema.sql仅允许两处引用修正，其他权威摘要不变；Markdown围栏/本机路径/Git空白检查通过。用户只读反馈log_bin=1、trust_creators=0；已记录本机首次恢复可用root管理身份执行独立迁移的技术建议，普通服务仍rbac_app、全局设置保持，建议尚未执行。不把关闭binlog的独立实例结果推成用户现有库成功。
-
-2026-10-18迁移初始化修复：用户提供migrate profile实际运行日志，MySQL1064发生在连接初始化脚本第二条SET，暂无V1～V3成功证据。已确认Boot仅换行拼接init-sqls，两项缺分号导致合并；新增回归RED为1测试1失败/0错误，补齐分号后完整构建41项离线测试全部通过。未启用多语句连接选项、未改V1～V3或其摘要，agent没有连接MySQL或执行SQL；用户保留原运行配置重新构建后继续验证。实际目标schema/约束/JPA仍待核验，BE-03及AT-02不标通过。详情见[BE-03准备记录](../05-detailed-design/BE-03-PREPARATION.md)。
-
-D-043实施进展：用户授权添加依赖、补齐配置及整理脚本。BOM实际解析JPA4.0.7/Hibernate7.2.24.Final/Connector9.7.0/Flyway11.14.1；普通模式只validate、Flyway关闭，迁移入口非Web/不扫描业务并强制独立凭据；V1保留43表/79FK，V2保留41触发器，V3只初始化guard。两轮有效RED后完整clean verify为40测试通过、0失败/错误/跳过；离线解析和缺配置jar入口通过，未连接MySQL或执行SQL。BE-03仍进行中，UUID/版本/真实约束和guard缺失启动失败检查待补；AT-02仍未运行。证据见[BE-03准备记录](../05-detailed-design/BE-03-PREPARATION.md)。以下BE-03未开始的描述为此前历史。
-
-D-043静态检查通过：231处本地链接、43个唯一决策、生成器确定性、迁移来源摘要及任务状态一致；需求/API/数据库草案摘要不变。Markdown代码围栏、本机绝对路径和Git空白检查通过。静态检查不运行数据库；无远程Issue/PR、合并或推送。
-
-2026-10-18本机日志整理：按用户指出的根目录日志问题，将backend下三份be02构建检查日志移至backend/logs/build/，移动前后SHA256全部一致；backend/.gitignore明确忽略logs/，运行说明和目录导航已同步。它们是手工保存的Maven输出，应用仍默认使用控制台；本次没有配置文件日志、重跑构建或执行SQL，BE-03尚未开始。仅提交约定文档和忽略规则，原始日志不入Git。
-
-整理核验通过：backend根目录无残留.log，三份归档日志均被Git忽略；静态设计/任务检查及Git空白检查通过。没有运行Java或数据库测试，不改变已有验收状态。
-
-2026-10-18数据库准备进展：用户回复“完成”，截图CURRENT_USER()显示rbac_app@localhost，连接树列出rbac_admin_dev/rbac_admin_test，另有local_mysql_rbactest连接名称。具体授权及两个SHOW TABLES结果未展开，按用户报告记录准备完成，不从连接名称推断真实账号或独立迁移身份。下一步为BE-03的Flyway/JPA适配、凭据本机注入及受控连接/迁移验证；尚未实施或执行。BE-01仍IN_PROGRESS，BE-02的OWNER_ACCEPTED、基座总门槛和业务状态保持不变；本轮仅更新文档，agent未连接数据库或执行SQL。详情见[环境准备记录](../05-detailed-design/ENVIRONMENT.md)。
-
-本轮文档静态检查通过：210处本地链接、42个唯一决策、生成器确定性及任务/基线一致性；Git空白检查通过。未运行应用、数据库或业务测试，不扩展既有验收结论。
-
-最新D-042：2026-10-17，用户明确回复“确认通过”，仅确认BE-02/f911c60。已同步OWNER_ACCEPTED及确认消息/日期，未合并或推送；基座总门槛、数据库准备、AT-01/37局部范围及业务未分派状态不变。本轮只维护确认记录，未重跑应用/测试、连接数据库或执行SQL。静态检查209处链接、42个唯一决策、生成器及状态一致性通过，代码围栏/本机路径/空白检查通过。
-
-最新D-041实施交接：用户在健康UP后明确授权执行BE-02。公共HTTP/配置骨架已按项目TDD实现，包名com.adgn.backend/YAML已同步；固定Maven3.9.11/发行包SHA256，Boot4.0.8/Corretto21.0.12.1。全量clean verify为30测试通过、0失败/错误/跳过，jar真实随机端口健康/404 Problem/非法头422/无测试接口暴露，以及server必需配置缺失/提供两种启动结果均实测。具体RED/GREEN、插件版本、产物SHA及本机短socket目录限制见[BE-02实施记录](../05-detailed-design/BE-02-IMPLEMENTATION.md)，团队运行见[后端README](../../backend/README.md)。
-
-BE-02为OWNER_ACCEPTED（D-042），用户明确确认实现提交f911c60；尚未合并主线；BE-01准备和BE-03适配仍IN_PROGRESS，其余32任务PLANNED。AT-01/02/37仅PARTIALLY_VERIFIED，其余38项未运行；基座IN_PROGRESS但总门槛NOT_EVALUATED，业务30项未分派。未创建远程Issue/PR、合并main、推送或连接数据库/执行SQL；.codeartsdoer等无关本机文件保留不纳入提交。以下此前“无工程/无HTTP运行”均为历史，以本段为准。
-
-D-041静态交接检查PASS：209处本地链接、41决策唯一、生成器确定性、任务/验收状态及上游摘要一致；新改共享文档和源码无本机绝对路径，Git空白检查通过。运行证据与静态报告分开记录，不将静态PASS当成完整业务或数据库验收。
-
-最新构建排障（2026-10-17）：用户已生成backend初始工程（Boot4.0.8/Java21、com.adgn.backend、YAML），本轮仅修复其Wrapper发行版3.10.0→原定3.9.11，保留Wrapper3.3.4及用户生成代码。实测java/javac21.0.12.1；会话临时JAVA_HOME下Wrapper --version通过、verify构建打包成功，生成的上下文测试1项通过、0失败/错误/跳过。存在Mockito动态agent及CDS警告，未屏蔽；不是业务TDD/BE-02完整验收或数据库验证。IDE截图Sync Finished但类仍标红，IDE恢复待确认；详情见[ENVIRONMENT.md](../05-detailed-design/ENVIRONMENT.md)。未改全局环境、连接数据库或推送；后续原文中的“未创建工程”是此前事实，现以本段为准。其他成员业务尚未分派，基座尚未验收。
-
-- 项目根目录：`rbac-admin`；当前文档分支`codex/foundation-environment`从main/169556d创建；main跟踪origin/main，原分支保留、未建worktree。本地origin为`https://github.com/Noah-hope/RBAC-admin.git`。
-- 已从原项目需求文档目录导入 396 个文件，39,073,839 字节；首次导入 SHA-256 全部一致。原目录未修改，导入清单保留为历史快照。
-- 当前需求基线：V1.3，2026-10-16；沿用仅功能权限、来源关权、账号与 OA 规则，按实际材料采用公司—部门—岗位，部门平级。**Material 3 原型 0.2.0 阶段评审有条件通过，可启动 API 设计**；3 项原型缺口及工具同步待办见 [STAGE-REVIEW.md](../02-ui-design/STAGE-REVIEW.md)。本地API契约1.2.0、数据库1.1草案已完成正式需求—API—数据库一致性评审修订，设计层面有条件通过；Apifox1.2.0指定客户端导出核心一致已核对，历史导出证据及MCP限制保留；后端详细设计1.0及团队计划已交付并完成静态自查；BE-02公共骨架已实现、自测并由本人确认通过；正式业务和表结构未实现，用户报告开发空库已建，agent未连接/执行SQL或部署。本期没有真实OA，按用户授权采用演示适配器。团队共享记忆统一由本仓库 `docs/` 维护。
-
-| 阶段 | 状态 | 交接 |
+| 阶段 | 当前事实 | 交接入口 |
 | --- | --- | --- |
-| 初始化 | 完成 | Git、需求导入、流程和共享记忆 |
-| 1. 需求分析 | V1.3 平级部门修订完成 | 正式用例、材料核对、共享规则、简表及图源已同步；原始功能清单映射疑问保留 |
-| 2. 界面原型 | 可作为 API 设计输入；三项原型补齐按 D-029 后续跟踪 | `docs/02-ui-design/STAGE-REVIEW.md`；不作为 API 启动或契约定稿前置，相关业务规则仍保留 |
-| 3. API 设计 | Git1.2.0正式跨阶段修订完成，指定客户端导出核心一致已核对 | 67入站、1出站、129模型；120模型/104媒体示例通过，三路径覆盖及模型修复有效；Git权威，MCP限制保留 |
-| 4. 数据库设计 | 1.1草案，正式跨阶段评审修订后有条件通过 | [正式评审](../04-database/CONSISTENCY-REVIEW.md)；43表/356列，6项缺陷修订；独立8.4.8初始迁移/基础约束通过；用户测试库V1～V3/guard/重复迁移及本机运行已核对，基础JPA和公共事务已验证，完整业务待后续 |
-| 5. 详细设计与 TDD | 1.2实施：BE-02/03/04/05本人确认；基座总门槛未评估 | [详细设计入口](../05-detailed-design/README.md)；13模块、5项基座/30项待分派、41项验收（AT-01/02/03/04/33/37局部验证）、68操作；取消基座独立评审后估算78/145.5/239人时 |
+| 需求 | V1.3，仅功能权限；部门平级、来源关权、恢复不复权 | [正式用例](../01-requirements/usecases-v1/用例说明.md) |
+| 原型 | Material3原型0.2.0有条件通过，可作为API输入；3项缺口按D-029后续跟踪 | [阶段评审](../02-ui-design/STAGE-REVIEW.md) |
+| API | Git1.2.0正式跨阶段修订及指定Apifox客户端导出核心一致已核对；67入站＋1出站，129模型；120模型/104媒体示例检查通过；两处元数据差异及MCP限制保留 | [契约与同步](../03-api/APIFOX.md) |
+| 数据库 | 1.1设计有条件通过；43业务表/41触发器迁移和基础映射/约束已有隔离引擎证据；本机开发/测试库初始化已确认，完整业务未验收 | [数据库入口](../04-database/README.md) |
+| 基座 | BE-02～05单项OWNER_ACCEPTED；BE-01技术准备已核对，协作/整体交付仍IN_PROGRESS；最新64离线＋42引擎检查全通过 | [交接核对](../05-detailed-design/FOUNDATION-REVIEW.md) |
+| 业务与交付 | BE-06～35共30项PLANNED/UNASSIGNED，实际Owner/Reviewer待登记；真实JWT、业务端到端、云端部署尚未实现或验收；正式前端后置，OA采用演示方案 | [任务清单](../05-detailed-design/TASKS.md) |
 
-## 当前基座准备与本人确认（2026-10-17）
+## 基座证据与边界
 
-最新D-040：IDE采用IntelliJ IDEA，正式工程位置确定为rbac-admin/backend，沿用根Git仓库；项目、Maven和运行JDK均使用21，尚未实测构建，不要求提供/提交个人JDK目录。用户确认开发空库rbac_admin_dev已创建，Navicat截图显示服务端8.4.8、本机3306；这属于用户报告/截图事实，agent未连接、建库或执行SQL，表结构未迁移。后端服务使用专用数据库用户，具体用户名/Host和权限待配置；团队共享密码私下分发、各自本机注入，禁止入Git/文档/日志，迁移身份分离保留。BE-01仍准备中，BE-02尚未开始。下文D-039中的本机版本/空库待定是此前记录，以本段为准。
+- BE-02/f911c60按D-042由用户“确认通过”；BE-03/b8caeb2按D-046技术核对后“继续”的上下文确认，保留原始消息；BE-04/58b556a按D-047确认本机健康UP；BE-05/d059d11按D-049结合15:28测试库连接/启动日志、用户健康UP及单独明确开关true确认。单项确认不等于主线交付或整体门槛通过。
+- 用户15:44开发库证据：Flyway1/2/3的success均1，mutation_guard为id1/revision0；普通BackendApplication日志连接localhost:3306/rbac_admin_dev/MySQL8.4.8，Hikari/JPA、Tomcat8080及健康UP。开发库已初始化；测试库此前迁移/重复运行/普通启动及账号授权截图已核对。日志未展示的实际账号不作推断。
+- 运行账号rbac_app仅两个库的DML；迁移账号rbac_migrator有库内DDL/触发器权限，但用户binlog=1/trust_creators=0还有额外触发器限制。沿用管理员受控独立迁移策略，普通应用不以root运行。密码/密钥只经本机环境注入，不进入共享文档、日志或Git。
+- 本轮复核现有JUnit报告：64离线＋42真实MySQL检查，失败/错误/跳过均0；当前实现自d059d11未变，现有jar包含三项公共自动配置且不含测试夹具。没有重新运行Java或SQL、连接已有库、读取IDE秘密。静态验证结果见[validation.json](../05-detailed-design/validation.json)，不代替真实测试。
+- AT-01/02/03/04/33/37仅PARTIALLY_VERIFIED，其余35项DESIGNED_NOT_RUN。当前资格/重放授权为回调端口，正式JWT/范围未实现；固定申请RFC8785归BE-21。基座不等于完整后端验收。
 
-D-040文档核验：6份修改文档的代码围栏、44处本地链接、40个唯一决策编号和本机路径检查通过，Git空白差异检查通过；backend目录未创建，未运行应用/业务测试或SQL。该核验仅覆盖本轮文档，不重新声明设计全量验证或环境验证通过。
+## 下一步与协作待办
 
-D-039：用户确认已有云服务器，后续可Docker部署数据库，目前使用本机MySQL；本地JDK21可在IDE中引用，命令行未配置；基座由用户本人确认，不需要他人评审。只读Get-Command核实java/javac均不在PATH，JAVA_HOME未配置。没有修改环境变量，也没有运行实际JDK、本机MySQL连接/版本查询或云端部署，用户陈述不写成实测通过。
+1. 本人核对本次报告并确认BE-01收尾及整体基座范围，然后安排共同主线交付；当前不自行合并或推送，不先实现业务。
+2. 当前本地分支codex/foundation-environment；本轮起点c5f4325，本地main为169556d且是其祖先，尚无本次基座实现。origin已配置为GitHub仓库；本轮未联网核验远程或成员权限，未创建远程Issue/PR。无关.codeartsdoer保留不提交。
+3. 登记实际成员、核验拉取/PR权限；基座交付后分批分派BE-06～35及独立Reviewer，保留原技术依赖。CI/分支保护与云端部署按实际能力/后续任务推进；已有云服务器不表示Docker数据库或备份恢复已经验证。
+4. 成员按使用指南从共同版本启动、复用读写/幂等/审计边界；各用自己的本机库可各有HMAC密钥，连接同库的实例必须保持一致密钥环。普通启动和独立迁移配置分开，已有库不重复清理。
 
-更新ENVIRONMENT及基座交接：BE-01为IN_PROGRESS（环境准备），BE-02～35仍PLANNED，基座阶段PREPARING、门槛NOT_EVALUATED，验收证据为空。5项基座reviewPolicy=OWNER_ACCEPTANCE、无需Reviewer；TDD、自检、真实数据库/事务验证不取消。30项业务仍未分派，保留原独立评审规则。
+D-050静态收尾：PASS，316处本地链接、50个唯一决策、生成器确定性与状态/来源一致性通过；15份改动Markdown的UTF-8/围栏/相对路径及本地链接、Git空白检查通过。基座分支改动范围未发现常见凭据标记或生成/IDE产物被跟踪；不将有限扫描当作秘密安全的完整保证。没有新Java/数据库运行结果。
 
-不强制永久JAVA_HOME/PATH；后续可通过IDE构建JDK或受控会话显式指定JDK21，记录实际运行方式。当前数据库选本机独立开发/测试schema，服务端版本、连接及权限仍待核验；设计目标MySQL8.4不是已测本机版本。云服务器存在不代表Docker数据库已部署。详细结果见ENVIRONMENT，文档不保存个人安装路径或连接秘密。
-
-取消基座单列独立评审1.25/2.5/5人时，本人确认含原开发9/18/28估算；业务评审7.5/15/30保留，总量78/145.5/239，仍超原40～72容量。本轮只改准备记录和规则，未开始BE-02工程或执行SQL；BE-01不能因这次组织确认就标为全部完成。以下保留前一版独立评审及环境待定时的历史。
-
-本轮静态复核通过：1.2阶段/任务/验收策略一致，5项基座本人确认且无单列独立评审，30项业务原评审保留；BE-01准备中、其余34项未开始，基座门槛未评估。188处本地链接、39条决策有效；上游摘要、原技术任务和图源保持一致，取消基座评审工时为明确例外。该PASS不代表JDK、MySQL、工程或基座功能已实际通过。
+共享记忆、决策与流程统一在docs/project；任务生成器和校验器同步维护上述门槛，不手改生成JSON制造验收。下方为明确历史章节，其当时未完成项以本节当前状态替代。
 
 ## 先基座后分派的交付历史（2026-10-17）
 

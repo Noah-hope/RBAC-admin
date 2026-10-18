@@ -1,6 +1,6 @@
 # 本地Issue草案与验收卡
 
-修订1.2/D-049确认更新：BE-01为IN_PROGRESS（协作条件待办）；BE-02为OWNER_ACCEPTED（D-042/f911c60）；BE-03为OWNER_ACCEPTED（用户核对后回复继续，D-046/b8caeb2，见BE-03-PERSISTENCE）；BE-04为OWNER_ACCEPTED（D-047/58b556a，用户确认服务UP；公共事务/审计/快照证据见BE-04-TRANSACTIONS），BE-05为OWNER_ACCEPTED（D-049/d059d11，用户确认启用true及本机健康UP，见BE-05-IDEMPOTENCY），其余30项PLANNED。以上均未合并主线。BE-01～05为用户先实现的基座；BE-06～35为验收基座后待分派的业务/交付任务，ownerSlot和reviewerSlot为null时绝不表示已指派。基座reviewPolicy=OWNER_ACCEPTANCE、独立评审工时为0；业务保留INDEPENDENT_REVIEW。suggestedOwnerSlot/suggestedReviewerSlot只是旧方案参考。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。
+修订1.2/D-050整体核对：F-01～05证据已核对，F-06待本人整体确认与共同主线交付（见FOUNDATION-REVIEW.md）；BE-01为IN_PROGRESS（本机技术准备已核对，团队访问/主线交付等协作待办）；BE-02为OWNER_ACCEPTED（D-042/f911c60）；BE-03为OWNER_ACCEPTED（用户核对后回复继续，D-046/b8caeb2，见BE-03-PERSISTENCE）；BE-04为OWNER_ACCEPTED（D-047/58b556a，用户确认服务UP；公共事务/审计/快照证据见BE-04-TRANSACTIONS），BE-05为OWNER_ACCEPTED（D-049/d059d11，用户确认启用true及本机健康UP，见BE-05-IDEMPOTENCY），其余30项PLANNED。以上均未合并主线。BE-01～05为用户先实现的基座；BE-06～35为验收基座后待分派的业务/交付任务，ownerSlot和reviewerSlot为null时绝不表示已指派。基座reviewPolicy=OWNER_ACCEPTANCE、独立评审工时为0；业务保留INDEPENDENT_REVIEW。suggestedOwnerSlot/suggestedReviewerSlot只是旧方案参考。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。
 
 业务任务启动须同时满足FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED和原dependencies；这两个阶段门槛不是额外业务需求。基座验收见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。开发估算含设计细化/TDD/自测/文档，基座自检/本人确认含开发估算，业务独立评审另计，外部等待不计。
 
@@ -17,7 +17,7 @@
 - 验收：AT-01 可重复构建与最小部署；AT-39 PR与发布证据。
 - 验收边界：登记用户确认的JDK21/本机MySQL/已有云服务器和本人验收安排，补实际版本与使用方式；AT-01/39只为准备证据。无需他人批准，不要求永久JAVA_HOME/PATH；能用IDE或显式JDK运行构建即可。未运行的构建/数据库检查仍留待验证。
 - PR说明：关联真实Issue号；列明变更行为、契约/表版本、实际RED/GREEN命令及结果、待办；所有验收定义见TEST-PLAN。
-- 注意：用户已明确基座无需他人评审；JDK/Wrapper构建、本机MySQL8.4.8测试库迁移/启动/账号及独立实例机制已验证。开发库迁移/guard/启动/健康已获用户截图及日志确认；其余协作条件和全基座交付待完成；不把云服务器存在当Docker数据库已部署。
+- 注意：用户已明确基座无需他人评审；JDK/Wrapper构建、本机MySQL8.4.8测试库迁移/启动/账号及独立实例机制已验证。开发库迁移/guard/启动/健康已获用户截图及日志确认；D-050已完成F-01～05证据核对，团队访问、本人整体确认及共同主线交付等协作事项仍待完成（见FOUNDATION-REVIEW.md）；不把云服务器存在当Docker数据库已部署。
 
 ## BE-02 应用骨架、契约边界与健康检查
 

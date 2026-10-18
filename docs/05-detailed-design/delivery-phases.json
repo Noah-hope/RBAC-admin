@@ -65,7 +65,50 @@
     ],
     "reviewPolicy": "INDEPENDENT_REVIEW"
   },
-  "gateStatus": "NOT_EVALUATED",
-  "gateEvidence": [],
+  "gateStatus": "PENDING_OWNER_ACCEPTANCE_AND_MAIN_DELIVERY",
+  "gateEvidence": [
+    {
+      "id": "F-01",
+      "status": "VERIFIED",
+      "evidence": "FOUNDATION-REVIEW.md",
+      "date": "2026-10-18",
+      "scope": "PUBLIC_FOUNDATION_ONLY"
+    },
+    {
+      "id": "F-02",
+      "status": "VERIFIED",
+      "evidence": "FOUNDATION-REVIEW.md",
+      "date": "2026-10-18",
+      "scope": "PUBLIC_FOUNDATION_ONLY"
+    },
+    {
+      "id": "F-03",
+      "status": "VERIFIED",
+      "evidence": "FOUNDATION-REVIEW.md",
+      "date": "2026-10-18",
+      "scope": "PUBLIC_FOUNDATION_ONLY"
+    },
+    {
+      "id": "F-04",
+      "status": "VERIFIED",
+      "evidence": "FOUNDATION-REVIEW.md",
+      "date": "2026-10-18",
+      "scope": "PUBLIC_FOUNDATION_ONLY"
+    },
+    {
+      "id": "F-05",
+      "status": "VERIFIED",
+      "evidence": "FOUNDATION-REVIEW.md",
+      "date": "2026-10-18",
+      "scope": "PUBLIC_FOUNDATION_ONLY"
+    },
+    {
+      "id": "F-06",
+      "status": "PENDING",
+      "evidence": "FOUNDATION-REVIEW.md",
+      "date": "2026-10-18",
+      "scope": "OWNER_ACCEPTANCE_AND_MAIN_DELIVERY"
+    }
+  ],
   "reviewRule": "基座由用户确认，无需他人评审；业务阶段原独立评审规则保留，人员以后登记"
 }
