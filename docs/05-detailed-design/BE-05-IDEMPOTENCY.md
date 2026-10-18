@@ -1,5 +1,7 @@
 # BE-05 HTTP幂等预留与安全重放
 
+D-049本人确认更新：用户在健康UP后明确确认开关true，BE-05/d059d11为OWNER_ACCEPTED。原64离线＋42真实引擎结果沿用；默认关闭仍为应用设计值，用户本机已选择启用。以下实施时“待本人确认”及15:28“等待开关确认”是此前历史，最新确认详见末节。
+
 2026-10-18实施设计，用户明确授权执行已确认计划；BE-04/58b556a已本人确认。沿用API1.2.0、数据库1.1及V1～V3，不新增正式业务路由或改DDL。最终64离线＋42真实引擎检查全通过；本人确认与完整业务验收边界见后文。
 
 代码入口：[幂等协调器](../../backend/src/main/java/com/adgn/backend/core/idempotency/IdempotencyCoordinator.java)、[启用及密钥装配](../../backend/src/main/java/com/adgn/backend/core/idempotency/IdempotencyAutoConfiguration.java)、[HTTP适配](../../backend/src/main/java/com/adgn/backend/web/IdempotencyHttp.java)。测试入口：[真实引擎](../../backend/src/test/java/com/adgn/backend/IdempotencyMySqlCheck.java)、[配置](../../backend/src/test/java/com/adgn/idempotencyfixture/IdempotencyConfigTest.java)、[HTTP](../../backend/src/test/java/com/adgn/idempotencyfixture/IdempotencyHttpTest.java)。
@@ -64,3 +66,9 @@ BE-05保持IN_PROGRESS，等待用户本人按交付记录确认；AT-04仅PARTI
 ## 本机启动回报（2026-10-18）
 
 2026-10-18 15:28用户本机运行核对：最新日志显示BackendApplication/dev成功连接localhost:3306/rbac_admin_test（MySQL8.4.8），Hikari与JPA初始化完成、Tomcat8080启动，GET记录200；用户明确确认健康status=UP。此前15:27的Connection refused已不再出现在本次日志，原失败不能解释为HMAC错误。日志未展示RBAC_IDEMPOTENCY_ENABLED或幂等Bean装配，故只确认服务启动/健康，不由UP推断HMAC启用已验证；当前等待用户仅确认开关是否true，不读取IDE口令/密钥。BE-05保持IN_PROGRESS及待本人确认，既有64离线＋42引擎结果沿用，基座总门槛不变。agent本轮只读用户日志并同步文档，未连接数据库、执行SQL或运行新Java测试。
+
+## 本人确认（D-049，2026-10-18）
+
+用户先回复“确认status状态为up”，随后针对幂等开关单独回复“是，已设为 true”。结合本机15:28日志中测试库MySQL8.4.8连接、Tomcat8080及GET200，记录BE-05/d059d11单项OWNER_ACCEPTED。启用事实来自用户明确确认，agent没有读取IDE变量/密钥或检查运行Bean；不把健康UP当作幂等业务行为实测。既有64离线＋42引擎证据保持，本轮未运行新Java或SQL。
+
+BE-02～05单项已确认，BE-01仍开放；整体F-01～06门槛未评估，30项业务仍未分派。下一步核对BE-01环境/协作余项和基座整体交接，再按用户安排共同主线与业务分派；未自行合并或推送。

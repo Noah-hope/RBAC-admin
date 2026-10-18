@@ -1,6 +1,6 @@
 # 本地Issue草案与验收卡
 
-修订1.2/D-048实施更新：BE-01为IN_PROGRESS（协作条件待办）；BE-02为OWNER_ACCEPTED（D-042/f911c60）；BE-03为OWNER_ACCEPTED（用户核对后回复继续，D-046/b8caeb2，见BE-03-PERSISTENCE）；BE-04为OWNER_ACCEPTED（D-047/58b556a，用户确认服务UP；公共事务/审计/快照证据见BE-04-TRANSACTIONS），BE-05为IN_PROGRESS（预留/栅栏/安全重放公共机制，见BE-05-IDEMPOTENCY），其余30项PLANNED。以上均未合并主线。BE-01～05为用户先实现的基座；BE-06～35为验收基座后待分派的业务/交付任务，ownerSlot和reviewerSlot为null时绝不表示已指派。基座reviewPolicy=OWNER_ACCEPTANCE、独立评审工时为0；业务保留INDEPENDENT_REVIEW。suggestedOwnerSlot/suggestedReviewerSlot只是旧方案参考。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。
+修订1.2/D-049确认更新：BE-01为IN_PROGRESS（协作条件待办）；BE-02为OWNER_ACCEPTED（D-042/f911c60）；BE-03为OWNER_ACCEPTED（用户核对后回复继续，D-046/b8caeb2，见BE-03-PERSISTENCE）；BE-04为OWNER_ACCEPTED（D-047/58b556a，用户确认服务UP；公共事务/审计/快照证据见BE-04-TRANSACTIONS），BE-05为OWNER_ACCEPTED（D-049/d059d11，用户确认启用true及本机健康UP，见BE-05-IDEMPOTENCY），其余30项PLANNED。以上均未合并主线。BE-01～05为用户先实现的基座；BE-06～35为验收基座后待分派的业务/交付任务，ownerSlot和reviewerSlot为null时绝不表示已指派。基座reviewPolicy=OWNER_ACCEPTANCE、独立评审工时为0；业务保留INDEPENDENT_REVIEW。suggestedOwnerSlot/suggestedReviewerSlot只是旧方案参考。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。
 
 业务任务启动须同时满足FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED和原dependencies；这两个阶段门槛不是额外业务需求。基座验收见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。开发估算含设计细化/TDD/自测/文档，基座自检/本人确认含开发估算，业务独立评审另计，外部等待不计。
 
@@ -58,7 +58,7 @@
 
 ## BE-05 HTTP幂等预留、栅栏与删除后重放
 
-- 状态：IN_PROGRESS；阶段FOUNDATION；负责人用户（已确认），本人确认无需他人评审；模块M00。
+- 状态：OWNER_ACCEPTED；阶段FOUNDATION；负责人用户（已确认），本人确认无需他人评审；模块M00。
 - 分派参考：建议组A、建议评审组不适用（基座本人确认），不是已确认人员；启动条件基座任务按下列依赖推进。
 - 依赖：BE-04；开发估算2/4/6h，评审0/0/0h（低/中/高）。
 - API：内部能力/部署，无新增公开业务API。

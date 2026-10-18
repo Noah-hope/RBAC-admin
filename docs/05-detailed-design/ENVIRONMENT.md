@@ -1,5 +1,7 @@
 # BE-01环境与基座确认记录
 
+2026-10-18/D-049：用户已确认健康status=UP，并明确回复RBAC_IDEMPOTENCY_ENABLED“是，已设为 true”。结合15:28本机启动/测试库连接日志，按BE-05交接范围记录d059d11为OWNER_ACCEPTED；不是仅凭UP推断启用。BE-02～05单项已本人确认，BE-01仍IN_PROGRESS、其余30项PLANNED，基座总门槛NOT_EVALUATED；下一步核对BE-01剩余条件和F-01～06整体交接，不自行开始业务、合并或推送。见[BE-05确认记录](BE-05-IDEMPOTENCY.md)。下方待确认/待核验描述是此前历史，以本段及机器清单为准。
+
 2026-10-18 15:28用户本机运行核对：最新日志显示BackendApplication/dev成功连接localhost:3306/rbac_admin_test（MySQL8.4.8），Hikari与JPA初始化完成、Tomcat8080启动，GET记录200；用户明确确认健康status=UP。此前15:27的Connection refused已不再出现在本次日志，原失败不能解释为HMAC错误。日志未展示RBAC_IDEMPOTENCY_ENABLED或幂等Bean装配，故只确认服务启动/健康，不由UP推断HMAC启用已验证；当前等待用户仅确认开关是否true，不读取IDE口令/密钥。BE-05保持IN_PROGRESS及待本人确认，既有64离线＋42引擎结果沿用，基座总门槛不变。agent本轮只读用户日志并同步文档，未连接数据库、执行SQL或运行新Java测试。
 
 2026-10-18/D-048：BE-05幂等预留、租约栅栏、当前授权后的安全重放及HTTP适配已实现，64项离线＋42项隔离MySQL检查全通过，临时实例已关闭；默认关闭，显式启用时要求独立HMAC密钥。BE-02/03/04已本人确认，BE-01/05保持IN_PROGRESS，30项业务未分派；BE-05待本人确认、基座总门槛未评估。详见[BE-05记录](BE-05-IDEMPOTENCY.md)。下方D-043～047保留为此前历史，以本段和机器清单为准。

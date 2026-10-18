@@ -96,7 +96,7 @@ def checks(report):
         require(module['ownerSlot']==('USER' if module['id']=='M00' else None),'模块人员误记已分派')
     referenced=set()
     for task in tasks:
-        expected_status={'BE-01':'IN_PROGRESS','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'IN_PROGRESS'}.get(task['id'],'PLANNED')
+        expected_status={'BE-01':'IN_PROGRESS','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
         require(task['status']==expected_status,'任务准备/实现状态不符')
         if task['id']=='BE-03':
             progress=task.get('implementationProgress',{})
@@ -125,7 +125,16 @@ def checks(report):
                     and progress.get('canonicalizationScope')=='CALLER_SUPPLIED_CANONICAL_BYTES_NOT_JCS'
                     and progress.get('defaultEnabled') is False
                     and progress.get('crossDomainBusinessVerified') is False
-                    and progress.get('ownerAccepted') is False,'BE-05公共机制误记为完整业务或本人验收')
+                    and progress.get('ownerAccepted') is True,'BE-05公共机制或本人确认范围不符')
+            acceptance=task.get('ownerAcceptance',{})
+            require(acceptance.get('acceptedBy')=='USER' and acceptance.get('scope')=='BE-05'
+                    and acceptance.get('implementationCommit')=='d059d11'
+                    and acceptance.get('source')=='USER_MESSAGE' and acceptance.get('message')=='是，已设为 true'
+                    and acceptance.get('precedingHealthConfirmation')=='确认status状态为up'
+                    and acceptance.get('idempotencyEnabledConfirmed') is True
+                    and acceptance.get('interpretation')=='ENABLED_LOCAL_UP_CONFIRMATION_AFTER_BE05_HANDOFF'
+                    and acceptance.get('date')=='2026-10-18' and acceptance.get('mergedToMain') is False,
+                    'BE-05本人确认依据或主线状态不符')
         if task['id']=='BE-04':
             progress=task.get('implementationProgress',{})
             require(progress.get('evidence')=='BE-04-TRANSACTIONS.md'
@@ -146,7 +155,7 @@ def checks(report):
                     and acceptance.get('date')=='2026-10-17' and acceptance.get('source')=='USER_MESSAGE'
                     and acceptance.get('message')=='确认通过' and acceptance.get('implementationCommit')=='f911c60'
                     and acceptance.get('mergedToMain') is False,'BE-02本人确认依据/主线状态不符')
-            require(phase_plan['foundation'].get('ownerAcceptedTaskIds')==['BE-02','BE-03','BE-04'],'单项确认错误扩展到整个基座')
+            require(phase_plan['foundation'].get('ownerAcceptedTaskIds')==['BE-02','BE-03','BE-04','BE-05'],'单项确认错误扩展到整个基座')
         require(task['remoteIssueNumber'] is None and task['remotePrNumber'] is None,'伪造远程事项')
         require(task['suggestedOwnerSlot'] in 'ABCD','建议组无效')
         require(task['reviewerSlot'] is None,'评审人尚未登记，不应伪造')

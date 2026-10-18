@@ -106,6 +106,8 @@ BE-04没有DDL变化，已完成V1～V3的测试库无需清库或重新迁移�
 
 ## BE-05幂等功能启用
 
+D-049：用户已确认启用true并启动/健康UP，BE-05/d059d11单项本人确认已记录；以下配置方式继续适用，应用默认关闭策略不变，不表示完整业务或全基座验收。
+
 幂等默认关闭，不要求现在修改已有BackendApplication配置；关闭时不注册IdempotencyCoordinator，也不提供忽略幂等的执行入口。后续业务接入需要显式启用并使用统一协调器。BE-05只提供公共机制，当前没有新增业务接口；设计、TDD与结果见[幂等实施记录](../docs/05-detailed-design/BE-05-IDEMPOTENCY.md)。
 
 在IDE的Spring Boot → BackendApplication → 环境变量中添加：
