@@ -1,5 +1,9 @@
 # 模块结构、接口与责任
 
+D-048补充：core/idempotency提供显式两阶段协调器、CanonicalRequestCodec端口、授权事实和安全结果类型，见[BE-05](BE-05-IDEMPOTENCY.md)。没有全局Servlet缓存或默认管理员身份；正式领域必须提供当前资格/完整覆盖检查及安全投影。
+
+D-046实施范围：M00公共CommandBoundary/ReadBoundary/WriteContext和AuditAppender已有实现及隔离引擎自测，见[BE-04记录](BE-04-TRANSACTIONS.md)。正式资格、业务受控写端口、幂等和审计查询仍由相应任务实现，下文接口设计不表示这些业务已实现。
+
 ## 设计取值与分层
 
 实施组织修订1.1/D-038：先由用户实现BE-01～05公共基座，验收后再分派30项业务/交付任务。人员分组不替代下述13模块及依赖；common责任范围以M00/core为主，M11/M12仅其公共支撑部分先行。各业务负责人当前未指派，详见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。
@@ -8,7 +12,7 @@
 
 HTTP适配层M12负责DTO、认证头、状态码和Problem；应用编排层负责当前授权、完整用例和事务；领域策略/受控写端口维护本域不变量；JPA/JDBC与文件/OA适配器提供持久化和外部边界。使用普通Java接口及构造注入，不为每个字段/表建一套抽象层。
 
-模块及编译依赖见[MODULES](MODULES.md)，可编辑图见[module-structure.drawio](module-structure.drawio)。公共包取`com.noah.rbacadmin`，按功能包再分`web/application/domain/persistence`，不按全局Controller/Service/Repository大目录让四人同时编辑同一服务。M11跨表只做独立SQL/不可变DTO投影，实体写入仍归各模块；统计和详情使用相同授权谓词。
+模块及编译依赖见[MODULES](MODULES.md)，可编辑图见[module-structure.drawio](module-structure.drawio)。公共包取`com.adgn.backend`，按功能包再分`web/application/domain/persistence`，不按全局Controller/Service/Repository大目录让四人同时编辑同一服务。M11跨表只做独立SQL/不可变DTO投影，实体写入仍归各模块；统计和详情使用相同授权谓词。
 
 ## 数据流到结构化模块
 

@@ -18,7 +18,9 @@
 4. 数据库设计：依据需求与 API 契约形成实体、关系、约束、索引及事务设计。
 5. 详细设计与实现：先产出设计文档，分解流程、模块和依赖，再使用 TDD skill，先编写并运行失败测试，再按模块实现、重构并验证。
 
-当前实施组织按 D-038：先由用户实现 BE-01～05 公共基座，按 `docs/05-detailed-design/FOUNDATION-HANDOFF.md` 验收并纳入共同主线后，再分派 BE-06～35 的业务/交付任务。A～D 只作职责建议，业务实际负责人和评审人待登记；不将文档修订或基座静态检查记为已实现/已验收。正式业务启动仍须满足原技术依赖。
+当前实施组织按 D-038：先由用户实现 BE-01～05 公共基座，按 `docs/05-detailed-design/FOUNDATION-HANDOFF.md` 验收并纳入共同主线后，再分派 BE-06～35 的业务/交付任务。A～D 只作职责建议，业务实际负责人待登记，按D-051由负责人自行确认完成，不设置独立评审人；不将文档修订或基座静态检查记为已实现/已验收。正式业务启动仍须满足原技术依赖。
+
+D-039补充：基座阶段由用户本人确认，无需其他成员评审；TDD、自检、真实数据库/事务验证和交接证据仍保留。D-051进一步确认全部任务均由唯一负责人核对测试和自检证据并确认完成，不设置独立评审人；agent生成代码仍须满足验收行为、TDD及真实验证。当前先使用本机MySQL，云服务器已具备、Docker数据库留后续部署；JDK21由IDE引用，命令行未配置，可用IDE或显式JDK运行，不强制永久环境变量。
 
 完整阶段交付要求见 `docs/project/WORKFLOW.md`，当前阶段及交接事实见 `docs/project/MEMORY.md`。不因目录或文档存在就宣布阶段完成。尚未选定的技术不自行记为既定方案。
 
@@ -26,7 +28,7 @@
 
 进入依赖某个 skill/MCP 的实际阶段前，检查其可用性，不因文件存在就声称外部工具已连接。Apifox MCP 已于 2026-10-16 验证文档读取与刷新，写入能力未提供；当前事实以共享记忆为准。
 
-当前只采用 `.agents/skills/`、`docs/project/` 和 `docs/01-requirements/`～`05-detailed-design/`；不提前创建额外工程目录。界面阶段交付归入 `docs/02-ui-design/`，正式代码目录后续确定。完整目录约定见 `docs/project/LAYOUT.md`。
+当前采用 `.agents/skills/`、`docs/project/`、`docs/01-requirements/`～`05-detailed-design/`及已生成的`backend/`。D-041授权完成BE-02公共HTTP骨架；正式后端为单Maven工程，基础包`com.adgn.backend`，配置YAML，不另建Git仓库或common同义包。未实现业务不建空接口；deploy/tools/.github按后续任务实际需要创建。界面阶段交付归入 `docs/02-ui-design/`，完整目录约定见 `docs/project/LAYOUT.md`。
 
 ## 当前需求的权威来源
 

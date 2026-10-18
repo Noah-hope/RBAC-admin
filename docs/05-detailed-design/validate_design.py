@@ -73,35 +73,123 @@ def checks(report):
     module_order=dag(modules,'dependencies');task_order=dag(tasks,'dependencies')
     require((len(modules),len(tasks),len(cases),len(mapping))==(13,35,41,68),'冻结设计规模不符')
     require(len(cids)==len(cases),'重复验收编号')
-    require(all(c['status']=='DESIGNED_NOT_RUN' for c in cases),'误记业务验收已运行')
+    partial_evidence={'AT-01':'BE-02-IMPLEMENTATION.md','AT-02':'BE-03-PERSISTENCE.md',
+                      'AT-04':'BE-05-IDEMPOTENCY.md','AT-03':'BE-04-TRANSACTIONS.md','AT-33':'BE-04-TRANSACTIONS.md','AT-37':'BE-02-IMPLEMENTATION.md'}
+    require(all(c['status']==('PARTIALLY_VERIFIED' if c['id'] in partial_evidence else 'DESIGNED_NOT_RUN') for c in cases),'验收局部/完整状态不符')
+    require(all(c.get('evidence')==partial_evidence[c['id']] for c in cases if c['status']=='PARTIALLY_VERIFIED'),'局部验收缺实施证据')
     deferred={c['id'] for c in cases if c['delivery']=='FRONTEND_DEFERRED'}
     require(deferred=={'AT-40'},'前端后置边界不符')
     phase_plan=read('delivery-phases.json')
     foundation_ids={f'BE-{n:02}' for n in range(1,6)}
     business_ids=tids-foundation_ids
     required_gates=['FOUNDATION_ACCEPTED','BUSINESS_OWNER_ASSIGNED']
-    require(phase_plan['revision']=='1.1' and phase_plan['decision']=='D-038','分工决策/修订不符')
+    require(phase_plan['revision']=='1.3' and phase_plan['decision']=='D-039' and phase_plan['organizationDecision']=='D-038' and phase_plan['collaborationDecision']=='D-051','分工/验收决策不符')
     require(set(phase_plan['foundation']['taskIds'])==foundation_ids and phase_plan['foundation']['ownerSlot']=='USER','基座阶段边界/负责人不符')
     require(set(phase_plan['business']['taskIds'])==business_ids and phase_plan['business']['ownerSlot'] is None,'业务阶段错误指派')
     require(phase_plan['business']['startConditions']==required_gates,'阶段门槛缺失')
-    require(phase_plan['foundation']['status']=='PLANNED_NOT_RUN' and phase_plan['gateStatus']=='NOT_EVALUATED' and not phase_plan['gateEvidence'],'误记基座已实现/验收')
+    require(phase_plan['foundation']['status']=='IN_PROGRESS'
+            and phase_plan['gateStatus']=='PENDING_OWNER_ACCEPTANCE_AND_MAIN_DELIVERY','误记基座全部验收')
+    gate_evidence=phase_plan['gateEvidence']
+    require([g['id'] for g in gate_evidence]==[f'F-{n:02}' for n in range(1,7)],'整体核对缺门槛项或重复')
+    require(all(g['status']==('PENDING' if g['id']=='F-06' else 'VERIFIED')
+                and g['evidence']=='FOUNDATION-REVIEW.md' and g['date']=='2026-10-18'
+                and g['scope']==('OWNER_ACCEPTANCE_AND_MAIN_DELIVERY' if g['id']=='F-06' else 'PUBLIC_FOUNDATION_ONLY')
+                for g in gate_evidence),'技术核对/本人确认/主线交付边界不符')
+    require((ROOT/'FOUNDATION-REVIEW.md').exists() and (ROOT/'FOUNDATION-USAGE.md').exists(),'缺交接核对或团队使用指南')
     require(phase_plan['foundation']['reviewerSlot'] is None,'虚构基座评审人')
+    require(phase_plan['foundation']['reviewRequired'] is False and phase_plan['foundation']['reviewPolicy']=='OWNER_ACCEPTANCE' and phase_plan['foundation']['acceptanceOwnerSlot']=='USER','未落实基座本人确认')
+    require(phase_plan['business']['reviewPolicy']=='OWNER_ACCEPTANCE'
+            and phase_plan['business']['reviewRequired'] is False
+            and phase_plan['business']['reviewerSlot'] is None
+            and phase_plan['business']['acceptanceOwnerPolicy']=='TASK_OWNER','未落实D-051业务负责人确认')
     for module in modules:
         require(module['suggestedOwnerSlot'] in 'ABCD','模块建议组无效')
         require(module['ownerSlot']==('USER' if module['id']=='M00' else None),'模块人员误记已分派')
     referenced=set()
     for task in tasks:
-        require(task['status']=='PLANNED','任务误记已实现')
+        expected_status={'BE-01':'IN_PROGRESS','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
+        require(task['status']==expected_status,'任务准备/实现状态不符')
+        if task['id']=='BE-01':
+            progress=task.get('implementationProgress',{})
+            require(progress.get('evidence')=='FOUNDATION-REVIEW.md'
+                    and progress.get('scope')=='LOCAL_ENVIRONMENT_AND_FOUNDATION_HANDOFF_REVIEW'
+                    and progress.get('localTechnicalPreparationVerified') is True
+                    and progress.get('teamRepositoryAccessVerified') is False
+                    and progress.get('mergedToMain') is False
+                    and progress.get('ownerAccepted') is False,'BE-01准备/协作待办状态不符')
+        if task['id']=='BE-03':
+            progress=task.get('implementationProgress',{})
+            require(progress.get('evidence')=='BE-03-PREPARATION.md'
+                    and progress.get('databaseExecuted') is True
+                    and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
+                    and progress.get('databaseEvidence')=='BE-03-MYSQL-VALIDATION.md'
+                    and progress.get('jpaMappingVerified') is True
+                    and progress.get('jpaMappingScope')=='BASIC_SAMPLES_ONLY'
+                    and progress.get('persistenceEvidence')=='BE-03-PERSISTENCE.md'
+                    and progress.get('startupGuardVerified') is True
+                    and progress.get('ownerAccepted') is True,'BE-03实施范围与本人确认记录不符')
+            acceptance=task.get('ownerAcceptance',{})
+            require(acceptance.get('acceptedBy')=='USER' and acceptance.get('scope')=='BE-03'
+                    and acceptance.get('implementationCommit')=='b8caeb2'
+                    and acceptance.get('message')=='继续' and acceptance.get('source')=='USER_MESSAGE'
+                    and acceptance.get('interpretation')=='CONTINUE_AFTER_BE03_REVIEW'
+                    and acceptance.get('date')=='2026-10-18' and acceptance.get('mergedToMain') is False,
+                    'BE-03本人确认或主线状态不符')
+        if task['id']=='BE-05':
+            progress=task.get('implementationProgress',{})
+            require(progress.get('evidence')=='BE-05-IDEMPOTENCY.md'
+                    and progress.get('scope')=='HTTP_IDEMPOTENCY_RESERVATION_FENCING_AND_SAFE_REPLAY'
+                    and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
+                    and progress.get('authorizationImplementation')=='CALLBACK_ONLY'
+                    and progress.get('canonicalizationScope')=='CALLER_SUPPLIED_CANONICAL_BYTES_NOT_JCS'
+                    and progress.get('defaultEnabled') is False
+                    and progress.get('crossDomainBusinessVerified') is False
+                    and progress.get('ownerAccepted') is True,'BE-05公共机制或本人确认范围不符')
+            acceptance=task.get('ownerAcceptance',{})
+            require(acceptance.get('acceptedBy')=='USER' and acceptance.get('scope')=='BE-05'
+                    and acceptance.get('implementationCommit')=='d059d11'
+                    and acceptance.get('source')=='USER_MESSAGE' and acceptance.get('message')=='是，已设为 true'
+                    and acceptance.get('precedingHealthConfirmation')=='确认status状态为up'
+                    and acceptance.get('idempotencyEnabledConfirmed') is True
+                    and acceptance.get('interpretation')=='ENABLED_LOCAL_UP_CONFIRMATION_AFTER_BE05_HANDOFF'
+                    and acceptance.get('date')=='2026-10-18' and acceptance.get('mergedToMain') is False,
+                    'BE-05本人确认依据或主线状态不符')
+        if task['id']=='BE-04':
+            progress=task.get('implementationProgress',{})
+            require(progress.get('evidence')=='BE-04-TRANSACTIONS.md'
+                    and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
+                    and progress.get('authorizationImplementation')=='CALLBACK_ONLY'
+                    and progress.get('crossDomainBusinessVerified') is False
+                    and progress.get('ownerAccepted') is True,'BE-04公共机制或本人确认状态不符')
+            acceptance=task.get('ownerAcceptance',{})
+            require(acceptance.get('acceptedBy')=='USER' and acceptance.get('scope')=='BE-04'
+                    and acceptance.get('implementationCommit')=='58b556a'
+                    and acceptance.get('source')=='USER_MESSAGE' and acceptance.get('message')=='BE-04 确认服务为up状态，接下来做什么'
+                    and acceptance.get('interpretation')=='LOCAL_UP_CONFIRMATION_AFTER_BE04_HANDOFF'
+                    and acceptance.get('date')=='2026-10-18' and acceptance.get('mergedToMain') is False,
+                    'BE-04本人确认依据或主线状态不符')
+        if task['id']=='BE-02':
+            acceptance=task.get('ownerAcceptance',{})
+            require(acceptance.get('acceptedBy')=='USER' and acceptance.get('scope')=='BE-02'
+                    and acceptance.get('date')=='2026-10-17' and acceptance.get('source')=='USER_MESSAGE'
+                    and acceptance.get('message')=='确认通过' and acceptance.get('implementationCommit')=='f911c60'
+                    and acceptance.get('mergedToMain') is False,'BE-02本人确认依据/主线状态不符')
+            require(phase_plan['foundation'].get('ownerAcceptedTaskIds')==['BE-02','BE-03','BE-04','BE-05'],'单项确认错误扩展到整个基座')
         require(task['remoteIssueNumber'] is None and task['remotePrNumber'] is None,'伪造远程事项')
-        require(task['suggestedOwnerSlot'] in 'ABCD' and task['suggestedReviewerSlot'] in 'ABCD','建议组无效')
-        require(task['reviewerSlot'] is None,'评审人尚未登记，不应伪造')
+        require(task['suggestedOwnerSlot'] in 'ABCD','建议组无效')
+        require(task['reviewerSlot'] is None and task['suggestedReviewerSlot'] is None
+                and task['reviewPolicy']=='OWNER_ACCEPTANCE' and task['reviewRequired'] is False
+                and task['acceptanceOwnerPolicy']=='TASK_OWNER'
+                and all(v==0 for v in task['reviewHours'].values()),'D-051任务仍设置他人评审或单列工时')
         if task['id'] in foundation_ids:
             require(task['phase']=='FOUNDATION' and task['ownerSlot']=='USER' and task['assignmentStatus']=='OWNER_CONFIRMED','基座归属不符')
             require(not task['startConditions'] and set(task['dependencies'])<=foundation_ids,'基座反向依赖业务')
             require(not task['operations'],'提前将业务API纳入基座')
+            require(task['reviewPolicy']=='OWNER_ACCEPTANCE' and task['suggestedReviewerSlot'] is None and all(v==0 for v in task['reviewHours'].values()),'基座仍要求他人评审或重复计工时')
         else:
             require(task['phase']=='BUSINESS' and task['ownerSlot'] is None and task['assignmentStatus']=='UNASSIGNED','提前分派业务任务')
             require(task['startConditions']==required_gates,'业务缺阶段启动门槛')
+            require(task['reviewPolicy']=='OWNER_ACCEPTANCE','业务任务未落实负责人确认')
         require(set(task['modules'])<=mids,'任务引用未知模块')
         require(task['acceptance'] and set(task['acceptance'])<=cids,'任务缺验收/引用未知')
         require(bool(task.get('acceptanceScope','').strip()),'任务缺具体验收边界')
@@ -114,7 +202,7 @@ def checks(report):
     previous_tasks=json.loads(subprocess.check_output(['git','show','9416980:docs/05-detailed-design/issues.json'],cwd=REPO))
     previous_by_id={t['id']:t for t in previous_tasks}
     for task in tasks:
-        for field in ('dependencies','operations','modules','acceptance','estimateHours','reviewHours','tables','transactions','invariants'):
+        for field in ('dependencies','operations','modules','acceptance','estimateHours','tables','transactions','invariants'):
             require(task[field]==previous_by_id[task['id']][field],'组织修订意外改变原业务/技术任务 '+task['id']+'/'+field)
     api_path=REPO/'docs/03-api/openapi.yaml'
     api=yaml.safe_load(api_path.read_text(encoding='utf-8'))
@@ -165,7 +253,7 @@ def checks(report):
     estimate=read('estimates.json')
     require(estimate['capacityHours']==dict(minimum=4*5*2,maximum=4*6*3),'团队容量错误')
     require(estimate['businessPersonLoad'] is None and 'personLoad' not in estimate,'未分派业务却计算固定个人负载')
-    for s,expected in [('low',79.25),('likely',148),('high',244)]:
+    for s,expected in [('low',70.5),('likely',130.5),('high',209)]:
         total=sum(t['estimateHours'][s]+t['reviewHours'][s] for t in tasks)
         require(total==expected==estimate['totalHours'][s],'估算总量错误')
         for phase,ids in [('FOUNDATION',foundation_ids),('BUSINESS',business_ids)]:
@@ -182,7 +270,9 @@ def checks(report):
         business_total=sum(t['estimateHours'][s]+t['reviewHours'][s] for t in tasks if t['id'] in business_ids)
         require(bound['foundationOwnerDevelopmentDayEquivalent']==foundation_dev/hpd and bound['businessPooledDayEquivalent']==business_total/(4*hpd),'阶段小时折算错误')
         require(bound['stagedCapacityDays']==math.ceil(foundation_dev/hpd+business_total/(4*hpd)),'两阶段容量下界错误')
-    require(estimate['totalHours']['low']>72,'不应伪称预算内全量可交付')
+    require(estimate['decision']=='D-051' and estimate['revision']=='1.3','估算协作规则来源不符')
+    require(estimate['totalHours']=={'low':70.5,'likely':130.5,'high':209},'取消单列评审后的估算不符')
+    require(estimate['totalHours']['likely']>72,'不应以乐观估算承诺预算内全量交付')
     diagram_pages=vertices=edges=0
     for name in ('module-structure.drawio','core-flows.drawio'):
         original_graph=subprocess.check_output(['git','show','9416980:docs/05-detailed-design/'+name],cwd=REPO)
@@ -205,7 +295,7 @@ def checks(report):
                     edges+=1;require(cell.get('source')in ids and cell.get('target')in ids and cell.find('mxGeometry')is not None,'图源悬空连线')
     require(diagram_pages==6,'图页数量不符')
     links=0
-    docs=list(ROOT.glob('*.md'))+[REPO/'README.md',REPO/'docs/README.md']+list((REPO/'docs/project').glob('*.md'))
+    docs=list(ROOT.glob('*.md'))+[REPO/'README.md',REPO/'docs/README.md',REPO/'backend/README.md']+list((REPO/'docs/project').glob('*.md'))
     for p in docs:
         for dest in re.findall(r'\[[^\]]*\]\(([^)]+)\)',p.read_text(encoding='utf-8-sig')):
             dest=dest.strip('<>').split('#')[0]
@@ -220,8 +310,26 @@ def checks(report):
     source_hashes={}
     for name in source_paths:
         original=subprocess.check_output(['git','show',f'{BASELINE}:{name}'],cwd=REPO)
-        require(hashlib.sha256(original).hexdigest()==sha(REPO/name),'意外改变上游 '+name);source_hashes[name]=sha(REPO/name)
-    for directory in ('backend','deploy','tools','.github'):
+        if name=='docs/04-database/schema.sql':
+            expected=original.decode('utf-8').replace('CHECK (row_number>0','CHECK (`row_number`>0')
+            require(original.decode('utf-8').count('CHECK (row_number>0')==2,'D-044修订范围不符')
+            require((REPO/name).read_text(encoding='utf-8')==expected.replace('\r\n','\n'),'超出D-044的上游SQL变更')
+            report['upstreamCorrection']='D-044: quote reserved ROW_NUMBER in exactly two CHECK expressions'
+        else:
+            require(hashlib.sha256(original).hexdigest()==sha(REPO/name),'意外改变上游 '+name)
+        source_hashes[name]=sha(REPO/name)
+    require((REPO/'backend/pom.xml').exists(),'BE-02工程缺失')
+    migration_manifest=read('BE-03-MIGRATIONS.json')
+    require(migration_manifest['databaseExecuted'] is True
+            and migration_manifest.get('existingUserDatabasesTouched') is False,'隔离迁移证据/边界不符')
+    require(len(migration_manifest['migrations'])==3,'初始迁移范围不符')
+    for entry in migration_manifest['migrations']:
+        require(sha(REPO/'backend/src/main/resources/db/migration'/entry['file'])==entry['sha256'],'迁移摘要变化未同步来源记录')
+        if 'sourceSha256' in entry:
+            require(sha(REPO/entry['source'])==entry['sourceSha256'],'迁移上游草案变化未核对')
+    report['migrationPreparationFiles']=3
+    report['migrationEngineExecutedByThisCheck']=False
+    for directory in ('deploy','tools','.github'):
         require(not (REPO/directory).exists(),'本设计阶段提前创建工程/远程配置目录 '+directory)
     report.update(dict(modules=len(modules),backendIssueDrafts=len(tasks),acceptanceItems=len(cases),
         backendAcceptanceItems=len(cases)-len(deferred),deferredFrontendItems=len(deferred),
@@ -230,15 +338,16 @@ def checks(report):
         estimatesHours=estimate['totalHours'],capacityHours=estimate['capacityHours'],diagramPages=diagram_pages,
         diagramVertices=vertices,diagramEdges=edges,localLinks=links,pythonSyntaxFiles=len(list(ROOT.glob('*.py'))),
         decisionIds=len(decisions),upstreamSha256=source_hashes,
-        planRevision='1.1',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=len(business_ids),
+        planRevision='1.3',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=len(business_ids),
+        foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:IN_PROGRESS',
         foundationGateStatus=phase_plan['gateStatus'],businessOperationsAwaitingAssignment=len(mapping),
         artifactSha256={n:sha(ROOT/n) for n in GENERATED}))
 
 
 def main():
-    report=dict(scope='DETAILED_DESIGN_STATIC_ONLY',baseline=BASELINE,status='RUNNING',
-        businessTestsRun=False,databaseStarted=False,sqlExecuted=False,httpIntegrationRun=False,
-        remoteIssuesCreated=0,remotePrsCreated=0,applicationCreated=False,deployed=False,
+    report=dict(scope='DESIGN_AND_IMPLEMENTATION_TRACKING_STATIC_ONLY',baseline=BASELINE,status='RUNNING',
+        businessTestsRunByThisCheck=False,databaseStarted=False,sqlExecuted=False,httpIntegrationRunByThisCheck=False,
+        remoteIssuesCreated=0,remotePrsCreated=0,applicationCreatedByThisCheck=False,applicationExists=(REPO/'backend/pom.xml').exists(),deployed=False,
         diagramDesktopValidated=False)
     target=ROOT/'validation.json'
     target.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')

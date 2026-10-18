@@ -1,0 +1,39 @@
+{
+  "baselineCommit": "fc2b98d",
+  "databaseDesignVersion": "1.1",
+  "apiVersion": "1.2.0",
+  "databaseExecuted": true,
+  "migrations": [
+    {
+      "file": "V1__create_tables_and_constraints.sql",
+      "source": "docs/04-database/schema.sql",
+      "sourceSha256": "af293b847fa0445c657bb17466d56fb44c4a4cd348e5e683a3275293121f0619",
+      "sha256": "fc5802ad0b7417fe657cac87a9559fac01a5481ca7804163309cdead3415c416",
+      "correction": "D-044: quote reserved ROW_NUMBER in two CHECK expressions; business constraints unchanged"
+    },
+    {
+      "file": "V2__create_immutability_triggers.sql",
+      "source": "docs/04-database/immutability.sql",
+      "sourceSha256": "1d36a1374144c1887ee785102adf9db157246c4e1bf30ef477d22c28c47fb4fc",
+      "sha256": "1f175592813306bc1598b4c68552fee5c97d5fbbd449963627c4165fc3ff7599"
+    },
+    {
+      "file": "V3__initialize_mutation_guard.sql",
+      "source": "docs/05-detailed-design/DEPLOYMENT.md: mutation_guard initialization",
+      "sha256": "3ecbca2080c5be1e2ccb9e608e8fbb2e2a4b1b1f26739f4e94f9b126506c3d55"
+    }
+  ],
+  "executionScope": "V1-V3 in disposable MySQL instance only; existing user schemas untouched",
+  "existingUserDatabasesTouched": false,
+  "engineValidation": {
+    "evidence": "BE-03-MYSQL-VALIDATION.md",
+    "version": "8.4.8",
+    "scope": "DISPOSABLE_INSTANCE_ONLY",
+    "binaryLogging": false,
+    "migrationSuccess": true,
+    "jpaMappingVerified": true,
+    "jpaMappingScope": "BASIC_SAMPLES_ONLY",
+    "persistenceEvidence": "BE-03-PERSISTENCE.md",
+    "startupGuardVerified": true
+  }
+}

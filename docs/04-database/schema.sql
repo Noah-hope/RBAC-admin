@@ -663,7 +663,7 @@ CREATE TABLE `import_plan_row` (
   `field_changes` JSON NOT NULL COMMENT 'ImportValueChange[]，明确字段及before/after；JSON顶层ARRAY',
   `dependency_snapshot` JSON NOT NULL COMMENT '目标版本、唯一键不存在断言、引用集合摘要和来源周期；JSON顶层OBJECT',
   PRIMARY KEY (`batch_id`, `row_number`, `plan_no`),
-  CONSTRAINT `ck_import_plan_row_1` CHECK (row_number>0 AND plan_no>=0),
+  CONSTRAINT `ck_import_plan_row_1` CHECK (`row_number`>0 AND plan_no>=0),
   CONSTRAINT `ck_import_plan_row_2` CHECK (expected_version BETWEEN 0 AND 9007199254740991),
   CONSTRAINT `ck_import_plan_row_3` CHECK (JSON_TYPE(normalized_values) = 'OBJECT'),
   CONSTRAINT `ck_import_plan_row_4` CHECK (JSON_TYPE(field_changes) = 'ARRAY'),
@@ -681,7 +681,7 @@ CREATE TABLE `import_issue` (
   PRIMARY KEY (`id`),
   KEY `ix_import_issue_1` (`batch_id`, `row_number`, `id`),
   CONSTRAINT `ck_import_issue_1` CHECK (severity IN ('WARNING','BLOCKING')),
-  CONSTRAINT `ck_import_issue_2` CHECK (row_number>0)
+  CONSTRAINT `ck_import_issue_2` CHECK (`row_number`>0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin COMMENT='冻结预检报告；仅总管理员可读';
 
 CREATE TABLE `impact_preview` (

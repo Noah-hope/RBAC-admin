@@ -7,8 +7,9 @@
     "operations": [],
     "useCases": [],
     "reviewScenario": "",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-02-IMPLEMENTATION.md"
   },
   {
     "id": "AT-02",
@@ -18,8 +19,9 @@
     "operations": [],
     "useCases": [],
     "reviewScenario": "",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-03-PERSISTENCE.md"
   },
   {
     "id": "AT-03",
@@ -29,8 +31,9 @@
     "operations": [],
     "useCases": [],
     "reviewScenario": "S08/S15/S20",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-04-TRANSACTIONS.md"
   },
   {
     "id": "AT-04",
@@ -46,8 +49,9 @@
       "UC-04"
     ],
     "reviewScenario": "S16",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-05-IDEMPOTENCY.md"
   },
   {
     "id": "AT-05",
@@ -543,8 +547,9 @@
       "UC-06"
     ],
     "reviewScenario": "S23",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-04-TRANSACTIONS.md"
   },
   {
     "id": "AT-34",
@@ -594,8 +599,9 @@
     "operations": [],
     "useCases": [],
     "reviewScenario": "",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-02-IMPLEMENTATION.md"
   },
   {
     "id": "AT-38",
@@ -611,8 +617,8 @@
   {
     "id": "AT-39",
     "title": "PR与发布证据",
-    "fixture": "一个任务分支、失败→通过测试记录、另一成员review、候选部署包",
-    "expected": "Issue/PR/commit/构建校验和对应；未验收项不关闭，未运行测试不打勾；当前设计阶段不创建远程事项",
+    "fixture": "一个任务分支、失败→通过测试记录、任务负责人自检确认、候选部署包",
+    "expected": "Issue/PR/commit/构建校验和及负责人确认对应；未验收项不关闭，未运行测试不打勾；当前设计阶段不创建远程事项",
     "operations": [],
     "useCases": [],
     "reviewScenario": "",

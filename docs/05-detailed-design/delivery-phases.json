@@ -1,6 +1,8 @@
 {
-  "revision": "1.1",
-  "decision": "D-038",
+  "revision": "1.3",
+  "decision": "D-039",
+  "organizationDecision": "D-038",
+  "collaborationDecision": "D-051",
   "foundation": {
     "ownerSlot": "USER",
     "taskIds": [
@@ -10,9 +12,18 @@
       "BE-04",
       "BE-05"
     ],
-    "status": "PLANNED_NOT_RUN",
+    "status": "IN_PROGRESS",
+    "reviewRequired": false,
+    "reviewPolicy": "OWNER_ACCEPTANCE",
+    "acceptanceOwnerSlot": "USER",
     "acceptanceGate": "FOUNDATION_ACCEPTED",
-    "reviewerSlot": null
+    "reviewerSlot": null,
+    "ownerAcceptedTaskIds": [
+      "BE-02",
+      "BE-03",
+      "BE-04",
+      "BE-05"
+    ]
   },
   "business": {
     "taskIds": [
@@ -52,9 +63,56 @@
     "startConditions": [
       "FOUNDATION_ACCEPTED",
       "BUSINESS_OWNER_ASSIGNED"
-    ]
+    ],
+    "reviewPolicy": "OWNER_ACCEPTANCE",
+    "reviewRequired": false,
+    "reviewerSlot": null,
+    "acceptanceOwnerPolicy": "TASK_OWNER"
   },
-  "gateStatus": "NOT_EVALUATED",
-  "gateEvidence": [],
-  "reviewRule": "至少一名未参与对应改动的成员评审；身份待登记"
+  "gateStatus": "PENDING_OWNER_ACCEPTANCE_AND_MAIN_DELIVERY",
+  "gateEvidence": [
+    {
+      "id": "F-01",
+      "status": "VERIFIED",
+      "evidence": "FOUNDATION-REVIEW.md",
+      "date": "2026-10-18",
+      "scope": "PUBLIC_FOUNDATION_ONLY"
+    },
+    {
+      "id": "F-02",
+      "status": "VERIFIED",
+      "evidence": "FOUNDATION-REVIEW.md",
+      "date": "2026-10-18",
+      "scope": "PUBLIC_FOUNDATION_ONLY"
+    },
+    {
+      "id": "F-03",
+      "status": "VERIFIED",
+      "evidence": "FOUNDATION-REVIEW.md",
+      "date": "2026-10-18",
+      "scope": "PUBLIC_FOUNDATION_ONLY"
+    },
+    {
+      "id": "F-04",
+      "status": "VERIFIED",
+      "evidence": "FOUNDATION-REVIEW.md",
+      "date": "2026-10-18",
+      "scope": "PUBLIC_FOUNDATION_ONLY"
+    },
+    {
+      "id": "F-05",
+      "status": "VERIFIED",
+      "evidence": "FOUNDATION-REVIEW.md",
+      "date": "2026-10-18",
+      "scope": "PUBLIC_FOUNDATION_ONLY"
+    },
+    {
+      "id": "F-06",
+      "status": "PENDING",
+      "evidence": "FOUNDATION-REVIEW.md",
+      "date": "2026-10-18",
+      "scope": "OWNER_ACCEPTANCE_AND_MAIN_DELIVERY"
+    }
+  ],
+  "reviewRule": "D-051：所有任务由唯一负责人核对测试和自检证据并确认完成，不设置独立评审人；技术依赖、真实验证和主线交付要求保留"
 }
