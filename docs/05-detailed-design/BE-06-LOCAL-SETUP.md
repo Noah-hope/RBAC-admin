@@ -6,10 +6,21 @@
 
 每个成员使用自己的本机数据库时可独立生成；同一数据库/服务部署的实例应使用同一套管理员签名与信任配置。这里的RSA/JWT密钥与BE-05的HMAC密钥、数据库密码是三个不同用途的秘密。
 
-在PowerShell执行下例，仅将文件写到本机用户应用目录，不打印密钥。脚本只生成开发密钥，不创建数据库账号或管理员。已有密钥时会拒绝覆盖；不要反复生成来解决启动问题。
+在Windows PowerShell 5.1或PowerShell 7执行下例，仅将文件写到本机用户应用目录，不打印密钥。脚本只生成开发密钥，不创建数据库账号或管理员。脚本在构造时指定2048位，不对旧版.NET的只读KeySize属性赋值；遇错立即停止，执行前检查所有目标文件，已有任何文件时拒绝写入。
+
+如果执行过旧版脚本并看到“KeySize是只读属性”，旧脚本可能在报错后继续写出文件。不要覆盖或删除原文件；将下例的`rbac-admin/identity-keys`改为一个尚不存在的新目录，例如`rbac-admin/identity-keys-recovery`，完整执行修正版。IDEA使用本次输出的新路径；如果该目录已存在文件，请另选新目录，不要反复生成来解决应用启动问题。
 
 ```powershell
+& {
+$ErrorActionPreference = 'Stop'
 $taskKeyDir = Join-Path $env:LOCALAPPDATA 'rbac-admin/identity-keys'
+foreach ($taskName in @('admin', 'business', 'oa')) {
+    foreach ($taskKind in @('signing', 'trust')) {
+        if (Test-Path -LiteralPath (Join-Path $taskKeyDir "$taskName-$taskKind.json")) {
+            throw "已有密钥文件，请使用现有文件或另选目录：$taskKeyDir"
+        }
+    }
+}
 New-Item -ItemType Directory -Path $taskKeyDir -Force | Out-Null
 function ConvertTo-LocalBase64Url([byte[]] $bytes) {
     [Convert]::ToBase64String($bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_')
@@ -17,12 +28,8 @@ function ConvertTo-LocalBase64Url([byte[]] $bytes) {
 foreach ($taskName in @('admin', 'business', 'oa')) {
     $taskSigning = Join-Path $taskKeyDir "$taskName-signing.json"
     $taskTrust = Join-Path $taskKeyDir "$taskName-trust.json"
-    if ((Test-Path -LiteralPath $taskSigning) -or (Test-Path -LiteralPath $taskTrust)) {
-        throw "已有 $taskName 密钥，请使用现有文件或另选目录。"
-    }
-    $taskRsa = [System.Security.Cryptography.RSA]::Create()
+    $taskRsa = [System.Security.Cryptography.RSACng]::new(2048)
     try {
-        $taskRsa.KeySize = 2048
         $taskParameters = $taskRsa.ExportParameters($true)
         $taskJwk = @{ kty='RSA'; kid="local-$taskName-v1"; use='sig'; alg='RS256' }
         $taskFields = @{ n='Modulus'; e='Exponent'; d='D'; p='P'; q='Q'; dp='DP'; dq='DQ'; qi='InverseQ' }
@@ -37,13 +44,19 @@ foreach ($taskName in @('admin', 'business', 'oa')) {
     } finally { $taskRsa.Dispose() }
 }
 Write-Output "本机开发密钥已写入：$taskKeyDir"
+Write-Output 'RBAC_IDENTITY_ENABLED=true'
+Write-Output 'RBAC_ADMIN_KEY_ID=local-admin-v1'
+Write-Output "RBAC_ADMIN_JWK_SET=$(Join-Path $taskKeyDir 'admin-signing.json')"
+Write-Output "RBAC_BUSINESS_JWK_SET=$(Join-Path $taskKeyDir 'business-trust.json')"
+Write-Output "RBAC_OA_JWK_SET=$(Join-Path $taskKeyDir 'oa-trust.json')"
+}
 ```
 
 三个`*-signing.json`含私钥，只在本机保管；应用仅需管理员私钥，业务/OA仅配公钥。未来服务调用工具使用相应服务私钥，BE-31负责该工具，不由管理员登录签发服务token。生产密钥由实际部署管理，不复用这里的开发文件。
 
 ## IDEA运行配置
 
-打开 **运行 → 编辑配置 → Spring Boot下的BackendApplication → 修改选项 → 环境变量**。JRE仍选21，工作目录仍为backend；在原数据库/幂等变量基础上添加：
+打开 **运行 → 编辑配置 → Spring Boot下的BackendApplication → 修改选项 → 环境变量**。JRE仍选21，工作目录仍为backend；在原数据库/幂等变量基础上添加脚本输出的五项，等号左侧为名称、右侧为值。使用恢复目录时同样以本次实际输出为准：
 
 | 名称 | 填写内容 |
 | --- | --- |

@@ -59,3 +59,11 @@
 完整输出在本机`.tmp/be06-final-complete-verify.log`，JUnit在target/surefire-reports和failsafe-reports。保留Flyway对8.4的版本验证WARN与Hibernate的既有incubating提示；没有静默跳过测试或引入H2替代。
 
 BE-06为IN_PROGRESS：代码与自测完成，**待A（用户本人）确认及后续合入**；不会因为测试通过自动标记OWNER_ACCEPTED。AT-05/06/07保持PARTIALLY_VERIFIED：BE-07账号创建/重置、BE-08完整范围上下文、正式业务资源授权与OA回调端到端不在本轮。初始总管理员仍由BE-32的受控初始化处理，本轮不向用户库填充夹具。
+
+## 本机生成指南兼容性纠错（2026-10-18）
+
+用户在Windows PowerShell执行指南时，KeySize赋值报只读；实际在Windows PowerShell5.1.26100.9711复现，RSA.Create返回RSACryptoServiceProvider且PowerShell暴露的属性只有getter，原先PowerShell7.6.5的验证不足以覆盖该环境。先执行指南原脚本的隔离回归得到失败，再改用RSACng(2048)构造、脚本作用域ErrorActionPreference=Stop、全部文件写前预检，并直接输出五个环境变量的非秘密路径。
+
+修正后对文档实际代码块执行回归，Windows PowerShell5.1与PowerShell7均PASS：生成六个JWK文件、三个2048位密钥对真实RS256签名验签、公钥不含私有参数、重复执行不覆盖、仅部分旧文件存在时在写入前终止。测试把LOCALAPPDATA临时指向backend/.tmp的专属随机目录，finally清理目录与进程变量，没有读取或改写用户真实密钥。旧版脚本遇错可能继续生成文件，指南明确使用新恢复目录并按新输出配置，不建议直接删除或覆盖旧文件。
+
+本次只修正指南中的PowerShell脚本，不改Java、JWT协议、API或数据库；没有重新运行Java/MySQL测试，既有74＋59结果为前次实施证据，BE-06仍待负责人确认。

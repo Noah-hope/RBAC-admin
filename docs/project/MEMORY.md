@@ -1,5 +1,7 @@
 # 项目共享记忆
 
+2026-10-18/D-056本机启用纠错：用户截图报告密钥指南的KeySize赋值只读错误；在Windows PowerShell5.1真实复现，旧版.NET的RSA.Create返回对象暴露只读KeySize，原指南仅在PowerShell7验证不足。修正为RSACng(2048)构造，脚本作用域内遇错即停、所有目标文件写前预检并输出五项配置路径；旧脚本可能留存文件，恢复改用新目录，不覆盖或读取用户现有密钥。原文档脚本回归在5.1先失败、修正后5.1与7均通过：六文件、2048位、真实RS256往返、公钥无私有参数、重复与部分文件存在时拒绝且不改文件；专属临时密钥清理完成。仅修正文档与操作脚本，未改Java/API/DDL、未连接数据库，不将此次验证等同于本人验收；BE-06仍待A确认。
+
 D-056（2026-10-18）：用户明确本人负责A，并选择本轮完整实现BE-06；先设计/TDD，在codex/be-06-identity开发分支实现登录、当前会话、退出、改密和三类RS256身份入口。目录样例为web/identity/controller、dto及identity/service、repository、security、config；不建立空业务接口。用户A认领已登记，BE-06为IN_PROGRESS待本人确认及合入，其余29项PLANNED；BE-07下一轮、BE-08仍等D/BE-10。身份启用需独立本地RSA密钥环，关闭时受保护路径503，不能绕过认证。最终完整clean verify/mysql-check为74离线＋59真实MySQL，失败/错误/跳过均0；专属实例随机schema/用户清理为0、进程关闭及本轮临时密钥目录清理已核对。静态校验通过，原API/DDL/迁移未改。设计/证据见[身份记录](../05-detailed-design/BE-06-IDENTITY.md)，本机与团队接入见[启用说明](../05-detailed-design/BE-06-LOCAL-SETUP.md)。未操作用户已有数据库、IDE秘密或共同主线；下方D-055的全PLANNED/未认领A为历史。
 
 D-054/D-055主线交付（2026-10-18）：用户明确“合并主分支，推送至云端”。fetch后本地/远程main同为5a07259，分支43c243a含4个文档提交；静态核对PASS，27个文档/元数据/校验文件、后端实现未变。保留历史合入main生成c2cab3a63e5f3d3b9da08bcad4291a6c1f03126c，合并树与43c243a一致、无冲突；push成功，ls-remote回查refs/heads/main为上述完整SHA。README业务依赖图、A～D分工和同步任务资料已进入共同主线，成员可pull更新。30项业务仍PLANNED，实名/账号与成员接入证据待补；不运行Java/SQL、不标记业务验收或部署通过。原工作分支及无关.codeartsdoer保留。下方“未合并/推送”为各文档编辑轮次的历史状态。
