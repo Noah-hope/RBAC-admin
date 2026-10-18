@@ -6,6 +6,8 @@
 
 ## 当前状态
 
+2026-10-18 10:52用户本机运行回报：BackendApplication默认dev成功连接rbac_admin_test/MySQL8.4.8，Hikari/JPA/Tomcat8080正常启动，GET200且健康截图status=UP。普通后端连接/启动/健康检查已确认；日志未显示实际数据库用户名，rbac_app和rbac_migrator的CURRENT_USER/GRANTS仍需核验，不能因健康UP声明账号权限齐全或整个BE-03/基座本人验收完成。下一步先只读核验账号，收尾BE-03，再按原依赖推进BE-04写事务/读快照/同事务审计。agent未连接或改动用户库，本轮只记录用户日志/截图。
+
 D-045实施：VersionedUuidEntity只用于专用row_version表，UUID CHAR和可空Long @Version保证预分配新ID走persist；API业务版本独立维护。UtcInstantConverter显式应用于DATETIME(6)，Timestamp时间点＋UTC绑定，截断微秒；真实Asia/Shanghai JVM捕获并修复八小时偏移。生成列只读映射样例不进入正式jar。普通启动只读检查guard，缺表/记录即失败，不补建、不重置非零revision；独立迁移和离线profile不装配。44离线＋9项隔离MySQL检查均通过，已有库未连接/操作。BE-03保持IN_PROGRESS，AT-02局部验证，待本人用rbac_app连接已迁移测试库确认启动和健康、核验迁移账号；开发库初始化/领域映射/业务并发及BE-04/05仍待后续。详见[持久化基础](../05-detailed-design/BE-03-PERSISTENCE.md)。
 
 D-045收尾核验：实际可执行jar在随机最小guard夹具、DML账号及非Web模式下，有guard(1,9)退出0且值不变，缺行退出1并有RBAC_DB_NOT_INITIALIZED且不补建；不是HTTP/全量schema或部署验收。所有临时schema/账号清理，独立MySQL正常关闭。生成器/来源/迁移/状态静态检查PASS（265链接、45决策），UTF-8/无本机路径/围栏及Git空白检查通过。实际证据与静态校验分开，不扩展BE-03本人确认或全基座验收。

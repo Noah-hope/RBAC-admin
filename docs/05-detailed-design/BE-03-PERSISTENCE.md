@@ -42,6 +42,8 @@ jar中包含3个公共持久化类和自动配置注册资源，不含Persistenc
 
 ## 本人确认和剩余边界
 
+用户后续提供2026-10-18 10:52启动日志及健康截图：BackendApplication、默认dev、Java21.0.12.1连接localhost:3306/rbac_admin_test/MySQL8.4.8，Hikari/JPA完成初始化、Tomcat8080启动，HTTP GET记录200，健康status=UP。确认本机普通后端连接/启动/健康检查成功；日志没有输出实际数据库用户名或GRANTS，不能据此认定确实使用rbac_app或迁移账号权限已齐全。没有把这次运行回报标记为BE-03整项OWNER_ACCEPTED或基座验收；以下IDE步骤已完成运行结果核对，当前先核验两个账号权限，再收尾BE-03。
+
 IDE重载Maven后，普通Spring Boot配置BackendApplication可临时连接已迁移的rbac_admin_test，使用rbac_app及本机密码，确认启动与/actuator/health。不要切到root作为运行账号，也不要让新启动检查自动补空开发库；开发库初始化另用独立迁移入口开展。本轮未读取IDE口令或操作用户库。
 
 迁移账号仍保留rbac_migrator职责。库内DDL/TRIGGER权限与binlog额外策略需同时满足；root是此前本机首次触发器初始化的临时管理身份，不是所有迁移必须使用root。当前不改变共享本机MySQL的全局trust_creators，不给rbac_app或迁移账号无依据授予全局SUPER。项目专用MySQL实例可由管理员评估配置trust_creators=1并让受限迁移账号执行；保留0的实例则由管理员受控处理触发器迁移。两类方案都会影响触发器DEFINER与后续权限维护，云端落地时核验，不由普通后端设置。实际rbac_migrator完整GRANTS仍未核验，不把技术说明记成已授权/已执行。
