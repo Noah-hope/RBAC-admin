@@ -1,5 +1,9 @@
 # 项目共享记忆
 
+D-065验证完成：BE-10最终代码完整clean verify/mysql-check为81离线＋122真实MySQL，失败/错误/跳过均0；六个查询HTTP、受控导入基础写与既有读取均已实现验证。版本上限无变化与迁移审计新公司归属补充RED后修正。专属23310实例随机schema/账号0/0，PID8392正常退出，临时RSA目录0，本机原MySQL84仍Running；未操作已有项目库。静态追踪同步通过。按本轮明确授权准备合入main并推送，实际交付SHA待成功后补；负责人人工验收未虚构，BE-10为IMPLEMENTED。
+
+D-065（2026-10-19）全量实施授权：成员D要求完成全部BE-10并合并推送，替代D-064仅内部读取、不推送的边界。在codex/be-10-people补六个HTTP查询、当前身份与单任命/双版本的窄范围读取、过滤后分页及安全投影、受控EmploymentWriter基础变更/映射/任职/无历史部门迁移及同事务审计。状态登记IMPLEMENTED、本人确认未伪造；BE-08通用范围、BE-26/27失效、BE-28～30文件及整批导入仍为原任务，不因基础端口实现标记完成。完整测试和远程交付结果在实际核对后补充；详见[BE-10](../05-detailed-design/BE-10-PEOPLE.md)。
+
 D-064验证结果：先记录离线事务保护RED和8个真实引擎场景RED，再实现；完整clean verify/mysql-check为81离线＋96真实MySQL，全无失败/错误/跳过；随后无生产改动补UTC精度/存储故障两项并重跑全部10项端口检查通过，XML覆盖合计81＋98。专属23310实例随机schema/账号剩余0/0，PID37380正常退出，用户MySQL84仍Running。静态校验PASS。A接入方法与BE-10剩余边界见[交接](../05-detailed-design/BE-10-PEOPLE.md)；本轮不以测试通过代替D的确认，不合并推送。
 
 D-064（2026-10-19）：本会话用户认领D，要求先完成A需要的数据能力。在codex/be-10-people（基线5966834）实施BE-10内部OrganizationReader：公司/部门/岗位/员工、源身份与组织路径精确映射、准确公司/部门全部有效任职和版本；强制调用方同数据源事务，不缓存、不授权、不新开事务。A可在BE-08/09的ReadBoundary/CommandBoundary内复用，仍自行复核身份/单项范围。设计与实际验证见[BE-10交接](../05-detailed-design/BE-10-PEOPLE.md)。BE-10整体IN_PROGRESS，内部读取实现不等于六个HTTP接口/EmploymentWriter/整项AT完成；本人确认及main交付待办理，其余26项PLANNED。成员D本机已通过JDK21/Wrapper构建、MySQL8.4.8双库迁移及权限、HMAC启用启动和健康UP，证据为本会话用户输出/回报；不记录密码/密钥，不推断RSA/管理员初始化完成。历史A会话认领保持，本会话未获得远程写入授权。

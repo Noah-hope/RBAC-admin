@@ -224,7 +224,7 @@
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
     "evidence": "BE-10-PEOPLE.md",
-    "verificationScope": "INTERNAL_ORGANIZATION_AND_CURRENT_EMPLOYMENT_FACTS_ONLY"
+    "verificationScope": "BE10_PEOPLE_HTTP_INTERNAL_READ_AND_IMPORT_PRIMITIVES_ONLY_NOT_FULL_IMPORT_LIFECYCLE"
   },
   {
     "id": "AT-14",
@@ -459,8 +459,10 @@
       "UC-10"
     ],
     "reviewScenario": "S01/S19",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-10-PEOPLE.md",
+    "verificationScope": "BE10_PEOPLE_HTTP_INTERNAL_READ_AND_IMPORT_PRIMITIVES_ONLY_NOT_FULL_IMPORT_LIFECYCLE"
   },
   {
     "id": "AT-28",
@@ -490,8 +492,10 @@
       "UC-10"
     ],
     "reviewScenario": "S25",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-10-PEOPLE.md",
+    "verificationScope": "BE10_PEOPLE_HTTP_INTERNAL_READ_AND_IMPORT_PRIMITIVES_ONLY_NOT_FULL_IMPORT_LIFECYCLE"
   },
   {
     "id": "AT-30",

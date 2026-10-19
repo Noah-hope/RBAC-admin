@@ -76,7 +76,7 @@ def checks(report):
     partial_evidence={'AT-01':'BE-02-IMPLEMENTATION.md','AT-02':'BE-03-PERSISTENCE.md',
                       'AT-05':'BE-06-IDENTITY.md','AT-06':'BE-06-IDENTITY.md','AT-07':'BE-06-IDENTITY.md',
                       'AT-04':'BE-05-IDEMPOTENCY.md','AT-03':'BE-04-TRANSACTIONS.md','AT-33':'BE-04-TRANSACTIONS.md','AT-37':'BE-02-IMPLEMENTATION.md',
-                      'AT-36':'BE-32-DEPLOYMENT.md','AT-13':'BE-10-PEOPLE.md'}
+                      'AT-36':'BE-32-DEPLOYMENT.md','AT-13':'BE-10-PEOPLE.md','AT-27':'BE-10-PEOPLE.md','AT-29':'BE-10-PEOPLE.md'}
     require(all(c['status']==('PARTIALLY_VERIFIED' if c['id'] in partial_evidence else 'DESIGNED_NOT_RUN') for c in cases),'验收局部/完整状态不符')
     require(all(c.get('evidence')==partial_evidence[c['id']] for c in cases if c['status']=='PARTIALLY_VERIFIED'),'局部验收缺实施证据')
     deferred={c['id'] for c in cases if c['delivery']=='FRONTEND_DEFERRED'}
@@ -181,16 +181,16 @@ def checks(report):
         require(module['assignmentStatus']==('OWNER_CONFIRMED' if module['id']=='M00' else ('SHARED_BY_TASK' if module['id'] in shared else 'ASSIGNED')),'共享模块未按任务区分责任')
     referenced=set()
     for task in tasks:
-        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-10':'IN_PROGRESS','BE-32':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
+        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-10':'IMPLEMENTED','BE-32':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
         require(task['status']==expected_status,'任务准备/实现状态不符')
         if task['id']=='BE-10':
             progress=task['implementationProgress']
             require(progress.get('internalReadPortImplemented') is True
-                    and progress.get('implemented') is False and progress.get('httpImplemented') is False
-                    and progress.get('employmentWriterImplemented') is False
+                    and progress.get('implemented') is True and progress.get('httpImplemented') is True
+                    and progress.get('employmentWriterImplemented') is True
                     and progress.get('ownerAccepted') is False and progress.get('mergedToMain') is False
                     and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
-                    and progress.get('evidence')=='BE-10-PEOPLE.md','BE-10内部端口/整项验收边界不符')
+                    and progress.get('evidence')=='BE-10-PEOPLE.md','BE-10实现/本人验收边界不符')
         if task['id']=='BE-06':
             progress=task['implementationProgress']
             require(progress.get('decision')=='D-056' and progress.get('evidence')=='BE-06-IDENTITY.md'
@@ -383,7 +383,7 @@ def checks(report):
         require(row['ownerSlot']==assignments[task['id']] and row['assignmentStatus']=='ASSIGNED' and row['phase']=='BUSINESS','业务操作与任务负责人不符')
         require(row['suggestedOwnerSlot']==task['suggestedOwnerSlot'] and row['startConditions']==required_gates,'操作与任务分工/阶段不一致')
         require(set(row['tables'])<=tables,'操作引用未知表')
-        require(set(row['acceptance'])<=cids and row['status']==('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07'} else 'PLANNED_NOT_IMPLEMENTED'),'验收引用/实施状态不符')
+        require(set(row['acceptance'])<=cids and row['status']==('IMPLEMENTED_PENDING_OWNER' if task['id']=='BE-10' else ('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07'} else 'PLANNED_NOT_IMPLEMENTED')),'验收引用/实施状态不符')
         if direction=='INBOUND':require('AT-37'in row['acceptance'],'入站缺全契约验收')
         require(set(row['requestModels'])<=api['components']['schemas'].keys(),'未知输入模型')
         require(set(model for values in row['successResponseModels'].values() for model in values)<=api['components']['schemas'].keys(),'未知输出模型')
@@ -534,9 +534,9 @@ def checks(report):
         decisionIds=len(decisions),upstreamSha256=source_hashes,
         planRevision='1.4',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=0,
         businessTasksAssigned=len(assignments),assignmentDecision='D-055',memberIdentitiesPending=4,
-        confirmedUserAlias='D',historicallyConfirmedUserAliases=['A'],implementationDecision='D-064',
-        internalPortTasksPendingOwner=['BE-10'],implementedBusinessTasksPendingOwner=[],
-        ownerAcceptedBusinessTasks=['BE-06','BE-07','BE-32'],businessTasksPendingMainDelivery=[],businessAcceptanceDecision='D-062',
+        confirmedUserAlias='D',historicallyConfirmedUserAliases=['A'],implementationDecision='D-065',
+        internalPortTasksPendingOwner=[],implementedBusinessTasksPendingOwner=['BE-10'],
+        ownerAcceptedBusinessTasks=['BE-06','BE-07','BE-32'],businessTasksPendingMainDelivery=['BE-10'],businessAcceptanceDecision='D-062',
         businessMainDeliveryDecision='D-063',businessMainDeliveryMerge=bootstrap_delivery['mergeCommit'],
         businessMainDeliveryPrUrl=bootstrap_delivery['prUrl'],
         foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:OWNER_ACCEPTED',
