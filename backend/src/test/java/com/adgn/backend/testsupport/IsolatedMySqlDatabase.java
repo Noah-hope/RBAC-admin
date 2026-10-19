@@ -87,6 +87,14 @@ public final class IsolatedMySqlDatabase implements AutoCloseable {
         return DriverManager.getConnection(url, runtime, password);
     }
 
+    /** Pass only this fixture's DML credentials to an owned bootstrap subprocess. */
+    public void configureBootstrap(ProcessBuilder process) {
+        process.environment().put("RBAC_BOOTSTRAP_URL", url);
+        process.environment().put("RBAC_BOOTSTRAP_USER", runtime);
+        process.environment().put("RBAC_BOOTSTRAP_PASSWORD", password);
+        process.environment().put("RBAC_BOOTSTRAP_CONFIRM_DATABASE", schema);
+    }
+
     public String scalar(String sql) throws SQLException {
         try (var statement = admin.createStatement(); var rows = statement.executeQuery(sql)) {
             if (!rows.next()) throw new IllegalStateException("Expected one row");

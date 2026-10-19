@@ -28,6 +28,8 @@
     </scm>
     <properties>
         <java.version>21</java.version>
+        <!-- Stable archive entries; SOURCE commit and SHA256 are recorded beside the release. -->
+        <project.build.outputTimestamp>2026-10-19T00:00:00Z</project.build.outputTimestamp>
     </properties>
     <dependencies>
         <dependency>

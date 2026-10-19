@@ -1,5 +1,7 @@
 # rbac-admin · 集中权限管理系统
 
+D-061：A 已实现 BE-32 部署产物、配置与管理员初始化，80 离线＋88 真实 MySQL 检查通过；任务已获本人确认（D-062），待主线交付，未合并或推送。[IDEA 初始化与发布步骤](deploy/README.md)使用同一份 Java 代码/jar，无需组员现在选择服务器模板或新增一套密钥；实际服务器部署仍由 BE-34 验证。测试与交接见 [BE-32 记录](docs/05-detailed-design/BE-32-DEPLOYMENT.md)，其余27项保持 PLANNED。下方 D-060 及更早的数量/状态为历史。
+
 身份模块与后续目录样例：见[BE-06实现](docs/05-detailed-design/BE-06-IDENTITY.md)和[本机启用及组员接入](docs/05-detailed-design/BE-06-LOCAL-SETUP.md)。
 
 D-060：BE-06身份认证与[BE-07后台账号管理](docs/05-detailed-design/BE-07-ACCOUNTS.md)均已本人确认，已合入并推送main/ff19d17、远程回查一致。当前75离线＋80真实MySQL检查通过；其余28项待实现，下方待主线/旧29项为此前记录。成员可pull共同main后按身份启用说明配置，密钥不随代码提交。
