@@ -17,5 +17,5 @@ public class PeopleAutoConfiguration {
     @Bean OrganizationReader organizationReader(DataSource source) { return new OrganizationReader(source); }
     @Bean EmploymentWriter employmentWriter(DataSource source,com.adgn.backend.core.audit.AuditAppender audit,tools.jackson.databind.json.JsonMapper json){return new EmploymentWriter(source,audit,json);}
     @Bean @ConditionalOnBean(CurrentIdentityReader.class)
-    PeopleQueries peopleQueries(DataSource source,ReadBoundary reads,CurrentIdentityReader identity){return new PeopleQueries(source,reads,identity);}
+    PeopleQueries peopleQueries(DataSource source,ReadBoundary reads,com.adgn.backend.scope.service.ManagementContextResolver contexts){return new PeopleQueries(source,reads,contexts);}
 }

@@ -1,5 +1,7 @@
 # 后端工程
 
+BE-08 已实现四个任命/范围 GET 及统一当前上下文解析/覆盖策略，使用 `scope/repository` 的 Spring Data JPA 只读映射和仓储；`people` 查询复用同一解析器。无需新增数据库迁移或密钥，待 A 确认及主线交付。接口、真实验证及本机步骤见 [BE-08](../docs/05-detailed-design/BE-08-MANAGEMENT-SCOPE.md)。
+
 BE-32已获A确认并通过[PR #1](https://github.com/Noah-hope/RBAC-admin/pull/1)交付main/609ee4b（D-063），组员可更新main后按[部署与本机初始化指南](../deploy/README.md)使用；真实服务器验收仍为BE-34。
 
 BE-32：管理员初始化、jar 发布和 Linux 启动示例见 [部署与初始化操作](../deploy/README.md)，设计与验证见 [BE-32](../docs/05-detailed-design/BE-32-DEPLOYMENT.md)。初始化使用独立 `BootstrapAdminApplication`，不需要另外生成 RSA/HMAC 密钥，也不会在普通启动时自动创建账号。服务器与本机使用同一代码/jar，差别只在外置配置和启动方式；当前尚未部署云服务器。

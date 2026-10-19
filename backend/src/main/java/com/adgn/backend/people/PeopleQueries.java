@@ -1,7 +1,7 @@
 package com.adgn.backend.people;
 
 import com.adgn.backend.core.transaction.ReadBoundary;
-import com.adgn.backend.identity.service.CurrentIdentityReader;
+import com.adgn.backend.scope.service.ManagementContextResolver;
 import com.adgn.backend.identity.security.IdentityFailure;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,7 +11,7 @@ import java.sql.*;
 import java.time.Instant;
 import java.util.*;
 
-/** People-specific scope projection. General appointment APIs and coverage policy belong to BE-08. */
+/** People-specific visibility, with current single-appointment qualification supplied by BE-08. */
 public final class PeopleQueries {
     public record Context(String appointmentId,String appointmentVersion,String scopeVersion) { }
     public record Filter(String page,String pageSize,String companyId,String departmentId,String status,String q) { }
@@ -26,9 +26,9 @@ public final class PeopleQueries {
     }
     private final JdbcTemplate jdbc;
     private final ReadBoundary reads;
-    private final CurrentIdentityReader identity;
-    public PeopleQueries(DataSource source,ReadBoundary reads,CurrentIdentityReader identity){
-        this.jdbc=new JdbcTemplate(source);this.reads=reads;this.identity=identity;
+    private final ManagementContextResolver contexts;
+    public PeopleQueries(DataSource source,ReadBoundary reads,ManagementContextResolver contexts){
+        this.jdbc=new JdbcTemplate(source);this.reads=reads;this.contexts=contexts;
     }
     public Page<?> list(Jwt token,Context context,String resource,String employeeId,Filter f)throws Exception{
         long page=number(f.page(),1),size=number(f.pageSize(),20);
@@ -86,24 +86,8 @@ public final class PeopleQueries {
         return reads.read(()->access(token,context),a->{var e=findEmployee(a,employeeId);if(e==null)throw missing();return e;});
     }
     private Access access(Jwt token,Context c){
-        var account=identity.admin(token,false).account();
-        boolean absent=c.appointmentId()==null && c.appointmentVersion()==null && c.scopeVersion()==null;
-        if(account.superAdmin() && absent)return new Access(null,null,null);
-        if(c.appointmentId()==null || c.appointmentVersion()==null || c.scopeVersion()==null)throw IdentityFailure.invalid();
-        identifier(c.appointmentId());long av=version(c.appointmentVersion()),sv=version(c.scopeVersion());
-        var rows=jdbc.queryForList("""
-            SELECT ap.account_id,ap.status,ap.appointment_version,s.scope_version,s.id AS scope_id,s.company_id,s.department_id,
-              EXISTS(SELECT 1 FROM employment em WHERE em.employee_id=? AND em.company_id=s.company_id
-                AND em.department_id=s.department_id AND em.status='ACTIVE') AS employed
-            FROM admin_appointment ap JOIN management_scope s ON s.id=ap.scope_id WHERE ap.id=?
-            """,account.employeeId(),c.appointmentId());
-        if(rows.isEmpty())throw new IdentityFailure(409,"CONTEXT_CHANGED");
-        var r=rows.getFirst();
-        if(!account.id().equals(r.get("account_id")))throw new IdentityFailure(403,"FORBIDDEN");
-        if(!"ACTIVE".equals(r.get("status")) || ((Number)r.get("appointment_version")).longValue()!=av
-                || ((Number)r.get("scope_version")).longValue()!=sv)throw new IdentityFailure(409,"CONTEXT_CHANGED");
-        if(((Number)r.get("employed")).intValue()!=1)throw new IdentityFailure(403,"FORBIDDEN");
-        return new Access((String)r.get("company_id"),(String)r.get("department_id"),(String)r.get("scope_id"));
+        var a=contexts.resolve(token,new ManagementContextResolver.Selection(c.appointmentId(),c.appointmentVersion(),c.scopeVersion()));
+        return new Access(a.companyId(),a.departmentId(),a.scopeId());
     }
     private static void checkFilters(Access a,Filter f){
         if(!a.global() && ((f.companyId()!=null && !f.companyId().equals(a.company())) || (f.departmentId()!=null && !f.departmentId().equals(a.department()))))
