@@ -5,6 +5,7 @@
   "collaborationDecision": "D-051",
   "deliveryDecision": "D-053",
   "assignmentDecision": "D-055",
+  "implementationDecision": "D-058",
   "foundation": {
     "ownerSlot": "USER",
     "taskIds": [
@@ -93,6 +94,8 @@
         "area": "身份与管理范围、运行交付",
         "realName": null,
         "githubLogin": null,
+        "claimedBy": "USER",
+        "claimDecision": "D-056",
         "repositoryAccessVerified": false,
         "localEnvironmentVerified": false
       },
@@ -101,6 +104,8 @@
         "area": "系统、角色与功能权限、集成验收",
         "realName": null,
         "githubLogin": null,
+        "claimedBy": null,
+        "claimDecision": null,
         "repositoryAccessVerified": false,
         "localEnvironmentVerified": false
       },
@@ -109,6 +114,8 @@
         "area": "申请、OA审批与执行、审计",
         "realName": null,
         "githubLogin": null,
+        "claimedBy": null,
+        "claimDecision": null,
         "repositoryAccessVerified": false,
         "localEnvironmentVerified": false
       },
@@ -117,6 +124,8 @@
         "area": "组织、人员与授权来源、导入",
         "realName": null,
         "githubLogin": null,
+        "claimedBy": null,
+        "claimDecision": null,
         "repositoryAccessVerified": false,
         "localEnvironmentVerified": false
       }

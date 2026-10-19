@@ -1,5 +1,9 @@
 # Clone 后的本机配置与协作开发指南
 
+D-056业务接入更新：用户认领A并开始BE-06，普通身份业务启用、RSA密钥文件及Controller/Service目录样例见[BE-06接入说明](BE-06-LOCAL-SETUP.md)。本文仍用于配置公共基座；新业务启用不以健康UP代替验收。
+
+D-058：BE-07账号管理沿用原RSA/HMAC和数据库配置，不新增迁移或密钥；写接口要求身份与幂等均启用，操作与验证见[账号管理](BE-07-ACCOUNTS.md)。
+
 任务接入：先在[四人分工说明](TEAM-ASSIGNMENT.md)查看自己对应A/B/C/D的任务。30项已登记成员代号，具体姓名/GitHub账号由团队补充；完成本文环境配置并满足所属任务原前置后再开工，各任务由负责人自己确认完成。
 
 适用于首次加入项目的成员。按下面顺序完成一次配置，即可在自己的电脑构建、初始化数据库、启动后端，并从共同基线领取任务开发。主流程使用 Windows、IntelliJ IDEA 和本机 MySQL；PowerShell只用于Git命令、生成本机密钥及可选的终端构建。所有路径均相对项目根目录 `rbac-admin`。
@@ -107,7 +111,7 @@ Maven 使用仓库自带 Wrapper，固定3.9.11，不需要另装一套 Maven。
 
 这组默认测试不连接你的MySQL，也不要求先填数据库密码或HMAC密钥。“离线测试”指测试不访问数据库，并不表示Maven首次下载依赖可以断网。Maven运行配置字段依据见[JetBrains说明](https://www.jetbrains.com/help/idea/run-debug-configuration-maven.html)。
 
-**本步成功标志：** 构建控制台显示 `BUILD SUCCESS`，测试没有失败或错误。当前基座为64项离线测试通过，后续数量以实际报告为准，jar位于 `backend/target/`。`VerifyBackend`是Maven构建配置，后面三份是应用运行配置，作用不同。
+**本步成功标志：** 构建控制台显示 `BUILD SUCCESS`，测试没有失败或错误。当前BE-07分支为75项离线测试；基座交付时为64项，数量以所在提交的实际报告为准，jar位于 `backend/target/`。`VerifyBackend`是Maven构建配置，后面三份是应用运行配置，作用不同。
 
 仅当你自己选择在终端运行Maven时，才查看文末“可选：终端构建”；IDEA流程不需要先去做该附录。
 

@@ -33,6 +33,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     public ApiExceptionHandler(ProblemResponses problems) { this.problems = problems; }
 
+    @ExceptionHandler(com.adgn.backend.identity.security.IdentityFailure.class)
+    ResponseEntity<Object> identityFailure(com.adgn.backend.identity.security.IdentityFailure failure,HttpServletRequest request) {
+        var status=HttpStatusCode.valueOf(failure.status());
+        var template=problems.body(status,List.of(),request);
+        var headers=new HttpHeaders();headers.setContentType(org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON);headers.setCacheControl("no-store");
+        if(failure.status()==401)headers.set(HttpHeaders.WWW_AUTHENTICATE,"Bearer");
+        if(failure.retryAfter()>0)headers.set(HttpHeaders.RETRY_AFTER,Long.toString(failure.retryAfter()));
+        return new ResponseEntity<>(new ApiProblem("urn:rbac-admin:problem:"+failure.code().toLowerCase(java.util.Locale.ROOT).replace('_','-'),
+                template.title(),failure.status(),failure.code(),template.detail(),template.requestId(),template.errors()),headers,status);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {

@@ -51,9 +51,10 @@ class MigrationEntryTest {
         var app = application();
         assertThat(app.getWebApplicationType()).isEqualTo(WebApplicationType.NONE);
         app.addPrimarySources(Set.of(DoNotExecuteSql.class));
+        assertThatCode(() -> {
         try (var context = app.run("--RBAC_MIGRATION_URL=jdbc:mysql://localhost:3306/unused_migration",
                 "--RBAC_MIGRATION_USER=migration_fixture", "--RBAC_MIGRATION_PASSWORD=unused-migration-fixture",
-                "--spring.datasource.username=runtime_fixture")) {
+                "--spring.datasource.username=runtime_fixture", "--rbac.identity.enabled=true")) {
             var configuration = context.getBean(Flyway.class).getConfiguration();
             assertThat(configuration.getDataSource()).isInstanceOf(AbstractDriverBasedDataSource.class);
             var migrationDataSource = (AbstractDriverBasedDataSource) configuration.getDataSource();
@@ -62,7 +63,9 @@ class MigrationEntryTest {
             assertThat(context.getBeansOfType(DataSource.class)).isEmpty();
             assertThat(context.getBeansOfType(BackendApplication.class)).isEmpty();
             assertThat(context.containsBean("requestIdFilter")).isFalse();
+            assertThat(context.getBeansOfType(com.adgn.backend.identity.service.IdentityService.class)).isEmpty();
         }
+        }).doesNotThrowAnyException();
     }
 
     @Test

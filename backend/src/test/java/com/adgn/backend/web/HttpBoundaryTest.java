@@ -43,6 +43,22 @@ class HttpBoundaryTest {
     private final JsonMapper json = JsonMapper.builder().build();
 
     @Test
+    void disabledIdentityFailsClosedForEveryProtectedFamily() throws Exception {
+        for (String path : List.of("/api/v1/admin/accounts", "/api/v1/integration/identity-probe", "/api/v1/oa/identity-probe")) {
+            var response = send("GET", path, null, null);
+            assertProblem(response, 503, "DEPENDENCY_UNAVAILABLE");
+        }
+    }
+
+    @Test
+    void encodedRouteStillUsesTheContainersDecodedProtectedServletPath() throws Exception {
+        var response=mvc.perform(MockMvcRequestBuilders.get(java.net.URI.create("/api/v1/%61dmin/accounts"))
+                .with(request->{request.setServletPath("/api/v1/admin/accounts");return request;}))
+                .andReturn().getResponse();
+        assertProblem(response,503,"DEPENDENCY_UNAVAILABLE");
+    }
+
+    @Test
     void carriesClientRequestIdInResponseAndLoggingContext(CapturedOutput output) throws Exception {
         var response = send("POST", "/__test/echo", "{\"name\":\"测试\"}", "req_ABC-1");
         assertThat(response.getStatus()).isEqualTo(200);

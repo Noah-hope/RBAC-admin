@@ -2,6 +2,8 @@
 
 本目录是项目团队共享记忆的统一维护位置。当前状态、待办、决策、流程及各阶段交付物均在这里保存，并随对应改动提交 Git。根目录 `AGENTS.md` 提供协作入口，`README.md` 提供项目导航。
 
+2026-10-19/D-058：用户A已继续[BE-07账号管理](05-detailed-design/BE-07-ACCOUNTS.md)，在含已确认BE-06祖先的分支实现，已按D-059本人确认、待主线交付；其他28项仍待实现，不能由健康UP推断业务验收。
+
 ## 工作入口
 
 - [当前状态与交接](project/MEMORY.md)：已完成事项、待办、验证结果及下一步。
@@ -22,7 +24,7 @@
 | [02-ui-design](02-ui-design/README.md) | Vue 3 + TypeScript + Tailwind CSS 界面原型及设计说明 | 可作为 API 输入；按 D-029，3 项原型补齐后续跟踪，不阻塞 API |
 | [03-api](03-api/README.md) | OpenAPI 契约、示例、状态/错误、追踪及数据库交接 | Git1.2.0正式跨阶段修订完成；Apifox1.2.0指定客户端导出核心一致已核对；两处元数据差异及MCP限制保留 |
 | [04-database](04-database/README.md) | ER图、完整字典、约束/索引、事务/JPA/幂等、DDL草案与验证 | 1.1草案，正式跨阶段评审后有条件通过；开发/测试库迁移及普通启动已核对；基础JPA/公共事务已有隔离引擎验证，完整业务未验收，见[评审报告](04-database/CONSISTENCY-REVIEW.md) |
-| [05-detailed-design](05-detailed-design/README.md) | 后端模块/流程/部署、两阶段任务与基座交接 | BE-01～05已本人整体确认，F-01～06通过并交付main/b68aa9a；30项业务已按D-055登记A～D代号，实名/账号及成员接入待补 |
+| [05-detailed-design](05-detailed-design/README.md) | 后端模块/流程/部署、两阶段任务与基座交接 | BE-01～05已本人整体确认，F-01～06通过并交付main/b68aa9a；30项已按D-055登记A～D，用户认领A；BE-06在开发分支实现并获本人确认（D-057），待合入，其他身份/账号及接入证据待补 |
 
 阶段状态以 `project/MEMORY.md` 为准，目录存在不代表阶段完成。阶段变化时同步更新导航。
 

@@ -21,6 +21,8 @@ public record SafeResult(int status,String body,String location) {
     }
     private static void rejectSecrets(JsonNode node) {
         if (node.isObject()) for (var field:node.properties()) {
+            // Contract metadata is safe; a password value under this name is not.
+            if (field.getKey().equals("mustChangePassword") && field.getValue().isBoolean()) continue;
             String name=field.getKey().toLowerCase(Locale.ROOT).replace("_","").replace("-","");
             if (name.contains("password") || name.contains("token") || name.contains("secret") || name.contains("credential")
                     || name.contains("hash") || name.equals("authorization") || name.equals("cookie")) throw new IllegalArgumentException();
