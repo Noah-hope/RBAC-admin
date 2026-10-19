@@ -143,7 +143,23 @@
     "reviewPolicy": "OWNER_ACCEPTANCE",
     "reviewRequired": false,
     "reviewerSlot": null,
-    "acceptanceOwnerPolicy": "TASK_OWNER"
+    "acceptanceOwnerPolicy": "TASK_OWNER",
+    "mainDelivery": {
+      "taskIds": [
+        "BE-06",
+        "BE-07"
+      ],
+      "decision": "D-060",
+      "date": "2026-10-19",
+      "branch": "main",
+      "sourceCommit": "9b6d89e20e2f1646bd2ed96223d9c43a21e2f96f",
+      "mergeCommit": "ff19d1792a6934dbd6bca6c174dcba29f7acdad8",
+      "remote": "origin",
+      "remoteRef": "refs/heads/main",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "ff19d1792a6934dbd6bca6c174dcba29f7acdad8",
+      "evidence": "BE-07-ACCOUNTS.md"
+    }
   },
   "gateStatus": "FOUNDATION_ACCEPTED",
   "gateEvidence": [

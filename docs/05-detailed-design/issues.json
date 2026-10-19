@@ -472,7 +472,7 @@
       "scope": "LOGIN_SESSION_PASSWORD_AND_THREE_JWT_FAMILIES",
       "implemented": true,
       "ownerAccepted": true,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "setup": "BE-06-LOCAL-SETUP.md",
@@ -489,8 +489,9 @@
       "message": "验证通过",
       "implementationCommit": "1907a63f23ab35ad85404c9bde6f7bb2648fc704",
       "interpretation": "LOCAL_VERIFICATION_CONFIRMATION_AFTER_BE06_HANDOFF",
-      "mergedToMain": false,
-      "evidence": "BE-06-IDENTITY.md"
+      "mergedToMain": true,
+      "evidence": "BE-06-IDENTITY.md",
+      "mainMergeCommit": "ff19d1792a6934dbd6bca6c174dcba29f7acdad8"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
@@ -581,7 +582,7 @@
       "scope": "SUPER_ADMIN_ACCOUNT_READ_CREATE_STATE_AND_PASSWORD_RESET",
       "implemented": true,
       "ownerAccepted": true,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "claimedBy": "USER",
@@ -601,8 +602,9 @@
       "verificationMessage": "BE-07这两项验证通过，下一步做什么",
       "implementationCommit": "584eb4e8365b0041c09ccf3f76fcaf284bb32e26",
       "interpretation": "LOCAL_UP_AND_UNAUTHENTICATED_401_WITH_PRIOR_AUTOMATED_EVIDENCE",
-      "mergedToMain": false,
-      "evidence": "BE-07-ACCOUNTS.md"
+      "mergedToMain": true,
+      "evidence": "BE-07-ACCOUNTS.md",
+      "mainMergeCommit": "ff19d1792a6934dbd6bca6c174dcba29f7acdad8"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [

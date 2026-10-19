@@ -56,7 +56,7 @@
         "Session"
       ]
     },
-    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "currentSession",
@@ -112,7 +112,7 @@
         "SessionView"
       ]
     },
-    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "logout",
@@ -167,7 +167,7 @@
     "successResponseModels": {
       "204": []
     },
-    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "changeOwnPassword",
@@ -224,7 +224,7 @@
     "successResponseModels": {
       "204": []
     },
-    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "myAppointments",
@@ -367,7 +367,7 @@
         "AccountPage"
       ]
     },
-    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "createAccount",
@@ -429,7 +429,7 @@
         "Account"
       ]
     },
-    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "getAccount",
@@ -487,7 +487,7 @@
         "Account"
       ]
     },
-    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "setAccountState",
@@ -554,7 +554,7 @@
         "Account"
       ]
     },
-    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "resetAccountPassword",
@@ -621,7 +621,7 @@
         "Account"
       ]
     },
-    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "listSystems",

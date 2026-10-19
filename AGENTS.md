@@ -26,6 +26,8 @@ D-057已记录用户A确认BE-06通过，主线交付仍待办理；D-058用户�
 
 D-059已记录A确认BE-07（本机健康UP及未登录401回报，结合既有75离线＋80真实MySQL证据）；BE-06/07均OWNER_ACCEPTED待主线交付，其他28项PLANNED。下一步建议交付主线，A可安排BE-32，BE-08仍须D/BE-10；未授权就不把建议当作新任务实施或合并推送。
 
+D-060当前交付：用户已明确授权合并推送，BE-06/07已无冲突合入main/ff19d17并推送，远程SHA回查一致；上述待主线是此前历史。任务均OWNER_ACCEPTED、9个正式操作已交付，其余28项PLANNED；组员可pull共同main，后续任务仍按原依赖及本人明确实施指令推进，不自动开始BE-32。
+
 完整阶段交付要求见 `docs/project/WORKFLOW.md`，当前阶段及交接事实见 `docs/project/MEMORY.md`。不因目录或文档存在就宣布阶段完成。尚未选定的技术不自行记为既定方案。
 
 项目技能统一从 `.agents/skills/<技能名>/SKILL.md` 读取，包含 `grill-me`、`grilling`、`frontend-design`、`test-driven-development`；优先使用仓库副本，来源与版本见 `docs/project/SKILLS.md`。`grill-me` 是委托入口，实际访谈同时读取 `grilling`。后续正式业务逻辑的新功能、缺陷修复及行为变更使用 TDD，编写或修改测试时同时读取其 `writing-good-tests.md`。
