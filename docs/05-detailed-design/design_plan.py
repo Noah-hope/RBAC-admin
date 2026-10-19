@@ -17,6 +17,9 @@ FOUNDATION_SOURCE_COMMIT = '379ad438220a478093947f657d04eb56a6a2efcb'
 FOUNDATION_MERGE_COMMIT = 'b68aa9aee6e78dd0b2cc1922d68028ce68ddeb11'
 BUSINESS_SOURCE_COMMIT = '9b6d89e20e2f1646bd2ed96223d9c43a21e2f96f'
 BUSINESS_MERGE_COMMIT = 'ff19d1792a6934dbd6bca6c174dcba29f7acdad8'
+BOOTSTRAP_SOURCE_COMMIT = 'd5941c902712c92d4d8d8d7505bd6df4f5ceb139'
+BOOTSTRAP_MERGE_COMMIT = '609ee4bb017e46b42e43bcd8c2616d31ab410f5a'
+BOOTSTRAP_PR_URL = 'https://github.com/Noah-hope/RBAC-admin/pull/1'
 BUSINESS_ASSIGNMENTS = {
     'A': [6, 7, 8, 9, 27, 32, 34],
     'B': [11, 12, 13, 15, 17, 18, 33, 35],
@@ -272,6 +275,11 @@ for task in TASKS:
     if task['id'] in {'BE-06','BE-07'}:
         task['implementationProgress']['mergedToMain']=True
         task['ownerAcceptance'].update(mergedToMain=True,mainMergeCommit=BUSINESS_MERGE_COMMIT)
+    if task['id']=='BE-32':
+        task['implementationProgress']['mergedToMain']=True
+        task['ownerAcceptance'].update(mergedToMain=True,mainMergeCommit=BOOTSTRAP_MERGE_COMMIT,
+                                       mainPrNumber=1,mainPrUrl=BOOTSTRAP_PR_URL)
+        task['remotePrNumber']=1
     task['acceptanceScope'] = ACCEPTANCE_SCOPES.get(int(task['id'][-2:]),
         '完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。')
 
@@ -336,9 +344,13 @@ def generate():
             scope='PUBLIC_FOUNDATION_ONLY' if n <= 5 else 'OWNER_ACCEPTANCE_AND_MAIN_DELIVERY')
             for n in range(1,7)],
         reviewRule='D-051：所有任务由唯一负责人核对测试和自检证据并确认完成，不设置独立评审人；技术依赖、真实验证和主线交付要求保留')
+    phase_plan['business']['additionalMainDeliveries']=[dict(taskIds=['BE-32'],decision='D-063',date='2026-10-19',
+        branch='main',sourceCommit=BOOTSTRAP_SOURCE_COMMIT,mergeCommit=BOOTSTRAP_MERGE_COMMIT,
+        remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=BOOTSTRAP_MERGE_COMMIT,
+        prNumber=1,prUrl=BOOTSTRAP_PR_URL,prState='MERGED',evidence='BE-32-DEPLOYMENT.md')]
     dump('delivery-phases.json',phase_plan)
     dump('modules.json',modules);dump('acceptance.json',CASES);dump('issues.json',TASKS)
-    lines=['# 模块结构与维护责任','','修订1.4/D-055：基座已确认并纳入主线，30项任务已登记A～D成员代号，实名与GitHub账号映射待补。D-056用户认领A，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，待主线交付），其余27项PLANNED，由负责人自行确认完成（D-051）。分工详见[四人分工](TEAM-ASSIGNMENT.md)。公共包前缀`com.adgn.backend`、13个逻辑模块及技术依赖不变。','','| 模块 | 包后缀/负责人 | 编译依赖 | 职责与主要接口 |','| --- | --- | --- | --- |']
+    lines=['# 模块结构与维护责任','','修订1.4/D-055：基座已确认并纳入主线，30项任务已登记A～D成员代号，实名与GitHub账号映射待补。D-056用户认领A，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），其余27项PLANNED，由负责人自行确认完成（D-051）。分工详见[四人分工](TEAM-ASSIGNMENT.md)。公共包前缀`com.adgn.backend`、13个逻辑模块及技术依赖不变。','','| 模块 | 包后缀/负责人 | 编译依赖 | 职责与主要接口 |','| --- | --- | --- | --- |']
     for m in modules:lines.append(f"| {m['id']} {m['name']} | `{m['package']}` / {'用户（基座）' if m['ownerSlot']=='USER' else (m['ownerSlot'] or '、'.join(m['ownerSlots'])+'按任务分别负责')} | {','.join(m['dependencies']) or '无'} | {m['responsibility']} |")
     lines+=['','M00的公共能力由用户实现；M11的读事务约定、M12的错误/配置/装配基础也属于BE-02/04的基座部分，不意味着全部查询/HTTP业务由用户承包。M00中规范化codec先明确接口，固定申请的JCS实现和向量验证仍归BE-21。','','M11采用独立SQL/DTO投影，不引用各域JPA实体或命令模块。业务阶段按A～D的对应任务分别维护身份、人员来源、申请、权限投影，避免一个巨大QueryService成为共用编辑热点。','','共同事务与接口约定见[ARCHITECTURE.md](ARCHITECTURE.md)，具体步骤见[CORE-FLOWS.md](CORE-FLOWS.md)，阶段交接见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。']
     write('MODULES.md','\n'.join(lines))
@@ -412,7 +424,7 @@ def generate():
     for case in CASES:tests.append(f"| {case['id']} {case['title']} | {case['fixture']} | {case['expected']} | {','.join(case['operations']) or '内部/部署'} | {case['reviewScenario'] or '新增验收准备'} |")
     tests+=['','## 测试层次与运行证据','','- 单元：纯策略/集合差异/规范化/目录无环，不以mock调用次数替代行为。','- HTTP：真实DTO/认证链/Problem与全部67入站响应Schema；单项管理上下文、旧token和三类JWT交叉调用。','- MySQL集成：Testcontainers MySQL8.4；无容器时使用团队批准的独立测试实例和唯一测试schema，绝不指向共享/业务库。H2不替代即时FK、JSON、触发器、生成槽与事务测试。','- 并发：两个独立连接/事务，以barrier控制锁取得/提交先后；测试方超时保证清理。既测执行先也测关权先，观察最终授权/epoch/success/audit，而不是仅断言抛异常。','- 故障：在业务第N项、audit、success及完成幂等结果前注入异常，另连接检查全回滚；结果可靠提交后模拟进程中断/响应丢失，恢复不覆盖成功。','- 部署：候选产物在实际目标服务器启动、迁移、重启、HTTPS与全链路演示；本机Mock不能替代。','','Issue的验收AT列表是最低必测行为；具体负责部分见每卡acceptanceScope。AT-37覆盖每项所属API，包括未单独列出的列表/详情/预览。基础任务可按其负责部分验收合并，不能据此把整个AT标为通过；BE-33汇总后端完整行为与契约证据，BE-34完成目标服务器，BE-35汇总发布证据。BE-01只核验准备清单，不要求先有构建或发布包，因而不形成实现前置条件循环。测试类和断言在对应模块实现时按writing-good-tests设计，BE-02已有公共适配的RED/GREEN及打包HTTP证据，见[BE-02-IMPLEMENTATION.md](BE-02-IMPLEMENTATION.md)；BE-06身份验证见[身份记录](BE-06-IDENTITY.md)，其余业务尚无运行结果。','','拟定构建命令为`./mvnw verify`，其中unit走Surefire、*IT走Failsafe、集成测试不得静默skip；另生成JUnit/契约验证报告。当前backend已有Wrapper及实际构建结果；BE-03准备后完整构建41项离线测试通过，包含原BE-02的30项，不等于真实数据库或完整业务验收通过，见BE-03-PREPARATION.md；最新BE-06身份与旧回归见BE-06-IDENTITY.md；此前BE-05幂等验证见BE-05-IDEMPOTENCY.md；51离线＋25引擎是此前BE-04结果，44离线＋9引擎是此前BE-03结果，领域映射/完整业务并发尚未验收。外部真实OA改为演示适配，信任及回调边界仍保留。']
     write('TEST-PLAN.md','\n'.join(tests))
-    cards=['# 本地Issue草案与验收卡','','修订1.4/D-055四人分工，沿用D-053主线交付、D-051协作规则与D-050核对：D-053已确认F-01～06，基座已合并并推送main/b68aa9a（见FOUNDATION-REVIEW.md）；BE-01为OWNER_ACCEPTED（D-053整体交接确认，成员接入待办保留）；BE-02为OWNER_ACCEPTED（D-042/f911c60）；BE-03为OWNER_ACCEPTED（用户核对后回复继续，D-046/b8caeb2，见BE-03-PERSISTENCE）；BE-04为OWNER_ACCEPTED（D-047/58b556a，用户确认服务UP；公共事务/审计/快照证据见BE-04-TRANSACTIONS），BE-05为OWNER_ACCEPTED（D-049/d059d11，用户确认启用true及本机健康UP，见BE-05-IDEMPOTENCY），BE-06为OWNER_ACCEPTED（D-056实施、D-057本人确认，已由D-060交付main），BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，待主线交付），其余27项PLANNED。BE-01～05已由D-053整体确认，合并main/b68aa9a并推送回查通过。BE-01～05为用户先实现的基座；BE-06～35已按D-055登记A～D唯一成员代号，assignmentStatus为ASSIGNED，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，待主线交付），其余27项PLANNED；用户已认领A，GitHub账号与其他成员身份/环境待补，详见TEAM-ASSIGNMENT.md。D-051统一所有任务reviewPolicy=OWNER_ACCEPTANCE，不设置独立评审人，reviewerSlot/suggestedReviewerSlot保留null仅作格式兼容、不是待填写；单列评审工时为0。suggestedOwnerSlot保留为历史建议组，以ownerSlot为准。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。','','业务任务启动须同时满足FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED和原dependencies；这两个阶段门槛不是额外业务需求。基座验收见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。开发估算含设计细化/TDD/自测/文档及负责人核对确认；不再单列他人评审，外部等待不计。','','通用DoD：对应设计已读且引用准确→业务/可执行基础能力RED失败原因留证→最小实现→GREEN及重构→对应安全/事务验收→任务负责人核对行为/权限/事务/恢复及测试证据后明确确认完成→集成与文档更新。环境/协作/发布核验使用真实记录。未运行验证不得勾选通过；团队依赖以合并且所属部分通过为准；D-058明确允许A在含已确认BE-06祖先的BE-07分支继续开发，此前不据此宣称主线已交付，现D-060已记录实际合并推送，完整跨域证据由BE-33/34/35汇总。秘密不进Issue正文。']
+    cards=['# 本地Issue草案与验收卡','','修订1.4/D-055四人分工，沿用D-053主线交付、D-051协作规则与D-050核对：D-053已确认F-01～06，基座已合并并推送main/b68aa9a（见FOUNDATION-REVIEW.md）；BE-01为OWNER_ACCEPTED（D-053整体交接确认，成员接入待办保留）；BE-02为OWNER_ACCEPTED（D-042/f911c60）；BE-03为OWNER_ACCEPTED（用户核对后回复继续，D-046/b8caeb2，见BE-03-PERSISTENCE）；BE-04为OWNER_ACCEPTED（D-047/58b556a，用户确认服务UP；公共事务/审计/快照证据见BE-04-TRANSACTIONS），BE-05为OWNER_ACCEPTED（D-049/d059d11，用户确认启用true及本机健康UP，见BE-05-IDEMPOTENCY），BE-06为OWNER_ACCEPTED（D-056实施、D-057本人确认，已由D-060交付main），BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），其余27项PLANNED。BE-01～05已由D-053整体确认，合并main/b68aa9a并推送回查通过。BE-01～05为用户先实现的基座；BE-06～35已按D-055登记A～D唯一成员代号，assignmentStatus为ASSIGNED，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），其余27项PLANNED；用户已认领A，GitHub账号与其他成员身份/环境待补，详见TEAM-ASSIGNMENT.md。D-051统一所有任务reviewPolicy=OWNER_ACCEPTANCE，不设置独立评审人，reviewerSlot/suggestedReviewerSlot保留null仅作格式兼容、不是待填写；单列评审工时为0。suggestedOwnerSlot保留为历史建议组，以ownerSlot为准。GitHub/main已就绪，BE-32的真实PR#1已合并；其余任务未登记远程PR，BE编号不是平台Issue号。','','业务任务启动须同时满足FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED和原dependencies；这两个阶段门槛不是额外业务需求。基座验收见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。开发估算含设计细化/TDD/自测/文档及负责人核对确认；不再单列他人评审，外部等待不计。','','通用DoD：对应设计已读且引用准确→业务/可执行基础能力RED失败原因留证→最小实现→GREEN及重构→对应安全/事务验收→任务负责人核对行为/权限/事务/恢复及测试证据后明确确认完成→集成与文档更新。环境/协作/发布核验使用真实记录。未运行验证不得勾选通过；团队依赖以合并且所属部分通过为准；D-058明确允许A在含已确认BE-06祖先的BE-07分支继续开发，此前不据此宣称主线已交付，现D-060已记录实际合并推送，完整跨域证据由BE-33/34/35汇总。秘密不进Issue正文。']
     for task in TASKS:
         est=task['estimateHours']
         cards += [f"\n## {task['id']} {task['title']}", '',
@@ -445,7 +457,7 @@ def generate_assignment():
     lines += ['',
         '按D-055登记分工；D-056用户明确本人负责A，其他成员姓名及GitHub账号映射待补。每项BE只有一名负责人，由该负责人自行确认完成，不另设评审人。', '',
         '**当前：用户认领A，BE-06已在开发分支实现并获本人确认（D-057），已交付main；D的BE-10可先开工。** BE-07按D-058在包含确认祖先的任务分支实现，并已获D-059本人确认；其他成员依赖仍等已由D-060交付main。B可推进BE-11，D可推进BE-10或BE-28，C可先细化接口及测试场景；各任务就绪即可推进，不必等所有人完成同一批。', '',
-        'BE-01～05公共基座已由用户完成并确认；本次分工覆盖BE-06～35共30项，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，待主线交付），其余27项PLANNED。下文“前置”列列出完整直接依赖；开发先后也可对照[README流程图](../../README.md#业务开发顺序)。', '',
+        'BE-01～05公共基座已由用户完成并确认；本次分工覆盖BE-06～35共30项，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），其余27项PLANNED。下文“前置”列列出完整直接依赖；开发先后也可对照[README流程图](../../README.md#业务开发顺序)。', '',
         '每个业务功能由负责人贯穿实现：需要HTTP时负责Controller、请求/响应DTO、Service、所属领域的持久化或查询投影，以及测试和文档；内部能力无需新建Controller，也不要求每个BE重复创建Repository。详细UC/API/表/事务/验收映射见[任务卡](TASKS.md)和[追踪表](TRACEABILITY.md)。', '']
     notes = {
         'A': [
@@ -521,7 +533,7 @@ def generate_schedule():
         totalHours=totals,phaseTotals=phases,foundationOwnerDevelopmentHours=phases['FOUNDATION']['developmentHours'],
         businessPersonLoad=loads,assumption='沿用逐任务技术工作量，D-055按A～D成员代号汇总负载，实名/账号及实际可投入时间待补；全部任务按D-051由负责人确认，不另设评审。原估算含TDD/自检/确认，不假设agent一定更快。容量下界非工期承诺，不含外部等待/依赖停顿。',capacityLowerBounds=bounds)
     dump('estimates.json',result)
-    lines=['# 先基座、后分工：实施估算与依赖计划','','修订1.4/D-055：BE-01～05公共基座已确认并纳入主线，BE-06～35已登记A～D成员代号，详见[四人分工](TEAM-ASSIGNMENT.md)。实名/GitHub账号及成员接入证据待补；BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，待主线交付），其余27项PLANNED，全部任务由负责人自行确认完成。业务原有技术依赖及启动门槛保留。','','团队原投入40～72人时（4人、5～6天、每天2～3小时）仍作为比较口径；不是可保证的工期。逐任务技术范围及低/中/高工作量沿用1.0，D-051将全部任务单列独立评审工时归零，负责人自检/确认含原开发估算，重算总量和阶段容量；不是实测重新估价。下列个人负载只是按当前任务估算汇总，仍须按实测和成员可投入时间调整排期。','','| 情境 | 全量开发与负责人自检确认人时 | 相对72人时上限 |','| --- | --- | --- |']
+    lines=['# 先基座、后分工：实施估算与依赖计划','','修订1.4/D-055：BE-01～05公共基座已确认并纳入主线，BE-06～35已登记A～D成员代号，详见[四人分工](TEAM-ASSIGNMENT.md)。实名/GitHub账号及成员接入证据待补；BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），其余27项PLANNED，全部任务由负责人自行确认完成。业务原有技术依赖及启动门槛保留。','','团队原投入40～72人时（4人、5～6天、每天2～3小时）仍作为比较口径；不是可保证的工期。逐任务技术范围及低/中/高工作量沿用1.0，D-051将全部任务单列独立评审工时归零，负责人自检/确认含原开发估算，重算总量和阶段容量；不是实测重新估价。下列个人负载只是按当前任务估算汇总，仍须按实测和成员可投入时间调整排期。','','| 情境 | 全量开发与负责人自检确认人时 | 相对72人时上限 |','| --- | --- | --- |']
     for s,label in [('low','低'),('likely','中'),('high','高')]:lines.append(f"| {label} | {totals[s]:g} | 超出{max(0,totals[s]-72):g} |")
     lines+=['','| 阶段 | 开发人时（低/中/高） | 另计他人评审人时（均0） | 合计人时 |','| --- | --- | --- | --- |']
     for phase,label in [('FOUNDATION','用户实现基座（5项）'),('BUSINESS','已分派业务/交付（30项，未实现）')]:
@@ -534,7 +546,7 @@ def generate_schedule():
         lines.append(f'| {owner} | {load["taskCount"]} | {hours} |')
     lines+=['','用户基座开发及本人确认估算为9/18/28小时；全部任务由负责人确认，不另设评审人，单列评审为0。业务负载按D-055的A～D成员代号汇总，见businessPersonLoad；具体人员身份及实际可用时间尚未核验，不能把估算当完成时间。','','**完整范围低估算70.5人时接近72上限，中估130.5人时仍超出预算，不能据此保证5～6天全量交付。** 增加投入或顺延需团队协调，业务范围变化另确认。','','## 两阶段容量下界','','基座阶段由用户开发并确认，其他人可准备场景；业务阶段暂以四人可投入计算容量，实际投入仍待成员确认。粗下界=向上取整〔基座开发人时/每人每日小时＋业务阶段开发及负责人自检确认总人时/(4×每人每日小时)〕。该式不含依赖和环境延迟；不是可执行日历。','','| 情境 | 每人每天小时 | 仅看总量的容量下界 | 加入基座单人先行的下界 |','| --- | --- | --- | --- |']
     for s,label in [('low','低'),('likely','中'),('high','高')]:lines.append(f"| {label} | {bounds[s]['hoursPerPersonPerDay']} | {bounds[s]['pooledCapacityDays']}工作日 | {bounds[s]['stagedCapacityDays']}工作日 |")
-    lines+=['','公式与阶段汇总见[estimates.json](estimates.json)。基座已通过并交付main，30项已按成员代号分派；技术依赖未就绪的任务不能记为已开工。用户已认领A，BE-06在开发分支实现且已本人确认（D-057），已交付main，D/BE-10可先行；BE-07已按D-059确认已交付main；A已确认BE-32（D-062，待主线交付）、BE-08仍等D/BE-10，B/C按前置交付情况推进。','','## 实际推进顺序','','1. 用户按BE-01→02→03→04→05实施基座，逐项TDD并保留可评审的小PR；基座已交付，D-056开始实施BE-06，详见BE-06-IDENTITY.md。','2. 按[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)完成真实环境验证、说明、用户本人确认和主线交付，记录基座验收证据；不是以文件生成或Mock摘要通过门槛。','3. D-055已登记30项任务的A～D分工；团队补成员实名/GitHub账号、访问权限、本机验证及依赖提交。需要时再创建真实Issue/PR，不虚构编号。','4. 业务阶段按既有依赖并行，BE-06/10等基础业务先行，之后目录角色、申请OA、来源导入按条件接入；完整闭环是集成里程碑，不要求所有人等整条闭环才开始自己的就绪任务。','5. BE-33汇总业务实证，BE-34目标服务器验收，BE-35发布交接；未完成项保持开放。','','## 外部条件','','用户确认已有云服务器可后续部署Docker数据库，目前用本机MySQL。JDK21可在IDE引用，命令行java/javac/JAVA_HOME尚不可用；不要求永久环境变量，实施时明确IDE/显式JDK方式。用户本机MySQL8.4.8、应用连接、开发/测试库迁移及账号权限已有基座证据；其他成员本机配置与云端部署仍待核验。JDK21/Wrapper3.9.11及BE-02已实测，见ENVIRONMENT.md和BE-02-IMPLEMENTATION.md。演示OA按既定方案，真实OA不是本期前置。外部等待未计入估算。']
+    lines+=['','公式与阶段汇总见[estimates.json](estimates.json)。基座已通过并交付main，30项已按成员代号分派；技术依赖未就绪的任务不能记为已开工。用户已认领A，BE-06在开发分支实现且已本人确认（D-057），已交付main，D/BE-10可先行；BE-07已按D-059确认已交付main；A已确认BE-32且由D-063/PR#1交付main、BE-08仍等D/BE-10，B/C按前置交付情况推进。','','## 实际推进顺序','','1. 用户按BE-01→02→03→04→05实施基座，逐项TDD并保留可评审的小PR；基座已交付，D-056开始实施BE-06，详见BE-06-IDENTITY.md。','2. 按[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)完成真实环境验证、说明、用户本人确认和主线交付，记录基座验收证据；不是以文件生成或Mock摘要通过门槛。','3. D-055已登记30项任务的A～D分工；团队补成员实名/GitHub账号、访问权限、本机验证及依赖提交。需要时再创建真实Issue/PR，不虚构编号。','4. 业务阶段按既有依赖并行，BE-06/10等基础业务先行，之后目录角色、申请OA、来源导入按条件接入；完整闭环是集成里程碑，不要求所有人等整条闭环才开始自己的就绪任务。','5. BE-33汇总业务实证，BE-34目标服务器验收，BE-35发布交接；未完成项保持开放。','','## 外部条件','','用户确认已有云服务器可后续部署Docker数据库，目前用本机MySQL。JDK21可在IDE引用，命令行java/javac/JAVA_HOME尚不可用；不要求永久环境变量，实施时明确IDE/显式JDK方式。用户本机MySQL8.4.8、应用连接、开发/测试库迁移及账号权限已有基座证据；其他成员本机配置与云端部署仍待核验。JDK21/Wrapper3.9.11及BE-02已实测，见ENVIRONMENT.md和BE-02-IMPLEMENTATION.md。演示OA按既定方案，真实OA不是本期前置。外部等待未计入估算。']
     write('IMPLEMENTATION-PLAN.md','\n'.join(lines))
 
 

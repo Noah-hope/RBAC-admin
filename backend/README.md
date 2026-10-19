@@ -1,5 +1,7 @@
 # 后端工程
 
+BE-32已获A确认并通过[PR #1](https://github.com/Noah-hope/RBAC-admin/pull/1)交付main/609ee4b（D-063），组员可更新main后按[部署与本机初始化指南](../deploy/README.md)使用；真实服务器验收仍为BE-34。
+
 BE-32：管理员初始化、jar 发布和 Linux 启动示例见 [部署与初始化操作](../deploy/README.md)，设计与验证见 [BE-32](../docs/05-detailed-design/BE-32-DEPLOYMENT.md)。初始化使用独立 `BootstrapAdminApplication`，不需要另外生成 RSA/HMAC 密钥，也不会在普通启动时自动创建账号。服务器与本机使用同一代码/jar，差别只在外置配置和启动方式；当前尚未部署云服务器。
 
 BE-07已实现账号列表/详情/创建/启停/密码重置，并按D-060交付main，复用BE-06身份和BE-05幂等，不新增迁移或密钥。读/写权限、原版本重放及本机验证步骤见[账号管理](../docs/05-detailed-design/BE-07-ACCOUNTS.md)；BE-07已按D-059本人确认，BE-06已按D-057确认，两项均已合入推送main/ff19d17并回查一致，初始总管理员仍归BE-32。下方BE-06“待确认”为此前实施记录。

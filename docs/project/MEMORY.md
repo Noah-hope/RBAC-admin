@@ -1,5 +1,7 @@
 # 项目共享记忆
 
+D-063实际交付（2026-10-19）：按用户明确授权，已推送codex/be-32-bootstrap并创建[PR #1](https://github.com/Noah-hope/RBAC-admin/pull/1)，正文包含变更、80离线＋88真实MySQL、本机人工验证及组员接入。远程main基线9857e5e，PR来源d5941c902712c92d4d8d8d7505bd6df4f5ceb139；GitHub确认mergeable=true/clean，check runs与status条目均0，不把无CI记录称为CI通过。普通merge成功生成609ee4bb017e46b42e43bcd8c2616d31ab410f5a；PR回查state=closed/merged=true，远程main回查同SHA，两个父提交及合并树与PR来源一致。本地主线已快进同步，BE-32登记OWNER_ACCEPTED/已交付main及remotePrNumber=1；保留任务分支和无关.codeartsdoer。后端自cc76ac9未改，复核既有报告/摘要，本轮不重跑Java或SQL，不部署服务器。A剩BE-08/09/27/34四项PLANNED，BE-08仍等待D/BE-10；下方待主线描述均为此前历史。
+
 D-063 交付授权（2026-10-19）：用户明确要求代提PR并合并，已核对origin/main仍为9857e5e、任务分支含4个本地提交，后端自已验证cc76ac9未改；已有80离线＋88真实MySQL及同包摘要证据复核。本轮获授权推送codex/be-32-bootstrap、创建main目标PR并合并、同步交付追踪和本地主线，不删除任务分支、不提交无关.codeartsdoer。仓库权限和无重复开放PR已只读核对；创建与合并进行中，链接/SHA待实际成功后补，未运行Java/SQL或部署服务器。
 
 D-062（2026-10-19）：用户 A 明确“现在确认BE-32验证通过”，按D-051登记OWNER_ACCEPTED，接受实现cc76ac9c4bf4d073f7306b2f5e95c1d5cf52a614、人工证据27b99700d7d6f747f9e1f1377ca7aed20c5e92c9；沿用80离线＋88真实MySQL及重复构建证据，源码自cc76ac9未变。本轮只改状态/文档并静态核对，不重跑Java或数据库，不记录凭据。A还剩BE-08/09/27/34四项PLANNED，BE-32待主线交付；整体AT和服务器验收边界不变。用户询问直接合并推送或先提PR，建议先推任务分支、提PR说明变更和证据，再合入main；[PR说明草案](../05-detailed-design/BE-32-PR.md)已准备，尚未创建远程PR/合并/推送，不把建议当作授权。下方待本人确认均为此前历史。

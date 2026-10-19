@@ -1,5 +1,7 @@
 # BE-32：独立管理员初始化、部署配置与本机验证指南
 
+本文已用于[PR #1](https://github.com/Noah-hope/RBAC-admin/pull/1)正文，2026-10-19已合并至main/609ee4b。以下为该PR的交付说明；不是待发布草案。
+
 后端已有登录能力，但尚无受控的初始总管理员创建入口。本次提供同一 jar 中显式执行的 BootstrapAdminApplication，创建后要求首次改密；普通应用启动不会创建或重置管理员。
 
 ## 变更

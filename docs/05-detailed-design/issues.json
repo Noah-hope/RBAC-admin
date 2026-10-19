@@ -2709,14 +2709,14 @@
       "design-ready"
     ],
     "remoteIssueNumber": null,
-    "remotePrNumber": null,
+    "remotePrNumber": 1,
     "implementationProgress": {
       "evidence": "BE-32-DEPLOYMENT.md",
       "decision": "D-061",
       "scope": "PACKAGED_BOOTSTRAP_SERVER_CONFIGURATION_AND_DEPLOYMENT_TEMPLATES",
       "implemented": true,
       "ownerAccepted": true,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "targetServerDeployed": false,
@@ -2734,8 +2734,11 @@
       "implementationCommit": "cc76ac9c4bf4d073f7306b2f5e95c1d5cf52a614",
       "verificationEvidenceCommit": "27b99700d7d6f747f9e1f1377ca7aed20c5e92c9",
       "interpretation": "OWNER_ACCEPTANCE_AFTER_LOCAL_CHAIN_AND_PRIOR_AUTOMATED_EVIDENCE",
-      "mergedToMain": false,
-      "evidence": "BE-32-DEPLOYMENT.md"
+      "mergedToMain": true,
+      "evidence": "BE-32-DEPLOYMENT.md",
+      "mainMergeCommit": "609ee4bb017e46b42e43bcd8c2616d31ab410f5a",
+      "mainPrNumber": 1,
+      "mainPrUrl": "https://github.com/Noah-hope/RBAC-admin/pull/1"
     },
     "acceptanceScope": "验证产物/配置/初始化及隔离环境演练；AT-36在本任务覆盖可交付部署能力，实际目标服务器、重启与恢复证据由BE-34完成。",
     "useCases": [],

@@ -159,7 +159,27 @@
       "pushVerified": true,
       "verifiedRemoteCommit": "ff19d1792a6934dbd6bca6c174dcba29f7acdad8",
       "evidence": "BE-07-ACCOUNTS.md"
-    }
+    },
+    "additionalMainDeliveries": [
+      {
+        "taskIds": [
+          "BE-32"
+        ],
+        "decision": "D-063",
+        "date": "2026-10-19",
+        "branch": "main",
+        "sourceCommit": "d5941c902712c92d4d8d8d7505bd6df4f5ceb139",
+        "mergeCommit": "609ee4bb017e46b42e43bcd8c2616d31ab410f5a",
+        "remote": "origin",
+        "remoteRef": "refs/heads/main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "609ee4bb017e46b42e43bcd8c2616d31ab410f5a",
+        "prNumber": 1,
+        "prUrl": "https://github.com/Noah-hope/RBAC-admin/pull/1",
+        "prState": "MERGED",
+        "evidence": "BE-32-DEPLOYMENT.md"
+      }
+    ]
   },
   "gateStatus": "FOUNDATION_ACCEPTED",
   "gateEvidence": [

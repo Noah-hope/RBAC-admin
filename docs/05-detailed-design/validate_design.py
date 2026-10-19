@@ -155,6 +155,23 @@ def checks(report):
             'BE-06/07交付不是当前提交祖先')
     require(subprocess.run(['git','diff','--quiet',business_delivery['sourceCommit'],business_delivery['mergeCommit']],cwd=REPO).returncode==0,
             'BE-06/07合并树与已确认分支不一致')
+    deliveries=phase_plan['business'].get('additionalMainDeliveries',[])
+    require(len(deliveries)==1,'BE-32主线交付记录缺失或重复')
+    bootstrap_delivery=deliveries[0]
+    require(bootstrap_delivery.get('taskIds')==['BE-32'] and bootstrap_delivery.get('decision')=='D-063'
+            and bootstrap_delivery.get('sourceCommit')=='d5941c902712c92d4d8d8d7505bd6df4f5ceb139'
+            and bootstrap_delivery.get('mergeCommit')=='609ee4bb017e46b42e43bcd8c2616d31ab410f5a'
+            and bootstrap_delivery.get('prNumber')==1 and bootstrap_delivery.get('prState')=='MERGED'
+            and bootstrap_delivery.get('prUrl')=='https://github.com/Noah-hope/RBAC-admin/pull/1'
+            and bootstrap_delivery.get('remote')=='origin' and bootstrap_delivery.get('branch')=='main'
+            and bootstrap_delivery.get('pushVerified') is True
+            and bootstrap_delivery.get('verifiedRemoteCommit')==bootstrap_delivery['mergeCommit'],'BE-32 PR主线交付证据不符')
+    parents=subprocess.check_output(['git','show','-s','--format=%P',bootstrap_delivery['mergeCommit']],cwd=REPO,text=True).split()
+    require(len(parents)==2 and parents[1]==bootstrap_delivery['sourceCommit'],'BE-32合并来源不符')
+    require(subprocess.run(['git','merge-base','--is-ancestor',bootstrap_delivery['mergeCommit'],'HEAD'],cwd=REPO).returncode==0,
+            'BE-32合并不是当前提交祖先')
+    require(subprocess.run(['git','diff','--quiet',bootstrap_delivery['sourceCommit'],bootstrap_delivery['mergeCommit']],cwd=REPO).returncode==0,
+            'BE-32合并树与已核对分支不一致')
     for module in modules:
         require(module['suggestedOwnerSlot'] in 'ABCD','模块建议组无效')
         shared={'M10':['A','D'],'M11':list('ABCD'),'M12':list('ABCD')}
@@ -280,7 +297,7 @@ def checks(report):
             progress=task.get('implementationProgress',{})
             require(progress.get('decision')=='D-061' and progress.get('evidence')=='BE-32-DEPLOYMENT.md'
                     and progress.get('implemented') is True and progress.get('ownerAccepted') is True
-                    and progress.get('mergedToMain') is False and progress.get('databaseExecuted') is True
+                    and progress.get('mergedToMain') is True and progress.get('databaseExecuted') is True
                     and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
                     and progress.get('targetServerDeployed') is False,
                     'BE-32实施/本人确认/真实服务器边界不符')
@@ -291,12 +308,15 @@ def checks(report):
                     and acceptance.get('message')=='现在确认BE-32验证通过'
                     and acceptance.get('implementationCommit')=='cc76ac9c4bf4d073f7306b2f5e95c1d5cf52a614'
                     and acceptance.get('verificationEvidenceCommit')=='27b99700d7d6f747f9e1f1377ca7aed20c5e92c9'
-                    and acceptance.get('mergedToMain') is False,'BE-32本人确认或待主线状态不符')
+                    and acceptance.get('mergedToMain') is True
+                    and acceptance.get('mainMergeCommit')==bootstrap_delivery['mergeCommit']
+                    and acceptance.get('mainPrNumber')==1 and acceptance.get('mainPrUrl')==bootstrap_delivery['prUrl'],
+                    'BE-32本人确认或主线交付状态不符')
             require(subprocess.check_output(['git','show',acceptance['implementationCommit']+':backend/src/main/java/com/adgn/backend/bootstrap/BootstrapAdminApplication.java'],cwd=REPO),
                     'BE-32确认版本缺实际初始化实现')
         if task['id'] in foundation_ids:
             require(task['ownerAcceptance'].get('mainMergeCommit')==phase_plan['foundation']['mainDelivery']['mergeCommit'],'基座任务缺主线交付提交')
-        require(task['remoteIssueNumber'] is None and task['remotePrNumber'] is None,'伪造远程事项')
+        require(task['remoteIssueNumber'] is None and task['remotePrNumber']==(1 if task['id']=='BE-32' else None),'远程事项与实际证据不符')
         require(task['suggestedOwnerSlot'] in 'ABCD','建议组无效')
         require(task['reviewerSlot'] is None and task['suggestedReviewerSlot'] is None
                 and task['reviewPolicy']=='OWNER_ACCEPTANCE' and task['reviewRequired'] is False
@@ -506,8 +526,9 @@ def checks(report):
         planRevision='1.4',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=0,
         businessTasksAssigned=len(assignments),assignmentDecision='D-055',memberIdentitiesPending=4,
         confirmedUserAlias='A',implementationDecision='D-061',implementedBusinessTasksPendingOwner=[],
-        ownerAcceptedBusinessTasks=['BE-06','BE-07','BE-32'],businessTasksPendingMainDelivery=['BE-32'],businessAcceptanceDecision='D-062',
-        businessMainDeliveryDecision='D-060',businessMainDeliveryMerge=business_delivery['mergeCommit'],
+        ownerAcceptedBusinessTasks=['BE-06','BE-07','BE-32'],businessTasksPendingMainDelivery=[],businessAcceptanceDecision='D-062',
+        businessMainDeliveryDecision='D-063',businessMainDeliveryMerge=bootstrap_delivery['mergeCommit'],
+        businessMainDeliveryPrUrl=bootstrap_delivery['prUrl'],
         foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:OWNER_ACCEPTED',
         foundationGateStatus=phase_plan['gateStatus'],businessOperationsAwaitingAssignment=0,businessOperationsAssigned=len(mapping),
         artifactSha256={n:sha(ROOT/n) for n in GENERATED}))
