@@ -300,4 +300,19 @@ class BModuleMySqlCheck {
             assertThat(body(response).path("code").stringValue()).isEqualTo("FORBIDDEN");
         }
     }
+    @Test void duplicateManagementHeadersAreRejectedByBothSystemAndRoleEndpoints()throws Exception{
+        String sid=createSystem("duplicate-context"+id()).path("id").stringValue();
+        var selected=scoped(sid);
+        String role=role(sid,selected.company(),selected.department(),false);
+        for(String path:List.of("/api/v1/admin/systems","/api/v1/admin/roles/"+role)){
+            for(String duplicate:selected.headers().keySet()){
+                var builder=HttpRequest.newBuilder(URI.create(base+path)).timeout(Duration.ofSeconds(25))
+                        .header("Authorization","Bearer "+selected.token());
+                selected.headers().forEach(builder::header);
+                builder.header(duplicate,selected.headers().get(duplicate));
+                var response=http.send(builder.GET().build(),HttpResponse.BodyHandlers.ofString());
+                assertThat(response.statusCode()).as(path+" duplicate "+duplicate+": "+response.body()).isEqualTo(422);
+            }
+        }
+    }
 }
