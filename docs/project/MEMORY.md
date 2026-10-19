@@ -1,5 +1,7 @@
 # 项目共享记忆
 
+D-069实际交付（2026-10-19）：按A明确指令推送BE-08任务分支并创建[PR #2](https://github.com/Noah-hope/RBAC-admin/pull/2)，正文包含变更、85离线＋136真实MySQL证据和组员接入。已核对head为2199f0ef7b36a048845842c9803b08acf0f6612a、base为db1be16、mergeable=true/clean；检查/status条目0，不称CI通过。普通merge生成ca8518918bd668f48769134763a10a163e10612b，回查PR为closed/merged=true，远程main同SHA，父提交及合并树与来源一致。本地main已快进同步，BE-08维持D-068的OWNER_ACCEPTED并登记mergedToMain=true、PR#2；任务分支保留，未动无关.codeartsdoer。后端自1c0eb3c未改，本轮只核对旧证据及静态追踪，不重跑Java/SQL、不部署。B可pull后推进BE-17；A的BE-09仍须BE-17，其他未实现任务不自动开始。
+
 D-069交付授权（2026-10-19）：A明确要求提交PR并合并主线，已授权推送codex/be-08-management-scope、创建main目标PR、核对后合并并同步记录。本轮fetch核对远程main仍db1be16；后端自已验证1c0eb3c未改，复核85离线＋136真实MySQL成功日志，沿用原证据不重跑Java/SQL。实际PR链接与合并SHA待成功后补，不能将授权记为交付成功；保留任务分支及无关.codeartsdoer，不部署或开新业务。
 
 D-068（2026-10-19）：A明确“验证通过，接下来做什么”，接受BE-08实现1c0eb3c055fe267fd0ff69c37e5120de3951eca1，登记OWNER_ACCEPTED、mergedToMain=false。本人回报按原话保留，不虚构新的HTTP截图或逐项人工测试结果；既有85离线＋136真实MySQL证据沿用，源码未变。本轮同步确认/生成器/静态追踪，准备[PR正文](../05-detailed-design/BE-08-PR.md)，不重跑Java/SQL。fetch核对远程main仍db1be16，BE-17仍PLANNED；下一步先交付BE-08共同主线，供B实施BE-17及C等任务复用；A的BE-09仍等B/BE-17。未授权远程写入，不推送、创建PR、合并或自动实施下一任务。A的7项已确认4项，剩BE-09/27/34三项PLANNED；不代D确认BE-10。

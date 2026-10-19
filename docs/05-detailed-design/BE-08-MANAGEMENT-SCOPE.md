@@ -1,5 +1,7 @@
 # BE-08：当前单项任命、范围读模型与覆盖策略
 
+D-069实际交付：本任务已通过[PR #2](https://github.com/Noah-hope/RBAC-admin/pull/2)普通merge进入main。来源2199f0ef7b36a048845842c9803b08acf0f6612a，合并ca8518918bd668f48769134763a10a163e10612b；PR回查closed/merged=true、远程main同SHA，合并树等于来源，本地main已同步。D-068验收保持，mergedToMain=true；保留任务分支。本轮只同步交付记录/静态核对，后端未改，沿用85离线＋136引擎，不重复Java/SQL，不部署。检查条目0不称为CI通过。下方待主线是此前历史。
+
 ## D-068 负责人确认
 
 2026-10-19，A明确“验证通过，接下来做什么”，接受实现提交 `1c0eb3c055fe267fd0ff69c37e5120de3951eca1`。任务为 OWNER_ACCEPTED，待共同 main 交付。沿用本文件85离线＋136真实MySQL及原自检证据；本轮未新增Java/数据库运行，不推断本人逐项重跑全部场景。下方待A确认是实施阶段历史。

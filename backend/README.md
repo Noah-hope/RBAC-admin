@@ -1,5 +1,7 @@
 # 后端工程
 
+BE-08已通过[PR #2](https://github.com/Noah-hope/RBAC-admin/pull/2)交付main/ca85189（D-069），保持OWNER_ACCEPTED；组员更新main即可复用，无新迁移或密钥。下方待交付为历史。
+
 BE-08已按D-068获A确认，待主线交付；下方待确认是此前历史。[PR正文](../docs/05-detailed-design/BE-08-PR.md)已准备，尚未创建或合并。
 
 BE-08 已实现四个任命/范围 GET 及统一当前上下文解析/覆盖策略，使用 `scope/repository` 的 Spring Data JPA 只读映射和仓储；`people` 查询复用同一解析器。无需新增数据库迁移或密钥，待 A 确认及主线交付。接口、真实验证及本机步骤见 [BE-08](../docs/05-detailed-design/BE-08-MANAGEMENT-SCOPE.md)。

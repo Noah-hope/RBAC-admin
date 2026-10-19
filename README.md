@@ -1,5 +1,7 @@
 # rbac-admin · 集中权限管理系统
 
+D-069：BE-08已按A确认并通过[PR #2](https://github.com/Noah-hope/RBAC-admin/pull/2)交付main/ca85189。本地及远程主线已核对，组员可pull并按[BE-08交接](docs/05-detailed-design/BE-08-MANAGEMENT-SCOPE.md)复用；B可推进BE-17，A/BE-09仍等BE-17。下方待交付为历史。
+
 D-068：A已确认BE-08验证通过，当前待共同main交付。已准备[PR正文](docs/05-detailed-design/BE-08-PR.md)，尚未推送、创建或合并；A后续BE-09仍等B/BE-17。下方待A确认是此前历史。
 
 D-067：A 已在 `codex/be-08-management-scope` 实现任命/范围四查询和单项上下文/覆盖策略，使用 Spring Data JPA 只读仓储，接入 D 已交付的 BE-10。当前待 A 确认、未交付 main；验证结果、Apifox 步骤及 B/C/D 内部接口约定见 [BE-08](docs/05-detailed-design/BE-08-MANAGEMENT-SCOPE.md)。下方较早的任务数量与状态为历史，以共享记忆和任务清单为准。

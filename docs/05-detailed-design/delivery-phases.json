@@ -195,6 +195,25 @@
         "ownerAccepted": false,
         "deliveryMode": "LOCAL_MERGE_AND_PUSH",
         "evidence": "BE-10-PEOPLE.md"
+      },
+      {
+        "taskIds": [
+          "BE-08"
+        ],
+        "decision": "D-069",
+        "date": "2026-10-19",
+        "branch": "main",
+        "sourceCommit": "2199f0ef7b36a048845842c9803b08acf0f6612a",
+        "mergeCommit": "ca8518918bd668f48769134763a10a163e10612b",
+        "remote": "origin",
+        "remoteRef": "refs/heads/main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "ca8518918bd668f48769134763a10a163e10612b",
+        "ownerAccepted": true,
+        "prNumber": 2,
+        "prUrl": "https://github.com/Noah-hope/RBAC-admin/pull/2",
+        "prState": "MERGED",
+        "evidence": "BE-08-MANAGEMENT-SCOPE.md"
       }
     ]
   },
