@@ -1,5 +1,7 @@
 # 项目共享记忆
 
+D-061（2026-10-19）：用户 A 要求开始 BE-32，前置已交付 main；在 codex/be-32-bootstrap 先设计/TDD 实现独立 BootstrapAdminApplication、server 配置保护和 deploy 模板/操作指南。普通启动不初始化；DML 账号、目标库显式确认、拒绝覆盖已有总管理员、首次改密、guard/账号/审计原子提交。两组实际 RED 留证，新增 5 离线＋8 引擎，完整 clean verify/mysql-check 为 80＋88，全无失败/错误/跳过；第二次独立 clean verify 的 jar SHA256 一致。专属随机端口 MySQL8.4.8 的自定义 schema/账号清理为0/0、专属进程关闭、临时密钥目录归零，用户已有库未操作。服务器和本机使用相同代码/jar，差别只在外置配置/启动方式，无需用户当前选择 OS；未连接或部署云服务器，systemd/nginx/HTTPS/备份恢复由 BE-34 核验。BE-32 仍 IN_PROGRESS 待 A 确认，未合并/推送；BE-06/07 既有确认及 main 交付保持，其余27项 PLANNED，BE-08 仍等待 D/BE-10。同步任务生成器/校验器及接入说明，AT-36 仅局部验证；[实现证据](../05-detailed-design/BE-32-DEPLOYMENT.md)、[IDEA 初始化与部署指南](../../deploy/README.md)。保留无关 .codeartsdoer，本轮不创建远程 Issue/PR。
+
 D-060（2026-10-19）：用户明确“合并main并推送”。fetch核对本地/远程main均e58b6ba，以9b6d89e为源无冲突no-ff合入main，合并提交ff19d1792a6934dbd6bca6c174dcba29f7acdad8；合并树与源一致。push成功，远程refs/heads/main回查为同一SHA。BE-06/07均OWNER_ACCEPTED且已交付共同main，9个正式操作主责记录同步，其他28项PLANNED。复核现有75离线报告及完整日志的80引擎通过证据，后端自584eb4e未改，本轮不重跑Java/SQL、不读密钥或动已有库。保留任务分支及无关.codeartsdoer；下方D-059及更早待主线为历史。组员可pull共同main，B/BE-11、D/BE-10或28及A/BE-32可按各自依赖安排；A/BE-08仍等D/BE-10，不自动开新任务。
 
 D-059（2026-10-19）：用户A明确“BE-07验证通过”，随后确认健康UP和未登录账号入口401两项通过。结合584eb4e的75离线＋80真实MySQL证据，BE-07登记OWNER_ACCEPTED；BE-06/07均待主线交付，其他28项PLANNED。不推断本人已手工登录/创建/重置或重跑全部测试，本轮仅文档/静态同步，不运行Java或数据库、不合并推送。下一步建议先交付main供组员复用；A的BE-08仍依赖D/BE-10（当前PLANNED），BE-32部署产物/配置与管理员初始化技术前置已具备，可作为后续实施建议，尚未开始。下方D-058待确认为历史。

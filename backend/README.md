@@ -1,5 +1,7 @@
 # 后端工程
 
+BE-32：管理员初始化、jar 发布和 Linux 启动示例见 [部署与初始化操作](../deploy/README.md)，设计与验证见 [BE-32](../docs/05-detailed-design/BE-32-DEPLOYMENT.md)。初始化使用独立 `BootstrapAdminApplication`，不需要另外生成 RSA/HMAC 密钥，也不会在普通启动时自动创建账号。服务器与本机使用同一代码/jar，差别只在外置配置和启动方式；当前尚未部署云服务器。
+
 BE-07已实现账号列表/详情/创建/启停/密码重置，并按D-060交付main，复用BE-06身份和BE-05幂等，不新增迁移或密钥。读/写权限、原版本重放及本机验证步骤见[账号管理](../docs/05-detailed-design/BE-07-ACCOUNTS.md)；BE-07已按D-059本人确认，BE-06已按D-057确认，两项均已合入推送main/ff19d17并回查一致，初始总管理员仍归BE-32。下方BE-06“待确认”为此前实施记录。
 
 BE-06业务接入（D-056）：登录、当前会话、退出和本人改密在开发分支实现，待本人确认；运行前按[本机启用](../docs/05-detailed-design/BE-06-LOCAL-SETUP.md)配置独立RSA密钥及RBAC_IDENTITY_ENABLED。关闭时admin/integration/oa路径503，不提供绕过认证入口。Controller/DTO及Service/Repository结构、TDD和真实验证见[身份记录](../docs/05-detailed-design/BE-06-IDENTITY.md)。原64离线＋42引擎为BE-05历史结果，当前数量以最新报告为准。

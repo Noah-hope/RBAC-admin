@@ -75,7 +75,8 @@ def checks(report):
     require(len(cids)==len(cases),'重复验收编号')
     partial_evidence={'AT-01':'BE-02-IMPLEMENTATION.md','AT-02':'BE-03-PERSISTENCE.md',
                       'AT-05':'BE-06-IDENTITY.md','AT-06':'BE-06-IDENTITY.md','AT-07':'BE-06-IDENTITY.md',
-                      'AT-04':'BE-05-IDEMPOTENCY.md','AT-03':'BE-04-TRANSACTIONS.md','AT-33':'BE-04-TRANSACTIONS.md','AT-37':'BE-02-IMPLEMENTATION.md'}
+                      'AT-04':'BE-05-IDEMPOTENCY.md','AT-03':'BE-04-TRANSACTIONS.md','AT-33':'BE-04-TRANSACTIONS.md','AT-37':'BE-02-IMPLEMENTATION.md',
+                      'AT-36':'BE-32-DEPLOYMENT.md'}
     require(all(c['status']==('PARTIALLY_VERIFIED' if c['id'] in partial_evidence else 'DESIGNED_NOT_RUN') for c in cases),'验收局部/完整状态不符')
     require(all(c.get('evidence')==partial_evidence[c['id']] for c in cases if c['status']=='PARTIALLY_VERIFIED'),'局部验收缺实施证据')
     deferred={c['id'] for c in cases if c['delivery']=='FRONTEND_DEFERRED'}
@@ -162,7 +163,7 @@ def checks(report):
         require(module['assignmentStatus']==('OWNER_CONFIRMED' if module['id']=='M00' else ('SHARED_BY_TASK' if module['id'] in shared else 'ASSIGNED')),'共享模块未按任务区分责任')
     referenced=set()
     for task in tasks:
-        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
+        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-32':'IN_PROGRESS'}.get(task['id'],'PLANNED')
         require(task['status']==expected_status,'任务准备/实现状态不符')
         if task['id']=='BE-06':
             progress=task['implementationProgress']
@@ -275,6 +276,14 @@ def checks(report):
                     and acceptance.get('mainMergeCommit')==business_delivery['mergeCommit'],'BE-07负责人确认依据不符')
             require(subprocess.check_output(['git','show','584eb4e:backend/src/main/java/com/adgn/backend/identity/service/AccountService.java'],cwd=REPO),
                     'BE-07确认版本缺少实际实现')
+        if task['id']=='BE-32':
+            progress=task.get('implementationProgress',{})
+            require(progress.get('decision')=='D-061' and progress.get('evidence')=='BE-32-DEPLOYMENT.md'
+                    and progress.get('implemented') is True and progress.get('ownerAccepted') is False
+                    and progress.get('mergedToMain') is False and progress.get('databaseExecuted') is True
+                    and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
+                    and progress.get('targetServerDeployed') is False and 'ownerAcceptance' not in task,
+                    'BE-32实施/本人确认/真实服务器边界不符')
         if task['id'] in foundation_ids:
             require(task['ownerAcceptance'].get('mainMergeCommit')==phase_plan['foundation']['mainDelivery']['mergeCommit'],'基座任务缺主线交付提交')
         require(task['remoteIssueNumber'] is None and task['remotePrNumber'] is None,'伪造远程事项')
@@ -472,7 +481,10 @@ def checks(report):
             require(sha(REPO/entry['source'])==entry['sourceSha256'],'迁移上游草案变化未核对')
     report['migrationPreparationFiles']=3
     report['migrationEngineExecutedByThisCheck']=False
-    for directory in ('deploy','tools','.github'):
+    for expected in ('README.md','server.env.example','migrate.env.example','bootstrap.env.example',
+                     'rbac-admin.service','rbac-migrate.service','rbac-bootstrap.service','nginx.conf.example'):
+        require((REPO/'deploy'/expected).is_file(),'BE-32缺部署说明或模板 '+expected)
+    for directory in ('tools','.github'):
         require(not (REPO/directory).exists(),'本设计阶段提前创建工程/远程配置目录 '+directory)
     report.update(dict(modules=len(modules),backendIssueDrafts=len(tasks),acceptanceItems=len(cases),
         backendAcceptanceItems=len(cases)-len(deferred),deferredFrontendItems=len(deferred),
@@ -483,8 +495,8 @@ def checks(report):
         decisionIds=len(decisions),upstreamSha256=source_hashes,
         planRevision='1.4',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=0,
         businessTasksAssigned=len(assignments),assignmentDecision='D-055',memberIdentitiesPending=4,
-        confirmedUserAlias='A',implementationDecision='D-058',implementedBusinessTasksPendingOwner=[],
-        ownerAcceptedBusinessTasks=['BE-06','BE-07'],businessTasksPendingMainDelivery=[],businessAcceptanceDecision='D-059',
+        confirmedUserAlias='A',implementationDecision='D-061',implementedBusinessTasksPendingOwner=['BE-32'],
+        ownerAcceptedBusinessTasks=['BE-06','BE-07'],businessTasksPendingMainDelivery=['BE-32'],businessAcceptanceDecision='D-059',
         businessMainDeliveryDecision='D-060',businessMainDeliveryMerge=business_delivery['mergeCommit'],
         foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:OWNER_ACCEPTED',
         foundationGateStatus=phase_plan['gateStatus'],businessOperationsAwaitingAssignment=0,businessOperationsAssigned=len(mapping),

@@ -92,9 +92,9 @@
   "diagramPages": 6,
   "diagramVertices": 59,
   "diagramEdges": 57,
-  "localLinks": 387,
+  "localLinks": 402,
   "pythonSyntaxFiles": 2,
-  "decisionIds": 60,
+  "decisionIds": 61,
   "upstreamSha256": {
     "docs/03-api/openapi.yaml": "9910ceafadea88d85793d00f7bb4e6e5673700a8565366a407185c4517e0cbdf",
     "docs/03-api/apifox-export.json": "67fd08c024a365cfef26485a5984be28c7941cfc9662e1ae8d3ddac558fd5501",
@@ -124,13 +124,17 @@
   "assignmentDecision": "D-055",
   "memberIdentitiesPending": 4,
   "confirmedUserAlias": "A",
-  "implementationDecision": "D-058",
-  "implementedBusinessTasksPendingOwner": [],
+  "implementationDecision": "D-061",
+  "implementedBusinessTasksPendingOwner": [
+    "BE-32"
+  ],
   "ownerAcceptedBusinessTasks": [
     "BE-06",
     "BE-07"
   ],
-  "businessTasksPendingMainDelivery": [],
+  "businessTasksPendingMainDelivery": [
+    "BE-32"
+  ],
   "businessAcceptanceDecision": "D-059",
   "businessMainDeliveryDecision": "D-060",
   "businessMainDeliveryMerge": "ff19d1792a6934dbd6bca6c174dcba29f7acdad8",
@@ -143,18 +147,18 @@
   "businessOperationsAssigned": 68,
   "artifactSha256": {
     "modules.json": "f20c0338e550a72468fb18981f04778461fa93e0421ab9f916d30c97d3fcecdf",
-    "issues.json": "0164b4b10b7e6a1e0af27b219b4fed816ff44135c6098142c00d2f6e7d5cc8f9",
-    "acceptance.json": "ad0893538f8896736101a02d1a1892ac57494e3dfff4cf6d06da6acb1bbea336",
+    "issues.json": "3df99a6c1461c1d5cca168f38b2a71215aab516299e0040f57d6f671b7f37105",
+    "acceptance.json": "199448c184afac1f5dd1ffefb6f98525e29a9310d92f5e36eef33d24e15f4328",
     "operation-map.json": "887b3e577fc550f67c14ca877aa46fa2585aaff5844f57edf1be1c3d73e6be55",
     "estimates.json": "55baeb97978ace7292118acc188ac32fa64f8d8037a4fa32bb1a9d1ffa14d443",
-    "delivery-phases.json": "2f5e7fd161d88bd5b59904c30a458a19084212cc713116b3cc982c42570f5a25",
-    "MODULES.md": "e3dcb685e0c1aba6f28757f0c96c20108cf2ab1b5398b7eadfaa555753483dd1",
+    "delivery-phases.json": "51711590128e21372d83204c9e76d6bde86d241d0f3a1f29b72aa001f74b793c",
+    "MODULES.md": "933d653df9b5a0bb37e543b5b209ba48eb1dd97d53c6eab998e43a204f356c56",
     "TRACEABILITY.md": "7255cb8bf260289b46859ba58be2009da931a8ef5e00720da48e471b8418a384",
     "HANDLER-CONTRACTS.md": "fc845a172b5360321333b3e274c8d79c8537f264ae28e3b72f804891f350ce0e",
-    "TEST-PLAN.md": "c0529bcf622d357de63ca74a905b769d4e3b5d4451d65d595a02fd04a1b278c2",
-    "TASKS.md": "e7b068a9c7e7c1cc5054aa805454667848a47759ebf4d3a6f0e8f76ac070cf97",
-    "IMPLEMENTATION-PLAN.md": "5e4fedfa4a2d4bb0ce33ee703ae4967affaeec2110debd28b606d2ba8177bd2e",
-    "TEAM-ASSIGNMENT.md": "688848b5945cbd49e3843342371b6ef4720132491763bdcf5b9cea466b732eca",
+    "TEST-PLAN.md": "0250ae1a0463cd2406dc2879d5dd666612111f0f120c69b25831a212695f86dd",
+    "TASKS.md": "862acff5c13d444d2d3a0c90a83a8b08c3aefd2f9f52cd806c93d3e1fa1d5ba3",
+    "IMPLEMENTATION-PLAN.md": "a1afeec5e4850028445749c5030e3edcb7a83c3c2b497d33ab74a9412dbd214e",
+    "TEAM-ASSIGNMENT.md": "ea8ca01bf34365529957767ce9fd9e68575803021c099b7d1c05725ed884952a",
     "module-structure.drawio": "3db24f7f4f13cff20d34834b6cad2a5b48c1526e176d1a27ea0a0aa3e50a93b4",
     "core-flows.drawio": "af62be1624fe1141d5f6c472859e8ed0f7ff07363077ea1a2fa28c6fa206921f"
   }

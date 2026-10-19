@@ -9,7 +9,10 @@
     "reviewScenario": "",
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
-    "evidence": "BE-02-IMPLEMENTATION.md"
+    "evidence": "BE-02-IMPLEMENTATION.md",
+    "additionalEvidence": [
+      "BE-32-DEPLOYMENT.md"
+    ]
   },
   {
     "id": "AT-02",
@@ -21,7 +24,10 @@
     "reviewScenario": "",
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
-    "evidence": "BE-03-PERSISTENCE.md"
+    "evidence": "BE-03-PERSISTENCE.md",
+    "additionalEvidence": [
+      "BE-32-DEPLOYMENT.md"
+    ]
   },
   {
     "id": "AT-03",
@@ -597,8 +603,10 @@
     "operations": [],
     "useCases": [],
     "reviewScenario": "",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-32-DEPLOYMENT.md",
+    "verificationScope": "PACKAGED_BOOTSTRAP_AND_SERVER_CONFIGURATION_ONLY_NOT_TARGET_SERVER"
   },
   {
     "id": "AT-37",
