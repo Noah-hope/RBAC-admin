@@ -13,6 +13,8 @@ ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parent.parent
 FOUNDATION_IDS = {f'BE-{n:02}' for n in range(1, 6)}
 BUSINESS_START = ['FOUNDATION_ACCEPTED', 'BUSINESS_OWNER_ASSIGNED']
+B_IMPLEMENTED = {'BE-11', 'BE-13', 'BE-15'}
+B_EVIDENCE = 'BE-11-13-15-B-MODULE.md'
 FOUNDATION_SOURCE_COMMIT = '379ad438220a478093947f657d04eb56a6a2efcb'
 FOUNDATION_MERGE_COMMIT = 'b68aa9aee6e78dd0b2cc1922d68028ce68ddeb11'
 BUSINESS_SOURCE_COMMIT = '9b6d89e20e2f1646bd2ed96223d9c43a21e2f96f'
@@ -116,6 +118,10 @@ for case in CASES:
         case['status']='PARTIALLY_VERIFIED'
         case['evidence']='BE-06-IDENTITY.md'
         if case['id'] in {'AT-06','AT-07'}: case['additionalEvidence']=['BE-07-ACCOUNTS.md']
+    if case['id'] in {'AT-09','AT-11','AT-12'}:
+        case['status']='PARTIALLY_VERIFIED'
+        case['evidence']=B_EVIDENCE
+    if case['id']=='AT-37': case['additionalEvidence']=[B_EVIDENCE]
 
 TASKS = []
 def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
@@ -131,8 +137,12 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
         estimateHours=dict(zip(('low','likely','high'),estimate)),
         reviewHours=dict.fromkeys(('low','likely','high'),0),dependencies=[f'BE-{x:02}' for x in deps],
         modules=mods.split(),operations=ops.split(),acceptance=[f'AT-{x:02}' for x in cases],
-        deliverable=deliverable,notes=notes,status='OWNER_ACCEPTED' if foundation or n in (6,7) else 'PLANNED',milestone='后端全范围可部署演示（拟建）',
+        deliverable=deliverable,notes=notes,status='OWNER_ACCEPTED' if foundation or n in (6,7) else ('IN_PROGRESS' if f'BE-{n:02}' in B_IMPLEMENTED else 'PLANNED'),milestone='后端全范围可部署演示（拟建）',
         labels=['backend','design-ready'],remoteIssueNumber=None,remotePrNumber=None))
+    if f'BE-{n:02}' in B_IMPLEMENTED:
+        TASKS[-1]['implementationProgress']=dict(evidence=B_EVIDENCE,decision='D-061',implemented=True,
+            ownerAccepted=False,mergedToMain=False,databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
+            branch='codex/be-11-13-15-b-module',dependencyBase='9857e5e',claimSource='USER_MESSAGE')
     if n == 6:
         TASKS[-1]['implementationProgress']=dict(evidence='BE-06-IDENTITY.md',decision='D-056',
             scope='LOGIN_SESSION_PASSWORD_AND_THREE_JWT_FAMILIES',implemented=True,
@@ -261,6 +271,9 @@ def dump(name, value):
     (ROOT/name).write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 
 def write(name, text):
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\nD-061（2026-10-19）当前：B 的 BE-11/13/15 已实现并在独立 MySQL 验证，任务为 IN_PROGRESS（待负责人确认），未合并或推送。当前共 7 项 OWNER_ACCEPTED、3 项 IN_PROGRESS、25 项 PLANNED；6 个 B 入站操作已实现。AT-09/11/12 仅局部验证，AT-37 补 B 接口证据；完整业务验收仍开放。BE-17 缺 BE-08/10，BE-12 等 BE-17，BE-18 缺 BE-10/14。详见 [B 实施记录](BE-11-13-15-B-MODULE.md)。下方 D-060 及更早的阶段汇总为历史，本轮任务卡和机器清单以本段为准。\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -359,7 +372,7 @@ def generate():
             acceptance=sorted(set(task['acceptance']+(['AT-37'] if row['direction']=='INBOUND' else ['AT-20']))),
             parameters=parameter_names,requestModels=sorted(schema_refs(operation.get('requestBody',{}),api)),
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
-            status='OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07'} else 'PLANNED_NOT_IMPLEMENTED'))
+            status='OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07'} else ('IMPLEMENTED_PENDING_OWNER_ACCEPTANCE' if task['id'] in B_IMPLEMENTED else 'PLANNED_NOT_IMPLEMENTED')))
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
         owned=[r for r in op_map if r['issue']==task['id']]

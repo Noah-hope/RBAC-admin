@@ -940,7 +940,7 @@
     ],
     "deliverable": "稳定系统编码和唯一SYSTEM_ACCESS，登记同事务，分页/详情权限与契约一致。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -948,6 +948,18 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-11-13-15-B-MODULE.md",
+      "decision": "D-061",
+      "implemented": true,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "branch": "codex/be-11-13-15-b-module",
+      "dependencyBase": "9857e5e",
+      "claimSource": "USER_MESSAGE"
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-01"
@@ -1121,7 +1133,7 @@
     ],
     "deliverable": "固定归属、共享角色维护边界、元数据版本与配置版本，当前配置与待审批状态分开显示。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -1129,6 +1141,18 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-11-13-15-B-MODULE.md",
+      "decision": "D-061",
+      "implemented": true,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "branch": "codex/be-11-13-15-b-module",
+      "dependencyBase": "9857e5e",
+      "claimSource": "USER_MESSAGE"
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-02"
@@ -1279,7 +1303,7 @@
     ],
     "deliverable": "仅执行器可用的配置差集校验/替换/版本和历史写入，保留停用项合法，全部非空。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -1287,6 +1311,18 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-11-13-15-B-MODULE.md",
+      "decision": "D-061",
+      "implemented": true,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "branch": "codex/be-11-13-15-b-module",
+      "dependencyBase": "9857e5e",
+      "claimSource": "USER_MESSAGE"
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-02",

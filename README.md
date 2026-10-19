@@ -1,5 +1,7 @@
 # rbac-admin · 集中权限管理系统
 
+D-061（2026-10-19）：B 的 BE-11、BE-13、BE-15 已在独立任务分支实现，真实测试和接入约定见 [B 实施记录](docs/05-detailed-design/BE-11-13-15-B-MODULE.md)。待负责人确认，未合并或推送；BE-17/12/18 仍按原依赖等待，完整后端与发布验收尚未完成。下方旧日期的任务数量与运行结果为历史。
+
 身份模块与后续目录样例：见[BE-06实现](docs/05-detailed-design/BE-06-IDENTITY.md)和[本机启用及组员接入](docs/05-detailed-design/BE-06-LOCAL-SETUP.md)。
 
 D-060：BE-06身份认证与[BE-07后台账号管理](docs/05-detailed-design/BE-07-ACCOUNTS.md)均已本人确认，已合入并推送main/ff19d17、远程回查一致。当前75离线＋80真实MySQL检查通过；其余28项待实现，下方待主线/旧29项为此前记录。成员可pull共同main后按身份启用说明配置，密钥不随代码提交。

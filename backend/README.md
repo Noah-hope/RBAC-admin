@@ -1,5 +1,7 @@
 # 后端工程
 
+B 模块接入（2026-10-19）：本轮已在任务分支实现系统登记/查询、角色读取/元数据修改和内部有效配置应用器。沿用既有身份与幂等启用配置，无新增环境变量、依赖或迁移。六个 HTTP 操作、权限边界、C/BE-25 内部调用约定及真实 RED/GREEN 见 [B 实施记录](../docs/05-detailed-design/BE-11-13-15-B-MODULE.md)。完整 `clean verify -Pmysql-check` 为 75 普通测试 + 92 MySQL 检查通过；部署与完整 OA 链路尚未验收。
+
 BE-07已实现账号列表/详情/创建/启停/密码重置，并按D-060交付main，复用BE-06身份和BE-05幂等，不新增迁移或密钥。读/写权限、原版本重放及本机验证步骤见[账号管理](../docs/05-detailed-design/BE-07-ACCOUNTS.md)；BE-07已按D-059本人确认，BE-06已按D-057确认，两项均已合入推送main/ff19d17并回查一致，初始总管理员仍归BE-32。下方BE-06“待确认”为此前实施记录。
 
 BE-06业务接入（D-056）：登录、当前会话、退出和本人改密在开发分支实现，待本人确认；运行前按[本机启用](../docs/05-detailed-design/BE-06-LOCAL-SETUP.md)配置独立RSA密钥及RBAC_IDENTITY_ENABLED。关闭时admin/integration/oa路径503，不提供绕过认证入口。Controller/DTO及Service/Repository结构、TDD和真实验证见[身份记录](../docs/05-detailed-design/BE-06-IDENTITY.md)。原64离线＋42引擎为BE-05历史结果，当前数量以最新报告为准。

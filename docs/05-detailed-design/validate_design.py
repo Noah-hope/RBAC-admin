@@ -64,6 +64,7 @@ def dag(nodes, field):
 
 
 def checks(report):
+    report['gitHistoryShallow']=subprocess.check_output(['git','rev-parse','--is-shallow-repository'],cwd=REPO,text=True).strip()=='true'
     before={n:sha(ROOT/n) for n in GENERATED}
     subprocess.run([sys.executable,str(ROOT/'design_plan.py')],cwd=REPO,check=True,capture_output=True,text=True)
     require(before=={n:sha(ROOT/n) for n in GENERATED},'生成资料不确定或未刷新')
@@ -75,7 +76,8 @@ def checks(report):
     require(len(cids)==len(cases),'重复验收编号')
     partial_evidence={'AT-01':'BE-02-IMPLEMENTATION.md','AT-02':'BE-03-PERSISTENCE.md',
                       'AT-05':'BE-06-IDENTITY.md','AT-06':'BE-06-IDENTITY.md','AT-07':'BE-06-IDENTITY.md',
-                      'AT-04':'BE-05-IDEMPOTENCY.md','AT-03':'BE-04-TRANSACTIONS.md','AT-33':'BE-04-TRANSACTIONS.md','AT-37':'BE-02-IMPLEMENTATION.md'}
+                      'AT-04':'BE-05-IDEMPOTENCY.md','AT-03':'BE-04-TRANSACTIONS.md','AT-33':'BE-04-TRANSACTIONS.md','AT-37':'BE-02-IMPLEMENTATION.md',
+                      'AT-09':'BE-11-13-15-B-MODULE.md','AT-11':'BE-11-13-15-B-MODULE.md','AT-12':'BE-11-13-15-B-MODULE.md'}
     require(all(c['status']==('PARTIALLY_VERIFIED' if c['id'] in partial_evidence else 'DESIGNED_NOT_RUN') for c in cases),'验收局部/完整状态不符')
     require(all(c.get('evidence')==partial_evidence[c['id']] for c in cases if c['status']=='PARTIALLY_VERIFIED'),'局部验收缺实施证据')
     deferred={c['id'] for c in cases if c['delivery']=='FRONTEND_DEFERRED'}
@@ -131,7 +133,8 @@ def checks(report):
             and delivery.get('branch')=='main' and delivery.get('remote')=='origin'
             and delivery.get('remoteRef')=='refs/heads/main' and delivery.get('pushVerified') is True
             and delivery.get('verifiedRemoteCommit')==delivery['mergeCommit'],'缺实际主线推送回查记录')
-    require(subprocess.run(['git','merge-base','--is-ancestor',delivery['mergeCommit'],'HEAD'],cwd=REPO,capture_output=True).returncode==0,'交付合并不是当前代码祖先')
+    require(subprocess.run(['git','merge-base','--is-ancestor',delivery['mergeCommit'],'HEAD'],cwd=REPO,capture_output=True).returncode==0,
+            '浅克隆缺少历史，无法核对交付祖先；需补齐Git历史' if report['gitHistoryShallow'] else '交付合并不是当前代码祖先')
     merge_parents=subprocess.check_output(['git','show','-s','--format=%P',delivery['mergeCommit']],cwd=REPO,text=True).split()
     require(len(merge_parents)==2 and merge_parents[1]==delivery['sourceCommit'],'交付合并与本人确认版本不符')
     require((ROOT/'FOUNDATION-REVIEW.md').exists() and (ROOT/'FOUNDATION-USAGE.md').exists(),'缺交接核对或团队使用指南')
@@ -162,8 +165,14 @@ def checks(report):
         require(module['assignmentStatus']==('OWNER_CONFIRMED' if module['id']=='M00' else ('SHARED_BY_TASK' if module['id'] in shared else 'ASSIGNED')),'共享模块未按任务区分责任')
     referenced=set()
     for task in tasks:
-        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
+        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-11':'IN_PROGRESS','BE-13':'IN_PROGRESS','BE-15':'IN_PROGRESS'}.get(task['id'],'PLANNED')
         require(task['status']==expected_status,'任务准备/实现状态不符')
+        if task['id'] in {'BE-11','BE-13','BE-15'}:
+            progress=task.get('implementationProgress',{})
+            require(progress.get('decision')=='D-061' and progress.get('implemented') is True
+                    and progress.get('ownerAccepted') is False and progress.get('mergedToMain') is False
+                    and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
+                    and (ROOT/progress.get('evidence','')).is_file(),'B模块实施/确认/交付边界不符')
         if task['id']=='BE-06':
             progress=task['implementationProgress']
             require(progress.get('decision')=='D-056' and progress.get('evidence')=='BE-06-IDENTITY.md'
@@ -335,7 +344,8 @@ def checks(report):
         require(row['ownerSlot']==assignments[task['id']] and row['assignmentStatus']=='ASSIGNED' and row['phase']=='BUSINESS','业务操作与任务负责人不符')
         require(row['suggestedOwnerSlot']==task['suggestedOwnerSlot'] and row['startConditions']==required_gates,'操作与任务分工/阶段不一致')
         require(set(row['tables'])<=tables,'操作引用未知表')
-        require(set(row['acceptance'])<=cids and row['status']==('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07'} else 'PLANNED_NOT_IMPLEMENTED'),'验收引用/实施状态不符')
+        expected_operation_status='OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07'} else ('IMPLEMENTED_PENDING_OWNER_ACCEPTANCE' if task['id'] in {'BE-11','BE-13','BE-15'} else 'PLANNED_NOT_IMPLEMENTED')
+        require(set(row['acceptance'])<=cids and row['status']==expected_operation_status,'验收引用/实施状态不符')
         if direction=='INBOUND':require('AT-37'in row['acceptance'],'入站缺全契约验收')
         require(set(row['requestModels'])<=api['components']['schemas'].keys(),'未知输入模型')
         require(set(model for values in row['successResponseModels'].values() for model in values)<=api['components']['schemas'].keys(),'未知输出模型')
@@ -483,7 +493,7 @@ def checks(report):
         decisionIds=len(decisions),upstreamSha256=source_hashes,
         planRevision='1.4',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=0,
         businessTasksAssigned=len(assignments),assignmentDecision='D-055',memberIdentitiesPending=4,
-        confirmedUserAlias='A',implementationDecision='D-058',implementedBusinessTasksPendingOwner=[],
+        confirmedUserAlias='B',implementationDecision='D-061',implementedBusinessTasksPendingOwner=['BE-11','BE-13','BE-15'],
         ownerAcceptedBusinessTasks=['BE-06','BE-07'],businessTasksPendingMainDelivery=[],businessAcceptanceDecision='D-059',
         businessMainDeliveryDecision='D-060',businessMainDeliveryMerge=business_delivery['mergeCommit'],
         foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:OWNER_ACCEPTED',

@@ -708,7 +708,7 @@
         "ApplicationPage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
   },
   {
     "operationId": "createSystem",
@@ -774,7 +774,7 @@
         "Application"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
   },
   {
     "operationId": "getSystem",
@@ -846,7 +846,7 @@
         "Application"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
   },
   {
     "operationId": "updateSystem",
@@ -1431,7 +1431,7 @@
         "RolePage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
   },
   {
     "operationId": "createRole",
@@ -1582,7 +1582,7 @@
         "Role"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
   },
   {
     "operationId": "updateRoleMetadata",
@@ -1665,7 +1665,7 @@
         "Role"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
   },
   {
     "operationId": "listEmployees",
