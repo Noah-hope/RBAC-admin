@@ -6,4 +6,4 @@
 
 验证：三组有效RED后实现，最终完整 `./mvnw.cmd -Pmysql-check clean verify` 为85离线＋136真实MySQL，失败/错误/跳过0，含双连接快照和JPA/JDBC同事务。仅使用专属临时实例，测试schema/账号及密钥清理，专属进程已关闭，未操作成员已有库。
 
-A已按D-068确认实现 `1c0eb3c055fe267fd0ff69c37e5120de3951eca1`。本文件仅为待提交PR正文，不表示已经创建或合并。交付后组员更新main，B/C/D按[BE-08交接](BE-08-MANAGEMENT-SCOPE.md)接入同事务上下文解析和覆盖策略；无需新增迁移或密钥。实际服务器、范围创建与整套业务验收不在本次范围。
+A已按D-068确认实现 `1c0eb3c055fe267fd0ff69c37e5120de3951eca1`。交付后组员更新main，B/C/D按[BE-08交接](https://github.com/Noah-hope/RBAC-admin/blob/codex/be-08-management-scope/docs/05-detailed-design/BE-08-MANAGEMENT-SCOPE.md)接入同事务上下文解析和覆盖策略；无需新增迁移或密钥。实际服务器、范围创建与整套业务验收不在本次范围。
