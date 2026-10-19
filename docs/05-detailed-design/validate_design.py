@@ -157,7 +157,7 @@ def checks(report):
     require(subprocess.run(['git','diff','--quiet',business_delivery['sourceCommit'],business_delivery['mergeCommit']],cwd=REPO).returncode==0,
             'BE-06/07合并树与已确认分支不一致')
     deliveries=phase_plan['business'].get('additionalMainDeliveries',[])
-    require(len(deliveries)==1,'BE-32主线交付记录缺失或重复')
+    require(len(deliveries)==2,'BE-32/BE-10主线交付记录缺失或重复')
     bootstrap_delivery=deliveries[0]
     require(bootstrap_delivery.get('taskIds')==['BE-32'] and bootstrap_delivery.get('decision')=='D-063'
             and bootstrap_delivery.get('sourceCommit')=='d5941c902712c92d4d8d8d7505bd6df4f5ceb139'
@@ -173,6 +173,16 @@ def checks(report):
             'BE-32合并不是当前提交祖先')
     require(subprocess.run(['git','diff','--quiet',bootstrap_delivery['sourceCommit'],bootstrap_delivery['mergeCommit']],cwd=REPO).returncode==0,
             'BE-32合并树与已核对分支不一致')
+    people_delivery=deliveries[1]
+    require(people_delivery.get('taskIds')==['BE-10'] and people_delivery.get('decision')=='D-065'
+            and people_delivery.get('sourceCommit')=='6bfae88c89d0bad4b1599787ea47e2107a3bbcf9'
+            and people_delivery.get('mergeCommit')=='8f1db6927b6d82e1a352ad016a4c1c056a6c648a'
+            and people_delivery.get('pushVerified') is True and people_delivery.get('ownerAccepted') is False
+            and people_delivery.get('verifiedRemoteCommit')==people_delivery['mergeCommit'],'BE-10交付与本人验收边界不符')
+    parents=subprocess.check_output(['git','show','-s','--format=%P',people_delivery['mergeCommit']],cwd=REPO,text=True).split()
+    require(len(parents)==2 and parents[1]==people_delivery['sourceCommit'],'BE-10合并来源不符')
+    require(subprocess.run(['git','merge-base','--is-ancestor',people_delivery['mergeCommit'],'HEAD'],cwd=REPO).returncode==0,'BE-10交付不是当前祖先')
+    require(subprocess.run(['git','diff','--quiet',people_delivery['sourceCommit'],people_delivery['mergeCommit']],cwd=REPO).returncode==0,'BE-10合并树与已验证实现不符')
     for module in modules:
         require(module['suggestedOwnerSlot'] in 'ABCD','模块建议组无效')
         shared={'M10':['A','D'],'M11':list('ABCD'),'M12':list('ABCD')}
@@ -188,7 +198,8 @@ def checks(report):
             require(progress.get('internalReadPortImplemented') is True
                     and progress.get('implemented') is True and progress.get('httpImplemented') is True
                     and progress.get('employmentWriterImplemented') is True
-                    and progress.get('ownerAccepted') is False and progress.get('mergedToMain') is False
+                    and progress.get('ownerAccepted') is False and progress.get('mergedToMain') is True
+                    and progress.get('mainMergeCommit')==people_delivery['mergeCommit']
                     and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
                     and progress.get('evidence')=='BE-10-PEOPLE.md','BE-10实现/本人验收边界不符')
         if task['id']=='BE-06':
@@ -383,7 +394,7 @@ def checks(report):
         require(row['ownerSlot']==assignments[task['id']] and row['assignmentStatus']=='ASSIGNED' and row['phase']=='BUSINESS','业务操作与任务负责人不符')
         require(row['suggestedOwnerSlot']==task['suggestedOwnerSlot'] and row['startConditions']==required_gates,'操作与任务分工/阶段不一致')
         require(set(row['tables'])<=tables,'操作引用未知表')
-        require(set(row['acceptance'])<=cids and row['status']==('IMPLEMENTED_PENDING_OWNER' if task['id']=='BE-10' else ('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07'} else 'PLANNED_NOT_IMPLEMENTED')),'验收引用/实施状态不符')
+        require(set(row['acceptance'])<=cids and row['status']==('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id']=='BE-10' else ('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07'} else 'PLANNED_NOT_IMPLEMENTED')),'验收引用/实施状态不符')
         if direction=='INBOUND':require('AT-37'in row['acceptance'],'入站缺全契约验收')
         require(set(row['requestModels'])<=api['components']['schemas'].keys(),'未知输入模型')
         require(set(model for values in row['successResponseModels'].values() for model in values)<=api['components']['schemas'].keys(),'未知输出模型')
@@ -536,9 +547,9 @@ def checks(report):
         businessTasksAssigned=len(assignments),assignmentDecision='D-055',memberIdentitiesPending=4,
         confirmedUserAlias='D',historicallyConfirmedUserAliases=['A'],implementationDecision='D-065',
         internalPortTasksPendingOwner=[],implementedBusinessTasksPendingOwner=['BE-10'],
-        ownerAcceptedBusinessTasks=['BE-06','BE-07','BE-32'],businessTasksPendingMainDelivery=['BE-10'],businessAcceptanceDecision='D-062',
-        businessMainDeliveryDecision='D-063',businessMainDeliveryMerge=bootstrap_delivery['mergeCommit'],
-        businessMainDeliveryPrUrl=bootstrap_delivery['prUrl'],
+        ownerAcceptedBusinessTasks=['BE-06','BE-07','BE-32'],businessTasksPendingMainDelivery=[],businessAcceptanceDecision='D-062',
+        businessMainDeliveryDecision='D-065',businessMainDeliveryMerge=people_delivery['mergeCommit'],
+        businessMainDeliveryPrUrl=None,priorBootstrapDeliveryPrUrl=bootstrap_delivery['prUrl'],
         foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:OWNER_ACCEPTED',
         foundationGateStatus=phase_plan['gateStatus'],businessOperationsAwaitingAssignment=0,businessOperationsAssigned=len(mapping),
         artifactSha256={n:sha(ROOT/n) for n in GENERATED}))

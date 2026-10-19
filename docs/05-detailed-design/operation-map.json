@@ -1767,7 +1767,7 @@
         "EmployeePage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "getEmployee",
@@ -1844,7 +1844,7 @@
         "Employee"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listEmployments",
@@ -1946,7 +1946,7 @@
         "EmploymentPage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listGrants",
@@ -3380,7 +3380,7 @@
         "CompanyPage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listDepartments",
@@ -3468,7 +3468,7 @@
         "DepartmentPage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listPositions",
@@ -3561,7 +3561,7 @@
         "PositionPage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "employeeStatePreview",

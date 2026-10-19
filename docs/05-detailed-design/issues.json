@@ -871,12 +871,16 @@
       "httpImplemented": true,
       "employmentWriterImplemented": true,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "claimedBy": "USER",
       "claimSource": "USER_MESSAGE",
-      "claimedOwnerSlot": "D"
+      "claimedOwnerSlot": "D",
+      "mainMergeCommit": "8f1db6927b6d82e1a352ad016a4c1c056a6c648a",
+      "sourceCommit": "6bfae88c89d0bad4b1599787ea47e2107a3bbcf9",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "8f1db6927b6d82e1a352ad016a4c1c056a6c648a"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
