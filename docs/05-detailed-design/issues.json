@@ -854,7 +854,7 @@
     ],
     "deliverable": "稳定员工/源身份/公司部门岗位映射及任职读取，EmploymentWriter仅供受控导入调用；无新增组织写API。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -862,6 +862,22 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-10-PEOPLE.md",
+      "decision": "D-065",
+      "scope": "FULL_BE10_PEOPLE_QUERIES_INTERNAL_FACTS_AND_IMPORT_WRITE_PRIMITIVES",
+      "internalReadPortImplemented": true,
+      "implemented": true,
+      "httpImplemented": true,
+      "employmentWriterImplemented": true,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "claimedBy": "USER",
+      "claimSource": "USER_MESSAGE",
+      "claimedOwnerSlot": "D"
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-03",

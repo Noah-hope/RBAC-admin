@@ -5,7 +5,7 @@
   "collaborationDecision": "D-051",
   "deliveryDecision": "D-053",
   "assignmentDecision": "D-055",
-  "implementationDecision": "D-061",
+  "implementationDecision": "D-065",
   "foundation": {
     "ownerSlot": "USER",
     "taskIds": [
@@ -124,10 +124,10 @@
         "area": "组织、人员与授权来源、导入",
         "realName": null,
         "githubLogin": null,
-        "claimedBy": null,
-        "claimDecision": null,
+        "claimedBy": "USER",
+        "claimDecision": "D-064",
         "repositoryAccessVerified": false,
-        "localEnvironmentVerified": false
+        "localEnvironmentVerified": true
       }
     ],
     "assignmentSource": {

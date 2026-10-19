@@ -1,5 +1,13 @@
 # 项目共享记忆
 
+D-065验证完成：BE-10最终代码完整clean verify/mysql-check为81离线＋122真实MySQL，失败/错误/跳过均0；六个查询HTTP、受控导入基础写与既有读取均已实现验证。版本上限无变化与迁移审计新公司归属补充RED后修正。专属23310实例随机schema/账号0/0，PID8392正常退出，临时RSA目录0，本机原MySQL84仍Running；未操作已有项目库。静态追踪同步通过。按本轮明确授权准备合入main并推送，实际交付SHA待成功后补；负责人人工验收未虚构，BE-10为IMPLEMENTED。
+
+D-065（2026-10-19）全量实施授权：成员D要求完成全部BE-10并合并推送，替代D-064仅内部读取、不推送的边界。在codex/be-10-people补六个HTTP查询、当前身份与单任命/双版本的窄范围读取、过滤后分页及安全投影、受控EmploymentWriter基础变更/映射/任职/无历史部门迁移及同事务审计。状态登记IMPLEMENTED、本人确认未伪造；BE-08通用范围、BE-26/27失效、BE-28～30文件及整批导入仍为原任务，不因基础端口实现标记完成。完整测试和远程交付结果在实际核对后补充；详见[BE-10](../05-detailed-design/BE-10-PEOPLE.md)。
+
+D-064验证结果：先记录离线事务保护RED和8个真实引擎场景RED，再实现；完整clean verify/mysql-check为81离线＋96真实MySQL，全无失败/错误/跳过；随后无生产改动补UTC精度/存储故障两项并重跑全部10项端口检查通过，XML覆盖合计81＋98。专属23310实例随机schema/账号剩余0/0，PID37380正常退出，用户MySQL84仍Running。静态校验PASS。A接入方法与BE-10剩余边界见[交接](../05-detailed-design/BE-10-PEOPLE.md)；本轮不以测试通过代替D的确认，不合并推送。
+
+D-064（2026-10-19）：本会话用户认领D，要求先完成A需要的数据能力。在codex/be-10-people（基线5966834）实施BE-10内部OrganizationReader：公司/部门/岗位/员工、源身份与组织路径精确映射、准确公司/部门全部有效任职和版本；强制调用方同数据源事务，不缓存、不授权、不新开事务。A可在BE-08/09的ReadBoundary/CommandBoundary内复用，仍自行复核身份/单项范围。设计与实际验证见[BE-10交接](../05-detailed-design/BE-10-PEOPLE.md)。BE-10整体IN_PROGRESS，内部读取实现不等于六个HTTP接口/EmploymentWriter/整项AT完成；本人确认及main交付待办理，其余26项PLANNED。成员D本机已通过JDK21/Wrapper构建、MySQL8.4.8双库迁移及权限、HMAC启用启动和健康UP，证据为本会话用户输出/回报；不记录密码/密钥，不推断RSA/管理员初始化完成。历史A会话认领保持，本会话未获得远程写入授权。
+
 D-063实际交付（2026-10-19）：按用户明确授权，已推送codex/be-32-bootstrap并创建[PR #1](https://github.com/Noah-hope/RBAC-admin/pull/1)，正文包含变更、80离线＋88真实MySQL、本机人工验证及组员接入。远程main基线9857e5e，PR来源d5941c902712c92d4d8d8d7505bd6df4f5ceb139；GitHub确认mergeable=true/clean，check runs与status条目均0，不把无CI记录称为CI通过。普通merge成功生成609ee4bb017e46b42e43bcd8c2616d31ab410f5a；PR回查state=closed/merged=true，远程main回查同SHA，两个父提交及合并树与PR来源一致。本地主线已快进同步，BE-32登记OWNER_ACCEPTED/已交付main及remotePrNumber=1；保留任务分支和无关.codeartsdoer。后端自cc76ac9未改，复核既有报告/摘要，本轮不重跑Java或SQL，不部署服务器。A剩BE-08/09/27/34四项PLANNED，BE-08仍等待D/BE-10；下方待主线描述均为此前历史。
 
 D-063 交付授权（2026-10-19）：用户明确要求代提PR并合并，已核对origin/main仍为9857e5e、任务分支含4个本地提交，后端自已验证cc76ac9未改；已有80离线＋88真实MySQL及同包摘要证据复核。本轮获授权推送codex/be-32-bootstrap、创建main目标PR并合并、同步交付追踪和本地主线，不删除任务分支、不提交无关.codeartsdoer。仓库权限和无重复开放PR已只读核对；创建与合并进行中，链接/SHA待实际成功后补，未运行Java/SQL或部署服务器。
