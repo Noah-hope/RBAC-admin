@@ -1,5 +1,7 @@
 # 项目共享记忆
 
+D-062（2026-10-19）：用户 A 明确“现在确认BE-32验证通过”，按D-051登记OWNER_ACCEPTED，接受实现cc76ac9c4bf4d073f7306b2f5e95c1d5cf52a614、人工证据27b99700d7d6f747f9e1f1377ca7aed20c5e92c9；沿用80离线＋88真实MySQL及重复构建证据，源码自cc76ac9未变。本轮只改状态/文档并静态核对，不重跑Java或数据库，不记录凭据。A还剩BE-08/09/27/34四项PLANNED，BE-32待主线交付；整体AT和服务器验收边界不变。用户询问直接合并推送或先提PR，建议先推任务分支、提PR说明变更和证据，再合入main；[PR说明草案](../05-detailed-design/BE-32-PR.md)已准备，尚未创建远程PR/合并/推送，不把建议当作授权。下方待本人确认均为此前历史。
+
 D-061 本机链路验证进展（2026-10-19）：用户确认 BackendApplication 原连dev、BootstrapTestAdmin连test，正常应用改连初始化目标测试库后，截图依次显示首次登录201/PASSWORD_CHANGE_ONLY、新密码登录201/NORMAL；最后明确“成功获取了”，账号列表正文为employeeId=NULL、enabled=true、mustChangePassword=false、version=2、page=1/pageSize=20/total=1。本机首次登录/改密生效/正常会话/列表读取链路已获截图与用户回报支持；最终截图没有HTTP状态栏，不虚构200原始截图，改密204/旧token拒绝/重复初始化/审计SQL没有新人工截图，沿用既有自动化证据。已在[BE-32](../05-detailed-design/BE-32-DEPLOYMENT.md)补记录，在[操作指南](../../deploy/README.md)补Dev/Test独立运行配置、列表可选参数与手动凭证设置。本轮只改文档并做静态校验，不执行登录、SQL、Java测试或远程写入，不记录密码/token/账号UUID；BE-32仍待A整体确认，未合并推送。下方“本机登录未确认”等为此前排查历史。
 
 D-061 本机排查补充（2026-10-19）：用户确认首次初始化配置的密码长度不足，后续 Apifox 先出现空/非法 RequestId 的422、再出现400，最新为401 AUTHENTICATION_FAILED。已读源码/Git契约并 refresh/read/ref 复核 Apifox MCP：默认模块登录仍声明AdminJwt、截图实际发出未解析 Bearer变量，Git登录为公开security:[]；这是既有默认模块/指定导出边界，不改写过去指定1.2.0导出已核对的事实。后端登录路径跳过Bearer，因此不把客户端继承认证直接当作401原因；仍须用户核对正常应用的目标库、初始账号及本机密码。补充 [登录排查说明](../../deploy/README.md)与Apifox复核记录；未读取本机秘密、连接已有库或执行登录，未改Java/API/DDL。本机成功登录/首次改密仍未确认，BE-32保持待A确认，未合并推送。

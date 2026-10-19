@@ -163,7 +163,7 @@ def checks(report):
         require(module['assignmentStatus']==('OWNER_CONFIRMED' if module['id']=='M00' else ('SHARED_BY_TASK' if module['id'] in shared else 'ASSIGNED')),'共享模块未按任务区分责任')
     referenced=set()
     for task in tasks:
-        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-32':'IN_PROGRESS'}.get(task['id'],'PLANNED')
+        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-32':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
         require(task['status']==expected_status,'任务准备/实现状态不符')
         if task['id']=='BE-06':
             progress=task['implementationProgress']
@@ -279,11 +279,21 @@ def checks(report):
         if task['id']=='BE-32':
             progress=task.get('implementationProgress',{})
             require(progress.get('decision')=='D-061' and progress.get('evidence')=='BE-32-DEPLOYMENT.md'
-                    and progress.get('implemented') is True and progress.get('ownerAccepted') is False
+                    and progress.get('implemented') is True and progress.get('ownerAccepted') is True
                     and progress.get('mergedToMain') is False and progress.get('databaseExecuted') is True
                     and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
-                    and progress.get('targetServerDeployed') is False and 'ownerAcceptance' not in task,
+                    and progress.get('targetServerDeployed') is False,
                     'BE-32实施/本人确认/真实服务器边界不符')
+            acceptance=task.get('ownerAcceptance',{})
+            require(acceptance.get('acceptedBy')=='USER' and acceptance.get('ownerSlot')=='A'
+                    and acceptance.get('scope')=='BE-32' and acceptance.get('decision')=='D-062'
+                    and acceptance.get('date')=='2026-10-19' and acceptance.get('source')=='USER_MESSAGE'
+                    and acceptance.get('message')=='现在确认BE-32验证通过'
+                    and acceptance.get('implementationCommit')=='cc76ac9c4bf4d073f7306b2f5e95c1d5cf52a614'
+                    and acceptance.get('verificationEvidenceCommit')=='27b99700d7d6f747f9e1f1377ca7aed20c5e92c9'
+                    and acceptance.get('mergedToMain') is False,'BE-32本人确认或待主线状态不符')
+            require(subprocess.check_output(['git','show',acceptance['implementationCommit']+':backend/src/main/java/com/adgn/backend/bootstrap/BootstrapAdminApplication.java'],cwd=REPO),
+                    'BE-32确认版本缺实际初始化实现')
         if task['id'] in foundation_ids:
             require(task['ownerAcceptance'].get('mainMergeCommit')==phase_plan['foundation']['mainDelivery']['mergeCommit'],'基座任务缺主线交付提交')
         require(task['remoteIssueNumber'] is None and task['remotePrNumber'] is None,'伪造远程事项')
@@ -495,8 +505,8 @@ def checks(report):
         decisionIds=len(decisions),upstreamSha256=source_hashes,
         planRevision='1.4',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=0,
         businessTasksAssigned=len(assignments),assignmentDecision='D-055',memberIdentitiesPending=4,
-        confirmedUserAlias='A',implementationDecision='D-061',implementedBusinessTasksPendingOwner=['BE-32'],
-        ownerAcceptedBusinessTasks=['BE-06','BE-07'],businessTasksPendingMainDelivery=['BE-32'],businessAcceptanceDecision='D-059',
+        confirmedUserAlias='A',implementationDecision='D-061',implementedBusinessTasksPendingOwner=[],
+        ownerAcceptedBusinessTasks=['BE-06','BE-07','BE-32'],businessTasksPendingMainDelivery=['BE-32'],businessAcceptanceDecision='D-062',
         businessMainDeliveryDecision='D-060',businessMainDeliveryMerge=business_delivery['mergeCommit'],
         foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:OWNER_ACCEPTED',
         foundationGateStatus=phase_plan['gateStatus'],businessOperationsAwaitingAssignment=0,businessOperationsAssigned=len(mapping),
