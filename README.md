@@ -1,5 +1,9 @@
 # rbac-admin · 集中权限管理系统
 
+D-068：A已确认BE-08验证通过，当前待共同main交付。已准备[PR正文](docs/05-detailed-design/BE-08-PR.md)，尚未推送、创建或合并；A后续BE-09仍等B/BE-17。下方待A确认是此前历史。
+
+D-067：A 已在 `codex/be-08-management-scope` 实现任命/范围四查询和单项上下文/覆盖策略，使用 Spring Data JPA 只读仓储，接入 D 已交付的 BE-10。当前待 A 确认、未交付 main；验证结果、Apifox 步骤及 B/C/D 内部接口约定见 [BE-08](docs/05-detailed-design/BE-08-MANAGEMENT-SCOPE.md)。下方较早的任务数量与状态为历史，以共享记忆和任务清单为准。
+
 D-061：A 已实现 BE-32 部署产物、配置与管理员初始化，80 离线＋88 真实 MySQL 检查通过；任务已获本人确认（D-062），并已通过[PR #1](https://github.com/Noah-hope/RBAC-admin/pull/1)合入远程main/609ee4b（D-063）。[IDEA 初始化与发布步骤](deploy/README.md)使用同一份 Java 代码/jar，无需组员现在选择服务器模板或新增一套密钥；实际服务器部署仍由 BE-34 验证。测试与交接见 [BE-32 记录](docs/05-detailed-design/BE-32-DEPLOYMENT.md)，其余27项保持 PLANNED。下方 D-060 及更早的数量/状态为历史。
 
 身份模块与后续目录样例：见[BE-06实现](docs/05-detailed-design/BE-06-IDENTITY.md)和[本机启用及组员接入](docs/05-detailed-design/BE-06-LOCAL-SETUP.md)。

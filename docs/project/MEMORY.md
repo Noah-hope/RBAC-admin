@@ -1,5 +1,13 @@
 # 项目共享记忆
 
+D-069交付授权（2026-10-19）：A明确要求提交PR并合并主线，已授权推送codex/be-08-management-scope、创建main目标PR、核对后合并并同步记录。本轮fetch核对远程main仍db1be16；后端自已验证1c0eb3c未改，复核85离线＋136真实MySQL成功日志，沿用原证据不重跑Java/SQL。实际PR链接与合并SHA待成功后补，不能将授权记为交付成功；保留任务分支及无关.codeartsdoer，不部署或开新业务。
+
+D-068（2026-10-19）：A明确“验证通过，接下来做什么”，接受BE-08实现1c0eb3c055fe267fd0ff69c37e5120de3951eca1，登记OWNER_ACCEPTED、mergedToMain=false。本人回报按原话保留，不虚构新的HTTP截图或逐项人工测试结果；既有85离线＋136真实MySQL证据沿用，源码未变。本轮同步确认/生成器/静态追踪，准备[PR正文](../05-detailed-design/BE-08-PR.md)，不重跑Java/SQL。fetch核对远程main仍db1be16，BE-17仍PLANNED；下一步先交付BE-08共同主线，供B实施BE-17及C等任务复用；A的BE-09仍等B/BE-17。未授权远程写入，不推送、创建PR、合并或自动实施下一任务。A的7项已确认4项，剩BE-09/27/34三项PLANNED；不代D确认BE-10。
+
+D-067（2026-10-19）：A明确开始开发BE-08，在codex/be-08-management-scope实施四个任命/范围GET、Spring Data JPA只读实体/仓储、统一ManagementContextResolver和纯ScopeCoveragePolicy。先真实RED再实现；people查询复用resolver，保持D的人员可见性和事务，不新增写接口或改迁移。首轮完整回归检出两组旧夹具实体扫描覆盖问题，补正式实体扫描且保留全部断言后，最终clean verify/mysql-check为85离线＋136真实MySQL，全无失败/错误/跳过，包含双连接RR快照及JPA/JDBC同事务复核。专属实例schema/账号0/0、进程正常退出、临时密钥目录0，原MySQL84仍Running。实际证据、本机Apifox步骤与组员接入见[BE-08](../05-detailed-design/BE-08-MANAGEMENT-SCOPE.md)。任务IN_PROGRESS待A确认，未合并推送；用户已有库未操作，不代D确认BE-10。AT-08/19仅本任务局部验证，BE-09仍等B/BE-17。
+
+D-066（2026-10-19）：A 要求拉取远程、同步本地并准备开发 BE-08。fetch 后将本地 main 从5966834无冲突快进至远程db1be16，建立codex/be-08-management-scope；保留无关.codeartsdoer。已核对BE-10交付及OrganizationReader同事务接入要求，准备[BE-08设计与测试顺序](../05-detailed-design/BE-08-MANAGEMENT-SCOPE.md)。本轮仅开发准备，BE-08仍PLANNED，未修改业务代码或运行Java/SQL，未推送或创建PR；BE-10保持IMPLEMENTED/已交付main、D人工验收开放，不代为确认。
+
 D-065实际交付：已按授权将codex/be-10-people来源6bfae88c89d0bad4b1599787ea47e2107a3bbcf9以no-ff无冲突合入main/8f1db6927b6d82e1a352ad016a4c1c056a6c648a，合并双亲为5966834和6bfae88，合并树与验证来源一致；git push origin main成功，ls-remote回查远程main为同SHA。BE-10的6个正式查询操作登记IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER，整项IMPLEMENTED、mergedToMain=true、ownerAccepted=false，保留成员D后续人工验收，不把合并授权等同验收通过。任务分支保留，当前81＋122验证证据见[BE-10](../05-detailed-design/BE-10-PEOPLE.md)；交付追踪由生成器统一更新。A可核对main提供的端口安排BE-08；其他26项PLANNED，不自动开始新任务。当前收尾只更新文档/静态交付证据，不重复执行Java或数据库。
 
 D-065验证完成：BE-10最终代码完整clean verify/mysql-check为81离线＋122真实MySQL，失败/错误/跳过均0；六个查询HTTP、受控导入基础写与既有读取均已实现验证。版本上限无变化与迁移审计新公司归属补充RED后修正。专属23310实例随机schema/账号0/0，PID8392正常退出，临时RSA目录0，本机原MySQL84仍Running；未操作已有项目库。静态追踪同步通过。按本轮明确授权准备合入main并推送，实际交付SHA待成功后补；负责人人工验收未虚构，BE-10为IMPLEMENTED。

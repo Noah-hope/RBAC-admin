@@ -1,6 +1,6 @@
 # 模块结构与维护责任
 
-修订1.4/D-055：基座已确认并纳入主线，30项任务已登记A～D成员代号，实名与GitHub账号映射待补。D-056用户认领A，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），其余26项PLANNED，由负责人自行确认完成（D-051）。分工详见[四人分工](TEAM-ASSIGNMENT.md)。公共包前缀`com.adgn.backend`、13个逻辑模块及技术依赖不变。
+修订1.4/D-055：基座已确认并纳入主线，30项任务已登记A～D成员代号，实名与GitHub账号映射待补。D-056用户认领A，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，待交付main），其余25项PLANNED，由负责人自行确认完成（D-051）。分工详见[四人分工](TEAM-ASSIGNMENT.md)。公共包前缀`com.adgn.backend`、13个逻辑模块及技术依赖不变。
 
 | 模块 | 包后缀/负责人 | 编译依赖 | 职责与主要接口 |
 | --- | --- | --- | --- |

@@ -680,7 +680,7 @@
     ],
     "deliverable": "三上下文头、当前单项覆盖、列表/详情边界、任命版本与范围版本独立。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "OWNER_ACCEPTED",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -688,6 +688,33 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-08-MANAGEMENT-SCOPE.md",
+      "decision": "D-067",
+      "scope": "SINGLE_APPOINTMENT_CONTEXT_SCOPE_READS_AND_COVERAGE",
+      "implemented": true,
+      "ownerAccepted": true,
+      "mergedToMain": false,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "persistence": "SPRING_DATA_JPA_READ_REPOSITORIES",
+      "branch": "codex/be-08-management-scope",
+      "dependencyBase": "db1be16",
+      "claimedOwnerSlot": "A"
+    },
+    "ownerAcceptance": {
+      "acceptedBy": "USER",
+      "ownerSlot": "A",
+      "date": "2026-10-19",
+      "scope": "BE-08",
+      "decision": "D-068",
+      "source": "USER_MESSAGE",
+      "message": "验证通过，接下来做什么",
+      "implementationCommit": "1c0eb3c055fe267fd0ff69c37e5120de3951eca1",
+      "interpretation": "OWNER_CONFIRMATION_AFTER_BE08_HANDOFF_AND_LOGIN_GUIDANCE",
+      "mergedToMain": false,
+      "evidence": "BE-08-MANAGEMENT-SCOPE.md"
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-07",

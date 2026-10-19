@@ -19,7 +19,7 @@ public final class PersistenceSamples {
     private PersistenceSamples() { }
 
     @TestConfiguration(proxyBeanMethods = false)
-    @EntityScan(basePackageClasses = PersistenceSamples.class)
+    @EntityScan(basePackageClasses = {PersistenceSamples.class, com.adgn.backend.BackendApplication.class})
     public static class MappingConfiguration { }
 
     @Entity(name = "PersistenceSystemSample")
