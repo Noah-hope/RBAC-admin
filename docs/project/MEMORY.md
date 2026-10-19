@@ -1,5 +1,7 @@
 # 项目共享记忆
 
+D-063 交付授权（2026-10-19）：用户明确要求代提PR并合并，已核对origin/main仍为9857e5e、任务分支含4个本地提交，后端自已验证cc76ac9未改；已有80离线＋88真实MySQL及同包摘要证据复核。本轮获授权推送codex/be-32-bootstrap、创建main目标PR并合并、同步交付追踪和本地主线，不删除任务分支、不提交无关.codeartsdoer。仓库权限和无重复开放PR已只读核对；创建与合并进行中，链接/SHA待实际成功后补，未运行Java/SQL或部署服务器。
+
 D-062（2026-10-19）：用户 A 明确“现在确认BE-32验证通过”，按D-051登记OWNER_ACCEPTED，接受实现cc76ac9c4bf4d073f7306b2f5e95c1d5cf52a614、人工证据27b99700d7d6f747f9e1f1377ca7aed20c5e92c9；沿用80离线＋88真实MySQL及重复构建证据，源码自cc76ac9未变。本轮只改状态/文档并静态核对，不重跑Java或数据库，不记录凭据。A还剩BE-08/09/27/34四项PLANNED，BE-32待主线交付；整体AT和服务器验收边界不变。用户询问直接合并推送或先提PR，建议先推任务分支、提PR说明变更和证据，再合入main；[PR说明草案](../05-detailed-design/BE-32-PR.md)已准备，尚未创建远程PR/合并/推送，不把建议当作授权。下方待本人确认均为此前历史。
 
 D-061 本机链路验证进展（2026-10-19）：用户确认 BackendApplication 原连dev、BootstrapTestAdmin连test，正常应用改连初始化目标测试库后，截图依次显示首次登录201/PASSWORD_CHANGE_ONLY、新密码登录201/NORMAL；最后明确“成功获取了”，账号列表正文为employeeId=NULL、enabled=true、mustChangePassword=false、version=2、page=1/pageSize=20/total=1。本机首次登录/改密生效/正常会话/列表读取链路已获截图与用户回报支持；最终截图没有HTTP状态栏，不虚构200原始截图，改密204/旧token拒绝/重复初始化/审计SQL没有新人工截图，沿用既有自动化证据。已在[BE-32](../05-detailed-design/BE-32-DEPLOYMENT.md)补记录，在[操作指南](../../deploy/README.md)补Dev/Test独立运行配置、列表可选参数与手动凭证设置。本轮只改文档并做静态校验，不执行登录、SQL、Java测试或远程写入，不记录密码/token/账号UUID；BE-32仍待A整体确认，未合并推送。下方“本机登录未确认”等为此前排查历史。
