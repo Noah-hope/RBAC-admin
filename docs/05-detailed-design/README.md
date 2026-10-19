@@ -1,5 +1,13 @@
 # 后端详细设计与协作实施入口
 
+D-069：BE-08已通过[PR #2](https://github.com/Noah-hope/RBAC-admin/pull/2)合入main/ca85189并回查，任务已确认并交付；B可接入BE-17，A的BE-09仍等BE-17。下方待交付为历史。
+
+D-068：BE-08已获A确认，待共同main交付；[PR正文](BE-08-PR.md)已准备，尚未创建PR或合并。下方待确认是此前历史。
+
+D-067：A 已在任务分支实现 [BE-08 任命与范围读取、当前上下文及覆盖策略](BE-08-MANAGEMENT-SCOPE.md)，待 A 确认和主线交付。依赖的 D/BE-10 已合入 main，D 人工验收仍开放；BE-09 创建和 BE-27 持久失效按原依赖另行实施。
+
+BE-32 已实现并通过 80 离线＋88 真实 MySQL 检查（D-061），前置已交付 main；管理员初始化、服务器配置与发布模板见 [BE-32](BE-32-DEPLOYMENT.md)及[操作指南](../../deploy/README.md)。未部署云服务器，任务已按 D-062 获 A 确认并通过 [PR #1](https://github.com/Noah-hope/RBAC-admin/pull/1) 交付 main/609ee4b（D-063）；BE-06/07 的既有确认与主线交付保持。
+
 D-058（2026-10-19）：A已继续实现[BE-07账号管理](BE-07-ACCOUNTS.md)，5个接口复用当前身份、guard事务、HMAC幂等与GLOBAL审计。BE-07已按D-059本人确认，BE-06/07均已按D-060合入推送main/ff19d17并回查一致，其他28项PLANNED；本地连续开发依据显式授权及确认祖先，后续已按D-060合并推送。
 
 2026-10-18/D-053：用户明确确认基座整体交接通过，并授权合并main及推送。BE-01～05均OWNER_ACCEPTED、F-01～06通过，门槛FOUNDATION_ACCEPTED；main/b68aa9a已推送GitHub且回查一致。D-055已登记30项业务的A～D分工，BE-06在D-056按用户认领A后实施、D-057本人确认、D-060交付main，其余29项PLANNED；各成员GitHub账号及其余接入证据待补，开工仍须原技术依赖。

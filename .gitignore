@@ -12,6 +12,8 @@ target/
 !.env.example
 !.env.*.example
 *.local
+*.env
+!*.env.example
 *.pem
 *.key
 

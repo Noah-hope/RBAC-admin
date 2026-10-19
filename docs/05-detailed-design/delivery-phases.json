@@ -5,7 +5,7 @@
   "collaborationDecision": "D-051",
   "deliveryDecision": "D-053",
   "assignmentDecision": "D-055",
-  "implementationDecision": "D-058",
+  "implementationDecision": "D-065",
   "foundation": {
     "ownerSlot": "USER",
     "taskIds": [
@@ -124,10 +124,10 @@
         "area": "组织、人员与授权来源、导入",
         "realName": null,
         "githubLogin": null,
-        "claimedBy": null,
-        "claimDecision": null,
+        "claimedBy": "USER",
+        "claimDecision": "D-064",
         "repositoryAccessVerified": false,
-        "localEnvironmentVerified": false
+        "localEnvironmentVerified": true
       }
     ],
     "assignmentSource": {
@@ -159,7 +159,63 @@
       "pushVerified": true,
       "verifiedRemoteCommit": "ff19d1792a6934dbd6bca6c174dcba29f7acdad8",
       "evidence": "BE-07-ACCOUNTS.md"
-    }
+    },
+    "additionalMainDeliveries": [
+      {
+        "taskIds": [
+          "BE-32"
+        ],
+        "decision": "D-063",
+        "date": "2026-10-19",
+        "branch": "main",
+        "sourceCommit": "d5941c902712c92d4d8d8d7505bd6df4f5ceb139",
+        "mergeCommit": "609ee4bb017e46b42e43bcd8c2616d31ab410f5a",
+        "remote": "origin",
+        "remoteRef": "refs/heads/main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "609ee4bb017e46b42e43bcd8c2616d31ab410f5a",
+        "prNumber": 1,
+        "prUrl": "https://github.com/Noah-hope/RBAC-admin/pull/1",
+        "prState": "MERGED",
+        "evidence": "BE-32-DEPLOYMENT.md"
+      },
+      {
+        "taskIds": [
+          "BE-10"
+        ],
+        "decision": "D-065",
+        "date": "2026-10-19",
+        "branch": "main",
+        "sourceCommit": "6bfae88c89d0bad4b1599787ea47e2107a3bbcf9",
+        "mergeCommit": "8f1db6927b6d82e1a352ad016a4c1c056a6c648a",
+        "remote": "origin",
+        "remoteRef": "refs/heads/main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "8f1db6927b6d82e1a352ad016a4c1c056a6c648a",
+        "ownerAccepted": false,
+        "deliveryMode": "LOCAL_MERGE_AND_PUSH",
+        "evidence": "BE-10-PEOPLE.md"
+      },
+      {
+        "taskIds": [
+          "BE-08"
+        ],
+        "decision": "D-069",
+        "date": "2026-10-19",
+        "branch": "main",
+        "sourceCommit": "2199f0ef7b36a048845842c9803b08acf0f6612a",
+        "mergeCommit": "ca8518918bd668f48769134763a10a163e10612b",
+        "remote": "origin",
+        "remoteRef": "refs/heads/main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "ca8518918bd668f48769134763a10a163e10612b",
+        "ownerAccepted": true,
+        "prNumber": 2,
+        "prUrl": "https://github.com/Noah-hope/RBAC-admin/pull/2",
+        "prState": "MERGED",
+        "evidence": "BE-08-MANAGEMENT-SCOPE.md"
+      }
+    ]
   },
   "gateStatus": "FOUNDATION_ACCEPTED",
   "gateEvidence": [

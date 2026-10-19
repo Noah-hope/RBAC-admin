@@ -290,4 +290,14 @@ class BModuleMySqlCheck {
         var response=request("GET","/api/v1/admin/roles/"+hidden,null,s.token(),null,s.headers());
         assertThat(response.statusCode()).as(response.body()).isEqualTo(404);
     }
+    @Test void foreignAppointmentIsRejectedConsistentlyByPeopleSystemAndRoleEndpoints()throws Exception{
+        String sid=createSystem("context-integration"+id()).path("id").stringValue();
+        var owner=scoped(sid);var other=scoped(sid);
+        String role=role(sid,owner.company(),owner.department(),false);
+        for(String path:List.of("/api/v1/admin/companies","/api/v1/admin/systems","/api/v1/admin/roles/"+role)){
+            var response=request("GET",path,null,owner.token(),null,other.headers());
+            assertThat(response.statusCode()).as(path+": "+response.body()).isEqualTo(403);
+            assertThat(body(response).path("code").stringValue()).isEqualTo("FORBIDDEN");
+        }
+    }
 }

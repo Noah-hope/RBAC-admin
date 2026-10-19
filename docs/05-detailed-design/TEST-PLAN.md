@@ -1,8 +1,8 @@
 # 后端验收与TDD交接
 
-D-061（2026-10-19）当前：B 的 BE-11/13/15 已实现并在独立 MySQL 验证，任务为 IN_PROGRESS（待负责人确认），未合并或推送。当前共 7 项 OWNER_ACCEPTED、3 项 IN_PROGRESS、25 项 PLANNED；6 个 B 入站操作已实现。AT-09/11/12 仅局部验证，AT-37 补 B 接口证据；完整业务验收仍开放。BE-17 缺 BE-08/10，BE-12 等 BE-17，BE-18 缺 BE-10/14。详见 [B 实施记录](BE-11-13-15-B-MODULE.md)。下方 D-060 及更早的阶段汇总为历史，本轮任务卡和机器清单以本段为准。
+D-070（2026-10-19）B 状态：BE-11/13/15 已实现，任务为 IN_PROGRESS（待负责人确认），原提交 abc5cf2 已推送 B 分支，未合入 main。当前共 9 项 OWNER_ACCEPTED、1 项 IMPLEMENTED、3 项 IN_PROGRESS、22 项 PLANNED；6 个 B 入站操作已实现。AT-09/11/12 仅局部验证，AT-37 补 B 接口证据。BE-08/10 已交付最新 main，BE-17 技术依赖已就绪但本轮仅做集成检查；BE-12 等 BE-17，BE-18 仍缺 BE-14。详见 [B 实施记录](BE-11-13-15-B-MODULE.md)。本轮集成事实见 [合并检查](B-MAIN-INTEGRATION.md)，更早日期的数量/待交付说明为历史。
 
-下表为验收目标：AT-01/37的BE-02部分、AT-02的基础持久化及AT-03/33的公共事务/快照及AT-04的公共幂等部分、AT-05/06/07的BE-06身份部分及AT-06/07的BE-07账号管理部分为PARTIALLY_VERIFIED，其余32项DESIGNED_NOT_RUN；完整业务仍未验收，局部证据见[BE-02实施记录](BE-02-IMPLEMENTATION.md)、[持久化基础验证](BE-03-PERSISTENCE.md)、[公共事务](BE-04-TRANSACTIONS.md)、[幂等机制](BE-05-IDEMPOTENCY.md)、[身份实施](BE-06-IDENTITY.md)及[账号管理](BE-07-ACCOUNTS.md)。其中AT-40为前端后置交接，不计本期后端验收；其余40项覆盖后端、部署及协作。实际执行需对应Issue按项目TDD技能记录失败→实现→通过，并在隔离MySQL8.4运行关键事务/并发/故障场景。
+下表为验收目标：AT-01/37的BE-02部分、AT-02的基础持久化及AT-03/33的公共事务/快照及AT-04的公共幂等部分、AT-05/06/07的BE-06身份部分及AT-06/07的BE-07账号管理部分、AT-36的BE-32打包初始化/配置部分为PARTIALLY_VERIFIED，AT-13/27/29的BE-10局部行为为PARTIALLY_VERIFIED，AT-08/19的BE-08任命读取/上下文/覆盖部分为PARTIALLY_VERIFIED，其余26项DESIGNED_NOT_RUN；完整业务仍未验收，局部证据见[BE-02实施记录](BE-02-IMPLEMENTATION.md)、[持久化基础验证](BE-03-PERSISTENCE.md)、[公共事务](BE-04-TRANSACTIONS.md)、[幂等机制](BE-05-IDEMPOTENCY.md)、[身份实施](BE-06-IDENTITY.md)、[账号管理](BE-07-ACCOUNTS.md)及[部署初始化](BE-32-DEPLOYMENT.md)。其中AT-40为前端后置交接，不计本期后端验收；其余40项覆盖后端、部署及协作。实际执行需对应Issue按项目TDD技能记录失败→实现→通过，并在隔离MySQL8.4运行关键事务/并发/故障场景。
 
 D-038阶段约定：用户先验证BE-01～05的公共机制和对应acceptanceScope，F-01～06为基座交接检查，不新增业务测试编号。真实身份、草稿删除、审批、导入等端到端场景留业务分派后补齐；夹具证明机制不能标记整个AT或业务已通过。D-053已确认F-01～06，基座已合并并推送main/b68aa9a；见FOUNDATION-REVIEW.md。
 

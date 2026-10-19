@@ -1,3 +1,9 @@
+server:
+  # Only a local trusted reverse proxy can reach this loopback-bound connector.
+  forward-headers-strategy: native
+
 rbac:
   runtime:
     instance-id: ${RBAC_INSTANCE_ID}
+  storage:
+    import-directory: ${RBAC_IMPORT_DIRECTORY:}

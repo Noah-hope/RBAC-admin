@@ -289,7 +289,7 @@
         "AppointmentPage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "listAccounts",
@@ -1767,7 +1767,7 @@
         "EmployeePage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "getEmployee",
@@ -1844,7 +1844,7 @@
         "Employee"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listEmployments",
@@ -1946,7 +1946,7 @@
         "EmploymentPage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listGrants",
@@ -3380,7 +3380,7 @@
         "CompanyPage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listDepartments",
@@ -3468,7 +3468,7 @@
         "DepartmentPage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listPositions",
@@ -3561,7 +3561,7 @@
         "PositionPage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "employeeStatePreview",
@@ -3786,7 +3786,7 @@
         "ScopePage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "createScope",
@@ -3980,7 +3980,7 @@
         "Scope"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "replaceScope",
@@ -4133,7 +4133,7 @@
         "AppointmentPage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "scopeEditPreview",

@@ -1,6 +1,15 @@
 # 后端工程
 
 B 模块接入（2026-10-19）：本轮已在任务分支实现系统登记/查询、角色读取/元数据修改和内部有效配置应用器。沿用既有身份与幂等启用配置，无新增环境变量、依赖或迁移。六个 HTTP 操作、权限边界、C/BE-25 内部调用约定及真实 RED/GREEN 见 [B 实施记录](../docs/05-detailed-design/BE-11-13-15-B-MODULE.md)。完整 `clean verify -Pmysql-check` 为 75 普通测试 + 92 MySQL 检查通过；部署与完整 OA 链路尚未验收。
+BE-08已通过[PR #2](https://github.com/Noah-hope/RBAC-admin/pull/2)交付main/ca85189（D-069），保持OWNER_ACCEPTED；组员更新main即可复用，无新迁移或密钥。下方待交付为历史。
+
+BE-08已按D-068获A确认，待主线交付；下方待确认是此前历史。[PR正文](../docs/05-detailed-design/BE-08-PR.md)已准备，尚未创建或合并。
+
+BE-08 已实现四个任命/范围 GET 及统一当前上下文解析/覆盖策略，使用 `scope/repository` 的 Spring Data JPA 只读映射和仓储；`people` 查询复用同一解析器。无需新增数据库迁移或密钥，待 A 确认及主线交付。接口、真实验证及本机步骤见 [BE-08](../docs/05-detailed-design/BE-08-MANAGEMENT-SCOPE.md)。
+
+BE-32已获A确认并通过[PR #1](https://github.com/Noah-hope/RBAC-admin/pull/1)交付main/609ee4b（D-063），组员可更新main后按[部署与本机初始化指南](../deploy/README.md)使用；真实服务器验收仍为BE-34。
+
+BE-32：管理员初始化、jar 发布和 Linux 启动示例见 [部署与初始化操作](../deploy/README.md)，设计与验证见 [BE-32](../docs/05-detailed-design/BE-32-DEPLOYMENT.md)。初始化使用独立 `BootstrapAdminApplication`，不需要另外生成 RSA/HMAC 密钥，也不会在普通启动时自动创建账号。服务器与本机使用同一代码/jar，差别只在外置配置和启动方式；当前尚未部署云服务器。
 
 BE-07已实现账号列表/详情/创建/启停/密码重置，并按D-060交付main，复用BE-06身份和BE-05幂等，不新增迁移或密钥。读/写权限、原版本重放及本机验证步骤见[账号管理](../docs/05-detailed-design/BE-07-ACCOUNTS.md)；BE-07已按D-059本人确认，BE-06已按D-057确认，两项均已合入推送main/ff19d17并回查一致，初始总管理员仍归BE-32。下方BE-06“待确认”为此前实施记录。
 

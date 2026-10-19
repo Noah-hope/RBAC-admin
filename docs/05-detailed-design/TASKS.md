@@ -1,8 +1,8 @@
 # 本地Issue草案与验收卡
 
-D-061（2026-10-19）当前：B 的 BE-11/13/15 已实现并在独立 MySQL 验证，任务为 IN_PROGRESS（待负责人确认），未合并或推送。当前共 7 项 OWNER_ACCEPTED、3 项 IN_PROGRESS、25 项 PLANNED；6 个 B 入站操作已实现。AT-09/11/12 仅局部验证，AT-37 补 B 接口证据；完整业务验收仍开放。BE-17 缺 BE-08/10，BE-12 等 BE-17，BE-18 缺 BE-10/14。详见 [B 实施记录](BE-11-13-15-B-MODULE.md)。下方 D-060 及更早的阶段汇总为历史，本轮任务卡和机器清单以本段为准。
+D-070（2026-10-19）B 状态：BE-11/13/15 已实现，任务为 IN_PROGRESS（待负责人确认），原提交 abc5cf2 已推送 B 分支，未合入 main。当前共 9 项 OWNER_ACCEPTED、1 项 IMPLEMENTED、3 项 IN_PROGRESS、22 项 PLANNED；6 个 B 入站操作已实现。AT-09/11/12 仅局部验证，AT-37 补 B 接口证据。BE-08/10 已交付最新 main，BE-17 技术依赖已就绪但本轮仅做集成检查；BE-12 等 BE-17，BE-18 仍缺 BE-14。详见 [B 实施记录](BE-11-13-15-B-MODULE.md)。本轮集成事实见 [合并检查](B-MAIN-INTEGRATION.md)，更早日期的数量/待交付说明为历史。
 
-修订1.4/D-055四人分工，沿用D-053主线交付、D-051协作规则与D-050核对：D-053已确认F-01～06，基座已合并并推送main/b68aa9a（见FOUNDATION-REVIEW.md）；BE-01为OWNER_ACCEPTED（D-053整体交接确认，成员接入待办保留）；BE-02为OWNER_ACCEPTED（D-042/f911c60）；BE-03为OWNER_ACCEPTED（用户核对后回复继续，D-046/b8caeb2，见BE-03-PERSISTENCE）；BE-04为OWNER_ACCEPTED（D-047/58b556a，用户确认服务UP；公共事务/审计/快照证据见BE-04-TRANSACTIONS），BE-05为OWNER_ACCEPTED（D-049/d059d11，用户确认启用true及本机健康UP，见BE-05-IDEMPOTENCY），BE-06为OWNER_ACCEPTED（D-056实施、D-057本人确认，已由D-060交付main），BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、其余28项PLANNED。BE-01～05已由D-053整体确认，合并main/b68aa9a并推送回查通过。BE-01～05为用户先实现的基座；BE-06～35已按D-055登记A～D唯一成员代号，assignmentStatus为ASSIGNED，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、其余28项PLANNED；用户已认领A，GitHub账号与其他成员身份/环境待补，详见TEAM-ASSIGNMENT.md。D-051统一所有任务reviewPolicy=OWNER_ACCEPTANCE，不设置独立评审人，reviewerSlot/suggestedReviewerSlot保留null仅作格式兼容、不是待填写；单列评审工时为0。suggestedOwnerSlot保留为历史建议组，以ownerSlot为准。GitHub/main已就绪，未创建远程Issue/PR；BE编号不是平台Issue号。
+修订1.4/D-055四人分工，沿用D-053主线交付、D-051协作规则与D-050核对：D-053已确认F-01～06，基座已合并并推送main/b68aa9a（见FOUNDATION-REVIEW.md）；BE-01为OWNER_ACCEPTED（D-053整体交接确认，成员接入待办保留）；BE-02为OWNER_ACCEPTED（D-042/f911c60）；BE-03为OWNER_ACCEPTED（用户核对后回复继续，D-046/b8caeb2，见BE-03-PERSISTENCE）；BE-04为OWNER_ACCEPTED（D-047/58b556a，用户确认服务UP；公共事务/审计/快照证据见BE-04-TRANSACTIONS），BE-05为OWNER_ACCEPTED（D-049/d059d11，用户确认启用true及本机健康UP，见BE-05-IDEMPOTENCY），BE-06为OWNER_ACCEPTED（D-056实施、D-057本人确认，已由D-060交付main），BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED。BE-01～05已由D-053整体确认，合并main/b68aa9a并推送回查通过。BE-01～05为用户先实现的基座；BE-06～35已按D-055登记A～D唯一成员代号，assignmentStatus为ASSIGNED，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED；历史会话用户已认领A，D会话已认领并完成本机基座配置；当前A会话实施BE-08；实名/GitHub账号与其他成员环境待补，详见TEAM-ASSIGNMENT.md。D-051统一所有任务reviewPolicy=OWNER_ACCEPTANCE，不设置独立评审人，reviewerSlot/suggestedReviewerSlot保留null仅作格式兼容、不是待填写；单列评审工时为0。suggestedOwnerSlot保留为历史建议组，以ownerSlot为准。GitHub/main已就绪，BE-32的PR#1和BE-08的PR#2均已合并；其余任务未登记远程PR，BE编号不是平台Issue号。
 
 业务任务启动须同时满足FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED和原dependencies；这两个阶段门槛不是额外业务需求。基座验收见[FOUNDATION-HANDOFF.md](FOUNDATION-HANDOFF.md)。开发估算含设计细化/TDD/自测/文档及负责人核对确认；不再单列他人评审，外部等待不计。
 
@@ -96,7 +96,7 @@ D-061（2026-10-19）当前：B 的 BE-11/13/15 已实现并在独立 MySQL 验�
 
 ## BE-08 当前单项任命、范围读模型与覆盖策略
 
-- 状态：PLANNED；阶段BUSINESS；负责人A（成员代号），由负责人自检确认；模块M03,M11,M12。
+- 状态：OWNER_ACCEPTED；阶段BUSINESS；负责人A（成员代号），由负责人自检确认；模块M03,M11,M12。
 - 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-06,BE-10；开发估算1.5/3/5h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：myAppointments, listScopes, getScope, listScopeAppointments。
@@ -120,7 +120,7 @@ D-061（2026-10-19）当前：B 的 BE-11/13/15 已实现并在独立 MySQL 验�
 
 ## BE-10 组织、员工与任职读取及基础变更端口
 
-- 状态：PLANNED；阶段BUSINESS；负责人D（成员代号），由负责人自检确认；模块M02,M11,M12。
+- 状态：IMPLEMENTED；阶段BUSINESS；负责人D（成员代号），由负责人自检确认；模块M02,M11,M12。
 - 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-03,BE-04；开发估算1.5/3/5h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：listCompanies, listDepartments, listPositions, listEmployees, getEmployee, listEmployments。
@@ -385,7 +385,7 @@ D-061（2026-10-19）当前：B 的 BE-11/13/15 已实现并在独立 MySQL 验�
 
 ## BE-32 部署产物、配置与管理员初始化
 
-- 状态：PLANNED；阶段BUSINESS；负责人A（成员代号），由负责人自检确认；模块M00,M12。
+- 状态：OWNER_ACCEPTED；阶段BUSINESS；负责人A（成员代号），由负责人自检确认；模块M00,M12。
 - 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-01,BE-02,BE-03,BE-06；开发估算2/4/6h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。
