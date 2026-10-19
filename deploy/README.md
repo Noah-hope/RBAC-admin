@@ -27,6 +27,8 @@ BE-32 提供同一个 jar 的发布方法及通用 Linux 模板。Windows/IDE �
 6. 重跑初始化应拒绝 `ADMIN_ALREADY_EXISTS`，不会重置原密码。已有总管理员（包括停用账号）时不需要初始化；此工具不承担找回密码。
 7. 删除 IDEA 初始化配置中的口令或移除此配置；不要勾选“存储为项目文件”。正常运行配置不添加任何 `RBAC_BOOTSTRAP_*`。
 
+正常后端必须连接初始化管理员的同一实例/schema。可复制为 `BackendApplication-Dev`（dev库）和 `BackendApplication-Test`（test库），均使用 `rbac_app` 运行账号，分别保存URL，验证时选Test，不必每次修改。两份默认都用8080，切换前先停止当前实例；bootstrap只创建指定库的账号，不修改其他运行配置或同步其他库的数据。独立迁移仍使用 `rbac_migrator`。
+
 只读核对（选择本次目标库）：
 
 ```sql
@@ -52,6 +54,8 @@ Body 使用 JSON 对象，字段为 `loginName`、`password`；前者填写初�
 | 400 MALFORMED_REQUEST | 核对实际 URL、Content-Type、真实发送的 JSON；先排除 `//api/`、空正文或格式错误 |
 | 401 AUTHENTICATION_FAILED | 账号在运行库不存在、密码不匹配或当前账号资格无效；按统一失败响应处理，不能从正文区分具体原因 |
 | 201 | 登录成功；初始化账号首次应为 PASSWORD_CHANGE_ONLY，改密后重新登录为 NORMAL |
+
+账号列表 `GET /api/v1/admin/accounts` 返回422且errors为空时，核对 Params：可只发送 `page=1&pageSize=20`；未使用的employeeId/q/enabled取消勾选，不要发送空字符串。Body选none；Auth使用新密码重新登录后的正常token。若鉴权凭证由父级继承且输入框不可编辑，在右上凭证下拉切换“手动设置”后填入accessToken本身，不额外加Bearer前缀；实际请求应只出现一项有效Authorization头。本人改密和列表分别配置，登录请求保持无认证。
 
 登录 401 时先比较两个 IDEA 配置的目标：bootstrap 的 `RBAC_BOOTSTRAP_URL` 与正常 BackendApplication 的 `SPRING_DATASOURCE_URL` 应指向同一实例和 schema，例如均为 `rbac_admin_test`。修改运行配置后须停止旧进程并重新启动；Navicat 选择了测试库不代表 Java 应用也连接测试库。
 

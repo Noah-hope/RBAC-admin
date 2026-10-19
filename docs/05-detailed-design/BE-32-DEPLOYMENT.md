@@ -46,6 +46,14 @@
 - 本轮专属 MySQL8.4.8 仅监听回环随机非3306端口；写前核对进程/独立数据目录与实例，结束后自定义 schema/随机账号为 0/0，复核实例身份后关闭专属进程。临时 RSA 目录已删除。已有开发/测试库均未操作。
 - 静态生成器/追踪校验通过；35 任务、68 操作、原 API/DDL/迁移和依赖不变。AT-36 新增局部证据，完整服务器验收保持开放。
 
+## A 的本机验证记录（2026-10-19）
+
+用户发现正常 BackendApplication 原先连接 dev，而 BootstrapTestAdmin 指向 test；正常应用改连同一测试库后，截图确认首次登录201、SUPER_ADMIN、PASSWORD_CHANGE_ONLY。随后使用新密码重新登录，截图确认201、NORMAL；用户最终回复“成功获取了”，并提供账号分页正文：employeeId=NULL、enabled=true、mustChangePassword=false、version=2、page=1、pageSize=20、total=1。
+
+据此记录初始管理员首次登录、改密生效、新密码正常会话和账号列表读取的本机链路通过。最终截图未包含HTTP状态栏，不能单独将其记为已截图核验200；改密204、旧token拒绝、重复初始化及审计SQL本轮也未单独提供人工结果，相关自动化证据仍沿用上表，不扩大用户实际回报。真实密码/token/账号UUID不写入文档。
+
+列表此前422的排查重点为五个查询参数；用户按page=1/pageSize=20、取消未用筛选参数的步骤后回报成功，不据此推断究竟哪个原始参数非法。部署指南补充可选空值、独立运行配置与手动鉴权操作。本轮agent仅更新文档/静态追踪，没有登录或操作用户数据库、重跑Java/MySQL、修改契约或代码。BE-32仍待A整体确认，未合并/推送；真实服务器验收仍由BE-34承担。
+
 ## 文件与接入
 
 - `backend/.../bootstrap/BootstrapAdminApplication.java`：唯一显式初始化入口，无 Spring 组件装配。
