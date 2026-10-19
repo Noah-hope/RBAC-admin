@@ -1,5 +1,7 @@
 # 项目共享记忆
 
+D-061 本机排查补充（2026-10-19）：用户确认首次初始化配置的密码长度不足，后续 Apifox 先出现空/非法 RequestId 的422、再出现400，最新为401 AUTHENTICATION_FAILED。已读源码/Git契约并 refresh/read/ref 复核 Apifox MCP：默认模块登录仍声明AdminJwt、截图实际发出未解析 Bearer变量，Git登录为公开security:[]；这是既有默认模块/指定导出边界，不改写过去指定1.2.0导出已核对的事实。后端登录路径跳过Bearer，因此不把客户端继承认证直接当作401原因；仍须用户核对正常应用的目标库、初始账号及本机密码。补充 [登录排查说明](../../deploy/README.md)与Apifox复核记录；未读取本机秘密、连接已有库或执行登录，未改Java/API/DDL。本机成功登录/首次改密仍未确认，BE-32保持待A确认，未合并推送。
+
 D-061（2026-10-19）：用户 A 要求开始 BE-32，前置已交付 main；在 codex/be-32-bootstrap 先设计/TDD 实现独立 BootstrapAdminApplication、server 配置保护和 deploy 模板/操作指南。普通启动不初始化；DML 账号、目标库显式确认、拒绝覆盖已有总管理员、首次改密、guard/账号/审计原子提交。两组实际 RED 留证，新增 5 离线＋8 引擎，完整 clean verify/mysql-check 为 80＋88，全无失败/错误/跳过；第二次独立 clean verify 的 jar SHA256 一致。专属随机端口 MySQL8.4.8 的自定义 schema/账号清理为0/0、专属进程关闭、临时密钥目录归零，用户已有库未操作。服务器和本机使用相同代码/jar，差别只在外置配置/启动方式，无需用户当前选择 OS；未连接或部署云服务器，systemd/nginx/HTTPS/备份恢复由 BE-34 核验。BE-32 仍 IN_PROGRESS 待 A 确认，未合并/推送；BE-06/07 既有确认及 main 交付保持，其余27项 PLANNED，BE-08 仍等待 D/BE-10。同步任务生成器/校验器及接入说明，AT-36 仅局部验证；[实现证据](../05-detailed-design/BE-32-DEPLOYMENT.md)、[IDEA 初始化与部署指南](../../deploy/README.md)。保留无关 .codeartsdoer，本轮不创建远程 Issue/PR。
 
 D-060（2026-10-19）：用户明确“合并main并推送”。fetch核对本地/远程main均e58b6ba，以9b6d89e为源无冲突no-ff合入main，合并提交ff19d1792a6934dbd6bca6c174dcba29f7acdad8；合并树与源一致。push成功，远程refs/heads/main回查为同一SHA。BE-06/07均OWNER_ACCEPTED且已交付共同main，9个正式操作主责记录同步，其他28项PLANNED。复核现有75离线报告及完整日志的80引擎通过证据，后端自584eb4e未改，本轮不重跑Java/SQL、不读密钥或动已有库。保留任务分支及无关.codeartsdoer；下方D-059及更早待主线为历史。组员可pull共同main，B/BE-11、D/BE-10或28及A/BE-32可按各自依赖安排；A/BE-08仍等D/BE-10，不自动开新任务。

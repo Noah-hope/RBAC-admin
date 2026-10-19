@@ -40,6 +40,32 @@ FROM audit_event WHERE event_type='ADMIN_BOOTSTRAPPED';
 
 退出码：0 创建成功；2 配置/目标确认无效；3 已有总管理员或登录名被占用；4 数据库、迁移、guard 或事务失败。遇 4 先核对数据库中的账号和审计状态，不自动重试或清库。Flyway 校验和不符时按迁移恢复流程处理，不直接 repair。
 
+## 本机登录调试
+
+`POST http://localhost:8080/api/v1/admin/sessions` 是公开登录入口，Apifox 的 Auth 应选“无认证”，不继承项目 Bearer；实际请求不应出现未解析的 `Bearer {{bearerToken}}`。Git 的登录契约为 `security: []`。默认模块/MCP 暴露的旧认证差异不能当作正确登录设置，导出覆盖也不等于已修改每份本机调试请求。
+
+Body 使用 JSON 对象，字段为 `loginName`、`password`；前者填写初始化时的管理员登录名，后者填写首次 `BOOTSTRAP_CREATED` 时的管理员密码。`RBAC_BOOTSTRAP_PASSWORD` 是数据库口令，不能用来登录后台。初始化成功后，再改 bootstrap 环境变量不会重置已存在账号；首次改密成功后应使用新密码。
+
+| 响应 | 本项目的排查方向 |
+| --- | --- |
+| 422，指向 X-Request-Id | 删除空、非法或重复请求头，允许后端生成；不是管理员密码验证失败 |
+| 400 MALFORMED_REQUEST | 核对实际 URL、Content-Type、真实发送的 JSON；先排除 `//api/`、空正文或格式错误 |
+| 401 AUTHENTICATION_FAILED | 账号在运行库不存在、密码不匹配或当前账号资格无效；按统一失败响应处理，不能从正文区分具体原因 |
+| 201 | 登录成功；初始化账号首次应为 PASSWORD_CHANGE_ONLY，改密后重新登录为 NORMAL |
+
+登录 401 时先比较两个 IDEA 配置的目标：bootstrap 的 `RBAC_BOOTSTRAP_URL` 与正常 BackendApplication 的 `SPRING_DATASOURCE_URL` 应指向同一实例和 schema，例如均为 `rbac_admin_test`。修改运行配置后须停止旧进程并重新启动；Navicat 选择了测试库不代表 Java 应用也连接测试库。
+
+在初始化目标库运行以下只读查询，不查询密码哈希或会话：
+
+```sql
+SELECT login_name, employee_id, enabled, is_super_admin, must_change_password
+FROM rbac_admin_test.admin_account WHERE login_name='initial.admin';
+```
+
+首次初始化账号应存在，employee_id=NULL、enabled=1、is_super_admin=1；必须改密标记为1不会阻止登录，只会限制首次会话。没有记录时先核对初始化成功输出及实际目标；已有记录时不清库、不手工改哈希、不靠重跑初始化重置密码。密码只在本机核对，不粘贴到共享资料。
+
+当前后端对该 POST 路径跳过 Bearer 校验，因此发现客户端继承 Bearer 时应纠正配置，但不能据此断言它导致了本次 401。Apifox 右侧若固定选择 201 校验，会将正确的 401 Problem 响应误报为“成功结构不匹配”；应分别核对各状态定义。正式排查不降低后端认证要求。
+
 ## 构建与发布产物
 
 在已提交的任务版本上记录 `git rev-parse HEAD` 和 `git status --porcelain`。有工作区改动时先归入对应提交，不能把未提交代码标成某个已存在的 commit。backend 中执行：
