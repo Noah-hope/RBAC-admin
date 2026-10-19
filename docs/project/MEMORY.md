@@ -1,5 +1,7 @@
 # 项目共享记忆
 
+D-066（2026-10-19）：A 要求拉取远程、同步本地并准备开发 BE-08。fetch 后将本地 main 从5966834无冲突快进至远程db1be16，建立codex/be-08-management-scope；保留无关.codeartsdoer。已核对BE-10交付及OrganizationReader同事务接入要求，准备[BE-08设计与测试顺序](../05-detailed-design/BE-08-MANAGEMENT-SCOPE.md)。本轮仅开发准备，BE-08仍PLANNED，未修改业务代码或运行Java/SQL，未推送或创建PR；BE-10保持IMPLEMENTED/已交付main、D人工验收开放，不代为确认。
+
 D-065实际交付：已按授权将codex/be-10-people来源6bfae88c89d0bad4b1599787ea47e2107a3bbcf9以no-ff无冲突合入main/8f1db6927b6d82e1a352ad016a4c1c056a6c648a，合并双亲为5966834和6bfae88，合并树与验证来源一致；git push origin main成功，ls-remote回查远程main为同SHA。BE-10的6个正式查询操作登记IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER，整项IMPLEMENTED、mergedToMain=true、ownerAccepted=false，保留成员D后续人工验收，不把合并授权等同验收通过。任务分支保留，当前81＋122验证证据见[BE-10](../05-detailed-design/BE-10-PEOPLE.md)；交付追踪由生成器统一更新。A可核对main提供的端口安排BE-08；其他26项PLANNED，不自动开始新任务。当前收尾只更新文档/静态交付证据，不重复执行Java或数据库。
 
 D-065验证完成：BE-10最终代码完整clean verify/mysql-check为81离线＋122真实MySQL，失败/错误/跳过均0；六个查询HTTP、受控导入基础写与既有读取均已实现验证。版本上限无变化与迁移审计新公司归属补充RED后修正。专属23310实例随机schema/账号0/0，PID8392正常退出，临时RSA目录0，本机原MySQL84仍Running；未操作已有项目库。静态追踪同步通过。按本轮明确授权准备合入main并推送，实际交付SHA待成功后补；负责人人工验收未虚构，BE-10为IMPLEMENTED。
