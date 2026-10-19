@@ -154,8 +154,9 @@
       "UC-01"
     ],
     "reviewScenario": "S02/S03",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-11-13-15-B-MODULE.md"
   },
   {
     "id": "AT-10",
@@ -190,8 +191,9 @@
       "UC-02"
     ],
     "reviewScenario": "S04",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-11-13-15-B-MODULE.md"
   },
   {
     "id": "AT-12",
@@ -206,8 +208,9 @@
       "UC-02"
     ],
     "reviewScenario": "S05",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-11-13-15-B-MODULE.md"
   },
   {
     "id": "AT-13",
@@ -628,7 +631,10 @@
     "reviewScenario": "",
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
-    "evidence": "BE-02-IMPLEMENTATION.md"
+    "evidence": "BE-02-IMPLEMENTATION.md",
+    "additionalEvidence": [
+      "BE-11-13-15-B-MODULE.md"
+    ]
   },
   {
     "id": "AT-38",

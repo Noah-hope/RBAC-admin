@@ -1,5 +1,6 @@
 # 后端工程
 
+B 模块接入（2026-10-19）：本轮已在任务分支实现系统登记/查询、角色读取/元数据修改和内部有效配置应用器。沿用既有身份与幂等启用配置，无新增环境变量、依赖或迁移。六个 HTTP 操作、权限边界、C/BE-25 内部调用约定及真实 RED/GREEN 见 [B 实施记录](../docs/05-detailed-design/BE-11-13-15-B-MODULE.md)。完整 `clean verify -Pmysql-check` 为 75 普通测试 + 92 MySQL 检查通过；部署与完整 OA 链路尚未验收。
 BE-08已通过[PR #2](https://github.com/Noah-hope/RBAC-admin/pull/2)交付main/ca85189（D-069），保持OWNER_ACCEPTED；组员更新main即可复用，无新迁移或密钥。下方待交付为历史。
 
 BE-08已按D-068获A确认，待主线交付；下方待确认是此前历史。[PR正文](../docs/05-detailed-design/BE-08-PR.md)已准备，尚未创建或合并。

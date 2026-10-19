@@ -1,5 +1,10 @@
 # 项目共享记忆
 
+D-072（2026-10-20）：当前 B 用户明确授权拉取、按原要求修正后合入远程 main。最新远程仍为 5b695a7；B 已接入该主线，并按 TDD 补查重复管理上下文头，真实 RED 为期望 422、实际 200，随后修正为与人员接口一致的拒绝行为。完整回归和实际合并/推送结果成功后记录于 [集成交付记录](../05-detailed-design/B-MAIN-INTEGRATION.md)。本轮保留任务分支，不强推、不部署；B 人工验收不因交付授权自动记为完成。
+
+D-071（2026-10-20）：按当前 B 用户要求将最新 main/5b695a7 接入 B 任务分支并核对原设计，不改远程 main。复用正式 BE-08 resolver 修正他人任命在人员/B 接口间 403/409 不一致；先真实 RED，再完整 85 普通＋149 真实 MySQL 检查通过。原 B/abc5cf2 已推送分支；此前“未推送”“BE-08/10 未交付”为历史。BE-17 技术依赖已就绪但本轮仅集成检查，BE-12/18 等原剩余依赖。B 的原 D-061 编号因与 A 冲突调整为 D-070，双方原验收事实不变。详见 [集成记录](../05-detailed-design/B-MAIN-INTEGRATION.md)。
+
+D-070（2026-10-19）：当前用户授权直接按现有计划实施 B，不再逐项询问。在共同主线 9857e5e 上创建 `codex/be-11-13-15-b-module`，实现 BE-11 系统登记/列表/详情、BE-13 角色列表/详情/元数据修改和 BE-15 内部配置应用器；未推送或合并 main。使用项目 TDD 技能，真实 RED/GREEN 与完整构建、隔离 MySQL 结果见 [B 实施记录](../05-detailed-design/BE-11-13-15-B-MODULE.md)。沿用原契约和迁移，未操作已有数据库。三项 IN_PROGRESS 表示已实现待负责人确认，不虚构 OWNER_ACCEPTED 或 OA 全链路完成；原 A 的 D-056～060 为既往交付事实。BE-17 仍缺 BE-08/10，BE-12 等 BE-17，BE-18 缺 BE-10/14，BE-33/35 仍等待其他板块与部署验收。
 D-069实际交付（2026-10-19）：按A明确指令推送BE-08任务分支并创建[PR #2](https://github.com/Noah-hope/RBAC-admin/pull/2)，正文包含变更、85离线＋136真实MySQL证据和组员接入。已核对head为2199f0ef7b36a048845842c9803b08acf0f6612a、base为db1be16、mergeable=true/clean；检查/status条目0，不称CI通过。普通merge生成ca8518918bd668f48769134763a10a163e10612b，回查PR为closed/merged=true，远程main同SHA，父提交及合并树与来源一致。本地main已快进同步，BE-08维持D-068的OWNER_ACCEPTED并登记mergedToMain=true、PR#2；任务分支保留，未动无关.codeartsdoer。后端自1c0eb3c未改，本轮只核对旧证据及静态追踪，不重跑Java/SQL、不部署。B可pull后推进BE-17；A的BE-09仍须BE-17，其他未实现任务不自动开始。
 
 D-069交付授权（2026-10-19）：A明确要求提交PR并合并主线，已授权推送codex/be-08-management-scope、创建main目标PR、核对后合并并同步记录。本轮fetch核对远程main仍db1be16；后端自已验证1c0eb3c未改，复核85离线＋136真实MySQL成功日志，沿用原证据不重跑Java/SQL。实际PR链接与合并SHA待成功后补，不能将授权记为交付成功；保留任务分支及无关.codeartsdoer，不部署或开新业务。

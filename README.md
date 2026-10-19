@@ -1,5 +1,6 @@
 # rbac-admin · 集中权限管理系统
 
+D-070（2026-10-19）：B 的 BE-11、BE-13、BE-15 已在独立任务分支实现，真实测试和接入约定见 [B 实施记录](docs/05-detailed-design/BE-11-13-15-B-MODULE.md)。待负责人确认，未合并或推送；BE-17/12/18 仍按原依赖等待，完整后端与发布验收尚未完成。下方旧日期的任务数量与运行结果为历史。
 D-069：BE-08已按A确认并通过[PR #2](https://github.com/Noah-hope/RBAC-admin/pull/2)交付main/ca85189。本地及远程主线已核对，组员可pull并按[BE-08交接](docs/05-detailed-design/BE-08-MANAGEMENT-SCOPE.md)复用；B可推进BE-17，A/BE-09仍等BE-17。下方待交付为历史。
 
 D-068：A已确认BE-08验证通过，当前待共同main交付。已准备[PR正文](docs/05-detailed-design/BE-08-PR.md)，尚未推送、创建或合并；A后续BE-09仍等B/BE-17。下方待A确认是此前历史。
