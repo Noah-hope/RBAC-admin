@@ -221,8 +221,10 @@
       "UC-03"
     ],
     "reviewScenario": "S06",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-10-PEOPLE.md",
+    "verificationScope": "INTERNAL_ORGANIZATION_AND_CURRENT_EMPLOYMENT_FACTS_ONLY"
   },
   {
     "id": "AT-14",
