@@ -149,7 +149,7 @@ def checks(report):
         require(module['assignmentStatus']==('OWNER_CONFIRMED' if module['id']=='M00' else ('SHARED_BY_TASK' if module['id'] in shared else 'ASSIGNED')),'共享模块未按任务区分责任')
     referenced=set()
     for task in tasks:
-        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'IN_PROGRESS'}.get(task['id'],'PLANNED')
+        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
         require(task['status']==expected_status,'任务准备/实现状态不符')
         if task['id']=='BE-06':
             progress=task['implementationProgress']
@@ -241,15 +241,25 @@ def checks(report):
         if task['id']=='BE-07':
             progress=task.get('implementationProgress',{})
             require(progress.get('decision')=='D-058' and progress.get('evidence')=='BE-07-ACCOUNTS.md'
-                    and progress.get('implemented') is True and progress.get('ownerAccepted') is False
+                    and progress.get('implemented') is True and progress.get('ownerAccepted') is True
                     and progress.get('mergedToMain') is False and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY',
-                    'BE-07实施及待本人确认边界不符')
+                    'BE-07实施及本人确认/主线边界不符')
             require(progress.get('dependencyIntegrationPolicy')=='ACCEPTED_ANCESTOR_WITH_EXPLICIT_CONTINUATION'
                     and progress.get('acceptedDependency')=='BE-06'
                     and progress.get('acceptedDependencyCommit')=='1907a63f23ab35ad85404c9bde6f7bb2648fc704',
                     'BE-07未记录已确认祖先与显式继续授权')
             require(subprocess.run(['git','merge-base','--is-ancestor',progress['acceptedDependencyCommit'],'HEAD'],cwd=REPO).returncode==0,
                     'BE-07分支不包含已确认BE-06祖先')
+            acceptance=task.get('ownerAcceptance',{})
+            require(acceptance.get('acceptedBy')=='USER' and acceptance.get('ownerSlot')=='A'
+                    and acceptance.get('date')=='2026-10-19' and acceptance.get('scope')=='BE-07'
+                    and acceptance.get('decision')=='D-059' and acceptance.get('source')=='USER_MESSAGE'
+                    and acceptance.get('message')=='BE-07验证通过'
+                    and acceptance.get('verificationMessage')=='BE-07这两项验证通过，下一步做什么'
+                    and acceptance.get('implementationCommit')=='584eb4e8365b0041c09ccf3f76fcaf284bb32e26'
+                    and acceptance.get('mergedToMain') is False,'BE-07负责人确认依据不符')
+            require(subprocess.check_output(['git','show','584eb4e:backend/src/main/java/com/adgn/backend/identity/service/AccountService.java'],cwd=REPO),
+                    'BE-07确认版本缺少实际实现')
         if task['id'] in foundation_ids:
             require(task['ownerAcceptance'].get('mainMergeCommit')==phase_plan['foundation']['mainDelivery']['mergeCommit'],'基座任务缺主线交付提交')
         require(task['remoteIssueNumber'] is None and task['remotePrNumber'] is None,'伪造远程事项')
@@ -310,7 +320,7 @@ def checks(report):
         require(row['ownerSlot']==assignments[task['id']] and row['assignmentStatus']=='ASSIGNED' and row['phase']=='BUSINESS','业务操作与任务负责人不符')
         require(row['suggestedOwnerSlot']==task['suggestedOwnerSlot'] and row['startConditions']==required_gates,'操作与任务分工/阶段不一致')
         require(set(row['tables'])<=tables,'操作引用未知表')
-        require(set(row['acceptance'])<=cids and row['status']==('OWNER_ACCEPTED_PENDING_MAIN_DELIVERY' if task['id']=='BE-06' else ('IMPLEMENTED_PENDING_OWNER_ACCEPTANCE' if task['id']=='BE-07' else 'PLANNED_NOT_IMPLEMENTED')),'验收引用/实施状态不符')
+        require(set(row['acceptance'])<=cids and row['status']==('OWNER_ACCEPTED_PENDING_MAIN_DELIVERY' if task['id'] in {'BE-06','BE-07'} else 'PLANNED_NOT_IMPLEMENTED'),'验收引用/实施状态不符')
         if direction=='INBOUND':require('AT-37'in row['acceptance'],'入站缺全契约验收')
         require(set(row['requestModels'])<=api['components']['schemas'].keys(),'未知输入模型')
         require(set(model for values in row['successResponseModels'].values() for model in values)<=api['components']['schemas'].keys(),'未知输出模型')
@@ -458,8 +468,8 @@ def checks(report):
         decisionIds=len(decisions),upstreamSha256=source_hashes,
         planRevision='1.4',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=0,
         businessTasksAssigned=len(assignments),assignmentDecision='D-055',memberIdentitiesPending=4,
-        confirmedUserAlias='A',implementationDecision='D-058',implementedBusinessTasksPendingOwner=['BE-07'],
-        ownerAcceptedBusinessTasks=['BE-06'],businessTasksPendingMainDelivery=['BE-06','BE-07'],businessAcceptanceDecision='D-057',
+        confirmedUserAlias='A',implementationDecision='D-058',implementedBusinessTasksPendingOwner=[],
+        ownerAcceptedBusinessTasks=['BE-06','BE-07'],businessTasksPendingMainDelivery=['BE-06','BE-07'],businessAcceptanceDecision='D-059',
         foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:OWNER_ACCEPTED',
         foundationGateStatus=phase_plan['gateStatus'],businessOperationsAwaitingAssignment=0,businessOperationsAssigned=len(mapping),
         artifactSha256={n:sha(ROOT/n) for n in GENERATED}))

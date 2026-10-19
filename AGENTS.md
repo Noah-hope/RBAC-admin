@@ -24,6 +24,8 @@ D-039补充：基座阶段由用户本人确认，无需其他成员评审；TDD
 
 D-057已记录用户A确认BE-06通过，主线交付仍待办理；D-058用户明确继续BE-07，允许在含已确认BE-06祖先的codex/be-07-accounts任务分支上连续实施，不虚构main已交付，也不自行合并推送。BE-07先设计/TDD并复用身份、事务、幂等和审计，完成后仍由A确认；其他团队依赖按实际主线交付核对。
 
+D-059已记录A确认BE-07（本机健康UP及未登录401回报，结合既有75离线＋80真实MySQL证据）；BE-06/07均OWNER_ACCEPTED待主线交付，其他28项PLANNED。下一步建议交付主线，A可安排BE-32，BE-08仍须D/BE-10；未授权就不把建议当作新任务实施或合并推送。
+
 完整阶段交付要求见 `docs/project/WORKFLOW.md`，当前阶段及交接事实见 `docs/project/MEMORY.md`。不因目录或文档存在就宣布阶段完成。尚未选定的技术不自行记为既定方案。
 
 项目技能统一从 `.agents/skills/<技能名>/SKILL.md` 读取，包含 `grill-me`、`grilling`、`frontend-design`、`test-driven-development`；优先使用仓库副本，来源与版本见 `docs/project/SKILLS.md`。`grill-me` 是委托入口，实际访谈同时读取 `grilling`。后续正式业务逻辑的新功能、缺陷修复及行为变更使用 TDD，编写或修改测试时同时读取其 `writing-good-tests.md`。
