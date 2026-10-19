@@ -1,5 +1,7 @@
 # 项目协作规则
 
+D-072实际交付（2026-10-20）：B 的 BE-11/13/15 已由 b92cdbb 合入并交付远程 main/0e391c6，B 分支保留；远程完整 SHA 回查一致，合并树等于源分支。85 普通＋150 真实 MySQL/HTTP 检查及完整静态校验通过；任务仍待负责人验收，不代记 OWNER_ACCEPTED。Git 连接超时改用官方 Git API 按本地对象 SHA 原样、force=false 交付，不强推/创建 PR/部署。BE-17 技术依赖就绪但未实现；下方此前未交付为历史。见 docs/05-detailed-design/B-MAIN-INTEGRATION.md。
+
 D-072（2026-10-20）：当前 B 用户明确要求“现在拉到本地做合并，按照最初要求修正以后，合并到远程”，授权拉取最新 main、依原设计修正和验证后合并并推送远程 main；此前 D-071 不推送 main 的边界为历史。保留任务分支、不强推、不部署；实现交付与负责人验收分别记录。当前验证及实际交付见 docs/05-detailed-design/B-MAIN-INTEGRATION.md，不把 BE-11/13/15 交付说成整个 B 或 OA 全链路完成。
 
 D-069实际交付（2026-10-19）：BE-08已通过[PR #2](https://github.com/Noah-hope/RBAC-admin/pull/2)合入远程main，来源2199f0ef7b36a048845842c9803b08acf0f6612a，合并ca8518918bd668f48769134763a10a163e10612b。PR回查closed/merged=true，远程main SHA回查一致，合并树等于来源，本地main已同步；任务OWNER_ACCEPTED、mergedToMain=true、remotePrNumber=2，原任务分支及无关.codeartsdoer保留。远程检查条目0，不记为CI通过；沿用85＋136真实验证，本轮无Java/SQL或部署。B可更新main接入BE-17，A/BE-09仍等BE-17，不自动开新任务。下方待交付为历史。

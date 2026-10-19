@@ -15,6 +15,8 @@ FOUNDATION_IDS = {f'BE-{n:02}' for n in range(1, 6)}
 BUSINESS_START = ['FOUNDATION_ACCEPTED', 'BUSINESS_OWNER_ASSIGNED']
 B_IMPLEMENTED = {'BE-11', 'BE-13', 'BE-15'}
 B_EVIDENCE = 'BE-11-13-15-B-MODULE.md'
+B_SOURCE_COMMIT = 'b92cdbb9b6a30b6e697f7ad80ef06e38fa034067'
+B_MERGE_COMMIT = '0e391c6a652fb9ee12991b7b7d2ac85a3922d166'
 FOUNDATION_SOURCE_COMMIT = '379ad438220a478093947f657d04eb56a6a2efcb'
 FOUNDATION_MERGE_COMMIT = 'b68aa9aee6e78dd0b2cc1922d68028ce68ddeb11'
 BUSINESS_SOURCE_COMMIT = '9b6d89e20e2f1646bd2ed96223d9c43a21e2f96f'
@@ -313,6 +315,10 @@ ACCEPTANCE_SCOPES = {
     35: '汇总AT-39完整Issue/PR/commit/候选包与发布证据，检查其他后端AT均有实际结果；有未通过项时不得宣布全量发布完成。',
 }
 for task in TASKS:
+    if task['id'] in B_IMPLEMENTED:
+        task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=B_MERGE_COMMIT,
+            sourceCommit=B_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=B_MERGE_COMMIT,
+            deliveryDecision='D-072')
     if task['phase']=='FOUNDATION':
         task['ownerAcceptance']['mainMergeCommit']=FOUNDATION_MERGE_COMMIT
     if task['id'] in {'BE-06','BE-07'}:
@@ -341,7 +347,7 @@ def dump(name, value):
 def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
-        text = title+'\n\nD-070（2026-10-19）B 状态：BE-11/13/15 已实现，任务为 IN_PROGRESS（待负责人确认），原提交 abc5cf2 已推送 B 分支，未合入 main。当前共 9 项 OWNER_ACCEPTED、1 项 IMPLEMENTED、3 项 IN_PROGRESS、22 项 PLANNED；6 个 B 入站操作已实现。AT-09/11/12 仅局部验证，AT-37 补 B 接口证据。BE-08/10 已交付最新 main，BE-17 技术依赖已就绪但本轮仅做集成检查；BE-12 等 BE-17，BE-18 仍缺 BE-14。详见 [B 实施记录](BE-11-13-15-B-MODULE.md)。本轮集成事实见 [合并检查](B-MAIN-INTEGRATION.md)，更早日期的数量/待交付说明为历史。\n'+body
+        text = title+'\n\nD-072（2026-10-20）B 状态：BE-11/13/15 已实现并合入远程 main/0e391c6，来源 b92cdbb，任务仍为 IN_PROGRESS（待负责人确认）。完整 85 普通＋150 真实 MySQL 检查及设计静态校验通过；6 个 B 入站操作已交付。当前共 9 项 OWNER_ACCEPTED、1 项 IMPLEMENTED、3 项 IN_PROGRESS、22 项 PLANNED。AT-09/11/12 仅局部验证，AT-37 补 B 接口证据。BE-17 技术依赖已就绪但未实现；BE-12 等 BE-17，BE-18 仍缺 BE-14。详见 [B 实施记录](BE-11-13-15-B-MODULE.md)及[集成交付](B-MAIN-INTEGRATION.md)，更早日期的数量/待交付说明为历史。\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -412,6 +418,10 @@ def generate():
         branch='main',sourceCommit=SCOPE_SOURCE_COMMIT,mergeCommit=SCOPE_MERGE_COMMIT,
         remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=SCOPE_MERGE_COMMIT,
         ownerAccepted=True,prNumber=2,prUrl=SCOPE_PR_URL,prState='MERGED',evidence='BE-08-MANAGEMENT-SCOPE.md'))
+    phase_plan['business']['additionalMainDeliveries'].append(dict(taskIds=sorted(B_IMPLEMENTED),decision='D-072',date='2026-10-20',
+        branch='main',sourceCommit=B_SOURCE_COMMIT,mergeCommit=B_MERGE_COMMIT,
+        remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=B_MERGE_COMMIT,
+        ownerAccepted=False,deliveryMode='LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH',evidence='B-MAIN-INTEGRATION.md'))
     dump('delivery-phases.json',phase_plan)
     dump('modules.json',modules);dump('acceptance.json',CASES);dump('issues.json',TASKS)
     lines=['# 模块结构与维护责任','','修订1.4/D-055：基座已确认并纳入主线，30项任务已登记A～D成员代号，实名与GitHub账号映射待补。D-056用户认领A，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED，由负责人自行确认完成（D-051）。分工详见[四人分工](TEAM-ASSIGNMENT.md)。公共包前缀`com.adgn.backend`、13个逻辑模块及技术依赖不变。','','| 模块 | 包后缀/负责人 | 编译依赖 | 职责与主要接口 |','| --- | --- | --- | --- |']
@@ -453,7 +463,7 @@ def generate():
             acceptance=sorted(set(task['acceptance']+(['AT-37'] if row['direction']=='INBOUND' else ['AT-20']))),
             parameters=parameter_names,requestModels=sorted(schema_refs(operation.get('requestBody',{}),api)),
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
-            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id']=='BE-10' else ('IMPLEMENTED_PENDING_OWNER_ACCEPTANCE' if task['id'] in B_IMPLEMENTED else 'PLANNED_NOT_IMPLEMENTED')))))
+            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10'} else 'PLANNED_NOT_IMPLEMENTED'))))
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
         owned=[r for r in op_map if r['issue']==task['id']]

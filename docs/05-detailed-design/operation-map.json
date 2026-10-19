@@ -708,7 +708,7 @@
         "ApplicationPage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "createSystem",
@@ -774,7 +774,7 @@
         "Application"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "getSystem",
@@ -846,7 +846,7 @@
         "Application"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "updateSystem",
@@ -1431,7 +1431,7 @@
         "RolePage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "createRole",
@@ -1582,7 +1582,7 @@
         "Role"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "updateRoleMetadata",
@@ -1665,7 +1665,7 @@
         "Role"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_ACCEPTANCE"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listEmployees",

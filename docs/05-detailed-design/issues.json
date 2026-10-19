@@ -1007,12 +1007,17 @@
       "decision": "D-070",
       "implemented": true,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "branch": "codex/be-11-13-15-b-module",
       "dependencyBase": "9857e5e",
-      "claimSource": "USER_MESSAGE"
+      "claimSource": "USER_MESSAGE",
+      "mainMergeCommit": "0e391c6a652fb9ee12991b7b7d2ac85a3922d166",
+      "sourceCommit": "b92cdbb9b6a30b6e697f7ad80ef06e38fa034067",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "0e391c6a652fb9ee12991b7b7d2ac85a3922d166",
+      "deliveryDecision": "D-072"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
@@ -1200,12 +1205,17 @@
       "decision": "D-070",
       "implemented": true,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "branch": "codex/be-11-13-15-b-module",
       "dependencyBase": "9857e5e",
-      "claimSource": "USER_MESSAGE"
+      "claimSource": "USER_MESSAGE",
+      "mainMergeCommit": "0e391c6a652fb9ee12991b7b7d2ac85a3922d166",
+      "sourceCommit": "b92cdbb9b6a30b6e697f7ad80ef06e38fa034067",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "0e391c6a652fb9ee12991b7b7d2ac85a3922d166",
+      "deliveryDecision": "D-072"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
@@ -1370,12 +1380,17 @@
       "decision": "D-070",
       "implemented": true,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "branch": "codex/be-11-13-15-b-module",
       "dependencyBase": "9857e5e",
-      "claimSource": "USER_MESSAGE"
+      "claimSource": "USER_MESSAGE",
+      "mainMergeCommit": "0e391c6a652fb9ee12991b7b7d2ac85a3922d166",
+      "sourceCommit": "b92cdbb9b6a30b6e697f7ad80ef06e38fa034067",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "0e391c6a652fb9ee12991b7b7d2ac85a3922d166",
+      "deliveryDecision": "D-072"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [

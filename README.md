@@ -1,5 +1,7 @@
 # rbac-admin · 集中权限管理系统
 
+D-072（2026-10-20）：B 的 BE-11/13/15 已合入并交付远程 main/0e391c6，来源 b92cdbb；完整 85 普通＋150 真实 MySQL/接口检查及静态校验通过，原设计管理上下文校验已统一。B 分支保留，待负责人验收；其余 B 任务与 OA/发布未完成。详见 [集成交付](docs/05-detailed-design/B-MAIN-INTEGRATION.md)，下方待推送及旧依赖说明为历史。
+
 D-070（2026-10-19）：B 的 BE-11、BE-13、BE-15 已在独立任务分支实现，真实测试和接入约定见 [B 实施记录](docs/05-detailed-design/BE-11-13-15-B-MODULE.md)。待负责人确认，未合并或推送；BE-17/12/18 仍按原依赖等待，完整后端与发布验收尚未完成。下方旧日期的任务数量与运行结果为历史。
 D-069：BE-08已按A确认并通过[PR #2](https://github.com/Noah-hope/RBAC-admin/pull/2)交付main/ca85189。本地及远程主线已核对，组员可pull并按[BE-08交接](docs/05-detailed-design/BE-08-MANAGEMENT-SCOPE.md)复用；B可推进BE-17，A/BE-09仍等BE-17。下方待交付为历史。
 
