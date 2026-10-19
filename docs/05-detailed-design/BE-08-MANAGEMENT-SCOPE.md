@@ -1,5 +1,11 @@
 # BE-08：当前单项任命、范围读模型与覆盖策略
 
+## D-068 负责人确认
+
+2026-10-19，A明确“验证通过，接下来做什么”，接受实现提交 `1c0eb3c055fe267fd0ff69c37e5120de3951eca1`。任务为 OWNER_ACCEPTED，待共同 main 交付。沿用本文件85离线＋136真实MySQL及原自检证据；本轮未新增Java/数据库运行，不推断本人逐项重跑全部场景。下方待A确认是实施阶段历史。
+
+已准备 [PR正文](BE-08-PR.md)，尚未推送、创建PR或合并。远程main核对仍为db1be16；先交付本任务供B/BE-17等使用，A/BE-09再等BE-17交付。本轮不开始BE-09或代替其他负责人确认。
+
 ## D-067 实施范围
 
 2026-10-19，A 明确“开始开发BE-08”。在 `codex/be-08-management-scope` 实现四个读取接口、`ManagementContextResolver` 和纯 `ScopeCoveragePolicy`。采用 Spring Data JPA 的只读实体及仓储；范围列表使用 JPQL，跨账号/任职的任命读取通过 JPA 原生 SQL 投影完成，不复制其他领域的 JPA 实体。仅暴露需要的读取方法，不提供仓储写入口，DTO 不序列化实体。

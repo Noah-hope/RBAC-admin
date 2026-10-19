@@ -1,5 +1,7 @@
 # 项目共享记忆
 
+D-068（2026-10-19）：A明确“验证通过，接下来做什么”，接受BE-08实现1c0eb3c055fe267fd0ff69c37e5120de3951eca1，登记OWNER_ACCEPTED、mergedToMain=false。本人回报按原话保留，不虚构新的HTTP截图或逐项人工测试结果；既有85离线＋136真实MySQL证据沿用，源码未变。本轮同步确认/生成器/静态追踪，准备[PR正文](../05-detailed-design/BE-08-PR.md)，不重跑Java/SQL。fetch核对远程main仍db1be16，BE-17仍PLANNED；下一步先交付BE-08共同主线，供B实施BE-17及C等任务复用；A的BE-09仍等B/BE-17。未授权远程写入，不推送、创建PR、合并或自动实施下一任务。A的7项已确认4项，剩BE-09/27/34三项PLANNED；不代D确认BE-10。
+
 D-067（2026-10-19）：A明确开始开发BE-08，在codex/be-08-management-scope实施四个任命/范围GET、Spring Data JPA只读实体/仓储、统一ManagementContextResolver和纯ScopeCoveragePolicy。先真实RED再实现；people查询复用resolver，保持D的人员可见性和事务，不新增写接口或改迁移。首轮完整回归检出两组旧夹具实体扫描覆盖问题，补正式实体扫描且保留全部断言后，最终clean verify/mysql-check为85离线＋136真实MySQL，全无失败/错误/跳过，包含双连接RR快照及JPA/JDBC同事务复核。专属实例schema/账号0/0、进程正常退出、临时密钥目录0，原MySQL84仍Running。实际证据、本机Apifox步骤与组员接入见[BE-08](../05-detailed-design/BE-08-MANAGEMENT-SCOPE.md)。任务IN_PROGRESS待A确认，未合并推送；用户已有库未操作，不代D确认BE-10。AT-08/19仅本任务局部验证，BE-09仍等B/BE-17。
 
 D-066（2026-10-19）：A 要求拉取远程、同步本地并准备开发 BE-08。fetch 后将本地 main 从5966834无冲突快进至远程db1be16，建立codex/be-08-management-scope；保留无关.codeartsdoer。已核对BE-10交付及OrganizationReader同事务接入要求，准备[BE-08设计与测试顺序](../05-detailed-design/BE-08-MANAGEMENT-SCOPE.md)。本轮仅开发准备，BE-08仍PLANNED，未修改业务代码或运行Java/SQL，未推送或创建PR；BE-10保持IMPLEMENTED/已交付main、D人工验收开放，不代为确认。

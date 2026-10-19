@@ -1,5 +1,7 @@
 # 项目协作规则
 
+D-068（2026-10-19）：A在BE-08交接与登录说明后明确“验证通过，接下来做什么”，登记BE-08/1c0eb3c055fe267fd0ff69c37e5120de3951eca1为OWNER_ACCEPTED、待主线交付，沿用85离线＋136真实MySQL证据。本轮只同步确认/静态追踪并准备PR正文，不重跑Java/SQL，不把询问下一步视为推送、创建PR或合并授权。fetch核对远程main仍db1be16，BE-17仍PLANNED；建议先交付BE-08供B/BE-17等复用，BE-09仍须BE-17交付，不自动开始新任务。下方待A确认均为此前历史。
+
 D-067（2026-10-19）：本会话A明确“开始开发BE-08”，已在codex/be-08-management-scope按既有设计/TDD实现四查询、当前单项任命/双版本解析和覆盖策略。复用已交付BE-10、Spring Data JPA只读仓储及原事务边界，people查询接入统一resolver，既有迁移/身份机制不变。修正两组旧测试夹具实体扫描后，完整85离线＋136真实MySQL通过，专属实例/账号/临时密钥已清理关闭，未操作已有库。实现、真实RED/GREEN及本机步骤见docs/05-detailed-design/BE-08-MANAGEMENT-SCOPE.md；BE-08保持IN_PROGRESS待A确认，不自行合并推送。D-066仅准备为此前状态，BE-10仍不代D验收；BE-09/27等不扩展实施。
 
 D-066（2026-10-19）：本会话A要求拉取远程、同步本地并准备开发BE-08。已fetch并将main无冲突快进到db1be16，建立codex/be-08-management-scope；设计与测试顺序见docs/05-detailed-design/BE-08-MANAGEMENT-SCOPE.md。本轮仅开发准备，BE-08仍PLANNED，未改业务代码、未运行Java/SQL或推送。BE-10已交付main且可核对端口，D人工验收仍开放；历史会话D认领不覆盖本会话A。后续实现先按TDD，保留无关.codeartsdoer。

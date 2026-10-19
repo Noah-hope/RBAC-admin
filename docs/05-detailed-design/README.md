@@ -1,5 +1,7 @@
 # 后端详细设计与协作实施入口
 
+D-068：BE-08已获A确认，待共同main交付；[PR正文](BE-08-PR.md)已准备，尚未创建PR或合并。下方待确认是此前历史。
+
 D-067：A 已在任务分支实现 [BE-08 任命与范围读取、当前上下文及覆盖策略](BE-08-MANAGEMENT-SCOPE.md)，待 A 确认和主线交付。依赖的 D/BE-10 已合入 main，D 人工验收仍开放；BE-09 创建和 BE-27 持久失效按原依赖另行实施。
 
 BE-32 已实现并通过 80 离线＋88 真实 MySQL 检查（D-061），前置已交付 main；管理员初始化、服务器配置与发布模板见 [BE-32](BE-32-DEPLOYMENT.md)及[操作指南](../../deploy/README.md)。未部署云服务器，任务已按 D-062 获 A 确认并通过 [PR #1](https://github.com/Noah-hope/RBAC-admin/pull/1) 交付 main/609ee4b（D-063）；BE-06/07 的既有确认与主线交付保持。

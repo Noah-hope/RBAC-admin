@@ -289,7 +289,7 @@
         "AppointmentPage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER"
+    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
   },
   {
     "operationId": "listAccounts",
@@ -3786,7 +3786,7 @@
         "ScopePage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER"
+    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
   },
   {
     "operationId": "createScope",
@@ -3980,7 +3980,7 @@
         "Scope"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER"
+    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
   },
   {
     "operationId": "replaceScope",
@@ -4133,7 +4133,7 @@
         "AppointmentPage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER"
+    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
   },
   {
     "operationId": "scopeEditPreview",
