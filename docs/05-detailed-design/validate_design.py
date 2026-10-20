@@ -82,7 +82,7 @@ def checks(report):
                       'AT-36':'BE-32-DEPLOYMENT.md','AT-13':'BE-10-PEOPLE.md','AT-27':'BE-10-PEOPLE.md','AT-29':'BE-10-PEOPLE.md',
                       'AT-08':'BE-08-MANAGEMENT-SCOPE.md','AT-19':'BE-08-MANAGEMENT-SCOPE.md',
                       'AT-26':'BE-28-IMPORT-FILES.md','AT-14':'BE-14-GRANT-BASELINES.md','AT-15':'BE-14-GRANT-BASELINES.md',
-                      'AT-22':'BE-16-GRANT-MUTATIONS.md','AT-41':'BE-16-GRANT-MUTATIONS.md'}
+                      'AT-22':'BE-16-GRANT-MUTATIONS.md','AT-41':'BE-16-GRANT-MUTATIONS.md','AT-25':'BE-29-IMPORT-PRECHECK.md'}
     require(all(c['status']==('PARTIALLY_VERIFIED' if c['id'] in partial_evidence else 'DESIGNED_NOT_RUN') for c in cases),'验收局部/完整状态不符')
     require(all(c.get('evidence')==partial_evidence[c['id']] for c in cases if c['status']=='PARTIALLY_VERIFIED'),'局部验收缺实施证据')
     deferred={c['id'] for c in cases if c['delivery']=='FRONTEND_DEFERRED'}
@@ -262,8 +262,17 @@ def checks(report):
         require(module['assignmentStatus']==('OWNER_CONFIRMED' if module['id']=='M00' else ('SHARED_BY_TASK' if module['id'] in shared else 'ASSIGNED')),'共享模块未按任务区分责任')
     referenced=set()
     for task in tasks:
-        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-08':'OWNER_ACCEPTED','BE-10':'IMPLEMENTED','BE-11':'IN_PROGRESS','BE-12':'IN_PROGRESS','BE-13':'IN_PROGRESS','BE-14':'IMPLEMENTED','BE-15':'IN_PROGRESS','BE-16':'IMPLEMENTED','BE-17':'IN_PROGRESS','BE-28':'IMPLEMENTED','BE-32':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
+        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-08':'OWNER_ACCEPTED','BE-10':'IMPLEMENTED','BE-11':'IN_PROGRESS','BE-12':'IN_PROGRESS','BE-13':'IN_PROGRESS','BE-14':'IMPLEMENTED','BE-15':'IN_PROGRESS','BE-16':'IMPLEMENTED','BE-17':'IN_PROGRESS','BE-28':'IMPLEMENTED','BE-29':'IMPLEMENTED','BE-32':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
         require(task['status']==expected_status,'任务准备/实现状态不符')
+        if task['id']=='BE-29':
+            progress=task.get('implementationProgress',{})
+            require(progress.get('decision')=='D-081' and progress.get('implemented') is True
+                    and progress.get('httpImplemented') is True and progress.get('ownerAccepted') is False
+                    and progress.get('mergedToMain') is False and progress.get('databaseExecuted') is True
+                    and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
+                    and progress.get('branch')=='codex/be-29-import-precheck' and progress.get('dependencyBase')=='072585e'
+                    and progress.get('evidence')=='BE-29-IMPORT-PRECHECK.md' and 'ownerAcceptance' not in task,
+                    'BE-29预检实现/本人验收/未交付边界不符')
         if task['id']=='BE-16':
             progress=task.get('implementationProgress',{})
             require(progress.get('decision')=='D-079' and progress.get('implemented') is True
@@ -536,7 +545,7 @@ def checks(report):
         require(row['ownerSlot']==assignments[task['id']] and row['assignmentStatus']=='ASSIGNED' and row['phase']=='BUSINESS','业务操作与任务负责人不符')
         require(row['suggestedOwnerSlot']==task['suggestedOwnerSlot'] and row['startConditions']==required_gates,'操作与任务分工/阶段不一致')
         require(set(row['tables'])<=tables,'操作引用未知表')
-        expected_operation_status='OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in {'BE-10','BE-11','BE-12','BE-13','BE-14','BE-15','BE-17','BE-28'} else 'PLANNED_NOT_IMPLEMENTED')
+        expected_operation_status='OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in {'BE-10','BE-11','BE-12','BE-13','BE-14','BE-15','BE-17','BE-28'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY' if task['id']=='BE-29' else 'PLANNED_NOT_IMPLEMENTED'))
         require(set(row['acceptance'])<=cids and row['status']==expected_operation_status,'验收引用/实施状态不符')
         if direction=='INBOUND':require('AT-37'in row['acceptance'],'入站缺全契约验收')
         require(set(row['requestModels'])<=api['components']['schemas'].keys(),'未知输入模型')
@@ -688,9 +697,9 @@ def checks(report):
         decisionIds=len(decisions),upstreamSha256=source_hashes,
         planRevision='1.4',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=0,
         businessTasksAssigned=len(assignments),assignmentDecision='D-055',memberIdentitiesPending=4,
-        confirmedUserAlias='D',historicallyConfirmedUserAliases=['A','B','D'],implementationDecision='D-079',
-        internalPortTasksPendingOwner=['BE-16'],implementedBusinessTasksPendingOwner=['BE-10','BE-11','BE-12','BE-13','BE-14','BE-15','BE-16','BE-17','BE-28'],
-        ownerAcceptedBusinessTasks=['BE-06','BE-07','BE-08','BE-32'],businessTasksPendingMainDelivery=[],businessAcceptanceDecision='D-068',
+        confirmedUserAlias='D',historicallyConfirmedUserAliases=['A','B','D'],implementationDecision='D-081',
+        internalPortTasksPendingOwner=['BE-16'],implementedBusinessTasksPendingOwner=['BE-10','BE-11','BE-12','BE-13','BE-14','BE-15','BE-16','BE-17','BE-28','BE-29'],
+        ownerAcceptedBusinessTasks=['BE-06','BE-07','BE-08','BE-32'],businessTasksPendingMainDelivery=['BE-29'],businessAcceptanceDecision='D-068',
         businessMainDeliveryDecision='D-080',businessMainDeliveryMerge=grant_mutation_delivery['mergeCommit'],
         businessMainDeliveryPrUrl=None,priorScopeDeliveryPrUrl=scope_delivery['prUrl'],priorBootstrapDeliveryPrUrl=bootstrap_delivery['prUrl'],
         foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:OWNER_ACCEPTED',

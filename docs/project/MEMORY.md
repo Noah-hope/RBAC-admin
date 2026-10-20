@@ -1,5 +1,9 @@
 # 项目共享记忆
 
+D-081实际结果：BE-29已按设计/TDD完成五个预检/报告操作，完整137离线＋228真实MySQL/HTTP通过（均0失败/错误/跳过），含25项规划器和13项真实预检验证。来源/映射/候选/前后差异、动作顺序与依赖冻结、同key/同源批次防重、权限与事务回滚均有证据；不写正式人员/授权。随机库/账号0/0、测试密钥文件目录0，专属MySQL5140正常关闭、原MySQL84仍Running。BE-29 IMPLEMENTED/ownerAccepted=false/mergedToMain=false；9项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、16项PLANNED。完整静态检查及交接见[BE-29](../05-detailed-design/BE-29-IMPORT-PRECHECK.md)；只本地提交，原验收/交付事实保持，下方旧数量为历史。
+
+D-081（2026-10-20）：成员D明确“接下来进行下一项任务”，已fetch核对main/072585e，在codex/be-29-import-precheck实施BE-29；BE-10/17/28技术依赖已交付。预检仅冻结输入、完整候选ID/code、规范前后值、动作次序/版本、映射写计划、集合依赖和影响，以及问题与报告分页，不写正式数据。设计/真实RED/GREEN及交接见[BE-29](../05-detailed-design/BE-29-IMPORT-PRECHECK.md)。BE-26仍等C/BE-20，BE-30仍待A/BE-27及BE-29；不代其他成员实施、不把READY当作导入成功，也不扩展此前BE-16合并推送授权。既有人工验收事实保持。
+
 D-080实际交付（2026-10-20）：D明确“先完成合并推送”，核对远程main仍为BE-16基线a860dc8、既有112离线＋215真实MySQL/HTTP及jar摘要一致，静态复核通过后将来源dba2eaab8990fd17780d7f655fdfa049a6f7b2e1无冲突no-ff合入main/7ab021a80e26cbf4e3b4bc245f574fcd5c31c2ff；合并树等于验证来源，普通推送main和任务分支成功，ls-remote回查完整SHA一致。分支保留，本轮不重跑Java/SQL、无PR/部署。BE-16为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，BE-14/28人工验收继续开放；下方待主线/未授权为历史。35项中9项OWNER_ACCEPTED、4项IMPLEMENTED、5项IN_PROGRESS、17项PLANNED；BE-26仍须C/BE-20，不自动开新任务。见[BE-16交接](../05-detailed-design/BE-16-GRANT-MUTATIONS.md)。
 
 D-079实际结果：BE-16完整112离线＋215真实MySQL/HTTP及静态检查通过（均0失败/错误/跳过），其中22项本任务真实写端口验证。新/旧来源与永久关系、授予/撤销/关闭、独立部门资格、版本上限、双连接guard竞争和证据/审计失败回滚均有断言；专属随机库/账号0/0、测试密钥目录0，MySQL子进程39780正常关闭、原MySQL84仍Running。登记BE-16 IMPLEMENTED/ownerAccepted=false/mergedToMain=false，9项OWNER_ACCEPTED、4项IMPLEMENTED、5项IN_PROGRESS、17项PLANNED；未合并推送，BE-14/28人工验收继续开放，下方旧数量为历史。

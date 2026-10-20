@@ -1,5 +1,7 @@
 # 后端工程
 
+D-081（2026-10-20）：BE-29在codex/be-29-import-precheck实现导入冻结预检及批次/问题/差异五个操作，候选ID/code、前后值、动作顺序、映射与依赖均冻结；不改正式人员或授权。完整137离线＋228真实MySQL/HTTP通过，失败/错误/跳过0。沿用BE-28配置，无新环境变量或迁移，接入及验收见[BE-29](../docs/05-detailed-design/BE-29-IMPORT-PRECHECK.md)；待负责人确认与主线交付，未合并推送。正式导入仍留BE-30。
+
 D-080（2026-10-20）：BE-16已由dba2eaa无冲突合入远程main/7ab021a，任务分支已推送并保留，完整SHA回查一致。既有112离线＋215真实MySQL/HTTP及jar摘要核对通过，本轮静态复核通过、无业务代码或环境变更。A/B/C/D更新main后按[BE-16交接](../docs/05-detailed-design/BE-16-GRANT-MUTATIONS.md)接入同事务内部写端口；BE-16、BE-14/28均仍待人工验收，下方待主线为历史。
 
 D-079（2026-10-20）：BE-16实现BaselineWriter、GrantApplier、SourceCloser同事务内部端口，以及完整AffectedFacts返回；来源部门和角色所属部门资格独立检查。无新HTTP、依赖、迁移或环境变量，接入与验证见[BE-16](../docs/05-detailed-design/BE-16-GRANT-MUTATIONS.md)；当前任务分支codex/be-16-grant-mutations，负责人验收及主线交付分别待办理，BE-14/28人工验收仍开放。

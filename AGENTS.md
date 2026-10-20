@@ -1,5 +1,9 @@
 # 项目协作规则
 
+D-081实际结果：BE-29五操作及纯规划/保守集合依赖复核、原子seal报告已实现，完整137离线＋228真实MySQL/HTTP及静态追踪通过，失败/错误/跳过0。含25项规划器＋13项真实预检检查、1000行、明确XLSX选表、候选ID隐藏、同批防重、映射/顺序失效及审计故障回滚。随机库/账号0/0、测试密钥/文件目录0，专属5140子进程正常关闭，原MySQL84仍Running。BE-29为IMPLEMENTED、ownerAccepted=false、mergedToMain=false；既有BE-10/14/16/28人工验收保持，不合并推送或自动开展其他任务，见docs/05-detailed-design/BE-29-IMPORT-PRECHECK.md。
+
+D-081（2026-10-20）：成员D明确“接下来进行下一项任务”。已fetch核对共同main/072585e并创建codex/be-29-import-precheck，按直接依赖已交付的BE-10/17/28实施BE-29冻结导入预检及五路报告查询。BE-26仍缺C/BE-20，BE-30仍缺BE-27/29，本轮不跨任务实施。先设计/TDD，复用BE-28安全解析/文件、BE-17影响快照及既有guard/身份/幂等/审计；不改正式组织/员工/任职/来源/授权/申请/任命/会话。实现、人工验收及主线交付分开，既有BE-10/14/16/28人工验收仍开放；本次不扩展BE-16特定合并推送授权。交接与实际验证见docs/05-detailed-design/BE-29-IMPORT-PRECHECK.md。
+
 D-080实际交付（2026-10-20）：成员D明确“先完成合并推送”，BE-16来源dba2eaab8990fd17780d7f655fdfa049a6f7b2e1已无冲突no-ff合入远程main/7ab021a80e26cbf4e3b4bc245f574fcd5c31c2ff，合并树等于已验证来源。普通git push推送main及codex/be-16-grant-mutations成功，ls-remote回查两个完整SHA一致，任务分支保留。远程主线与开发基线a860dc8未分叉，112离线＋215真实MySQL/HTTP报告及jar摘要均核对一致，本轮静态复核通过，不重复Java/SQL、不部署。BE-16为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，BE-14/28人工验收继续开放；D-079未授权/待主线为此前状态，不自动开BE-26/29。交接见docs/05-detailed-design/BE-16-GRANT-MUTATIONS.md。
 
 D-079实际结果：BE-16完整112离线＋215真实MySQL/HTTP及静态追踪通过，失败/错误/跳过0；含本任务22项内部写端口验证、双连接关闭/执行竞争和第N条/审计回滚。随机库/账号/测试密钥目录0，专属MySQL子进程39780正常关闭，用户原MySQL84仍Running。BE-16为IMPLEMENTED、ownerAccepted=false、mergedToMain=false，本地任务分支保留，未合并推送；BE-14/28待D人工验收状态不变，不自动开始BE-26/29。

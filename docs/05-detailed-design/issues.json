@@ -2640,7 +2640,7 @@
     ],
     "deliverable": "冻结完整输入/映射/规范前后值/动作顺序/候选ID-code/依赖/唯一性断言，无正式数据副作用。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -2648,6 +2648,20 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-29-IMPORT-PRECHECK.md",
+      "decision": "D-081",
+      "scope": "FROZEN_PRECHECK_PLAN_DIFF_ISSUE_QUERY_ONLY_NOT_FORMAL_IMPORT_COMMIT",
+      "implemented": true,
+      "httpImplemented": true,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "branch": "codex/be-29-import-precheck",
+      "dependencyBase": "072585e",
+      "claimedOwnerSlot": "D"
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-10",

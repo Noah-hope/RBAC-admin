@@ -163,6 +163,12 @@ for case in CASES:
     if case['id']=='AT-26':
         case.update(status='PARTIALLY_VERIFIED',evidence='BE-28-IMPORT-FILES.md',
             verificationScope='BE28_UPLOAD_IMMUTABLE_STORAGE_AND_SAFE_PARSING_ONLY_NOT_PRECHECK_OR_COMMIT')
+    if case['id']=='AT-25':
+        case.update(status='PARTIALLY_VERIFIED',evidence='BE-29-IMPORT-PRECHECK.md',
+            verificationScope='BE29_SAME_SOURCE_BATCH_FROZEN_PRECHECK_AND_CONFLICT_ONLY_NOT_COMMIT_REPLAY_OR_NEW_BATCH_ACTUAL_DML')
+    if case['id'] in {'AT-26','AT-27','AT-29'}:
+        case.setdefault('additionalEvidence',[]).append('BE-29-IMPORT-PRECHECK.md')
+        case['verificationScope']='PRIOR_UPLOAD_OR_PEOPLE_PRIMITIVES_AND_BE29_FROZEN_PRECHECK_ONLY_NOT_FORMAL_IMPORT_COMMIT_OR_LIFECYCLE'
     if case['id']=='AT-13': case.setdefault('additionalEvidence',[]).append('BE-14-GRANT-BASELINES.md')
     if case['id'] in {'AT-14','AT-15'}:
         case.update(status='PARTIALLY_VERIFIED',evidence='BE-14-GRANT-BASELINES.md',
@@ -227,6 +233,13 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             implemented=True,httpImplemented=True,ownerAccepted=False,mergedToMain=False,
             databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
             branch='codex/be-28-import-files',dependencyBase='93acc63',claimedOwnerSlot='D')
+    if n == 29:
+        TASKS[-1]['status']='IMPLEMENTED'
+        TASKS[-1]['implementationProgress']=dict(evidence='BE-29-IMPORT-PRECHECK.md',decision='D-081',
+            scope='FROZEN_PRECHECK_PLAN_DIFF_ISSUE_QUERY_ONLY_NOT_FORMAL_IMPORT_COMMIT',
+            implemented=True,httpImplemented=True,ownerAccepted=False,mergedToMain=False,
+            databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
+            branch='codex/be-29-import-precheck',dependencyBase='072585e',claimedOwnerSlot='D')
     if n == 14:
         TASKS[-1]['status']='IMPLEMENTED'
         TASKS[-1]['implementationProgress']=dict(evidence='BE-14-GRANT-BASELINES.md',decision='D-077',
@@ -431,6 +444,9 @@ def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text = title+'\n\nD-080（2026-10-20）：D明确“先完成合并推送”，BE-16来源dba2eaa已无冲突保留历史合入远程main/7ab021a，合并树等于已验证来源，任务分支推送并保留，远程完整SHA回查一致。核对112离线＋215真实MySQL/HTTP报告与jar摘要一致，本轮静态复核通过，无Java/SQL重跑或部署。BE-16为IMPLEMENTED、mergedToMain=true、ownerAccepted=false；BE-14/28人工验收继续开放。当前9项OWNER_ACCEPTED、4项IMPLEMENTED、5项IN_PROGRESS、17项PLANNED；下方未授权/待主线为历史，不自动开新任务。见[BE-16](BE-16-GRANT-MUTATIONS.md)。\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\nD-081（2026-10-20）：D要求下一项，BE-29在codex/be-29-import-precheck（main/072585e）按设计/TDD实现五个预检/报告操作，冻结候选ID-code、规范差异、映射、动作顺序及依赖，不改正式人员/授权数据。完整137离线＋228真实MySQL/HTTP通过，失败/错误/跳过0；随机库/账号/临时密钥文件目录0，专属实例正常关闭，原MySQL84仍Running。BE-29为IMPLEMENTED、ownerAccepted=false、mergedToMain=false；AT-25/26/27/29仅补预检局部证据，BE-26仍等C/BE-20，BE-30仍等A/BE-27及本任务主线交付。共9项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、16项PLANNED；既有验收状态保持，不合并推送或自动开新任务。下方旧状态/数量为历史，见[BE-29](BE-29-IMPORT-PRECHECK.md)。\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -562,7 +578,7 @@ def generate():
             acceptance=sorted(set(task['acceptance']+(['AT-37'] if row['direction']=='INBOUND' else ['AT-20']))),
             parameters=parameter_names,requestModels=sorted(schema_refs(operation.get('requestBody',{}),api)),
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
-            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-28'} else 'PLANNED_NOT_IMPLEMENTED'))))
+            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-28'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY' if task['id']=='BE-29' else 'PLANNED_NOT_IMPLEMENTED')))))
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
         owned=[r for r in op_map if r['issue']==task['id']]

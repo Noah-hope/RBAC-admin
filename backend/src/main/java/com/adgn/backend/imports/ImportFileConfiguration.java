@@ -5,6 +5,7 @@ import com.adgn.backend.identity.service.CurrentIdentityReader;
 import com.adgn.backend.core.audit.AuditAppender;
 import com.adgn.backend.core.idempotency.*;
 import com.adgn.backend.core.transaction.ReadBoundary;
+import com.adgn.backend.query.preview.*;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.beans.factory.ObjectProvider;
@@ -25,4 +26,7 @@ public class ImportFileConfiguration {
     }
     @Bean ImportFileService importFileService(DataSource source,ReadBoundary reads,CurrentIdentityReader current,ObjectProvider<IdempotencyCoordinator> coordinators,
             ImportFileParser parser,ImportFileStore store,AuditAppender audit,JsonMapper json){return new ImportFileService(source,reads,current,coordinators,parser,store,audit,json);}
+    @Bean ImportPlanner importPlanner(){return new ImportPlanner();}
+    @Bean ImportSnapshot importSnapshot(DataSource source,PreviewService previews){return new ImportSnapshot(source,previews);}
+    @Bean ImportPlanService importPlanService(DataSource source,ReadBoundary reads,CurrentIdentityReader current,ObjectProvider<IdempotencyCoordinator> coordinators,ImportFileService files,ImportPlanner planner,ImportSnapshot snapshots,ImpactService impacts,PreviewService previews,AuditAppender audit,JsonMapper json){return new ImportPlanService(source,reads,current,coordinators,files,planner,snapshots,impacts,previews,audit,json);}
 }
