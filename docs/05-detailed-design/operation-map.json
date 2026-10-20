@@ -4616,7 +4616,7 @@
         "ImportBatch"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listImportBatches",
@@ -4693,7 +4693,7 @@
         "ImportBatchPage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "getImportBatch",
@@ -4755,7 +4755,7 @@
         "ImportBatch"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listImportIssues",
@@ -4832,7 +4832,7 @@
         "ImportIssuePage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "commitImport",
@@ -5189,7 +5189,7 @@
         "ImportPlanChangePage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listPreviewTargets",

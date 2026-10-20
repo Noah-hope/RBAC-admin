@@ -1,5 +1,7 @@
 # 后端工程
 
+D-085实际交付（2026-10-20）：成员D明确“合并推送吧”，BE-29接入A已交付BE-09后，来源db3419687f8dc43b1959564ddc19b0e7d32826ed已无冲突no-ff合入远程main/6506cda54c4898e736a2e730ba001294f8de4c2c，合并树等于已完整验证来源，任务分支codex/be-29-import-precheck保留。普通Git连接连续失败，改用官方GitHub Git API按本地对象原始SHA、force=false推送main和任务分支，远程两个完整SHA均回查一致。完整137离线＋240真实MySQL/HTTP及静态校验通过，专属资源清理关闭，原MySQL84仍Running；BE-29为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，既有人工验收保持。D原实施编号D-081与A冲突已统一为D-084；A的D-081/082/083及PR#3交付保留。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED；不强推或部署，下方未授权/待主线为历史。
+
 D-084（2026-10-20）：BE-29在codex/be-29-import-precheck实现导入冻结预检及批次/问题/差异五个操作，候选ID/code、前后值、动作顺序、映射与依赖均冻结；不改正式人员或授权。完整137离线＋228真实MySQL/HTTP通过，失败/错误/跳过0。沿用BE-28配置，无新环境变量或迁移，接入及验收见[BE-29](../docs/05-detailed-design/BE-29-IMPORT-PRECHECK.md)；待负责人确认与主线交付，未合并推送。正式导入仍留BE-30。
 
 D-080（2026-10-20）：BE-16已由dba2eaa无冲突合入远程main/7ab021a，任务分支已推送并保留，完整SHA回查一致。既有112离线＋215真实MySQL/HTTP及jar摘要核对通过，本轮静态复核通过、无业务代码或环境变更。A/B/C/D更新main后按[BE-16交接](../docs/05-detailed-design/BE-16-GRANT-MUTATIONS.md)接入同事务内部写端口；BE-16、BE-14/28均仍待人工验收，下方待主线为历史。

@@ -1,5 +1,14 @@
 # 项目决策记录
 
+## 2026-10-20：BE-29 合并与推送
+
+| 编号 | 授权依据 | 落地方式与边界 |
+| --- | --- | --- |
+| D-085 | 成员D明确“合并推送吧” | 授权核对最新主线、接入新增BE-09并完整验证后合并推送BE-29，回查远程SHA并保留分支。实现、D本人验收与主线交付分开；原D-084未授权交付为历史。不强推或部署。 |
+
+D-085实际交付（2026-10-20）：成员D明确“合并推送吧”，BE-29接入A已交付BE-09后，来源db3419687f8dc43b1959564ddc19b0e7d32826ed已无冲突no-ff合入远程main/6506cda54c4898e736a2e730ba001294f8de4c2c，合并树等于已完整验证来源，任务分支codex/be-29-import-precheck保留。普通Git连接连续失败，改用官方GitHub Git API按本地对象原始SHA、force=false推送main和任务分支，远程两个完整SHA均回查一致。完整137离线＋240真实MySQL/HTTP及静态校验通过，专属资源清理关闭，原MySQL84仍Running；BE-29为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，既有人工验收保持。D原实施编号D-081与A冲突已统一为D-084；A的D-081/082/083及PR#3交付保留。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED；不强推或部署，下方未授权/待主线为历史。
+
+
 ## 2026-10-20：D 继续 BE-29 冻结导入预检
 
 | 编号 | 授权依据 | 落地方式与边界 |

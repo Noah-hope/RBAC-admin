@@ -321,6 +321,23 @@
         "prUrl": "https://github.com/Noah-hope/RBAC-admin/pull/3",
         "prState": "MERGED",
         "evidence": "BE-09-SCOPE-CREATION.md"
+      },
+      {
+        "taskIds": [
+          "BE-29"
+        ],
+        "decision": "D-085",
+        "date": "2026-10-20",
+        "branch": "main",
+        "sourceCommit": "db3419687f8dc43b1959564ddc19b0e7d32826ed",
+        "mergeCommit": "6506cda54c4898e736a2e730ba001294f8de4c2c",
+        "remote": "origin",
+        "remoteRef": "refs/heads/main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "6506cda54c4898e736a2e730ba001294f8de4c2c",
+        "ownerAccepted": false,
+        "deliveryMode": "LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH",
+        "evidence": "BE-29-IMPORT-PRECHECK.md"
       }
     ]
   },
