@@ -1,6 +1,8 @@
 # 项目协作规则
 
-D-079（2026-10-20）：本会话A要求开始BE-09，已同步共同main/a860dc8，在codex/be-09-scope-creation按设计/TDD实现创建预览及范围/系统集合/任命原子保存。技术依赖BE-05/08/17已主线交付，B/D负责人验收不代确认；使用JPA创建仓储与既有guard/幂等/安全预览/审计。完整112离线＋205真实MySQL/HTTP及静态检查通过，随机库/账号/临时密钥目录均0、专属实例已关闭，原MySQL84仍Running；真实RED/GREEN及本机步骤见docs/05-detailed-design/BE-09-SCOPE-CREATION.md。BE-09为IN_PROGRESS待A人工确认及主线交付，不自行推送/PR/合并或开始BE-27/34；原有无关.codeartsdoer保留。下方A仍等BE-17为此前历史。
+D-082（2026-10-20）：A明确“测试通过即可”，接受BE-09/41931f45e2319f41434c6470f4e2b564af9058d3的112离线＋205真实MySQL/HTTP证据，登记OWNER_ACCEPTED、mergedToMain=false；本机演示未进行，不虚构人工验证通过。仅更新验收/PR准备及静态追踪，不重跑Java/SQL、不推送或合并。fetch已核对远程main/072585e新增BE-16交付，BE-26与BE-33仍PLANNED；本任务分支尚未整合BE-16，后续交付时需接入并验证。原本地BE-09的D-079与D/BE-16编号冲突，统一调整为D-081，保留双方事实；本次确认用D-082。A剩BE-27和BE-34，不自动开新任务。
+
+D-081（2026-10-20）：本会话A要求开始BE-09，已同步共同main/a860dc8，在codex/be-09-scope-creation按设计/TDD实现创建预览及范围/系统集合/任命原子保存。技术依赖BE-05/08/17已主线交付，B/D负责人验收不代确认；使用JPA创建仓储与既有guard/幂等/安全预览/审计。完整112离线＋205真实MySQL/HTTP及静态检查通过，随机库/账号/临时密钥目录均0、专属实例已关闭，原MySQL84仍Running；真实RED/GREEN及本机步骤见docs/05-detailed-design/BE-09-SCOPE-CREATION.md。BE-09为IN_PROGRESS待A人工确认及主线交付，不自行推送/PR/合并或开始BE-27/34；原有无关.codeartsdoer保留。下方A仍等BE-17为此前历史。
 
 D-078实际交付（2026-10-20）：成员D明确“先完成合并与推送”，BE-14来源367cdae2acc6ff247116651abad53adafb6a34b9已无冲突保留历史合入远程main/c7435d9b17a2f9be57d1e748cae24f125a45deb2，任务分支已推送并保留，远程完整SHA回查一致，合并树等于已验证来源。主线未新增业务变更，沿用完整112离线＋193真实MySQL/HTTP证据；本轮静态追踪通过，不重跑Java/SQL，不部署或开新任务。BE-14保持IMPLEMENTED、mergedToMain=true、ownerAccepted=false，BE-28人工验收也仍开放，不以交付授权代记验收。此前D-077未授权/待主线为历史，接入见docs/05-detailed-design/BE-14-GRANT-BASELINES.md。
 
