@@ -457,8 +457,10 @@
       "UC-11"
     ],
     "reviewScenario": "S18",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-29-IMPORT-PRECHECK.md",
+    "verificationScope": "BE29_SAME_SOURCE_BATCH_FROZEN_PRECHECK_AND_CONFLICT_ONLY_NOT_COMMIT_REPLAY_OR_NEW_BATCH_ACTUAL_DML"
   },
   {
     "id": "AT-26",
@@ -476,7 +478,10 @@
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
     "evidence": "BE-28-IMPORT-FILES.md",
-    "verificationScope": "BE28_UPLOAD_IMMUTABLE_STORAGE_AND_SAFE_PARSING_ONLY_NOT_PRECHECK_OR_COMMIT"
+    "verificationScope": "PRIOR_UPLOAD_OR_PEOPLE_PRIMITIVES_AND_BE29_FROZEN_PRECHECK_ONLY_NOT_FORMAL_IMPORT_COMMIT_OR_LIFECYCLE",
+    "additionalEvidence": [
+      "BE-29-IMPORT-PRECHECK.md"
+    ]
   },
   {
     "id": "AT-27",
@@ -495,7 +500,10 @@
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
     "evidence": "BE-10-PEOPLE.md",
-    "verificationScope": "BE10_PEOPLE_HTTP_INTERNAL_READ_AND_IMPORT_PRIMITIVES_ONLY_NOT_FULL_IMPORT_LIFECYCLE"
+    "verificationScope": "PRIOR_UPLOAD_OR_PEOPLE_PRIMITIVES_AND_BE29_FROZEN_PRECHECK_ONLY_NOT_FORMAL_IMPORT_COMMIT_OR_LIFECYCLE",
+    "additionalEvidence": [
+      "BE-29-IMPORT-PRECHECK.md"
+    ]
   },
   {
     "id": "AT-28",
@@ -528,7 +536,10 @@
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
     "evidence": "BE-10-PEOPLE.md",
-    "verificationScope": "BE10_PEOPLE_HTTP_INTERNAL_READ_AND_IMPORT_PRIMITIVES_ONLY_NOT_FULL_IMPORT_LIFECYCLE"
+    "verificationScope": "PRIOR_UPLOAD_OR_PEOPLE_PRIMITIVES_AND_BE29_FROZEN_PRECHECK_ONLY_NOT_FORMAL_IMPORT_COMMIT_OR_LIFECYCLE",
+    "additionalEvidence": [
+      "BE-29-IMPORT-PRECHECK.md"
+    ]
   },
   {
     "id": "AT-30",

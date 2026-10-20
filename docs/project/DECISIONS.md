@@ -1,5 +1,13 @@
 # 项目决策记录
 
+## 2026-10-20：D 继续 BE-29 冻结导入预检
+
+| 编号 | 授权依据 | 落地方式与边界 |
+| --- | --- | --- |
+| D-084 | 成员D明确“接下来进行下一项任务” | 依既定顺序与实际主线交付，选择BE-29（直接依赖BE-10/17/28已满足），在072585e上建立codex/be-29-import-precheck。先设计/TDD及专属MySQL/HTTP，完成只读规划、原子冻结及五个报告操作；不修改正式人员/授权，不替代BE-30。BE-26仍缺C/BE-20，BE-30仍待A/BE-27与本任务；本轮不跨成员、不开新任务、不合并推送、不代记人工验收。 |
+
+D-084实际结果：五个预检/报告操作已实现，完整137离线＋228真实MySQL/HTTP及静态追踪通过，失败/错误/跳过0；本任务25＋13。专属随机schema/账号0/0、测试密钥与文件目录0，子进程5140正常关闭，原MySQL84仍Running。BE-29保持IMPLEMENTED、ownerAccepted=false、mergedToMain=false，本地分支保留，未合并推送；原任务人工验收状态不变，交接见[BE-29](../05-detailed-design/BE-29-IMPORT-PRECHECK.md)。
+
 D-083实际交付（2026-10-20）：BE-09已通过[PR #3](https://github.com/Noah-hope/RBAC-admin/pull/3)合入远程main，来源0fee462503274fbed1ab03826c8d0723c9825c19，合并5f42a2cff11d68c49a4926373eeee97e3f5e8889。已回查closed/merged=true、远程完整SHA、双亲及合并树等于验证来源，本地main已同步、任务分支保留；OWNER_ACCEPTED、mergedToMain=true、remotePrNumber=3。接入BE-16后完整112普通＋227真实MySQL/HTTP及静态校验通过，专属资源清理关闭，原MySQL84仍Running；远程检查条目0，不记为CI通过。本轮交付不部署或开新任务，D各任务验收不代确认；下方待授权/待PR/待主线为历史。
 
 ## 2026-10-20：BE-09 PR 与主线交付

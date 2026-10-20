@@ -1,5 +1,13 @@
 # 项目开发流程
 
+D-084集成结果（2026-10-20）：接入远程main/06a6b5c（A已验收并经PR#3交付的BE-09）后，完整clean verify/mysql-check通过，137项离线/20组＋240项真实MySQL/HTTP/19组，失败/错误/跳过0，日志backend/.tmp/be29-main-integration-verify.log。集成未改BE-29业务代码，静态追踪通过；BE-29保持IMPLEMENTED待D人工验收，本次主线交付由用户“合并推送吧”明确授权，实际SHA成功后补。
+
+D-084编号协调（2026-10-20）：BE-29原本地实施记录D-081与远程A/BE-09重复，现统一为D-084；原实现80abde1及真实RED/GREEN事实保留，A的D-081/082/083、验收与PR#3交付均保持。已接入main/06a6b5c，业务代码无冲突；BE-29仍IMPLEMENTED、ownerAccepted=false，待集成回归与本次授权的主线交付。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED。
+
+2026-10-20/D-084实际结果：BE-29真实RED/GREEN、完整137离线＋228真实MySQL/HTTP及静态追踪通过；专属验证资源清空并正常关闭，原MySQL84仍Running。实现、测试和共享记忆纳入同一本地任务提交，登记IMPLEMENTED待D人工确认和主线交付；不把预检READY当作正式导入成功，不自动合并推送或展开BE-26/27/30。
+
+2026-10-20/D-084：D要求继续下一项。按主线072585e及依赖选择BE-29，先写详细设计，再纯规划器RED、真实HTTP/MySQL RED、实现及边界RED/GREEN；完整回归和专属资源清理后同步追踪并本地提交。只预检/冻结/读取报告，不正式导入或展开BE-26/27/30。既有BE-16已交付状态保持；本次开发不代人工验收，也不延用上项的特定合并推送授权。
+
 D-083实际交付（2026-10-20）：BE-09已通过[PR #3](https://github.com/Noah-hope/RBAC-admin/pull/3)合入远程main，来源0fee462503274fbed1ab03826c8d0723c9825c19，合并5f42a2cff11d68c49a4926373eeee97e3f5e8889。已回查closed/merged=true、远程完整SHA、双亲及合并树等于验证来源，本地main已同步、任务分支保留；OWNER_ACCEPTED、mergedToMain=true、remotePrNumber=3。接入BE-16后完整112普通＋227真实MySQL/HTTP及静态校验通过，专属资源清理关闭，原MySQL84仍Running；远程检查条目0，不记为CI通过。本轮交付不部署或开新任务，D各任务验收不代确认；下方待授权/待PR/待主线为历史。
 
 D-083集成结果：接入main/072585e后完整112普通＋227真实MySQL/HTTP及静态校验通过，失败/错误/跳过0；随机库/账号和BE-09密钥目录0，专属实例关闭，原MySQL84仍Running。当前准备推送及PR交付，真实结果成功后补，BE-09代码仍与A确认来源41931f4一致。

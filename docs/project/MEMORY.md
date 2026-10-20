@@ -1,5 +1,13 @@
 # 项目共享记忆
 
+D-084集成结果（2026-10-20）：接入远程main/06a6b5c（A已验收并经PR#3交付的BE-09）后，完整clean verify/mysql-check通过，137项离线/20组＋240项真实MySQL/HTTP/19组，失败/错误/跳过0，日志backend/.tmp/be29-main-integration-verify.log。集成未改BE-29业务代码，静态追踪通过；BE-29保持IMPLEMENTED待D人工验收，本次主线交付由用户“合并推送吧”明确授权，实际SHA成功后补。
+
+D-084编号协调（2026-10-20）：BE-29原本地实施记录D-081与远程A/BE-09重复，现统一为D-084；原实现80abde1及真实RED/GREEN事实保留，A的D-081/082/083、验收与PR#3交付均保持。已接入main/06a6b5c，业务代码无冲突；BE-29仍IMPLEMENTED、ownerAccepted=false，待集成回归与本次授权的主线交付。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED。
+
+D-084实际结果：BE-29已按设计/TDD完成五个预检/报告操作，完整137离线＋228真实MySQL/HTTP通过（均0失败/错误/跳过），含25项规划器和13项真实预检验证。来源/映射/候选/前后差异、动作顺序与依赖冻结、同key/同源批次防重、权限与事务回滚均有证据；不写正式人员/授权。随机库/账号0/0、测试密钥文件目录0，专属MySQL5140正常关闭、原MySQL84仍Running。BE-29 IMPLEMENTED/ownerAccepted=false/mergedToMain=false；9项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、16项PLANNED。完整静态检查及交接见[BE-29](../05-detailed-design/BE-29-IMPORT-PRECHECK.md)；只本地提交，原验收/交付事实保持，下方旧数量为历史。
+
+D-084（2026-10-20）：成员D明确“接下来进行下一项任务”，已fetch核对main/072585e，在codex/be-29-import-precheck实施BE-29；BE-10/17/28技术依赖已交付。预检仅冻结输入、完整候选ID/code、规范前后值、动作次序/版本、映射写计划、集合依赖和影响，以及问题与报告分页，不写正式数据。设计/真实RED/GREEN及交接见[BE-29](../05-detailed-design/BE-29-IMPORT-PRECHECK.md)。BE-26仍等C/BE-20，BE-30仍待A/BE-27及BE-29；不代其他成员实施、不把READY当作导入成功，也不扩展此前BE-16合并推送授权。既有人工验收事实保持。
+
 D-083实际交付（2026-10-20）：BE-09已通过[PR #3](https://github.com/Noah-hope/RBAC-admin/pull/3)合入远程main，来源0fee462503274fbed1ab03826c8d0723c9825c19，合并5f42a2cff11d68c49a4926373eeee97e3f5e8889。已回查closed/merged=true、远程完整SHA、双亲及合并树等于验证来源，本地main已同步、任务分支保留；OWNER_ACCEPTED、mergedToMain=true、remotePrNumber=3。接入BE-16后完整112普通＋227真实MySQL/HTTP及静态校验通过，专属资源清理关闭，原MySQL84仍Running；远程检查条目0，不记为CI通过。本轮交付不部署或开新任务，D各任务验收不代确认；下方待授权/待PR/待主线为历史。
 
 D-083集成结果：接入main/072585e后完整112普通＋227真实MySQL/HTTP及静态校验通过，失败/错误/跳过0；随机库/账号和BE-09密钥目录0，专属实例关闭，原MySQL84仍Running。当前准备推送及PR交付，真实结果成功后补，BE-09代码仍与A确认来源41931f4一致。
