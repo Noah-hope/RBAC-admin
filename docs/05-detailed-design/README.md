@@ -1,5 +1,7 @@
 # 后端详细设计与协作实施入口
 
+D-085：BE-29已合入并推送main/6506cda，交付记录86089d2远程回查一致，完整137离线＋240真实MySQL/HTTP通过，仍待D人工验收，见[交接](BE-29-IMPORT-PRECHECK.md)。D-086按用户要求继续下一项，已完成[BE-26设计与验收准备](BE-26-SOURCE-CLOSURE.md)；C/BE-20未交付，BE-26仍PLANNED，未运行本任务业务测试。
+
 D-083：BE-09已通过[PR #3](https://github.com/Noah-hope/RBAC-admin/pull/3)交付main/5f42a2c，本地及远程已核对，任务分支保留；112普通＋227真实MySQL/HTTP通过。A确认沿用D-082，未进行人工演示；组员可更新main接入，见[交付记录](BE-09-SCOPE-CREATION.md)。下方待交付为历史。
 
 D-082：A已按自动化测试证据确认BE-09，待主线交付，本机演示未进行；见[确认依据](BE-09-SCOPE-CREATION.md)及[PR正文草稿](BE-09-PR.md)。下方待负责人确认为历史。

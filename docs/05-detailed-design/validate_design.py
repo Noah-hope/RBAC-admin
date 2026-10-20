@@ -287,6 +287,19 @@ def checks(report):
     for task in tasks:
         expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-08':'OWNER_ACCEPTED','BE-09':'OWNER_ACCEPTED','BE-10':'IMPLEMENTED','BE-11':'IN_PROGRESS','BE-12':'IN_PROGRESS','BE-13':'IN_PROGRESS','BE-14':'IMPLEMENTED','BE-15':'IN_PROGRESS','BE-16':'IMPLEMENTED','BE-17':'IN_PROGRESS','BE-28':'IMPLEMENTED','BE-29':'IMPLEMENTED','BE-32':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
         require(task['status']==expected_status,'任务准备/实现状态不符')
+        if task['id']=='BE-26':
+            preparation=task.get('preparation',{})
+            require(task['status']=='PLANNED' and preparation.get('decision')=='D-086'
+                    and preparation.get('evidence')=='BE-26-SOURCE-CLOSURE.md'
+                    and preparation.get('branch')=='codex/be-26-source-closure'
+                    and preparation.get('dependencyBase')=='86089d2'
+                    and preparation.get('designPrepared') is True and preparation.get('acceptanceScenariosPrepared') is True
+                    and preparation.get('implementationStarted') is False and preparation.get('testsRun') is False
+                    and preparation.get('blockedBy')==['BE-20']
+                    and preparation.get('dependencyStatus')=='WAITING_FOR_MAIN_DELIVERY'
+                    and next(t for t in tasks if t['id']=='BE-20')['status']=='PLANNED'
+                    and 'implementationProgress' not in task and 'ownerAcceptance' not in task,
+                    'BE-26准备/技术依赖/未实施边界不符')
         if task['id']=='BE-29':
             progress=task.get('implementationProgress',{})
             require(progress.get('decision')=='D-084' and progress.get('implemented') is True
@@ -750,6 +763,7 @@ def checks(report):
         planRevision='1.4',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=0,
         businessTasksAssigned=len(assignments),assignmentDecision='D-055',memberIdentitiesPending=4,
         confirmedUserAlias='D',historicallyConfirmedUserAliases=['A','B','D'],implementationDecision='D-084',
+        preparedBusinessTasksWaitingDependencies=['BE-26'],preparationDecision='D-086',
         internalPortTasksPendingOwner=['BE-16'],implementedBusinessTasksPendingOwner=['BE-10','BE-11','BE-12','BE-13','BE-14','BE-15','BE-16','BE-17','BE-28','BE-29'],
         ownerAcceptedBusinessTasks=['BE-06','BE-07','BE-08','BE-09','BE-32'],businessTasksPendingMainDelivery=[],businessAcceptanceDecision='D-082',
         businessMainDeliveryDecision='D-085',businessMainDeliveryMerge=import_precheck_delivery['mergeCommit'],

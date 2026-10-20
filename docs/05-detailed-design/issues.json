@@ -2390,6 +2390,20 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "preparation": {
+      "decision": "D-086",
+      "evidence": "BE-26-SOURCE-CLOSURE.md",
+      "branch": "codex/be-26-source-closure",
+      "dependencyBase": "86089d2",
+      "designPrepared": true,
+      "acceptanceScenariosPrepared": true,
+      "implementationStarted": false,
+      "testsRun": false,
+      "dependencyStatus": "WAITING_FOR_MAIN_DELIVERY",
+      "blockedBy": [
+        "BE-20"
+      ]
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-02",
