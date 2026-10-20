@@ -2253,7 +2253,7 @@
         "ChangeRequestPage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
   },
   {
     "operationId": "createChangeDraft",
@@ -2423,7 +2423,7 @@
         "ChangeRequest"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
   },
   {
     "operationId": "updateChangeDraft",
@@ -2968,7 +2968,7 @@
         "ChangeEventPage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
   },
   {
     "operationId": "listPreviewEmployees",
@@ -4346,7 +4346,7 @@
         "AuditEventPage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
   },
   {
     "operationId": "getAudit",
@@ -4419,7 +4419,7 @@
         "AuditDetail"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
   },
   {
     "operationId": "uploadImportFile",
