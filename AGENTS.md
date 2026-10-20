@@ -1,5 +1,7 @@
 # 项目协作规则
 
+D-090（2026-10-21）：C明确“确认，然后继续完成剩下的任务”，接受BE-19/22既有137离线＋284真实MySQL/HTTP证据；人工演示未进行。来源cc88885f2c97df838720fc2f7f0e524d72e56351已no-ff合入main/cf27f7f910bf5e904c89542f56e3f56fddd884d9，合并树等于验证来源，main及任务分支原子推送且远程完整SHA回查一致。两项OWNER_ACCEPTED、mergedToMain=true。后续按BE-21→23→24→25→31连续实施，依赖沿同一任务分支继承，各项实现、本人确认、主线交付分开记录；不代其他成员验收、不部署。共13项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、12项PLANNED。下方待确认/待交付为历史。
+
 D-089（2026-10-21）：C要求继续其他任务，本轮在BE-19-22-审计与申请查询（main/09abaa2）先设计/TDD连续实现BE-19审计列表/详情及BE-22申请列表/详情/时间线，复用整份当前单项范围投影。两项为IMPLEMENTED待C负责人确认与共同主线交付；不会把BE-20的特定合并推送授权扩展到本轮。原始事件append-only，关联主体和缺损目标不能绕过授权，历史名称不使用当前值倒推；验证及本机步骤见docs/05-detailed-design/BE-19-22-AUDIT-REQUEST-QUERIES.md。BE-21/23/24/25/31仍PLANNED，其他成员状态保持。
 
 D-088（2026-10-21）：C在BE-20负责人确认与逐项合并建议后明确“可以”，接受既有137离线＋265真实MySQL/HTTP验证并授权交付。来源310313a07e0321f58a5b1b03d3d59231fe2a17a6已保留历史合入远程main/a9b214cce38d4396120b3902ce19f2b7440bf4f1，合并树等于验证来源；main和中文任务分支已原子推送，远程完整SHA回查一致。BE-20为OWNER_ACCEPTED、mergedToMain=true，人工演示未进行；本轮代码未变，仅复核报告/jar摘要与静态追踪，无新Java/SQL或部署。D/BE-26技术依赖已交付，其他C任务不自动开展，既有其他负责人验收保持。详细证据见docs/05-detailed-design/BE-20-CHANGE-DRAFTS.md。

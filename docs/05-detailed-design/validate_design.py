@@ -165,7 +165,7 @@ def checks(report):
     require(subprocess.run(['git','diff','--quiet',business_delivery['sourceCommit'],business_delivery['mergeCommit']],cwd=REPO).returncode==0,
             'BE-06/07合并树与已确认分支不一致')
     deliveries=phase_plan['business'].get('additionalMainDeliveries',[])
-    require(len(deliveries)==11,'BE-32/BE-10/BE-08/B/BE-17-12/BE-28/BE-14/BE-16/BE-09主线交付记录缺失或重复')
+    require(len(deliveries)==12,'BE-32/BE-10/BE-08/B/BE-17-12/BE-28/BE-14/BE-16/BE-09主线交付记录缺失或重复')
     bootstrap_delivery=deliveries[0]
     require(bootstrap_delivery.get('taskIds')==['BE-32'] and bootstrap_delivery.get('decision')=='D-063'
             and bootstrap_delivery.get('sourceCommit')=='d5941c902712c92d4d8d8d7505bd6df4f5ceb139'
@@ -296,15 +296,15 @@ def checks(report):
         require(module['assignmentStatus']==('OWNER_CONFIRMED' if module['id']=='M00' else ('SHARED_BY_TASK' if module['id'] in shared else 'ASSIGNED')),'共享模块未按任务区分责任')
     referenced=set()
     for task in tasks:
-        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-08':'OWNER_ACCEPTED','BE-09':'OWNER_ACCEPTED','BE-10':'IMPLEMENTED','BE-11':'IN_PROGRESS','BE-12':'IN_PROGRESS','BE-13':'IN_PROGRESS','BE-14':'IMPLEMENTED','BE-15':'IN_PROGRESS','BE-16':'IMPLEMENTED','BE-17':'IN_PROGRESS','BE-19':'IMPLEMENTED','BE-20':'OWNER_ACCEPTED','BE-22':'IMPLEMENTED','BE-28':'IMPLEMENTED','BE-29':'IMPLEMENTED','BE-32':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
+        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-08':'OWNER_ACCEPTED','BE-09':'OWNER_ACCEPTED','BE-10':'IMPLEMENTED','BE-11':'IN_PROGRESS','BE-12':'IN_PROGRESS','BE-13':'IN_PROGRESS','BE-14':'IMPLEMENTED','BE-15':'IN_PROGRESS','BE-16':'IMPLEMENTED','BE-17':'IN_PROGRESS','BE-19':'OWNER_ACCEPTED','BE-20':'OWNER_ACCEPTED','BE-22':'OWNER_ACCEPTED','BE-28':'IMPLEMENTED','BE-29':'IMPLEMENTED','BE-32':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
         require(task['status']==expected_status,'任务准备/实现状态不符')
         if task['id'] in {'BE-19','BE-22'}:
             progress=task.get('implementationProgress',{})
             require(progress.get('decision')=='D-089' and progress.get('implemented') is True
-                    and progress.get('httpImplemented') is True and progress.get('ownerAccepted') is False
-                    and progress.get('mergedToMain') is False and progress.get('databaseExecuted') is True
+                    and progress.get('httpImplemented') is True and progress.get('ownerAccepted') is True
+                    and progress.get('mergedToMain') is True and progress.get('databaseExecuted') is True
                     and progress.get('claimedOwnerSlot')=='C' and progress.get('branch')=='BE-19-22-审计与申请查询'
-                    and progress.get('evidence')=='BE-19-22-AUDIT-REQUEST-QUERIES.md' and 'ownerAcceptance' not in task,
+                    and progress.get('evidence')=='BE-19-22-AUDIT-REQUEST-QUERIES.md' and task.get('ownerAcceptance',{}).get('decision')=='D-090',
                     'BE-19/22实现与负责人确认、主线交付边界不符')
         if task['id']=='BE-20':
             progress=task.get('implementationProgress',{});acceptance=task.get('ownerAcceptance',{})
@@ -632,7 +632,7 @@ def checks(report):
         expected_operation_status='OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in {'BE-10','BE-11','BE-12','BE-13','BE-14','BE-15','BE-17','BE-28','BE-29'} else 'PLANNED_NOT_IMPLEMENTED')
         if task['id']=='BE-09': expected_operation_status='OWNER_ACCEPTED_MAIN_DELIVERED'
         if task['id']=='BE-20': expected_operation_status='OWNER_ACCEPTED_MAIN_DELIVERED'
-        if task['id'] in {'BE-19','BE-22'}: expected_operation_status='IMPLEMENTED_PENDING_OWNER_AND_MAIN'
+        if task['id'] in {'BE-19','BE-22'}: expected_operation_status='OWNER_ACCEPTED_MAIN_DELIVERED'
         require(set(row['acceptance'])<=cids and row['status']==expected_operation_status,'验收引用/实施状态不符')
         if direction=='INBOUND':require('AT-37'in row['acceptance'],'入站缺全契约验收')
         require(set(row['requestModels'])<=api['components']['schemas'].keys(),'未知输入模型')

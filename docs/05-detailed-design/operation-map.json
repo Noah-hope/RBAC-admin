@@ -2253,7 +2253,7 @@
         "ChangeRequestPage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "createChangeDraft",
@@ -2423,7 +2423,7 @@
         "ChangeRequest"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "updateChangeDraft",
@@ -2968,7 +2968,7 @@
         "ChangeEventPage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "listPreviewEmployees",
@@ -4346,7 +4346,7 @@
         "AuditEventPage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "getAudit",
@@ -4419,7 +4419,7 @@
         "AuditDetail"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "uploadImportFile",

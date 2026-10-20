@@ -275,13 +275,17 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
             branch='codex/be-29-import-precheck',dependencyBase='072585e',claimedOwnerSlot='D')
     if n in (19,22):
-        TASKS[-1]['status']='IMPLEMENTED'
+        TASKS[-1]['status']='OWNER_ACCEPTED'
         TASKS[-1]['implementationProgress']=dict(evidence='BE-19-22-AUDIT-REQUEST-QUERIES.md',decision='D-089',
             scope='AUDIT_READS' if n==19 else 'WHOLE_REQUEST_READS_AND_SAFE_TIMELINE',
-            implemented=True,httpImplemented=True,ownerAccepted=False,mergedToMain=False,
+            implemented=True,httpImplemented=True,ownerAccepted=True,mergedToMain=True,
             databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
             branch='BE-19-22-审计与申请查询',dependencyBase='09abaa2',claimedOwnerSlot='C',
-            claimedBy='USER',claimSource='USER_MESSAGE')
+            claimedBy='USER',claimSource='USER_MESSAGE',deliveryDecision='D-090',
+            sourceCommit='cc88885f2c97df838720fc2f7f0e524d72e56351',mainMergeCommit='cf27f7f910bf5e904c89542f56e3f56fddd884d9',pushVerified=True)
+        TASKS[-1]['ownerAcceptance']=dict(acceptedBy='USER',ownerSlot='C',date='2026-10-21',scope=f'BE-{n:02}',
+            decision='D-090',source='USER_MESSAGE',message='确认，然后继续完成剩下的任务',manualDemoVerified=False,
+            automatedUnitTests=137,automatedMySqlTests=284,mergedToMain=True,evidence='BE-19-22-AUDIT-REQUEST-QUERIES.md')
     if n == 20:
         TASKS[-1]['status']='OWNER_ACCEPTED'
         TASKS[-1]['implementationProgress']=dict(evidence='BE-20-CHANGE-DRAFTS.md',decision='D-086',
@@ -544,6 +548,7 @@ def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text = title+'\n\n'+'D-089（2026-10-21）：C要求继续其他任务，BE-19/22在BE-19-22-审计与申请查询（main/09abaa2）先设计及真实HTTP/MySQL RED，再实现审计列表/详情和申请列表/详情/时间线。当前单项完整范围先SQL过滤再统计/分页，关联主体与缺损目标投影不能绕过授权，审计仅投影历史公开字段。实现与实际验证见[BE-19/22](BE-19-22-AUDIT-REQUEST-QUERIES.md)。两项为IMPLEMENTED、ownerAccepted=false、mergedToMain=false，不代记人工验收或延用BE-20特定交付授权。其他C写链路仍PLANNED，已交付BE-20状态保持；共11项OWNER_ACCEPTED、7项IMPLEMENTED、5项IN_PROGRESS、12项PLANNED。下方旧状态/数量为历史。'+'\n'+body
+        text = text.split('\n',1)[0]+'\n\n'+'D-090（2026-10-21）：C明确“确认，然后继续完成剩下的任务”，接受BE-19/22既有137离线＋284真实MySQL/HTTP证据；人工演示未进行。来源cc88885f2c97df838720fc2f7f0e524d72e56351已no-ff合入main/cf27f7f910bf5e904c89542f56e3f56fddd884d9，合并树等于验证来源，main及任务分支原子推送且远程完整SHA回查一致。两项OWNER_ACCEPTED、mergedToMain=true。后续按BE-21→23→24→25→31连续实施，依赖沿同一任务分支继承，各项实现、本人确认、主线交付分开记录；不代其他成员验收、不部署。共13项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、12项PLANNED。下方待确认/待交付为历史。'+'\n'+text.split('\n',1)[1]
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -646,6 +651,10 @@ def generate():
         branch='main',sourceCommit='310313a07e0321f58a5b1b03d3d59231fe2a17a6',mergeCommit='a9b214cce38d4396120b3902ce19f2b7440bf4f1',
         remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit='a9b214cce38d4396120b3902ce19f2b7440bf4f1',
         ownerAccepted=True,deliveryMode='LOCAL_MERGE_AND_ATOMIC_PUSH',evidence='BE-20-CHANGE-DRAFTS.md'))
+    phase_plan['business']['additionalMainDeliveries'].append(dict(taskIds=['BE-19','BE-22'],decision='D-090',date='2026-10-21',
+        sourceCommit='cc88885f2c97df838720fc2f7f0e524d72e56351',mergeCommit='cf27f7f910bf5e904c89542f56e3f56fddd884d9',
+        branch='main',remote='origin',pushVerified=True,verifiedRemoteCommit='cf27f7f910bf5e904c89542f56e3f56fddd884d9',
+        ownerAccepted=True,evidence='BE-19-22-AUDIT-REQUEST-QUERIES.md'))
     dump('delivery-phases.json',phase_plan)
     dump('modules.json',modules);dump('acceptance.json',CASES);dump('issues.json',TASKS)
     lines=['# 模块结构与维护责任','','修订1.4/D-055：基座已确认并纳入主线，30项任务已登记A～D成员代号，实名与GitHub账号映射待补。D-056用户认领A，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED，由负责人自行确认完成（D-051）。分工详见[四人分工](TEAM-ASSIGNMENT.md)。公共包前缀`com.adgn.backend`、13个逻辑模块及技术依赖不变。','','| 模块 | 包后缀/负责人 | 编译依赖 | 职责与主要接口 |','| --- | --- | --- | --- |']
@@ -687,7 +696,7 @@ def generate():
             acceptance=sorted(set(task['acceptance']+(['AT-37'] if row['direction']=='INBOUND' else ['AT-20']))),
             parameters=parameter_names,requestModels=sorted(schema_refs(operation.get('requestBody',{}),api)),
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
-            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08','BE-09','BE-20'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-28','BE-29'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN' if task['id'] in {'BE-19','BE-22'} else 'PLANNED_NOT_IMPLEMENTED')))))
+            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08','BE-09','BE-19','BE-20','BE-22'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-28','BE-29'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN' if task['id'] in {'BE-19','BE-22'} else 'PLANNED_NOT_IMPLEMENTED')))))
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
         owned=[r for r in op_map if r['issue']==task['id']]

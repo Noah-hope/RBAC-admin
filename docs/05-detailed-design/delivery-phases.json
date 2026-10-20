@@ -355,6 +355,22 @@
         "ownerAccepted": true,
         "deliveryMode": "LOCAL_MERGE_AND_ATOMIC_PUSH",
         "evidence": "BE-20-CHANGE-DRAFTS.md"
+      },
+      {
+        "taskIds": [
+          "BE-19",
+          "BE-22"
+        ],
+        "decision": "D-090",
+        "date": "2026-10-21",
+        "sourceCommit": "cc88885f2c97df838720fc2f7f0e524d72e56351",
+        "mergeCommit": "cf27f7f910bf5e904c89542f56e3f56fddd884d9",
+        "branch": "main",
+        "remote": "origin",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "cf27f7f910bf5e904c89542f56e3f56fddd884d9",
+        "ownerAccepted": true,
+        "evidence": "BE-19-22-AUDIT-REQUEST-QUERIES.md"
       }
     ]
   },
