@@ -1,5 +1,7 @@
 # rbac-admin · 集中权限管理系统
 
+D-083：A已授权BE-09通过PR交付main，已接入最新BE-16，正在完整集成验证。实际PR及合并结果成功后补录；下方待授权/未整合是历史，见[BE-09交接](docs/05-detailed-design/BE-09-SCOPE-CREATION.md)。
+
 D-082：A已确认BE-09按自动化测试通过验收，OWNER_ACCEPTED、待主线交付，本机演示未进行。下一步可办理BE-09交付；A剩余BE-27等D/BE-26、BE-34等B/BE-33。下方待A确认是此前历史，见[验收依据及后续演示步骤](docs/05-detailed-design/BE-09-SCOPE-CREATION.md)。
 
 D-081：A/BE-09 的创建预览与范围/任命原子创建已在 `codex/be-09-scope-creation` 实现，待A本人确认，尚未交付main。实现、验证及逐步Apifox操作见[BE-09验收说明](docs/05-detailed-design/BE-09-SCOPE-CREATION.md)；BE-05/08/17技术依赖已在main，下方仍需等待的描述为历史。

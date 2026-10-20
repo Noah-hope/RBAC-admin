@@ -81,7 +81,8 @@ def checks(report):
                       'AT-10':'BE-17-12-PREVIEW-CATALOG.md','AT-31':'BE-17-12-PREVIEW-CATALOG.md','AT-32':'BE-17-12-PREVIEW-CATALOG.md',
                       'AT-36':'BE-32-DEPLOYMENT.md','AT-13':'BE-10-PEOPLE.md','AT-27':'BE-10-PEOPLE.md','AT-29':'BE-10-PEOPLE.md',
                       'AT-08':'BE-08-MANAGEMENT-SCOPE.md','AT-19':'BE-08-MANAGEMENT-SCOPE.md',
-                      'AT-26':'BE-28-IMPORT-FILES.md','AT-14':'BE-14-GRANT-BASELINES.md','AT-15':'BE-14-GRANT-BASELINES.md'}
+                      'AT-26':'BE-28-IMPORT-FILES.md','AT-14':'BE-14-GRANT-BASELINES.md','AT-15':'BE-14-GRANT-BASELINES.md',
+                      'AT-22':'BE-16-GRANT-MUTATIONS.md','AT-41':'BE-16-GRANT-MUTATIONS.md'}
     require(all(c['status']==('PARTIALLY_VERIFIED' if c['id'] in partial_evidence else 'DESIGNED_NOT_RUN') for c in cases),'验收局部/完整状态不符')
     require(all(c.get('evidence')==partial_evidence[c['id']] for c in cases if c['status']=='PARTIALLY_VERIFIED'),'局部验收缺实施证据')
     deferred={c['id'] for c in cases if c['delivery']=='FRONTEND_DEFERRED'}
@@ -163,7 +164,7 @@ def checks(report):
     require(subprocess.run(['git','diff','--quiet',business_delivery['sourceCommit'],business_delivery['mergeCommit']],cwd=REPO).returncode==0,
             'BE-06/07合并树与已确认分支不一致')
     deliveries=phase_plan['business'].get('additionalMainDeliveries',[])
-    require(len(deliveries)==7,'BE-32/BE-10/BE-08/B/BE-17-12/BE-28/BE-14主线交付记录缺失或重复')
+    require(len(deliveries)==8,'BE-32/BE-10/BE-08/B/BE-17-12/BE-28/BE-14/BE-16主线交付记录缺失或重复')
     bootstrap_delivery=deliveries[0]
     require(bootstrap_delivery.get('taskIds')==['BE-32'] and bootstrap_delivery.get('decision')=='D-063'
             and bootstrap_delivery.get('sourceCommit')=='d5941c902712c92d4d8d8d7505bd6df4f5ceb139'
@@ -242,6 +243,17 @@ def checks(report):
     require(len(parents)==2 and parents[1]==grant_delivery['sourceCommit'],'BE-14合并来源不符')
     require(subprocess.run(['git','merge-base','--is-ancestor',grant_delivery['mergeCommit'],'HEAD'],cwd=REPO).returncode==0,'BE-14交付不是当前祖先')
     require(subprocess.run(['git','diff','--quiet',grant_delivery['sourceCommit'],grant_delivery['mergeCommit']],cwd=REPO).returncode==0,'BE-14合并树与已验证来源不符')
+    grant_mutation_delivery=deliveries[7]
+    require(grant_mutation_delivery.get('taskIds')==['BE-16'] and grant_mutation_delivery.get('decision')=='D-080'
+            and grant_mutation_delivery.get('sourceCommit')=='dba2eaab8990fd17780d7f655fdfa049a6f7b2e1'
+            and grant_mutation_delivery.get('mergeCommit')=='7ab021a80e26cbf4e3b4bc245f574fcd5c31c2ff'
+            and grant_mutation_delivery.get('ownerAccepted') is False and grant_mutation_delivery.get('pushVerified') is True
+            and grant_mutation_delivery.get('deliveryMode')=='LOCAL_MERGE_AND_PUSH'
+            and grant_mutation_delivery.get('verifiedRemoteCommit')==grant_mutation_delivery['mergeCommit'],'BE-16交付/负责人验收边界不符')
+    parents=subprocess.check_output(['git','show','-s','--format=%P',grant_mutation_delivery['mergeCommit']],cwd=REPO,text=True).split()
+    require(parents==['a860dc8d4c321ebb702cda9294201b8a6c2aa0b6',grant_mutation_delivery['sourceCommit']],'BE-16合并双亲与基线/来源不符')
+    require(subprocess.run(['git','merge-base','--is-ancestor',grant_mutation_delivery['mergeCommit'],'HEAD'],cwd=REPO).returncode==0,'BE-16交付不是当前祖先')
+    require(subprocess.run(['git','diff','--quiet',grant_mutation_delivery['sourceCommit'],grant_mutation_delivery['mergeCommit']],cwd=REPO).returncode==0,'BE-16合并树与已验证来源不符')
     for module in modules:
         require(module['suggestedOwnerSlot'] in 'ABCD','模块建议组无效')
         shared={'M10':['A','D'],'M11':list('ABCD'),'M12':list('ABCD')}
@@ -250,7 +262,7 @@ def checks(report):
         require(module['assignmentStatus']==('OWNER_CONFIRMED' if module['id']=='M00' else ('SHARED_BY_TASK' if module['id'] in shared else 'ASSIGNED')),'共享模块未按任务区分责任')
     referenced=set()
     for task in tasks:
-        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-08':'OWNER_ACCEPTED','BE-10':'IMPLEMENTED','BE-11':'IN_PROGRESS','BE-12':'IN_PROGRESS','BE-13':'IN_PROGRESS','BE-14':'IMPLEMENTED','BE-15':'IN_PROGRESS','BE-17':'IN_PROGRESS','BE-28':'IMPLEMENTED','BE-32':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
+        expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-08':'OWNER_ACCEPTED','BE-10':'IMPLEMENTED','BE-11':'IN_PROGRESS','BE-12':'IN_PROGRESS','BE-13':'IN_PROGRESS','BE-14':'IMPLEMENTED','BE-15':'IN_PROGRESS','BE-16':'IMPLEMENTED','BE-17':'IN_PROGRESS','BE-28':'IMPLEMENTED','BE-32':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
         if task['id']=='BE-09': expected_status='OWNER_ACCEPTED'
         require(task['status']==expected_status,'任务准备/实现状态不符')
         if task['id']=='BE-09':
@@ -270,6 +282,20 @@ def checks(report):
                     and acceptance.get('automatedUnitTests')==112 and acceptance.get('automatedMySqlTests')==205
                     and acceptance.get('implementationCommit')=='41931f45e2319f41434c6470f4e2b564af9058d3',
                     'BE-09负责人基于自动化证据确认与主线边界不符')
+        if task['id']=='BE-16':
+            progress=task.get('implementationProgress',{})
+            require(progress.get('decision')=='D-079' and progress.get('implemented') is True
+                    and progress.get('internalWritePortImplemented') is True and progress.get('httpImplemented') is False
+                    and progress.get('ownerAccepted') is False and progress.get('mergedToMain') is True
+                    and progress.get('pushVerified') is True and progress.get('deliveryDecision')=='D-080'
+                    and progress.get('sourceCommit')==grant_mutation_delivery['sourceCommit']
+                    and progress.get('mainMergeCommit')==grant_mutation_delivery['mergeCommit']
+                    and progress.get('verifiedRemoteCommit')==grant_mutation_delivery['mergeCommit']
+                    and progress.get('databaseExecuted') is True and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
+                    and progress.get('branch')=='codex/be-16-grant-mutations' and progress.get('dependencyBase')=='a860dc8'
+                    and progress.get('evidence')=='BE-16-GRANT-MUTATIONS.md' and 'ownerAcceptance' not in task,
+                    'BE-16内部实现/负责人验收/主线交付边界不符')
+
         if task['id']=='BE-14':
             progress=task.get('implementationProgress',{})
             require(progress.get('decision')=='D-077' and progress.get('implemented') is True
@@ -683,9 +709,10 @@ def checks(report):
         planRevision='1.4',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=0,
         businessTasksAssigned=len(assignments),assignmentDecision='D-055',memberIdentitiesPending=4,
         confirmedUserAlias='A',historicallyConfirmedUserAliases=['A','B','D'],implementationDecision='D-081',
-        internalPortTasksPendingOwner=[],implementedBusinessTasksPendingOwner=['BE-10','BE-11','BE-12','BE-13','BE-14','BE-15','BE-17','BE-28'],
+        internalPortTasksPendingOwner=['BE-16'],implementedBusinessTasksPendingOwner=['BE-10','BE-11','BE-12','BE-13','BE-14','BE-15','BE-16','BE-17','BE-28'],
         ownerAcceptedBusinessTasks=['BE-06','BE-07','BE-08','BE-09','BE-32'],businessTasksPendingMainDelivery=['BE-09'],businessAcceptanceDecision='D-082',
-        businessMainDeliveryDecision='D-078',businessMainDeliveryMerge=grant_delivery['mergeCommit'],
+        businessMainDeliveryDecision='D-080',businessMainDeliveryMerge=grant_mutation_delivery['mergeCommit'],
+
         businessMainDeliveryPrUrl=None,priorScopeDeliveryPrUrl=scope_delivery['prUrl'],priorBootstrapDeliveryPrUrl=bootstrap_delivery['prUrl'],
         foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:OWNER_ACCEPTED',
         foundationGateStatus=phase_plan['gateStatus'],businessOperationsAwaitingAssignment=0,businessOperationsAssigned=len(mapping),
