@@ -1,6 +1,8 @@
 # BE-09 创建管理范围及任命、创建预览
 
-状态：A 已按自动化测试证据确认（D-082），OWNER_ACCEPTED，来源41931f4；本机演示尚未进行，尚未主线交付。基线 main/a860dc8，分支 codex/be-09-scope-creation。
+D-083实际交付（2026-10-20）：BE-09已通过[PR #3](https://github.com/Noah-hope/RBAC-admin/pull/3)合入远程main，来源0fee462503274fbed1ab03826c8d0723c9825c19，合并5f42a2cff11d68c49a4926373eeee97e3f5e8889。已回查closed/merged=true、远程完整SHA、双亲及合并树等于验证来源，本地main已同步、任务分支保留；OWNER_ACCEPTED、mergedToMain=true、remotePrNumber=3。接入BE-16后完整112普通＋227真实MySQL/HTTP及静态校验通过，专属资源清理关闭，原MySQL84仍Running；远程检查条目0，不记为CI通过。本轮交付不部署或开新任务，D各任务验收不代确认；下方待授权/待PR/待主线为历史。
+
+状态：A 已按自动化测试证据确认（D-082），OWNER_ACCEPTED，来源41931f4；本机演示尚未进行，已通过PR #3交付main/5f42a2c（D-083）。基线 main/a860dc8，分支 codex/be-09-scope-creation。
 
 2026-10-20：A明确“测试通过即可”，接受已有112离线＋205真实MySQL/HTTP证据；不再将演示账号准备作为本任务负责人确认前置。已fetch核对远程main/072585e新增BE-16，但本任务分支尚未整合；后续主线交付前应接入并回归。实施编号原D-079因与远程D/BE-16冲突改为D-081，本次确认编号D-082；保留原实现与证据。本轮仅文档/静态追踪，未推送/PR/合并。
 

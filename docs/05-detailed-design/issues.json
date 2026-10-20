@@ -799,21 +799,26 @@
       "design-ready"
     ],
     "remoteIssueNumber": null,
-    "remotePrNumber": null,
+    "remotePrNumber": 3,
     "implementationProgress": {
       "evidence": "BE-09-SCOPE-CREATION.md",
       "decision": "D-081",
       "scope": "SUPER_ADMIN_SCOPE_CREATION_PREVIEW_AND_ATOMIC_APPOINTMENTS",
       "implemented": true,
       "ownerAccepted": true,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "claimedBy": "USER",
       "claimSource": "USER_MESSAGE",
       "branch": "codex/be-09-scope-creation",
       "dependencyBase": "a860dc8",
-      "claimedOwnerSlot": "A"
+      "claimedOwnerSlot": "A",
+      "mainMergeCommit": "5f42a2cff11d68c49a4926373eeee97e3f5e8889",
+      "sourceCommit": "0fee462503274fbed1ab03826c8d0723c9825c19",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "5f42a2cff11d68c49a4926373eeee97e3f5e8889",
+      "deliveryDecision": "D-083"
     },
     "ownerAcceptance": {
       "acceptedBy": "USER",
@@ -828,8 +833,11 @@
       "manualDemoVerified": false,
       "automatedUnitTests": 112,
       "automatedMySqlTests": 205,
-      "mergedToMain": false,
-      "evidence": "BE-09-SCOPE-CREATION.md"
+      "mergedToMain": true,
+      "evidence": "BE-09-SCOPE-CREATION.md",
+      "mainMergeCommit": "5f42a2cff11d68c49a4926373eeee97e3f5e8889",
+      "mainPrNumber": 3,
+      "mainPrUrl": "https://github.com/Noah-hope/RBAC-admin/pull/3"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [

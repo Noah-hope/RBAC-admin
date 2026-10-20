@@ -3857,7 +3857,7 @@
         "ScopeResult"
       ]
     },
-    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "scopeCreatePreview",
@@ -3920,7 +3920,7 @@
         "Preview"
       ]
     },
-    "status": "OWNER_ACCEPTED_PENDING_MAIN_DELIVERY"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "getScope",

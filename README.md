@@ -1,5 +1,7 @@
 # rbac-admin · 集中权限管理系统
 
+D-083：BE-09已通过[PR #3](https://github.com/Noah-hope/RBAC-admin/pull/3)交付main/5f42a2c，本地及远程已核对，任务分支保留；112普通＋227真实MySQL/HTTP通过。A确认沿用D-082，未进行人工演示；组员可更新main接入，见[交付记录](docs/05-detailed-design/BE-09-SCOPE-CREATION.md)。下方待交付为历史。
+
 D-083：A已授权BE-09通过PR交付main，已接入最新BE-16，正在完整集成验证。实际PR及合并结果成功后补录；下方待授权/未整合是历史，见[BE-09交接](docs/05-detailed-design/BE-09-SCOPE-CREATION.md)。
 
 D-082：A已确认BE-09按自动化测试通过验收，OWNER_ACCEPTED、待主线交付，本机演示未进行。下一步可办理BE-09交付；A剩余BE-27等D/BE-26、BE-34等B/BE-33。下方待A确认是此前历史，见[验收依据及后续演示步骤](docs/05-detailed-design/BE-09-SCOPE-CREATION.md)。

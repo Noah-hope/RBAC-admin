@@ -302,6 +302,25 @@
         "ownerAccepted": false,
         "deliveryMode": "LOCAL_MERGE_AND_PUSH",
         "evidence": "BE-16-GRANT-MUTATIONS.md"
+      },
+      {
+        "taskIds": [
+          "BE-09"
+        ],
+        "decision": "D-083",
+        "date": "2026-10-20",
+        "branch": "main",
+        "sourceCommit": "0fee462503274fbed1ab03826c8d0723c9825c19",
+        "mergeCommit": "5f42a2cff11d68c49a4926373eeee97e3f5e8889",
+        "remote": "origin",
+        "remoteRef": "refs/heads/main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "5f42a2cff11d68c49a4926373eeee97e3f5e8889",
+        "ownerAccepted": true,
+        "prNumber": 3,
+        "prUrl": "https://github.com/Noah-hope/RBAC-admin/pull/3",
+        "prState": "MERGED",
+        "evidence": "BE-09-SCOPE-CREATION.md"
       }
     ]
   },
