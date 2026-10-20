@@ -2,6 +2,8 @@
 
 D-076（2026-10-20）：用户已要求先合并和推送，授权交付后再人工验收。已接入最新main/1f7886e及B/BE-17/12；D原实施编号D-073与B重复，调整为D-075，原验证事实不变。本轮完整集成验证及实际合并推送成功后追加；下方未授权/未交付及102＋159为此前实施记录。当前不自动开始BE-29/30。
 
+2026-10-20 12:59（Asia/Shanghai），集成后的完整 `clean verify -Pmysql-check` 通过：110离线＋178真实MySQL/HTTP，失败/错误/跳过均0。日志 `backend/.tmp/be28-integration-full.log`，同时覆盖BE-28及最新B/BE-17/12，不只是新增检查。jar SHA256 `e283b5cc6837bff5b48a19e640ef288a530dc7f17e55349118f10c7b76d2b6d4`。随机schema/账号均0，BE-28临时密钥/文件目录均0，专属PID6964正常关闭，用户原MySQL84仍Running。实际交付前后只更新文档/追踪，不再改业务代码；机器验证不代记D人工验收。
+
 2026-10-20，成员D授权开始BE-28。基线main/93acc63，分支codex/be-28-import-files。依据UC-10、Git API1.2.0的uploadImportFile/getImportFile、T0/T8/T9/T11、import_file现有结构和AT-26。不调整需求/接口/迁移，不实现BE-29预检或BE-30整批提交；不读取真实人事资料。
 
 ## 模块与流程
@@ -50,5 +52,22 @@ ZIP额外资源保护：最多2048包项；最多100万单元格，限制畸形�
 3. 例如CSV正文为 `employeeKey,name` 换行 `007,测试员工`。响应201，应只有id/fileName/sha256/sizeBytes/sheetNames/createdAt，并含Location和no-store；CSV工作表名为`CSV`，XLSX返回工作簿中的工作表名列表。
 4. 用响应id调用 `GET /api/v1/admin/import-files/{fileId}`，应200且相同安全元数据；同key同名同文件再次上传应201、Idempotent-Replayed=true及相同id，修改文件名或内容后沿用同key应409。
 5. 普通权限管理员上传403、详情404；未登录401；临时改密账号403。上传合法只代表文件已保存和解析，不会修改员工/任职，也不会生成预检批次或完成导入。
+
+首次本机验收可按下面的最小流程逐项观察，不需要重新运行全部自动化测试：
+
+- 启动IDE中原有BackendApplication，确认连接目标开发库与已有管理员所在库一致。没有初始化过后台总管理员时，先按[本机初始化步骤](../../deploy/README.md)创建一次；MySQL的rbac_app/root不是后台登录账号。
+- Apifox调用 `POST http://localhost:8080/api/v1/admin/sessions`，Auth选无认证，JSON为 `{"loginName":"本机总管理员登录名","password":"本机后台密码"}`。保存返回的accessToken到本地环境；若mode为PASSWORD_CHANGE_ONLY，先按[登录/首次改密说明](BE-06-LOCAL-SETUP.md)完成改密，再重新登录取得NORMAL会话。
+- 在本机准备UTF-8文件 `.tmp/be28-acceptance.csv`，内容为上文两行示例。上传请求Auth选Bearer Token，输入accessToken本身；Headers添加Idempotency-Key，值可在PowerShell运行 `[guid]::NewGuid().ToString()` 获取。Body选form-data，字段名file、类型File，选择CSV，文件MIME选text/csv；Content-Type及boundary交给Apifox生成，不手工填JSON或multipart边界。
+
+| 操作 | 应观察到的结果 |
+| --- | --- |
+| 首次上传示例CSV | 201，记录id，sheetNames为["CSV"]，不出现服务器存储路径 |
+| GET同一个id（使用相同Bearer认证） | 200，id/sha256/sizeBytes与上传相同 |
+| 原请求同key、同名、同文件重发 | 201，相同id，响应头Idempotent-Replayed为true |
+| 改动CSV内容，沿用刚才的key上传 | 409；使用新key才是新上传 |
+| 去掉上传请求的认证后重发 | 401 |
+| 重新启动应用后GET原id | 200；不要删除或更换存储目录 |
+
+以上结果核对后，由D明确确认BE-28验收通过；机器测试和先合并推送不代替这项确认。上传与幂等验证会留下相应文件/元数据/审计，仍不会创建员工或任职。
 
 BE-29可复用 `ImportFileService.readSheet(fileId, sheetName, token)`，必须明确选择sheetName，并由本任务复核当前总管理员、文件存在与SHA256，返回不可变原始文本行及源行号；BE-29仍自行完成模板映射、冻结计划/差异和业务依赖检查。BE-30负责整批正式变更及跨域失效，本任务不提前承担其写入语义。
