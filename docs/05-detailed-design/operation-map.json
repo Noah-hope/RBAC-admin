@@ -4476,7 +4476,7 @@
         "ImportFile"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY"
   },
   {
     "operationId": "getImportFile",
@@ -4534,7 +4534,7 @@
         "ImportFile"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY"
   },
   {
     "operationId": "precheckImport",

@@ -3,3 +3,4 @@ com.adgn.backend.core.transaction.TransactionBoundaryAutoConfiguration
 com.adgn.backend.core.idempotency.IdempotencyAutoConfiguration
 com.adgn.backend.identity.config.IdentityAutoConfiguration
 com.adgn.backend.people.PeopleAutoConfiguration
+com.adgn.backend.imports.ImportFileConfiguration

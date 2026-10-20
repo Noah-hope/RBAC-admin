@@ -454,8 +454,10 @@
       "UC-10"
     ],
     "reviewScenario": "S19",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-28-IMPORT-FILES.md",
+    "verificationScope": "BE28_UPLOAD_IMMUTABLE_STORAGE_AND_SAFE_PARSING_ONLY_NOT_PRECHECK_OR_COMMIT"
   },
   {
     "id": "AT-27",

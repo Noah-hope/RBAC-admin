@@ -1,5 +1,9 @@
 # 项目共享记忆
 
+D-076（2026-10-20）：D已要求先合并推送BE-28，再按交接步骤人工验收；先fetch核对远程main/1f7886e并接入最新B/BE-17/12。无Java冲突，共享设计/记忆冲突合并保留两方事实，D原BE-28实施编号调整为D-075，B原D-073/074不变。集成后完整回归及实际主线交付成功后记入[BE-28](../05-detailed-design/BE-28-IMPORT-FILES.md)，不以授权或机器验证代记D人工验收。下方旧未授权/旧数量为历史。
+
+D-075（2026-10-20）：本会话成员D明确开始BE-28，已fetch并将本地main快进至93acc63，创建codex/be-28-import-files。实现uploadImportFile/getImportFile、安全CSV/XLSX解析、SHA256不可变存储和后续明确选表读取端口；沿用V1～V3及现有身份/事务/审计/幂等，无新增依赖或组织人员变更。完整102离线＋159真实MySQL/HTTP及静态校验通过，失败/错误/跳过均0。随机库/账号和临时密钥/存储目录均0，专属PID3652正常关闭，原MySQL84仍Running。真实RED/GREEN与交接见[BE-28设计和交接](../05-detailed-design/BE-28-IMPORT-FILES.md)。BE-28登记IMPLEMENTED，待D人工确认和主线交付，未合并推送；AT-26只标本任务部分验证。BE-29预检、BE-30整批提交及真实HR集成未实现，本轮不自动开始。当前35项中9项OWNER_ACCEPTED、2项IMPLEMENTED、5项IN_PROGRESS、19项PLANNED；保留A/B已有主线交付与人工确认事实，下方旧数量和任务边界均属历史。
+
 D-074实际交付（2026-10-20）：按 B 用户“你检查完之后合并就好”，BE-17/12 来源 1fb95ad3d89789b8e45de7bedbb6397bc04f37e7 已无冲突合入并推送远程 main/3103b351089f300fe2553b79bb6f63ae5a383cf1；任务分支已推送保留，远程 SHA 回查一致。远程原基线仍 93acc63，无他人新增改动，合并树与完整 93＋169 测试通过源一致，本轮合并后 93 普通回归再次通过。静态追踪记录已交付、本人验收仍开放，不将合并授权代记 OWNER_ACCEPTED；原 D-073 未交付为历史。Git 连接超时后经官方 API 按本地对象 SHA 且 force=false 交付，不创建 PR/部署。组员可更新 main 接入 BE-17；不自动开始 BE-09/18 等剩余任务。见 [验证与接入](../05-detailed-design/BE-17-12-PREVIEW-CATALOG.md)。
 
 D-073（2026-10-20）：B 已按用户“17和12你做一下”在 codex/be-17-12-preview-catalog 实现 BE-17 固定安全快照/影响计算/确认端口和 BE-12 六个系统、目录操作，基线 main/93acc63，原契约/迁移不变。完整 93 普通＋169 真实 MySQL/HTTP 回归通过；实现与测试见 [实施记录](../05-detailed-design/BE-17-12-PREVIEW-CATALOG.md)。两项 IN_PROGRESS 表示代码已实现、待本人确认及主线交付，不虚构 OWNER_ACCEPTED 或已推送；原三项远程交付保留。BE-18 仍等 BE-14，BE-33/35 等其他模块及部署验收；整个 B 尚未全量完成。下方 BE-17/12 未实现是历史。
