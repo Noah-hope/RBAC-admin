@@ -1,5 +1,9 @@
 # BE-29 冻结导入预检、差异与问题报告
 
+集成验证清理：随机schema/账号回查0/0，测试密钥及文件目录无残留；专属MySQL子进程41836/父进程24424正常关闭，原MySQL84仍Running，未操作用户现有库。
+
+D-084集成结果（2026-10-20）：接入远程main/06a6b5c（A已验收并经PR#3交付的BE-09）后，完整clean verify/mysql-check通过，137项离线/20组＋240项真实MySQL/HTTP/19组，失败/错误/跳过0，日志backend/.tmp/be29-main-integration-verify.log。集成未改BE-29业务代码，静态追踪通过；BE-29保持IMPLEMENTED待D人工验收，本次主线交付由用户“合并推送吧”明确授权，实际SHA成功后补。 集成jar SHA256为 `4534fe14d81d8d9999b589ffd2152ba82a64a79bcf7ec3a5f536e5e83cf26c5a`。
+
 D-084编号协调（2026-10-20）：BE-29原本地实施记录D-081与远程A/BE-09重复，现统一为D-084；原实现80abde1及真实RED/GREEN事实保留，A的D-081/082/083、验收与PR#3交付均保持。已接入main/06a6b5c，业务代码无冲突；BE-29仍IMPLEMENTED、ownerAccepted=false，待集成回归与本次授权的主线交付。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED。
 
 2026-10-20，成员D要求“接下来进行下一项任务”。已fetch核对共同main/072585e，在codex/be-29-import-precheck实施BE-29；直接依赖BE-10、BE-17、BE-28均已交付。BE-26仍缺C/BE-20，BE-30仍待BE-27/29，不跳过依赖实施。既有BE-10/14/16/28人工验收保持开放；本次不扩展BE-16特定合并推送授权。

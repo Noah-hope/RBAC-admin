@@ -1,5 +1,7 @@
 # 项目协作规则
 
+D-084集成结果（2026-10-20）：接入远程main/06a6b5c（A已验收并经PR#3交付的BE-09）后，完整clean verify/mysql-check通过，137项离线/20组＋240项真实MySQL/HTTP/19组，失败/错误/跳过0，日志backend/.tmp/be29-main-integration-verify.log。集成未改BE-29业务代码，静态追踪通过；BE-29保持IMPLEMENTED待D人工验收，本次主线交付由用户“合并推送吧”明确授权，实际SHA成功后补。
+
 D-084编号协调（2026-10-20）：BE-29原本地实施记录D-081与远程A/BE-09重复，现统一为D-084；原实现80abde1及真实RED/GREEN事实保留，A的D-081/082/083、验收与PR#3交付均保持。已接入main/06a6b5c，业务代码无冲突；BE-29仍IMPLEMENTED、ownerAccepted=false，待集成回归与本次授权的主线交付。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED。
 
 D-084实际结果：BE-29五操作及纯规划/保守集合依赖复核、原子seal报告已实现，完整137离线＋228真实MySQL/HTTP及静态追踪通过，失败/错误/跳过0。含25项规划器＋13项真实预检检查、1000行、明确XLSX选表、候选ID隐藏、同批防重、映射/顺序失效及审计故障回滚。随机库/账号0/0、测试密钥/文件目录0，专属5140子进程正常关闭，原MySQL84仍Running。BE-29为IMPLEMENTED、ownerAccepted=false、mergedToMain=false；既有BE-10/14/16/28人工验收保持，不合并推送或自动开展其他任务，见docs/05-detailed-design/BE-29-IMPORT-PRECHECK.md。
