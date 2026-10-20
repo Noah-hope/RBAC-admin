@@ -251,7 +251,16 @@ def checks(report):
     referenced=set()
     for task in tasks:
         expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-08':'OWNER_ACCEPTED','BE-10':'IMPLEMENTED','BE-11':'IN_PROGRESS','BE-12':'IN_PROGRESS','BE-13':'IN_PROGRESS','BE-14':'IMPLEMENTED','BE-15':'IN_PROGRESS','BE-17':'IN_PROGRESS','BE-28':'IMPLEMENTED','BE-32':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
+        if task['id']=='BE-09': expected_status='IN_PROGRESS'
         require(task['status']==expected_status,'任务准备/实现状态不符')
+        if task['id']=='BE-09':
+            progress=task.get('implementationProgress',{})
+            require(progress.get('decision')=='D-079' and progress.get('implemented') is True
+                    and progress.get('claimedOwnerSlot')=='A' and progress.get('ownerAccepted') is False
+                    and progress.get('mergedToMain') is False and 'ownerAcceptance' not in task
+                    and progress.get('branch')=='codex/be-09-scope-creation'
+                    and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
+                    and progress.get('evidence')=='BE-09-SCOPE-CREATION.md','BE-09实现/验收/主线边界不符')
         if task['id']=='BE-14':
             progress=task.get('implementationProgress',{})
             require(progress.get('decision')=='D-077' and progress.get('implemented') is True
@@ -512,6 +521,7 @@ def checks(report):
         require(row['suggestedOwnerSlot']==task['suggestedOwnerSlot'] and row['startConditions']==required_gates,'操作与任务分工/阶段不一致')
         require(set(row['tables'])<=tables,'操作引用未知表')
         expected_operation_status='OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in {'BE-10','BE-11','BE-12','BE-13','BE-14','BE-15','BE-17','BE-28'} else 'PLANNED_NOT_IMPLEMENTED')
+        if task['id']=='BE-09': expected_operation_status='IMPLEMENTED_PENDING_OWNER'
         require(set(row['acceptance'])<=cids and row['status']==expected_operation_status,'验收引用/实施状态不符')
         if direction=='INBOUND':require('AT-37'in row['acceptance'],'入站缺全契约验收')
         require(set(row['requestModels'])<=api['components']['schemas'].keys(),'未知输入模型')
@@ -663,9 +673,9 @@ def checks(report):
         decisionIds=len(decisions),upstreamSha256=source_hashes,
         planRevision='1.4',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=0,
         businessTasksAssigned=len(assignments),assignmentDecision='D-055',memberIdentitiesPending=4,
-        confirmedUserAlias='D',historicallyConfirmedUserAliases=['A','B','D'],implementationDecision='D-077',
-        internalPortTasksPendingOwner=[],implementedBusinessTasksPendingOwner=['BE-10','BE-11','BE-12','BE-13','BE-14','BE-15','BE-17','BE-28'],
-        ownerAcceptedBusinessTasks=['BE-06','BE-07','BE-08','BE-32'],businessTasksPendingMainDelivery=[],businessAcceptanceDecision='D-068',
+        confirmedUserAlias='A',historicallyConfirmedUserAliases=['A','B','D'],implementationDecision='D-079',
+        internalPortTasksPendingOwner=[],implementedBusinessTasksPendingOwner=['BE-09','BE-10','BE-11','BE-12','BE-13','BE-14','BE-15','BE-17','BE-28'],
+        ownerAcceptedBusinessTasks=['BE-06','BE-07','BE-08','BE-32'],businessTasksPendingMainDelivery=['BE-09'],businessAcceptanceDecision='D-068',
         businessMainDeliveryDecision='D-078',businessMainDeliveryMerge=grant_delivery['mergeCommit'],
         businessMainDeliveryPrUrl=None,priorScopeDeliveryPrUrl=scope_delivery['prUrl'],priorBootstrapDeliveryPrUrl=bootstrap_delivery['prUrl'],
         foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:OWNER_ACCEPTED',

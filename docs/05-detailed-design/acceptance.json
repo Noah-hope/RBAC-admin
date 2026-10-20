@@ -139,7 +139,10 @@
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
     "evidence": "BE-08-MANAGEMENT-SCOPE.md",
-    "verificationScope": "BE08_READ_CONTEXT_AND_COVERAGE_ONLY_NOT_APPOINTMENT_WRITES_OR_REQUEST_INVALIDATION"
+    "verificationScope": "BE08_READ_CONTEXT_AND_COVERAGE_ONLY_NOT_APPOINTMENT_WRITES_OR_REQUEST_INVALIDATION",
+    "additionalEvidence": [
+      "BE-09-SCOPE-CREATION.md"
+    ]
   },
   {
     "id": "AT-09",
@@ -557,7 +560,10 @@
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
     "evidence": "BE-17-12-PREVIEW-CATALOG.md",
-    "verificationScope": "BE17_FIXED_SAFE_PREVIEW_AND_BE12_ATOMIC_CATALOG_ONLY_NOT_ALL_CONSUMER_COMMANDS"
+    "verificationScope": "BE17_FIXED_SAFE_PREVIEW_AND_BE12_ATOMIC_CATALOG_ONLY_NOT_ALL_CONSUMER_COMMANDS",
+    "additionalEvidence": [
+      "BE-09-SCOPE-CREATION.md"
+    ]
   },
   {
     "id": "AT-32",
@@ -652,7 +658,8 @@
     "evidence": "BE-02-IMPLEMENTATION.md",
     "additionalEvidence": [
       "BE-11-13-15-B-MODULE.md",
-      "BE-17-12-PREVIEW-CATALOG.md"
+      "BE-17-12-PREVIEW-CATALOG.md",
+      "BE-09-SCOPE-CREATION.md"
     ]
   },
   {

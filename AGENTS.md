@@ -1,5 +1,7 @@
 # 项目协作规则
 
+D-079（2026-10-20）：本会话A要求开始BE-09，已同步共同main/a860dc8，在codex/be-09-scope-creation按设计/TDD实现创建预览及范围/系统集合/任命原子保存。技术依赖BE-05/08/17已主线交付，B/D负责人验收不代确认；使用JPA创建仓储与既有guard/幂等/安全预览/审计。完整112离线＋205真实MySQL/HTTP及静态检查通过，随机库/账号/临时密钥目录均0、专属实例已关闭，原MySQL84仍Running；真实RED/GREEN及本机步骤见docs/05-detailed-design/BE-09-SCOPE-CREATION.md。BE-09为IN_PROGRESS待A人工确认及主线交付，不自行推送/PR/合并或开始BE-27/34；原有无关.codeartsdoer保留。下方A仍等BE-17为此前历史。
+
 D-078实际交付（2026-10-20）：成员D明确“先完成合并与推送”，BE-14来源367cdae2acc6ff247116651abad53adafb6a34b9已无冲突保留历史合入远程main/c7435d9b17a2f9be57d1e748cae24f125a45deb2，任务分支已推送并保留，远程完整SHA回查一致，合并树等于已验证来源。主线未新增业务变更，沿用完整112离线＋193真实MySQL/HTTP证据；本轮静态追踪通过，不重跑Java/SQL，不部署或开新任务。BE-14保持IMPLEMENTED、mergedToMain=true、ownerAccepted=false，BE-28人工验收也仍开放，不以交付授权代记验收。此前D-077未授权/待主线为历史，接入见docs/05-detailed-design/BE-14-GRANT-BASELINES.md。
 
 D-077（2026-10-20）：当前成员D明确推迟BE-28人工验收并开始下一项，按既定顺序实施BE-14；远程main已核对61132f8，分支codex/be-14-grant-baselines。先设计/TDD实现三查询与GrantReader事务内来源/关系/历史/当前资格事实端口，保持纯读取与逻辑0、完整任职及固定来源历史边界。完整112离线＋193真实MySQL/HTTP及静态检查通过；随机库/账号及临时密钥目录均0、专属实例关闭、原MySQL84仍Running，详见docs/05-detailed-design/BE-14-GRANT-BASELINES.md。BE-14为IMPLEMENTED待本人确认及主线交付，BE-28仍已交付待本人验收；本次继续开发不代验收，也不扩展此前BE-28特定合并推送授权，不自动开BE-16/29。

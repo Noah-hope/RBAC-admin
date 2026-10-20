@@ -792,7 +792,7 @@
     ],
     "deliverable": "总管理员创建完整范围/名单，当前部门任职及系统合法，失败全回滚。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -800,6 +800,21 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-09-SCOPE-CREATION.md",
+      "decision": "D-079",
+      "scope": "SUPER_ADMIN_SCOPE_CREATION_PREVIEW_AND_ATOMIC_APPOINTMENTS",
+      "implemented": true,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "claimedBy": "USER",
+      "claimSource": "USER_MESSAGE",
+      "branch": "codex/be-09-scope-creation",
+      "dependencyBase": "a860dc8",
+      "claimedOwnerSlot": "A"
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-01",
