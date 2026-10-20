@@ -1310,7 +1310,7 @@
     ],
     "deliverable": "缺失逻辑0基线、全部适用任职、同来源去重/异源并存、准确历史grant版本。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -1318,6 +1318,21 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-14-GRANT-BASELINES.md",
+      "decision": "D-077",
+      "scope": "SOURCE_RELATION_BASELINE_HISTORY_AND_CURRENT_QUALIFICATION_READS",
+      "implemented": true,
+      "httpImplemented": true,
+      "internalReadPortImplemented": true,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "branch": "codex/be-14-grant-baselines",
+      "dependencyBase": "61132f8",
+      "claimedOwnerSlot": "D"
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-03",

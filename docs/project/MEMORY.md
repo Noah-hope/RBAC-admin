@@ -1,5 +1,7 @@
 # 项目共享记忆
 
+D-077（2026-10-20）：成员D明确“我后面再验收吧，先开始下一项工作任务”，BE-28继续保留IMPLEMENTED/mergedToMain=true/ownerAccepted=false。按顺序选择依赖代码已交付的BE-14，在codex/be-14-grant-baselines（共同main/61132f8，官方API回查一致）实现三个查询及事务内GrantReader，供B/BE-18、C/BE-20与D/BE-16接入；无新迁移、依赖或来源/授权DML。完整112离线＋193真实MySQL/HTTP及静态检查通过，失败/错误/跳过0；随机库/账号0/0、临时密钥目录0，专属PID7144正常关闭，原MySQL84仍Running。实际证据见[BE-14](../05-detailed-design/BE-14-GRANT-BASELINES.md)。BE-14登记IMPLEMENTED，待D人工确认和主线交付，未合并推送；AT-13补本任务读取证据，AT-14/15仅局部读取验证。35项中9项OWNER_ACCEPTED、3项IMPLEMENTED、5项IN_PROGRESS、18项PLANNED；其他成员及BE-28原交付/验收事实保持，不自动实施BE-16/29。
+
 D-076实际交付（2026-10-20）：BE-28来源233f63352b0c8dea92fd916c47bd29d59267f97c已合入远程main/4b384fb7b629affd8fbd0e5762cad652bbdb3158，main及任务分支回查均为预期完整SHA，合并树等于验证来源，分支保留。接入最新B/BE-17/12后完整110离线＋178真实MySQL/HTTP通过，失败/错误/跳过0；专属实例已正常关闭，随机库/账号及临时密钥/文件目录0，用户原MySQL84仍Running。Git传输失败后使用官方API按相同对象SHA及force=false更新，无PR/部署。静态追踪记录BE-28的mergedToMain=true、ownerAccepted=false；手工验收仍开放，步骤见[BE-28](../05-detailed-design/BE-28-IMPORT-FILES.md)。下方待交付和未授权是历史；不自动启动BE-29/30。
 
 D-076（2026-10-20）：D已要求先合并推送BE-28，再按交接步骤人工验收；先fetch核对远程main/1f7886e并接入最新B/BE-17/12。无Java冲突，共享设计/记忆冲突合并保留两方事实，D原BE-28实施编号调整为D-075，B原D-073/074不变。集成后完整回归及实际主线交付成功后记入[BE-28](../05-detailed-design/BE-28-IMPORT-FILES.md)，不以授权或机器验证代记D人工验收。下方旧未授权/旧数量为历史。

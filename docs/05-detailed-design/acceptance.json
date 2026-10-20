@@ -234,7 +234,10 @@
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
     "evidence": "BE-10-PEOPLE.md",
-    "verificationScope": "BE10_PEOPLE_HTTP_INTERNAL_READ_AND_IMPORT_PRIMITIVES_ONLY_NOT_FULL_IMPORT_LIFECYCLE"
+    "verificationScope": "BE10_PEOPLE_HTTP_INTERNAL_READ_AND_IMPORT_PRIMITIVES_ONLY_NOT_FULL_IMPORT_LIFECYCLE",
+    "additionalEvidence": [
+      "BE-14-GRANT-BASELINES.md"
+    ]
   },
   {
     "id": "AT-14",
@@ -251,8 +254,10 @@
       "UC-04"
     ],
     "reviewScenario": "S07/S09",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-14-GRANT-BASELINES.md",
+    "verificationScope": "BE14_SOURCE_RELATION_AND_HISTORY_READS_ONLY_NOT_GRANT_MUTATIONS_OR_CLOSE_EXECUTION_RACES"
   },
   {
     "id": "AT-15",
@@ -268,8 +273,10 @@
       "UC-11"
     ],
     "reviewScenario": "S08",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-14-GRANT-BASELINES.md",
+    "verificationScope": "BE14_SOURCE_RELATION_AND_HISTORY_READS_ONLY_NOT_GRANT_MUTATIONS_OR_CLOSE_EXECUTION_RACES"
   },
   {
     "id": "AT-16",
