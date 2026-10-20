@@ -1,5 +1,7 @@
 # 后端工程
 
+D-077（2026-10-20）：BE-14在codex/be-14-grant-baselines实现授权历史、关系基线和来源基线三个查询，以及调用方同事务的GrantReader事实端口；无新迁移、依赖或环境变量。接口与B/C/D接入见[BE-14](../docs/05-detailed-design/BE-14-GRANT-BASELINES.md)，待负责人确认及主线交付。BE-28仍已交付、人工验收延后。
+
 D-076实际交付（2026-10-20）：BE-28已由233f633合入远程main/4b384fb，完整110离线＋178真实MySQL/HTTP及静态校验通过；分支保留、远程SHA回查一致，待D人工验收。现有运行配置可继续使用，无新迁移/密钥；上传与幂等、文件目录及Apifox验收见[BE-28](../docs/05-detailed-design/BE-28-IMPORT-FILES.md)。下方任务分支/未交付为历史。
 
 D-075（2026-10-20）：BE-28 已在 codex/be-28-import-files 实现 CSV/XLSX 上传、元数据查询、不可变文件存储与安全解析。无需新增迁移或 Maven 依赖；本机默认存储目录为 backend 工作目录下 `.tmp/imports`，可用 `RBAC_IMPORT_DIRECTORY` 指定持久目录。接口用法、限制、TDD 与验证见 [BE-28](../docs/05-detailed-design/BE-28-IMPORT-FILES.md)。待负责人确认及主线交付，BE-29/30 仍未实现。

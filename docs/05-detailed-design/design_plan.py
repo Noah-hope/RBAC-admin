@@ -159,6 +159,10 @@ for case in CASES:
     if case['id']=='AT-26':
         case.update(status='PARTIALLY_VERIFIED',evidence='BE-28-IMPORT-FILES.md',
             verificationScope='BE28_UPLOAD_IMMUTABLE_STORAGE_AND_SAFE_PARSING_ONLY_NOT_PRECHECK_OR_COMMIT')
+    if case['id']=='AT-13': case.setdefault('additionalEvidence',[]).append('BE-14-GRANT-BASELINES.md')
+    if case['id'] in {'AT-14','AT-15'}:
+        case.update(status='PARTIALLY_VERIFIED',evidence='BE-14-GRANT-BASELINES.md',
+            verificationScope='BE14_SOURCE_RELATION_AND_HISTORY_READS_ONLY_NOT_GRANT_MUTATIONS_OR_CLOSE_EXECUTION_RACES')
     if case['id'] in {'AT-01','AT-02'}:
         case['additionalEvidence']=['BE-32-DEPLOYMENT.md']
 
@@ -213,6 +217,13 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             implemented=True,httpImplemented=True,ownerAccepted=False,mergedToMain=False,
             databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
             branch='codex/be-28-import-files',dependencyBase='93acc63',claimedOwnerSlot='D')
+    if n == 14:
+        TASKS[-1]['status']='IMPLEMENTED'
+        TASKS[-1]['implementationProgress']=dict(evidence='BE-14-GRANT-BASELINES.md',decision='D-077',
+            scope='SOURCE_RELATION_BASELINE_HISTORY_AND_CURRENT_QUALIFICATION_READS',
+            implemented=True,httpImplemented=True,internalReadPortImplemented=True,
+            ownerAccepted=False,mergedToMain=False,databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
+            branch='codex/be-14-grant-baselines',dependencyBase='61132f8',claimedOwnerSlot='D')
     if n == 8:
         TASKS[-1]['status']='OWNER_ACCEPTED'
         TASKS[-1]['implementationProgress']=dict(evidence='BE-08-MANAGEMENT-SCOPE.md',decision='D-067',
@@ -386,6 +397,9 @@ def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text = title+'\n\nD-076（2026-10-20）：BE-28 已接入最新 BE-17/12 后完整110离线＋178真实MySQL/HTTP通过，并由233f633保留历史合入远程main/4b384fb，远程SHA回查一致，分支保留。Git连接失败后使用官方API按本地SHA原样交付、force=false。BE-28仍待本人确认，mergedToMain=true；交付不代记人工验收。当前共9项OWNER_ACCEPTED、2项IMPLEMENTED、5项IN_PROGRESS、19项PLANNED。D原BE-28实施编号因与B冲突改为D-075，原事实保留；下方旧数量/未授权为历史。见 [BE-28](BE-28-IMPORT-FILES.md)。\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\nD-077（2026-10-20）：D要求推迟BE-28人工验收并开始下一项，已在codex/be-14-grant-baselines实现BE-14三个查询及事务内来源/关系/历史/当前资格事实端口；无新迁移或DML。BE-14为IMPLEMENTED，待本人确认及主线交付，BE-28仍已交付待本人确认。AT-13补本任务证据，AT-14/15仅读取局部验证，BE-16/26执行竞争不在本任务。当前共9项OWNER_ACCEPTED、3项IMPLEMENTED、5项IN_PROGRESS、18项PLANNED，下方旧状态/数量为历史。见[BE-14](BE-14-GRANT-BASELINES.md)。\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -509,7 +523,7 @@ def generate():
             acceptance=sorted(set(task['acceptance']+(['AT-37'] if row['direction']=='INBOUND' else ['AT-20']))),
             parameters=parameter_names,requestModels=sorted(schema_refs(operation.get('requestBody',{}),api)),
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
-            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-28'} else 'PLANNED_NOT_IMPLEMENTED'))))
+            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY' if task['id']=='BE-14' else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-28'} else 'PLANNED_NOT_IMPLEMENTED')))))
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
         owned=[r for r in op_map if r['issue']==task['id']]

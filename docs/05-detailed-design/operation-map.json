@@ -2059,7 +2059,7 @@
         "GrantPage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY"
   },
   {
     "operationId": "grantBaselines",
@@ -2133,7 +2133,7 @@
         "BaselineResult"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY"
   },
   {
     "operationId": "listChangeRequests",
@@ -3131,7 +3131,7 @@
         "SourceQueryResult"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY"
   },
   {
     "operationId": "sourceClosePreview",
