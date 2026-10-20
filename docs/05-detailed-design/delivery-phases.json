@@ -338,6 +338,23 @@
         "ownerAccepted": false,
         "deliveryMode": "LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH",
         "evidence": "BE-29-IMPORT-PRECHECK.md"
+      },
+      {
+        "taskIds": [
+          "BE-20"
+        ],
+        "decision": "D-088",
+        "date": "2026-10-21",
+        "branch": "main",
+        "sourceCommit": "310313a07e0321f58a5b1b03d3d59231fe2a17a6",
+        "mergeCommit": "a9b214cce38d4396120b3902ce19f2b7440bf4f1",
+        "remote": "origin",
+        "remoteRef": "refs/heads/main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "a9b214cce38d4396120b3902ce19f2b7440bf4f1",
+        "ownerAccepted": true,
+        "deliveryMode": "LOCAL_MERGE_AND_ATOMIC_PUSH",
+        "evidence": "BE-20-CHANGE-DRAFTS.md"
       }
     ]
   },

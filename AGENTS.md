@@ -1,5 +1,7 @@
 # 项目协作规则
 
+D-088（2026-10-21）：C在BE-20负责人确认与逐项合并建议后明确“可以”，接受既有137离线＋265真实MySQL/HTTP验证并授权交付。来源310313a07e0321f58a5b1b03d3d59231fe2a17a6已保留历史合入远程main/a9b214cce38d4396120b3902ce19f2b7440bf4f1，合并树等于验证来源；main和中文任务分支已原子推送，远程完整SHA回查一致。BE-20为OWNER_ACCEPTED、mergedToMain=true，人工演示未进行；本轮代码未变，仅复核报告/jar摘要与静态追踪，无新Java/SQL或部署。D/BE-26技术依赖已交付，其他C任务不自动开展，既有其他负责人验收保持。详细证据见docs/05-detailed-design/BE-20-CHANGE-DRAFTS.md。
+
 D-086（2026-10-20）：本轮用户明确负责C，要求先列计划再执行BE-20。已在codex/be-20-change-drafts（main/86089d2）完成设计、真实RED/GREEN、四写接口及最小WorkflowStateWriter交接；完整137离线＋265真实MySQL/HTTP和设计静态校验通过，失败/错误/跳过0。随机库/账号/临时密钥目录0，专属MySQL正常关闭并清理。BE-20为IMPLEMENTED、ownerAccepted=false、mergedToMain=false，待C负责人确认及共同主线交付；A/D历史认领和验收保持，BE-19及BE-21～25/31不自动开工，不合并推送或部署。实现与验收步骤见docs/05-detailed-design/BE-20-CHANGE-DRAFTS.md。
 
 D-085实际交付（2026-10-20）：成员D明确“合并推送吧”，BE-29接入A已交付BE-09后，来源db3419687f8dc43b1959564ddc19b0e7d32826ed已无冲突no-ff合入远程main/6506cda54c4898e736a2e730ba001294f8de4c2c，合并树等于已完整验证来源，任务分支codex/be-29-import-precheck保留。普通Git连接连续失败，改用官方GitHub Git API按本地对象原始SHA、force=false推送main和任务分支，远程两个完整SHA均回查一致。完整137离线＋240真实MySQL/HTTP及静态校验通过，专属资源清理关闭，原MySQL84仍Running；BE-29为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，既有人工验收保持。D原实施编号D-081与A冲突已统一为D-084；A的D-081/082/083及PR#3交付保留。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED；不强推或部署，下方未授权/待主线为历史。

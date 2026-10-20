@@ -1,5 +1,7 @@
 # BE-20 角色创建与变更草稿
 
+D-088（2026-10-21）：C在BE-20负责人确认与逐项合并建议后明确“可以”，接受既有137离线＋265真实MySQL/HTTP验证并授权交付。来源310313a07e0321f58a5b1b03d3d59231fe2a17a6已保留历史合入远程main/a9b214cce38d4396120b3902ce19f2b7440bf4f1，合并树等于验证来源；main和中文任务分支已原子推送，远程完整SHA回查一致。BE-20为OWNER_ACCEPTED、mergedToMain=true，人工演示未进行；本轮代码未变，仅复核报告/jar摘要与静态追踪，无新Java/SQL或部署。D/BE-26技术依赖已交付，其他C任务不自动开展，既有其他负责人验收保持。详细证据见docs/05-detailed-design/BE-20-CHANGE-DRAFTS.md。
+
 ## 范围与依据
 
 2026-10-20：本轮用户明确负责 C，并要求先列计划再执行。基于 main/86089d2，当前任务分支 BE-20-角色与变更草稿。依据 UC-02/03/04、OpenAPI 1.2.0 的 createRole/createChangeDraft/updateChangeDraft/deleteChangeDraft、数据库 T0/T2/T3/T11、AT-11/13/17（AT-04/16 仅本任务局部）。不实施提交/OA/执行器及审计查询，不代记负责人验收或主线交付。

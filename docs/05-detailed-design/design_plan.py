@@ -268,13 +268,21 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
             branch='codex/be-29-import-precheck',dependencyBase='072585e',claimedOwnerSlot='D')
     if n == 20:
-        TASKS[-1]['status']='IMPLEMENTED'
+        TASKS[-1]['status']='OWNER_ACCEPTED'
         TASKS[-1]['implementationProgress']=dict(evidence='BE-20-CHANGE-DRAFTS.md',decision='D-086',
             scope='ROLE_AND_THREE_CHANGE_DRAFTS_ATOMIC_CLAIMS_AND_INTERNAL_INVALIDATION_STATE_PORT',
-            implemented=True,httpImplemented=True,ownerAccepted=False,mergedToMain=False,
+            implemented=True,httpImplemented=True,ownerAccepted=True,mergedToMain=True,
             databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
             branch='BE-20-角色与变更草稿',dependencyBase='86089d2',claimedOwnerSlot='C',
-            claimedBy='USER',claimSource='USER_MESSAGE')
+            claimedBy='USER',claimSource='USER_MESSAGE',deliveryDecision='D-088',
+            sourceCommit='310313a07e0321f58a5b1b03d3d59231fe2a17a6',mainMergeCommit='a9b214cce38d4396120b3902ce19f2b7440bf4f1',
+            pushVerified=True,verifiedRemoteCommit='a9b214cce38d4396120b3902ce19f2b7440bf4f1')
+        TASKS[-1]['ownerAcceptance']=dict(acceptedBy='USER',ownerSlot='C',date='2026-10-21',
+            scope='BE-20',decision='D-088',source='USER_MESSAGE',message='可以',
+            interpretation='ACCEPT_AND_DELIVER_BE20_AFTER_TASK_BRANCH_WORKFLOW_EXPLANATION',
+            implementationCommit='4e1bcf4f4d79874c71cbd56782f74196095f4384',manualDemoVerified=False,
+            automatedUnitTests=137,automatedMySqlTests=265,mergedToMain=True,
+            mainMergeCommit='a9b214cce38d4396120b3902ce19f2b7440bf4f1',evidence='BE-20-CHANGE-DRAFTS.md')
     if n == 14:
         TASKS[-1]['status']='IMPLEMENTED'
         TASKS[-1]['implementationProgress']=dict(evidence='BE-14-GRANT-BASELINES.md',decision='D-077',
@@ -515,6 +523,9 @@ def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text = title+'\n\nD-086（2026-10-20）：本轮用户明确负责C并要求先列计划再执行。BE-20在BE-20-角色与变更草稿（main/86089d2）先设计及真实HTTP/MySQL RED，再实现新角色/三类草稿/完整目标/原子占用/编辑删除/当前授权幂等重放，以及供D调用的最小WorkflowStateWriter。验证及交接见[BE-20](BE-20-CHANGE-DRAFTS.md)。BE-20为IMPLEMENTED、ownerAccepted=false、mergedToMain=false；此前A/D认领和验收事实保留。BE-19及BE-21～25/31仍PLANNED，BE-26仍须本任务主线交付；不代记验收，不合并推送或自动开展其他任务。共10项OWNER_ACCEPTED、6项IMPLEMENTED、5项IN_PROGRESS、14项PLANNED，下方旧状态/数量为历史。\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\n'+'D-088实际交付（2026-10-21）：C在确认BE-20及逐项合并方案后明确“可以”，接受既有137离线＋265真实MySQL/HTTP验证并授权交付。来源310313a07e0321f58a5b1b03d3d59231fe2a17a6已无冲突no-ff合入远程main/a9b214cce38d4396120b3902ce19f2b7440bf4f1，合并树等于验证来源；main与BE-20-角色与变更草稿已原子推送并完整SHA回查一致，任务分支保留。BE-20为OWNER_ACCEPTED、mergedToMain=true，本机人工演示未进行；本轮仅复核原报告/jar摘要和静态追踪，不重跑代码未变的Java/SQL。D/BE-26技术依赖已交付，其他C任务仍开放，不自动开工或部署。共11项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、14项PLANNED。下方待验收/待交付为历史，见[BE-20](BE-20-CHANGE-DRAFTS.md)。'+'\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -613,6 +624,10 @@ def generate():
         branch='main',sourceCommit=IMPORT_PRECHECK_SOURCE_COMMIT,mergeCommit=IMPORT_PRECHECK_MERGE_COMMIT,
         remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=IMPORT_PRECHECK_MERGE_COMMIT,
         ownerAccepted=False,deliveryMode='LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH',evidence='BE-29-IMPORT-PRECHECK.md'))
+    phase_plan['business']['additionalMainDeliveries'].append(dict(taskIds=['BE-20'],decision='D-088',date='2026-10-21',
+        branch='main',sourceCommit='310313a07e0321f58a5b1b03d3d59231fe2a17a6',mergeCommit='a9b214cce38d4396120b3902ce19f2b7440bf4f1',
+        remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit='a9b214cce38d4396120b3902ce19f2b7440bf4f1',
+        ownerAccepted=True,deliveryMode='LOCAL_MERGE_AND_ATOMIC_PUSH',evidence='BE-20-CHANGE-DRAFTS.md'))
     dump('delivery-phases.json',phase_plan)
     dump('modules.json',modules);dump('acceptance.json',CASES);dump('issues.json',TASKS)
     lines=['# 模块结构与维护责任','','修订1.4/D-055：基座已确认并纳入主线，30项任务已登记A～D成员代号，实名与GitHub账号映射待补。D-056用户认领A，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED，由负责人自行确认完成（D-051）。分工详见[四人分工](TEAM-ASSIGNMENT.md)。公共包前缀`com.adgn.backend`、13个逻辑模块及技术依赖不变。','','| 模块 | 包后缀/负责人 | 编译依赖 | 职责与主要接口 |','| --- | --- | --- | --- |']
@@ -654,7 +669,7 @@ def generate():
             acceptance=sorted(set(task['acceptance']+(['AT-37'] if row['direction']=='INBOUND' else ['AT-20']))),
             parameters=parameter_names,requestModels=sorted(schema_refs(operation.get('requestBody',{}),api)),
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
-            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08','BE-09'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-28','BE-29'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN' if task['id']=='BE-20' else 'PLANNED_NOT_IMPLEMENTED')))))
+            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08','BE-09','BE-20'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-28','BE-29'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN' if task['id']=='BE-20' else 'PLANNED_NOT_IMPLEMENTED')))))
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
         owned=[r for r in op_map if r['issue']==task['id']]

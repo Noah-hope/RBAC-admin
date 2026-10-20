@@ -1511,7 +1511,7 @@
         "RoleCreated"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "getRole",
@@ -2343,7 +2343,7 @@
         "ChangeRequest"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "getChangeRequest",
@@ -2518,7 +2518,7 @@
         "ChangeRequest"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "deleteChangeDraft",
@@ -2614,7 +2614,7 @@
     "successResponseModels": {
       "204": []
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "changePreview",

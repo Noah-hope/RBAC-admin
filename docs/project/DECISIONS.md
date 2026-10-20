@@ -386,3 +386,9 @@ D-071（2026-10-20）：用户要求检查其他成员 main 提交的兼容性�
 | 编号 | 授权依据 | 落地方式与边界 |
 | --- | --- | --- |
 | D-086 | 本轮用户明确“我就负责C的任务”，随后要求“先罗列计划再执行”；前文已选BE-20 | 在最新共同main/86089d2建立codex/be-20-change-drafts，先设计及真实HTTP/MySQL RED，再实现createRole、createChangeDraft、updateChangeDraft、deleteChangeDraft与C供D使用的最小状态失效端口。复用已有基座/身份/角色/来源端口及原表，不改变原需求或迁移。完整137离线＋265真实MySQL/HTTP及静态校验通过，随机库/账号/密钥已清理、专属进程已正常关闭。BE-20为IMPLEMENTED待本人确认及主线交付，不代记OWNER_ACCEPTED，不扩展既往其他成员的合并推送授权；A/D历史事实保留，其他C任务不自动展开。详见[BE-20](../05-detailed-design/BE-20-CHANGE-DRAFTS.md)。 |
+
+## BE-20负责人确认与主线交付（2026-10-21）
+
+| 编号 | 授权依据 | 落地方式与边界 |
+| --- | --- | --- |
+| D-088 | C在收到“建议先确认并交付BE-20”的任务状态与分支流程说明后明确“可以” | D-088（2026-10-21）：C在BE-20负责人确认与逐项合并建议后明确“可以”，接受既有137离线＋265真实MySQL/HTTP验证并授权交付。来源310313a07e0321f58a5b1b03d3d59231fe2a17a6已保留历史合入远程main/a9b214cce38d4396120b3902ce19f2b7440bf4f1，合并树等于验证来源；main和中文任务分支已原子推送，远程完整SHA回查一致。BE-20为OWNER_ACCEPTED、mergedToMain=true，人工演示未进行；本轮代码未变，仅复核报告/jar摘要与静态追踪，无新Java/SQL或部署。D/BE-26技术依赖已交付，其他C任务不自动开展，既有其他负责人验收保持。详细证据见docs/05-detailed-design/BE-20-CHANGE-DRAFTS.md。 |
