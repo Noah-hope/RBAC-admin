@@ -1,6 +1,6 @@
 # 四人业务开发分工
 
-D-086（2026-10-20）：本轮用户明确负责C并要求先列计划再执行。BE-20在codex/be-20-change-drafts（main/86089d2）先设计及真实HTTP/MySQL RED，再实现新角色/三类草稿/完整目标/原子占用/编辑删除/当前授权幂等重放，以及供D调用的最小WorkflowStateWriter。验证及交接见[BE-20](BE-20-CHANGE-DRAFTS.md)。BE-20为IMPLEMENTED、ownerAccepted=false、mergedToMain=false；此前A/D认领和验收事实保留。BE-19及BE-21～25/31仍PLANNED，BE-26仍须本任务主线交付；不代记验收，不合并推送或自动开展其他任务。共10项OWNER_ACCEPTED、6项IMPLEMENTED、5项IN_PROGRESS、14项PLANNED，下方旧状态/数量为历史。
+D-086（2026-10-20）：本轮用户明确负责C并要求先列计划再执行。BE-20在BE-20-角色与变更草稿（main/86089d2）先设计及真实HTTP/MySQL RED，再实现新角色/三类草稿/完整目标/原子占用/编辑删除/当前授权幂等重放，以及供D调用的最小WorkflowStateWriter。验证及交接见[BE-20](BE-20-CHANGE-DRAFTS.md)。BE-20为IMPLEMENTED、ownerAccepted=false、mergedToMain=false；此前A/D认领和验收事实保留。BE-19及BE-21～25/31仍PLANNED，BE-26仍须本任务主线交付；不代记验收，不合并推送或自动开展其他任务。共10项OWNER_ACCEPTED、6项IMPLEMENTED、5项IN_PROGRESS、14项PLANNED，下方旧状态/数量为历史。
 
 D-085实际交付（2026-10-20）：成员D明确“合并推送吧”，BE-29接入A已交付BE-09后，来源db3419687f8dc43b1959564ddc19b0e7d32826ed已无冲突no-ff合入远程main/6506cda54c4898e736a2e730ba001294f8de4c2c，合并树等于已完整验证来源，任务分支codex/be-29-import-precheck保留。普通Git连接连续失败，改用官方GitHub Git API按本地对象原始SHA、force=false推送main和任务分支，远程两个完整SHA均回查一致。完整137离线＋240真实MySQL/HTTP及静态校验通过，专属资源清理关闭，原MySQL84仍Running；BE-29为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，既有人工验收保持。D原实施编号D-081与A冲突已统一为D-084；A的D-081/082/083及PR#3交付保留。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED；不强推或部署，下方未授权/待主线为历史。
 
@@ -131,7 +131,7 @@ BE-01～05公共基座已由用户完成并确认；本次分工覆盖BE-06～35
 
 ## 四人共同遵守
 
-1. 各自在最新共同主线建立`codex/be-xx-主题`分支。先按[本机配置指南](FOUNDATION-USAGE.md)完成环境；实名/GitHub账号对应、仓库读写权限及成员本机验证结果仍需如实登记。业务代号已分工不代表这些操作已完成。
+1. 各自在最新共同主线建立`BE-任务编号-中文主题`分支。先按[本机配置指南](FOUNDATION-USAGE.md)完成环境；实名/GitHub账号对应、仓库读写权限及成员本机验证结果仍需如实登记。业务代号已分工不代表这些操作已完成。
 2. M11查询投影、M12 Controller/DTO按功能分文件，由对应BE负责人维护；不共写一个巨大QueryService或统一业务Controller。M10按本表A/D的任务拆分。调用其他领域公开内部端口，不随意改其实体和Repository。
 3. 修改公共core、pom.xml、全局配置/Problem/认证装配时先与基座维护者（用户）及受影响成员协调；迁移先协调版本号，每个版本只由一人提交。复用既有43表设计，结构变化同步权威设计；协调不增加独立评审人或额外审批门槛。
 4. 接口交接写清输入/输出、权限与事务前提、失败语义、验收场景和依赖提交。未就绪时可以准备设计和测试场景，不能把Mock端口记成真实依赖已完成。

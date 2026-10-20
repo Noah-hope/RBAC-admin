@@ -1902,7 +1902,7 @@
       "mergedToMain": false,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
-      "branch": "codex/be-20-change-drafts",
+      "branch": "BE-20-角色与变更草稿",
       "dependencyBase": "86089d2",
       "claimedOwnerSlot": "C",
       "claimedBy": "USER",

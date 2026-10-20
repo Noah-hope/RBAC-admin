@@ -293,7 +293,7 @@ def checks(report):
             require(progress.get('decision')=='D-086' and progress.get('implemented') is True
                     and progress.get('httpImplemented') is True and progress.get('ownerAccepted') is False
                     and progress.get('mergedToMain') is False and progress.get('databaseExecuted') is True
-                    and progress.get('claimedOwnerSlot')=='C' and progress.get('branch')=='codex/be-20-change-drafts'
+                    and progress.get('claimedOwnerSlot')=='C' and progress.get('branch')=='BE-20-角色与变更草稿'
                     and progress.get('evidence')=='BE-20-CHANGE-DRAFTS.md' and 'ownerAcceptance' not in task,
                     'BE-20实现与负责人确认及主线交付边界不符')
         if task['id']=='BE-29':
