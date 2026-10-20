@@ -1,5 +1,7 @@
 # BE-14 来源、关系基线与授权历史
 
+D-078实际交付（2026-10-20）：用户明确“先完成合并与推送”。已核对远程main仍为61132f8，既有112离线＋193真实MySQL/HTTP报告及jar SHA256一致；本轮复核静态追踪，不重复运行Java/SQL。来源 `367cdae2acc6ff247116651abad53adafb6a34b9` 已以no-ff无冲突合入远程main/`c7435d9b17a2f9be57d1e748cae24f125a45deb2`，双亲为61132f8和367cdae，合并树等于验证来源。`git push origin main codex/be-14-grant-baselines`成功，ls-remote回查main和分支完整SHA均一致，任务分支保留。BE-14登记IMPLEMENTED、mergedToMain=true、ownerAccepted=false；D人工验收及BE-28人工验收仍待明确确认，未创建PR、强推或部署。下方未授权/待交付为历史记录，后续仅更新交付文档及追踪。
+
 2026-10-20，成员D要求“我后面再验收吧，先开始下一项工作任务”。按既定顺序实施BE-14；BE-10、BE-11代码及所属自动化证据已交付共同main，基线61132f8，分支codex/be-14-grant-baselines。BE-28维持IMPLEMENTED/mergedToMain=true/ownerAccepted=false，本次继续开发不代记其人工验收，也不自动实施BE-16/29或扩展此前BE-28的合并推送授权。
 
 依据UC-03/04/11、API1.2.0的listGrants/grantBaselines/sourceBaselines、T9/T11、I-03/08/09及现有V1～V3迁移；不改需求、接口或数据库结构。AT-13/14/15仅验证本任务的读取与资格事实部分，授予/结束/周期推进和执行竞争留BE-16/26及C执行器。

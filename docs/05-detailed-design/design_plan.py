@@ -21,6 +21,8 @@ B_CURRENT_SOURCE_COMMIT = '1fb95ad3d89789b8e45de7bedbb6397bc04f37e7'
 B_CURRENT_MERGE_COMMIT = '3103b351089f300fe2553b79bb6f63ae5a383cf1'
 IMPORT_SOURCE_COMMIT = '233f63352b0c8dea92fd916c47bd29d59267f97c'
 IMPORT_MERGE_COMMIT = '4b384fb7b629affd8fbd0e5762cad652bbdb3158'
+GRANT_SOURCE_COMMIT = '367cdae2acc6ff247116651abad53adafb6a34b9'
+GRANT_MERGE_COMMIT = 'c7435d9b17a2f9be57d1e748cae24f125a45deb2'
 B_EVIDENCE = 'BE-11-13-15-B-MODULE.md'
 B_SOURCE_COMMIT = 'b92cdbb9b6a30b6e697f7ad80ef06e38fa034067'
 B_MERGE_COMMIT = '0e391c6a652fb9ee12991b7b7d2ac85a3922d166'
@@ -374,6 +376,10 @@ for task in TASKS:
     if task['id']=='BE-10':
         task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=PEOPLE_MERGE_COMMIT,
             sourceCommit=PEOPLE_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=PEOPLE_MERGE_COMMIT)
+    if task['id']=='BE-14':
+        task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=GRANT_MERGE_COMMIT,
+            sourceCommit=GRANT_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=GRANT_MERGE_COMMIT,
+            deliveryDecision='D-078')
     if task['id']=='BE-28':
         task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=IMPORT_MERGE_COMMIT,
             sourceCommit=IMPORT_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=IMPORT_MERGE_COMMIT,
@@ -399,7 +405,7 @@ def write(name, text):
         text = title+'\n\nD-076（2026-10-20）：BE-28 已接入最新 BE-17/12 后完整110离线＋178真实MySQL/HTTP通过，并由233f633保留历史合入远程main/4b384fb，远程SHA回查一致，分支保留。Git连接失败后使用官方API按本地SHA原样交付、force=false。BE-28仍待本人确认，mergedToMain=true；交付不代记人工验收。当前共9项OWNER_ACCEPTED、2项IMPLEMENTED、5项IN_PROGRESS、19项PLANNED。D原BE-28实施编号因与B冲突改为D-075，原事实保留；下方旧数量/未授权为历史。见 [BE-28](BE-28-IMPORT-FILES.md)。\n'+body
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
-        text = title+'\n\nD-077（2026-10-20）：D要求推迟BE-28人工验收并开始下一项，已在codex/be-14-grant-baselines实现BE-14三个查询及事务内来源/关系/历史/当前资格事实端口；无新迁移或DML。BE-14为IMPLEMENTED，待本人确认及主线交付，BE-28仍已交付待本人确认。AT-13补本任务证据，AT-14/15仅读取局部验证，BE-16/26执行竞争不在本任务。当前共9项OWNER_ACCEPTED、3项IMPLEMENTED、5项IN_PROGRESS、18项PLANNED，下方旧状态/数量为历史。见[BE-14](BE-14-GRANT-BASELINES.md)。\n'+body
+        text = title+'\n\nD-078（2026-10-20）：D明确要求先合并推送，BE-14来源367cdae已保留历史合入远程main/c7435d9，分支已推送并保留，远程完整SHA回查一致，合并树等于验证来源。沿用完整112离线＋193真实MySQL/HTTP证据，本轮静态检查通过，未重复执行Java/SQL。BE-14仍为IMPLEMENTED、ownerAccepted=false、mergedToMain=true，BE-28仍已交付待本人确认；下方未授权/待主线为历史。AT-13补本任务证据，AT-14/15仅读取局部验证，BE-16/26执行竞争不在本任务。当前共9项OWNER_ACCEPTED、3项IMPLEMENTED、5项IN_PROGRESS、18项PLANNED，下方旧状态/数量为历史。见[BE-14](BE-14-GRANT-BASELINES.md)。\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -482,6 +488,10 @@ def generate():
         branch='main',sourceCommit=IMPORT_SOURCE_COMMIT,mergeCommit=IMPORT_MERGE_COMMIT,
         remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=IMPORT_MERGE_COMMIT,
         ownerAccepted=False,deliveryMode='LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH',evidence='BE-28-IMPORT-FILES.md'))
+    phase_plan['business']['additionalMainDeliveries'].append(dict(taskIds=['BE-14'],decision='D-078',date='2026-10-20',
+        branch='main',sourceCommit=GRANT_SOURCE_COMMIT,mergeCommit=GRANT_MERGE_COMMIT,
+        remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=GRANT_MERGE_COMMIT,
+        ownerAccepted=False,deliveryMode='LOCAL_MERGE_AND_PUSH',evidence='BE-14-GRANT-BASELINES.md'))
     dump('delivery-phases.json',phase_plan)
     dump('modules.json',modules);dump('acceptance.json',CASES);dump('issues.json',TASKS)
     lines=['# 模块结构与维护责任','','修订1.4/D-055：基座已确认并纳入主线，30项任务已登记A～D成员代号，实名与GitHub账号映射待补。D-056用户认领A，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED，由负责人自行确认完成（D-051）。分工详见[四人分工](TEAM-ASSIGNMENT.md)。公共包前缀`com.adgn.backend`、13个逻辑模块及技术依赖不变。','','| 模块 | 包后缀/负责人 | 编译依赖 | 职责与主要接口 |','| --- | --- | --- | --- |']
@@ -523,7 +533,7 @@ def generate():
             acceptance=sorted(set(task['acceptance']+(['AT-37'] if row['direction']=='INBOUND' else ['AT-20']))),
             parameters=parameter_names,requestModels=sorted(schema_refs(operation.get('requestBody',{}),api)),
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
-            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY' if task['id']=='BE-14' else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-28'} else 'PLANNED_NOT_IMPLEMENTED')))))
+            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-28'} else 'PLANNED_NOT_IMPLEMENTED'))))
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
         owned=[r for r in op_map if r['issue']==task['id']]

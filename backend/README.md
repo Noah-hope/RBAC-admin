@@ -1,5 +1,7 @@
 # 后端工程
 
+D-078（2026-10-20）：BE-14已由367cdae合入远程main/c7435d9，main及任务分支完整SHA已回查，分支保留。沿用完整112离线＋193真实MySQL/HTTP及构建证据，本轮静态复核通过、业务代码未改；无新环境变量、依赖或迁移。B/C/D可更新main后按[BE-14交接](../docs/05-detailed-design/BE-14-GRANT-BASELINES.md)使用；BE-14和BE-28仍待人工验收，下方待主线是历史。
+
 D-077（2026-10-20）：BE-14在codex/be-14-grant-baselines实现授权历史、关系基线和来源基线三个查询，以及调用方同事务的GrantReader事实端口；无新迁移、依赖或环境变量。接口与B/C/D接入见[BE-14](../docs/05-detailed-design/BE-14-GRANT-BASELINES.md)，待负责人确认及主线交付。BE-28仍已交付、人工验收延后。
 
 D-076实际交付（2026-10-20）：BE-28已由233f633合入远程main/4b384fb，完整110离线＋178真实MySQL/HTTP及静态校验通过；分支保留、远程SHA回查一致，待D人工验收。现有运行配置可继续使用，无新迁移/密钥；上传与幂等、文件目录及Apifox验收见[BE-28](../docs/05-detailed-design/BE-28-IMPORT-FILES.md)。下方任务分支/未交付为历史。

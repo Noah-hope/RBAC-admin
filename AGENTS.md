@@ -1,5 +1,7 @@
 # 项目协作规则
 
+D-078实际交付（2026-10-20）：成员D明确“先完成合并与推送”，BE-14来源367cdae2acc6ff247116651abad53adafb6a34b9已无冲突保留历史合入远程main/c7435d9b17a2f9be57d1e748cae24f125a45deb2，任务分支已推送并保留，远程完整SHA回查一致，合并树等于已验证来源。主线未新增业务变更，沿用完整112离线＋193真实MySQL/HTTP证据；本轮静态追踪通过，不重跑Java/SQL，不部署或开新任务。BE-14保持IMPLEMENTED、mergedToMain=true、ownerAccepted=false，BE-28人工验收也仍开放，不以交付授权代记验收。此前D-077未授权/待主线为历史，接入见docs/05-detailed-design/BE-14-GRANT-BASELINES.md。
+
 D-077（2026-10-20）：当前成员D明确推迟BE-28人工验收并开始下一项，按既定顺序实施BE-14；远程main已核对61132f8，分支codex/be-14-grant-baselines。先设计/TDD实现三查询与GrantReader事务内来源/关系/历史/当前资格事实端口，保持纯读取与逻辑0、完整任职及固定来源历史边界。完整112离线＋193真实MySQL/HTTP及静态检查通过；随机库/账号及临时密钥目录均0、专属实例关闭、原MySQL84仍Running，详见docs/05-detailed-design/BE-14-GRANT-BASELINES.md。BE-14为IMPLEMENTED待本人确认及主线交付，BE-28仍已交付待本人验收；本次继续开发不代验收，也不扩展此前BE-28特定合并推送授权，不自动开BE-16/29。
 
 D-076实际交付（2026-10-20）：BE-28来源233f63352b0c8dea92fd916c47bd29d59267f97c已保留历史合入远程main/4b384fb7b629affd8fbd0e5762cad652bbdb3158，任务分支已推送并保留，远程完整SHA回查一致、合并树等于验证来源。接入B/BE-17/12后完整110离线＋178真实MySQL/HTTP及静态检查通过；Git连接失败后通过官方Git Database API按本地对象SHA原样、force=false交付，无PR/部署。BE-28为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，仍待D人工验收；D原实施编号因与B冲突改为D-075，B的D-073/074及双方事实保留。下方待交付/未授权为历史，验收步骤见docs/05-detailed-design/BE-28-IMPORT-FILES.md。

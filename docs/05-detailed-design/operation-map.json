@@ -2059,7 +2059,7 @@
         "GrantPage"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "grantBaselines",
@@ -2133,7 +2133,7 @@
         "BaselineResult"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listChangeRequests",
@@ -3131,7 +3131,7 @@
         "SourceQueryResult"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "sourceClosePreview",
