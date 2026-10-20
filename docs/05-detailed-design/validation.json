@@ -93,9 +93,9 @@
   "diagramPages": 6,
   "diagramVertices": 59,
   "diagramEdges": 57,
-  "localLinks": 549,
+  "localLinks": 548,
   "pythonSyntaxFiles": 2,
-  "decisionIds": 84,
+  "decisionIds": 83,
   "upstreamSha256": {
     "docs/03-api/openapi.yaml": "9910ceafadea88d85793d00f7bb4e6e5673700a8565366a407185c4517e0cbdf",
     "docs/03-api/apifox-export.json": "67fd08c024a365cfef26485a5984be28c7941cfc9662e1ae8d3ddac558fd5501",
@@ -181,7 +181,7 @@
     "TEST-PLAN.md": "10dfb109e72f40cf9490873d3d05053c952667eaaa2ced1c4379bd1befd423ac",
     "TASKS.md": "0b9e8aeb39384b2278284bf8e9c9b6a93b98faa883f9c97684405fc4d175d11b",
     "IMPLEMENTATION-PLAN.md": "caedc52cfe24fda469097759887141fa6672757f865478e735e98cf267e6f8f2",
-    "TEAM-ASSIGNMENT.md": "f489c1c0eb3a9ca3c91247154b07deb94a71369e83599c1d1535d57a79fb1d66",
+    "TEAM-ASSIGNMENT.md": "9a6edf3145b8a3b3d387995758d24e763a5ae2d6c2904b617e3b3bcc8cd4931b",
     "module-structure.drawio": "3db24f7f4f13cff20d34834b6cad2a5b48c1526e176d1a27ea0a0aa3e50a93b4",
     "core-flows.drawio": "af62be1624fe1141d5f6c472859e8ed0f7ff07363077ea1a2fa28c6fa206921f"
   }

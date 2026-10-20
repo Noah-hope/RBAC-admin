@@ -1,10 +1,8 @@
 # BE-20 角色创建与变更草稿
 
-D-087（2026-10-21）：用户要求当前及以后分支名不带codex并尽量中文。BE-20本地分支已由 codex/be-20-change-drafts 更名为 BE-20-角色与变更草稿，原提交4e1bcf4保持不变；同步当前任务追踪与命名规则，未推送、合并或修改其他历史分支。
-
 ## 范围与依据
 
-2026-10-20：本轮用户明确负责 C，并要求先列计划再执行。基于 main/86089d2，任务分支 codex/be-20-change-drafts。依据 UC-02/03/04、OpenAPI 1.2.0 的 createRole/createChangeDraft/updateChangeDraft/deleteChangeDraft、数据库 T0/T2/T3/T11、AT-11/13/17（AT-04/16 仅本任务局部）。不实施提交/OA/执行器及审计查询，不代记负责人验收或主线交付。
+2026-10-20：本轮用户明确负责 C，并要求先列计划再执行。基于 main/86089d2，当前任务分支 BE-20-角色与变更草稿。依据 UC-02/03/04、OpenAPI 1.2.0 的 createRole/createChangeDraft/updateChangeDraft/deleteChangeDraft、数据库 T0/T2/T3/T11、AT-11/13/17（AT-04/16 仅本任务局部）。不实施提交/OA/执行器及审计查询，不代记负责人验收或主线交付。
 
 ## 结构与调用
 

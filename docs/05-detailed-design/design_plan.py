@@ -763,7 +763,7 @@ def generate_assignment():
                 lines.append(f"| {task['id']} {task['title']} | {'、'.join(task['dependencies'])} | {task['deliverable']} |")
         lines += ['', '**推进与交接：**', ''] + [f'{i}. {note}' for i, note in enumerate(notes[owner][1:], 1)] + ['']
     lines += ['## 四人共同遵守', '',
-        '1. 各自在最新共同主线建立`BE-任务编号-中文主题`分支。先按[本机配置指南](FOUNDATION-USAGE.md)完成环境；实名/GitHub账号对应、仓库读写权限及成员本机验证结果仍需如实登记。业务代号已分工不代表这些操作已完成。',
+        '1. 各自在最新共同主线建立`codex/be-xx-主题`分支。先按[本机配置指南](FOUNDATION-USAGE.md)完成环境；实名/GitHub账号对应、仓库读写权限及成员本机验证结果仍需如实登记。业务代号已分工不代表这些操作已完成。',
         '2. M11查询投影、M12 Controller/DTO按功能分文件，由对应BE负责人维护；不共写一个巨大QueryService或统一业务Controller。M10按本表A/D的任务拆分。调用其他领域公开内部端口，不随意改其实体和Repository。',
         '3. 修改公共core、pom.xml、全局配置/Problem/认证装配时先与基座维护者（用户）及受影响成员协调；迁移先协调版本号，每个版本只由一人提交。复用既有43表设计，结构变化同步权威设计；协调不增加独立评审人或额外审批门槛。',
         '4. 接口交接写清输入/输出、权限与事务前提、失败语义、验收场景和依赖提交。未就绪时可以准备设计和测试场景，不能把Mock端口记成真实依赖已完成。',
