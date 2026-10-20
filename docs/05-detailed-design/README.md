@@ -1,5 +1,7 @@
 # 后端详细设计与协作实施入口
 
+C的BE-19/22读取接口已在本地任务分支实现、待负责人确认及主线交付，见[审计与申请查询交接](BE-19-22-AUDIT-REQUEST-QUERIES.md)。
+
 C的BE-20已获负责人确认并交付共同main，其余C任务仍开放，见[设计与验收交接](BE-20-CHANGE-DRAFTS.md)。
 
 D-083：BE-09已通过[PR #3](https://github.com/Noah-hope/RBAC-admin/pull/3)交付main/5f42a2c，本地及远程已核对，任务分支保留；112普通＋227真实MySQL/HTTP通过。A确认沿用D-082，未进行人工演示；组员可更新main接入，见[交付记录](BE-09-SCOPE-CREATION.md)。下方待交付为历史。

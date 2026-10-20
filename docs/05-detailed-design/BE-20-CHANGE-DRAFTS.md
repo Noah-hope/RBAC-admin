@@ -49,8 +49,10 @@ D 的后续编排可在已有 WriteContext 中调用：
 ```java
 var state = workflowStateWriter.read(write, requestId);
 boolean invalidated = workflowStateWriter.invalidate(
-    write, requestId, state.statusVersion(), "SOURCE_CLOSED");
+    write, requestId, state.statusVersion(), "SOURCE_EPOCH_CHANGED");
 ```
+
+失效原因必须由调用方从CONVENTIONS中的公开失效码选择；直接关闭来源对应SOURCE_EPOCH_CHANGED，不把内部事件名SOURCE_CLOSED作为公开failureCode。
 
 该方法不选取受影响申请、不自行开事务、不处理授权、审计或统计、不公开成 HTTP。返回 true 才表示本次完成整份状态转换；DRAFT/已终态返回 false，不伪造 submittedVersion。状态版本陈旧409，版本耗尽409；发生异常会标记调用方事务回滚，调用方即便捕获也不能提交部分状态。READY/LEASED outbox 改 STOPPED 并清空租约，已 DONE 的外部关联事实保留。审批结果和固定内容不变。外层来源/任职/授权变更、整份失效、审计及幂等结果仍必须原子提交；该端口不代表 BE-26 已实现或真实 OA 已接通。
 
