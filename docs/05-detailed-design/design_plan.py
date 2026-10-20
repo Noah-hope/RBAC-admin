@@ -189,6 +189,13 @@ for case in CASES:
     if case['id'] in {'AT-01','AT-02'}:
         case['additionalEvidence']=['BE-32-DEPLOYMENT.md']
 
+for case in CASES:
+    if case['id'] in {'AT-04','AT-11','AT-13','AT-16','AT-17','AT-22','AT-37'}:
+        case['status']='PARTIALLY_VERIFIED'
+        case.setdefault('evidence','BE-20-CHANGE-DRAFTS.md')
+        case.setdefault('additionalEvidence',[]).append('BE-20-CHANGE-DRAFTS.md')
+        case['verificationScope']='; '.join(filter(None,[case.get('verificationScope',''),'BE20_DRAFT_HTTP_SCOPE_CLAIMS_REPLAY_AND_INTERNAL_INVALIDATION_ONLY_NOT_SUBMIT_OA_OR_EXECUTION']))
+
 TASKS = []
 def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
     foundation = n <= 5
@@ -260,6 +267,14 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             implemented=True,httpImplemented=True,ownerAccepted=False,mergedToMain=False,
             databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
             branch='codex/be-29-import-precheck',dependencyBase='072585e',claimedOwnerSlot='D')
+    if n == 20:
+        TASKS[-1]['status']='IMPLEMENTED'
+        TASKS[-1]['implementationProgress']=dict(evidence='BE-20-CHANGE-DRAFTS.md',decision='D-086',
+            scope='ROLE_AND_THREE_CHANGE_DRAFTS_ATOMIC_CLAIMS_AND_INTERNAL_INVALIDATION_STATE_PORT',
+            implemented=True,httpImplemented=True,ownerAccepted=False,mergedToMain=False,
+            databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
+            branch='codex/be-20-change-drafts',dependencyBase='86089d2',claimedOwnerSlot='C',
+            claimedBy='USER',claimSource='USER_MESSAGE')
     if n == 14:
         TASKS[-1]['status']='IMPLEMENTED'
         TASKS[-1]['implementationProgress']=dict(evidence='BE-14-GRANT-BASELINES.md',decision='D-077',
@@ -497,6 +512,9 @@ def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text = title+'\n\nD-085实际交付（2026-10-20）：成员D明确“合并推送吧”，BE-29接入A已交付BE-09后，来源db3419687f8dc43b1959564ddc19b0e7d32826ed已无冲突no-ff合入远程main/6506cda54c4898e736a2e730ba001294f8de4c2c，合并树等于已完整验证来源，任务分支codex/be-29-import-precheck保留。普通Git连接连续失败，改用官方GitHub Git API按本地对象原始SHA、force=false推送main和任务分支，远程两个完整SHA均回查一致。完整137离线＋240真实MySQL/HTTP及静态校验通过，专属资源清理关闭，原MySQL84仍Running；BE-29为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，既有人工验收保持。D原实施编号D-081与A冲突已统一为D-084；A的D-081/082/083及PR#3交付保留。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED；不强推或部署，下方未授权/待主线为历史。\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\nD-086（2026-10-20）：本轮用户明确负责C并要求先列计划再执行。BE-20在codex/be-20-change-drafts（main/86089d2）先设计及真实HTTP/MySQL RED，再实现新角色/三类草稿/完整目标/原子占用/编辑删除/当前授权幂等重放，以及供D调用的最小WorkflowStateWriter。验证及交接见[BE-20](BE-20-CHANGE-DRAFTS.md)。BE-20为IMPLEMENTED、ownerAccepted=false、mergedToMain=false；此前A/D认领和验收事实保留。BE-19及BE-21～25/31仍PLANNED，BE-26仍须本任务主线交付；不代记验收，不合并推送或自动开展其他任务。共10项OWNER_ACCEPTED、6项IMPLEMENTED、5项IN_PROGRESS、14项PLANNED，下方旧状态/数量为历史。\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -538,8 +556,8 @@ def generate():
         taskIds=[t['id'] for t in TASKS if t['phase']=='BUSINESS'],ownerSlot=None,
         ownerSlots=list(BUSINESS_ASSIGNMENTS),assignmentStatus='ASSIGNED',
         members=[dict(alias=owner,area=BUSINESS_AREAS[owner],realName=None,githubLogin=None,
-            claimedBy='USER' if owner in {'A','D'} else None,
-            claimDecision='D-056' if owner=='A' else ('D-064' if owner=='D' else None),
+            claimedBy='USER' if owner in {'A','C','D'} else None,
+            claimDecision='D-056' if owner=='A' else ('D-064' if owner=='D' else ('D-086' if owner=='C' else None)),
             repositoryAccessVerified=False,localEnvironmentVerified=owner=='D') for owner in BUSINESS_ASSIGNMENTS],
         assignmentSource=dict(date='2026-10-18',source='USER_REQUEST',evidence='TEAM-ASSIGNMENT.md',
             message='现在给出四个人的分工，并且形成文档，说明ABCD四个人分别负责哪一块'),
@@ -636,7 +654,7 @@ def generate():
             acceptance=sorted(set(task['acceptance']+(['AT-37'] if row['direction']=='INBOUND' else ['AT-20']))),
             parameters=parameter_names,requestModels=sorted(schema_refs(operation.get('requestBody',{}),api)),
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
-            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08','BE-09'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-28','BE-29'} else 'PLANNED_NOT_IMPLEMENTED'))))
+            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08','BE-09'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-28','BE-29'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN' if task['id']=='BE-20' else 'PLANNED_NOT_IMPLEMENTED')))))
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
         owned=[r for r in op_map if r['issue']==task['id']]

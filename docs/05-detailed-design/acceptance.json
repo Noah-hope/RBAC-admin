@@ -57,7 +57,11 @@
     "reviewScenario": "S16",
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
-    "evidence": "BE-05-IDEMPOTENCY.md"
+    "evidence": "BE-05-IDEMPOTENCY.md",
+    "additionalEvidence": [
+      "BE-20-CHANGE-DRAFTS.md"
+    ],
+    "verificationScope": "BE20_DRAFT_HTTP_SCOPE_CLAIMS_REPLAY_AND_INTERNAL_INVALIDATION_ONLY_NOT_SUBMIT_OA_OR_EXECUTION"
   },
   {
     "id": "AT-05",
@@ -201,7 +205,11 @@
     "reviewScenario": "S04",
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
-    "evidence": "BE-11-13-15-B-MODULE.md"
+    "evidence": "BE-11-13-15-B-MODULE.md",
+    "additionalEvidence": [
+      "BE-20-CHANGE-DRAFTS.md"
+    ],
+    "verificationScope": "BE20_DRAFT_HTTP_SCOPE_CLAIMS_REPLAY_AND_INTERNAL_INVALIDATION_ONLY_NOT_SUBMIT_OA_OR_EXECUTION"
   },
   {
     "id": "AT-12",
@@ -237,10 +245,11 @@
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
     "evidence": "BE-10-PEOPLE.md",
-    "verificationScope": "BE10_PEOPLE_HTTP_INTERNAL_READ_AND_IMPORT_PRIMITIVES_ONLY_NOT_FULL_IMPORT_LIFECYCLE",
+    "verificationScope": "BE10_PEOPLE_HTTP_INTERNAL_READ_AND_IMPORT_PRIMITIVES_ONLY_NOT_FULL_IMPORT_LIFECYCLE; BE20_DRAFT_HTTP_SCOPE_CLAIMS_REPLAY_AND_INTERNAL_INVALIDATION_ONLY_NOT_SUBMIT_OA_OR_EXECUTION",
     "additionalEvidence": [
       "BE-14-GRANT-BASELINES.md",
-      "BE-16-GRANT-MUTATIONS.md"
+      "BE-16-GRANT-MUTATIONS.md",
+      "BE-20-CHANGE-DRAFTS.md"
     ]
   },
   {
@@ -303,8 +312,13 @@
       "UC-04"
     ],
     "reviewScenario": "S10",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-20-CHANGE-DRAFTS.md",
+    "additionalEvidence": [
+      "BE-20-CHANGE-DRAFTS.md"
+    ],
+    "verificationScope": "BE20_DRAFT_HTTP_SCOPE_CLAIMS_REPLAY_AND_INTERNAL_INVALIDATION_ONLY_NOT_SUBMIT_OA_OR_EXECUTION"
   },
   {
     "id": "AT-17",
@@ -322,8 +336,13 @@
       "UC-04"
     ],
     "reviewScenario": "S12",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-20-CHANGE-DRAFTS.md",
+    "additionalEvidence": [
+      "BE-20-CHANGE-DRAFTS.md"
+    ],
+    "verificationScope": "BE20_DRAFT_HTTP_SCOPE_CLAIMS_REPLAY_AND_INTERNAL_INVALIDATION_ONLY_NOT_SUBMIT_OA_OR_EXECUTION"
   },
   {
     "id": "AT-18",
@@ -411,7 +430,10 @@
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
     "evidence": "BE-16-GRANT-MUTATIONS.md",
-    "verificationScope": "BE16_INTERNAL_ATOMIC_APPROVED_TARGETS_AND_INDEPENDENT_SOURCE_ROLE_QUALIFICATIONS_ONLY_NOT_C_EXECUTOR_OR_LIFECYCLE"
+    "verificationScope": "BE16_INTERNAL_ATOMIC_APPROVED_TARGETS_AND_INDEPENDENT_SOURCE_ROLE_QUALIFICATIONS_ONLY_NOT_C_EXECUTOR_OR_LIFECYCLE; BE20_DRAFT_HTTP_SCOPE_CLAIMS_REPLAY_AND_INTERNAL_INVALIDATION_ONLY_NOT_SUBMIT_OA_OR_EXECUTION",
+    "additionalEvidence": [
+      "BE-20-CHANGE-DRAFTS.md"
+    ]
   },
   {
     "id": "AT-23",
@@ -679,8 +701,10 @@
     "additionalEvidence": [
       "BE-11-13-15-B-MODULE.md",
       "BE-17-12-PREVIEW-CATALOG.md",
-      "BE-09-SCOPE-CREATION.md"
-    ]
+      "BE-09-SCOPE-CREATION.md",
+      "BE-20-CHANGE-DRAFTS.md"
+    ],
+    "verificationScope": "BE20_DRAFT_HTTP_SCOPE_CLAIMS_REPLAY_AND_INTERNAL_INVALIDATION_ONLY_NOT_SUBMIT_OA_OR_EXECUTION"
   },
   {
     "id": "AT-38",
