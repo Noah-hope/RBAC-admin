@@ -51,7 +51,8 @@ public final class GrantReader {
                 if(!grants.isEmpty())active=grants.getFirst();
             }
         }
-        boolean applicable=role.departmentId()==null || role.departmentId().equals(key.sourceDepartmentId());
+        boolean applicable=role.departmentId()==null || role.departmentId().equals(key.sourceDepartmentId())
+                || !people.applicableEmployments(UUID.fromString(key.employeeId()),UUID.fromString(key.sourceCompanyId()),UUID.fromString(role.departmentId())).isEmpty();
         var jobs=applicable?people.applicableEmployments(UUID.fromString(key.employeeId()),UUID.fromString(key.sourceCompanyId()),UUID.fromString(key.sourceDepartmentId())):List.<OrganizationReader.Employment>of();
         return new Baseline(baseline,key,role,source,relation,active,jobs,role.systemEnabled() && role.state().equals("EFFECTIVE") && role.configurationVersion()>0 && !jobs.isEmpty());
     }

@@ -14,6 +14,9 @@ import javax.sql.DataSource;
 @Profile("!migrate")
 public class GrantConfiguration {
     @Bean GrantReader grantReader(DataSource source,OrganizationReader people){return new GrantReader(source,people);}
+    @Bean BaselineWriter baselineWriter(DataSource source,GrantReader reader){return new BaselineWriter(source,reader);}
+    @Bean GrantApplier grantApplier(DataSource source,GrantReader reader){return new GrantApplier(source,reader);}
+    @Bean SourceCloser sourceCloser(DataSource source,GrantReader reader,BaselineWriter baselines){return new SourceCloser(source,reader,baselines);}
     @Bean @ConditionalOnBean(CurrentIdentityReader.class)
     GrantQueries grantQueries(DataSource source,ReadBoundary reads,ManagementContextResolver contexts,GrantReader reader){return new GrantQueries(source,reads,contexts,reader);}
 }

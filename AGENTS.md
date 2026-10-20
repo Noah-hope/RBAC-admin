@@ -1,5 +1,9 @@
 # 项目协作规则
 
+D-079实际结果：BE-16完整112离线＋215真实MySQL/HTTP及静态追踪通过，失败/错误/跳过0；含本任务22项内部写端口验证、双连接关闭/执行竞争和第N条/审计回滚。随机库/账号/测试密钥目录0，专属MySQL子进程39780正常关闭，用户原MySQL84仍Running。BE-16为IMPLEMENTED、ownerAccepted=false、mergedToMain=false，本地任务分支保留，未合并推送；BE-14/28待D人工验收状态不变，不自动开始BE-26/29。
+
+D-079（2026-10-20）：成员D明确“接下来开始执行下一个任务”，按既定依赖选择BE-16；BE-04/14代码已交付共同main，基线a860dc8，分支codex/be-16-grant-mutations。范围为BaselineWriter、GrantApplier、SourceCloser内部原子端口，先设计/TDD及真实隔离MySQL验证；不新增公开写入口，不替代C的固定申请/OA/执行恢复或BE-26生命周期及申请失效编排。来源部门与角色所属部门分别校验任职，允许两处均合格时不同部门；不改变角色归属或后台管理范围规则。BE-14/28人工验收仍开放，本次开发不扩展此前BE-14特定合并推送授权。实际结果和交接见docs/05-detailed-design/BE-16-GRANT-MUTATIONS.md。
+
 D-078实际交付（2026-10-20）：成员D明确“先完成合并与推送”，BE-14来源367cdae2acc6ff247116651abad53adafb6a34b9已无冲突保留历史合入远程main/c7435d9b17a2f9be57d1e748cae24f125a45deb2，任务分支已推送并保留，远程完整SHA回查一致，合并树等于已验证来源。主线未新增业务变更，沿用完整112离线＋193真实MySQL/HTTP证据；本轮静态追踪通过，不重跑Java/SQL，不部署或开新任务。BE-14保持IMPLEMENTED、mergedToMain=true、ownerAccepted=false，BE-28人工验收也仍开放，不以交付授权代记验收。此前D-077未授权/待主线为历史，接入见docs/05-detailed-design/BE-14-GRANT-BASELINES.md。
 
 D-077（2026-10-20）：当前成员D明确推迟BE-28人工验收并开始下一项，按既定顺序实施BE-14；远程main已核对61132f8，分支codex/be-14-grant-baselines。先设计/TDD实现三查询与GrantReader事务内来源/关系/历史/当前资格事实端口，保持纯读取与逻辑0、完整任职及固定来源历史边界。完整112离线＋193真实MySQL/HTTP及静态检查通过；随机库/账号及临时密钥目录均0、专属实例关闭、原MySQL84仍Running，详见docs/05-detailed-design/BE-14-GRANT-BASELINES.md。BE-14为IMPLEMENTED待本人确认及主线交付，BE-28仍已交付待本人验收；本次继续开发不代验收，也不扩展此前BE-28特定合并推送授权，不自动开BE-16/29。
