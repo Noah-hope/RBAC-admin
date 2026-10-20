@@ -233,6 +233,24 @@
         "ownerAccepted": false,
         "deliveryMode": "LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH",
         "evidence": "B-MAIN-INTEGRATION.md"
+      },
+      {
+        "taskIds": [
+          "BE-12",
+          "BE-17"
+        ],
+        "decision": "D-074",
+        "date": "2026-10-20",
+        "branch": "main",
+        "sourceCommit": "1fb95ad3d89789b8e45de7bedbb6397bc04f37e7",
+        "mergeCommit": "3103b351089f300fe2553b79bb6f63ae5a383cf1",
+        "remote": "origin",
+        "remoteRef": "refs/heads/main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "3103b351089f300fe2553b79bb6f63ae5a383cf1",
+        "ownerAccepted": false,
+        "deliveryMode": "LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH",
+        "evidence": "BE-17-12-PREVIEW-CATALOG.md"
       }
     ]
   },

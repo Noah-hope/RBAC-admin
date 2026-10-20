@@ -1,8 +1,8 @@
 # 本地Issue草案与验收卡
 
-D-073（2026-10-20）D 状态：BE-28 已实现上传/元数据、不可变文件存储与安全 CSV/XLSX 解析，状态 IMPLEMENTED，待负责人确认及主线交付，分支 codex/be-28-import-files。AT-26 仅本任务部分验证，BE-29/30 保持 PLANNED。当前共 9 项 OWNER_ACCEPTED、2 项 IMPLEMENTED、3 项 IN_PROGRESS、21 项 PLANNED；下方更早数量为历史。设计、TDD 与实际验证见 [BE-28](BE-28-IMPORT-FILES.md)。
+D-076（2026-10-20）：D 已授权先合并推送 BE-28，先接入最新 BE-17/12 主线再完整回归；BE-28 已实现待本人确认和实际主线交付。当前共9项OWNER_ACCEPTED、2项IMPLEMENTED、5项IN_PROGRESS、19项PLANNED。D原BE-28实施编号因与B冲突改为D-075，原事实保留；下方旧数量/未授权为历史。见 [BE-28](BE-28-IMPORT-FILES.md)。
 
-D-072（2026-10-20）B 状态：BE-11/13/15 已实现并合入远程 main/0e391c6，来源 b92cdbb，任务仍为 IN_PROGRESS（待负责人确认）。完整 85 普通＋150 真实 MySQL 检查及设计静态校验通过；6 个 B 入站操作已交付。当前共 9 项 OWNER_ACCEPTED、1 项 IMPLEMENTED、3 项 IN_PROGRESS、22 项 PLANNED。AT-09/11/12 仅局部验证，AT-37 补 B 接口证据。BE-17 技术依赖已就绪但未实现；BE-12 等 BE-17，BE-18 仍缺 BE-14。详见 [B 实施记录](BE-11-13-15-B-MODULE.md)及[集成交付](B-MAIN-INTEGRATION.md)，更早日期的数量/待交付说明为历史。
+D-074（2026-10-20）B 状态：BE-17/12 已由 1fb95ad 无冲突合入并交付远程 main/3103b35，任务分支保留，完整 SHA 回查一致，合并树等于已验证源。完整 93 普通＋169 真实 MySQL/HTTP 通过，本轮合并后 93 普通测试再次通过。任务待本人确认，不代记 OWNER_ACCEPTED。BE-11/13/15 原交付保留；共 9 项 OWNER_ACCEPTED、1 项 IMPLEMENTED、5 项 IN_PROGRESS、20 项 PLANNED。AT-09/10/11/12/31/32 仅局部验证，不代表全部消费者/OA/BE-33 完成。BE-18 仍缺 BE-14，BE-33/35 仍开放。详见 [BE-17/12 实施及交付](BE-17-12-PREVIEW-CATALOG.md)，下方更早数量/待交付说明为历史。
 
 修订1.4/D-055四人分工，沿用D-053主线交付、D-051协作规则与D-050核对：D-053已确认F-01～06，基座已合并并推送main/b68aa9a（见FOUNDATION-REVIEW.md）；BE-01为OWNER_ACCEPTED（D-053整体交接确认，成员接入待办保留）；BE-02为OWNER_ACCEPTED（D-042/f911c60）；BE-03为OWNER_ACCEPTED（用户核对后回复继续，D-046/b8caeb2，见BE-03-PERSISTENCE）；BE-04为OWNER_ACCEPTED（D-047/58b556a，用户确认服务UP；公共事务/审计/快照证据见BE-04-TRANSACTIONS），BE-05为OWNER_ACCEPTED（D-049/d059d11，用户确认启用true及本机健康UP，见BE-05-IDEMPOTENCY），BE-06为OWNER_ACCEPTED（D-056实施、D-057本人确认，已由D-060交付main），BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED。BE-01～05已由D-053整体确认，合并main/b68aa9a并推送回查通过。BE-01～05为用户先实现的基座；BE-06～35已按D-055登记A～D唯一成员代号，assignmentStatus为ASSIGNED，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED；历史会话用户已认领A，D会话已认领并完成本机基座配置；当前A会话实施BE-08；实名/GitHub账号与其他成员环境待补，详见TEAM-ASSIGNMENT.md。D-051统一所有任务reviewPolicy=OWNER_ACCEPTANCE，不设置独立评审人，reviewerSlot/suggestedReviewerSlot保留null仅作格式兼容、不是待填写；单列评审工时为0。suggestedOwnerSlot保留为历史建议组，以ownerSlot为准。GitHub/main已就绪，BE-32的PR#1和BE-08的PR#2均已合并；其余任务未登记远程PR，BE编号不是平台Issue号。
 
@@ -146,7 +146,7 @@ D-072（2026-10-20）B 状态：BE-11/13/15 已实现并合入远程 main/0e391c
 
 ## BE-12 目录原子编辑、系统启停及影响预览
 
-- 状态：PLANNED；阶段BUSINESS；负责人B（成员代号），由负责人自检确认；模块M04,M12。
+- 状态：IN_PROGRESS；阶段BUSINESS；负责人B（成员代号），由负责人自检确认；模块M04,M12。
 - 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-11,BE-17；开发估算3/5/8h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：updateSystem, systemStatePreview, listDirectoryNodes, listPermissions, catalogPreview, saveCatalog。
@@ -206,7 +206,7 @@ D-072（2026-10-20）B 状态：BE-11/13/15 已实现并合入远程 main/0e391c
 
 ## BE-17 安全影响预览与分页、依赖集合快照
 
-- 状态：PLANNED；阶段BUSINESS；负责人B（成员代号），由负责人自检确认；模块M11,M12。
+- 状态：IN_PROGRESS；阶段BUSINESS；负责人B（成员代号），由负责人自检确认；模块M11,M12。
 - 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-04,BE-08,BE-10；开发估算2.5/5/8h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：listPreviewEmployees, listPreviewTargets。

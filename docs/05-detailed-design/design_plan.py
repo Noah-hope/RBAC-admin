@@ -13,7 +13,12 @@ ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parent.parent
 FOUNDATION_IDS = {f'BE-{n:02}' for n in range(1, 6)}
 BUSINESS_START = ['FOUNDATION_ACCEPTED', 'BUSINESS_OWNER_ASSIGNED']
-B_IMPLEMENTED = {'BE-11', 'BE-13', 'BE-15'}
+B_MAIN_DELIVERED = {'BE-11', 'BE-13', 'BE-15'}
+B_CURRENT = {'BE-12', 'BE-17'}
+B_IMPLEMENTED = B_MAIN_DELIVERED | B_CURRENT
+B_CURRENT_EVIDENCE = 'BE-17-12-PREVIEW-CATALOG.md'
+B_CURRENT_SOURCE_COMMIT = '1fb95ad3d89789b8e45de7bedbb6397bc04f37e7'
+B_CURRENT_MERGE_COMMIT = '3103b351089f300fe2553b79bb6f63ae5a383cf1'
 B_EVIDENCE = 'BE-11-13-15-B-MODULE.md'
 B_SOURCE_COMMIT = 'b92cdbb9b6a30b6e697f7ad80ef06e38fa034067'
 B_MERGE_COMMIT = '0e391c6a652fb9ee12991b7b7d2ac85a3922d166'
@@ -131,7 +136,12 @@ for case in CASES:
     if case['id'] in {'AT-09','AT-11','AT-12'}:
         case['status']='PARTIALLY_VERIFIED'
         case['evidence']=B_EVIDENCE
-    if case['id']=='AT-37': case['additionalEvidence']=[B_EVIDENCE]
+    if case['id']=='AT-37': case['additionalEvidence']=[B_EVIDENCE,B_CURRENT_EVIDENCE]
+    if case['id']=='AT-09': case['additionalEvidence']=[B_CURRENT_EVIDENCE]
+    if case['id'] in {'AT-10','AT-31','AT-32'}:
+        case['status']='PARTIALLY_VERIFIED'
+        case['evidence']=B_CURRENT_EVIDENCE
+        case['verificationScope']='BE17_FIXED_SAFE_PREVIEW_AND_BE12_ATOMIC_CATALOG_ONLY_NOT_ALL_CONSUMER_COMMANDS'
     if case['id']=='AT-36':
         case['status']='PARTIALLY_VERIFIED'
         case['evidence']='BE-32-DEPLOYMENT.md'
@@ -166,10 +176,15 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
         modules=mods.split(),operations=ops.split(),acceptance=[f'AT-{x:02}' for x in cases],
         deliverable=deliverable,notes=notes,status='OWNER_ACCEPTED' if foundation or n in (6,7,32) else ('IN_PROGRESS' if f'BE-{n:02}' in B_IMPLEMENTED else 'PLANNED'),milestone='后端全范围可部署演示（拟建）',
         labels=['backend','design-ready'],remoteIssueNumber=None,remotePrNumber=None))
-    if f'BE-{n:02}' in B_IMPLEMENTED:
+    if f'BE-{n:02}' in B_MAIN_DELIVERED:
         TASKS[-1]['implementationProgress']=dict(evidence=B_EVIDENCE,decision='D-070',implemented=True,
             ownerAccepted=False,mergedToMain=False,databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
             branch='codex/be-11-13-15-b-module',dependencyBase='9857e5e',claimSource='USER_MESSAGE')
+    if f'BE-{n:02}' in B_CURRENT:
+        TASKS[-1]['implementationProgress']=dict(evidence=B_CURRENT_EVIDENCE,decision='D-073',implemented=True,
+            ownerAccepted=False,mergedToMain=False,databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
+            branch='codex/be-17-12-preview-catalog',dependencyBase='93acc63',claimSource='USER_MESSAGE',
+            dependencyContinuation='BE-12 consumes BE-17 implemented and verified on the same task branch')
     if n == 6:
         TASKS[-1]['implementationProgress']=dict(evidence='BE-06-IDENTITY.md',decision='D-056',
             scope='LOGIN_SESSION_PASSWORD_AND_THREE_JWT_FAMILIES',implemented=True,
@@ -191,7 +206,7 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             claimedBy='USER',claimSource='USER_MESSAGE',claimedOwnerSlot='D')
     if n == 28:
         TASKS[-1]['status']='IMPLEMENTED'
-        TASKS[-1]['implementationProgress']=dict(evidence='BE-28-IMPORT-FILES.md',decision='D-073',
+        TASKS[-1]['implementationProgress']=dict(evidence='BE-28-IMPORT-FILES.md',decision='D-075',
             scope='UPLOAD_METADATA_IMMUTABLE_STORAGE_AND_SAFE_CSV_XLSX_PARSING',
             implemented=True,httpImplemented=True,ownerAccepted=False,mergedToMain=False,
             databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
@@ -325,10 +340,14 @@ ACCEPTANCE_SCOPES = {
     35: '汇总AT-39完整Issue/PR/commit/候选包与发布证据，检查其他后端AT均有实际结果；有未通过项时不得宣布全量发布完成。',
 }
 for task in TASKS:
-    if task['id'] in B_IMPLEMENTED:
+    if task['id'] in B_MAIN_DELIVERED:
         task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=B_MERGE_COMMIT,
             sourceCommit=B_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=B_MERGE_COMMIT,
             deliveryDecision='D-072')
+    if task['id'] in B_CURRENT:
+        task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=B_CURRENT_MERGE_COMMIT,
+            sourceCommit=B_CURRENT_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=B_CURRENT_MERGE_COMMIT,
+            deliveryDecision='D-074')
     if task['phase']=='FOUNDATION':
         task['ownerAcceptance']['mainMergeCommit']=FOUNDATION_MERGE_COMMIT
     if task['id'] in {'BE-06','BE-07'}:
@@ -357,10 +376,10 @@ def dump(name, value):
 def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
-        text = title+'\n\nD-072（2026-10-20）B 状态：BE-11/13/15 已实现并合入远程 main/0e391c6，来源 b92cdbb，任务仍为 IN_PROGRESS（待负责人确认）。完整 85 普通＋150 真实 MySQL 检查及设计静态校验通过；6 个 B 入站操作已交付。当前共 9 项 OWNER_ACCEPTED、1 项 IMPLEMENTED、3 项 IN_PROGRESS、22 项 PLANNED。AT-09/11/12 仅局部验证，AT-37 补 B 接口证据。BE-17 技术依赖已就绪但未实现；BE-12 等 BE-17，BE-18 仍缺 BE-14。详见 [B 实施记录](BE-11-13-15-B-MODULE.md)及[集成交付](B-MAIN-INTEGRATION.md)，更早日期的数量/待交付说明为历史。\n'+body
+        text = title+'\n\nD-074（2026-10-20）B 状态：BE-17/12 已由 1fb95ad 无冲突合入并交付远程 main/3103b35，任务分支保留，完整 SHA 回查一致，合并树等于已验证源。完整 93 普通＋169 真实 MySQL/HTTP 通过，本轮合并后 93 普通测试再次通过。任务待本人确认，不代记 OWNER_ACCEPTED。BE-11/13/15 原交付保留；共 9 项 OWNER_ACCEPTED、1 项 IMPLEMENTED、5 项 IN_PROGRESS、20 项 PLANNED。AT-09/10/11/12/31/32 仅局部验证，不代表全部消费者/OA/BE-33 完成。BE-18 仍缺 BE-14，BE-33/35 仍开放。详见 [BE-17/12 实施及交付](BE-17-12-PREVIEW-CATALOG.md)，下方更早数量/待交付说明为历史。\n'+body
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
-        text = title+'\n\nD-073（2026-10-20）D 状态：BE-28 已实现上传/元数据、不可变文件存储与安全 CSV/XLSX 解析，状态 IMPLEMENTED，待负责人确认及主线交付，分支 codex/be-28-import-files。AT-26 仅本任务部分验证，BE-29/30 保持 PLANNED。当前共 9 项 OWNER_ACCEPTED、2 项 IMPLEMENTED、3 项 IN_PROGRESS、21 项 PLANNED；下方更早数量为历史。设计、TDD 与实际验证见 [BE-28](BE-28-IMPORT-FILES.md)。\n'+body
+        text = title+'\n\nD-076（2026-10-20）：D 已授权先合并推送 BE-28，先接入最新 BE-17/12 主线再完整回归；BE-28 已实现待本人确认和实际主线交付。当前共9项OWNER_ACCEPTED、2项IMPLEMENTED、5项IN_PROGRESS、19项PLANNED。D原BE-28实施编号因与B冲突改为D-075，原事实保留；下方旧数量/未授权为历史。见 [BE-28](BE-28-IMPORT-FILES.md)。\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -431,10 +450,14 @@ def generate():
         branch='main',sourceCommit=SCOPE_SOURCE_COMMIT,mergeCommit=SCOPE_MERGE_COMMIT,
         remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=SCOPE_MERGE_COMMIT,
         ownerAccepted=True,prNumber=2,prUrl=SCOPE_PR_URL,prState='MERGED',evidence='BE-08-MANAGEMENT-SCOPE.md'))
-    phase_plan['business']['additionalMainDeliveries'].append(dict(taskIds=sorted(B_IMPLEMENTED),decision='D-072',date='2026-10-20',
+    phase_plan['business']['additionalMainDeliveries'].append(dict(taskIds=sorted(B_MAIN_DELIVERED),decision='D-072',date='2026-10-20',
         branch='main',sourceCommit=B_SOURCE_COMMIT,mergeCommit=B_MERGE_COMMIT,
         remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=B_MERGE_COMMIT,
         ownerAccepted=False,deliveryMode='LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH',evidence='B-MAIN-INTEGRATION.md'))
+    phase_plan['business']['additionalMainDeliveries'].append(dict(taskIds=sorted(B_CURRENT),decision='D-074',date='2026-10-20',
+        branch='main',sourceCommit=B_CURRENT_SOURCE_COMMIT,mergeCommit=B_CURRENT_MERGE_COMMIT,
+        remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=B_CURRENT_MERGE_COMMIT,
+        ownerAccepted=False,deliveryMode='LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH',evidence=B_CURRENT_EVIDENCE))
     dump('delivery-phases.json',phase_plan)
     dump('modules.json',modules);dump('acceptance.json',CASES);dump('issues.json',TASKS)
     lines=['# 模块结构与维护责任','','修订1.4/D-055：基座已确认并纳入主线，30项任务已登记A～D成员代号，实名与GitHub账号映射待补。D-056用户认领A，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED，由负责人自行确认完成（D-051）。分工详见[四人分工](TEAM-ASSIGNMENT.md)。公共包前缀`com.adgn.backend`、13个逻辑模块及技术依赖不变。','','| 模块 | 包后缀/负责人 | 编译依赖 | 职责与主要接口 |','| --- | --- | --- | --- |']
@@ -530,7 +553,8 @@ def generate():
     generate_assignment()
     generate_schedule()
     generate_diagrams(modules)
-    print(f'生成{len(modules)}模块、{len(TASKS)}本地后端Issue草案、{len(CASES)}项验收（AT-01/02/03/04/05/06/07/08/13/19/27/29/33/36/37局部验证）、{len(op_map)}操作追踪与可编辑图源；本生成器未创建工程/远程事项或执行SQL。')
+    partial='/'.join(c['id'] for c in CASES if c['status']=='PARTIALLY_VERIFIED')
+    print(f'生成{len(modules)}模块、{len(TASKS)}本地后端Issue草案、{len(CASES)}项验收（{partial}局部验证）、{len(op_map)}操作追踪与可编辑图源；本生成器未创建工程/远程事项或执行SQL。')
 
 def generate_assignment():
     lines = ['# 四人业务开发分工', '',
