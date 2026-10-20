@@ -1504,12 +1504,17 @@
       "internalWritePortImplemented": true,
       "httpImplemented": false,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "branch": "codex/be-16-grant-mutations",
       "dependencyBase": "a860dc8",
-      "claimedOwnerSlot": "D"
+      "claimedOwnerSlot": "D",
+      "mainMergeCommit": "7ab021a80e26cbf4e3b4bc245f574fcd5c31c2ff",
+      "sourceCommit": "dba2eaab8990fd17780d7f655fdfa049a6f7b2e1",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "7ab021a80e26cbf4e3b4bc245f574fcd5c31c2ff",
+      "deliveryDecision": "D-080"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [

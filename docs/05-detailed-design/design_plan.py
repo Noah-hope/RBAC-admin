@@ -23,6 +23,8 @@ IMPORT_SOURCE_COMMIT = '233f63352b0c8dea92fd916c47bd29d59267f97c'
 IMPORT_MERGE_COMMIT = '4b384fb7b629affd8fbd0e5762cad652bbdb3158'
 GRANT_SOURCE_COMMIT = '367cdae2acc6ff247116651abad53adafb6a34b9'
 GRANT_MERGE_COMMIT = 'c7435d9b17a2f9be57d1e748cae24f125a45deb2'
+GRANT_MUTATION_SOURCE_COMMIT = 'dba2eaab8990fd17780d7f655fdfa049a6f7b2e1'
+GRANT_MUTATION_MERGE_COMMIT = '7ab021a80e26cbf4e3b4bc245f574fcd5c31c2ff'
 B_EVIDENCE = 'BE-11-13-15-B-MODULE.md'
 B_SOURCE_COMMIT = 'b92cdbb9b6a30b6e697f7ad80ef06e38fa034067'
 B_MERGE_COMMIT = '0e391c6a652fb9ee12991b7b7d2ac85a3922d166'
@@ -393,6 +395,10 @@ for task in TASKS:
         task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=GRANT_MERGE_COMMIT,
             sourceCommit=GRANT_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=GRANT_MERGE_COMMIT,
             deliveryDecision='D-078')
+    if task['id']=='BE-16':
+        task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=GRANT_MUTATION_MERGE_COMMIT,
+            sourceCommit=GRANT_MUTATION_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=GRANT_MUTATION_MERGE_COMMIT,
+            deliveryDecision='D-080')
     if task['id']=='BE-28':
         task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=IMPORT_MERGE_COMMIT,
             sourceCommit=IMPORT_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=IMPORT_MERGE_COMMIT,
@@ -422,6 +428,9 @@ def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text = title+'\n\nD-079（2026-10-20）：D要求开始下一项，BE-16在codex/be-16-grant-mutations（基线main/a860dc8）按设计/TDD实现BaselineWriter、GrantApplier、SourceCloser及AffectedFacts。完整112离线＋215真实MySQL/HTTP通过，失败/错误/跳过0；专属实例正常关闭，随机库/账号/测试密钥目录0，用户原MySQL84仍Running。BE-16为IMPLEMENTED、ownerAccepted=false、mergedToMain=false，未合并推送；BE-14/28仍已交付待本人确认。AT-14/15/22/41只补底层局部证据，不代表C执行器、真实OA或BE-26生命周期完成。当前9项OWNER_ACCEPTED、4项IMPLEMENTED、5项IN_PROGRESS、17项PLANNED，下方旧数量/边界为历史。见[BE-16](BE-16-GRANT-MUTATIONS.md)。\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\nD-080（2026-10-20）：D明确“先完成合并推送”，BE-16来源dba2eaa已无冲突保留历史合入远程main/7ab021a，合并树等于已验证来源，任务分支推送并保留，远程完整SHA回查一致。核对112离线＋215真实MySQL/HTTP报告与jar摘要一致，本轮静态复核通过，无Java/SQL重跑或部署。BE-16为IMPLEMENTED、mergedToMain=true、ownerAccepted=false；BE-14/28人工验收继续开放。当前9项OWNER_ACCEPTED、4项IMPLEMENTED、5项IN_PROGRESS、17项PLANNED；下方未授权/待主线为历史，不自动开新任务。见[BE-16](BE-16-GRANT-MUTATIONS.md)。\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -508,6 +517,10 @@ def generate():
         branch='main',sourceCommit=GRANT_SOURCE_COMMIT,mergeCommit=GRANT_MERGE_COMMIT,
         remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=GRANT_MERGE_COMMIT,
         ownerAccepted=False,deliveryMode='LOCAL_MERGE_AND_PUSH',evidence='BE-14-GRANT-BASELINES.md'))
+    phase_plan['business']['additionalMainDeliveries'].append(dict(taskIds=['BE-16'],decision='D-080',date='2026-10-20',
+        branch='main',sourceCommit=GRANT_MUTATION_SOURCE_COMMIT,mergeCommit=GRANT_MUTATION_MERGE_COMMIT,
+        remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=GRANT_MUTATION_MERGE_COMMIT,
+        ownerAccepted=False,deliveryMode='LOCAL_MERGE_AND_PUSH',evidence='BE-16-GRANT-MUTATIONS.md'))
     dump('delivery-phases.json',phase_plan)
     dump('modules.json',modules);dump('acceptance.json',CASES);dump('issues.json',TASKS)
     lines=['# 模块结构与维护责任','','修订1.4/D-055：基座已确认并纳入主线，30项任务已登记A～D成员代号，实名与GitHub账号映射待补。D-056用户认领A，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED，由负责人自行确认完成（D-051）。分工详见[四人分工](TEAM-ASSIGNMENT.md)。公共包前缀`com.adgn.backend`、13个逻辑模块及技术依赖不变。','','| 模块 | 包后缀/负责人 | 编译依赖 | 职责与主要接口 |','| --- | --- | --- | --- |']

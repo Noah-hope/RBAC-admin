@@ -285,6 +285,23 @@
         "ownerAccepted": false,
         "deliveryMode": "LOCAL_MERGE_AND_PUSH",
         "evidence": "BE-14-GRANT-BASELINES.md"
+      },
+      {
+        "taskIds": [
+          "BE-16"
+        ],
+        "decision": "D-080",
+        "date": "2026-10-20",
+        "branch": "main",
+        "sourceCommit": "dba2eaab8990fd17780d7f655fdfa049a6f7b2e1",
+        "mergeCommit": "7ab021a80e26cbf4e3b4bc245f574fcd5c31c2ff",
+        "remote": "origin",
+        "remoteRef": "refs/heads/main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "7ab021a80e26cbf4e3b4bc245f574fcd5c31c2ff",
+        "ownerAccepted": false,
+        "deliveryMode": "LOCAL_MERGE_AND_PUSH",
+        "evidence": "BE-16-GRANT-MUTATIONS.md"
       }
     ]
   },

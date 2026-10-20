@@ -1,5 +1,7 @@
 # BE-16 授予、撤销与来源关闭原子端口
 
+D-080实际交付（2026-10-20）：用户明确“先完成合并推送”。已fetch核对远程main仍为开发基线a860dc8，112离线＋215真实MySQL/HTTP报告、构建jar SHA256与下方记录一致；本轮静态复核通过，不重复Java/SQL。来源dba2eaab8990fd17780d7f655fdfa049a6f7b2e1已无冲突no-ff合入远程main/7ab021a80e26cbf4e3b4bc245f574fcd5c31c2ff，双亲为a860dc8和dba2eaa，合并树等于已验证来源。普通git push推送main及codex/be-16-grant-mutations成功，ls-remote回查两个完整SHA一致，分支保留。BE-16登记IMPLEMENTED、mergedToMain=true、ownerAccepted=false，BE-14/28人工验收仍待确认；未创建PR、强推或部署，不自动开始新任务。下方未授权/待主线为此前历史，当前交付状态以本段和issues.json为准。
+
 2026-10-20，成员D要求“接下来开始执行下一个任务”。BE-04、BE-14已交付共同main，以a860dc8为基线创建codex/be-16-grant-mutations。先设计、真实RED，再实现；本次范围为BE-16内部端口，不新增HTTP、迁移或OA调用。BE-14、BE-28人工验收继续待确认；此次开始开发不扩展此前特定任务的合并推送授权。
 
 依据UC-03/04/10/11、既有API固定目标、数据库T0/T4/T5/T7和I-03/08/09；AT-14/15/22/41仅登记本任务实际覆盖的底层部分。C/BE-20～25负责草稿、规范字节与投影一致性、OA可信接入、成功凭据及恢复；D/BE-26/27/30负责生命周期入口、申请整份失效、claims释放及导入事件编排，端口存在不代表这些流程完成。
