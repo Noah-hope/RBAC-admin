@@ -3857,7 +3857,7 @@
         "ScopeResult"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "scopeCreatePreview",
@@ -3920,7 +3920,7 @@
         "Preview"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "getScope",

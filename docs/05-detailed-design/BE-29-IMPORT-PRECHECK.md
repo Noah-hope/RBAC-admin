@@ -1,5 +1,7 @@
 # BE-29 冻结导入预检、差异与问题报告
 
+D-084编号协调（2026-10-20）：BE-29原本地实施记录D-081与远程A/BE-09重复，现统一为D-084；原实现80abde1及真实RED/GREEN事实保留，A的D-081/082/083、验收与PR#3交付均保持。已接入main/06a6b5c，业务代码无冲突；BE-29仍IMPLEMENTED、ownerAccepted=false，待集成回归与本次授权的主线交付。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED。
+
 2026-10-20，成员D要求“接下来进行下一项任务”。已fetch核对共同main/072585e，在codex/be-29-import-precheck实施BE-29；直接依赖BE-10、BE-17、BE-28均已交付。BE-26仍缺C/BE-20，BE-30仍待BE-27/29，不跳过依赖实施。既有BE-10/14/16/28人工验收保持开放；本次不扩展BE-16特定合并推送授权。
 
 依据UC-10 V1.3、ImportInput/ImportBatch/ImportPlanChange及五个既有操作、V1～V3、T0/T8/T11、AT-25/26/27/29。无新迁移、依赖或真实HR集成；详细输入、冻结计划与正式提交分开。

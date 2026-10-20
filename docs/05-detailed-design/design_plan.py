@@ -25,6 +25,9 @@ GRANT_SOURCE_COMMIT = '367cdae2acc6ff247116651abad53adafb6a34b9'
 GRANT_MERGE_COMMIT = 'c7435d9b17a2f9be57d1e748cae24f125a45deb2'
 GRANT_MUTATION_SOURCE_COMMIT = 'dba2eaab8990fd17780d7f655fdfa049a6f7b2e1'
 GRANT_MUTATION_MERGE_COMMIT = '7ab021a80e26cbf4e3b4bc245f574fcd5c31c2ff'
+SCOPE_CREATE_SOURCE_COMMIT = '0fee462503274fbed1ab03826c8d0723c9825c19'
+SCOPE_CREATE_MERGE_COMMIT = '5f42a2cff11d68c49a4926373eeee97e3f5e8889'
+SCOPE_CREATE_PR_URL = 'https://github.com/Noah-hope/RBAC-admin/pull/3'
 B_EVIDENCE = 'BE-11-13-15-B-MODULE.md'
 B_SOURCE_COMMIT = 'b92cdbb9b6a30b6e697f7ad80ef06e38fa034067'
 B_MERGE_COMMIT = '0e391c6a652fb9ee12991b7b7d2ac85a3922d166'
@@ -170,6 +173,8 @@ for case in CASES:
         case.setdefault('additionalEvidence',[]).append('BE-29-IMPORT-PRECHECK.md')
         case['verificationScope']='PRIOR_UPLOAD_OR_PEOPLE_PRIMITIVES_AND_BE29_FROZEN_PRECHECK_ONLY_NOT_FORMAL_IMPORT_COMMIT_OR_LIFECYCLE'
     if case['id']=='AT-13': case.setdefault('additionalEvidence',[]).append('BE-14-GRANT-BASELINES.md')
+    if case['id'] in {'AT-08','AT-31','AT-37'}:
+        case.setdefault('additionalEvidence',[]).append('BE-09-SCOPE-CREATION.md')
     if case['id'] in {'AT-14','AT-15'}:
         case.update(status='PARTIALLY_VERIFIED',evidence='BE-14-GRANT-BASELINES.md',
             verificationScope='BE14_SOURCE_RELATION_AND_HISTORY_READS_ONLY_NOT_GRANT_MUTATIONS_OR_CLOSE_EXECUTION_RACES')
@@ -226,6 +231,19 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             employmentWriterImplemented=True,ownerAccepted=False,mergedToMain=False,
             databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
             claimedBy='USER',claimSource='USER_MESSAGE',claimedOwnerSlot='D')
+    if n == 9:
+        TASKS[-1]['status']='OWNER_ACCEPTED'
+        TASKS[-1]['implementationProgress']=dict(evidence='BE-09-SCOPE-CREATION.md',decision='D-081',
+            scope='SUPER_ADMIN_SCOPE_CREATION_PREVIEW_AND_ATOMIC_APPOINTMENTS',implemented=True,
+            ownerAccepted=True,mergedToMain=False,databaseExecuted=True,
+            databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',claimedBy='USER',claimSource='USER_MESSAGE',
+            branch='codex/be-09-scope-creation',dependencyBase='a860dc8',claimedOwnerSlot='A')
+        TASKS[-1]['ownerAcceptance']=dict(acceptedBy='USER',ownerSlot='A',date='2026-10-20',
+            scope='BE-09',decision='D-082',source='USER_MESSAGE',message='测试通过即可。',
+            implementationCommit='41931f45e2319f41434c6470f4e2b564af9058d3',
+            interpretation='OWNER_ACCEPTS_AUTOMATED_EVIDENCE_WITHOUT_MANUAL_DEMO',
+            manualDemoVerified=False,automatedUnitTests=112,automatedMySqlTests=205,
+            mergedToMain=False,evidence='BE-09-SCOPE-CREATION.md')
     if n == 28:
         TASKS[-1]['status']='IMPLEMENTED'
         TASKS[-1]['implementationProgress']=dict(evidence='BE-28-IMPORT-FILES.md',decision='D-075',
@@ -235,7 +253,7 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             branch='codex/be-28-import-files',dependencyBase='93acc63',claimedOwnerSlot='D')
     if n == 29:
         TASKS[-1]['status']='IMPLEMENTED'
-        TASKS[-1]['implementationProgress']=dict(evidence='BE-29-IMPORT-PRECHECK.md',decision='D-081',
+        TASKS[-1]['implementationProgress']=dict(evidence='BE-29-IMPORT-PRECHECK.md',decision='D-084',
             scope='FROZEN_PRECHECK_PLAN_DIFF_ISSUE_QUERY_ONLY_NOT_FORMAL_IMPORT_COMMIT',
             implemented=True,httpImplemented=True,ownerAccepted=False,mergedToMain=False,
             databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
@@ -422,6 +440,13 @@ for task in TASKS:
         task['ownerAcceptance'].update(mergedToMain=True,mainMergeCommit=SCOPE_MERGE_COMMIT,
             mainPrNumber=2,mainPrUrl=SCOPE_PR_URL)
         task['remotePrNumber']=2
+    if task['id']=='BE-09':
+        task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=SCOPE_CREATE_MERGE_COMMIT,
+            sourceCommit=SCOPE_CREATE_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=SCOPE_CREATE_MERGE_COMMIT,
+            deliveryDecision='D-083')
+        task['ownerAcceptance'].update(mergedToMain=True,mainMergeCommit=SCOPE_CREATE_MERGE_COMMIT,
+            mainPrNumber=3,mainPrUrl=SCOPE_CREATE_PR_URL)
+        task['remotePrNumber']=3
     task['acceptanceScope'] = ACCEPTANCE_SCOPES.get(int(task['id'][-2:]),
         '完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。')
 
@@ -446,7 +471,20 @@ def write(name, text):
         text = title+'\n\nD-080（2026-10-20）：D明确“先完成合并推送”，BE-16来源dba2eaa已无冲突保留历史合入远程main/7ab021a，合并树等于已验证来源，任务分支推送并保留，远程完整SHA回查一致。核对112离线＋215真实MySQL/HTTP报告与jar摘要一致，本轮静态复核通过，无Java/SQL重跑或部署。BE-16为IMPLEMENTED、mergedToMain=true、ownerAccepted=false；BE-14/28人工验收继续开放。当前9项OWNER_ACCEPTED、4项IMPLEMENTED、5项IN_PROGRESS、17项PLANNED；下方未授权/待主线为历史，不自动开新任务。见[BE-16](BE-16-GRANT-MUTATIONS.md)。\n'+body
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
-        text = title+'\n\nD-081（2026-10-20）：D要求下一项，BE-29在codex/be-29-import-precheck（main/072585e）按设计/TDD实现五个预检/报告操作，冻结候选ID-code、规范差异、映射、动作顺序及依赖，不改正式人员/授权数据。完整137离线＋228真实MySQL/HTTP通过，失败/错误/跳过0；随机库/账号/临时密钥文件目录0，专属实例正常关闭，原MySQL84仍Running。BE-29为IMPLEMENTED、ownerAccepted=false、mergedToMain=false；AT-25/26/27/29仅补预检局部证据，BE-26仍等C/BE-20，BE-30仍等A/BE-27及本任务主线交付。共9项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、16项PLANNED；既有验收状态保持，不合并推送或自动开新任务。下方旧状态/数量为历史，见[BE-29](BE-29-IMPORT-PRECHECK.md)。\n'+body
+        text = title+'\n\nD-081（2026-10-20）：A按已交付BE-05/08/17开始BE-09，创建预览及范围/系统集合/任命的原子保存已实现，使用JPA写仓储、BE-17固定预览与公共guard/幂等/审计。完整112离线＋205真实MySQL/HTTP及静态校验通过；当前IN_PROGRESS待A本人确认，未交付main；验证和本机步骤见[BE-09](BE-09-SCOPE-CREATION.md)。共9项OWNER_ACCEPTED、3项IMPLEMENTED、6项IN_PROGRESS、17项PLANNED，其他成员人工验收状态不变；AT-08/31/37只补本任务部分证据，不代表BE-27/33完成。下方旧状态/数量为历史。\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\nD-082（2026-10-20）：A明确“测试通过即可”，按已有112离线＋205真实MySQL/HTTP证据确认BE-09/41931f4，登记OWNER_ACCEPTED、待主线交付；未做本机演示，不虚构人工操作通过。远程最新072585e已交付D/BE-16，但本任务分支尚未整合该增量，BE-26及BE-33仍PLANNED。下一步建议交付BE-09；A余下BE-27等D/BE-26、BE-34等B/BE-33，不自动开工或推送。原本地BE-09编号D-079与远程D/BE-16冲突，统一为D-081，保留双方事实；下方待A确认/旧数量为历史。\n'+body
+
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\nD-083实际交付（2026-10-20）：BE-09已通过[PR #3](https://github.com/Noah-hope/RBAC-admin/pull/3)合入远程main，来源0fee462503274fbed1ab03826c8d0723c9825c19，合并5f42a2cff11d68c49a4926373eeee97e3f5e8889。已回查closed/merged=true、远程完整SHA、双亲及合并树等于验证来源，本地main已同步、任务分支保留；OWNER_ACCEPTED、mergedToMain=true、remotePrNumber=3。接入BE-16后完整112普通＋227真实MySQL/HTTP及静态校验通过，专属资源清理关闭，原MySQL84仍Running；远程检查条目0，不记为CI通过。本轮交付不部署或开新任务，D各任务验收不代确认；下方待授权/待PR/待主线为历史。\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\nD-084（2026-10-20）：D要求下一项，BE-29在codex/be-29-import-precheck（main/072585e）按设计/TDD实现五个预检/报告操作，冻结候选ID-code、规范差异、映射、动作顺序及依赖，不改正式人员/授权数据。完整137离线＋228真实MySQL/HTTP通过，失败/错误/跳过0；随机库/账号/临时密钥文件目录0，专属实例正常关闭，原MySQL84仍Running。BE-29为IMPLEMENTED、ownerAccepted=false、mergedToMain=false；AT-25/26/27/29仅补预检局部证据，BE-26仍等C/BE-20，BE-30仍等A/BE-27及本任务主线交付。共9项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、16项PLANNED；既有验收状态保持，不合并推送或自动开新任务。下方旧状态/数量为历史，见[BE-29](BE-29-IMPORT-PRECHECK.md)。\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\nD-084编号协调（2026-10-20）：BE-29原本地实施记录D-081与远程A/BE-09重复，现统一为D-084；原实现80abde1及真实RED/GREEN事实保留，A的D-081/082/083、验收与PR#3交付均保持。已接入main/06a6b5c，业务代码无冲突；BE-29仍IMPLEMENTED、ownerAccepted=false，待集成回归与本次授权的主线交付。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED。\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -537,6 +575,10 @@ def generate():
         branch='main',sourceCommit=GRANT_MUTATION_SOURCE_COMMIT,mergeCommit=GRANT_MUTATION_MERGE_COMMIT,
         remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=GRANT_MUTATION_MERGE_COMMIT,
         ownerAccepted=False,deliveryMode='LOCAL_MERGE_AND_PUSH',evidence='BE-16-GRANT-MUTATIONS.md'))
+    phase_plan['business']['additionalMainDeliveries'].append(dict(taskIds=['BE-09'],decision='D-083',date='2026-10-20',
+        branch='main',sourceCommit=SCOPE_CREATE_SOURCE_COMMIT,mergeCommit=SCOPE_CREATE_MERGE_COMMIT,
+        remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=SCOPE_CREATE_MERGE_COMMIT,
+        ownerAccepted=True,prNumber=3,prUrl=SCOPE_CREATE_PR_URL,prState='MERGED',evidence='BE-09-SCOPE-CREATION.md'))
     dump('delivery-phases.json',phase_plan)
     dump('modules.json',modules);dump('acceptance.json',CASES);dump('issues.json',TASKS)
     lines=['# 模块结构与维护责任','','修订1.4/D-055：基座已确认并纳入主线，30项任务已登记A～D成员代号，实名与GitHub账号映射待补。D-056用户认领A，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED，由负责人自行确认完成（D-051）。分工详见[四人分工](TEAM-ASSIGNMENT.md)。公共包前缀`com.adgn.backend`、13个逻辑模块及技术依赖不变。','','| 模块 | 包后缀/负责人 | 编译依赖 | 职责与主要接口 |','| --- | --- | --- | --- |']
@@ -578,7 +620,7 @@ def generate():
             acceptance=sorted(set(task['acceptance']+(['AT-37'] if row['direction']=='INBOUND' else ['AT-20']))),
             parameters=parameter_names,requestModels=sorted(schema_refs(operation.get('requestBody',{}),api)),
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
-            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-28'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY' if task['id']=='BE-29' else 'PLANNED_NOT_IMPLEMENTED')))))
+            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08','BE-09'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-28'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY' if task['id']=='BE-29' else 'PLANNED_NOT_IMPLEMENTED')))))
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
         owned=[r for r in op_map if r['issue']==task['id']]
