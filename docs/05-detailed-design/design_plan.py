@@ -453,6 +453,9 @@ def write(name, text):
         title, _, body = text.partition('\n')
         text = title+'\n\nD-082（2026-10-20）：A明确“测试通过即可”，按已有112离线＋205真实MySQL/HTTP证据确认BE-09/41931f4，登记OWNER_ACCEPTED、待主线交付；未做本机演示，不虚构人工操作通过。远程最新072585e已交付D/BE-16，但本任务分支尚未整合该增量，BE-26及BE-33仍PLANNED。下一步建议交付BE-09；A余下BE-27等D/BE-26、BE-34等B/BE-33，不自动开工或推送。原本地BE-09编号D-079与远程D/BE-16冲突，统一为D-081，保留双方事实；下方待A确认/旧数量为历史。\n'+body
 
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\nD-083（2026-10-20）：A已明确授权BE-09推送分支、创建PR并合并main。已整合main/072585e及BE-16，Java无冲突，共享文档保留双方事实，完整112普通＋227真实MySQL/HTTP及静态校验通过，专属资源已清理关闭。BE-09维持OWNER_ACCEPTED，D/BE-16仍IMPLEMENTED待D确认；实际PR与合并SHA成功后补，不部署或开新任务。下方未授权/未整合是历史。\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():

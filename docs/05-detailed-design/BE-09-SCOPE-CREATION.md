@@ -44,6 +44,8 @@ AT-08/31/37 仅补本任务的创建、预览及接口证据；BE-27 编辑/撤�
 
 ## A 本机如何验收
 
+D-083主线集成验证：按A本轮PR/合并授权，已将main/072585e（含BE-16）保留历史合入任务分支1b92b88，Java无冲突，共享文档/任务追踪保留双方事实。完整 `mvnw.cmd -Pmysql-check clean verify` 通过112普通＋227真实MySQL/HTTP检查，失败/错误/跳过0；其中BE-09新增12项、BE-16内部22项均通过，BE-09代码与A确认的41931f4一致。构建产物SHA-256为 `2010e15e4859b91b20f871a81dc84c177b625aa9d89b65bd06a3ca81d450101d`。静态校验通过，随机库/账号0/0、BE-09密钥目录0，专属实例已关闭，原MySQL84仍Running。A确认及D各任务人工验收状态保持，实际PR/主线结果成功后补录。
+
 使用原 BackendApplicationTest（或你固定用于验收的运行配置），确认数据库 URL 与账号、组织人员数据属于同一个库。沿用 BE-06/07 的 RSA 与幂等 HMAC 配置，不需要重新生成密钥；启用身份及幂等配置后重启。不要把 BootstrapTestAdmin 配置当普通应用启动。
 
 1. 在 Apifox 用总管理员的新密码调用 `POST /api/v1/admin/sessions`，登录请求 Auth 选“不使用鉴权”，得到 `mode=NORMAL` 的 `accessToken`。下面所有请求使用 Bearer Token，字段只填 token 本体。可保留本机环境的 `{{bearerToken}}`，值不保存到共享接口示例；可选 `X-Request-Id` 不填就取消勾选。
