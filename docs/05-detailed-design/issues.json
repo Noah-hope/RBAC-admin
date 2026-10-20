@@ -1488,7 +1488,7 @@
     ],
     "deliverable": "WriteContext内物化源/永久baseline、ACTIVE槽、新grantID、结束与证据，返回受影响事实供编排器失效申请。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -1496,6 +1496,21 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-16-GRANT-MUTATIONS.md",
+      "decision": "D-079",
+      "scope": "GUARDED_BASELINE_GRANT_REVOKE_SOURCE_AND_RELATION_CLOSE_PRIMITIVES",
+      "implemented": true,
+      "internalWritePortImplemented": true,
+      "httpImplemented": false,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "branch": "codex/be-16-grant-mutations",
+      "dependencyBase": "a860dc8",
+      "claimedOwnerSlot": "D"
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-03",

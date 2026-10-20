@@ -236,7 +236,8 @@
     "evidence": "BE-10-PEOPLE.md",
     "verificationScope": "BE10_PEOPLE_HTTP_INTERNAL_READ_AND_IMPORT_PRIMITIVES_ONLY_NOT_FULL_IMPORT_LIFECYCLE",
     "additionalEvidence": [
-      "BE-14-GRANT-BASELINES.md"
+      "BE-14-GRANT-BASELINES.md",
+      "BE-16-GRANT-MUTATIONS.md"
     ]
   },
   {
@@ -257,7 +258,10 @@
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
     "evidence": "BE-14-GRANT-BASELINES.md",
-    "verificationScope": "BE14_SOURCE_RELATION_AND_HISTORY_READS_ONLY_NOT_GRANT_MUTATIONS_OR_CLOSE_EXECUTION_RACES"
+    "verificationScope": "BE14_READS_AND_BE16_ATOMIC_GRANT_REVOKE_CLOSE_AND_GUARD_RACES_ONLY_NOT_LIFECYCLE_REQUEST_INVALIDATION_OR_PUBLIC_CLOSE",
+    "additionalEvidence": [
+      "BE-16-GRANT-MUTATIONS.md"
+    ]
   },
   {
     "id": "AT-15",
@@ -276,7 +280,10 @@
     "status": "PARTIALLY_VERIFIED",
     "delivery": "BACKEND",
     "evidence": "BE-14-GRANT-BASELINES.md",
-    "verificationScope": "BE14_SOURCE_RELATION_AND_HISTORY_READS_ONLY_NOT_GRANT_MUTATIONS_OR_CLOSE_EXECUTION_RACES"
+    "verificationScope": "BE14_READS_AND_BE16_ATOMIC_GRANT_REVOKE_CLOSE_AND_GUARD_RACES_ONLY_NOT_LIFECYCLE_REQUEST_INVALIDATION_OR_PUBLIC_CLOSE",
+    "additionalEvidence": [
+      "BE-16-GRANT-MUTATIONS.md"
+    ]
   },
   {
     "id": "AT-16",
@@ -398,8 +405,10 @@
       "UC-11"
     ],
     "reviewScenario": "S15",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-16-GRANT-MUTATIONS.md",
+    "verificationScope": "BE16_INTERNAL_ATOMIC_APPROVED_TARGETS_AND_INDEPENDENT_SOURCE_ROLE_QUALIFICATIONS_ONLY_NOT_C_EXECUTOR_OR_LIFECYCLE"
   },
   {
     "id": "AT-23",
@@ -703,7 +712,9 @@
       "UC-11"
     ],
     "reviewScenario": "S06/S18",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-16-GRANT-MUTATIONS.md",
+    "verificationScope": "BE16_INTERNAL_ATOMIC_APPROVED_TARGETS_AND_INDEPENDENT_SOURCE_ROLE_QUALIFICATIONS_ONLY_NOT_C_EXECUTOR_OR_LIFECYCLE"
   }
 ]

@@ -1,5 +1,9 @@
 # 项目共享记忆
 
+D-079实际结果：BE-16完整112离线＋215真实MySQL/HTTP及静态检查通过（均0失败/错误/跳过），其中22项本任务真实写端口验证。新/旧来源与永久关系、授予/撤销/关闭、独立部门资格、版本上限、双连接guard竞争和证据/审计失败回滚均有断言；专属随机库/账号0/0、测试密钥目录0，MySQL子进程39780正常关闭、原MySQL84仍Running。登记BE-16 IMPLEMENTED/ownerAccepted=false/mergedToMain=false，9项OWNER_ACCEPTED、4项IMPLEMENTED、5项IN_PROGRESS、17项PLANNED；未合并推送，BE-14/28人工验收继续开放，下方旧数量为历史。
+
+D-079（2026-10-20）：成员D明确开始下一项，依既定顺序在codex/be-16-grant-mutations实施BE-16，基线共同main/a860dc8，所需BE-04/14已交付。内部物化0锚点、全固定目标授予/准确撤销、来源周期及关系资格失效端口均复用同一WriteContext；来源与角色部门任职独立检查，返回AffectedFacts给后续编排。设计、真实RED/GREEN、完整验证及清理事实见[BE-16](../05-detailed-design/BE-16-GRANT-MUTATIONS.md)。不将内部能力记为C执行器、真实OA、BE-26/27/30完成；实现、本人验收、主线交付分别登记，BE-14/28人工验收继续开放，本次未授权合并推送。
+
 D-078实际交付（2026-10-20）：D明确“先完成合并与推送”，已核对远程main仍为BE-14开发基线61132f8、来源367cdae的112离线＋193真实MySQL/HTTP报告及jar摘要一致。静态复核通过后以no-ff无冲突合入main/c7435d9b17a2f9be57d1e748cae24f125a45deb2，合并树等于来源367cdae2acc6ff247116651abad53adafb6a34b9；git push普通推送main及codex/be-14-grant-baselines成功，ls-remote回查两个完整SHA一致。分支保留，无PR/强推/部署，本轮不重跑Java或SQL。BE-14已主线交付，仍待D人工确认，BE-28人工验收延后状态不变；下方待主线/未授权为历史，见[BE-14交接](../05-detailed-design/BE-14-GRANT-BASELINES.md)。B/BE-18、C/BE-20及D/BE-16可按原技术依赖核对接入，不自动开始新任务。
 
 D-077（2026-10-20）：成员D明确“我后面再验收吧，先开始下一项工作任务”，BE-28继续保留IMPLEMENTED/mergedToMain=true/ownerAccepted=false。按顺序选择依赖代码已交付的BE-14，在codex/be-14-grant-baselines（共同main/61132f8，官方API回查一致）实现三个查询及事务内GrantReader，供B/BE-18、C/BE-20与D/BE-16接入；无新迁移、依赖或来源/授权DML。完整112离线＋193真实MySQL/HTTP及静态检查通过，失败/错误/跳过0；随机库/账号0/0、临时密钥目录0，专属PID7144正常关闭，原MySQL84仍Running。实际证据见[BE-14](../05-detailed-design/BE-14-GRANT-BASELINES.md)。BE-14登记IMPLEMENTED，待D人工确认和主线交付，未合并推送；AT-13补本任务读取证据，AT-14/15仅局部读取验证。35项中9项OWNER_ACCEPTED、3项IMPLEMENTED、5项IN_PROGRESS、18项PLANNED；其他成员及BE-28原交付/验收事实保持，不自动实施BE-16/29。
