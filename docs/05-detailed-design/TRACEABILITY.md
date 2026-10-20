@@ -1,6 +1,6 @@
 # UC—API—模块—任务—验收追踪
 
-D-072（2026-10-20）B 状态：BE-11/13/15 已实现并合入远程 main/0e391c6，来源 b92cdbb，任务仍为 IN_PROGRESS（待负责人确认）。完整 85 普通＋150 真实 MySQL 检查及设计静态校验通过；6 个 B 入站操作已交付。当前共 9 项 OWNER_ACCEPTED、1 项 IMPLEMENTED、3 项 IN_PROGRESS、22 项 PLANNED。AT-09/11/12 仅局部验证，AT-37 补 B 接口证据。BE-17 技术依赖已就绪但未实现；BE-12 等 BE-17，BE-18 仍缺 BE-14。详见 [B 实施记录](BE-11-13-15-B-MODULE.md)及[集成交付](B-MAIN-INTEGRATION.md)，更早日期的数量/待交付说明为历史。
+D-073（2026-10-20）B 状态：BE-17/12 已在 codex/be-17-12-preview-catalog 实现，完整 93 普通＋169 真实 MySQL/HTTP 检查通过，待本人确认及主线交付。BE-11/13/15 原远程 main/0e391c6 交付保留。当前共 9 项 OWNER_ACCEPTED、1 项 IMPLEMENTED、5 项 IN_PROGRESS、20 项 PLANNED。AT-09/10/11/12/31/32 仅局部验证，AT-37 补接口证据，不代表全部消费者/OA/BE-33 完成。BE-12 同分支消费 BE-17；BE-18 仍缺 BE-14，BE-33/35 仍开放。详见 [BE-17/12 实施](BE-17-12-PREVIEW-CATALOG.md)及[此前集成交付](B-MAIN-INTEGRATION.md)，更早日期数量/未实现说明为历史。
 
 输入：需求V1.3/D-033、API1.2.0、数据库1.1；交接提交bd26465。契约SHA-256 `9910ceafadea88d85793d00f7bb4e6e5673700a8565366a407185c4517e0cbdf`。全部68操作各有唯一主责任务；按D-055登记A～D成员代号，实名/账号待补。操作、表及T/I不变，BE-06的4个操作已获负责人确认（D-057），已由D-060交付main，BE-07的5个操作已本人确认（D-059），已由D-060交付main，BE-10的6个操作已实现并交付main待D确认，BE-08的4个操作已获A确认（D-068）并由D-069/PR#2交付main，其余49项待实现；启动仍须满足门槛和原依赖。
 

@@ -28,7 +28,7 @@ public final class IdempotencyCoordinator {
         private final String code; private final AuthorizationBasis basis;
         public SafeFailure(String code,AuthorizationBasis basis) {
             super("Safe idempotent business rejection");
-            if (!List.of("VERSION_CONFLICT","CONTEXT_CHANGED","STATE_CONFLICT","VALIDATION_ERROR").contains(code))
+            if (!List.of("VERSION_CONFLICT","CONTEXT_CHANGED","STATE_CONFLICT","VALIDATION_ERROR","PREVIEW_STALE").contains(code))
                 throw new IllegalArgumentException("Business error is not replayable");
             this.code=code; this.basis=basis;
         }
