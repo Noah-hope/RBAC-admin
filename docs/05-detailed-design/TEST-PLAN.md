@@ -1,5 +1,7 @@
 # 后端验收与TDD交接
 
+D-073（2026-10-20）D 状态：BE-28 已实现上传/元数据、不可变文件存储与安全 CSV/XLSX 解析，状态 IMPLEMENTED，待负责人确认及主线交付，分支 codex/be-28-import-files。AT-26 仅本任务部分验证，BE-29/30 保持 PLANNED。当前共 9 项 OWNER_ACCEPTED、2 项 IMPLEMENTED、3 项 IN_PROGRESS、21 项 PLANNED；下方更早数量为历史。设计、TDD 与实际验证见 [BE-28](BE-28-IMPORT-FILES.md)。
+
 D-072（2026-10-20）B 状态：BE-11/13/15 已实现并合入远程 main/0e391c6，来源 b92cdbb，任务仍为 IN_PROGRESS（待负责人确认）。完整 85 普通＋150 真实 MySQL 检查及设计静态校验通过；6 个 B 入站操作已交付。当前共 9 项 OWNER_ACCEPTED、1 项 IMPLEMENTED、3 项 IN_PROGRESS、22 项 PLANNED。AT-09/11/12 仅局部验证，AT-37 补 B 接口证据。BE-17 技术依赖已就绪但未实现；BE-12 等 BE-17，BE-18 仍缺 BE-14。详见 [B 实施记录](BE-11-13-15-B-MODULE.md)及[集成交付](B-MAIN-INTEGRATION.md)，更早日期的数量/待交付说明为历史。
 
 下表为验收目标：AT-01/37的BE-02部分、AT-02的基础持久化及AT-03/33的公共事务/快照及AT-04的公共幂等部分、AT-05/06/07的BE-06身份部分及AT-06/07的BE-07账号管理部分、AT-36的BE-32打包初始化/配置部分为PARTIALLY_VERIFIED，AT-13/27/29的BE-10局部行为为PARTIALLY_VERIFIED，AT-08/19的BE-08任命读取/上下文/覆盖部分为PARTIALLY_VERIFIED，其余26项DESIGNED_NOT_RUN；完整业务仍未验收，局部证据见[BE-02实施记录](BE-02-IMPLEMENTATION.md)、[持久化基础验证](BE-03-PERSISTENCE.md)、[公共事务](BE-04-TRANSACTIONS.md)、[幂等机制](BE-05-IDEMPOTENCY.md)、[身份实施](BE-06-IDENTITY.md)、[账号管理](BE-07-ACCOUNTS.md)及[部署初始化](BE-32-DEPLOYMENT.md)。其中AT-40为前端后置交接，不计本期后端验收；其余40项覆盖后端、部署及协作。实际执行需对应Issue按项目TDD技能记录失败→实现→通过，并在隔离MySQL8.4运行关键事务/并发/故障场景。

@@ -2460,7 +2460,7 @@
     ],
     "deliverable": "正式文件边界、受控不可变存储/摘要/工作表/宏公式限制，不沿用原型上传限制。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -2468,6 +2468,20 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-28-IMPORT-FILES.md",
+      "decision": "D-073",
+      "scope": "UPLOAD_METADATA_IMMUTABLE_STORAGE_AND_SAFE_CSV_XLSX_PARSING",
+      "implemented": true,
+      "httpImplemented": true,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "branch": "codex/be-28-import-files",
+      "dependencyBase": "93acc63",
+      "claimedOwnerSlot": "D"
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-10"

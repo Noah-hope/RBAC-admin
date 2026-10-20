@@ -1,5 +1,7 @@
 # 项目协作规则
 
+D-073（2026-10-20）：当前成员D明确“可以，那接下来先进行BE-28”。已同步main/93acc63，在codex/be-28-import-files按设计/TDD实现CSV/XLSX上传与元数据查询、不可变文件存储及安全解析，复用现有迁移、身份、guard、幂等和审计。完整102离线＋159真实MySQL/HTTP及静态校验通过；随机库/账号和临时密钥/文件目录均清空、专属实例关闭，原MySQL84仍Running，见docs/05-detailed-design/BE-28-IMPORT-FILES.md。实现、负责人验收与主线交付分别记录，BE-28为IMPLEMENTED、ownerAccepted=false、mergedToMain=false；不将此前BE-10特定交付授权扩展到本任务，不自动实施BE-29/30。A/B此前交付与人工验收状态保留，下方旧数量为历史。
+
 D-072实际交付（2026-10-20）：B 的 BE-11/13/15 已由 b92cdbb 合入并交付远程 main/0e391c6，B 分支保留；远程完整 SHA 回查一致，合并树等于源分支。85 普通＋150 真实 MySQL/HTTP 检查及完整静态校验通过；任务仍待负责人验收，不代记 OWNER_ACCEPTED。Git 连接超时改用官方 Git API 按本地对象 SHA 原样、force=false 交付，不强推/创建 PR/部署。BE-17 技术依赖就绪但未实现；下方此前未交付为历史。见 docs/05-detailed-design/B-MAIN-INTEGRATION.md。
 
 D-072（2026-10-20）：当前 B 用户明确要求“现在拉到本地做合并，按照最初要求修正以后，合并到远程”，授权拉取最新 main、依原设计修正和验证后合并并推送远程 main；此前 D-071 不推送 main 的边界为历史。保留任务分支、不强推、不部署；实现交付与负责人验收分别记录。当前验证及实际交付见 docs/05-detailed-design/B-MAIN-INTEGRATION.md，不把 BE-11/13/15 交付说成整个 B 或 OA 全链路完成。

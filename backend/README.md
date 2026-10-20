@@ -1,5 +1,7 @@
 # 后端工程
 
+D-073（2026-10-20）：BE-28 已在 codex/be-28-import-files 实现 CSV/XLSX 上传、元数据查询、不可变文件存储与安全解析。无需新增迁移或 Maven 依赖；本机默认存储目录为 backend 工作目录下 `.tmp/imports`，可用 `RBAC_IMPORT_DIRECTORY` 指定持久目录。接口用法、限制、TDD 与验证见 [BE-28](../docs/05-detailed-design/BE-28-IMPORT-FILES.md)。待负责人确认及主线交付，BE-29/30 仍未实现。
+
 D-072（2026-10-20）：B/BE-11/13/15 已合入并交付远程 main/0e391c6，完整 85 普通＋150 真实 MySQL/接口检查及静态校验通过；共用 BE-08 上下文解析并拒绝重复管理头。无新环境变量、依赖或迁移；未部署或验收完整 OA 链路。见 [实际交付](../docs/05-detailed-design/B-MAIN-INTEGRATION.md)，下方旧数量/任务分支状态为历史。
 
 B 模块接入（2026-10-19）：本轮已在任务分支实现系统登记/查询、角色读取/元数据修改和内部有效配置应用器。沿用既有身份与幂等启用配置，无新增环境变量、依赖或迁移。六个 HTTP 操作、权限边界、C/BE-25 内部调用约定及真实 RED/GREEN 见 [B 实施记录](../docs/05-detailed-design/BE-11-13-15-B-MODULE.md)。完整 `clean verify -Pmysql-check` 为 75 普通测试 + 92 MySQL 检查通过；部署与完整 OA 链路尚未验收。

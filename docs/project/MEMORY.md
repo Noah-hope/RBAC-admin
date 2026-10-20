@@ -1,5 +1,7 @@
 # 项目共享记忆
 
+D-073（2026-10-20）：本会话成员D明确开始BE-28，已fetch并将本地main快进至93acc63，创建codex/be-28-import-files。实现uploadImportFile/getImportFile、安全CSV/XLSX解析、SHA256不可变存储和后续明确选表读取端口；沿用V1～V3及现有身份/事务/审计/幂等，无新增依赖或组织人员变更。完整102离线＋159真实MySQL/HTTP及静态校验通过，失败/错误/跳过均0。随机库/账号和临时密钥/存储目录均0，专属PID3652正常关闭，原MySQL84仍Running。真实RED/GREEN与交接见[BE-28设计和交接](../05-detailed-design/BE-28-IMPORT-FILES.md)。BE-28登记IMPLEMENTED，待D人工确认和主线交付，未合并推送；AT-26只标本任务部分验证。BE-29预检、BE-30整批提交及真实HR集成未实现，本轮不自动开始。当前35项中9项OWNER_ACCEPTED、2项IMPLEMENTED、3项IN_PROGRESS、21项PLANNED；保留A/B已有主线交付与人工确认事实，下方旧数量和任务边界均属历史。
+
 D-072实际交付（2026-10-20）：B 的 BE-11/13/15 来源 b92cdbb，已保留历史合入并交付远程 main/0e391c6；B 分支同样更新并保留，远程完整 SHA 回查一致。合并树等于通过验证的源分支，85 普通＋150 真实 MySQL/HTTP 检查及完整静态校验 PASS，隔离随机库/账号均 0、专属实例关闭。Git 连接超时后经官方 Git Database API 按本地对象 SHA 原样交付，force=false，无强推/PR/部署。任务已主线交付仍待负责人确认，不代验收。实际完整 SHA、原设计修正、构建产物摘要及限制见 [交付记录](../05-detailed-design/B-MAIN-INTEGRATION.md)。下方待推送/静态受阻为历史；BE-17 技术依赖已就绪但未实现，BE-12 等 BE-17、BE-18 等 BE-14，整个 B 和 OA 链路未完成。
 
 D-072（2026-10-20）：当前 B 用户明确授权拉取、按原要求修正后合入远程 main。最新远程仍为 5b695a7；B 已接入该主线，并按 TDD 补查重复管理上下文头，真实 RED 为期望 422、实际 200，随后修正为与人员接口一致的拒绝行为。完整回归和实际合并/推送结果成功后记录于 [集成交付记录](../05-detailed-design/B-MAIN-INTEGRATION.md)。本轮保留任务分支，不强推、不部署；B 人工验收不因交付授权自动记为完成。

@@ -1,5 +1,7 @@
 # 先基座、后分工：实施估算与依赖计划
 
+D-073（2026-10-20）D 状态：BE-28 已实现上传/元数据、不可变文件存储与安全 CSV/XLSX 解析，状态 IMPLEMENTED，待负责人确认及主线交付，分支 codex/be-28-import-files。AT-26 仅本任务部分验证，BE-29/30 保持 PLANNED。当前共 9 项 OWNER_ACCEPTED、2 项 IMPLEMENTED、3 项 IN_PROGRESS、21 项 PLANNED；下方更早数量为历史。设计、TDD 与实际验证见 [BE-28](BE-28-IMPORT-FILES.md)。
+
 D-072（2026-10-20）B 状态：BE-11/13/15 已实现并合入远程 main/0e391c6，来源 b92cdbb，任务仍为 IN_PROGRESS（待负责人确认）。完整 85 普通＋150 真实 MySQL 检查及设计静态校验通过；6 个 B 入站操作已交付。当前共 9 项 OWNER_ACCEPTED、1 项 IMPLEMENTED、3 项 IN_PROGRESS、22 项 PLANNED。AT-09/11/12 仅局部验证，AT-37 补 B 接口证据。BE-17 技术依赖已就绪但未实现；BE-12 等 BE-17，BE-18 仍缺 BE-14。详见 [B 实施记录](BE-11-13-15-B-MODULE.md)及[集成交付](B-MAIN-INTEGRATION.md)，更早日期的数量/待交付说明为历史。
 
 修订1.4/D-055：BE-01～05公共基座已确认并纳入主线，BE-06～35已登记A～D成员代号，详见[四人分工](TEAM-ASSIGNMENT.md)。实名/GitHub账号及成员接入证据待补；BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED，全部任务由负责人自行确认完成。业务原有技术依赖及启动门槛保留。

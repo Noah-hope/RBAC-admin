@@ -144,6 +144,9 @@ for case in CASES:
         case['status']='PARTIALLY_VERIFIED'
         case['evidence']='BE-08-MANAGEMENT-SCOPE.md'
         case['verificationScope']='BE08_READ_CONTEXT_AND_COVERAGE_ONLY_NOT_APPOINTMENT_WRITES_OR_REQUEST_INVALIDATION'
+    if case['id']=='AT-26':
+        case.update(status='PARTIALLY_VERIFIED',evidence='BE-28-IMPORT-FILES.md',
+            verificationScope='BE28_UPLOAD_IMMUTABLE_STORAGE_AND_SAFE_PARSING_ONLY_NOT_PRECHECK_OR_COMMIT')
     if case['id'] in {'AT-01','AT-02'}:
         case['additionalEvidence']=['BE-32-DEPLOYMENT.md']
 
@@ -186,6 +189,13 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             employmentWriterImplemented=True,ownerAccepted=False,mergedToMain=False,
             databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
             claimedBy='USER',claimSource='USER_MESSAGE',claimedOwnerSlot='D')
+    if n == 28:
+        TASKS[-1]['status']='IMPLEMENTED'
+        TASKS[-1]['implementationProgress']=dict(evidence='BE-28-IMPORT-FILES.md',decision='D-073',
+            scope='UPLOAD_METADATA_IMMUTABLE_STORAGE_AND_SAFE_CSV_XLSX_PARSING',
+            implemented=True,httpImplemented=True,ownerAccepted=False,mergedToMain=False,
+            databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
+            branch='codex/be-28-import-files',dependencyBase='93acc63',claimedOwnerSlot='D')
     if n == 8:
         TASKS[-1]['status']='OWNER_ACCEPTED'
         TASKS[-1]['implementationProgress']=dict(evidence='BE-08-MANAGEMENT-SCOPE.md',decision='D-067',
@@ -348,6 +358,9 @@ def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text = title+'\n\nD-072（2026-10-20）B 状态：BE-11/13/15 已实现并合入远程 main/0e391c6，来源 b92cdbb，任务仍为 IN_PROGRESS（待负责人确认）。完整 85 普通＋150 真实 MySQL 检查及设计静态校验通过；6 个 B 入站操作已交付。当前共 9 项 OWNER_ACCEPTED、1 项 IMPLEMENTED、3 项 IN_PROGRESS、22 项 PLANNED。AT-09/11/12 仅局部验证，AT-37 补 B 接口证据。BE-17 技术依赖已就绪但未实现；BE-12 等 BE-17，BE-18 仍缺 BE-14。详见 [B 实施记录](BE-11-13-15-B-MODULE.md)及[集成交付](B-MAIN-INTEGRATION.md)，更早日期的数量/待交付说明为历史。\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\nD-073（2026-10-20）D 状态：BE-28 已实现上传/元数据、不可变文件存储与安全 CSV/XLSX 解析，状态 IMPLEMENTED，待负责人确认及主线交付，分支 codex/be-28-import-files。AT-26 仅本任务部分验证，BE-29/30 保持 PLANNED。当前共 9 项 OWNER_ACCEPTED、2 项 IMPLEMENTED、3 项 IN_PROGRESS、21 项 PLANNED；下方更早数量为历史。设计、TDD 与实际验证见 [BE-28](BE-28-IMPORT-FILES.md)。\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -463,7 +476,7 @@ def generate():
             acceptance=sorted(set(task['acceptance']+(['AT-37'] if row['direction']=='INBOUND' else ['AT-20']))),
             parameters=parameter_names,requestModels=sorted(schema_refs(operation.get('requestBody',{}),api)),
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
-            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10'} else 'PLANNED_NOT_IMPLEMENTED'))))
+            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY' if task['id']=='BE-28' else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10'} else 'PLANNED_NOT_IMPLEMENTED')))))
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
         owned=[r for r in op_map if r['issue']==task['id']]
