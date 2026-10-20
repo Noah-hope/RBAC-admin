@@ -1,6 +1,6 @@
 # 四人业务开发分工
 
-D-073（2026-10-20）B 状态：BE-17/12 已在 codex/be-17-12-preview-catalog 实现，完整 93 普通＋169 真实 MySQL/HTTP 检查通过，待本人确认及主线交付。BE-11/13/15 原远程 main/0e391c6 交付保留。当前共 9 项 OWNER_ACCEPTED、1 项 IMPLEMENTED、5 项 IN_PROGRESS、20 项 PLANNED。AT-09/10/11/12/31/32 仅局部验证，AT-37 补接口证据，不代表全部消费者/OA/BE-33 完成。BE-12 同分支消费 BE-17；BE-18 仍缺 BE-14，BE-33/35 仍开放。详见 [BE-17/12 实施](BE-17-12-PREVIEW-CATALOG.md)及[此前集成交付](B-MAIN-INTEGRATION.md)，更早日期数量/未实现说明为历史。
+D-074（2026-10-20）B 状态：BE-17/12 已由 1fb95ad 无冲突合入并交付远程 main/3103b35，任务分支保留，完整 SHA 回查一致，合并树等于已验证源。完整 93 普通＋169 真实 MySQL/HTTP 通过，本轮合并后 93 普通测试再次通过。任务待本人确认，不代记 OWNER_ACCEPTED。BE-11/13/15 原交付保留；共 9 项 OWNER_ACCEPTED、1 项 IMPLEMENTED、5 项 IN_PROGRESS、20 项 PLANNED。AT-09/10/11/12/31/32 仅局部验证，不代表全部消费者/OA/BE-33 完成。BE-18 仍缺 BE-14，BE-33/35 仍开放。详见 [BE-17/12 实施及交付](BE-17-12-PREVIEW-CATALOG.md)，下方更早数量/待交付说明为历史。
 
 ## 分工汇总
 

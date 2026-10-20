@@ -1,5 +1,9 @@
 # 项目协作规则
 
+D-074实际交付（2026-10-20）：BE-17/12 来源 1fb95ad 已无冲突保留历史合入远程 main/3103b35，分支已推送并保留，远程完整 SHA 回查一致，合并树等于已验证源。完整 93＋169 通过，本轮合并后 93 普通回归及静态校验再次通过；交付不代记本人验收。Git 连接超时改用官方 API 按本地对象摘要、force=false 交付，无 PR/部署。下方待交付是历史，接入见 docs/05-detailed-design/BE-17-12-PREVIEW-CATALOG.md。
+
+D-074（2026-10-20）：B 用户明确“你检查完之后合并就好”，授权检查 BE-17/12 后合并并推送远程 main，替代 D-073 当轮未授权交付的边界。保留任务分支，不强推/部署，不将交付指令代记本人验收；实际合并与远程回查见 docs/05-detailed-design/BE-17-12-PREVIEW-CATALOG.md。
+
 D-073（2026-10-20）：当前 B 用户明确“17和12你做一下”，在 codex/be-17-12-preview-catalog（基线 main/93acc63）按原设计及 TDD 实现 BE-17 安全预览和 BE-12 系统/目录编辑。完整 93 普通＋169 真实隔离 MySQL/HTTP 检查通过。BE-12 同分支消费 BE-17，两项待本人确认及主线交付，不把此前三项的合并授权扩展为此次自动推送 main。实现、验证及接入见 docs/05-detailed-design/BE-17-12-PREVIEW-CATALOG.md；下方未实现为历史，BE-18/33/35 仍开放。
 
 D-072实际交付（2026-10-20）：B 的 BE-11/13/15 已由 b92cdbb 合入并交付远程 main/0e391c6，B 分支保留；远程完整 SHA 回查一致，合并树等于源分支。85 普通＋150 真实 MySQL/HTTP 检查及完整静态校验通过；任务仍待负责人验收，不代记 OWNER_ACCEPTED。Git 连接超时改用官方 Git API 按本地对象 SHA 原样、force=false 交付，不强推/创建 PR/部署。BE-17 技术依赖就绪但未实现；下方此前未交付为历史。见 docs/05-detailed-design/B-MAIN-INTEGRATION.md。

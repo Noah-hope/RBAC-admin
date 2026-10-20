@@ -1112,13 +1112,18 @@
       "decision": "D-073",
       "implemented": true,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "branch": "codex/be-17-12-preview-catalog",
       "dependencyBase": "93acc63",
       "claimSource": "USER_MESSAGE",
-      "dependencyContinuation": "BE-12 consumes BE-17 implemented and verified on the same task branch"
+      "dependencyContinuation": "BE-12 consumes BE-17 implemented and verified on the same task branch",
+      "mainMergeCommit": "3103b351089f300fe2553b79bb6f63ae5a383cf1",
+      "sourceCommit": "1fb95ad3d89789b8e45de7bedbb6397bc04f37e7",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "3103b351089f300fe2553b79bb6f63ae5a383cf1",
+      "deliveryDecision": "D-074"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
@@ -1546,13 +1551,18 @@
       "decision": "D-073",
       "implemented": true,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "branch": "codex/be-17-12-preview-catalog",
       "dependencyBase": "93acc63",
       "claimSource": "USER_MESSAGE",
-      "dependencyContinuation": "BE-12 consumes BE-17 implemented and verified on the same task branch"
+      "dependencyContinuation": "BE-12 consumes BE-17 implemented and verified on the same task branch",
+      "mainMergeCommit": "3103b351089f300fe2553b79bb6f63ae5a383cf1",
+      "sourceCommit": "1fb95ad3d89789b8e45de7bedbb6397bc04f37e7",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "3103b351089f300fe2553b79bb6f63ae5a383cf1",
+      "deliveryDecision": "D-074"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
