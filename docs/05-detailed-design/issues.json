@@ -1884,7 +1884,7 @@
     ],
     "deliverable": "新角色+初始草稿/claim原子，草稿完整投影与并发版本；删除安全快照、幂等授权依据及占用释放。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -1892,6 +1892,22 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-20-CHANGE-DRAFTS.md",
+      "decision": "D-086",
+      "scope": "ROLE_AND_THREE_CHANGE_DRAFTS_ATOMIC_CLAIMS_AND_INTERNAL_INVALIDATION_STATE_PORT",
+      "implemented": true,
+      "httpImplemented": true,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "branch": "BE-20-角色与变更草稿",
+      "dependencyBase": "86089d2",
+      "claimedOwnerSlot": "C",
+      "claimedBy": "USER",
+      "claimSource": "USER_MESSAGE"
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-02",

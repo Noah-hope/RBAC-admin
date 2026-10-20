@@ -114,8 +114,8 @@
         "area": "申请、OA审批与执行、审计",
         "realName": null,
         "githubLogin": null,
-        "claimedBy": null,
-        "claimDecision": null,
+        "claimedBy": "USER",
+        "claimDecision": "D-086",
         "repositoryAccessVerified": false,
         "localEnvironmentVerified": false
       },

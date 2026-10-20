@@ -380,3 +380,9 @@ D-071（2026-10-20）：用户要求检查其他成员 main 提交的兼容性�
 - 原需求清单映射未决问题，以正式用例记录为准。
 
 后续新增决策记录日期、原因、影响和关联交付物；变更已有决策时保留 Git 历史，并明确替代关系。
+
+## C认领与BE-20实施（2026-10-20）
+
+| 编号 | 授权依据 | 落地方式与边界 |
+| --- | --- | --- |
+| D-086 | 本轮用户明确“我就负责C的任务”，随后要求“先罗列计划再执行”；前文已选BE-20 | 在最新共同main/86089d2建立codex/be-20-change-drafts，先设计及真实HTTP/MySQL RED，再实现createRole、createChangeDraft、updateChangeDraft、deleteChangeDraft与C供D使用的最小状态失效端口。复用已有基座/身份/角色/来源端口及原表，不改变原需求或迁移。完整137离线＋265真实MySQL/HTTP及静态校验通过，随机库/账号/密钥已清理、专属进程已正常关闭。BE-20为IMPLEMENTED待本人确认及主线交付，不代记OWNER_ACCEPTED，不扩展既往其他成员的合并推送授权；A/D历史事实保留，其他C任务不自动展开。详见[BE-20](../05-detailed-design/BE-20-CHANGE-DRAFTS.md)。 |
