@@ -1,5 +1,7 @@
 # 项目共享记忆
 
+D-076实际交付（2026-10-20）：BE-28来源233f63352b0c8dea92fd916c47bd29d59267f97c已合入远程main/4b384fb7b629affd8fbd0e5762cad652bbdb3158，main及任务分支回查均为预期完整SHA，合并树等于验证来源，分支保留。接入最新B/BE-17/12后完整110离线＋178真实MySQL/HTTP通过，失败/错误/跳过0；专属实例已正常关闭，随机库/账号及临时密钥/文件目录0，用户原MySQL84仍Running。Git传输失败后使用官方API按相同对象SHA及force=false更新，无PR/部署。静态追踪记录BE-28的mergedToMain=true、ownerAccepted=false；手工验收仍开放，步骤见[BE-28](../05-detailed-design/BE-28-IMPORT-FILES.md)。下方待交付和未授权是历史；不自动启动BE-29/30。
+
 D-076（2026-10-20）：D已要求先合并推送BE-28，再按交接步骤人工验收；先fetch核对远程main/1f7886e并接入最新B/BE-17/12。无Java冲突，共享设计/记忆冲突合并保留两方事实，D原BE-28实施编号调整为D-075，B原D-073/074不变。集成后完整回归及实际主线交付成功后记入[BE-28](../05-detailed-design/BE-28-IMPORT-FILES.md)，不以授权或机器验证代记D人工验收。下方旧未授权/旧数量为历史。
 
 D-075（2026-10-20）：本会话成员D明确开始BE-28，已fetch并将本地main快进至93acc63，创建codex/be-28-import-files。实现uploadImportFile/getImportFile、安全CSV/XLSX解析、SHA256不可变存储和后续明确选表读取端口；沿用V1～V3及现有身份/事务/审计/幂等，无新增依赖或组织人员变更。完整102离线＋159真实MySQL/HTTP及静态校验通过，失败/错误/跳过均0。随机库/账号和临时密钥/存储目录均0，专属PID3652正常关闭，原MySQL84仍Running。真实RED/GREEN与交接见[BE-28设计和交接](../05-detailed-design/BE-28-IMPORT-FILES.md)。BE-28登记IMPLEMENTED，待D人工确认和主线交付，未合并推送；AT-26只标本任务部分验证。BE-29预检、BE-30整批提交及真实HR集成未实现，本轮不自动开始。当前35项中9项OWNER_ACCEPTED、2项IMPLEMENTED、5项IN_PROGRESS、19项PLANNED；保留A/B已有主线交付与人工确认事实，下方旧数量和任务边界均属历史。

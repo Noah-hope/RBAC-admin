@@ -2511,12 +2511,17 @@
       "implemented": true,
       "httpImplemented": true,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "branch": "codex/be-28-import-files",
       "dependencyBase": "93acc63",
-      "claimedOwnerSlot": "D"
+      "claimedOwnerSlot": "D",
+      "mainMergeCommit": "4b384fb7b629affd8fbd0e5762cad652bbdb3158",
+      "sourceCommit": "233f63352b0c8dea92fd916c47bd29d59267f97c",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "4b384fb7b629affd8fbd0e5762cad652bbdb3158",
+      "deliveryDecision": "D-076"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [

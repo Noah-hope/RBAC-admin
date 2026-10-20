@@ -93,7 +93,7 @@
   "diagramPages": 6,
   "diagramVertices": 59,
   "diagramEdges": 57,
-  "localLinks": 481,
+  "localLinks": 484,
   "pythonSyntaxFiles": 2,
   "decisionIds": 73,
   "upstreamSha256": {
@@ -147,12 +147,10 @@
     "BE-08",
     "BE-32"
   ],
-  "businessTasksPendingMainDelivery": [
-    "BE-28"
-  ],
+  "businessTasksPendingMainDelivery": [],
   "businessAcceptanceDecision": "D-068",
-  "businessMainDeliveryDecision": "D-074",
-  "businessMainDeliveryMerge": "3103b351089f300fe2553b79bb6f63ae5a383cf1",
+  "businessMainDeliveryDecision": "D-076",
+  "businessMainDeliveryMerge": "4b384fb7b629affd8fbd0e5762cad652bbdb3158",
   "businessMainDeliveryPrUrl": null,
   "priorScopeDeliveryPrUrl": "https://github.com/Noah-hope/RBAC-admin/pull/2",
   "priorBootstrapDeliveryPrUrl": "https://github.com/Noah-hope/RBAC-admin/pull/1",
@@ -165,18 +163,18 @@
   "businessOperationsAssigned": 68,
   "artifactSha256": {
     "modules.json": "f20c0338e550a72468fb18981f04778461fa93e0421ab9f916d30c97d3fcecdf",
-    "issues.json": "95179f317f8e8626617a46bbebf3a5204284fda362a31146b9c7dbf86d44d527",
+    "issues.json": "e2697d2ac3bfebc986a9ffab0c26c0e4b9c7cc94a4e03583fc27f22b2f5c694e",
     "acceptance.json": "064c826d417ca614d15a21a2ed0f96e33099da2934e3c9b6df724c00a4d9da45",
-    "operation-map.json": "8898af139893d1de3c4ea68e91f8f6716fc4ae749f314faac805e3cb67cd7a96",
+    "operation-map.json": "adcc4e69ae1aa38ca0f3d655617d40c2b0e582fcd5c669f83c8794930d83162e",
     "estimates.json": "55baeb97978ace7292118acc188ac32fa64f8d8037a4fa32bb1a9d1ffa14d443",
-    "delivery-phases.json": "47a27a30a82302ce058dd3f731f22f0f90e281d2b46daa9c36ef4be85e62e74f",
-    "MODULES.md": "598318c9adcb075525b582eb9d02e50fb6e6d25c8698ad5606957ebb80288c6b",
-    "TRACEABILITY.md": "70400fd4d66c622fff5baafb0eba6c8140250f2285377ff76967b37d4de24f4b",
+    "delivery-phases.json": "b674b639273e21b45ed7d3a1d2b7f5a2caff1592df8c6857e21f91c716bce0dc",
+    "MODULES.md": "deffa52ff379e888c4f7687d7941445e9e26ae100d84a4ee293cfa4b9572a352",
+    "TRACEABILITY.md": "2b76e76b85e7cc4a924049dc1ca3e2ad6f4189611aa3e97ff12d8d8178ad8fa3",
     "HANDLER-CONTRACTS.md": "fc845a172b5360321333b3e274c8d79c8537f264ae28e3b72f804891f350ce0e",
-    "TEST-PLAN.md": "2c51dee656276d81a11529d860c664cfce02f61b8b960a06cbe2d6a5242bfac5",
-    "TASKS.md": "a14cfe07ecab683f37fd34af25bf521281e553d2792cfe61b1110683f34976db",
-    "IMPLEMENTATION-PLAN.md": "5803365888660e47407c9caff3431fb91143c964786a8f27c3108e5a05dfb41d",
-    "TEAM-ASSIGNMENT.md": "2562cb5d96c3595c5f7a5972ad8efcf6932e1506ea43b4dbcabefcd73f4f4a64",
+    "TEST-PLAN.md": "ab3937d45a833a7efca95a802bd79ab1846e701a8fc215083de3d49c526e7538",
+    "TASKS.md": "b5da4a5316816102b697b9c2d8cbd5eedeb3ba7562c725d78ee6bd137e89be00",
+    "IMPLEMENTATION-PLAN.md": "34f13cccdaf4d4eb7880dfe11c64026c146dacc2bb85cea0e60ac3d4dec22ae7",
+    "TEAM-ASSIGNMENT.md": "8293af4c704c7a654a6d9ca2f93920ba1ce836dcbeaa750a8c9f6ece3d795ff7",
     "module-structure.drawio": "3db24f7f4f13cff20d34834b6cad2a5b48c1526e176d1a27ea0a0aa3e50a93b4",
     "core-flows.drawio": "af62be1624fe1141d5f6c472859e8ed0f7ff07363077ea1a2fa28c6fa206921f"
   }

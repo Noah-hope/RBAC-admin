@@ -1,5 +1,7 @@
 # 项目协作规则
 
+D-076实际交付（2026-10-20）：BE-28来源233f63352b0c8dea92fd916c47bd29d59267f97c已保留历史合入远程main/4b384fb7b629affd8fbd0e5762cad652bbdb3158，任务分支已推送并保留，远程完整SHA回查一致、合并树等于验证来源。接入B/BE-17/12后完整110离线＋178真实MySQL/HTTP及静态检查通过；Git连接失败后通过官方Git Database API按本地对象SHA原样、force=false交付，无PR/部署。BE-28为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，仍待D人工验收；D原实施编号因与B冲突改为D-075，B的D-073/074及双方事实保留。下方待交付/未授权为历史，验收步骤见docs/05-detailed-design/BE-28-IMPORT-FILES.md。
+
 D-076（2026-10-20）：成员D询问“我该怎么验收，能不能先合并和推送”，授权先交付BE-28至main再人工验收。先接入远程main/1f7886e（含B/BE-17/12）并完整验证，保留双方实现与交付事实；D原BE-28编号D-073与B冲突，统一改为D-075，不改原授权和验证事实。BE-28仍IMPLEMENTED、ownerAccepted=false，实际合并/推送结果成功后补；不强推、不部署、不自动实施BE-29/30。下方未授权BE-28交付为此前边界。
 
 D-075（2026-10-20）：当前成员D明确“可以，那接下来先进行BE-28”。已同步main/93acc63，在codex/be-28-import-files按设计/TDD实现CSV/XLSX上传与元数据查询、不可变文件存储及安全解析，复用现有迁移、身份、guard、幂等和审计。完整102离线＋159真实MySQL/HTTP及静态校验通过；随机库/账号和临时密钥/文件目录均清空、专属实例关闭，原MySQL84仍Running，见docs/05-detailed-design/BE-28-IMPORT-FILES.md。实现、负责人验收与主线交付分别记录，BE-28为IMPLEMENTED、ownerAccepted=false、mergedToMain=false；不将此前BE-10特定交付授权扩展到本任务，不自动实施BE-29/30。A/B此前交付与人工验收状态保留，下方旧数量为历史。

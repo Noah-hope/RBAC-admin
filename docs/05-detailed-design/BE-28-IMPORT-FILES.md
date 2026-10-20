@@ -1,5 +1,7 @@
 # BE-28 文件上传、不可变存储与解析
 
+D-076实际交付（2026-10-20）：来源 `233f63352b0c8dea92fd916c47bd29d59267f97c` 已保留历史合入远程main/`4b384fb7b629affd8fbd0e5762cad652bbdb3158`，双亲为远程基线1f7886e和来源233f633，合并树等于已验证来源。任务分支codex/be-28-import-files已推送并保留，main和分支的远程完整SHA均回查一致。Git传输重置/超时后，改GitHub官方Git Database API上传相同SHA的blob/tree/commit，再以force=false更新分支，没有重写历史、创建PR或部署。完整110＋178和静态证据见下文，交付后只补文档和追踪、不重跑Java/SQL。BE-28为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，D人工验收仍待确认；下方待交付/未授权是历史记录。
+
 D-076（2026-10-20）：用户已要求先合并和推送，授权交付后再人工验收。已接入最新main/1f7886e及B/BE-17/12；D原实施编号D-073与B重复，调整为D-075，原验证事实不变。本轮完整集成验证及实际合并推送成功后追加；下方未授权/未交付及102＋159为此前实施记录。当前不自动开始BE-29/30。
 
 2026-10-20 12:59（Asia/Shanghai），集成后的完整 `clean verify -Pmysql-check` 通过：110离线＋178真实MySQL/HTTP，失败/错误/跳过均0。日志 `backend/.tmp/be28-integration-full.log`，同时覆盖BE-28及最新B/BE-17/12，不只是新增检查。jar SHA256 `e283b5cc6837bff5b48a19e640ef288a530dc7f17e55349118f10c7b76d2b6d4`。随机schema/账号均0，BE-28临时密钥/文件目录均0，专属PID6964正常关闭，用户原MySQL84仍Running。实际交付前后只更新文档/追踪，不再改业务代码；机器验证不代记D人工验收。

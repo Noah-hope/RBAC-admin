@@ -19,6 +19,8 @@ B_IMPLEMENTED = B_MAIN_DELIVERED | B_CURRENT
 B_CURRENT_EVIDENCE = 'BE-17-12-PREVIEW-CATALOG.md'
 B_CURRENT_SOURCE_COMMIT = '1fb95ad3d89789b8e45de7bedbb6397bc04f37e7'
 B_CURRENT_MERGE_COMMIT = '3103b351089f300fe2553b79bb6f63ae5a383cf1'
+IMPORT_SOURCE_COMMIT = '233f63352b0c8dea92fd916c47bd29d59267f97c'
+IMPORT_MERGE_COMMIT = '4b384fb7b629affd8fbd0e5762cad652bbdb3158'
 B_EVIDENCE = 'BE-11-13-15-B-MODULE.md'
 B_SOURCE_COMMIT = 'b92cdbb9b6a30b6e697f7ad80ef06e38fa034067'
 B_MERGE_COMMIT = '0e391c6a652fb9ee12991b7b7d2ac85a3922d166'
@@ -361,6 +363,10 @@ for task in TASKS:
     if task['id']=='BE-10':
         task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=PEOPLE_MERGE_COMMIT,
             sourceCommit=PEOPLE_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=PEOPLE_MERGE_COMMIT)
+    if task['id']=='BE-28':
+        task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=IMPORT_MERGE_COMMIT,
+            sourceCommit=IMPORT_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=IMPORT_MERGE_COMMIT,
+            deliveryDecision='D-076')
     if task['id']=='BE-08':
         task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=SCOPE_MERGE_COMMIT,
             sourceCommit=SCOPE_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=SCOPE_MERGE_COMMIT)
@@ -379,7 +385,7 @@ def write(name, text):
         text = title+'\n\nD-074（2026-10-20）B 状态：BE-17/12 已由 1fb95ad 无冲突合入并交付远程 main/3103b35，任务分支保留，完整 SHA 回查一致，合并树等于已验证源。完整 93 普通＋169 真实 MySQL/HTTP 通过，本轮合并后 93 普通测试再次通过。任务待本人确认，不代记 OWNER_ACCEPTED。BE-11/13/15 原交付保留；共 9 项 OWNER_ACCEPTED、1 项 IMPLEMENTED、5 项 IN_PROGRESS、20 项 PLANNED。AT-09/10/11/12/31/32 仅局部验证，不代表全部消费者/OA/BE-33 完成。BE-18 仍缺 BE-14，BE-33/35 仍开放。详见 [BE-17/12 实施及交付](BE-17-12-PREVIEW-CATALOG.md)，下方更早数量/待交付说明为历史。\n'+body
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
-        text = title+'\n\nD-076（2026-10-20）：D 已授权先合并推送 BE-28，先接入最新 BE-17/12 主线再完整回归；BE-28 已实现待本人确认和实际主线交付。当前共9项OWNER_ACCEPTED、2项IMPLEMENTED、5项IN_PROGRESS、19项PLANNED。D原BE-28实施编号因与B冲突改为D-075，原事实保留；下方旧数量/未授权为历史。见 [BE-28](BE-28-IMPORT-FILES.md)。\n'+body
+        text = title+'\n\nD-076（2026-10-20）：BE-28 已接入最新 BE-17/12 后完整110离线＋178真实MySQL/HTTP通过，并由233f633保留历史合入远程main/4b384fb，远程SHA回查一致，分支保留。Git连接失败后使用官方API按本地SHA原样交付、force=false。BE-28仍待本人确认，mergedToMain=true；交付不代记人工验收。当前共9项OWNER_ACCEPTED、2项IMPLEMENTED、5项IN_PROGRESS、19项PLANNED。D原BE-28实施编号因与B冲突改为D-075，原事实保留；下方旧数量/未授权为历史。见 [BE-28](BE-28-IMPORT-FILES.md)。\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -458,6 +464,10 @@ def generate():
         branch='main',sourceCommit=B_CURRENT_SOURCE_COMMIT,mergeCommit=B_CURRENT_MERGE_COMMIT,
         remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=B_CURRENT_MERGE_COMMIT,
         ownerAccepted=False,deliveryMode='LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH',evidence=B_CURRENT_EVIDENCE))
+    phase_plan['business']['additionalMainDeliveries'].append(dict(taskIds=['BE-28'],decision='D-076',date='2026-10-20',
+        branch='main',sourceCommit=IMPORT_SOURCE_COMMIT,mergeCommit=IMPORT_MERGE_COMMIT,
+        remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=IMPORT_MERGE_COMMIT,
+        ownerAccepted=False,deliveryMode='LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH',evidence='BE-28-IMPORT-FILES.md'))
     dump('delivery-phases.json',phase_plan)
     dump('modules.json',modules);dump('acceptance.json',CASES);dump('issues.json',TASKS)
     lines=['# 模块结构与维护责任','','修订1.4/D-055：基座已确认并纳入主线，30项任务已登记A～D成员代号，实名与GitHub账号映射待补。D-056用户认领A，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED，由负责人自行确认完成（D-051）。分工详见[四人分工](TEAM-ASSIGNMENT.md)。公共包前缀`com.adgn.backend`、13个逻辑模块及技术依赖不变。','','| 模块 | 包后缀/负责人 | 编译依赖 | 职责与主要接口 |','| --- | --- | --- | --- |']
@@ -499,7 +509,7 @@ def generate():
             acceptance=sorted(set(task['acceptance']+(['AT-37'] if row['direction']=='INBOUND' else ['AT-20']))),
             parameters=parameter_names,requestModels=sorted(schema_refs(operation.get('requestBody',{}),api)),
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
-            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN_DELIVERY' if task['id']=='BE-28' else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10'} else 'PLANNED_NOT_IMPLEMENTED')))))
+            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-28'} else 'PLANNED_NOT_IMPLEMENTED'))))
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
         owned=[r for r in op_map if r['issue']==task['id']]

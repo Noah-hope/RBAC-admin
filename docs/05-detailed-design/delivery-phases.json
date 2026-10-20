@@ -251,6 +251,23 @@
         "ownerAccepted": false,
         "deliveryMode": "LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH",
         "evidence": "BE-17-12-PREVIEW-CATALOG.md"
+      },
+      {
+        "taskIds": [
+          "BE-28"
+        ],
+        "decision": "D-076",
+        "date": "2026-10-20",
+        "branch": "main",
+        "sourceCommit": "233f63352b0c8dea92fd916c47bd29d59267f97c",
+        "mergeCommit": "4b384fb7b629affd8fbd0e5762cad652bbdb3158",
+        "remote": "origin",
+        "remoteRef": "refs/heads/main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "4b384fb7b629affd8fbd0e5762cad652bbdb3158",
+        "ownerAccepted": false,
+        "deliveryMode": "LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH",
+        "evidence": "BE-28-IMPORT-FILES.md"
       }
     ]
   },

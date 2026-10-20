@@ -1,5 +1,7 @@
 # 后端工程
 
+D-076实际交付（2026-10-20）：BE-28已由233f633合入远程main/4b384fb，完整110离线＋178真实MySQL/HTTP及静态校验通过；分支保留、远程SHA回查一致，待D人工验收。现有运行配置可继续使用，无新迁移/密钥；上传与幂等、文件目录及Apifox验收见[BE-28](../docs/05-detailed-design/BE-28-IMPORT-FILES.md)。下方任务分支/未交付为历史。
+
 D-075（2026-10-20）：BE-28 已在 codex/be-28-import-files 实现 CSV/XLSX 上传、元数据查询、不可变文件存储与安全解析。无需新增迁移或 Maven 依赖；本机默认存储目录为 backend 工作目录下 `.tmp/imports`，可用 `RBAC_IMPORT_DIRECTORY` 指定持久目录。接口用法、限制、TDD 与验证见 [BE-28](../docs/05-detailed-design/BE-28-IMPORT-FILES.md)。待负责人确认及主线交付，BE-29/30 仍未实现。
 
 D-074（2026-10-20）：BE-17/12 已无冲突合入并交付远程 main/3103b35，合并树与通过完整 93＋169 的源 1fb95ad 一致，合并后 93 普通回归及静态校验再次通过。组员可更新 main，环境/迁移配置不变，任务分支保留；本人验收和剩余业务/OA/部署不伪造完成。下方待交付为历史；见 [交付与接入](../docs/05-detailed-design/BE-17-12-PREVIEW-CATALOG.md)。

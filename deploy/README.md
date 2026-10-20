@@ -92,7 +92,7 @@ Linux 使用 `./mvnw clean verify`、`sha256sum target/backend-0.0.1-SNAPSHOT.ja
 2. 将已校验 `app.jar` 放入对应 release；`/opt/rbac-admin/current` 指向该 release。发布配置前确认没有外来 `loader.properties`、LOADER_* 或 JAVA_TOOL_OPTIONS，避免覆盖独立入口。
 3. 分别复制三个 `.env.example` 到 `/etc/rbac-admin/server.env`、`migrate.env`、`bootstrap.env`，填写真实值，root 所有、权限 0600；运行服务不读取迁移/初始化文件。systemd 负责读取 EnvironmentFile；这些文件不是 shell 脚本，不要 `source` 或写 `export`。不要在聊天、PR、日志粘贴其内容。
 4. 服务端使用独立部署密钥，按现有 [RSA 配置说明](../docs/05-detailed-design/BE-06-LOCAL-SETUP.md)准备 admin 私钥及 business/OA 公钥（后两者不能包含私钥），写入 `/etc/rbac-admin/keys/`，root 所有、rbac-admin 组只读，目录 0750、文件 0640。HMAC 使用独立随机至少 32 字节的密钥环，格式见 [后端运行说明](../backend/README.md)；同一部署的多实例使用同一有效密钥环，不能每次启动重生成。
-5. server.env 显式开启身份和幂等，填实例标识及导入持久目录；server profile 缺开关或目录会拒绝启动。BE-28 已在任务分支实现上传与不可变存储，详见 [BE-28 使用说明](../docs/05-detailed-design/BE-28-IMPORT-FILES.md)，仍待负责人确认及主线交付；本指南的真实服务器验收仍由 BE-34 完成。已有身份与幂等装配负责验证密钥；不要同时传 dev/migrate profile。服务端 MySQL 独立账号/权限沿用 [数据库运行说明](../backend/README.md)。
+5. server.env 显式开启身份和幂等，填实例标识及导入持久目录；server profile 缺开关或目录会拒绝启动。BE-28 已交付 main/4b384fb，支持上传与不可变存储，详见 [BE-28 使用说明](../docs/05-detailed-design/BE-28-IMPORT-FILES.md)，仍待负责人确认；本指南的真实服务器验收仍由 BE-34 完成。已有身份与幂等装配负责验证密钥；不要同时传 dev/migrate profile。服务端 MySQL 独立账号/权限沿用 [数据库运行说明](../backend/README.md)。
 6. 将三个 `.service` 放入 `/etc/systemd/system/`，按实际 JDK 路径调整 ExecStart；执行 `systemd-analyze verify` 核对本机兼容性，再 `systemctl daemon-reload`。两个 oneshot 入口**不启用开机运行，也没有自动依赖**。迁移触发器所需 MySQL binary log/权限条件须先按迁移文档核对，不能为了省事改用应用 root 账号。
 
 首次发布的显式顺序：
