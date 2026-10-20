@@ -1,10 +1,19 @@
 # 项目协作规则
 
+D-083集成结果：接入main/072585e后完整112普通＋227真实MySQL/HTTP及静态校验通过，失败/错误/跳过0；随机库/账号和BE-09密钥目录0，专属实例关闭，原MySQL84仍Running。当前准备推送及PR交付，真实结果成功后补，BE-09代码仍与A确认来源41931f4一致。
+
+D-083（2026-10-20）：A明确“合并主线提交BE-09的PR”，授权接入最新main、集成验证、推送任务分支、创建指向main的PR并合并，再同步本地和交付记录。已接入main/072585e的BE-16，Java无冲突，共享文档/追踪保留双方事实；完整回归结果及实际PR/合并SHA在成功后补。按D-082保留BE-09负责人确认、人工演示未进行，D/BE-16仍待本人确认；不强推/删除分支/部署或自动开BE-27/34。下方D-082未授权交付为历史。
+
+D-082（2026-10-20）：A明确“测试通过即可”，接受BE-09/41931f45e2319f41434c6470f4e2b564af9058d3的112离线＋205真实MySQL/HTTP证据，登记OWNER_ACCEPTED、mergedToMain=false；本机演示未进行，不虚构人工验证通过。仅更新验收/PR准备及静态追踪，不重跑Java/SQL、不推送或合并。fetch已核对远程main/072585e新增BE-16交付，BE-26与BE-33仍PLANNED；本任务分支尚未整合BE-16，后续交付时需接入并验证。原本地BE-09的D-079与D/BE-16编号冲突，统一调整为D-081，保留双方事实；本次确认用D-082。A剩BE-27和BE-34，不自动开新任务。
+
+D-081（2026-10-20）：本会话A要求开始BE-09，已同步共同main/a860dc8，在codex/be-09-scope-creation按设计/TDD实现创建预览及范围/系统集合/任命原子保存。技术依赖BE-05/08/17已主线交付，B/D负责人验收不代确认；使用JPA创建仓储与既有guard/幂等/安全预览/审计。完整112离线＋205真实MySQL/HTTP及静态检查通过，随机库/账号/临时密钥目录均0、专属实例已关闭，原MySQL84仍Running；真实RED/GREEN及本机步骤见docs/05-detailed-design/BE-09-SCOPE-CREATION.md。BE-09为IN_PROGRESS待A人工确认及主线交付，不自行推送/PR/合并或开始BE-27/34；原有无关.codeartsdoer保留。下方A仍等BE-17为此前历史。
+
 D-080实际交付（2026-10-20）：成员D明确“先完成合并推送”，BE-16来源dba2eaab8990fd17780d7f655fdfa049a6f7b2e1已无冲突no-ff合入远程main/7ab021a80e26cbf4e3b4bc245f574fcd5c31c2ff，合并树等于已验证来源。普通git push推送main及codex/be-16-grant-mutations成功，ls-remote回查两个完整SHA一致，任务分支保留。远程主线与开发基线a860dc8未分叉，112离线＋215真实MySQL/HTTP报告及jar摘要均核对一致，本轮静态复核通过，不重复Java/SQL、不部署。BE-16为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，BE-14/28人工验收继续开放；D-079未授权/待主线为此前状态，不自动开BE-26/29。交接见docs/05-detailed-design/BE-16-GRANT-MUTATIONS.md。
 
 D-079实际结果：BE-16完整112离线＋215真实MySQL/HTTP及静态追踪通过，失败/错误/跳过0；含本任务22项内部写端口验证、双连接关闭/执行竞争和第N条/审计回滚。随机库/账号/测试密钥目录0，专属MySQL子进程39780正常关闭，用户原MySQL84仍Running。BE-16为IMPLEMENTED、ownerAccepted=false、mergedToMain=false，本地任务分支保留，未合并推送；BE-14/28待D人工验收状态不变，不自动开始BE-26/29。
 
 D-079（2026-10-20）：成员D明确“接下来开始执行下一个任务”，按既定依赖选择BE-16；BE-04/14代码已交付共同main，基线a860dc8，分支codex/be-16-grant-mutations。范围为BaselineWriter、GrantApplier、SourceCloser内部原子端口，先设计/TDD及真实隔离MySQL验证；不新增公开写入口，不替代C的固定申请/OA/执行恢复或BE-26生命周期及申请失效编排。来源部门与角色所属部门分别校验任职，允许两处均合格时不同部门；不改变角色归属或后台管理范围规则。BE-14/28人工验收仍开放，本次开发不扩展此前BE-14特定合并推送授权。实际结果和交接见docs/05-detailed-design/BE-16-GRANT-MUTATIONS.md。
+
 
 D-078实际交付（2026-10-20）：成员D明确“先完成合并与推送”，BE-14来源367cdae2acc6ff247116651abad53adafb6a34b9已无冲突保留历史合入远程main/c7435d9b17a2f9be57d1e748cae24f125a45deb2，任务分支已推送并保留，远程完整SHA回查一致，合并树等于已验证来源。主线未新增业务变更，沿用完整112离线＋193真实MySQL/HTTP证据；本轮静态追踪通过，不重跑Java/SQL，不部署或开新任务。BE-14保持IMPLEMENTED、mergedToMain=true、ownerAccepted=false，BE-28人工验收也仍开放，不以交付授权代记验收。此前D-077未授权/待主线为历史，接入见docs/05-detailed-design/BE-14-GRANT-BASELINES.md。
 

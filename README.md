@@ -1,5 +1,11 @@
 # rbac-admin · 集中权限管理系统
 
+D-083：A已授权BE-09通过PR交付main，已接入最新BE-16，正在完整集成验证。实际PR及合并结果成功后补录；下方待授权/未整合是历史，见[BE-09交接](docs/05-detailed-design/BE-09-SCOPE-CREATION.md)。
+
+D-082：A已确认BE-09按自动化测试通过验收，OWNER_ACCEPTED、待主线交付，本机演示未进行。下一步可办理BE-09交付；A剩余BE-27等D/BE-26、BE-34等B/BE-33。下方待A确认是此前历史，见[验收依据及后续演示步骤](docs/05-detailed-design/BE-09-SCOPE-CREATION.md)。
+
+D-081：A/BE-09 的创建预览与范围/任命原子创建已在 `codex/be-09-scope-creation` 实现，待A本人确认，尚未交付main。实现、验证及逐步Apifox操作见[BE-09验收说明](docs/05-detailed-design/BE-09-SCOPE-CREATION.md)；BE-05/08/17技术依赖已在main，下方仍需等待的描述为历史。
+
 D-074（2026-10-20）：BE-17/12 已检查并交付远程 main/3103b35，来源 1fb95ad、任务分支保留。完整 93 普通＋169 真实 MySQL/HTTP 通过，合并后 93 普通回归及静态校验再次通过；组员更新 main 即可复用。本人验收仍开放，BE-18/33/35 未完成；下方待交付为历史，见 [交付与接入](docs/05-detailed-design/BE-17-12-PREVIEW-CATALOG.md)。
 
 D-073（2026-10-20）：B/BE-17 安全影响预览及 BE-12 系统/目录编辑已在任务分支实现，完整 93 普通＋169 真实 MySQL/HTTP 检查通过。两项待本人确认与主线交付，尚未推送/合并 main；BE-18/33/35 仍开放。见 [实现与接入](docs/05-detailed-design/BE-17-12-PREVIEW-CATALOG.md)，下方未实现说明为历史。
