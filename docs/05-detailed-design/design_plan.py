@@ -306,7 +306,8 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             fullAcceptanceVerified=False,ownerAccepted=False,mergedToMain=False,
             unresolvedDependencies=[],databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',databaseExecuted=True,
             automatedSystemVerified=True,automatedUnitTests=143,automatedMySqlTests=436,taskMySqlTests=19,
-            auxiliaryTests=18,successfulContractOperations=67,systemEvidence='BE-33-SYSTEM-EVIDENCE.json')
+            auxiliaryTests=18,successfulContractOperations=67,systemEvidence='BE-33-SYSTEM-EVIDENCE.json',
+            implementationCommit='3bad24c13586c93421f72c912955b2c5102cc4bb')
         TASKS[-1]['preparationProgress'].update(historical=True,supersededBy='D-103')
     if n == 6:
         TASKS[-1]['implementationProgress']=dict(evidence='BE-06-IDENTITY.md',decision='D-056',

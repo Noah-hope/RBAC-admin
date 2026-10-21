@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "baseCommit": "0ff0ad703d4697c10f7e7cd5800961ef1404115a",
-  "verifiedWorkingTree": true,
+  "verifiedWorkingTree": false,
   "candidateIsPartial": false,
   "verifiedAt": "2026-10-21T22:45:11+08:00",
   "scope": "BE33_BACKEND_LOCAL_AUTOMATED_NOT_OWNER_SERVER_OR_RELEASE_ACCEPTANCE",
@@ -72,5 +72,6 @@
   },
   "ownerHandoff": {
     "verified": false
-  }
+  },
+  "verifiedSourceCommit": "3bad24c13586c93421f72c912955b2c5102cc4bb"
 }

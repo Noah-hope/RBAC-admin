@@ -861,5 +861,6 @@
   "mergedToMain": false,
   "serverVerified": false,
   "realExternalOaVerified": false,
-  "note": "Each operation has a successful real HTTP response; this does not mean every possible error status was exercised. Demo OA and application-context restart are local tests, not TARGET_SERVER evidence."
+  "note": "Each operation has a successful real HTTP response; this does not mean every possible error status was exercised. Demo OA and application-context restart are local tests, not TARGET_SERVER evidence.",
+  "verifiedSourceCommit": "3bad24c13586c93421f72c912955b2c5102cc4bb"
 }
