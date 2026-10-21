@@ -1,5 +1,11 @@
 # 后端详细设计与协作实施入口
 
+D-101实际结果（2026-10-21）：BE-30冻结导入整批提交、历史与失败恢复已实现。完整139普通/21组＋425真实MySQL/HTTP/27组、18辅助工具及静态追踪通过，失败/错误/跳过0，含本任务19项真实检查。覆盖固定候选身份、1000行及第500条/最后审计故障全批回滚、同批长期成功回放、独立来源/角色部门资格、Q-01离岗再任职、员工停用恢复不复权、整份申请claim/outbox失效、部门迁移即时FK及迟到失败记录不覆盖成功。随机库/账号/密钥文件目录0，专属MySQL子进程5840正常关闭，原MySQL84仍Running。BE-30为IMPLEMENTED、ownerAccepted=false、mergedToMain=false，仅本地任务分支提交；D七项代码均具备，既有人工验收不代确认。共13项OWNER_ACCEPTED、14项IMPLEMENTED、5项IN_PROGRESS、3项PLANNED；未合并推送或部署，不接管BE-33/34/35。接入基线main/126fbc9；D原准备D-095与B重复统一D-101，36c6cb5及双方事实保持。详见docs/05-detailed-design/BE-30-IMPORT-COMMIT.md，下方仅准备/IN_PROGRESS为历史。
+
+D-101（2026-10-21）：D明确“开始执行最后一项任务”，已fetch核对并接入远程main/126fbc9，A/BE-27已通过PR #4交付92d126f，直接依赖齐备。D原BE-30准备D-095与B重复，统一为D-101，原36c6cb5及B的D-095/096/097/098、A的D-099/100事实保持。已按现有设计/TDD进入IN_PROGRESS；真实首轮3项断言失败、0错误，commit路由404；核心3项GREEN已通过，后续员工/生命周期和故障场景仍在实现。复用BE-29固定计划、EmploymentWriter与A/EmployeeStateWriter、BE-16/26及guard/幂等/审计，同批整体成功或回滚。共13项OWNER_ACCEPTED、13项IMPLEMENTED、6项IN_PROGRESS、3项PLANNED；不代本人验收、不合并推送或部署。下方仅准备/缺BE-27为历史。
+
+D-101（2026-10-21）：D要求BE-26推送后自行继续下一项。BE-26及交付记录已推送并回查远程main/d79e28a，任务分支保留、D人工验收仍开放。已建立codex/be-30-import-commit并完成BE-30详细设计、实际端口衔接及14组TDD验收清单，见docs/05-detailed-design/BE-30-IMPORT-COMMIT.md。直接依赖BE-29已交付，A/BE-27仍PLANNED且主线缺员工全局状态与任命/会话失效编排，故只准备可独立部分，BE-30保持PLANNED、implementationStarted=false、testsRun=false，未改业务代码或运行本任务Java/SQL/HTTP。共13项OWNER_ACCEPTED、11项IMPLEMENTED、5项IN_PROGRESS、6项PLANNED；不跨成员实现BE-27、不代本人验收或部署。本次继续授权不扩展为BE-30合并推送，准备仅本地提交，下方BE-26未交付为历史。
+
 - [BE-27员工状态与范围替换](BE-27-CROSS-DOMAIN-LIFECYCLE.md)：四个接口、同事务失效、验证与BE-30接入。
 
 D-094实际交付（2026-10-21）：D明确“先进行合并推送”。BE-26已接入远程main/6b9a02e的C工作流，来源857d4a9d20fa43578f70385d256b86ce02ad3fdc已no-ff合入远程main/b00ffc98277e754757b0e3d9bd0fe3d920db53b4，合并树等于集成验证来源。普通Git连接超时，改用官方GitHub Git API按本地对象原始SHA、force=false交付，main及codex/be-26-source-closure两个完整SHA回查一致，任务分支保留。集成完整139离线/21组＋350真实MySQL/HTTP/23组及静态校验通过，失败/错误/跳过0；本机python3商店占位导致首轮1项环境失败，临时测试入口修正后完整重跑通过，业务代码未因此修改。随机schema/账号/密钥目录均0，专属MySQL子进程17336正常关闭，原MySQL84仍Running。BE-26为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，D人工验收仍开放，其他成员状态保持；共13项OWNER_ACCEPTED、11项IMPLEMENTED、5项IN_PROGRESS、6项PLANNED。原D实施D-091与C重复，统一D-093，原f745648/b011a8a及C的D-091/092事实保留。用户另要求交付后自行继续下一项，后续按依赖核对BE-30，不代A实施BE-27、不部署。下方未授权/待交付为历史。
