@@ -223,12 +223,12 @@ for case in CASES:
         case['verificationScope']='; '.join(filter(None,[case.get('verificationScope',''),'BE18_CURRENT_BUSINESS_QUERY_AND_CHECK_ONLY_NOT_ALL_LIFECYCLE_OR_EXTERNAL_SYSTEMS']))
 
 for case in CASES:
-    if case['id'] in {'AT-04','AT-07','AT-11','AT-13','AT-16','AT-30','AT-31','AT-34','AT-37'}:
+    if case['id'] in {'AT-04','AT-07','AT-11','AT-13','AT-15','AT-16','AT-19','AT-30','AT-31','AT-32','AT-34','AT-37'}:
         case.setdefault('additionalEvidence',[]).append('BE-33-35-INTEGRATION-HANDOFF.md')
-        case['verificationScope']='; '.join(filter(None,[case.get('verificationScope',''),'BE33_PREPARATION_DELIVERED_PUBLIC_FLOWS_ONLY_NOT_APPROVAL_EXECUTION_IMPORT_OR_TARGET_SERVER']))
+        case['verificationScope']='; '.join(filter(None,[case.get('verificationScope',''),'BE33_DELIVERED_CONFIG_GRANT_REVOKE_SOURCE_CLOSE_LATE_APPROVAL_AND_BUSINESS_QUERY_DEMO_ONLY_NOT_IMPORT_STATUS_RESTORE_OR_TARGET_SERVER']))
     if case['id']=='AT-38':
         case.update(status='PARTIALLY_VERIFIED',evidence='BE-33-35-INTEGRATION-HANDOFF.md',
-            verificationScope='BE33_CONFIG_GRANT_REVOKE_DEMO_FLOW_ONLY_NOT_IMPORT_SOURCE_CLOSE_STATUS_RESTORE_OR_TARGET_SERVER')
+            verificationScope='BE33_CONFIG_GRANT_REVOKE_SOURCE_CLOSE_LATE_APPROVAL_AND_NEW_EPOCH_DEMO_ONLY_NOT_IMPORT_STATUS_RESTORE_OR_TARGET_SERVER')
 
 TASKS = []
 def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
@@ -634,7 +634,7 @@ def write(name, text):
         text=title+'\n\nD-095（2026-10-21）：B 在已交付 BE-14 后按用户“那就改”实现 BE-18 两个业务权限接口，分支 codex/be-18-effective-permissions、基线 main/7914788。完整来源并集、独立进入/菜单/操作、当前身份与主库新快照、未知与故障分离；不改迁移/契约，不代记验收或主线交付。实际验证见 [BE-18](BE-18-EFFECTIVE-PERMISSIONS.md)。当前 13 项 OWNER_ACCEPTED、5 项 IMPLEMENTED、6 项 IN_PROGRESS、11 项 PLANNED；B 六项业务开发已实现待本人确认，BE-33/35 仍开放。下方 BE-18 等依赖/旧数量为历史。\n'+body
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body=text.partition('\n')
-        text=title+'\n\nD-096最新集成（2026-10-21）：B 已接入 C 工作流 main/6b9a02e，修正正式审批预览 /previews 路径，并补真实配置审批→授予→业务查询→撤销串联、发布证据工具与交接清单。原 B D-091/092 为避免与 C 重号统一为 D-095/094，源提交与验收事实保留。BE-33 仍缺 BE-27/30（传递依赖 BE-26），BE-35 缺 BE-34 真实服务器验收，两项保持 PLANNED、单列 preparationProgress，不伪造 AT-38/39 或完整项目通过。本地记录显示 60/67 入站操作已有实现，不等于全部契约验收通过。实际结果见 [集成与交接准备](BE-33-35-INTEGRATION-HANDOFF.md)，未推送/合并远程或部署。下方基线 7914788/缺 C 模块为历史。\n'+body
+        text=title+'\n\nD-096最新集成（2026-10-21）：B 已接入 C 工作流 main/6b9a02e，修正正式审批预览 /previews 路径，并补真实配置审批→授予→业务查询→撤销串联、发布证据工具与交接清单。原 B D-091/092 为避免与 C 重号统一为 D-095/096，源提交与验收事实保留。BE-33 仍缺 BE-27/30（传递依赖 BE-26），BE-35 缺 BE-34 真实服务器验收，两项保持 PLANNED、单列 preparationProgress，不伪造 AT-38/39 或完整项目通过。本地记录显示 60/67 入站操作已有实现，不等于全部契约验收通过。实际结果见 [集成与交接准备](BE-33-35-INTEGRATION-HANDOFF.md)，未推送/合并远程或部署。下方基线 7914788/缺 C 模块为历史。\n'+body
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text = title+'\n\n'+'D-093集成结果（2026-10-21）：接入远程main/6b9a02e及C/BE-21/23/24/25/31后，完整clean verify/mysql-check通过，139项离线/21组＋350项真实MySQL/HTTP/23组，失败/错误/跳过0，日志backend/.tmp/be26-delivery-final.log。首轮1项演示脚本因本机python3商店占位退出9009，临时测试目录配置真实Python入口后完整重跑通过；未因此修改业务代码或永久环境变量。随机库/账号/测试密钥目录均0，专属MySQL子进程17336正常关闭，原MySQL84仍Running。BE-26保持IMPLEMENTED、ownerAccepted=false，主线交付由用户明确“先进行合并推送”授权，实际成功后登记；共13项OWNER_ACCEPTED、11项IMPLEMENTED、5项IN_PROGRESS、6项PLANNED。原D编号D-091与C重复统一为D-093，C的D-091/092及双方历史保持。'+'\n'+body
@@ -644,6 +644,9 @@ def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text = title+'\n\n'+'B 分支交付准备（2026-10-21）：按用户“那你就弄完提交”，已接入 main/d79e28a 的 BE-26，正在完成新增来源关闭/迟到批准与 BE-18 查询的真实集成回归，随后提交推送独立分支，不合并远程 main。B 原 D-093/094 为保留 D 的已交付编号统一为 D-095/096，双方历史及验收事实保持。BE-33 仍缺 A/BE-27、D/BE-30，BE-35 仍缺 A/BE-34；BE-26 不再列作未实现依赖，不接管其他成员任务或部署。下方旧基线、缺 BE-26 和未授权推送为历史。'+'\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\n'+'B 最新验证（2026-10-21/D-097）：已接入 main/d79e28a 的 BE-26，完整 clean verify/mysql-check 通过：139 普通＋375 真实 MySQL/HTTP，失败/错误/跳过 0；18 项辅助工具测试与设计静态校验通过。新增真实来源关闭→下次查询拒绝、迟到批准不复权及新周期重新申请链路，集成组 8 项通过。专属随机库/账号 0/0、临时密钥清理、13461 实例正常关闭；既有数据库未操作。BE-18 与 BE-33/35 当前准备提交至独立 B 分支，远程 main 不合并；BE-33 尚缺 A/BE-27、D/BE-30，BE-35 尚缺 A/BE-34，正式状态及其他成员验收保持。下方缺 BE-26、旧测试数与未授权推送是历史。'+'\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():

@@ -59,15 +59,7 @@
       "target": "BE-25"
     },
     {
-      "code": "TASK_NOT_IMPLEMENTED",
-      "target": "BE-26"
-    },
-    {
       "code": "OWNER_ACCEPTANCE_PENDING",
-      "target": "BE-26"
-    },
-    {
-      "code": "TASK_NOT_DELIVERED",
       "target": "BE-26"
     },
     {
@@ -141,14 +133,6 @@
     {
       "code": "TASK_NOT_DELIVERED",
       "target": "BE-35"
-    },
-    {
-      "code": "OPERATION_NOT_IMPLEMENTED",
-      "target": "sourceClosePreview"
-    },
-    {
-      "code": "OPERATION_NOT_IMPLEMENTED",
-      "target": "closeSource"
     },
     {
       "code": "OPERATION_NOT_IMPLEMENTED",
@@ -343,11 +327,11 @@
       "target": "ownerHandoff"
     }
   ],
-  "implementedInboundOperations": 60,
+  "implementedInboundOperations": 62,
   "inboundOperations": 67,
-  "sourceSha256": "29ce63878668155728471ec672ab5761a618bfe28164fab9ad20fde1740d0e19",
+  "sourceSha256": "390e89242b5c374ddc86b79604f7fd75ace0f7764d2a83949e287934404194b6",
   "testResults": {
-    "tests": 478,
+    "tests": 514,
     "failures": 0,
     "errors": 0,
     "skipped": 0
