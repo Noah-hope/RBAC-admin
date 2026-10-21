@@ -40,7 +40,7 @@ public final class RoleService {
         var coordinator=idempotency.getIfAvailable();if(coordinator==null)throw new IdentityFailure(503,"DEPENDENCY_UNAVAILABLE");
         // Typed normalized request bytes include the selected management context, not RFC8785 fixed OA bytes.
         var fields=Arrays.asList(role,version,n,d,r,context.appointmentId(),context.appointmentVersion(),context.scopeVersion());
-        var request=new IdempotencyRequest(UUID.fromString(token.getSubject()),"updateRoleMetadata","PUT","/api/v1/admin/roles/"+role,parsed,json.writeValueAsBytes(fields));
+        var request=new IdempotencyRequest(UUID.fromString(token.getSubject()),"updateRoleMetadata","PUT","/api/v1/admin/roles/"+role+"/metadata",parsed,json.writeValueAsBytes(fields));
         return coordinator.execute(request,()->qualify(token,context,role).identity(),RoleService::authorize,write->{
             var old=target(write.authority(),role,true);var basis=basis(old);
             if(old.metadataVersion()!=version)throw new IdempotencyCoordinator.SafeFailure("VERSION_CONFLICT",basis);

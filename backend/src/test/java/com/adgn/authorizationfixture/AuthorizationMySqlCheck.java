@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.*;
 class AuthorizationMySqlCheck {
     private IsolatedMySqlDatabase database;private ConfigurableApplicationContext app;private JdbcTemplate jdbc;
     private Path keys;private String base,account;private RSAKey business,oa;private final JsonMapper json=JsonMapper.builder().build();
-    private final HttpClient http=HttpClient.newHttpClient();
+    private final HttpClient http=com.adgn.backend.testsupport.ContractHttpClient.create();
     private static String id(){return UUID.randomUUID().toString();}
     @BeforeAll void start()throws Exception{
         keys=Files.createTempDirectory(Path.of(".tmp"),"authorization-keys-");

@@ -16,3 +16,11 @@ server/endToEnd/ownerHandoff 默认 verified=false。后续真实证据须以仓
 所有任务必须真实实现、本人确认并主线交付，40 项后端 AT（不含前端 AT-40，含 AT-41）须逐项 VERIFIED。当前的局部证据/基础环境演练不满足此条件，特别不能将本机 demo 受理与持久工作器测试等同真实 OA 或目标服务器验收。工具不连接服务器、不创建 Issue/PR/tag/release、不部署，不代记负责人确认，不修改共享任务状态。
 
 最新集成结果、缺口及复跑基线见 [BE-33/35 准备记录](../../docs/05-detailed-design/BE-33-35-INTEGRATION-HANDOFF.md)。
+
+## BE-33 整体测试
+
+整体回归仍使用 `backend` 下的 `./mvnw clean verify -Pmysql-check`。先按本机指南准备本轮专属的非3306 MySQL8.4 实例，并仅在本进程设置 `RBAC_ISOLATED_MYSQL_PORT`、`RBAC_ISOLATED_MYSQL_DATADIR`；数据目录必须在 `backend/.tmp`。Windows 使用 `mvnw.cmd`，JDK21 可以从 IDE 配置或在当前终端引用。
+
+额外设置 `RBAC_CONTRACT_CHECK=true` 时，19组真实HTTP测试的客户端将按仓库 OpenAPI 1.2.0 检查实际响应的状态、媒体类型、Schema及敏感缓存头。覆盖摘要输出到 `backend/.tmp/be33-contract-coverage.json`，只保存 operationId、状态码和不含响应值的校验问题，不保存 token/密码。它是响应契约检查；请求/权限/并发/业务结果仍由具体测试断言，不能将单个401或路由存在算作成功契约覆盖。
+
+新增整体故事位于 `DeliveredModulesMySqlCheck`：正式 CSV 上传、预检、提交建立两公司/两部门/兼岗，配置共享/部门角色，demo OA 接收与可信回调、执行、业务查询、来源关闭、迟到批准、停用恢复、范围变化、导入离岗再任职、双连接竞争、故障回滚及应用上下文重启恢复。demo OA 和本机上下文重启不等于真实外部 OA 或 BE-34 服务器验收。结果见 [BE-33](../../docs/05-detailed-design/BE-33-SYSTEM-ACCEPTANCE.md)。

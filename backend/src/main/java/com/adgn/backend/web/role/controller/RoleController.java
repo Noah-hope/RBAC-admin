@@ -26,7 +26,7 @@ public class RoleController {
     @GetMapping("/{roleId}") public ResponseEntity<RoleRepository.View> get(@AuthenticationPrincipal Jwt token,@PathVariable String roleId,HttpServletRequest request)throws Exception{
         return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(service.get(token,ManagementHeaders.context(request),roleId));
     }
-    @PutMapping("/{roleId}") public ResponseEntity<Object> metadata(@AuthenticationPrincipal Jwt token,@PathVariable String roleId,@RequestHeader("Idempotency-Key")String key,@RequestBody Metadata input,HttpServletRequest request)throws Exception{
+    @PutMapping("/{roleId}/metadata") public ResponseEntity<Object> metadata(@AuthenticationPrincipal Jwt token,@PathVariable String roleId,@RequestHeader("Idempotency-Key")String key,@RequestBody Metadata input,HttpServletRequest request)throws Exception{
         return IdempotencyHttp.response(service.metadata(token,ManagementHeaders.context(request),roleId,key,input.expectedVersion(),input.name(),input.description(),input.reason(),(String)request.getAttribute("rbac.requestId")),request);
     }
 }

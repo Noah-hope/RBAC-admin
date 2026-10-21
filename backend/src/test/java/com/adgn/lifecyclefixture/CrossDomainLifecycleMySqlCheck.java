@@ -30,7 +30,7 @@ class CrossDomainLifecycleMySqlCheck {
     private IsolatedMySqlDatabase db; private ConfigurableApplicationContext app; private JdbcTemplate jdbc;
     private com.nimbusds.jose.jwk.RSAKey businessKey;
     private Path keys; private String base,account,token;
-    private final JsonMapper json=JsonMapper.builder().build(); private final HttpClient http=HttpClient.newHttpClient();
+    private final JsonMapper json=JsonMapper.builder().build(); private final HttpClient http=com.adgn.backend.testsupport.ContractHttpClient.create();
     private String id(){return UUID.randomUUID().toString();}
     @BeforeAll void start()throws Exception{
         keys=Files.createTempDirectory(Path.of(".tmp"),"be27-keys-");

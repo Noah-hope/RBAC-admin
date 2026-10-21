@@ -179,6 +179,6 @@ class BootstrapMySqlCheck {
         var builder=java.net.http.HttpRequest.newBuilder(java.net.URI.create(base+path)).timeout(java.time.Duration.ofSeconds(25));
         if(body!=null)builder.header("Content-Type","application/json");
         if(token!=null)builder.header("Authorization","Bearer "+token);
-        return java.net.http.HttpClient.newHttpClient().send(builder.method(method,body==null?java.net.http.HttpRequest.BodyPublishers.noBody():java.net.http.HttpRequest.BodyPublishers.ofString(body)).build(),java.net.http.HttpResponse.BodyHandlers.ofString());
+        return com.adgn.backend.testsupport.ContractHttpClient.create().send(builder.method(method,body==null?java.net.http.HttpRequest.BodyPublishers.noBody():java.net.http.HttpRequest.BodyPublishers.ofString(body)).build(),java.net.http.HttpResponse.BodyHandlers.ofString());
     }
 }

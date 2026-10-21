@@ -1,0 +1,865 @@
+{
+  "schemaVersion": 1,
+  "decision": "D-103",
+  "baseCommit": "0ff0ad703d4697c10f7e7cd5800961ef1404115a",
+  "scope": "BE33_BACKEND_LOCAL_AUTOMATED_NOT_OWNER_SERVER_OR_RELEASE_ACCEPTANCE",
+  "verifiedAt": "2026-10-21T22:45:11+08:00",
+  "sourceSha256": "9f1c71c422344a23bde00d1b079cf04a7296f099dd4f8934c293121a68e81f20",
+  "testSourceSha256": "9c255d258bfe6cc8a7fa8cf0587b43fba6a3e2489b77de27f860b56dc74365c2",
+  "supportSha256": "a76606e3043b9b828b4335d233d586a2ebf222c571992605060fea2433d1a3a2",
+  "artifactSha256": "cea7f4f4084ec8be245ea3c6494b8d955b0a37a87f8d33e7aadfd41f179498fb",
+  "tests": {
+    "surefire": {
+      "tests": 143,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 22
+    },
+    "failsafe": {
+      "tests": 436,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": 27
+    }
+  },
+  "suites": [
+    {
+      "name": "com.adgn.backend.BackendApplicationTests",
+      "family": "surefire",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.backend.change.CanonicalPayloadTest",
+      "family": "surefire",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.backend.DatabaseProfileTest",
+      "family": "surefire",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.backend.IdempotencyValueTest",
+      "family": "surefire",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.backend.MigrationEntryTest",
+      "family": "surefire",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.backend.MigrationScriptTest",
+      "family": "surefire",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.backend.OpenApiResponsesTest",
+      "family": "surefire",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.backend.PersistenceFailureTest",
+      "family": "surefire",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.backend.RuntimeConfigurationTest",
+      "family": "surefire",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.backend.UtcInstantConverterTest",
+      "family": "surefire",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.backend.web.HttpBoundaryTest",
+      "family": "surefire",
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.catalogfixture.ImpactPolicyTest",
+      "family": "surefire",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.deploymentfixture.ServerSettingsTest",
+      "family": "surefire",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.grantfixture.GrantReaderBoundaryTest",
+      "family": "surefire",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.idempotencyfixture.IdempotencyConfigTest",
+      "family": "surefire",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.idempotencyfixture.IdempotencyHttpTest",
+      "family": "surefire",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.identityfixture.IdentitySecurityTest",
+      "family": "surefire",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.importfixture.ImportFileParserTest",
+      "family": "surefire",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.importfixture.ImportFileStoreTest",
+      "family": "surefire",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.importfixture.ImportPlannerTest",
+      "family": "surefire",
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.peoplefixture.OrganizationReaderTest",
+      "family": "surefire",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.scopefixture.ScopeCoveragePolicyTest",
+      "family": "surefire",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.authorizationfixture.AuthorizationMySqlCheck",
+      "family": "failsafe",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.backend.IdempotencyMySqlCheck",
+      "family": "failsafe",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.backend.JpaMappingMySqlCheck",
+      "family": "failsafe",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.backend.MigrationMySqlCheck",
+      "family": "failsafe",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.backend.StartupDatabaseMySqlCheck",
+      "family": "failsafe",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.backend.TransactionBoundaryMySqlCheck",
+      "family": "failsafe",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.bfixture.BModuleMySqlCheck",
+      "family": "failsafe",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.bootstrapfixture.BootstrapMySqlCheck",
+      "family": "failsafe",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.catalogfixture.CatalogPreviewMySqlCheck",
+      "family": "failsafe",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.changefixture.AuditRequestQueriesMySqlCheck",
+      "family": "failsafe",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.changefixture.ChangeDraftMySqlCheck",
+      "family": "failsafe",
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.changefixture.SubmissionWorkflowMySqlCheck",
+      "family": "failsafe",
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.grantfixture.GrantMutationsMySqlCheck",
+      "family": "failsafe",
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.grantfixture.GrantQueriesMySqlCheck",
+      "family": "failsafe",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.identityfixture.AccountMySqlCheck",
+      "family": "failsafe",
+      "tests": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.identityfixture.IdentityMySqlCheck",
+      "family": "failsafe",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.importfixture.ImportCommitMySqlCheck",
+      "family": "failsafe",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.importfixture.ImportFileMySqlCheck",
+      "family": "failsafe",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.importfixture.ImportPrecheckMySqlCheck",
+      "family": "failsafe",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.integrationfixture.DeliveredModulesMySqlCheck",
+      "family": "failsafe",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.lifecyclefixture.CrossDomainLifecycleMySqlCheck",
+      "family": "failsafe",
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.lifecyclefixture.SourceClosureMySqlCheck",
+      "family": "failsafe",
+      "tests": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.peoplefixture.EmploymentWriterMySqlCheck",
+      "family": "failsafe",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.peoplefixture.OrganizationReaderMySqlCheck",
+      "family": "failsafe",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.peoplefixture.PeopleHttpMySqlCheck",
+      "family": "failsafe",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.scopefixture.ScopeCreationMySqlCheck",
+      "family": "failsafe",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.adgn.scopefixture.ScopeHttpMySqlCheck",
+      "family": "failsafe",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "auxiliaryTests": 18,
+  "inboundOperations": 67,
+  "successfulResponseOperations": 67,
+  "operationStatuses": {
+    "authorizationQuery": [
+      200,
+      401,
+      403,
+      422,
+      500,
+      503
+    ],
+    "catalogPreview": [
+      200,
+      401,
+      409,
+      422
+    ],
+    "changeOwnPassword": [
+      204,
+      401,
+      422,
+      500
+    ],
+    "changePreview": [
+      200,
+      401
+    ],
+    "closeSource": [
+      200,
+      401,
+      403,
+      409,
+      500
+    ],
+    "commitImport": [
+      200,
+      401,
+      403,
+      404,
+      409,
+      422,
+      503
+    ],
+    "createAccount": [
+      201,
+      401,
+      403,
+      409,
+      422,
+      500,
+      503
+    ],
+    "createChangeDraft": [
+      201,
+      401,
+      404,
+      409,
+      422,
+      500
+    ],
+    "createRole": [
+      201,
+      401,
+      403,
+      422,
+      500
+    ],
+    "createScope": [
+      201,
+      401,
+      404,
+      409,
+      500
+    ],
+    "createSystem": [
+      201,
+      401,
+      403,
+      409,
+      422,
+      500
+    ],
+    "currentSession": [
+      200,
+      401,
+      403
+    ],
+    "deleteChangeDraft": [
+      204,
+      401,
+      403,
+      404,
+      409
+    ],
+    "employeeStatePreview": [
+      200,
+      401,
+      403,
+      409,
+      422
+    ],
+    "getAccount": [
+      200,
+      401,
+      404
+    ],
+    "getAudit": [
+      200,
+      401,
+      404
+    ],
+    "getChangeRequest": [
+      200,
+      401,
+      404,
+      500
+    ],
+    "getEmployee": [
+      200,
+      401,
+      404
+    ],
+    "getImportBatch": [
+      200,
+      401,
+      404
+    ],
+    "getImportFile": [
+      200,
+      401,
+      404,
+      500,
+      503
+    ],
+    "getRole": [
+      200,
+      401,
+      403,
+      404,
+      422
+    ],
+    "getScope": [
+      200,
+      401,
+      404
+    ],
+    "getSystem": [
+      200,
+      401,
+      404,
+      500
+    ],
+    "grantBaselines": [
+      200,
+      401,
+      403,
+      404,
+      409,
+      422
+    ],
+    "listAccounts": [
+      200,
+      401,
+      403,
+      422
+    ],
+    "listAudit": [
+      200,
+      401,
+      403,
+      422,
+      500
+    ],
+    "listChangeEvents": [
+      200,
+      401,
+      404
+    ],
+    "listChangeRequests": [
+      200,
+      401,
+      403,
+      422
+    ],
+    "listCompanies": [
+      200,
+      401,
+      403,
+      409,
+      422
+    ],
+    "listDepartments": [
+      200,
+      401,
+      403
+    ],
+    "listDirectoryNodes": [
+      200,
+      401,
+      422
+    ],
+    "listEmployees": [
+      200,
+      401,
+      403,
+      409,
+      422
+    ],
+    "listEmployments": [
+      200,
+      401,
+      403,
+      404,
+      422
+    ],
+    "listGrants": [
+      200,
+      401,
+      403,
+      422,
+      500
+    ],
+    "listImportBatches": [
+      200,
+      401,
+      403,
+      422
+    ],
+    "listImportIssues": [
+      200,
+      401,
+      404
+    ],
+    "listImportPlanChanges": [
+      200,
+      401,
+      404
+    ],
+    "listPermissions": [
+      200,
+      401,
+      422
+    ],
+    "listPositions": [
+      200,
+      401,
+      403,
+      422
+    ],
+    "listPreviewEmployees": [
+      200,
+      401,
+      404,
+      409
+    ],
+    "listPreviewTargets": [
+      200,
+      401,
+      409
+    ],
+    "listRoles": [
+      200,
+      401,
+      403,
+      409,
+      422
+    ],
+    "listScopeAppointments": [
+      200,
+      401,
+      404,
+      422
+    ],
+    "listScopes": [
+      200,
+      401,
+      403,
+      422
+    ],
+    "listSystems": [
+      200,
+      401,
+      403,
+      409,
+      422
+    ],
+    "login": [
+      201,
+      401,
+      422,
+      429,
+      500
+    ],
+    "logout": [
+      204
+    ],
+    "myAppointments": [
+      200,
+      401,
+      403,
+      422
+    ],
+    "permissionCheck": [
+      200,
+      401,
+      422,
+      500
+    ],
+    "precheckImport": [
+      201,
+      401,
+      403,
+      409,
+      413,
+      422,
+      500
+    ],
+    "receiveOaResult": [
+      200,
+      202,
+      401,
+      409,
+      422,
+      500
+    ],
+    "replaceScope": [
+      200,
+      401,
+      409,
+      500
+    ],
+    "resetAccountPassword": [
+      200,
+      401,
+      403,
+      409,
+      500
+    ],
+    "retryOaDelivery": [
+      202,
+      401,
+      422
+    ],
+    "saveCatalog": [
+      200,
+      401,
+      409,
+      500
+    ],
+    "scopeCreatePreview": [
+      200,
+      401,
+      403,
+      422
+    ],
+    "scopeEditPreview": [
+      200,
+      401,
+      403,
+      422
+    ],
+    "setAccountState": [
+      200,
+      401,
+      403,
+      409,
+      422,
+      500
+    ],
+    "setEmployeeState": [
+      200,
+      401,
+      409,
+      500
+    ],
+    "sourceBaselines": [
+      200,
+      401,
+      403,
+      422
+    ],
+    "sourceClosePreview": [
+      200,
+      401,
+      403,
+      404,
+      409,
+      422
+    ],
+    "submitChange": [
+      200,
+      202,
+      401,
+      403,
+      409,
+      500
+    ],
+    "systemStatePreview": [
+      200,
+      401,
+      403,
+      409
+    ],
+    "updateChangeDraft": [
+      200,
+      401,
+      409,
+      422
+    ],
+    "updateRoleMetadata": [
+      200,
+      401,
+      403,
+      404,
+      409,
+      422,
+      500
+    ],
+    "updateSystem": [
+      200,
+      401,
+      409,
+      500
+    ],
+    "uploadImportFile": [
+      201,
+      401,
+      403,
+      409,
+      413,
+      422,
+      500,
+      503
+    ]
+  },
+  "schemaViolations": [],
+  "schemaCheckerScope": "REPOSITORY_OPENAPI_1_2_0_SUPPORTED_SCHEMA_KEYWORDS_STATUS_MEDIA_CACHE_ACTUAL_RESPONSES",
+  "wholeStory": "DeliveredModulesMySqlCheck.importedMultiCompanyMultiDepartmentMultiSystemStoryKeepsIndependentSources",
+  "ownerAccepted": false,
+  "mergedToMain": false,
+  "serverVerified": false,
+  "realExternalOaVerified": false,
+  "note": "Each operation has a successful real HTTP response; this does not mean every possible error status was exercised. Demo OA and application-context restart are local tests, not TARGET_SERVER evidence."
+}

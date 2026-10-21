@@ -34,7 +34,7 @@ class ScopeHttpMySqlCheck {
     String base,global,scoped,restricted,company,department,otherDepartment,noJobDepartment,actor,account,otherAccount;
     String firstScope,secondScope,noJobScope,historyScope,foreignScope,first,second,noJob,revoked,foreign,system1,system2;
     final JsonMapper json=JsonMapper.builder().build();
-    final HttpClient http=HttpClient.newHttpClient();
+    final HttpClient http=com.adgn.backend.testsupport.ContractHttpClient.create();
     final String password="Fixture-Scope-123456";
     String id(){return UUID.randomUUID().toString();}
 

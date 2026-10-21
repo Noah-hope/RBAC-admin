@@ -63,13 +63,15 @@
         "BE-09",
         "BE-27",
         "BE-32",
-        "BE-34"
+        "BE-33",
+        "BE-34",
+        "BE-35"
       ],
-      "taskCount": 7,
+      "taskCount": 9,
       "developmentHours": {
-        "low": 12.5,
-        "likely": 25,
-        "high": 40
+        "low": 16.5,
+        "likely": 32,
+        "high": 51
       },
       "reviewHours": {
         "low": 0,
@@ -77,9 +79,9 @@
         "high": 0
       },
       "totalHours": {
-        "low": 12.5,
-        "likely": 25,
-        "high": 40
+        "low": 16.5,
+        "likely": 32,
+        "high": 51
       }
     },
     "B": {
@@ -89,15 +91,13 @@
         "BE-13",
         "BE-15",
         "BE-17",
-        "BE-18",
-        "BE-33",
-        "BE-35"
+        "BE-18"
       ],
-      "taskCount": 8,
+      "taskCount": 6,
       "developmentHours": {
-        "low": 16.0,
-        "likely": 29.5,
-        "high": 47
+        "low": 12.0,
+        "likely": 22.5,
+        "high": 36
       },
       "reviewHours": {
         "low": 0,
@@ -105,9 +105,9 @@
         "high": 0
       },
       "totalHours": {
-        "low": 16.0,
-        "likely": 29.5,
-        "high": 47
+        "low": 12.0,
+        "likely": 22.5,
+        "high": 36
       }
     },
     "C": {

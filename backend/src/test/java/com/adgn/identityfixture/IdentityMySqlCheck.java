@@ -23,7 +23,7 @@ class IdentityMySqlCheck {
     private ConfigurableApplicationContext application;
     private JdbcTemplate jdbc;
     private String base;
-    private final HttpClient http = HttpClient.newHttpClient();
+    private final HttpClient http = com.adgn.backend.testsupport.ContractHttpClient.create();
     private final JsonMapper json = JsonMapper.builder().build();
     private final String password = "  初始口令𠮷-" + UUID.randomUUID();
     private String passwordHash;

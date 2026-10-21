@@ -50,8 +50,8 @@ SCOPE_SOURCE_COMMIT = '2199f0ef7b36a048845842c9803b08acf0f6612a'
 SCOPE_MERGE_COMMIT = 'ca8518918bd668f48769134763a10a163e10612b'
 SCOPE_PR_URL = 'https://github.com/Noah-hope/RBAC-admin/pull/2'
 BUSINESS_ASSIGNMENTS = {
-    'A': [6, 7, 8, 9, 27, 32, 34],
-    'B': [11, 12, 13, 15, 17, 18, 33, 35],
+    'A': [6, 7, 8, 9, 27, 32, 33, 34, 35],
+    'B': [11, 12, 13, 15, 17, 18],
     'C': [19, 20, 21, 22, 23, 24, 25, 31],
     'D': [10, 14, 16, 26, 28, 29, 30],
 }
@@ -246,6 +246,13 @@ for case in CASES:
         case.setdefault('additionalEvidence',[]).append('BE-30-IMPORT-COMMIT.md')
         case['verificationScope']='; '.join(filter(None,[case.get('verificationScope',''),'BE30_FROZEN_BATCH_ATOMIC_COMMIT_LIFECYCLE_HISTORY_FAILURE_RECOVERY_AND_LONG_TERM_REPLAY_ONLY_NOT_FULL_SYSTEM_OR_SERVER_ACCEPTANCE']))
 
+# BE-33 automated local evidence does not close owner/server/release acceptance.
+for case in CASES:
+    if case['id'] not in {'AT-36','AT-39','AT-40'}:
+        case.setdefault('additionalEvidence',[]).append('BE-33-SYSTEM-ACCEPTANCE.md')
+        case['localSystemVerification']=dict(decision='D-103',result='AUTOMATED_LOCAL_RUN_PASSED',
+            evidence='BE-33-SYSTEM-EVIDENCE.json',scope='LOCAL_BACKEND_ONLY_NOT_OWNER_SERVER_OR_RELEASE_ACCEPTANCE')
+
 TASKS = []
 def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
     foundation = n <= 5
@@ -254,7 +261,7 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
         ownerSlot='USER' if foundation else BUSINESS_OWNERS[f'BE-{n:02}'],reviewerSlot=None,reviewPolicy='OWNER_ACCEPTANCE',
         reviewRequired=False,acceptanceOwnerPolicy='TASK_OWNER',
         assignmentStatus='OWNER_CONFIRMED' if foundation else 'ASSIGNED',
-        assignmentDecision='D-053' if foundation else 'D-055',
+        assignmentDecision='D-053' if foundation else ('D-103' if n in (33,35) else 'D-055'),
         suggestedOwnerSlot=owner,suggestedReviewerSlot=None,
         startConditions=[] if foundation else list(BUSINESS_START),
         estimateHours=dict(zip(('low','likely','high'),estimate)),
@@ -291,6 +298,16 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
         TASKS[-1]['preparationProgress'].update(mergedToMain=True,deliveryDecision='D-098',
             sourceCommit='ba2178c60b1ec78b777952845b7bb71e5c9161ce',mainMergeCommit='43aeab78fbbf01acd568ff49c8893349e849d958',
             pushVerified=True,verifiedRemoteCommit='43aeab78fbbf01acd568ff49c8893349e849d958')
+    if n == 33:
+        TASKS[-1].update(status='IMPLEMENTED',assignmentDecision='D-103')
+        TASKS[-1]['implementationProgress']=dict(decision='D-103',evidence='BE-33-SYSTEM-ACCEPTANCE.md',
+            claimedOwnerSlot='A',claimSource='USER_MESSAGE',branch='codex/be-33-system-acceptance',
+            dependencyBase='0ff0ad703d4697c10f7e7cd5800961ef1404115a',implemented=True,
+            fullAcceptanceVerified=False,ownerAccepted=False,mergedToMain=False,
+            unresolvedDependencies=[],databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',databaseExecuted=True,
+            automatedSystemVerified=True,automatedUnitTests=143,automatedMySqlTests=436,taskMySqlTests=19,
+            auxiliaryTests=18,successfulContractOperations=67,systemEvidence='BE-33-SYSTEM-EVIDENCE.json')
+        TASKS[-1]['preparationProgress'].update(historical=True,supersededBy='D-103')
     if n == 6:
         TASKS[-1]['implementationProgress']=dict(evidence='BE-06-IDENTITY.md',decision='D-056',
             scope='LOGIN_SESSION_PASSWORD_AND_THREE_JWT_FAMILIES',implemented=True,
@@ -721,6 +738,9 @@ def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text = title+'\n\n'+'D-102实际交付（2026-10-21）：D明确“完成合并并推送”。BE-30来源a669e5f1958ff163a0bcf32e4394887acf6d1130已无冲突no-ff合入远程main/98f14c6a4b53582c9e9efc587a0e3095d1693eea，双亲为main/126fbc9和验证来源，合并树等于已完整验证来源。普通Git原子推送main及codex/be-30-import-commit成功，两个远程完整SHA回查一致，任务分支保留。沿用139普通/21组＋425真实MySQL/HTTP/27组及18辅助检查证据，失败/错误/跳过0；本轮静态追踪通过，代码未变，不重复Java/SQL。专属测试资源此前已清空并正常关闭，原MySQL84保持Running。BE-30为IMPLEMENTED、mergedToMain=true、ownerAccepted=false；D七项实现均已交付共同主线，D人工验收仍开放。共13项OWNER_ACCEPTED、14项IMPLEMENTED、5项IN_PROGRESS、3项PLANNED；BE-33可接入本次交付，其他成员任务及验收状态保持，不部署或自动开新任务。下方未授权/待交付为历史。'+'\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\nD-103实际结果（2026-10-21）：A已同步main/0ff0ad7并在codex/be-33-system-acceptance完成BE-33整体测试。完整143普通/22组＋436真实MySQL/HTTP/27组、18辅助检查通过，失败/错误/跳过0；19项整体组含本轮新增11项。67/67入站操作均有真实成功响应Schema证据并覆盖缺凭据边界，修复角色元数据正式/metadata路由及幂等路径。两公司/各两部门/兼岗/两系统经正式导入、审批、执行、查询、来源关闭/迟到批准/停用恢复/范围缩放，补两种guard顺序、末审计回滚和上下文重启恢复。BE-33由A接手、IMPLEMENTED待本人确认及主线交付；B原准备保留为历史，不代其他成员验收。BE-34/35及目标服务器/发布仍开放；未推送、合并或部署。详见[整体测试](BE-33-SYSTEM-ACCEPTANCE.md)。\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -952,19 +972,19 @@ def generate_assignment():
         '## 分工汇总', '',
         '| 成员 | 负责方向 | 对应任务 |',
         '| --- | --- | --- |',
-        '| A | **身份与管理范围、运行交付**：登录、账号、任命、范围、员工状态联动、初始化与部署 | BE-06～09、BE-27、BE-32、BE-34 |',
-        '| B | **系统、角色与功能权限**：系统目录、角色配置、影响预览、权限查询、集成验收 | BE-11～13、BE-15、BE-17～18、BE-33、BE-35 |',
+        '| A | **身份与管理范围、运行交付**：登录、账号、任命、范围、员工状态联动、初始化与部署 | BE-06～09、BE-27、BE-32～35 |',
+        '| B | **系统、角色与功能权限**：系统目录、角色配置、影响预览、权限查询、集成验收 | BE-11～13、BE-15、BE-17～18 |',
         '| C | **申请、审批与审计**：草稿、提交申请、OA投递与回调、执行恢复、审计查询 | BE-19～25、BE-31 |',
         '| D | **组织、人员与授权来源**：组织任职、授权基线、授予撤销、来源关权、文件导入 | BE-10、BE-14、BE-16、BE-26、BE-28～30 |']
     lines += ['',
-        '按D-055登记分工；D-056用户明确本人负责A，其他成员姓名及GitHub账号映射待补。每项BE只有一名负责人，由该负责人自行确认完成，不另设评审人。', '',
+        '按D-055登记分工，D-103按用户此前后期任务由本人收尾的安排，将BE-33/35转交A，BE-34原由A负责；D-056用户明确本人负责A，其他成员姓名及GitHub账号映射待补。每项BE只有一名负责人，由该负责人自行确认完成，不另设评审人。', '',
         '**当前：A实施BE-08（D-067），四查询与统一上下文/覆盖策略已获A确认（D-068）并由D-069/PR#2交付main；D的BE-10已由D-065交付main，D人工验收开放。** BE-07按D-058在包含确认祖先的任务分支实现，并已获D-059本人确认；其他成员依赖仍等已由D-060交付main。A已复用BE-10实施BE-08，后续BE-09仍须B/BE-17；B可推进BE-11，D可按依赖推进BE-28，C可先细化接口及测试场景；各任务就绪即可推进，不必等所有人完成同一批。', '',
         'BE-01～05公共基座已由用户完成并确认；本次分工覆盖BE-06～35共30项，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED。下文“前置”列列出完整直接依赖；开发先后也可对照[README流程图](../../README.md#业务开发顺序)。', '',
         '每个业务功能由负责人贯穿实现：需要HTTP时负责Controller、请求/响应DTO、Service、所属领域的持久化或查询投影，以及测试和文档；内部能力无需新建Controller，也不要求每个BE重复创建Repository。详细UC/API/表/事务/验收映射见[任务卡](TASKS.md)和[追踪表](TRACEABILITY.md)。', '']
     notes = {
         'A': [
             '主要维护`identity`、`scope`，以及本人任务对应的`lifecycle`、查询投影和HTTP适配。身份是后台账号、任命及三类JWT；管理范围不是业务数据权限。',
-            '先做BE-06，提供后台/业务系统/OA三类凭据的校验与后台会话能力。BE-07、BE-32在BE-06之后可按各自依赖推进；D的BE-10已交付main，BE-08已获A确认（D-068）并由D-069/PR#2交付main，BE-08已交付，BE-09须等B的BE-17。BE-27等待账号、范围及D的BE-26，BE-34最后等待BE-32和B的BE-33。',
+            '先做BE-06，提供后台/业务系统/OA三类凭据的校验与后台会话能力。BE-07、BE-32在BE-06之后可按各自依赖推进；D的BE-10已交付main，BE-08已获A确认（D-068）并由D-069/PR#2交付main，BE-08已交付，BE-09须等B的BE-17。BE-27等待账号、范围及D的BE-26，BE-33已由A接手整体测试；BE-34等待BE-32和BE-33。',
             '交给B/C/D：认证后的当前主体、受控服务身份及当前任命/范围资格读取接口。调用者仍在基座事务边界中复核当前资格，不能只相信JWT中的旧范围。接口签名和失败语义先写入设计，再由各方分别实现和测试。',
             '需要D提供组织/任职读取、来源关闭与统一失效编排，C提供申请状态写端口，需要B提供影响快照。BE-27由A完成员工停用/恢复、范围替换的跨域入口，调用已有内部能力；与D共同维护lifecycle时按功能分文件，协调会话/任命/来源/申请的原子失效。',
             'BE-32交付部署配置与管理员初始化，BE-34负责实际服务器部署、重启和演示证据；本机启动成功不能代替服务器验收。公共HTTP装配的业务接线由A协调，各控制器仍归各自任务负责人。',
@@ -974,7 +994,7 @@ def generate_assignment():
             '最早从BE-11开始，须等A的BE-06。BE-13在系统登记后推进，BE-15在角色读取后推进；BE-17所需A的BE-08和D的BE-10已交付main，可按依赖推进，BE-12再依赖BE-17。BE-18还要等D的BE-14。以上分支按任务前置推进，无需等待OA链路全部完成。',
             '交给C：BE-15的RoleConfigurationApplier，供BE-25在同一WriteContext中应用已批准角色配置；该内部应用器不新增公开业务接口，不自行提交独立事务。C负责执行编排，B负责目录和角色配置不变量。',
             '交给A/C/D：BE-17的影响计算、分页和依赖集合快照；明确输入、当前授权与快照过期/陈旧失败语义。BE-17只读表和投影，不反向依赖BE-12的目录命令，避免依赖环。BE-18使用D提供的来源/关系事实计算当前有效权限。',
-            'BE-33由B负责跨模块整链路、并发和失败集成，发现缺陷交对应模块负责人修复；其他成员仍各自完成任务测试。BE-35在A的BE-34通过后汇总交接与发布证据，不能提前关闭尚未通过的业务验收。',
+            'D-103按用户安排，BE-33已转交A负责整体测试，B的已交付集成准备保留；其他成员仍各自确认任务验收。BE-35也已转交A，须在BE-34通过后汇总交接与发布证据，不能提前关闭尚未通过的业务验收。',
         ],
         'C': [
             '主要维护`change`、`approval`、`execution`和审计读取投影，负责草稿→固定申请→OA投递/结果→自动执行的流程。OA批准与实际执行是不同状态，模拟适配不能宣称真实OA已接通。',

@@ -96,7 +96,7 @@ def checks(report):
     business_ids=tids-foundation_ids
     required_gates=['FOUNDATION_ACCEPTED','BUSINESS_OWNER_ASSIGNED']
     require(phase_plan['revision']=='1.4' and phase_plan['decision']=='D-039' and phase_plan['organizationDecision']=='D-038' and phase_plan['collaborationDecision']=='D-051' and phase_plan['assignmentDecision']=='D-055','分工/验收决策不符')
-    assignment_numbers = {'A':[6,7,8,9,27,32,34], 'B':[11,12,13,15,17,18,33,35],
+    assignment_numbers = {'A':[6,7,8,9,27,32,33,34,35], 'B':[11,12,13,15,17,18],
                           'C':[19,20,21,22,23,24,25,31], 'D':[10,14,16,26,28,29,30]}
     assignments = {f'BE-{n:02}': owner for owner, numbers in assignment_numbers.items() for n in numbers}
     require(len(assignments)==sum(map(len,assignment_numbers.values()))==30 and set(assignments)==business_ids,'四人分工遗漏或重复任务')
@@ -360,6 +360,7 @@ def checks(report):
     for task in tasks:
         expected_status={'BE-30':'IMPLEMENTED','BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-08':'OWNER_ACCEPTED','BE-09':'OWNER_ACCEPTED','BE-10':'IMPLEMENTED','BE-11':'IN_PROGRESS','BE-12':'IN_PROGRESS','BE-13':'IN_PROGRESS','BE-14':'IMPLEMENTED','BE-15':'IN_PROGRESS','BE-16':'IMPLEMENTED','BE-17':'IN_PROGRESS','BE-19':'OWNER_ACCEPTED','BE-21':'IMPLEMENTED','BE-23':'IMPLEMENTED','BE-24':'IMPLEMENTED','BE-25':'IMPLEMENTED','BE-31':'IMPLEMENTED','BE-20':'OWNER_ACCEPTED','BE-22':'OWNER_ACCEPTED','BE-26':'IMPLEMENTED','BE-28':'IMPLEMENTED','BE-29':'IMPLEMENTED','BE-32':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
         if task['id'] in {'BE-18','BE-27'}: expected_status='IMPLEMENTED'
+        if task['id']=='BE-33': expected_status='IMPLEMENTED'
         if task['id']=='BE-27':
             progress=task.get('implementationProgress',{})
             require(progress.get('implemented') is True and progress.get('httpImplemented') is True
@@ -372,7 +373,7 @@ def checks(report):
         require(task['status']==expected_status,'任务准备/实现状态不符')
         if task['id'] in {'BE-33','BE-35'}:
             preparation=task.get('preparationProgress',{})
-            require(task['status']=='PLANNED' and preparation.get('decision')=='D-096'
+            require(task['status']==('IMPLEMENTED' if task['id']=='BE-33' else 'PLANNED') and preparation.get('decision')=='D-096'
                     and preparation.get('implemented') is False and preparation.get('fullAcceptanceVerified') is False
                     and preparation.get('ownerAccepted') is False and preparation.get('mergedToMain') is True
                     and preparation.get('branch')=='codex/be-33-35-integration-handoff'
@@ -384,6 +385,17 @@ def checks(report):
             require(preparation.get('deliveryDecision')=='D-098' and preparation.get('mainMergeCommit')==b18_delivery['mergeCommit']
                     and preparation.get('sourceCommit')==b18_delivery['sourceCommit'] and preparation.get('pushVerified') is True
                     and preparation.get('verifiedRemoteCommit')==b18_delivery['mergeCommit'],'B准备主线证据不符')
+        if task['id']=='BE-33':
+            progress=task.get('implementationProgress',{})
+            require(progress.get('decision')=='D-103' and progress.get('claimedOwnerSlot')=='A'
+                    and progress.get('implemented') is True and progress.get('automatedSystemVerified') is True
+                    and progress.get('ownerAccepted') is False and progress.get('mergedToMain') is False
+                    and progress.get('fullAcceptanceVerified') is False and progress.get('unresolvedDependencies')==[]
+                    and progress.get('automatedUnitTests')==143 and progress.get('automatedMySqlTests')==436
+                    and progress.get('successfulContractOperations')==67 and progress.get('auxiliaryTests')==18
+                    and progress.get('evidence')=='BE-33-SYSTEM-ACCEPTANCE.md'
+                    and task.get('preparationProgress',{}).get('historical') is True,
+                    'BE-33自动化实施、本人确认、历史准备与主线交付须分别记录')
         if task['id']=='BE-18':
             progress=task.get('implementationProgress',{})
             require(progress.get('decision')=='D-095' and progress.get('implemented') is True
@@ -716,7 +728,7 @@ def checks(report):
             require(task['reviewPolicy']=='OWNER_ACCEPTANCE' and task['suggestedReviewerSlot'] is None and all(v==0 for v in task['reviewHours'].values()),'基座仍要求他人评审或重复计工时')
         else:
             require(task['phase']=='BUSINESS' and task['ownerSlot']==assignments[task['id']]
-                    and task['assignmentStatus']=='ASSIGNED' and task['assignmentDecision']=='D-055','业务任务分工不符')
+                    and task['assignmentStatus']=='ASSIGNED' and task['assignmentDecision']==('D-103' if task['id'] in {'BE-33','BE-35'} else 'D-055'),'业务任务分工不符')
             require(task['startConditions']==required_gates,'业务缺阶段启动门槛')
             require(task['reviewPolicy']=='OWNER_ACCEPTANCE','业务任务未落实负责人确认')
         require(set(task['modules'])<=mids,'任务引用未知模块')

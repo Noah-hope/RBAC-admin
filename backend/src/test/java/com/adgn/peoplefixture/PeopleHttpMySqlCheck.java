@@ -29,7 +29,7 @@ class PeopleHttpMySqlCheck {
     private String base,global,scoped,account,actor,company,department,position,otherCompany,otherDepartment,otherPosition,scope,appointment,employee,hidden,history,system;
     private final String password="Fixture-People-123456";
     private final JsonMapper json=JsonMapper.builder().build();
-    private final HttpClient http=HttpClient.newHttpClient();
+    private final HttpClient http=com.adgn.backend.testsupport.ContractHttpClient.create();
     private String id(){return UUID.randomUUID().toString();}
     @BeforeAll void start() throws Exception {
         keys=Files.createTempDirectory(Path.of(".tmp"),"be10-http-keys-");

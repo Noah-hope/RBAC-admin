@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.*;
 class GrantQueriesMySqlCheck {
     private IsolatedMySqlDatabase db;private ConfigurableApplicationContext app;private JdbcTemplate jdbc;
     private Path keys;private String base,account,token,hash;
-    private final JsonMapper json=JsonMapper.builder().build();private final HttpClient http=HttpClient.newHttpClient();
+    private final JsonMapper json=JsonMapper.builder().build();private final HttpClient http=com.adgn.backend.testsupport.ContractHttpClient.create();
     private final String password="Grant-Fixture-123456";
     private String id(){return UUID.randomUUID().toString();}
     @BeforeAll void start()throws Exception{

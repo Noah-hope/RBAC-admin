@@ -30,7 +30,7 @@ class BModuleMySqlCheck {
     private Path keys;
     private String base, account, token;
     private final JsonMapper json=JsonMapper.builder().build();
-    private final HttpClient http=HttpClient.newHttpClient();
+    private final HttpClient http=com.adgn.backend.testsupport.ContractHttpClient.create();
     @BeforeAll void start() throws Exception {
         keys=Files.createTempDirectory(Path.of(".tmp"),"b-keys-");
         for(String family:List.of("admin","business","oa")){
@@ -162,18 +162,18 @@ class BModuleMySqlCheck {
         assertThat(detail.statusCode()).as(detail.body()).isEqualTo(200);
         assertThat(body(detail).path("permissionIds").get(0).stringValue()).isEqualTo(system.path("systemAccessPermissionId").stringValue());
         assertThat(body(detail).path("activeChangeRequestId").stringValue()).isEqualTo(pending);
-        String key=id();var changed=call("PUT","/api/v1/admin/roles/"+role,metadata(1," 新角色 "),key);
+        String key=id();var changed=call("PUT","/api/v1/admin/roles/"+role+"/metadata",metadata(1," 新角色 "),key);
         assertThat(changed.statusCode()).as(changed.body()).isEqualTo(200);
         var value=body(changed);assertThat(value.path("name").stringValue()).isEqualTo("新角色");
         assertThat(value.path("metadataVersion").longValue()).isEqualTo(2);assertThat(value.path("configurationVersion").longValue()).isEqualTo(1);
         assertThat(value.path("permissionIds")).isEqualTo(body(detail).path("permissionIds"));
         for(String field:List.of("id","code","companyId","departmentId","systemId","activeChangeRequestId","state"))assertThat(value.path(field)).isEqualTo(body(detail).path(field));
-        assertThat(body(call("PUT","/api/v1/admin/roles/"+role,metadata(1," 新角色 "),key))).isEqualTo(value);
-        assertThat(call("PUT","/api/v1/admin/roles/"+role,metadata(1,"过期"),id()).statusCode()).isEqualTo(409);
-        assertThat(body(call("PUT","/api/v1/admin/roles/"+role,metadata(2,"新角色"),id())).path("metadataVersion").longValue()).isEqualTo(2);
+        assertThat(body(call("PUT","/api/v1/admin/roles/"+role+"/metadata",metadata(1," 新角色 "),key))).isEqualTo(value);
+        assertThat(call("PUT","/api/v1/admin/roles/"+role+"/metadata",metadata(1,"过期"),id()).statusCode()).isEqualTo(409);
+        assertThat(body(call("PUT","/api/v1/admin/roles/"+role+"/metadata",metadata(2,"新角色"),id())).path("metadataVersion").longValue()).isEqualTo(2);
         assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM audit_event WHERE target_id=?",Integer.class,role)).isEqualTo(1);
         var forbiddenField=new HashMap<>(metadata(2,"新角色"));forbiddenField.put("companyId",id());
-        assertThat(call("PUT","/api/v1/admin/roles/"+role,forbiddenField,id()).statusCode()).isEqualTo(422);
+        assertThat(call("PUT","/api/v1/admin/roles/"+role+"/metadata",forbiddenField,id()).statusCode()).isEqualTo(422);
     }
     @Test void scopedRoleQueriesFilterBeforeCountingAndSharedRolesAreReadOnly()throws Exception{
         String system=createSystem("scope-role"+id()).path("id").stringValue();var s=scoped(system);
@@ -186,18 +186,18 @@ class BModuleMySqlCheck {
         for(String r:List.of(hidden,id()))assertThat(request("GET","/api/v1/admin/roles/"+r,null,s.token(),null,s.headers()).statusCode()).isEqualTo(404);
         assertThat(request("GET","/api/v1/admin/roles?departmentId="+otherDepartment,null,s.token(),null,s.headers()).statusCode()).isEqualTo(403);
         assertThat(request("GET","/api/v1/admin/roles?systemId="+id(),null,s.token(),null,s.headers()).statusCode()).isEqualTo(403);
-        assertThat(request("PUT","/api/v1/admin/roles/"+shared,metadata(1,"共享"),s.token(),id(),s.headers()).statusCode()).isEqualTo(403);
-        assertThat(request("PUT","/api/v1/admin/roles/"+own,metadata(1,"本部门"),s.token(),id(),s.headers()).statusCode()).isEqualTo(200);
+        assertThat(request("PUT","/api/v1/admin/roles/"+shared+"/metadata",metadata(1,"共享"),s.token(),id(),s.headers()).statusCode()).isEqualTo(403);
+        assertThat(request("PUT","/api/v1/admin/roles/"+own+"/metadata",metadata(1,"本部门"),s.token(),id(),s.headers()).statusCode()).isEqualTo(200);
         assertThat(call("GET","/api/v1/admin/roles?state=DISABLED",null,null).statusCode()).isEqualTo(422);
     }
     @Test void metadataReplayRechecksCurrentScopeAndFailureRollsBackMetadata()throws Exception{
         String system=createSystem("replay-role"+id()).path("id").stringValue();var s=scoped(system);
         String role=role(system,s.company(),s.department(),false),key=id();
-        assertThat(request("PUT","/api/v1/admin/roles/"+role,metadata(1,"变更"),s.token(),key,s.headers()).statusCode()).isEqualTo(200);
+        assertThat(request("PUT","/api/v1/admin/roles/"+role+"/metadata",metadata(1,"变更"),s.token(),key,s.headers()).statusCode()).isEqualTo(200);
         jdbc.update("DELETE FROM scope_system WHERE scope_id=? AND system_id=?",s.scope(),system);
-        assertThat(request("PUT","/api/v1/admin/roles/"+role,metadata(1,"变更"),s.token(),key,s.headers()).statusCode()).isEqualTo(404);
+        assertThat(request("PUT","/api/v1/admin/roles/"+role+"/metadata",metadata(1,"变更"),s.token(),key,s.headers()).statusCode()).isEqualTo(404);
         database.execute("CREATE TRIGGER fail_b_role_audit BEFORE INSERT ON audit_event FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Injected audit failure'");
-        try{assertThat(call("PUT","/api/v1/admin/roles/"+role,metadata(2,"不应提交"),id()).statusCode()).isGreaterThanOrEqualTo(500);}
+        try{assertThat(call("PUT","/api/v1/admin/roles/"+role+"/metadata",metadata(2,"不应提交"),id()).statusCode()).isGreaterThanOrEqualTo(500);}
         finally{database.execute("DROP TRIGGER fail_b_role_audit");}
         var detail=call("GET","/api/v1/admin/roles/"+role,null,null);
         assertThat(body(detail).path("name").stringValue()).isEqualTo("变更");assertThat(body(detail).path("metadataVersion").longValue()).isEqualTo(2);

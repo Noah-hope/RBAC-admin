@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class ImportCommitMySqlCheck {
     private IsolatedMySqlDatabase db;private ConfigurableApplicationContext app;private JdbcTemplate jdbc;
-    private Path keys,storage;private String base,account,global,ordinary,restricted;private final JsonMapper json=JsonMapper.builder().build();private final HttpClient http=HttpClient.newHttpClient();
+    private Path keys,storage;private String base,account,global,ordinary,restricted;private final JsonMapper json=JsonMapper.builder().build();private final HttpClient http=com.adgn.backend.testsupport.ContractHttpClient.create();
     private String id(){return UUID.randomUUID().toString();}
     @BeforeAll void start()throws Exception{
         keys=Files.createTempDirectory(Path.of(".tmp"),"be30-keys-");storage=Files.createTempDirectory(Path.of(".tmp"),"be30-files-");

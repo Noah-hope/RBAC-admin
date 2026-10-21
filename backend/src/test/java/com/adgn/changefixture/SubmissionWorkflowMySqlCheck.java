@@ -29,7 +29,7 @@ class SubmissionWorkflowMySqlCheck {
     com.nimbusds.jose.jwk.RSAKey oaKey;
     String base,token,otherToken,restrictedToken,superAccount,company,department,otherDepartment,system,account,employee,passwordHash;
     final JsonMapper json=JsonMapper.builder().build();
-    final HttpClient http=HttpClient.newHttpClient();
+    final HttpClient http=com.adgn.backend.testsupport.ContractHttpClient.create();
     final String password="Fixture-Scope-123456";
     static String id(){return UUID.randomUUID().toString();}
     @BeforeAll void start()throws Exception{
