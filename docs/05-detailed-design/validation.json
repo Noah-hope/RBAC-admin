@@ -93,9 +93,9 @@
   "diagramPages": 6,
   "diagramVertices": 59,
   "diagramEdges": 57,
-  "localLinks": 583,
+  "localLinks": 587,
   "pythonSyntaxFiles": 2,
-  "decisionIds": 86,
+  "decisionIds": 88,
   "upstreamSha256": {
     "docs/03-api/openapi.yaml": "9910ceafadea88d85793d00f7bb4e6e5673700a8565366a407185c4517e0cbdf",
     "docs/03-api/apifox-export.json": "67fd08c024a365cfef26485a5984be28c7941cfc9662e1ae8d3ddac558fd5501",
@@ -128,13 +128,15 @@
   "historicallyConfirmedUserAliases": [
     "A",
     "B",
+    "C",
     "D"
   ],
-  "implementationDecision": "D-091",
+  "implementationDecision": "D-093",
   "preparedBusinessTasksWaitingDependencies": [],
-  "preparationDecision": "D-091",
+  "preparationDecision": "D-093",
   "internalPortTasksPendingOwner": [
-    "BE-16"
+    "BE-16",
+    "BE-25"
   ],
   "implementedBusinessTasksPendingOwner": [
     "BE-10",
@@ -145,9 +147,14 @@
     "BE-15",
     "BE-16",
     "BE-17",
+    "BE-21",
+    "BE-23",
+    "BE-24",
+    "BE-25",
     "BE-26",
     "BE-28",
-    "BE-29"
+    "BE-29",
+    "BE-31"
   ],
   "ownerAcceptedBusinessTasks": [
     "BE-06",
@@ -162,9 +169,9 @@
   "businessTasksPendingMainDelivery": [
     "BE-26"
   ],
-  "businessAcceptanceDecision": "D-082",
-  "businessMainDeliveryDecision": "D-090",
-  "businessMainDeliveryMerge": "cf27f7f910bf5e904c89542f56e3f56fddd884d9",
+  "businessAcceptanceDecision": "D-090",
+  "businessMainDeliveryDecision": "D-092",
+  "businessMainDeliveryMerge": "311aa5d5cbc3d7bfbd064888b4172d48de0a0e99",
   "businessMainDeliveryPrUrl": null,
   "priorScopeCreationDeliveryPrUrl": "https://github.com/Noah-hope/RBAC-admin/pull/3",
   "priorScopeDeliveryPrUrl": "https://github.com/Noah-hope/RBAC-admin/pull/2",
@@ -178,18 +185,18 @@
   "businessOperationsAssigned": 68,
   "artifactSha256": {
     "modules.json": "f20c0338e550a72468fb18981f04778461fa93e0421ab9f916d30c97d3fcecdf",
-    "issues.json": "182424394174fad726ac38a1effab3d78f581a61b149234680944468ce9c1d79",
-    "acceptance.json": "af58cdb789794caa62092b01c7917156f5a3c1d94e6ad798a1bf49fbfa67ebe8",
-    "operation-map.json": "f484e3a34b3db8f5014bef07f4e7d97ce6b811f645817411665a1bfbd84e7b1a",
+    "issues.json": "1c6bc08a18f563740f82950e345f2baef90bc5305fa860902ab1f4c03b49fbb1",
+    "acceptance.json": "ed9c59b569ec22c33b69f9c95fd44acc8ef8f15a338e43dafc1aaa3341aa9473",
+    "operation-map.json": "3859ad6c5018b928329aca8b82448772b830972fb10fdd9e69d824c20975ecc4",
     "estimates.json": "55baeb97978ace7292118acc188ac32fa64f8d8037a4fa32bb1a9d1ffa14d443",
-    "delivery-phases.json": "c0234256bcb19bc3abafaf3421aa40df41db9a74d8bf96d2ba5827c1bba373ec",
-    "MODULES.md": "1249e0bdad77e35fe398357c53bfb3f3bfda7a58329718f79f3a79d118b95cca",
-    "TRACEABILITY.md": "b8b481ac9c7cf2c965151bec4a27bbd3baf8276f9ad26f6c11759fa5abcbd0e1",
+    "delivery-phases.json": "3d96e8cfe09dca7497a2f1ec9aa890910ba8911d33c169b48ea8a706266ba4a7",
+    "MODULES.md": "bc116643757309250b23b97b54e741ea0f7fce311a3b5880479c04f7b7174eb0",
+    "TRACEABILITY.md": "0c4a0d9794939494e023811b1f11cf5658f357992f9ce563d2bf44c74b1fbdd0",
     "HANDLER-CONTRACTS.md": "fc845a172b5360321333b3e274c8d79c8537f264ae28e3b72f804891f350ce0e",
-    "TEST-PLAN.md": "ab83f87a5d52c9082cf4a6107d8ec0722c5c9f884048390a8baa44779072eb7b",
-    "TASKS.md": "d60c7e855548c914ca0127bf9444088bbc6d5bd33038c5eace3ca03cdfaf593d",
-    "IMPLEMENTATION-PLAN.md": "c22fa6031954e438e283d2f6f1f0dfd01618494ea482fefed381f3306296542f",
-    "TEAM-ASSIGNMENT.md": "89907ab70a4ef490108b336a8db0e24d893f87c632cc3f8625e390f597423931",
+    "TEST-PLAN.md": "951a30231348848eefc1fb66529d8e0eb8d8def0c0ad60a0f7bda65ff95e9b0c",
+    "TASKS.md": "93c937607bdc3853459e2715fdbbb2026391193565c937df84ba50e737bf8784",
+    "IMPLEMENTATION-PLAN.md": "3642c23f0a44fccdbdf0b710a2aef1bbdb495ec00728744bb55c5eb0c7990536",
+    "TEAM-ASSIGNMENT.md": "ee71df337198bdac5ec6397aaf139250ef76ca3665b8084f5a433186f8ec0482",
     "module-structure.drawio": "3db24f7f4f13cff20d34834b6cad2a5b48c1526e176d1a27ea0a0aa3e50a93b4",
     "core-flows.drawio": "af62be1624fe1141d5f6c472859e8ed0f7ff07363077ea1a2fa28c6fa206921f"
   }

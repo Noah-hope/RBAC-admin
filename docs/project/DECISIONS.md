@@ -1,5 +1,7 @@
 # 项目决策记录
 
+D-093集成结果（2026-10-21）：接入远程main/6b9a02e及C/BE-21/23/24/25/31后，完整clean verify/mysql-check通过，139项离线/21组＋350项真实MySQL/HTTP/23组，失败/错误/跳过0，日志backend/.tmp/be26-delivery-final.log。首轮1项演示脚本因本机python3商店占位退出9009，临时测试目录配置真实Python入口后完整重跑通过；未因此修改业务代码或永久环境变量。随机库/账号/测试密钥目录均0，专属MySQL子进程17336正常关闭，原MySQL84仍Running。BE-26保持IMPLEMENTED、ownerAccepted=false，主线交付由用户明确“先进行合并推送”授权，实际成功后登记；共13项OWNER_ACCEPTED、11项IMPLEMENTED、5项IN_PROGRESS、6项PLANNED。原D编号D-091与C重复统一为D-093，C的D-091/092及双方历史保持。
+
 D-093集成准备（2026-10-21）：D明确“先进行合并推送”，本次授权BE-26主线交付。远程main/6b9a02e新增C的BE-21/23/24/25/31，已接入且Java无冲突，正在专属隔离MySQL完整回归。D原BE-26准备/实施编号D-091与C重复，统一为D-093；原f745648、b011a8a及双方事实保留，C的D-091/092和验收/交付保持。BE-26保持IMPLEMENTED、ownerAccepted=false、mergedToMain=false，真实交付结果成功后登记。共13项OWNER_ACCEPTED、11项IMPLEMENTED、5项IN_PROGRESS、6项PLANNED；不代负责人验收或部署。
 
 D-093实际结果（2026-10-21）：BE-26两个公开操作与统一RequestInvalidator已完成设计/TDD，完整137离线/20组＋318真实MySQL/HTTP/22组及静态追踪通过，失败/错误/跳过0；含34项本任务真实验收。覆盖逻辑0、100来源、整份失效与全部claim/outbox、原范围实质失覆盖、独立角色/来源任职、隐藏混合申请及统计回放授权、并发与第N项/审计故障回滚。随机schema/账号/测试密钥目录均0，专属MySQL子进程27740正常关闭，原MySQL84仍Running。BE-26登记IMPLEMENTED、ownerAccepted=false、mergedToMain=false，只本地任务分支提交，既有各成员验收不代确认。共13项OWNER_ACCEPTED、6项IMPLEMENTED、5项IN_PROGRESS、11项PLANNED；BE-27/30未实施，不自动合并推送或部署。交接见docs/05-detailed-design/BE-26-SOURCE-CLOSURE.md，下方IN_PROGRESS/待实现为历史。

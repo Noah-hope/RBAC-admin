@@ -594,6 +594,9 @@ def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text=title+'\n\n'+'D-092（2026-10-21）：C明确数据库暂不处理、先提交合并既有工作。来源adab1861906dc7d973f796961249e1ef87563e29已无冲突no-ff合入远程main/311aa5d5cbc3d7bfbd064888b4172d48de0a0e99，合并树等于已验证来源；main与BE-21-31-申请审批与执行原子推送，远程完整SHA回查一致，任务分支保留。BE-21/23/24/25/31为IMPLEMENTED、mergedToMain=true、ownerAccepted=false；合并授权不代记本机人工验收。核对既有139离线＋316真实MySQL/HTTP报告及jar摘要一致，本轮代码未变，仅静态校验，不重新运行Java/SQL，不配置或连接本机数据库、不部署。C八项代码均已交付主线，本机环境与人工演示仍待后续；下方未交付为历史。'+'\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\n'+'D-093集成结果（2026-10-21）：接入远程main/6b9a02e及C/BE-21/23/24/25/31后，完整clean verify/mysql-check通过，139项离线/21组＋350项真实MySQL/HTTP/23组，失败/错误/跳过0，日志backend/.tmp/be26-delivery-final.log。首轮1项演示脚本因本机python3商店占位退出9009，临时测试目录配置真实Python入口后完整重跑通过；未因此修改业务代码或永久环境变量。随机库/账号/测试密钥目录均0，专属MySQL子进程17336正常关闭，原MySQL84仍Running。BE-26保持IMPLEMENTED、ownerAccepted=false，主线交付由用户明确“先进行合并推送”授权，实际成功后登记；共13项OWNER_ACCEPTED、11项IMPLEMENTED、5项IN_PROGRESS、6项PLANNED。原D编号D-091与C重复统一为D-093，C的D-091/092及双方历史保持。'+'\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
