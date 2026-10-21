@@ -36,6 +36,10 @@ public final class ChangeQueryService {
             return new Page(jdbc.query(SELECT+where+" ORDER BY r.created_at DESC,r.id DESC LIMIT ? OFFSET ?",(r,n)->view(r),args.toArray()),page.page(),page.pageSize(),total);
         });
     }
+    public Map<String,Object> currentView(String id){
+        if(!org.springframework.transaction.support.TransactionSynchronizationManager.isActualTransactionActive())throw new IllegalStateException("Caller transaction required");
+        return jdbc.query(SELECT+" WHERE r.id=?",(r,n)->view(r),id).getFirst();
+    }
     private Map<String,Object> view(ResultSet r)throws SQLException{
         try{
             if(!r.getBoolean("projection_valid"))throw integrity();

@@ -78,7 +78,7 @@ public final class DraftPlanner {
         return roles.get(id);
     }
     private JsonNode snapshot(RoleRepository.View role,JsonNode line){return json.valueToTree(Map.of("schemaVersion",1,"role",role,"input",line));}
-    private void validatePermissions(RoleRepository.View role,List<String> selected){
+    public void validatePermissions(RoleRepository.View role,List<String> selected){
         boolean enabled=jdbc.queryForObject("SELECT enabled FROM business_system WHERE id=?",Boolean.class,role.systemId());
         Set<String> old=new HashSet<>(role.permissionIds());
         for(String id:selected){
