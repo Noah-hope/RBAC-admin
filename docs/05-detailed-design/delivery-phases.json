@@ -407,6 +407,44 @@
         "ownerAccepted": false,
         "deliveryMode": "LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH",
         "evidence": "BE-26-SOURCE-CLOSURE.md"
+      },
+      {
+        "taskIds": [
+          "BE-18"
+        ],
+        "preparationTaskIds": [
+          "BE-33",
+          "BE-35"
+        ],
+        "decision": "D-098",
+        "date": "2026-10-21",
+        "branch": "main",
+        "sourceCommit": "ba2178c60b1ec78b777952845b7bb71e5c9161ce",
+        "mergeCommit": "43aeab78fbbf01acd568ff49c8893349e849d958",
+        "remote": "origin",
+        "remoteRef": "refs/heads/main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "43aeab78fbbf01acd568ff49c8893349e849d958",
+        "ownerAccepted": false,
+        "deliveryMode": "LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH",
+        "evidence": "BE-33-35-INTEGRATION-HANDOFF.md"
+      },
+      {
+        "taskIds": [
+          "BE-27"
+        ],
+        "decision": "D-100",
+        "date": "2026-10-21",
+        "sourceCommit": "682a052e5b38cb5be09d10f4856e93860b5091af",
+        "mergeCommit": "92d126f5465c8ecc5c2b4f293402fb21b0f1df7a",
+        "remote": "origin",
+        "branch": "main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "92d126f5465c8ecc5c2b4f293402fb21b0f1df7a",
+        "ownerAccepted": false,
+        "remotePrNumber": 4,
+        "prUrl": "https://github.com/Noah-hope/RBAC-admin/pull/4",
+        "evidence": "BE-27-CROSS-DOMAIN-LIFECYCLE.md"
       }
     ]
   },

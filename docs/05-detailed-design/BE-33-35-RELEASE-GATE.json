@@ -1,0 +1,335 @@
+{
+  "scope": "READ_ONLY_EVIDENCE_CONSISTENCY_NOT_SERVER_ATTESTATION",
+  "ready": false,
+  "blockers": [
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-10"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-11"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-12"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-13"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-14"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-15"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-16"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-17"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-18"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-21"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-23"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-24"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-25"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-26"
+    },
+    {
+      "code": "TASK_NOT_IMPLEMENTED",
+      "target": "BE-27"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-27"
+    },
+    {
+      "code": "TASK_NOT_DELIVERED",
+      "target": "BE-27"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-28"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-29"
+    },
+    {
+      "code": "TASK_NOT_IMPLEMENTED",
+      "target": "BE-30"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-30"
+    },
+    {
+      "code": "TASK_NOT_DELIVERED",
+      "target": "BE-30"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-31"
+    },
+    {
+      "code": "TASK_NOT_IMPLEMENTED",
+      "target": "BE-33"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-33"
+    },
+    {
+      "code": "TASK_NOT_DELIVERED",
+      "target": "BE-33"
+    },
+    {
+      "code": "TASK_NOT_IMPLEMENTED",
+      "target": "BE-34"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-34"
+    },
+    {
+      "code": "TASK_NOT_DELIVERED",
+      "target": "BE-34"
+    },
+    {
+      "code": "TASK_NOT_IMPLEMENTED",
+      "target": "BE-35"
+    },
+    {
+      "code": "OWNER_ACCEPTANCE_PENDING",
+      "target": "BE-35"
+    },
+    {
+      "code": "TASK_NOT_DELIVERED",
+      "target": "BE-35"
+    },
+    {
+      "code": "OPERATION_NOT_IMPLEMENTED",
+      "target": "employeeStatePreview"
+    },
+    {
+      "code": "OPERATION_NOT_IMPLEMENTED",
+      "target": "setEmployeeState"
+    },
+    {
+      "code": "OPERATION_NOT_IMPLEMENTED",
+      "target": "replaceScope"
+    },
+    {
+      "code": "OPERATION_NOT_IMPLEMENTED",
+      "target": "scopeEditPreview"
+    },
+    {
+      "code": "OPERATION_NOT_IMPLEMENTED",
+      "target": "commitImport"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-01"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-02"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-03"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-04"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-05"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-06"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-07"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-08"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-09"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-10"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-11"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-12"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-13"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-14"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-15"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-16"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-17"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-18"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-19"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-20"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-21"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-22"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-23"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-24"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-25"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-26"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-27"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-28"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-29"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-30"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-31"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-32"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-33"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-34"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-35"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-36"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-37"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-38"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-39"
+    },
+    {
+      "code": "ACCEPTANCE_NOT_VERIFIED",
+      "target": "AT-41"
+    },
+    {
+      "code": "SERVER_EVIDENCE_INVALID",
+      "target": "server"
+    },
+    {
+      "code": "ENDTOEND_EVIDENCE_INVALID",
+      "target": "endToEnd"
+    },
+    {
+      "code": "OWNERHANDOFF_EVIDENCE_INVALID",
+      "target": "ownerHandoff"
+    }
+  ],
+  "implementedInboundOperations": 62,
+  "inboundOperations": 67,
+  "sourceSha256": "390e89242b5c374ddc86b79604f7fd75ace0f7764d2a83949e287934404194b6",
+  "testResults": {
+    "tests": 514,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

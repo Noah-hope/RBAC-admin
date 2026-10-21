@@ -48,7 +48,12 @@ def main():
         class NoRedirect(urllib.request.HTTPRedirectHandler):
             def redirect_request(self, req, fp, code, msg, headers, newurl):
                 return None
-        with urllib.request.build_opener(NoRedirect).open(http, timeout=15) as response:
+        handlers = [NoRedirect]
+        # 回环演示只直连本机，避免系统/环境代理截获可信回调凭据或返回代理502。
+        # 非回环HTTPS仍沿用调用者明确配置的代理；保持禁止重定向。
+        if parsed.hostname in ("127.0.0.1", "localhost", "::1"):
+            handlers.append(urllib.request.ProxyHandler({}))
+        with urllib.request.build_opener(*handlers).open(http, timeout=15) as response:
             result = json.loads(response.read(16_384))
             print(json.dumps({"status": response.status, "requestId": result["requestId"],
                               "approvalResult": result["approvalResult"],

@@ -1,6 +1,6 @@
 # BE-30 导入整批提交、历史与失败恢复
 
-2026-10-21 / D-095：成员D要求完成BE-26推送后自行继续下一项。已核对远程main及交付记录到`d79e28a624fd4b9bf3862063c44274d3db602248`，建立`codex/be-30-import-commit`。BE-29已交付，A/BE-27仍PLANNED，主线缺少员工全局状态与任命、会话失效的统一生命周期内部编排。本轮完成设计、实际端口核对及TDD验收清单；BE-30保持PLANNED、implementationStarted=false、testsRun=false，未新增业务代码或执行本任务Java/SQL/HTTP。BE-26的139离线＋350真实MySQL/HTTP是上一项集成交付证据，不能计作BE-30验证。
+2026-10-21 / D-101：成员D要求完成BE-26推送后自行继续下一项。已核对远程main及交付记录到`d79e28a624fd4b9bf3862063c44274d3db602248`，建立`codex/be-30-import-commit`。BE-29已交付，A/BE-27仍PLANNED，主线缺少员工全局状态与任命、会话失效的统一生命周期内部编排。本轮完成设计、实际端口核对及TDD验收清单；BE-30保持PLANNED、implementationStarted=false、testsRun=false，未新增业务代码或执行本任务Java/SQL/HTTP。BE-26的139离线＋350真实MySQL/HTTP是上一项集成交付证据，不能计作BE-30验证。
 
 ## 依据与依赖门槛
 

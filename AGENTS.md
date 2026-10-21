@@ -1,6 +1,30 @@
 # 项目协作规则
 
-D-095（2026-10-21）：D要求BE-26推送后自行继续下一项。BE-26及交付记录已推送并回查远程main/d79e28a，任务分支保留、D人工验收仍开放。已建立codex/be-30-import-commit并完成BE-30详细设计、实际端口衔接及14组TDD验收清单，见docs/05-detailed-design/BE-30-IMPORT-COMMIT.md。直接依赖BE-29已交付，A/BE-27仍PLANNED且主线缺员工全局状态与任命/会话失效编排，故只准备可独立部分，BE-30保持PLANNED、implementationStarted=false、testsRun=false，未改业务代码或运行本任务Java/SQL/HTTP。共13项OWNER_ACCEPTED、11项IMPLEMENTED、5项IN_PROGRESS、6项PLANNED；不跨成员实现BE-27、不代本人验收或部署。本次继续授权不扩展为BE-30合并推送，准备仅本地提交，下方BE-26未交付为历史。
+D-101（2026-10-21）：D要求BE-26推送后自行继续下一项。BE-26及交付记录已推送并回查远程main/d79e28a，任务分支保留、D人工验收仍开放。已建立codex/be-30-import-commit并完成BE-30详细设计、实际端口衔接及14组TDD验收清单，见docs/05-detailed-design/BE-30-IMPORT-COMMIT.md。直接依赖BE-29已交付，A/BE-27仍PLANNED且主线缺员工全局状态与任命/会话失效编排，故只准备可独立部分，BE-30保持PLANNED、implementationStarted=false、testsRun=false，未改业务代码或运行本任务Java/SQL/HTTP。共13项OWNER_ACCEPTED、11项IMPLEMENTED、5项IN_PROGRESS、6项PLANNED；不跨成员实现BE-27、不代本人验收或部署。本次继续授权不扩展为BE-30合并推送，准备仅本地提交，下方BE-26未交付为历史。
+
+D-100实际交付（2026-10-21）：BE-27已通过PR #4（https://github.com/Noah-hope/RBAC-admin/pull/4）合入远程main。验证实现72daaac009a9778a7446373e2094d2196a836514，PR来源682a052e5b38cb5be09d10f4856e93860b5091af，合并92d126f5465c8ecc5c2b4f293402fb21b0f1df7a；已回查closed/merged=true、远程完整SHA、双亲及合并树等于验证来源。本地主线已同步、任务分支保留。沿用139普通＋406真实MySQL/HTTP及18辅助证据，交付静态检查通过，不重跑Java/SQL；远程检查条目0，不记为CI通过。BE-27为IMPLEMENTED、mergedToMain=true、remotePrNumber=4、ownerAccepted=false；负责人验收仍单独待确认。D可更新main接入BE-30，BE-33仍待BE-30、BE-34仍待完整集成，不部署或自动开新任务；下方待交付为历史。
+
+D-100（2026-10-21）：A明确“交付BE-27，推送远程”，授权推送任务分支、创建main目标PR并合并、同步本地主线及实际交付记录。已核对验证来源72daaac、最新main/8ad17e4、完整139普通＋406真实MySQL/HTTP及18辅助结果、jar摘要和资源清理；代码/测试未变，沿用既有证据并做静态核对，不重跑Java/SQL。交付不代记本人验收，BE-27保持IMPLEMENTED、ownerAccepted=false；保留任务分支和无关.codeartsdoer，不强推/部署/实施BE-30。实际PR和合并SHA在成功后补；下方不推送/合并为此前边界。
+
+D-099（2026-10-21）：A要求同步远程并开始BE-27，已快进main/8ad17e4并建立codex/be-27-cross-domain-invalidation。先设计、真实HTTP RED再实现员工状态和范围替换四入口，复用BE-16/26与既有身份/预览/幂等/审计；完整139普通＋406真实MySQL/HTTP（含本任务31项）、18辅助工具及静态校验通过，失败/错误/跳过0；专属库/账号/密钥均0且实例关闭、原MySQL84仍Running。证据见docs/05-detailed-design/BE-27-CROSS-DOMAIN-LIFECYCLE.md。BE-27为IMPLEMENTED待A确认及主线交付，不代其他成员验收，不推送/合并/部署或实施BE-30；无关.codeartsdoer保留。下方BE-27未实现为历史。
+
+D-098实际主线交付（2026-10-21）：B 明确要求“把你做的东西弄好，然后做好测试后就合并”。来源 ba2178c60b1ec78b777952845b7bb71e5c9161ce 已无冲突 no-ff 合入并推送远程 main/43aeab78fbbf01acd568ff49c8893349e849d958，双亲和合并树等于已验证来源，远程完整 SHA 已回查。合并后完整139普通＋375真实MySQL/HTTP、18辅助工具及静态追踪通过，失败/错误/跳过0；隔离库/账号0/0、密钥清理、专属MySQL关闭。常规Git网络卡住后停止本轮卡住进程，改用官方GitHub Git API按原始SHA、force=false交付。BE-18为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，B六项业务代码均已交付主线；BE-33/35仅已完成的集成/交接准备随同交付，正式任务保持PLANNED，仍缺A/BE-27、D/BE-30及A/BE-34。保留任务分支、不代记本人验收、不部署；下方不合并/未交付为历史，本条后续仅补交付证据文字。
+
+B 实际分支交付（2026-10-21/D-097）：已推送 codex/be-33-35-integration-handoff，远程完整 SHA 回查为 a5d5c3557b6da7cb8f52ea42c30ba03b5fcb18a3，包含 BE-18、集成修复/测试和交接证据；远程 main 仍 d79e28a624fd4b9bf3862063c44274d3db602248，未合并或推送 main。完整139＋375及18辅助检查通过，专属资源清理关闭；本条后续仅补交付文字。推送分支不等于主线交付、本人验收或 BE-33/35 完成；A/BE-27、D/BE-30、A/BE-34 及完整验收仍开放。下方准备推送/未授权为历史。
+
+B 最新验证（2026-10-21/D-097）：已接入 main/d79e28a 的 BE-26，完整 clean verify/mysql-check 通过：139 普通＋375 真实 MySQL/HTTP，失败/错误/跳过 0；18 项辅助工具测试与设计静态校验通过。新增真实来源关闭→下次查询拒绝、迟到批准不复权及新周期重新申请链路，集成组 8 项通过。专属随机库/账号 0/0、临时密钥清理、13461 实例正常关闭；既有数据库未操作。BE-18 与 BE-33/35 当前准备提交至独立 B 分支，远程 main 不合并；BE-33 尚缺 A/BE-27、D/BE-30，BE-35 尚缺 A/BE-34，正式状态及其他成员验收保持。下方缺 BE-26、旧测试数与未授权推送是历史。
+
+B 分支交付准备（2026-10-21）：按用户“那你就弄完提交”，已接入 main/d79e28a 的 BE-26，正在完成新增来源关闭/迟到批准与 BE-18 查询的真实集成回归，随后提交推送独立分支，不合并远程 main。B 原 D-093/094 为保留 D 的已交付编号统一为 D-095/096，双方历史及验收事实保持。BE-33 仍缺 A/BE-27、D/BE-30，BE-35 仍缺 A/BE-34；BE-26 不再列作未实现依赖，不接管其他成员任务或部署。下方旧基线、缺 BE-26 和未授权推送为历史。
+
+D-096验证收尾：接入 C main/6b9a02e 后，最终完整 139 普通＋339 真实 MySQL/HTTP、18 项辅助工具测试及静态校验通过。正式预览路径与本机回调代理两处集成问题已按真实 RED 修正；初次全量中失败用例重跑通过，未跳过。BE-33/35 仍缺 BE-26/27/30 及真实服务器 BE-34，不得因绿色回归关闭或发布，详见交接记录。
+
+D-096最新进展：已接入 C 新交付 main/6b9a02e，B 原 D-091/092 调整为 D-095/094 保留双方事实。集成真实配置审批、授予、业务查询、撤销和重复回调/执行，修正审批预览为原契约 /previews（真实 RED 为期望200实际404）。BE-33 仍缺 BE-27/30（含传递依赖BE-26），BE-35 缺目标服务器 BE-34；不得以局部回归和交接准备关闭两项。见 docs/05-detailed-design/BE-33-35-INTEGRATION-HANDOFF.md，下方缺 C/基线7914788为历史。
+
+D-096（2026-10-21）：B 要求完成剩余 BE-33/35。共同 main 仍 7914788，缺 BE-25/27/30/31 与真实服务器 BE-34；本轮在继承 BE-18/baeab61 的 codex/be-33-35-integration-handoff 补已交付模块公共接口集成检查、只读发布证据校验工具和交接清单。两项保持 PLANNED、单列 preparationProgress，不能把准备或绿色回归冒充完整 AT-38/39。见 docs/05-detailed-design/BE-33-35-INTEGRATION-HANDOFF.md；未接管其他成员模块、未推送/合并/部署。
+
+D-095验证结果：BE-18 完整 137 普通＋301 真实隔离 MySQL/HTTP 及设计静态校验通过，失败/错误/跳过均 0。随机库/账号 0/0，测试密钥清理，专属实例关闭。仍待 B 本人确认与主线交付，不虚构整个 B/项目验收完成。
+
+D-095（2026-10-21）：当前 B 用户在同步 main/7914788、说明 BE-14 已交付后要求“那就改”，按上下文实施 BE-18。分支 codex/be-18-effective-permissions，先详细设计、真实 HTTP/MySQL RED 再实现两个业务权限读取接口；同快照复核当前业务身份及完整有效来源并集，无缓存、无目录/角色命令依赖、不改契约/迁移。实现与验证见 docs/05-detailed-design/BE-18-EFFECTIVE-PERMISSIONS.md；本轮仅本地交付，未授权远程推送或合并，负责人确认不代记。B 六项业务开发已实现，BE-33/35 仍开放；下方 BE-18 等 BE-14 为历史。
 
 D-094实际交付（2026-10-21）：D明确“先进行合并推送”。BE-26已接入远程main/6b9a02e的C工作流，来源857d4a9d20fa43578f70385d256b86ce02ad3fdc已no-ff合入远程main/b00ffc98277e754757b0e3d9bd0fe3d920db53b4，合并树等于集成验证来源。普通Git连接超时，改用官方GitHub Git API按本地对象原始SHA、force=false交付，main及codex/be-26-source-closure两个完整SHA回查一致，任务分支保留。集成完整139离线/21组＋350真实MySQL/HTTP/23组及静态校验通过，失败/错误/跳过0；本机python3商店占位导致首轮1项环境失败，临时测试入口修正后完整重跑通过，业务代码未因此修改。随机schema/账号/密钥目录均0，专属MySQL子进程17336正常关闭，原MySQL84仍Running。BE-26为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，D人工验收仍开放，其他成员状态保持；共13项OWNER_ACCEPTED、11项IMPLEMENTED、5项IN_PROGRESS、6项PLANNED。原D实施D-091与C重复，统一D-093，原f745648/b011a8a及C的D-091/092事实保留。用户另要求交付后自行继续下一项，后续按依赖核对BE-30，不代A实施BE-27、不部署。下方未授权/待交付为历史。
 

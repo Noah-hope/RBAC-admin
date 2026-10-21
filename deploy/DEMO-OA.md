@@ -27,7 +27,7 @@ java -Dloader.main=com.adgn.backend.demo.DemoServiceApplication \
 ## 运行申请链路
 
 1. 正常应用显式启用`demo` profile，例如IDE的`spring.profiles.active=dev,demo`。`rbac.workflow.scheduling-enabled`默认true，启动及每30秒扫描持久待办；隔离测试可显式关闭。普通`dev/server`不会装配演示适配器。真实适配器可实现`OaSubmissionPort`替换；未配置适配器时安全记投递失败并退避，不假装已受理。当前提交要求库中恰有一个已启用OA身份；多实例配置未明确时503拒绝选择。
-2. 管理员按正式API创建角色/编辑配置草稿，或建立明确授予/撤销清单。POST`/api/v1/admin/change-requests/{id}/preview`传`expectedDraftVersion`，查看`effectiveContent`、无变化分类和影响。
+2. 管理员按正式API创建角色/编辑配置草稿，或建立明确授予/撤销清单。POST`/api/v1/admin/change-requests/{id}/previews`传`expectedDraftVersion`，查看`effectiveContent`、无变化分类和影响。
 3. POST同ID的`/submissions`，传`expectedDraftVersion`、刚取得的`previewId`和新的UUID `Idempotency-Key`。202表示固定内容与可靠待办已提交，有效权限尚未变更；全部无变化200且保留草稿、不投OA。预览过期或基线变化需重新预览。
 4. 等待发送器，GET申请详情确认`deliveryStatus=LINKED`，`oaApprovalId=DEMO-<实际requestId>`。把本次真实GET响应保存到受控文件，如`.tmp/live-request.json`。不要使用文档示例ID或猜测摘要。
 5. 设置`RBAC_DEMO_BASE_URL`及`RBAC_DEMO_CALLBACK_TOKEN_FILE`，从项目根目录执行：
