@@ -43,51 +43,19 @@
       "target": "BE-18"
     },
     {
-      "code": "TASK_NOT_IMPLEMENTED",
-      "target": "BE-21"
-    },
-    {
       "code": "OWNER_ACCEPTANCE_PENDING",
       "target": "BE-21"
-    },
-    {
-      "code": "TASK_NOT_DELIVERED",
-      "target": "BE-21"
-    },
-    {
-      "code": "TASK_NOT_IMPLEMENTED",
-      "target": "BE-23"
     },
     {
       "code": "OWNER_ACCEPTANCE_PENDING",
       "target": "BE-23"
     },
     {
-      "code": "TASK_NOT_DELIVERED",
-      "target": "BE-23"
-    },
-    {
-      "code": "TASK_NOT_IMPLEMENTED",
-      "target": "BE-24"
-    },
-    {
       "code": "OWNER_ACCEPTANCE_PENDING",
       "target": "BE-24"
     },
     {
-      "code": "TASK_NOT_DELIVERED",
-      "target": "BE-24"
-    },
-    {
-      "code": "TASK_NOT_IMPLEMENTED",
-      "target": "BE-25"
-    },
-    {
       "code": "OWNER_ACCEPTANCE_PENDING",
-      "target": "BE-25"
-    },
-    {
-      "code": "TASK_NOT_DELIVERED",
       "target": "BE-25"
     },
     {
@@ -135,15 +103,7 @@
       "target": "BE-30"
     },
     {
-      "code": "TASK_NOT_IMPLEMENTED",
-      "target": "BE-31"
-    },
-    {
       "code": "OWNER_ACCEPTANCE_PENDING",
-      "target": "BE-31"
-    },
-    {
-      "code": "TASK_NOT_DELIVERED",
       "target": "BE-31"
     },
     {
@@ -181,18 +141,6 @@
     {
       "code": "TASK_NOT_DELIVERED",
       "target": "BE-35"
-    },
-    {
-      "code": "OPERATION_NOT_IMPLEMENTED",
-      "target": "changePreview"
-    },
-    {
-      "code": "OPERATION_NOT_IMPLEMENTED",
-      "target": "submitChange"
-    },
-    {
-      "code": "OPERATION_NOT_IMPLEMENTED",
-      "target": "retryOaDelivery"
     },
     {
       "code": "OPERATION_NOT_IMPLEMENTED",
@@ -221,10 +169,6 @@
     {
       "code": "OPERATION_NOT_IMPLEMENTED",
       "target": "commitImport"
-    },
-    {
-      "code": "OPERATION_NOT_IMPLEMENTED",
-      "target": "receiveOaResult"
     },
     {
       "code": "ACCEPTANCE_NOT_VERIFIED",
@@ -399,11 +343,11 @@
       "target": "ownerHandoff"
     }
   ],
-  "implementedInboundOperations": 56,
+  "implementedInboundOperations": 60,
   "inboundOperations": 67,
-  "sourceSha256": "647515373c7b7842a4d7aea9e54a644ff772e81ae1ddf77959d48c74f1a6987b",
+  "sourceSha256": "29ce63878668155728471ec672ab5761a618bfe28164fab9ad20fde1740d0e19",
   "testResults": {
-    "tests": 442,
+    "tests": 478,
     "failures": 0,
     "errors": 0,
     "skipped": 0

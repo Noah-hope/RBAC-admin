@@ -84,6 +84,7 @@ def checks(report):
                       'AT-26':'BE-28-IMPORT-FILES.md','AT-14':'BE-14-GRANT-BASELINES.md','AT-15':'BE-14-GRANT-BASELINES.md',
                       'AT-22':'BE-16-GRANT-MUTATIONS.md','AT-41':'BE-16-GRANT-MUTATIONS.md','AT-25':'BE-29-IMPORT-PRECHECK.md','AT-16':'BE-20-CHANGE-DRAFTS.md','AT-17':'BE-20-CHANGE-DRAFTS.md','AT-18':'BE-19-22-AUDIT-REQUEST-QUERIES.md','AT-34':'BE-19-22-AUDIT-REQUEST-QUERIES.md','AT-20':'BE-21-31-APPROVAL-WORKFLOW.md','AT-21':'BE-21-31-APPROVAL-WORKFLOW.md','AT-23':'BE-21-31-APPROVAL-WORKFLOW.md','AT-35':'BE-21-31-APPROVAL-WORKFLOW.md'}
     partial_evidence['AT-30']='BE-18-EFFECTIVE-PERMISSIONS.md'
+    partial_evidence['AT-38']='BE-33-35-INTEGRATION-HANDOFF.md'
     require(all(c['status']==('PARTIALLY_VERIFIED' if c['id'] in partial_evidence else 'DESIGNED_NOT_RUN') for c in cases),'验收局部/完整状态不符')
     require(all(c.get('evidence')==partial_evidence[c['id']] for c in cases if c['status']=='PARTIALLY_VERIFIED'),'局部验收缺实施证据')
     deferred={c['id'] for c in cases if c['delivery']=='FRONTEND_DEFERRED'}

@@ -221,6 +221,9 @@ for case in CASES:
     if case['id'] in {'AT-04','AT-07','AT-11','AT-13','AT-16','AT-30','AT-31','AT-34','AT-37'}:
         case.setdefault('additionalEvidence',[]).append('BE-33-35-INTEGRATION-HANDOFF.md')
         case['verificationScope']='; '.join(filter(None,[case.get('verificationScope',''),'BE33_PREPARATION_DELIVERED_PUBLIC_FLOWS_ONLY_NOT_APPROVAL_EXECUTION_IMPORT_OR_TARGET_SERVER']))
+    if case['id']=='AT-38':
+        case.update(status='PARTIALLY_VERIFIED',evidence='BE-33-35-INTEGRATION-HANDOFF.md',
+            verificationScope='BE33_CONFIG_GRANT_REVOKE_DEMO_FLOW_ONLY_NOT_IMPORT_SOURCE_CLOSE_STATUS_RESTORE_OR_TARGET_SERVER')
 
 TASKS = []
 def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):

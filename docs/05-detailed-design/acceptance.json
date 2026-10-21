@@ -787,8 +787,10 @@
     "operations": [],
     "useCases": [],
     "reviewScenario": "",
-    "status": "DESIGNED_NOT_RUN",
-    "delivery": "BACKEND"
+    "status": "PARTIALLY_VERIFIED",
+    "delivery": "BACKEND",
+    "evidence": "BE-33-35-INTEGRATION-HANDOFF.md",
+    "verificationScope": "BE33_CONFIG_GRANT_REVOKE_DEMO_FLOW_ONLY_NOT_IMPORT_SOURCE_CLOSE_STATUS_RESTORE_OR_TARGET_SERVER"
   },
   {
     "id": "AT-39",
