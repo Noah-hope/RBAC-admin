@@ -25,14 +25,15 @@ import static org.assertj.core.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DeliveredModulesMySqlCheck {
     private IsolatedMySqlDatabase db;private ConfigurableApplicationContext app;private JdbcTemplate jdbc;
-    private Path keys;private String base,admin;private RSAKey business;private final JsonMapper json=JsonMapper.builder().build();private final HttpClient http=HttpClient.newHttpClient();
+    private Path keys;private String base,admin,oaInstance;private RSAKey business,oa;private final JsonMapper json=JsonMapper.builder().build();private final HttpClient http=HttpClient.newHttpClient();
     private static String id(){return UUID.randomUUID().toString();}
     @BeforeAll void start()throws Exception{
         keys=Files.createTempDirectory(Path.of(".tmp"),"delivered-modules-keys-");
-        for(String family:List.of("admin","business","oa")){var key=new RSAKeyGenerator(2048).keyID(family).generate();if(family.equals("business"))business=key;Files.writeString(keys.resolve(family+".json"),new JWKSet(family.equals("admin")?key:key.toPublicJWK()).toString(!family.equals("admin")));}
+        for(String family:List.of("admin","business","oa")){var key=new RSAKeyGenerator(2048).keyID(family).generate();if(family.equals("business"))business=key;if(family.equals("oa"))oa=key;Files.writeString(keys.resolve(family+".json"),new JWKSet(family.equals("admin")?key:key.toPublicJWK()).toString(!family.equals("admin")));}
         byte[] secret=new byte[32];new java.security.SecureRandom().nextBytes(secret);db=new IsolatedMySqlDatabase();
-        app=db.startWeb("--rbac.identity.enabled=true","--rbac.identity.admin-key-id=admin","--rbac.identity.admin-jwk-set="+keys.resolve("admin.json").toAbsolutePath(),"--rbac.identity.business-jwk-set="+keys.resolve("business.json").toAbsolutePath(),"--rbac.identity.oa-jwk-set="+keys.resolve("oa.json").toAbsolutePath(),"--rbac.idempotency.enabled=true","--rbac.idempotency.current-key-id=fixture","--rbac.idempotency.keys-json="+json.writeValueAsString(Map.of("fixture",Base64.getEncoder().encodeToString(secret))));
+        app=db.startWeb("--spring.profiles.active=dev,demo","--rbac.workflow.scheduling-enabled=false","--rbac.identity.enabled=true","--rbac.identity.admin-key-id=admin","--rbac.identity.admin-jwk-set="+keys.resolve("admin.json").toAbsolutePath(),"--rbac.identity.business-jwk-set="+keys.resolve("business.json").toAbsolutePath(),"--rbac.identity.oa-jwk-set="+keys.resolve("oa.json").toAbsolutePath(),"--rbac.idempotency.enabled=true","--rbac.idempotency.current-key-id=fixture","--rbac.idempotency.keys-json="+json.writeValueAsString(Map.of("fixture",Base64.getEncoder().encodeToString(secret))));
         jdbc=new JdbcTemplate(app.getBean(DataSource.class));base="http://127.0.0.1:"+((WebServerApplicationContext)app).getWebServer().getPort()+"/api/v1/";
+        oaInstance=id();jdbc.update("INSERT INTO service_identity(id,subject,kind) VALUES(?,?,'OA')",oaInstance,oaInstance);
         String account=id();jdbc.update("INSERT INTO admin_account(id,login_name,password_hash,is_super_admin,must_change_password,created_at) VALUES(?,?,?,1,0,UTC_TIMESTAMP(6))",account,account,new PasswordPolicy().encode("Delivered-Modules-1234"));
         admin=value(request("POST","admin/sessions",Map.of("loginName",account,"password","Delivered-Modules-1234"),null,null),201).path("accessToken").stringValue();
     }
@@ -65,7 +66,7 @@ class DeliveredModulesMySqlCheck {
         var baseline=write("POST","grant-baselines",Map.of("items",List.of(Map.of("employeeId",f.employee(),"roleId",role,"sourceCompanyId",f.company(),"sourceDepartmentId",f.department()))),200).path("items").get(0);
         assertThat(baseline.path("sourceEpoch").longValue()).isZero();assertThat(baseline.path("relationVersion").longValue()).isZero();assertThat(baseline.path("activeGrantId").isNull()).isTrue();assertThat(baseline.path("employmentIds").size()).isEqualTo(1);
         var q=value(request("POST","integration/authorization-queries",Map.of("employeeKey",f.employee(),"companyId",f.company()),f.businessToken(),null),200);assertThat(q.path("canAccessSystem").booleanValue()).isFalse();assertThat(q.path("operations").isEmpty()).isTrue();
-        assertThat(read("change-requests/"+draft).path("state").stringValue()).isEqualTo("DRAFT");assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM authorization_source",Long.class)).isZero();assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM role_grant",Long.class)).isZero();
+        assertThat(read("change-requests/"+draft).path("state").stringValue()).isEqualTo("DRAFT");assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM authorization_source WHERE employee_id=?",Long.class,f.employee())).isZero();assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM role_grant g JOIN grant_baseline b ON b.id=g.baseline_id JOIN authorization_source s ON s.id=b.source_id WHERE s.employee_id=?",Long.class,f.employee())).isZero();
     }
     @Test void metadataUpdateKeepsDraftAndDeletingDraftKeepsHistoricalAudit()throws Exception{
         var f=fixture();var created=role(f);String role=created.path("role").path("id").stringValue(),draft=created.path("draftId").stringValue();
@@ -85,5 +86,45 @@ class DeliveredModulesMySqlCheck {
         var f=fixture();String draft=role(f).path("draftId").stringValue();assertThat(request("GET","admin/change-requests/"+draft,null,f.businessToken(),null).statusCode()).isEqualTo(401);
         assertThat(request("POST","integration/permission-checks",Map.of("employeeKey",f.employee(),"companyId",f.company(),"permissionCode","entry"),admin,null).statusCode()).isEqualTo(401);
         var denied=value(request("POST","integration/permission-checks",Map.of("employeeKey",f.employee(),"companyId",f.company(),"permissionCode","unknown"),f.businessToken(),null),200);assertThat(denied.path("hasPermission").booleanValue()).isFalse();assertThat(denied.path("permissionType").isNull()).isTrue();
+    }
+    @Test void approvalPreviewIsAvailableAtTheFrozenOpenApiPath()throws Exception{
+        var f=fixture();var created=role(f);String role=created.path("role").path("id").stringValue(),draft=created.path("draftId").stringValue();
+        write("PUT","change-requests/"+draft,Map.of("expectedDraftVersion",1,"reason","配置进入权限","content",Map.of("kind","ROLE_CONFIGURATION","companyId",f.company(),"roleId",role,"expectedConfigurationVersion",0,"permissionIds",List.of(f.access()))),200);
+        var preview=write("POST","change-requests/"+draft+"/previews",Map.of("expectedDraftVersion",2),200);assertThat(preview.path("preview").path("id").stringValue()).isNotBlank();
+    }
+    private List<String> functionalCatalog(Fixture f)throws Exception{
+        var fn=new LinkedHashMap<String,Object>();fn.put("kind","NODE_CREATE");fn.put("localKey","function");fn.put("code","function");fn.put("name","功能");fn.put("nodeType","FUNCTION");fn.put("parentId",null);fn.put("parentLocalKey",null);fn.put("sortOrder",0);fn.put("enabled",true);fn.put("visibilityPermissionId",null);fn.put("visibilityPermissionLocalKey","view");
+        var commands=new ArrayList<Object>();commands.add(fn);
+        for(String code:List.of("view","edit")){var p=new LinkedHashMap<String,Object>();p.put("kind","PERMISSION_CREATE");p.put("localKey",code);p.put("functionId",null);p.put("functionLocalKey","function");p.put("code",code);p.put("name",code);p.put("menuEligible",code.equals("view"));p.put("enabled",true);commands.add(p);}
+        var input=Map.of("expectedCatalogVersion",1,"commands",commands,"reason","正式目录集成");var preview=write("POST","systems/"+f.system()+"/catalog-previews",input,200);var save=new LinkedHashMap<String,Object>(input);save.put("previewId",preview.path("id").stringValue());
+        var saved=write("POST","systems/"+f.system()+"/catalog-changes",save,200);var ids=new HashMap<String,String>();for(var row:saved.path("createdIds"))ids.put(row.path("localKey").stringValue(),row.path("id").stringValue());return List.of(f.access(),ids.get("view"),ids.get("edit"));
+    }
+    private String oaToken()throws Exception{
+        var now=Instant.now();var claims=new JWTClaimsSet.Builder().issuer("urn:rbac:oa").audience("rbac-oa-callback").subject(oaInstance).jwtID(id()).issueTime(Date.from(now)).expirationTime(Date.from(now.plusSeconds(300))).claim("oaInstanceId",oaInstance).build();
+        var token=new SignedJWT(new JWSHeader.Builder(JWSAlgorithm.RS256).keyID("oa").build(),claims);token.sign(new RSASSASigner(oa));return token.serialize();
+    }
+    private Map<String,Object> approve(String draft,long version)throws Exception{
+        var preview=write("POST","change-requests/"+draft+"/previews",Map.of("expectedDraftVersion",version),200);
+        write("POST","change-requests/"+draft+"/submissions",Map.of("expectedDraftVersion",version,"previewId",preview.path("preview").path("id").stringValue()),202);
+        assertThat(app.getBean(com.adgn.backend.oa.OaDeliveryService.class).deliver(draft)).isTrue();var fixed=read("change-requests/"+draft);
+        var input=Map.<String,Object>of("eventId",id(),"requestId",draft,"oaApprovalId",fixed.path("oaApprovalId").stringValue(),"submittedVersion",fixed.path("submittedVersion").longValue(),"contentDigest",fixed.path("contentDigest").stringValue(),"decision","APPROVED","isFinal",true,"decidedAt",Instant.now().toString(),"comment","正式模拟OA最终结果");
+        value(request("POST","oa/final-results",input,oaToken(),null),202);return input;
+    }
+    private JsonNode business(Fixture f)throws Exception{return value(request("POST","integration/authorization-queries",Map.of("employeeKey",f.employee(),"companyId",f.company()),f.businessToken(),null),200);}
+    @Test void realConfigurationGrantAndRevocationWorkflowControlsBusinessPermissions()throws Exception{
+        var f=fixture();var permissions=functionalCatalog(f);var created=role(f);String role=created.path("role").path("id").stringValue(),config=created.path("draftId").stringValue();
+        write("PUT","change-requests/"+config,Map.of("expectedDraftVersion",1,"reason","配置正式权限","content",Map.of("kind","ROLE_CONFIGURATION","companyId",f.company(),"roleId",role,"expectedConfigurationVersion",0,"permissionIds",permissions)),200);
+        approve(config,2);assertThat(read("roles/"+role).path("configurationVersion").longValue()).isZero();
+        app.getBean(com.adgn.backend.execution.ExecutionService.class).execute(config);assertThat(read("roles/"+role).path("configurationVersion").longValue()).isEqualTo(1);assertThat(business(f).path("canAccessSystem").booleanValue()).isFalse();
+        var baseline=write("POST","grant-baselines",Map.of("items",List.of(Map.of("employeeId",f.employee(),"roleId",role,"sourceCompanyId",f.company(),"sourceDepartmentId",f.department()))),200).path("items").get(0);
+        var line=Map.of("employeeId",f.employee(),"roleId",role,"sourceCompanyId",f.company(),"sourceDepartmentId",f.department(),"expectedRoleConfigurationVersion",baseline.path("roleConfigurationVersion").longValue(),"expectedSourceEpoch",baseline.path("sourceEpoch").longValue(),"expectedRelationVersion",baseline.path("relationVersion").longValue(),"employmentIds",json.convertValue(baseline.path("employmentIds"),List.class));
+        String grantDraft=write("POST","change-requests",Map.of("content",Map.of("kind","ROLE_GRANT","companyId",f.company(),"items",List.of(line)),"reason","正式授予"),201).path("id").stringValue();
+        var callback=approve(grantDraft,1);assertThat(business(f).path("canAccessSystem").booleanValue()).isFalse();app.getBean(com.adgn.backend.execution.ExecutionService.class).execute(grantDraft);
+        var allowed=business(f);assertThat(allowed.path("canAccessSystem").booleanValue()).isTrue();assertThat(allowed.path("operations").size()).isEqualTo(2);assertThat(allowed.path("menus").size()).isEqualTo(1);
+        value(request("POST","oa/final-results",callback,oaToken(),null),200);app.getBean(com.adgn.backend.execution.ExecutionService.class).execute(grantDraft);assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM execution_success WHERE request_id=?",Long.class,grantDraft)).isEqualTo(1);
+        var grants=read("grants?employeeId="+f.employee());assertThat(grants.path("items").size()).isEqualTo(1);var grant=grants.path("items").get(0);
+        String revoke=write("POST","change-requests",Map.of("content",Map.of("kind","ROLE_REVOCATION","companyId",f.company(),"items",List.of(Map.of("grantId",grant.path("id").stringValue(),"expectedRelationVersion",grant.path("relationVersion").longValue()))),"reason","正式撤销"),201).path("id").stringValue();
+        approve(revoke,1);assertThat(business(f).path("canAccessSystem").booleanValue()).isTrue();app.getBean(com.adgn.backend.execution.ExecutionService.class).execute(revoke);
+        var denied=business(f);assertThat(denied.path("canAccessSystem").booleanValue()).isFalse();assertThat(denied.path("operations").isEmpty()).isTrue();assertThat(read("grants?employeeId="+f.employee()).path("items").get(0).path("status").stringValue()).isEqualTo("REVOKED");assertThat(read("audit-events?changeRequestId="+revoke).path("total").longValue()).isPositive();
     }
 }

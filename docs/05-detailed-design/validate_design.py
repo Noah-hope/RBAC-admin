@@ -326,7 +326,9 @@ def checks(report):
                     and preparation.get('ownerAccepted') is False and preparation.get('mergedToMain') is False
                     and preparation.get('branch')=='codex/be-33-35-integration-handoff'
                     and preparation.get('evidence')=='BE-33-35-INTEGRATION-HANDOFF.md'
-                    and preparation.get('unresolvedDependencies')==(['BE-25','BE-27','BE-30','BE-31'] if task['id']=='BE-33' else ['BE-34']),
+                    and preparation.get('integratedMain')=='6b9a02e4406c5017e9b92b62bd41b026fc726f6c'
+                    and preparation.get('unresolvedDependencies')==(['BE-27','BE-30'] if task['id']=='BE-33' else ['BE-34'])
+                    and preparation.get('transitiveMissingDependencies')==(['BE-26'] if task['id']=='BE-33' else []),
                     'BE-33/35准备不能冒充依赖齐备或验收完成')
         if task['id']=='BE-18':
             progress=task.get('implementationProgress',{})

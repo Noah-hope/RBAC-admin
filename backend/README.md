@@ -1,5 +1,7 @@
 # 后端工程
 
+D-094更新：已接入 C 工作流并补真实配置/授予/撤销→B权限查询的集成回归，审批预览控制器/测试/演示步骤对齐原 /previews 契约。[发布证据工具](acceptance/README.md)只读校验并在缺依赖时拒绝通过，不等同服务器证明或自动发布。BE-33/35 仍开放；旧“未改生产代码/缺C”为第一阶段历史。
+
 D-094（2026-10-21）：新增 DeliveredModulesMySqlCheck 验证已交付 B/C/D 公共接口协作；`acceptance/verify_release.py` 只读检查发布证据，缺模块/报告/服务器证据退出 2，不自动发布或代负责人验收。复跑方式与依赖缺口见 [集成与交接准备](../docs/05-detailed-design/BE-33-35-INTEGRATION-HANDOFF.md)。BE-33/35 正式验收仍开放，未改业务生产代码。
 
 D-093（2026-10-21）：BE-18 的两个业务系统 POST 已在 codex/be-18-effective-permissions 实现；沿用现有 BUSINESS JWT 和数据库配置，无新增密钥/依赖/迁移，systemId 只取服务身份。接口、完整来源/菜单规则、上限与错误语义及实际测试见 [BE-18](../docs/05-detailed-design/BE-18-EFFECTIVE-PERMISSIONS.md)。本次未推送/合并/部署，不代记本人验收。

@@ -20,6 +20,11 @@ def source_digest(root,relative='backend/src/main'):
     for file in sorted(base.rglob('*')):
         if file.is_file():raw.extend(file.relative_to(base).as_posix().encode()+b'\0'+local(root,file.relative_to(root)).read_bytes())
     return sha(raw)
+def support_digest(root):
+    files=[p for base in ('backend/acceptance','tools') for p in (root/base).rglob('*.py')]
+    files+= [root/name for name in ('backend/pom.xml','backend/mvnw','backend/mvnw.cmd','backend/.mvn/wrapper/maven-wrapper.properties') if (root/name).is_file()]
+    files.sort()
+    return sha(b''.join(p.relative_to(root).as_posix().encode()+b'\0'+local(root,p.relative_to(root)).read_bytes() for p in files))
 
 def inspect(root,evidence):
     blockers=[]
@@ -45,6 +50,7 @@ def inspect(root,evidence):
     current_source=source_digest(root)
     if current_source!=evidence.get('sourceSha256'):block('SOURCE_DIGEST_MISMATCH','backend/src/main')
     if source_digest(root,'backend/src/test')!=evidence.get('testSourceSha256'):block('TEST_SOURCE_DIGEST_MISMATCH','backend/src/test')
+    if support_digest(root)!=evidence.get('supportSha256'):block('SUPPORT_DIGEST_MISMATCH','acceptance and demo tools')
     artifact=evidence.get('artifact',{})
     try: artifact_valid=sha(local(root,artifact['path']).read_bytes())==artifact['sha256']
     except (KeyError,ValueError,OSError): artifact_valid=False

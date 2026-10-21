@@ -26,6 +26,7 @@ class ReleaseGateTest(unittest.TestCase):
             raw=f'<testsuite name="example.{name}" tests="1" failures="0" errors="0" skipped="0"/>'.encode();self.write(path,raw);reports[path]=digest(raw)
         self.manifest=dict(schemaVersion=1,sourceSha256=digest(b'java/Example.java\0class Example {}\n'),artifact=dict(path='backend/target/app.jar',sha256=digest(b'candidate jar')),reports=reports,fullSuite=True)
         self.manifest['testSourceSha256']=digest(b'java/example/EngineMySqlCheck.java\0package example; class EngineMySqlCheck {}java/example/SuiteTest.java\0package example; class SuiteTest {}')
+        self.manifest['supportSha256']=digest(b'')
         for field in ('server','endToEnd','ownerHandoff'):
             path=f'docs/{field}.json';raw=json.dumps(dict(environment='TARGET_SERVER',artifactSha256=digest(b'candidate jar'),sourceSha256=self.manifest['sourceSha256'],checksPassed=True,reviewedBy='fixture owner')).encode()
             self.write(path,raw);self.manifest[field]=dict(verified=True,path=path,sha256=digest(raw))
@@ -55,6 +56,10 @@ class ReleaseGateTest(unittest.TestCase):
         self.write('backend/src/main/java/Example.java',b'class Changed {}');self.blocked('SOURCE_DIGEST_MISMATCH')
     def test_changed_test_source_invalidates_old_reports(self):
         self.write('backend/src/test/java/example/SuiteTest.java',b'package example; class SuiteTest { /* changed checks */ }');self.blocked('TEST_SOURCE_DIGEST_MISMATCH')
+    def test_changed_support_tool_invalidates_old_reports(self):
+        self.write('tools/demo_oa_result.py',b'print("changed helper")');self.blocked('SUPPORT_DIGEST_MISMATCH')
+    def test_changed_build_configuration_invalidates_old_reports(self):
+        self.write('backend/pom.xml',b'<project>changed dependencies</project>');self.blocked('SUPPORT_DIGEST_MISMATCH')
     def test_failed_or_skipped_tests_cannot_pass(self):
         for attr in ('failures','errors','skipped'):
             path='backend/target/surefire-reports/TEST-example.SuiteTest.xml';raw=f'<testsuite name="example.SuiteTest" tests="1" {attr}="1"/>'.encode();self.write(path,raw);self.manifest['reports'][path]=digest(raw);self.blocked('TESTS_NOT_GREEN')

@@ -3333,11 +3333,13 @@
       "mergedToMain": false,
       "branch": "codex/be-33-35-integration-handoff",
       "dependencyBase": "baeab61",
+      "integratedMain": "6b9a02e4406c5017e9b92b62bd41b026fc726f6c",
       "unresolvedDependencies": [
-        "BE-25",
         "BE-27",
-        "BE-30",
-        "BE-31"
+        "BE-30"
+      ],
+      "transitiveMissingDependencies": [
+        "BE-26"
       ]
     },
     "acceptanceScope": "对照全部后端AT收集各模块证据并运行跨模块场景，补齐全67入站契约及AT-38全链路；AT-36目标服务器和AT-39发布证据分别仍由BE-34/35完成。",
@@ -3469,9 +3471,11 @@
       "mergedToMain": false,
       "branch": "codex/be-33-35-integration-handoff",
       "dependencyBase": "baeab61",
+      "integratedMain": "6b9a02e4406c5017e9b92b62bd41b026fc726f6c",
       "unresolvedDependencies": [
         "BE-34"
-      ]
+      ],
+      "transitiveMissingDependencies": []
     },
     "acceptanceScope": "汇总AT-39完整Issue/PR/commit/候选包与发布证据，检查其他后端AT均有实际结果；有未通过项时不得宣布全量发布完成。",
     "useCases": [],
