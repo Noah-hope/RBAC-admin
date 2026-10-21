@@ -114,8 +114,8 @@
         "area": "申请、OA审批与执行、审计",
         "realName": null,
         "githubLogin": null,
-        "claimedBy": null,
-        "claimDecision": null,
+        "claimedBy": "USER",
+        "claimDecision": "D-086",
         "repositoryAccessVerified": false,
         "localEnvironmentVerified": false
       },
@@ -338,6 +338,39 @@
         "ownerAccepted": false,
         "deliveryMode": "LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH",
         "evidence": "BE-29-IMPORT-PRECHECK.md"
+      },
+      {
+        "taskIds": [
+          "BE-20"
+        ],
+        "decision": "D-088",
+        "date": "2026-10-21",
+        "branch": "main",
+        "sourceCommit": "310313a07e0321f58a5b1b03d3d59231fe2a17a6",
+        "mergeCommit": "a9b214cce38d4396120b3902ce19f2b7440bf4f1",
+        "remote": "origin",
+        "remoteRef": "refs/heads/main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "a9b214cce38d4396120b3902ce19f2b7440bf4f1",
+        "ownerAccepted": true,
+        "deliveryMode": "LOCAL_MERGE_AND_ATOMIC_PUSH",
+        "evidence": "BE-20-CHANGE-DRAFTS.md"
+      },
+      {
+        "taskIds": [
+          "BE-19",
+          "BE-22"
+        ],
+        "decision": "D-090",
+        "date": "2026-10-21",
+        "sourceCommit": "cc88885f2c97df838720fc2f7f0e524d72e56351",
+        "mergeCommit": "cf27f7f910bf5e904c89542f56e3f56fddd884d9",
+        "branch": "main",
+        "remote": "origin",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "cf27f7f910bf5e904c89542f56e3f56fddd884d9",
+        "ownerAccepted": true,
+        "evidence": "BE-19-22-AUDIT-REQUEST-QUERIES.md"
       }
     ]
   },

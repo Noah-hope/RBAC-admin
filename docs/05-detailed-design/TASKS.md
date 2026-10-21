@@ -1,6 +1,16 @@
 # 本地Issue草案与验收卡
 
-D-086（2026-10-20）：D要求BE-29推送完成后自行继续下一项。BE-29及交付记录已推送并回查main/86089d2，任务分支保留、D人工验收仍开放。已从该主线建立codex/be-26-source-closure，完成BE-26设计、端口衔接清单和11组TDD验收场景，见[BE-26设计与准备](BE-26-SOURCE-CLOSURE.md)。直接依赖BE-05/16/17已交付，但C/BE-20仍PLANNED且主线缺申请/claim写端口，故只推进可独立准备，BE-26保持PLANNED、implementationStarted=false，未改业务代码或运行本任务Java/SQL/HTTP。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED；BE-30仍须A/BE-27，不跨成员实现依赖。本次不扩展BE-29特定合并推送授权，准备提交仅在本地分支；下方不自动开新任务是此前边界。
+D-091（2026-10-21）：D明确开始执行BE-26，已接入main/7914788及C/BE-20、BE-19/22交付。D原准备编号D-086与C实施编号重复，统一为D-091，原f745648准备事实保留；C的D-086/088/089/090及验收/交付保持。首轮4项真实HTTP断言失败、0错误，目标预览路由404。BE-26进入IN_PROGRESS，复用WorkflowStateWriter/claim与既有SourceCloser、预览、guard、幂等和审计。共13项OWNER_ACCEPTED、5项IMPLEMENTED、6项IN_PROGRESS、11项PLANNED；不代D人工验收、不合并推送或开BE-27/30，下方未交付依赖/仅准备为历史。
+
+D-091（2026-10-20）：D要求BE-29推送完成后自行继续下一项。BE-29及交付记录已推送并回查main/86089d2，任务分支保留、D人工验收仍开放。已从该主线建立codex/be-26-source-closure，完成BE-26设计、端口衔接清单和11组TDD验收场景，见[BE-26设计与准备](BE-26-SOURCE-CLOSURE.md)。直接依赖BE-05/16/17已交付，但C/BE-20仍PLANNED且主线缺申请/claim写端口，故只推进可独立准备，BE-26保持PLANNED、implementationStarted=false，未改业务代码或运行本任务Java/SQL/HTTP。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED；BE-30仍须A/BE-27，不跨成员实现依赖。本次不扩展BE-29特定合并推送授权，准备提交仅在本地分支；下方不自动开新任务是此前边界。
+
+D-090（2026-10-21）：C明确“确认，然后继续完成剩下的任务”，接受BE-19/22既有137离线＋284真实MySQL/HTTP证据；人工演示未进行。来源cc88885f2c97df838720fc2f7f0e524d72e56351已no-ff合入main/cf27f7f910bf5e904c89542f56e3f56fddd884d9，合并树等于验证来源，main及任务分支原子推送且远程完整SHA回查一致。两项OWNER_ACCEPTED、mergedToMain=true。后续按BE-21→23→24→25→31连续实施，依赖沿同一任务分支继承，各项实现、本人确认、主线交付分开记录；不代其他成员验收、不部署。共13项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、12项PLANNED。下方待确认/待交付为历史。
+
+D-089（2026-10-21）：C要求继续其他任务，BE-19/22在BE-19-22-审计与申请查询（main/09abaa2）先设计及真实HTTP/MySQL RED，再实现审计列表/详情和申请列表/详情/时间线。当前单项完整范围先SQL过滤再统计/分页，关联主体与缺损目标投影不能绕过授权，审计仅投影历史公开字段。实现与实际验证见[BE-19/22](BE-19-22-AUDIT-REQUEST-QUERIES.md)。两项为IMPLEMENTED、ownerAccepted=false、mergedToMain=false，不代记人工验收或延用BE-20特定交付授权。其他C写链路仍PLANNED，已交付BE-20状态保持；共11项OWNER_ACCEPTED、7项IMPLEMENTED、5项IN_PROGRESS、12项PLANNED。下方旧状态/数量为历史。
+
+D-088实际交付（2026-10-21）：C在确认BE-20及逐项合并方案后明确“可以”，接受既有137离线＋265真实MySQL/HTTP验证并授权交付。来源310313a07e0321f58a5b1b03d3d59231fe2a17a6已无冲突no-ff合入远程main/a9b214cce38d4396120b3902ce19f2b7440bf4f1，合并树等于验证来源；main与BE-20-角色与变更草稿已原子推送并完整SHA回查一致，任务分支保留。BE-20为OWNER_ACCEPTED、mergedToMain=true，本机人工演示未进行；本轮仅复核原报告/jar摘要和静态追踪，不重跑代码未变的Java/SQL。D/BE-26技术依赖已交付，其他C任务仍开放，不自动开工或部署。共11项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、14项PLANNED。下方待验收/待交付为历史，见[BE-20](BE-20-CHANGE-DRAFTS.md)。
+
+D-086（2026-10-20）：本轮用户明确负责C并要求先列计划再执行。BE-20在BE-20-角色与变更草稿（main/86089d2）先设计及真实HTTP/MySQL RED，再实现新角色/三类草稿/完整目标/原子占用/编辑删除/当前授权幂等重放，以及供D调用的最小WorkflowStateWriter。验证及交接见[BE-20](BE-20-CHANGE-DRAFTS.md)。BE-20为IMPLEMENTED、ownerAccepted=false、mergedToMain=false；此前A/D认领和验收事实保留。BE-19及BE-21～25/31仍PLANNED，BE-26仍须本任务主线交付；不代记验收，不合并推送或自动开展其他任务。共10项OWNER_ACCEPTED、6项IMPLEMENTED、5项IN_PROGRESS、14项PLANNED，下方旧状态/数量为历史。
 
 D-085实际交付（2026-10-20）：成员D明确“合并推送吧”，BE-29接入A已交付BE-09后，来源db3419687f8dc43b1959564ddc19b0e7d32826ed已无冲突no-ff合入远程main/6506cda54c4898e736a2e730ba001294f8de4c2c，合并树等于已完整验证来源，任务分支codex/be-29-import-precheck保留。普通Git连接连续失败，改用官方GitHub Git API按本地对象原始SHA、force=false推送main和任务分支，远程两个完整SHA均回查一致。完整137离线＋240真实MySQL/HTTP及静态校验通过，专属资源清理关闭，原MySQL84仍Running；BE-29为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，既有人工验收保持。D原实施编号D-081与A冲突已统一为D-084；A的D-081/082/083及PR#3交付保留。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED；不强推或部署，下方未授权/待主线为历史。
 
@@ -253,7 +263,7 @@ D-074（2026-10-20）B 状态：BE-17/12 已由 1fb95ad 无冲突合入并交付
 
 ## BE-19 审计列表、详情与敏感访问
 
-- 状态：PLANNED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M11,M12。
+- 状态：OWNER_ACCEPTED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M11,M12。
 - 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-04,BE-06,BE-08；开发估算1.5/2.5/4h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：listAudit, getAudit。
@@ -265,7 +275,7 @@ D-074（2026-10-20）B 状态：BE-17/12 已由 1fb95ad 无冲突合入并交付
 
 ## BE-20 角色创建与配置/授予/撤销草稿、占用
 
-- 状态：PLANNED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M07,M12。
+- 状态：OWNER_ACCEPTED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M07,M12。
 - 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-05,BE-08,BE-13,BE-14；开发估算3/5/8h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：createRole, createChangeDraft, updateChangeDraft, deleteChangeDraft。
@@ -289,7 +299,7 @@ D-074（2026-10-20）B 状态：BE-17/12 已由 1fb95ad 无冲突合入并交付
 
 ## BE-22 申请列表、详情及安全时间线
 
-- 状态：PLANNED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M07,M11,M12。
+- 状态：OWNER_ACCEPTED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M07,M11,M12。
 - 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-20；开发估算1/2/3h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：listChangeRequests, getChangeRequest, listChangeEvents。
@@ -337,7 +347,7 @@ D-074（2026-10-20）B 状态：BE-17/12 已由 1fb95ad 无冲突合入并交付
 
 ## BE-26 直接来源关闭与统一申请失效编排
 
-- 状态：PLANNED；阶段BUSINESS；负责人D（成员代号），由负责人自检确认；模块M10,M12。
+- 状态：IN_PROGRESS；阶段BUSINESS；负责人D（成员代号），由负责人自检确认；模块M10,M12。
 - 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-05,BE-16,BE-20,BE-17；开发估算2.5/4.5/7h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：sourceClosePreview, closeSource。

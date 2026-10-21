@@ -1,13 +1,17 @@
 # 项目决策记录
 
-## 2026-10-20：交付BE-29后继续BE-26准备
+D-091（2026-10-21）：D明确开始执行BE-26，已接入main/7914788及C/BE-20、BE-19/22交付。D原准备编号D-086与C实施编号重复，统一为D-091，原f745648准备事实保留；C的D-086/088/089/090及验收/交付保持。首轮4项真实HTTP断言失败、0错误，目标预览路由404。BE-26进入IN_PROGRESS，复用WorkflowStateWriter/claim与既有SourceCloser、预览、guard、幂等和审计。共13项OWNER_ACCEPTED、5项IMPLEMENTED、6项IN_PROGRESS、11项PLANNED；不代D人工验收、不合并推送或开BE-27/30，下方未交付依赖/仅准备为历史。
+
+## 2026-10-20准备/2026-10-21实施：BE-26
 
 | 编号 | 授权依据 | 落地方式与边界 |
 | --- | --- | --- |
-| D-086 | D明确“你完成这个推送后自己开始执行下一项任务” | BE-29及交付记录远程SHA回查成功后，从main/86089d2建立BE-26分支。现C/BE-20仍PLANNED，按原技术依赖先完成可独立设计、接口衔接和验收准备，不将准备记为正式实现。待C实际交付后按TDD实施；不代C/BE-20或A/BE-27，不延用BE-29特定合并推送授权。 |
+| D-091 | D先要求BE-29推送后继续下一项，后于2026-10-21明确“开始执行BE-26” | BE-29及交付记录远程SHA回查成功后，从main/86089d2建立BE-26分支。现C/BE-20仍PLANNED，按原技术依赖先完成可独立设计、接口衔接和验收准备，不将准备记为正式实现。待C实际交付后按TDD实施；不代C/BE-20或A/BE-27，不延用BE-29特定合并推送授权。 |
 
-D-086（2026-10-20）：D要求BE-29推送完成后自行继续下一项。BE-29及交付记录已推送并回查main/86089d2，任务分支保留、D人工验收仍开放。已从该主线建立codex/be-26-source-closure，完成BE-26设计、端口衔接清单和11组TDD验收场景，见docs/05-detailed-design/BE-26-SOURCE-CLOSURE.md。直接依赖BE-05/16/17已交付，但C/BE-20仍PLANNED且主线缺申请/claim写端口，故只推进可独立准备，BE-26保持PLANNED、implementationStarted=false，未改业务代码或运行本任务Java/SQL/HTTP。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED；BE-30仍须A/BE-27，不跨成员实现依赖。本次不扩展BE-29特定合并推送授权，准备提交仅在本地分支；下方不自动开新任务是此前边界。
+D-091（2026-10-20）：D要求BE-29推送完成后自行继续下一项。BE-29及交付记录已推送并回查main/86089d2，任务分支保留、D人工验收仍开放。已从该主线建立codex/be-26-source-closure，完成BE-26设计、端口衔接清单和11组TDD验收场景，见docs/05-detailed-design/BE-26-SOURCE-CLOSURE.md。直接依赖BE-05/16/17已交付，但C/BE-20仍PLANNED且主线缺申请/claim写端口，故只推进可独立准备，BE-26保持PLANNED、implementationStarted=false，未改业务代码或运行本任务Java/SQL/HTTP。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED；BE-30仍须A/BE-27，不跨成员实现依赖。本次不扩展BE-29特定合并推送授权，准备提交仅在本地分支；下方不自动开新任务是此前边界。
 
+
+D-090（2026-10-21）：C明确“确认，然后继续完成剩下的任务”，接受BE-19/22既有137离线＋284真实MySQL/HTTP证据；人工演示未进行。来源cc88885f2c97df838720fc2f7f0e524d72e56351已no-ff合入main/cf27f7f910bf5e904c89542f56e3f56fddd884d9，合并树等于验证来源，main及任务分支原子推送且远程完整SHA回查一致。两项OWNER_ACCEPTED、mergedToMain=true。后续按BE-21→23→24→25→31连续实施，依赖沿同一任务分支继承，各项实现、本人确认、主线交付分开记录；不代其他成员验收、不部署。共13项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、12项PLANNED。下方待确认/待交付为历史。
 
 ## 2026-10-20：BE-29 合并与推送
 
@@ -389,3 +393,21 @@ D-071（2026-10-20）：用户要求检查其他成员 main 提交的兼容性�
 - 原需求清单映射未决问题，以正式用例记录为准。
 
 后续新增决策记录日期、原因、影响和关联交付物；变更已有决策时保留 Git 历史，并明确替代关系。
+
+## C认领与BE-20实施（2026-10-20）
+
+| 编号 | 授权依据 | 落地方式与边界 |
+| --- | --- | --- |
+| D-086 | 本轮用户明确“我就负责C的任务”，随后要求“先罗列计划再执行”；前文已选BE-20 | 在最新共同main/86089d2建立codex/be-20-change-drafts，先设计及真实HTTP/MySQL RED，再实现createRole、createChangeDraft、updateChangeDraft、deleteChangeDraft与C供D使用的最小状态失效端口。复用已有基座/身份/角色/来源端口及原表，不改变原需求或迁移。完整137离线＋265真实MySQL/HTTP及静态校验通过，随机库/账号/密钥已清理、专属进程已正常关闭。BE-20为IMPLEMENTED待本人确认及主线交付，不代记OWNER_ACCEPTED，不扩展既往其他成员的合并推送授权；A/D历史事实保留，其他C任务不自动展开。详见[BE-20](../05-detailed-design/BE-20-CHANGE-DRAFTS.md)。 |
+
+## BE-20负责人确认与主线交付（2026-10-21）
+
+| 编号 | 授权依据 | 落地方式与边界 |
+| --- | --- | --- |
+| D-088 | C在收到“建议先确认并交付BE-20”的任务状态与分支流程说明后明确“可以” | D-088（2026-10-21）：C在BE-20负责人确认与逐项合并建议后明确“可以”，接受既有137离线＋265真实MySQL/HTTP验证并授权交付。来源310313a07e0321f58a5b1b03d3d59231fe2a17a6已保留历史合入远程main/a9b214cce38d4396120b3902ce19f2b7440bf4f1，合并树等于验证来源；main和中文任务分支已原子推送，远程完整SHA回查一致。BE-20为OWNER_ACCEPTED、mergedToMain=true，人工演示未进行；本轮代码未变，仅复核报告/jar摘要与静态追踪，无新Java/SQL或部署。D/BE-26技术依赖已交付，其他C任务不自动开展，既有其他负责人验收保持。详细证据见docs/05-detailed-design/BE-20-CHANGE-DRAFTS.md。 |
+
+## C继续审计与申请查询（2026-10-21）
+
+| 编号 | 授权依据 | 落地方式与边界 |
+| --- | --- | --- |
+| D-089 | C明确“继续完成其他任务”，沿用已确认架构与按任务开发方式 | D-089（2026-10-21）：C要求继续其他任务，本轮在BE-19-22-审计与申请查询（main/09abaa2）先设计/TDD连续实现BE-19审计列表/详情及BE-22申请列表/详情/时间线，复用整份当前单项范围投影。两项为IMPLEMENTED待C负责人确认与共同主线交付；不会把BE-20的特定合并推送授权扩展到本轮。原始事件append-only，关联主体和缺损目标不能绕过授权，历史名称不使用当前值倒推；验证及本机步骤见docs/05-detailed-design/BE-19-22-AUDIT-REQUEST-QUERIES.md。BE-21/23/24/25/31仍PLANNED，其他成员状态保持。两项共享当前完整申请可见谓词，分别记录实施状态；不自行确认OWNER_ACCEPTED，不修改原需求、契约、迁移或公共事务，也不实现提交/OA/执行器。 |

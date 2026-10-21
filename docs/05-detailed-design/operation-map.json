@@ -1511,7 +1511,7 @@
         "RoleCreated"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "getRole",
@@ -2253,7 +2253,7 @@
         "ChangeRequestPage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "createChangeDraft",
@@ -2343,7 +2343,7 @@
         "ChangeRequest"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "getChangeRequest",
@@ -2423,7 +2423,7 @@
         "ChangeRequest"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "updateChangeDraft",
@@ -2518,7 +2518,7 @@
         "ChangeRequest"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "deleteChangeDraft",
@@ -2614,7 +2614,7 @@
     "successResponseModels": {
       "204": []
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "changePreview",
@@ -2968,7 +2968,7 @@
         "ChangeEventPage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "listPreviewEmployees",
@@ -4346,7 +4346,7 @@
         "AuditEventPage"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "getAudit",
@@ -4419,7 +4419,7 @@
         "AuditDetail"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "OWNER_ACCEPTED_MAIN_DELIVERED"
   },
   {
     "operationId": "uploadImportFile",
