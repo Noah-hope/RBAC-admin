@@ -27,6 +27,8 @@ GRANT_MUTATION_SOURCE_COMMIT = 'dba2eaab8990fd17780d7f655fdfa049a6f7b2e1'
 GRANT_MUTATION_MERGE_COMMIT = '7ab021a80e26cbf4e3b4bc245f574fcd5c31c2ff'
 IMPORT_PRECHECK_SOURCE_COMMIT = 'db3419687f8dc43b1959564ddc19b0e7d32826ed'
 IMPORT_PRECHECK_MERGE_COMMIT = '6506cda54c4898e736a2e730ba001294f8de4c2c'
+SOURCE_CLOSURE_SOURCE_COMMIT = '857d4a9d20fa43578f70385d256b86ce02ad3fdc'
+SOURCE_CLOSURE_MERGE_COMMIT = 'b00ffc98277e754757b0e3d9bd0fe3d920db53b4'
 SCOPE_CREATE_SOURCE_COMMIT = '0fee462503274fbed1ab03826c8d0723c9825c19'
 SCOPE_CREATE_MERGE_COMMIT = '5f42a2cff11d68c49a4926373eeee97e3f5e8889'
 SCOPE_CREATE_PR_URL = 'https://github.com/Noah-hope/RBAC-admin/pull/3'
@@ -504,6 +506,10 @@ for task in TASKS:
         task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=GRANT_MUTATION_MERGE_COMMIT,
             sourceCommit=GRANT_MUTATION_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=GRANT_MUTATION_MERGE_COMMIT,
             deliveryDecision='D-080')
+    if task['id']=='BE-26':
+        task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=SOURCE_CLOSURE_MERGE_COMMIT,
+            sourceCommit=SOURCE_CLOSURE_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=SOURCE_CLOSURE_MERGE_COMMIT,
+            deliveryDecision='D-094',integrationBase='6b9a02e')
     if task['id']=='BE-29':
         task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=IMPORT_PRECHECK_MERGE_COMMIT,
             sourceCommit=IMPORT_PRECHECK_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=IMPORT_PRECHECK_MERGE_COMMIT,
@@ -597,6 +603,9 @@ def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text = title+'\n\n'+'D-093集成结果（2026-10-21）：接入远程main/6b9a02e及C/BE-21/23/24/25/31后，完整clean verify/mysql-check通过，139项离线/21组＋350项真实MySQL/HTTP/23组，失败/错误/跳过0，日志backend/.tmp/be26-delivery-final.log。首轮1项演示脚本因本机python3商店占位退出9009，临时测试目录配置真实Python入口后完整重跑通过；未因此修改业务代码或永久环境变量。随机库/账号/测试密钥目录均0，专属MySQL子进程17336正常关闭，原MySQL84仍Running。BE-26保持IMPLEMENTED、ownerAccepted=false，主线交付由用户明确“先进行合并推送”授权，实际成功后登记；共13项OWNER_ACCEPTED、11项IMPLEMENTED、5项IN_PROGRESS、6项PLANNED。原D编号D-091与C重复统一为D-093，C的D-091/092及双方历史保持。'+'\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\n'+'D-094实际交付（2026-10-21）：D明确“先进行合并推送”。BE-26已接入远程main/6b9a02e的C工作流，来源857d4a9d20fa43578f70385d256b86ce02ad3fdc已no-ff合入远程main/b00ffc98277e754757b0e3d9bd0fe3d920db53b4，合并树等于集成验证来源。普通Git连接超时，改用官方GitHub Git API按本地对象原始SHA、force=false交付，main及codex/be-26-source-closure两个完整SHA回查一致，任务分支保留。集成完整139离线/21组＋350真实MySQL/HTTP/23组及静态校验通过，失败/错误/跳过0；本机python3商店占位导致首轮1项环境失败，临时测试入口修正后完整重跑通过，业务代码未因此修改。随机schema/账号/密钥目录均0，专属MySQL子进程17336正常关闭，原MySQL84仍Running。BE-26为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，D人工验收仍开放，其他成员状态保持；共13项OWNER_ACCEPTED、11项IMPLEMENTED、5项IN_PROGRESS、6项PLANNED。原D实施D-091与C重复，统一D-093，原f745648/b011a8a及C的D-091/092事实保留。用户另要求交付后自行继续下一项，后续按依赖核对BE-30，不代A实施BE-27、不部署。下方未授权/待交付为历史。'+'\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -705,6 +714,10 @@ def generate():
         ownerAccepted=True,evidence='BE-19-22-AUDIT-REQUEST-QUERIES.md'))
     phase_plan['business']['additionalMainDeliveries'].append(dict(taskIds=['BE-21','BE-23','BE-24','BE-25','BE-31'],decision='D-092',date='2026-10-21',
         sourceCommit='adab1861906dc7d973f796961249e1ef87563e29',mergeCommit='311aa5d5cbc3d7bfbd064888b4172d48de0a0e99',remote='origin',branch='main',pushVerified=True,verifiedRemoteCommit='311aa5d5cbc3d7bfbd064888b4172d48de0a0e99',ownerAccepted=False,evidence='BE-21-31-APPROVAL-WORKFLOW.md'))
+    phase_plan['business']['additionalMainDeliveries'].append(dict(taskIds=['BE-26'],decision='D-094',date='2026-10-21',
+        branch='main',sourceCommit=SOURCE_CLOSURE_SOURCE_COMMIT,mergeCommit=SOURCE_CLOSURE_MERGE_COMMIT,
+        remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=SOURCE_CLOSURE_MERGE_COMMIT,
+        ownerAccepted=False,deliveryMode='LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH',evidence='BE-26-SOURCE-CLOSURE.md'))
     dump('delivery-phases.json',phase_plan)
     dump('modules.json',modules);dump('acceptance.json',CASES);dump('issues.json',TASKS)
     lines=['# 模块结构与维护责任','','修订1.4/D-055：基座已确认并纳入主线，30项任务已登记A～D成员代号，实名与GitHub账号映射待补。D-056用户认领A，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED，由负责人自行确认完成（D-051）。分工详见[四人分工](TEAM-ASSIGNMENT.md)。公共包前缀`com.adgn.backend`、13个逻辑模块及技术依赖不变。','','| 模块 | 包后缀/负责人 | 编译依赖 | 职责与主要接口 |','| --- | --- | --- | --- |']
@@ -746,7 +759,7 @@ def generate():
             acceptance=sorted(set(task['acceptance']+(['AT-37'] if row['direction']=='INBOUND' else ['AT-20']))),
             parameters=parameter_names,requestModels=sorted(schema_refs(operation.get('requestBody',{}),api)),
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
-            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08','BE-09','BE-19','BE-20','BE-22'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-28','BE-29'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in {'BE-21','BE-23','BE-24','BE-25','BE-31'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN' if task['id']=='BE-26' else 'PLANNED_NOT_IMPLEMENTED'))))))
+            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08','BE-09','BE-19','BE-20','BE-22'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-28','BE-29'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in {'BE-21','BE-23','BE-24','BE-25','BE-31'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id']=='BE-26' else 'PLANNED_NOT_IMPLEMENTED'))))))
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
         owned=[r for r in op_map if r['issue']==task['id']]

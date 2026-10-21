@@ -1,5 +1,16 @@
 # BE-26 直接来源关闭与统一申请失效编排
 
+## D-094集成交付证据
+
+- 集成基线：`6b9a02e4406c5017e9b92b62bd41b026fc726f6c`，包含C/BE-21/23/24/25/31，不改其业务代码和负责人确认。
+- BE-26最终来源：`857d4a9d20fa43578f70385d256b86ce02ad3fdc`；主线合并：`b00ffc98277e754757b0e3d9bd0fe3d920db53b4`；双亲和合并树已校验，两个远程完整SHA已回查。
+- 完整命令：backend内显式JDK21及专属隔离MySQL执行 `./mvnw.cmd -q clean verify -Pmysql-check`，日志`backend/.tmp/be26-delivery-final.log`，退出0。139离线/21组、350真实MySQL/HTTP/23组，失败/错误/跳过0，含BE-26的34项与C新增工作流32项。
+- 首轮`be26-delivery-integration.log`为139＋350，1项失败、0错误：`demoResultScriptUsesLiveRequestAndTrustedCallbackWithoutPrintingToken`的python3商店占位退出9009；临时测试目录使用实际Python入口及进程级环境后完整重跑，不改项目实现或永久PATH。
+- 集成jar SHA256：`5c1261bd0111e2de12c055c9359a5febe9e088fb16a4a2d49beeb200899efccc`。专属测试资源清空、MySQL正常关闭；用户原MySQL84保持Running。下方137＋318及旧jar为集成前历史证据。
+- 交付后BE-26仍IMPLEMENTED待D人工确认；A的BE-27已具备本任务技术依赖，BE-30仍按BE-27实际主线交付核对。
+
+D-094实际交付（2026-10-21）：D明确“先进行合并推送”。BE-26已接入远程main/6b9a02e的C工作流，来源857d4a9d20fa43578f70385d256b86ce02ad3fdc已no-ff合入远程main/b00ffc98277e754757b0e3d9bd0fe3d920db53b4，合并树等于集成验证来源。普通Git连接超时，改用官方GitHub Git API按本地对象原始SHA、force=false交付，main及codex/be-26-source-closure两个完整SHA回查一致，任务分支保留。集成完整139离线/21组＋350真实MySQL/HTTP/23组及静态校验通过，失败/错误/跳过0；本机python3商店占位导致首轮1项环境失败，临时测试入口修正后完整重跑通过，业务代码未因此修改。随机schema/账号/密钥目录均0，专属MySQL子进程17336正常关闭，原MySQL84仍Running。BE-26为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，D人工验收仍开放，其他成员状态保持；共13项OWNER_ACCEPTED、11项IMPLEMENTED、5项IN_PROGRESS、6项PLANNED。原D实施D-091与C重复，统一D-093，原f745648/b011a8a及C的D-091/092事实保留。用户另要求交付后自行继续下一项，后续按依赖核对BE-30，不代A实施BE-27、不部署。下方未授权/待交付为历史。
+
 D-093集成结果（2026-10-21）：接入远程main/6b9a02e及C/BE-21/23/24/25/31后，完整clean verify/mysql-check通过，139项离线/21组＋350项真实MySQL/HTTP/23组，失败/错误/跳过0，日志backend/.tmp/be26-delivery-final.log。首轮1项演示脚本因本机python3商店占位退出9009，临时测试目录配置真实Python入口后完整重跑通过；未因此修改业务代码或永久环境变量。随机库/账号/测试密钥目录均0，专属MySQL子进程17336正常关闭，原MySQL84仍Running。BE-26保持IMPLEMENTED、ownerAccepted=false，主线交付由用户明确“先进行合并推送”授权，实际成功后登记；共13项OWNER_ACCEPTED、11项IMPLEMENTED、5项IN_PROGRESS、6项PLANNED。原D编号D-091与C重复统一为D-093，C的D-091/092及双方历史保持。
 
 D-093实际结果（2026-10-21）：BE-26两个公开操作与统一RequestInvalidator已完成设计/TDD，完整137离线/20组＋318真实MySQL/HTTP/22组及静态追踪通过，失败/错误/跳过0；含34项本任务真实验收。覆盖逻辑0、100来源、整份失效与全部claim/outbox、原范围实质失覆盖、独立角色/来源任职、隐藏混合申请及统计回放授权、并发与第N项/审计故障回滚。随机schema/账号/测试密钥目录均0，专属MySQL子进程27740正常关闭，原MySQL84仍Running。BE-26登记IMPLEMENTED、ownerAccepted=false、mergedToMain=false，只本地任务分支提交，既有各成员验收不代确认。共13项OWNER_ACCEPTED、6项IMPLEMENTED、5项IN_PROGRESS、11项PLANNED；BE-27/30未实施，不自动合并推送或部署。交接见docs/05-detailed-design/BE-26-SOURCE-CLOSURE.md，下方IN_PROGRESS/待实现为历史。

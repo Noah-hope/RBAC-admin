@@ -390,6 +390,23 @@
         "verifiedRemoteCommit": "311aa5d5cbc3d7bfbd064888b4172d48de0a0e99",
         "ownerAccepted": false,
         "evidence": "BE-21-31-APPROVAL-WORKFLOW.md"
+      },
+      {
+        "taskIds": [
+          "BE-26"
+        ],
+        "decision": "D-094",
+        "date": "2026-10-21",
+        "branch": "main",
+        "sourceCommit": "857d4a9d20fa43578f70385d256b86ce02ad3fdc",
+        "mergeCommit": "b00ffc98277e754757b0e3d9bd0fe3d920db53b4",
+        "remote": "origin",
+        "remoteRef": "refs/heads/main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "b00ffc98277e754757b0e3d9bd0fe3d920db53b4",
+        "ownerAccepted": false,
+        "deliveryMode": "LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH",
+        "evidence": "BE-26-SOURCE-CLOSURE.md"
       }
     ]
   },

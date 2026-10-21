@@ -2621,10 +2621,16 @@
       "httpImplemented": true,
       "internalWritePortImplemented": true,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
-      "scope": "DIRECT_SOURCE_CLOSE_AND_SHARED_REQUEST_INVALIDATION_ONLY_NOT_EMPLOYEE_SCOPE_OR_IMPORT_ENTRYPOINTS"
+      "scope": "DIRECT_SOURCE_CLOSE_AND_SHARED_REQUEST_INVALIDATION_ONLY_NOT_EMPLOYEE_SCOPE_OR_IMPORT_ENTRYPOINTS",
+      "mainMergeCommit": "b00ffc98277e754757b0e3d9bd0fe3d920db53b4",
+      "sourceCommit": "857d4a9d20fa43578f70385d256b86ce02ad3fdc",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "b00ffc98277e754757b0e3d9bd0fe3d920db53b4",
+      "deliveryDecision": "D-094",
+      "integrationBase": "6b9a02e"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
