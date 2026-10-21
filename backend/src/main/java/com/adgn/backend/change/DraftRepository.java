@@ -28,7 +28,7 @@ public final class DraftRepository {
         replaceTargets(c,old.id(),old.kind(),targets);return get(old.id());
     }
     public void delete(WriteContext<?> c,String id){c.requireActive(source);jdbc.update("DELETE FROM change_target WHERE request_id=?",id);if(jdbc.update("DELETE FROM change_request WHERE id=? AND state='DRAFT'",id)!=1)throw new PersistenceFailure(PersistenceFailure.Kind.DATA_INTEGRITY_ERROR,null);}
-    private void replaceTargets(WriteContext<?> c,String id,String kind,List<Target> targets){
+    void replaceTargets(WriteContext<?> c,String id,String kind,List<Target> targets){
         c.requireActive(source);jdbc.update("DELETE FROM change_target WHERE request_id=?",id);int line=0;
         for(var t:targets)jdbc.update("INSERT INTO change_target(request_id,line_no,line_kind,company_id,system_id,department_id,employee_id,role_id,source_id,baseline_id,grant_id,expected_configuration_version,expected_source_epoch,expected_relation_version,target_snapshot) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",id,line++,kind,t.company(),t.system(),t.department(),t.employee(),t.role(),t.source(),t.baseline(),t.grant(),t.configurationVersion(),t.sourceEpoch(),t.relationVersion(),json.writeValueAsString(t.snapshot()));
     }

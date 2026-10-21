@@ -123,3 +123,6 @@ curl --fail http://127.0.0.1:8080/actuator/health
 BE-34 在独立恢复环境演练数据库与文件恢复，核对审计、会话撤销和已受理外部事实后才确认服务器验收。保留周期、RPO/RTO 尚未确认；本轮不宣称服务器或完整业务恢复已通过。
 
 参考：[Boot 独立入口](https://docs.spring.io/spring-boot/4.0/specification/executable-jar/property-launcher.html)、[systemd 执行配置](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html)、[nginx 代理](https://nginx.org/en/docs/http/ngx_http_proxy_module.html)。模板应按目标服务器安装版本复核。
+
+
+申请、OA受理与获批执行的本机演示见[演示OA步骤](DEMO-OA.md)，受控CLI变量见[模板](demo.env.example)。
