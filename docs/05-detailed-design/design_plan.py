@@ -230,6 +230,13 @@ for case in CASES:
         case.update(status='PARTIALLY_VERIFIED',evidence='BE-33-35-INTEGRATION-HANDOFF.md',
             verificationScope='BE33_CONFIG_GRANT_REVOKE_SOURCE_CLOSE_LATE_APPROVAL_AND_NEW_EPOCH_DEMO_ONLY_NOT_IMPORT_STATUS_RESTORE_OR_TARGET_SERVER')
 
+for case in CASES:
+    if case['id'] in {'AT-08','AT-19','AT-24','AT-31'}:
+        case['status']='PARTIALLY_VERIFIED'
+        case.setdefault('evidence','BE-27-CROSS-DOMAIN-LIFECYCLE.md')
+        case.setdefault('additionalEvidence',[]).append('BE-27-CROSS-DOMAIN-LIFECYCLE.md')
+        case['verificationScope']='; '.join(filter(None,[case.get('verificationScope',''),'BE27_EMPLOYEE_STATE_SCOPE_REPLACEMENT_PERSISTENT_INVALIDATION_AND_RESTORE_NO_REGRANT_ONLY_NOT_IMPORT_BATCH_OR_TARGET_SERVER']))
+
 TASKS = []
 def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
     foundation = n <= 5
@@ -353,6 +360,14 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             branch='BE-21-31-申请审批与执行',dependencyBase='7914788',claimedOwnerSlot='C',claimedBy='USER',claimSource='USER_MESSAGE',
             realExternalOaConnected=False,manualDemoVerified=False,deliveryDecision='D-092',
             sourceCommit='adab1861906dc7d973f796961249e1ef87563e29',mainMergeCommit='311aa5d5cbc3d7bfbd064888b4172d48de0a0e99',pushVerified=True,verifiedRemoteCommit='311aa5d5cbc3d7bfbd064888b4172d48de0a0e99')
+    if n == 27:
+        TASKS[-1]['status']='IMPLEMENTED'
+        TASKS[-1]['implementationProgress']=dict(evidence='BE-27-CROSS-DOMAIN-LIFECYCLE.md',decision='D-099',
+            scope='EMPLOYEE_GLOBAL_STATE_AND_SCOPE_REPLACEMENT_ATOMIC_LIFECYCLE',
+            implemented=True,httpImplemented=True,internalWritePortImplemented=True,
+            ownerAccepted=False,mergedToMain=False,databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
+            branch='codex/be-27-cross-domain-invalidation',dependencyBase='8ad17e4',claimedOwnerSlot='A',claimSource='USER_MESSAGE',manualDemoVerified=False,
+            automatedUnitTests=139,automatedMySqlTests=406,taskMySqlTests=31,auxiliaryTests=18)
     if n == 20:
         TASKS[-1]['status']='OWNER_ACCEPTED'
         TASKS[-1]['implementationProgress']=dict(evidence='BE-20-CHANGE-DRAFTS.md',decision='D-086',
@@ -659,6 +674,9 @@ def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text = title+'\n\n'+'D-098实际主线交付（2026-10-21）：B 明确要求“把你做的东西弄好，然后做好测试后就合并”。来源 ba2178c60b1ec78b777952845b7bb71e5c9161ce 已无冲突 no-ff 合入并推送远程 main/43aeab78fbbf01acd568ff49c8893349e849d958，双亲和合并树等于已验证来源，远程完整 SHA 已回查。合并后完整139普通＋375真实MySQL/HTTP、18辅助工具及静态追踪通过，失败/错误/跳过0；隔离库/账号0/0、密钥清理、专属MySQL关闭。常规Git网络卡住后停止本轮卡住进程，改用官方GitHub Git API按原始SHA、force=false交付。BE-18为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，B六项业务代码均已交付主线；BE-33/35仅已完成的集成/交接准备随同交付，正式任务保持PLANNED，仍缺A/BE-27、D/BE-30及A/BE-34。保留任务分支、不代记本人验收、不部署；下方不合并/未交付为历史，本条后续仅补交付证据文字。'+'\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\nD-099（2026-10-21）：A要求同步远程并开始BE-27，已在main/8ad17e4上独立实现员工状态预览/保存及范围替换预览/保存，复用BE-16/26的来源与整份申请失效端口。完整139普通＋406真实MySQL/HTTP（含本任务31项）、18辅助工具及静态校验通过，失败/错误/跳过0；专属资源清理关闭，原MySQL84仍Running。详细证据见[BE-27交接](BE-27-CROSS-DOMAIN-LIFECYCLE.md)。实现、本人确认和主线交付分别记录，BE-27为IMPLEMENTED、ownerAccepted=false、mergedToMain=false，不代B/C/D验收，不推送/合并/部署或实施BE-30。下方BE-27尚未实现为历史。\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -817,6 +835,8 @@ def generate():
             parameters=parameter_names,requestModels=sorted(schema_refs(operation.get('requestBody',{}),api)),
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
             status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08','BE-09','BE-19','BE-20','BE-22'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-26','BE-28','BE-29'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in {'BE-21','BE-23','BE-24','BE-25','BE-31'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id']=='BE-18' else 'PLANNED_NOT_IMPLEMENTED'))))))
+    for entry in op_map:
+        if entry['issue']=='BE-27':entry['status']='IMPLEMENTED_PENDING_OWNER_AND_MAIN'
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
         owned=[r for r in op_map if r['issue']==task['id']]

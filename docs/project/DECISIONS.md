@@ -1,5 +1,7 @@
 # 项目决策记录
 
+D-099（2026-10-21）：A要求同步远程并开始BE-27，已快进main/8ad17e4并建立codex/be-27-cross-domain-invalidation。先设计、真实HTTP RED再实现员工状态和范围替换四入口，复用BE-16/26与既有身份/预览/幂等/审计；完整139普通＋406真实MySQL/HTTP（含本任务31项）、18辅助工具及静态校验通过，失败/错误/跳过0；专属库/账号/密钥均0且实例关闭、原MySQL84仍Running。证据见docs/05-detailed-design/BE-27-CROSS-DOMAIN-LIFECYCLE.md。BE-27为IMPLEMENTED待A确认及主线交付，不代其他成员验收，不推送/合并/部署或实施BE-30；无关.codeartsdoer保留。下方BE-27未实现为历史。
+
 ## B 测试后合入主线（2026-10-21）
 
 | 编号 | 用户授权 | 范围与边界 |

@@ -85,6 +85,7 @@ def checks(report):
                       'AT-22':'BE-16-GRANT-MUTATIONS.md','AT-41':'BE-16-GRANT-MUTATIONS.md','AT-25':'BE-29-IMPORT-PRECHECK.md','AT-16':'BE-20-CHANGE-DRAFTS.md','AT-17':'BE-20-CHANGE-DRAFTS.md','AT-18':'BE-19-22-AUDIT-REQUEST-QUERIES.md','AT-34':'BE-19-22-AUDIT-REQUEST-QUERIES.md','AT-20':'BE-21-31-APPROVAL-WORKFLOW.md','AT-21':'BE-21-31-APPROVAL-WORKFLOW.md','AT-23':'BE-21-31-APPROVAL-WORKFLOW.md','AT-35':'BE-21-31-APPROVAL-WORKFLOW.md'}
     partial_evidence['AT-30']='BE-18-EFFECTIVE-PERMISSIONS.md'
     partial_evidence['AT-38']='BE-33-35-INTEGRATION-HANDOFF.md'
+    partial_evidence['AT-24']='BE-27-CROSS-DOMAIN-LIFECYCLE.md'
     require(all(c['status']==('PARTIALLY_VERIFIED' if c['id'] in partial_evidence else 'DESIGNED_NOT_RUN') for c in cases),'验收局部/完整状态不符')
     require(all(c.get('evidence')==partial_evidence[c['id']] for c in cases if c['status']=='PARTIALLY_VERIFIED'),'局部验收缺实施证据')
     deferred={c['id'] for c in cases if c['delivery']=='FRONTEND_DEFERRED'}
@@ -338,7 +339,14 @@ def checks(report):
     referenced=set()
     for task in tasks:
         expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-08':'OWNER_ACCEPTED','BE-09':'OWNER_ACCEPTED','BE-10':'IMPLEMENTED','BE-11':'IN_PROGRESS','BE-12':'IN_PROGRESS','BE-13':'IN_PROGRESS','BE-14':'IMPLEMENTED','BE-15':'IN_PROGRESS','BE-16':'IMPLEMENTED','BE-17':'IN_PROGRESS','BE-19':'OWNER_ACCEPTED','BE-21':'IMPLEMENTED','BE-23':'IMPLEMENTED','BE-24':'IMPLEMENTED','BE-25':'IMPLEMENTED','BE-31':'IMPLEMENTED','BE-20':'OWNER_ACCEPTED','BE-22':'OWNER_ACCEPTED','BE-26':'IMPLEMENTED','BE-28':'IMPLEMENTED','BE-29':'IMPLEMENTED','BE-32':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
-        if task['id']=='BE-18': expected_status='IMPLEMENTED'
+        if task['id'] in {'BE-18','BE-27'}: expected_status='IMPLEMENTED'
+        if task['id']=='BE-27':
+            progress=task.get('implementationProgress',{})
+            require(progress.get('implemented') is True and progress.get('httpImplemented') is True
+                    and progress.get('internalWritePortImplemented') is True and progress.get('ownerAccepted') is False
+                    and progress.get('mergedToMain') is False and progress.get('decision')=='D-099'
+                    and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
+                    and progress.get('evidence')=='BE-27-CROSS-DOMAIN-LIFECYCLE.md','BE-27实现不可代记本人确认或主线交付')
         require(task['status']==expected_status,'任务准备/实现状态不符')
         if task['id'] in {'BE-33','BE-35'}:
             preparation=task.get('preparationProgress',{})
@@ -727,6 +735,7 @@ def checks(report):
         if task['id'] in {'BE-19','BE-22'}: expected_operation_status='OWNER_ACCEPTED_MAIN_DELIVERED'
         if task['id'] in {'BE-21','BE-23','BE-24','BE-25','BE-31'}: expected_operation_status='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
         if task['id']=='BE-18': expected_operation_status='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
+        if task['id']=='BE-27': expected_operation_status='IMPLEMENTED_PENDING_OWNER_AND_MAIN'
         require(set(row['acceptance'])<=cids and row['status']==expected_operation_status,'验收引用/实施状态不符')
         if direction=='INBOUND':require('AT-37'in row['acceptance'],'入站缺全契约验收')
         require(set(row['requestModels'])<=api['components']['schemas'].keys(),'未知输入模型')
