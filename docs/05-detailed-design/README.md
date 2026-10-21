@@ -1,5 +1,11 @@
 # 后端详细设计与协作实施入口
 
+D-093集成结果（2026-10-21）：接入远程main/6b9a02e及C/BE-21/23/24/25/31后，完整clean verify/mysql-check通过，139项离线/21组＋350项真实MySQL/HTTP/23组，失败/错误/跳过0，日志backend/.tmp/be26-delivery-final.log。首轮1项演示脚本因本机python3商店占位退出9009，临时测试目录配置真实Python入口后完整重跑通过；未因此修改业务代码或永久环境变量。随机库/账号/测试密钥目录均0，专属MySQL子进程17336正常关闭，原MySQL84仍Running。BE-26保持IMPLEMENTED、ownerAccepted=false，主线交付由用户明确“先进行合并推送”授权，实际成功后登记；共13项OWNER_ACCEPTED、11项IMPLEMENTED、5项IN_PROGRESS、6项PLANNED。原D编号D-091与C重复统一为D-093，C的D-091/092及双方历史保持。
+
+D-093：已完成[BE-26来源关闭与统一申请失效](BE-26-SOURCE-CLOSURE.md)，完整137离线＋318真实MySQL/HTTP及静态校验通过，IMPLEMENTED待D负责人确认和主线交付。复用已交付C/BE-20状态/占用及BE-19/22的安全可见性，未实施BE-27/30或真实OA链路。
+
+D-085：BE-29已合入并推送main/6506cda，交付记录86089d2远程回查一致，完整137离线＋240真实MySQL/HTTP通过，仍待D人工验收，见[交接](BE-29-IMPORT-PRECHECK.md)。D-093按用户要求继续下一项，已完成[BE-26设计与验收准备](BE-26-SOURCE-CLOSURE.md)；C/BE-20未交付，BE-26仍PLANNED，未运行本任务业务测试。
+
 C的BE-19/22读取接口已在本地任务分支实现、待负责人确认及主线交付，见[审计与申请查询交接](BE-19-22-AUDIT-REQUEST-QUERIES.md)。
 
 C的BE-20已获负责人确认并交付共同main，其余C任务仍开放，见[设计与验收交接](BE-20-CHANGE-DRAFTS.md)。
