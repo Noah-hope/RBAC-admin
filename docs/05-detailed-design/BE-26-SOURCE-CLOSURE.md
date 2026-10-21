@@ -1,10 +1,10 @@
 # BE-26 直接来源关闭与统一申请失效编排
 
-D-091实际结果（2026-10-21）：BE-26两个公开操作与统一RequestInvalidator已完成设计/TDD，完整137离线/20组＋318真实MySQL/HTTP/22组及静态追踪通过，失败/错误/跳过0；含34项本任务真实验收。覆盖逻辑0、100来源、整份失效与全部claim/outbox、原范围实质失覆盖、独立角色/来源任职、隐藏混合申请及统计回放授权、并发与第N项/审计故障回滚。随机schema/账号/测试密钥目录均0，专属MySQL子进程27740正常关闭，原MySQL84仍Running。BE-26登记IMPLEMENTED、ownerAccepted=false、mergedToMain=false，只本地任务分支提交，既有各成员验收不代确认。共13项OWNER_ACCEPTED、6项IMPLEMENTED、5项IN_PROGRESS、11项PLANNED；BE-27/30未实施，不自动合并推送或部署。交接见docs/05-detailed-design/BE-26-SOURCE-CLOSURE.md，下方IN_PROGRESS/待实现为历史。
+D-093实际结果（2026-10-21）：BE-26两个公开操作与统一RequestInvalidator已完成设计/TDD，完整137离线/20组＋318真实MySQL/HTTP/22组及静态追踪通过，失败/错误/跳过0；含34项本任务真实验收。覆盖逻辑0、100来源、整份失效与全部claim/outbox、原范围实质失覆盖、独立角色/来源任职、隐藏混合申请及统计回放授权、并发与第N项/审计故障回滚。随机schema/账号/测试密钥目录均0，专属MySQL子进程27740正常关闭，原MySQL84仍Running。BE-26登记IMPLEMENTED、ownerAccepted=false、mergedToMain=false，只本地任务分支提交，既有各成员验收不代确认。共13项OWNER_ACCEPTED、6项IMPLEMENTED、5项IN_PROGRESS、11项PLANNED；BE-27/30未实施，不自动合并推送或部署。交接见docs/05-detailed-design/BE-26-SOURCE-CLOSURE.md，下方IN_PROGRESS/待实现为历史。
 
 ## 实际结果与负责人交接
 
-D-091实际结果（2026-10-21）：BE-26两个公开操作与统一RequestInvalidator已完成设计/TDD，完整137离线/20组＋318真实MySQL/HTTP/22组及静态追踪通过，失败/错误/跳过0；含34项本任务真实验收。覆盖逻辑0、100来源、整份失效与全部claim/outbox、原范围实质失覆盖、独立角色/来源任职、隐藏混合申请及统计回放授权、并发与第N项/审计故障回滚。随机schema/账号/测试密钥目录均0，专属MySQL子进程27740正常关闭，原MySQL84仍Running。BE-26登记IMPLEMENTED、ownerAccepted=false、mergedToMain=false，只本地任务分支提交，既有各成员验收不代确认。共13项OWNER_ACCEPTED、6项IMPLEMENTED、5项IN_PROGRESS、11项PLANNED；BE-27/30未实施，不自动合并推送或部署。交接见docs/05-detailed-design/BE-26-SOURCE-CLOSURE.md，下方IN_PROGRESS/待实现为历史。
+D-093实际结果（2026-10-21）：BE-26两个公开操作与统一RequestInvalidator已完成设计/TDD，完整137离线/20组＋318真实MySQL/HTTP/22组及静态追踪通过，失败/错误/跳过0；含34项本任务真实验收。覆盖逻辑0、100来源、整份失效与全部claim/outbox、原范围实质失覆盖、独立角色/来源任职、隐藏混合申请及统计回放授权、并发与第N项/审计故障回滚。随机schema/账号/测试密钥目录均0，专属MySQL子进程27740正常关闭，原MySQL84仍Running。BE-26登记IMPLEMENTED、ownerAccepted=false、mergedToMain=false，只本地任务分支提交，既有各成员验收不代确认。共13项OWNER_ACCEPTED、6项IMPLEMENTED、5项IN_PROGRESS、11项PLANNED；BE-27/30未实施，不自动合并推送或部署。交接见docs/05-detailed-design/BE-26-SOURCE-CLOSURE.md，下方IN_PROGRESS/待实现为历史。
 
 完整回归：backend内显式JDK21、专属隔离MySQL环境执行 `./mvnw.cmd -q clean verify -Pmysql-check`，137项离线/20组、318项真实MySQL/HTTP/22组，失败/错误/跳过0，日志backend/.tmp/be26-full-verify.log。本任务34项在SourceClosureMySqlCheck，最终定向日志be26-final-targeted.log。jar `backend/target/backend-0.0.1-SNAPSHOT.jar` SHA256：`99e7bbb44ed8ab3886b41384c2e902cf65221fa20654b92a81f0f6bb15e62afb`。静态检查本身不运行Java/SQL/HTTP。
 
@@ -39,7 +39,7 @@ BE-26为IMPLEMENTED，D本人验收、合并和推送尚未进行；任务分支
 
 接入细化：保存幂等规范输入不包含可替换的任命上下文，当前单项授权及持久AuthorizationBasis在每次回放前复核；固定预览确认仍绑定创建上下文。统一失效端口同时接受来源周期、准确关系、员工资格、原范围覆盖及角色配置版本事实，业务写入与整份申请状态/claim/outbox/完整内部审计同事务。公开来源关闭审计仅含当前可读信息，混合申请完整失效审计使用GLOBAL，不把其ID计入不可见响应。全部端口在异常时标记调用方回滚，不设独立事务或新增公开内部入口。
 
-2026-10-20/D-091：成员D要求完成BE-29推送后继续下一项。BE-29已交付远程main，当前基线为交付记录提交86089d2，在codex/be-26-source-closure准备本设计与验收清单。
+2026-10-20/D-093：成员D要求完成BE-29推送后继续下一项。BE-29已交付远程main，当前基线为交付记录提交86089d2，在codex/be-26-source-closure准备本设计与验收清单。
 
 2026-10-20准备阶段：当时BE-26为PLANNED、C/BE-20尚未交付，仅设计与清单，无实现或本任务Java/SQL/HTTP测试。该限制已由上方2026-10-21远程交付核对解除；BE-30仍缺A/BE-27，不能先行替代本任务。
 

@@ -1,8 +1,8 @@
 # 后端详细设计与协作实施入口
 
-D-091：已完成[BE-26来源关闭与统一申请失效](BE-26-SOURCE-CLOSURE.md)，完整137离线＋318真实MySQL/HTTP及静态校验通过，IMPLEMENTED待D负责人确认和主线交付。复用已交付C/BE-20状态/占用及BE-19/22的安全可见性，未实施BE-27/30或真实OA链路。
+D-093：已完成[BE-26来源关闭与统一申请失效](BE-26-SOURCE-CLOSURE.md)，完整137离线＋318真实MySQL/HTTP及静态校验通过，IMPLEMENTED待D负责人确认和主线交付。复用已交付C/BE-20状态/占用及BE-19/22的安全可见性，未实施BE-27/30或真实OA链路。
 
-D-085：BE-29已合入并推送main/6506cda，交付记录86089d2远程回查一致，完整137离线＋240真实MySQL/HTTP通过，仍待D人工验收，见[交接](BE-29-IMPORT-PRECHECK.md)。D-091按用户要求继续下一项，已完成[BE-26设计与验收准备](BE-26-SOURCE-CLOSURE.md)；C/BE-20未交付，BE-26仍PLANNED，未运行本任务业务测试。
+D-085：BE-29已合入并推送main/6506cda，交付记录86089d2远程回查一致，完整137离线＋240真实MySQL/HTTP通过，仍待D人工验收，见[交接](BE-29-IMPORT-PRECHECK.md)。D-093按用户要求继续下一项，已完成[BE-26设计与验收准备](BE-26-SOURCE-CLOSURE.md)；C/BE-20未交付，BE-26仍PLANNED，未运行本任务业务测试。
 
 C的BE-19/22读取接口已在本地任务分支实现、待负责人确认及主线交付，见[审计与申请查询交接](BE-19-22-AUDIT-REQUEST-QUERIES.md)。
 
@@ -48,3 +48,6 @@ D-058（2026-10-19）：A已继续实现[BE-07账号管理](BE-07-ACCOUNTS.md)�
 [design_plan.py](design_plan.py)只生成本目录元数据、追踪、Issue正文、估算及原生drawio，不生成业务代码。对应机器资料为[modules.json](modules.json)、[issues.json](issues.json)、[acceptance.json](acceptance.json)、[operation-map.json](operation-map.json)、[estimates.json](estimates.json)。[validate_design.py](validate_design.py)执行设计静态检查；[validation.json](validation.json)记录实际结果，不能替代MySQL/JPA/并发/部署测试。
 
 上游权威入口：[正式需求](../01-requirements/usecases-v1/用例说明.md)、[管理规则](../01-requirements/usecases-v1/管理范围与人员权限规则.md)、[API](../03-api/openapi.yaml)、[数据库](../04-database/README.md)、[正式一致性评审](../04-database/CONSISTENCY-REVIEW.md)。状态以[MEMORY](../project/MEMORY.md)为准，不从目录存在推断实现完成。
+
+
+C固定申请、OA审批、可靠执行与演示工具的设计及验证见[BE-21/23/24/25/31](BE-21-31-APPROVAL-WORKFLOW.md)，本机使用见[演示步骤](../../deploy/DEMO-OA.md)。
