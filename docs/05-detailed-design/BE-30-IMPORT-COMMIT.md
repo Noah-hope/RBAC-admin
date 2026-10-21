@@ -1,5 +1,45 @@
 # BE-30 导入整批提交、历史与失败恢复
 
+## 实际交付与本机验收入口
+
+实现基线为main/126fbc99f7160a13519ff964b9d62dd57d3bcd08，包含A经PR #4交付的BE-27和B有效权限/集成能力。本轮仍在codex/be-30-import-commit，只本地提交，不把开始实施当作合并推送或本人验收授权。
+
+- `ImportCommitService`：当前总管理员、严格ImportCommit、同key完整输入、长期批次成功结果、固定计划/文件SHA/集合依赖复核；同一WriteContext按固定rowNumber/planNo调用基础写及生命周期；实际八字段计数、完整审计、批次成功和HTTP成功原子提交。
+- `ImportFailureRecorder`：原事务回滚后另一个guard事务；只处理仍匹配原版本/摘要的READY/FAILED，不覆盖SUCCEEDED/STALE或并发新状态。返回已知成功事实供不确定提交结果处理。内部端口校验ACCOUNT操作者和当前总管理员，不接受伪造服务主体。
+- `EmploymentLifecycleWriter`：BE-30的任职事件衔接，复用既有LifecycleStore、SourceCloser、RequestInvalidator；每次END后立即检查来源和角色部门各自任职、失效任命及必要会话，不能仅按最终任职名单过滤。EmployeeStateWriter沿用A实现，未复制员工状态机；原申请人离任不单独取消仍覆盖的申请。
+- `EmploymentWriter.initialEmployment`：受现有ImportAuthority约束的新任职基础写；可直接保存明确ENDED初始化，保持version=1与空历史日期，recordedEndAt取记录时刻，不伪造先ACTIVE再END的事件。
+- 部门迁移复用既有moveDepartment及全部映射的即时FK顺序；映射由该原子端口重建一次。其余映射与稳定源身份仍使用既有写端口。
+
+正常应用沿用现有身份、幂等和导入目录配置，无新迁移、依赖或环境变量。登录正常总管理员后：使用既有上传及预检操作取得READY批次，复制该批次的version/contentDigest，向`POST /api/v1/admin/import-batches/{batchId}/commits`发送严格两字段expectedVersion/contentDigest和新UUID Idempotency-Key。200应为SUCCEEDED，actualCounts为实际计数；同key或新key再次提交同成功批次回读原结果，不重复创建人员。BLOCKED为422、陈旧/版本冲突409；文件读取及临时存储不可用安全拒绝，业务事务失败全部回滚，不返回SQL或凭据。
+
+人工演示尚未进行。故障注入只在隔离测试进行，不要求在用户dev/test库安装触发器。不能用预检READY代替导入SUCCEEDED，不能以恢复员工身份推断旧授权/任命/会话恢复。
+
+## 实际TDD与验证证据
+
+| 阶段 | 实际观察 |
+| --- | --- |
+| be30-first-red.log | 3项断言失败、0错误，正式commit路由404：成功提交、陈旧依赖、阻断批次 |
+| be30-core-green.log | 3项核心真实HTTP/MySQL通过；期间一次路径/私有方法编译问题不作业务RED |
+| be30-actions-valid-red.log | 12项中5项业务断言失败，员工/任职/状态/1000行仍422；另1项源身份夹具误加created_at导致SQL错误，修正后重新验证，不伪称全部为业务RED |
+| be30-move-remap-red.log | 重映射明确422失败；初轮迁移映射缺必填可空字段属于夹具输入错误，不作该分支RED |
+| be30-actions-first-green.log | 13项中12通过、0错误；修正完整映射后，迁移在commit阶段422成为有效RED，随后接入moveDepartment |
+| be30-lifecycle-boundaries.log | 17项中16通过；整份失效/claim/outbox、生命周期审计故障和第500条回滚/1000行重试已通过；负责人降权夹具违反账号CHECK，不作业务RED，改为停用当前账号验证重新鉴权 |
+| be30-recorder-red.log | 缺失败记录内部端口为明确断言失败；独立角色部门场景一度缺来源历史任职证据被GrantReader拒绝，补齐真实完整夹具，无生产逻辑放宽 |
+| be30-final-targeted.log | 最终19项真实HTTP/MySQL全部通过，包含独立角色部门与来源部门、固定候选ID、成功后迟到失败记录保护 |
+| be30-full-verify.log | 显式JDK21、专属隔离MySQL执行`./mvnw.cmd -q clean verify -Pmysql-check`，139普通/21组＋425真实MySQL/HTTP/27组，失败/错误/跳过0，退出0 |
+| be30-auxiliary.log | 仓库内临时TEMP/TMP运行`python -m unittest discover -s backend/acceptance -p 'test_*.py' -v`，18项通过；不等于发布门禁已通过 |
+
+集成jar SHA256：`c23ad313e32e45032c6be1f94a69d22297d1c0275144cab70b30e312c4b9574b`。本轮仅为测试进程在忽略目录内提供真实python3入口，结束后清理；不修改永久PATH。测试仅非3306专属MySQL8.4及随机schema/DML账号，不操作用户现有dev/test库。最终schema/账号/密钥文件目录0，专属子进程5840（父34076）正常关闭，原MySQL84仍Running。静态追踪检查不运行Java/SQL/HTTP。
+
+19项是本任务边界证据；14组设计清单保留下方作场景归类，不把每个子场景都声称单独运行过。失败记录与成功的保护以两个真实guard事务顺序复现“成功提交后，旧失败记录继续到达”；没有虚构两次HTTP故障时序或真实外部OA/服务器验收。
+
+BE-30为IMPLEMENTED、ownerAccepted=false、mergedToMain=false；成员D七项实现具备，人工确认和主线交付各自记录。下方PLANNED/仅准备/未测试及缺BE-27是此前历史，后续交付需重新核对远程主线并保留各成员事实。
+
+
+D-101实际结果（2026-10-21）：BE-30冻结导入整批提交、历史与失败恢复已实现。完整139普通/21组＋425真实MySQL/HTTP/27组、18辅助工具及静态追踪通过，失败/错误/跳过0，含本任务19项真实检查。覆盖固定候选身份、1000行及第500条/最后审计故障全批回滚、同批长期成功回放、独立来源/角色部门资格、Q-01离岗再任职、员工停用恢复不复权、整份申请claim/outbox失效、部门迁移即时FK及迟到失败记录不覆盖成功。随机库/账号/密钥文件目录0，专属MySQL子进程5840正常关闭，原MySQL84仍Running。BE-30为IMPLEMENTED、ownerAccepted=false、mergedToMain=false，仅本地任务分支提交；D七项代码均具备，既有人工验收不代确认。共13项OWNER_ACCEPTED、14项IMPLEMENTED、5项IN_PROGRESS、3项PLANNED；未合并推送或部署，不接管BE-33/34/35。接入基线main/126fbc9；D原准备D-095与B重复统一D-101，36c6cb5及双方事实保持。详见docs/05-detailed-design/BE-30-IMPORT-COMMIT.md，下方仅准备/IN_PROGRESS为历史。
+
+D-101（2026-10-21）：D明确“开始执行最后一项任务”，已fetch核对并接入远程main/126fbc9，A/BE-27已通过PR #4交付92d126f，直接依赖齐备。D原BE-30准备D-095与B重复，统一为D-101，原36c6cb5及B的D-095/096/097/098、A的D-099/100事实保持。已按现有设计/TDD进入IN_PROGRESS；真实首轮3项断言失败、0错误，commit路由404；核心3项GREEN已通过，后续员工/生命周期和故障场景仍在实现。复用BE-29固定计划、EmploymentWriter与A/EmployeeStateWriter、BE-16/26及guard/幂等/审计，同批整体成功或回滚。共13项OWNER_ACCEPTED、13项IMPLEMENTED、6项IN_PROGRESS、3项PLANNED；不代本人验收、不合并推送或部署。下方仅准备/缺BE-27为历史。
+
 2026-10-21 / D-101：成员D要求完成BE-26推送后自行继续下一项。已核对远程main及交付记录到`d79e28a624fd4b9bf3862063c44274d3db602248`，建立`codex/be-30-import-commit`。BE-29已交付，A/BE-27仍PLANNED，主线缺少员工全局状态与任命、会话失效的统一生命周期内部编排。本轮完成设计、实际端口核对及TDD验收清单；BE-30保持PLANNED、implementationStarted=false、testsRun=false，未新增业务代码或执行本任务Java/SQL/HTTP。BE-26的139离线＋350真实MySQL/HTTP是上一项集成交付证据，不能计作BE-30验证。
 
 ## 依据与依赖门槛

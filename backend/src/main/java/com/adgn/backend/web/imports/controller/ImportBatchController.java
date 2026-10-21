@@ -14,8 +14,9 @@ import tools.jackson.databind.JsonNode;
 @RequestMapping("/api/v1/admin/import-batches")
 @ConditionalOnProperty(prefix="rbac.identity",name="enabled",havingValue="true")
 public class ImportBatchController {
-    private final ImportPlanService service;
-    public ImportBatchController(ImportPlanService service){this.service=service;}
+    private final ImportPlanService service;private final ImportCommitService commits;
+    public ImportBatchController(ImportPlanService service,ImportCommitService commits){this.service=service;this.commits=commits;}
+    @PostMapping("/{batchId}/commits") public ResponseEntity<Object> commit(@AuthenticationPrincipal Jwt token,@PathVariable String batchId,@RequestHeader("Idempotency-Key")String key,@RequestBody JsonNode input,HttpServletRequest request)throws Exception{return IdempotencyHttp.response(commits.commit(token,batchId,key,input,(String)request.getAttribute("rbac.requestId")),request);}
     @PostMapping public ResponseEntity<Object> precheck(@AuthenticationPrincipal Jwt token,@RequestHeader("Idempotency-Key")String key,@RequestBody JsonNode input,HttpServletRequest request)throws Exception{return IdempotencyHttp.response(service.precheck(token,key,input,(String)request.getAttribute("rbac.requestId")),request);}
     @GetMapping public ResponseEntity<ImportPlan.Page<ImportPlan.Batch>> list(@AuthenticationPrincipal Jwt token,@RequestParam(required=false)String sourceBatchId,@RequestParam(required=false)String state,@RequestParam(required=false)String page,@RequestParam(required=false)String pageSize)throws Exception{return safe(service.list(token,sourceBatchId,state,page,pageSize));}
     @GetMapping("/{batchId}") public ResponseEntity<ImportPlan.Batch> get(@AuthenticationPrincipal Jwt token,@PathVariable String batchId)throws Exception{return safe(service.get(batchId,token));}

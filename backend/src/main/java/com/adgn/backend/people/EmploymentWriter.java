@@ -64,6 +64,11 @@ public final class EmploymentWriter {
         return save(c,"employment",id,0,data("employee_id",requiredId(employee),"company_id",requiredId(company),"department_id",requiredId(department),
             "position_id",requiredId(position),"status","ACTIVE","started_at",micros(started)),load("employment",id),true);
     });}
+    public Result initialEmployment(WriteContext<?> c,UUID id,UUID employee,UUID company,UUID department,UUID position,String status,Instant started,Instant ended){return checked(c,()->{
+        required("employee",employee);ownership(company,department,position,"POSITION");
+        if(!Set.of("ACTIVE","ENDED").contains(status==null?"":status)||status.equals("ACTIVE")&&ended!=null||started!=null&&ended!=null&&ended.isBefore(started))throw invalid();
+        return save(c,"employment",id,0,data("employee_id",requiredId(employee),"company_id",requiredId(company),"department_id",requiredId(department),"position_id",requiredId(position),"status",status,"started_at",micros(started),"ended_at",micros(ended),"recorded_end_at",status.equals("ENDED")?c.now():null),load("employment",id),true);
+    });}
     public EndResult endEmployment(WriteContext<?> c,UUID id,long version,Instant ended){return checked(c,()->{
         var old=required("employment",id);expected(old,version);
         if(!"ACTIVE".equals(old.get("status")))throw conflict("STATE_CONFLICT",409);

@@ -3087,7 +3087,7 @@
     ],
     "deliverable": "1000源行一个事务，嵌入同一生命周期操作；STALE/FAILED后另事务防覆盖成功；同批防重及新批无变化。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -3095,7 +3095,7 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
-    "preparationProgress": {
+    "preparationHistory": {
       "decision": "D-101",
       "evidence": "BE-30-IMPORT-COMMIT.md",
       "branch": "codex/be-30-import-commit",
@@ -3108,6 +3108,21 @@
       "blockedBy": [
         "BE-27"
       ]
+    },
+    "implementationProgress": {
+      "decision": "D-101",
+      "evidence": "BE-30-IMPORT-COMMIT.md",
+      "branch": "codex/be-30-import-commit",
+      "dependencyBase": "126fbc9",
+      "claimedOwnerSlot": "D",
+      "implementationStarted": true,
+      "implemented": true,
+      "httpImplemented": true,
+      "internalWritePortImplemented": true,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
