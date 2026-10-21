@@ -1718,7 +1718,7 @@
     ],
     "deliverable": "主库新快照、完整有效来源并集、进入资格、独立菜单/操作、未知编码与存储错误区分。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -1726,6 +1726,21 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-18-EFFECTIVE-PERMISSIONS.md",
+      "decision": "D-091",
+      "scope": "FRESH_PRIMARY_BUSINESS_PERMISSION_UNION_AND_INDIVIDUAL_CHECK",
+      "implemented": true,
+      "httpImplemented": true,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "branch": "codex/be-18-effective-permissions",
+      "dependencyBase": "7914788",
+      "claimedOwnerSlot": "B",
+      "claimSource": "USER_MESSAGE"
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-01",

@@ -1,5 +1,7 @@
 # 本地Issue草案与验收卡
 
+D-091（2026-10-21）：B 在已交付 BE-14 后按用户“那就改”实现 BE-18 两个业务权限接口，分支 codex/be-18-effective-permissions、基线 main/7914788。完整来源并集、独立进入/菜单/操作、当前身份与主库新快照、未知与故障分离；不改迁移/契约，不代记验收或主线交付。实际验证见 [BE-18](BE-18-EFFECTIVE-PERMISSIONS.md)。当前 13 项 OWNER_ACCEPTED、5 项 IMPLEMENTED、6 项 IN_PROGRESS、11 项 PLANNED；B 六项业务开发已实现待本人确认，BE-33/35 仍开放。下方 BE-18 等依赖/旧数量为历史。
+
 D-090（2026-10-21）：C明确“确认，然后继续完成剩下的任务”，接受BE-19/22既有137离线＋284真实MySQL/HTTP证据；人工演示未进行。来源cc88885f2c97df838720fc2f7f0e524d72e56351已no-ff合入main/cf27f7f910bf5e904c89542f56e3f56fddd884d9，合并树等于验证来源，main及任务分支原子推送且远程完整SHA回查一致。两项OWNER_ACCEPTED、mergedToMain=true。后续按BE-21→23→24→25→31连续实施，依赖沿同一任务分支继承，各项实现、本人确认、主线交付分开记录；不代其他成员验收、不部署。共13项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、12项PLANNED。下方待确认/待交付为历史。
 
 D-089（2026-10-21）：C要求继续其他任务，BE-19/22在BE-19-22-审计与申请查询（main/09abaa2）先设计及真实HTTP/MySQL RED，再实现审计列表/详情和申请列表/详情/时间线。当前单项完整范围先SQL过滤再统计/分页，关联主体与缺损目标投影不能绕过授权，审计仅投影历史公开字段。实现与实际验证见[BE-19/22](BE-19-22-AUDIT-REQUEST-QUERIES.md)。两项为IMPLEMENTED、ownerAccepted=false、mergedToMain=false，不代记人工验收或延用BE-20特定交付授权。其他C写链路仍PLANNED，已交付BE-20状态保持；共11项OWNER_ACCEPTED、7项IMPLEMENTED、5项IN_PROGRESS、12项PLANNED。下方旧状态/数量为历史。
@@ -247,7 +249,7 @@ D-074（2026-10-20）B 状态：BE-17/12 已由 1fb95ad 无冲突合入并交付
 
 ## BE-18 业务系统有效权限和单项检查
 
-- 状态：PLANNED；阶段BUSINESS；负责人B（成员代号），由负责人自检确认；模块M11,M12。
+- 状态：IN_PROGRESS；阶段BUSINESS；负责人B（成员代号），由负责人自检确认；模块M11,M12。
 - 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-06,BE-10,BE-14；开发估算2/4/6h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：authorizationQuery, permissionCheck。

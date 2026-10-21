@@ -1,5 +1,7 @@
 # 后端工程
 
+D-091（2026-10-21）：BE-18 的两个业务系统 POST 已在 codex/be-18-effective-permissions 实现；沿用现有 BUSINESS JWT 和数据库配置，无新增密钥/依赖/迁移，systemId 只取服务身份。接口、完整来源/菜单规则、上限与错误语义及实际测试见 [BE-18](../docs/05-detailed-design/BE-18-EFFECTIVE-PERMISSIONS.md)。本次未推送/合并/部署，不代记本人验收。
+
 D-085实际交付（2026-10-20）：成员D明确“合并推送吧”，BE-29接入A已交付BE-09后，来源db3419687f8dc43b1959564ddc19b0e7d32826ed已无冲突no-ff合入远程main/6506cda54c4898e736a2e730ba001294f8de4c2c，合并树等于已完整验证来源，任务分支codex/be-29-import-precheck保留。普通Git连接连续失败，改用官方GitHub Git API按本地对象原始SHA、force=false推送main和任务分支，远程两个完整SHA均回查一致。完整137离线＋240真实MySQL/HTTP及静态校验通过，专属资源清理关闭，原MySQL84仍Running；BE-29为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，既有人工验收保持。D原实施编号D-081与A冲突已统一为D-084；A的D-081/082/083及PR#3交付保留。共10项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、15项PLANNED；不强推或部署，下方未授权/待主线为历史。
 
 D-084（2026-10-20）：BE-29在codex/be-29-import-precheck实现导入冻结预检及批次/问题/差异五个操作，候选ID/code、前后值、动作顺序、映射与依赖均冻结；不改正式人员或授权。完整137离线＋228真实MySQL/HTTP通过，失败/错误/跳过0。沿用BE-28配置，无新环境变量或迁移，接入及验收见[BE-29](../docs/05-detailed-design/BE-29-IMPORT-PRECHECK.md)；待负责人确认与主线交付，未合并推送。正式导入仍留BE-30。

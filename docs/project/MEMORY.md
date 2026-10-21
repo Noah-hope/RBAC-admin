@@ -1,5 +1,9 @@
 # 项目共享记忆
 
+D-091验证完成：BE-18 最终完整 clean verify/mysql-check 为 137 普通＋301 真实 MySQL/HTTP，失败/错误/跳过均 0；含新增 17 项及同学新主线既有全部回归。静态校验 PASS、随机库/账号 0/0、测试密钥清理，专属 13461 实例关闭。源码/测试/记录仅本地任务分支交付，不代记本人验收或推送/合并。
+
+D-091（2026-10-21）：当前 B 用户在拉取同学新增的 31 个提交、说明 BE-14 技术依赖齐备后明确“那就改”，本轮实现 BE-18。基线 main/7914788，分支 codex/be-18-effective-permissions；独立 SQL/DTO 和已有 ReadBoundary/CurrentIdentityReader 实现两个业务系统 POST，完整并集、独立菜单/操作、来源/关系版本、当前任职与故障分离。沿用原契约/迁移，不改同学模块业务代码；实际 TDD、测试及本机接入见 [BE-18](../05-detailed-design/BE-18-EFFECTIVE-PERMISSIONS.md)。状态 IN_PROGRESS 表示已实现待 B 本人确认与主线交付，不代记 OWNER_ACCEPTED，未推送或合并。B 六个业务开发任务均已有实现，BE-33/35 仍等完整集成与部署验收，不表示整个 B/项目完成。
+
 D-090（2026-10-21）：C明确“确认，然后继续完成剩下的任务”，接受BE-19/22既有137离线＋284真实MySQL/HTTP证据；人工演示未进行。来源cc88885f2c97df838720fc2f7f0e524d72e56351已no-ff合入main/cf27f7f910bf5e904c89542f56e3f56fddd884d9，合并树等于验证来源，main及任务分支原子推送且远程完整SHA回查一致。两项OWNER_ACCEPTED、mergedToMain=true。后续按BE-21→23→24→25→31连续实施，依赖沿同一任务分支继承，各项实现、本人确认、主线交付分开记录；不代其他成员验收、不部署。共13项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、12项PLANNED。下方待确认/待交付为历史。
 
 D-089（2026-10-21）：C要求继续其他任务，本轮在BE-19-22-审计与申请查询（main/09abaa2）先设计/TDD连续实现BE-19审计列表/详情及BE-22申请列表/详情/时间线，复用整份当前单项范围投影。两项为IMPLEMENTED待C负责人确认与共同主线交付；不会把BE-20的特定合并推送授权扩展到本轮。原始事件append-only，关联主体和缺损目标不能绕过授权，历史名称不使用当前值倒推；验证及本机步骤见docs/05-detailed-design/BE-19-22-AUDIT-REQUEST-QUERIES.md。BE-21/23/24/25/31仍PLANNED，其他成员状态保持。

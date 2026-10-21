@@ -203,6 +203,13 @@ for case in CASES:
         case.setdefault('additionalEvidence',[]).append('BE-19-22-AUDIT-REQUEST-QUERIES.md')
         case['verificationScope']='; '.join(filter(None,[case.get('verificationScope',''),'BE19_22_CURRENT_WHOLE_REQUEST_AUDIT_AND_TIMELINE_READS_ONLY_NOT_SUBMISSION_OA_OR_EXECUTION']))
 
+for case in CASES:
+    if case['id'] in {'AT-07','AT-10','AT-30','AT-33','AT-37'}:
+        case['status']='PARTIALLY_VERIFIED'
+        case.setdefault('evidence','BE-18-EFFECTIVE-PERMISSIONS.md')
+        case.setdefault('additionalEvidence',[]).append('BE-18-EFFECTIVE-PERMISSIONS.md')
+        case['verificationScope']='; '.join(filter(None,[case.get('verificationScope',''),'BE18_CURRENT_BUSINESS_QUERY_AND_CHECK_ONLY_NOT_ALL_LIFECYCLE_OR_EXTERNAL_SYSTEMS']))
+
 TASKS = []
 def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
     foundation = n <= 5
@@ -228,6 +235,12 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             ownerAccepted=False,mergedToMain=False,databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
             branch='codex/be-17-12-preview-catalog',dependencyBase='93acc63',claimSource='USER_MESSAGE',
             dependencyContinuation='BE-12 consumes BE-17 implemented and verified on the same task branch')
+    if n == 18:
+        TASKS[-1]['status']='IN_PROGRESS'
+        TASKS[-1]['implementationProgress']=dict(evidence='BE-18-EFFECTIVE-PERMISSIONS.md',decision='D-091',
+            scope='FRESH_PRIMARY_BUSINESS_PERMISSION_UNION_AND_INDIVIDUAL_CHECK',implemented=True,httpImplemented=True,
+            ownerAccepted=False,mergedToMain=False,databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
+            branch='codex/be-18-effective-permissions',dependencyBase='7914788',claimedOwnerSlot='B',claimSource='USER_MESSAGE')
     if n == 6:
         TASKS[-1]['implementationProgress']=dict(evidence='BE-06-IDENTITY.md',decision='D-056',
             scope='LOGIN_SESSION_PASSWORD_AND_THREE_JWT_FAMILIES',implemented=True,
@@ -549,6 +562,9 @@ def write(name, text):
         title, _, body = text.partition('\n')
         text = title+'\n\n'+'D-089（2026-10-21）：C要求继续其他任务，BE-19/22在BE-19-22-审计与申请查询（main/09abaa2）先设计及真实HTTP/MySQL RED，再实现审计列表/详情和申请列表/详情/时间线。当前单项完整范围先SQL过滤再统计/分页，关联主体与缺损目标投影不能绕过授权，审计仅投影历史公开字段。实现与实际验证见[BE-19/22](BE-19-22-AUDIT-REQUEST-QUERIES.md)。两项为IMPLEMENTED、ownerAccepted=false、mergedToMain=false，不代记人工验收或延用BE-20特定交付授权。其他C写链路仍PLANNED，已交付BE-20状态保持；共11项OWNER_ACCEPTED、7项IMPLEMENTED、5项IN_PROGRESS、12项PLANNED。下方旧状态/数量为历史。'+'\n'+body
         text = text.split('\n',1)[0]+'\n\n'+'D-090（2026-10-21）：C明确“确认，然后继续完成剩下的任务”，接受BE-19/22既有137离线＋284真实MySQL/HTTP证据；人工演示未进行。来源cc88885f2c97df838720fc2f7f0e524d72e56351已no-ff合入main/cf27f7f910bf5e904c89542f56e3f56fddd884d9，合并树等于验证来源，main及任务分支原子推送且远程完整SHA回查一致。两项OWNER_ACCEPTED、mergedToMain=true。后续按BE-21→23→24→25→31连续实施，依赖沿同一任务分支继承，各项实现、本人确认、主线交付分开记录；不代其他成员验收、不部署。共13项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、12项PLANNED。下方待确认/待交付为历史。'+'\n'+text.split('\n',1)[1]
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text=title+'\n\nD-091（2026-10-21）：B 在已交付 BE-14 后按用户“那就改”实现 BE-18 两个业务权限接口，分支 codex/be-18-effective-permissions、基线 main/7914788。完整来源并集、独立进入/菜单/操作、当前身份与主库新快照、未知与故障分离；不改迁移/契约，不代记验收或主线交付。实际验证见 [BE-18](BE-18-EFFECTIVE-PERMISSIONS.md)。当前 13 项 OWNER_ACCEPTED、5 项 IMPLEMENTED、6 项 IN_PROGRESS、11 项 PLANNED；B 六项业务开发已实现待本人确认，BE-33/35 仍开放。下方 BE-18 等依赖/旧数量为历史。\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -696,7 +712,7 @@ def generate():
             acceptance=sorted(set(task['acceptance']+(['AT-37'] if row['direction']=='INBOUND' else ['AT-20']))),
             parameters=parameter_names,requestModels=sorted(schema_refs(operation.get('requestBody',{}),api)),
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
-            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08','BE-09','BE-19','BE-20','BE-22'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-28','BE-29'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN' if task['id'] in {'BE-19','BE-22'} else 'PLANNED_NOT_IMPLEMENTED')))))
+            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08','BE-09','BE-19','BE-20','BE-22'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-28','BE-29'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN' if task['id']=='BE-18' else 'PLANNED_NOT_IMPLEMENTED')))))
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
         owned=[r for r in op_map if r['issue']==task['id']]
