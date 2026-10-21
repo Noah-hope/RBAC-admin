@@ -1,5 +1,38 @@
 # BE-26 直接来源关闭与统一申请失效编排
 
+D-091实际结果（2026-10-21）：BE-26两个公开操作与统一RequestInvalidator已完成设计/TDD，完整137离线/20组＋318真实MySQL/HTTP/22组及静态追踪通过，失败/错误/跳过0；含34项本任务真实验收。覆盖逻辑0、100来源、整份失效与全部claim/outbox、原范围实质失覆盖、独立角色/来源任职、隐藏混合申请及统计回放授权、并发与第N项/审计故障回滚。随机schema/账号/测试密钥目录均0，专属MySQL子进程27740正常关闭，原MySQL84仍Running。BE-26登记IMPLEMENTED、ownerAccepted=false、mergedToMain=false，只本地任务分支提交，既有各成员验收不代确认。共13项OWNER_ACCEPTED、6项IMPLEMENTED、5项IN_PROGRESS、11项PLANNED；BE-27/30未实施，不自动合并推送或部署。交接见docs/05-detailed-design/BE-26-SOURCE-CLOSURE.md，下方IN_PROGRESS/待实现为历史。
+
+## 实际结果与负责人交接
+
+D-091实际结果（2026-10-21）：BE-26两个公开操作与统一RequestInvalidator已完成设计/TDD，完整137离线/20组＋318真实MySQL/HTTP/22组及静态追踪通过，失败/错误/跳过0；含34项本任务真实验收。覆盖逻辑0、100来源、整份失效与全部claim/outbox、原范围实质失覆盖、独立角色/来源任职、隐藏混合申请及统计回放授权、并发与第N项/审计故障回滚。随机schema/账号/测试密钥目录均0，专属MySQL子进程27740正常关闭，原MySQL84仍Running。BE-26登记IMPLEMENTED、ownerAccepted=false、mergedToMain=false，只本地任务分支提交，既有各成员验收不代确认。共13项OWNER_ACCEPTED、6项IMPLEMENTED、5项IN_PROGRESS、11项PLANNED；BE-27/30未实施，不自动合并推送或部署。交接见docs/05-detailed-design/BE-26-SOURCE-CLOSURE.md，下方IN_PROGRESS/待实现为历史。
+
+完整回归：backend内显式JDK21、专属隔离MySQL环境执行 `./mvnw.cmd -q clean verify -Pmysql-check`，137项离线/20组、318项真实MySQL/HTTP/22组，失败/错误/跳过0，日志backend/.tmp/be26-full-verify.log。本任务34项在SourceClosureMySqlCheck，最终定向日志be26-final-targeted.log。jar `backend/target/backend-0.0.1-SNAPSHOT.jar` SHA256：`99e7bbb44ed8ab3886b41384c2e902cf65221fa20654b92a81f0f6bb15e62afb`。静态检查本身不运行Java/SQL/HTTP。
+
+| TDD阶段 | 实际观察 |
+| --- | --- |
+| 首轮正式RED | be26-http-valid-red.log：4项断言失败、0错误，路由404；命令参数/必填历史夹具错误不作为RED |
+| 集成后RED | be26-integrated-http-red.log：7项断言失败、0错误，包含输入与固定预览 |
+| 整份失效RED/GREEN | be26-invalidation-red.log：10项中3项失败、0错误，旧申请仍PENDING；实现后10项通过 |
+| 完整边界RED | be26-full-boundary-red.log：25项中8项失败、0错误，覆盖统一失效的五种触发及三类安全/资格预览问题 |
+| 可空目标与回放RED | be26-replay-null-red.log：30项中13失败、5错误；待审批配置空employee字段导致NPE并影响后续直接端口测试，另有未知标识及版本耗尽500。不是通过证据 |
+| 独立权限RED | be26-visible-replay-red.log：1失败、0错误，撤去曾披露申请所需系统后旧统计仍200，预期403 |
+| 最终GREEN | 34项真实HTTP/MySQL全部通过；包含100来源、第二来源失败、已批准/失败待重试、捕获异常不能提交、混合范围隐藏及历史统计回放权限 |
+
+中间角色归属更新被不可变触发器拒绝、DML账号安装触发器失败和过期预览时间约束均已修正为合规夹具，不作为业务RED。用户中断后一次专属实例退出导致连接失败，恢复同一专属实例后重新验证，未把该运行记为通过。原MySQL84保持Running；最终随机库、账号与测试密钥目录回查0，子进程27740正常关闭，未操作用户现有库。
+
+两公开操作已实现：POST `/api/v1/admin/source-closure-previews` 返回200固定预览；POST `/api/v1/admin/source-closures` 返回200 APPLIED及安全计数/审计ID。读取来源基线取得准确epoch/version，保存必须使用同一规范输入与previewId，并提供UUID Idempotency-Key。预览不修改正式来源；无grant的逻辑0来源也明确展示且关闭后推进。输入systems支持1～100项、排序规范化且不允许重复。无授权401、受限会话/越范围403；未知目标404、预览过期/依赖变化409、非法输入422、存储/审计失败完整回滚。
+
+同key重放会重新校验当前单项任命，并按持久AuthorizationBasis检查输入来源和曾实际披露的完整申请/角色范围。新任命覆盖全部事实时可重放；缩小后不能取得旧统计或不可读审计ID。隐藏混合申请实际整份失效，但不返ID/隐藏数量；完整内部审计GLOBAL，公开来源审计SCOPED且仅包含可读请求引用。
+
+实现额外复用了当前基线已交付BE-22的RequestVisibility，故接入本分支时应包含main/7914788及其祖先；没有复制第二套申请可见性规则。ImpactPolicy已按真实失败测试修正角色部门与来源部门的独立有效任职复核。无新迁移、Maven依赖、环境变量或公开契约变更。
+
+内部接入：`RequestInvalidator.sources(context, affectedFacts, requestId, reason)`处理来源/关系事实；`invalidate(context, Changes, requestId, reason)`统一处理grantFacts、inactiveEmployees、employmentChangedEmployees、changedScopes、roleVersions。调用方先在同一WriteContext中写业务，再调用失效端口；不独立提交。changedScopes会重读原范围对全清单的当前覆盖，原申请人离任不单独失效。角色配置只使旧授予失效，不机械取消准确撤销。返回内部Invalidated列表的auditId为GLOBAL审计，客户端披露仍由外层安全投影负责。BE-27的HTTP入口/员工状态/范围替换和BE-30实际导入仍由原任务完成。
+
+验收重跑仅使用显式非3306专属MySQL，设置RBAC_ISOLATED_MYSQL_PORT/RBAC_ISOLATED_MYSQL_DATADIR后，在backend执行 `./mvnw.cmd -q test-compile failsafe:integration-test failsafe:verify -Pmysql-check "-Dit.test=SourceClosureMySqlCheck"`。测试自行创建、清理随机库和最小DML账号，禁止指向dev/test库。OA固定状态使用持久测试夹具，不代表真实OA或C执行器已接通；完整回归保留BE-16底层双连接关闭/执行竞争证据，本任务另验证两个HTTP连接竞争关闭。
+
+BE-26为IMPLEMENTED，D本人验收、合并和推送尚未进行；任务分支保留。可先核对上述断言及实现，再单独记录负责人确认和主线交付，不自动开始BE-27/30。
+
+
 2026-10-21实施接入：成员D明确“开始执行BE-26”。远程main/7914788已核对BE-20通过D-088交付a9b214c，含WorkflowStateWriter.invalidate(WriteContext, requestId, expectedStatusVersion, reasonCode)与ClaimService；直接依赖全部满足。复用该端口，RequestInvalidator只负责受影响事实选择、失效原因及内部结果；直接关闭使用SOURCE_EPOCH_CHANGED。下方C/BE-20未交付为准备阶段历史。本次实现、D负责人验收及主线交付分别记录，不自动合并推送或开展BE-27/30。
 
 首轮真实RED：be26-http-valid-red.log，4项业务断言失败、0错误、0跳过，预览路由404。此前PowerShell参数错误及夹具缺必填历史引用不作为有效RED。新增实现前已记录下方11组验收行为。
@@ -63,7 +96,7 @@ RequestInvalidator是统一内部编排端口，本任务首先接入来源关�
 
 ## TDD顺序与可核对断言
 
-按仓库[test-driven-development](../../.agents/skills/test-driven-development/SKILL.md)及writing-good-tests.md实施。以下为计划，未编写或运行，不构成RED/GREEN证据。
+按仓库[test-driven-development](../../.agents/skills/test-driven-development/SKILL.md)及writing-good-tests.md实施。以下为实施前制定的验收计划，实际执行证据见上方结果；计划本身不作为RED/GREEN证据。
 
 | 顺序 | 实际业务测试 | 应捕获的问题 |
 | --- | --- | --- |
@@ -83,9 +116,8 @@ RequestInvalidator是统一内部编排端口，本任务首先接入来源关�
 
 各阶段先记录独立失败断言，再最小实现、定向GREEN及完整回归。只启用仓库临时datadir、非3306专属MySQL8.4和随机schema/最小DML账号，结束后回查资源0并正常关闭；不操作用户dev/test库。实现后记录准确测试数量、jar摘要、日志与清理结果，不沿用BE-29的137＋240冒充BE-26验证。
 
-## 下一次继续的位置
+## 后续交接
 
-1. 同步并核验C/BE-20实际主线交付，核对claim/申请写端口及其自检结果；同时接入其后新主线并处理共享决策编号。
-2. 以本设计编写真实RED，落地两个操作、统一申请失效和安全结果投影，再完整真实回归。
-3. 分别记录IMPLEMENTED、D负责人验收和主线交付；本次“继续下一项”授权开发，不把BE-29特定合并推送授权扩展到BE-26。
-4. BE-26交付后A可按依赖推进BE-27，D在BE-27与已交付BE-29都满足后实施BE-30。保持原责任划分，不代C实现BE-20或代A实现BE-27。
+1. D核对本任务34项断言、完整137＋318证据和自检结果，另行确认负责人验收；本轮不代记OWNER_ACCEPTED。
+2. 获得本任务主线交付指令后，先核对新远程main并处理增量，必要时集成重验，再合并推送并回查SHA；本轮只本地提交。
+3. A核对BE-26实际主线交付后可按依赖实施BE-27。D的BE-30仍等待BE-27及已交付BE-29，不由本任务代实现其他成员任务。

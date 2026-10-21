@@ -2488,7 +2488,7 @@
     ],
     "deliverable": "统一RequestInvalidator，关权/关系结束触发整份已提交申请失效，安全计数/可见审计及幂等原子，DRAFT不伪终态。",
     "notes": "",
-    "status": "IN_PROGRESS",
+    "status": "IMPLEMENTED",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -2517,11 +2517,14 @@
       "dependencyBase": "7914788",
       "claimedOwnerSlot": "D",
       "implementationStarted": true,
-      "implemented": false,
+      "implemented": true,
+      "httpImplemented": true,
+      "internalWritePortImplemented": true,
       "ownerAccepted": false,
       "mergedToMain": false,
       "databaseExecuted": true,
-      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY"
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "scope": "DIRECT_SOURCE_CLOSE_AND_SHARED_REQUEST_INVALIDATION_ONLY_NOT_EMPLOYEE_SCOPE_OR_IMPORT_ENTRYPOINTS"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
