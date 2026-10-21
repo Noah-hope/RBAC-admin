@@ -2064,7 +2064,7 @@
       "internalPortImplemented": false,
       "cliImplemented": false,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "branch": "BE-21-31-申请审批与执行",
@@ -2073,7 +2073,12 @@
       "claimedBy": "USER",
       "claimSource": "USER_MESSAGE",
       "realExternalOaConnected": false,
-      "manualDemoVerified": false
+      "manualDemoVerified": false,
+      "deliveryDecision": "D-092",
+      "sourceCommit": "adab1861906dc7d973f796961249e1ef87563e29",
+      "mainMergeCommit": "311aa5d5cbc3d7bfbd064888b4172d48de0a0e99",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "311aa5d5cbc3d7bfbd064888b4172d48de0a0e99"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
@@ -2287,7 +2292,7 @@
       "internalPortImplemented": false,
       "cliImplemented": false,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "branch": "BE-21-31-申请审批与执行",
@@ -2296,7 +2301,12 @@
       "claimedBy": "USER",
       "claimSource": "USER_MESSAGE",
       "realExternalOaConnected": false,
-      "manualDemoVerified": false
+      "manualDemoVerified": false,
+      "deliveryDecision": "D-092",
+      "sourceCommit": "adab1861906dc7d973f796961249e1ef87563e29",
+      "mainMergeCommit": "311aa5d5cbc3d7bfbd064888b4172d48de0a0e99",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "311aa5d5cbc3d7bfbd064888b4172d48de0a0e99"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
@@ -2387,7 +2397,7 @@
       "internalPortImplemented": false,
       "cliImplemented": false,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "branch": "BE-21-31-申请审批与执行",
@@ -2396,7 +2406,12 @@
       "claimedBy": "USER",
       "claimSource": "USER_MESSAGE",
       "realExternalOaConnected": false,
-      "manualDemoVerified": false
+      "manualDemoVerified": false,
+      "deliveryDecision": "D-092",
+      "sourceCommit": "adab1861906dc7d973f796961249e1ef87563e29",
+      "mainMergeCommit": "311aa5d5cbc3d7bfbd064888b4172d48de0a0e99",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "311aa5d5cbc3d7bfbd064888b4172d48de0a0e99"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
@@ -2487,7 +2502,7 @@
       "internalPortImplemented": true,
       "cliImplemented": false,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "branch": "BE-21-31-申请审批与执行",
@@ -2496,7 +2511,12 @@
       "claimedBy": "USER",
       "claimSource": "USER_MESSAGE",
       "realExternalOaConnected": false,
-      "manualDemoVerified": false
+      "manualDemoVerified": false,
+      "deliveryDecision": "D-092",
+      "sourceCommit": "adab1861906dc7d973f796961249e1ef87563e29",
+      "mainMergeCommit": "311aa5d5cbc3d7bfbd064888b4172d48de0a0e99",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "311aa5d5cbc3d7bfbd064888b4172d48de0a0e99"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
@@ -3096,7 +3116,7 @@
       "internalPortImplemented": false,
       "cliImplemented": true,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "branch": "BE-21-31-申请审批与执行",
@@ -3105,7 +3125,12 @@
       "claimedBy": "USER",
       "claimSource": "USER_MESSAGE",
       "realExternalOaConnected": false,
-      "manualDemoVerified": false
+      "manualDemoVerified": false,
+      "deliveryDecision": "D-092",
+      "sourceCommit": "adab1861906dc7d973f796961249e1ef87563e29",
+      "mainMergeCommit": "311aa5d5cbc3d7bfbd064888b4172d48de0a0e99",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "311aa5d5cbc3d7bfbd064888b4172d48de0a0e99"
     },
     "acceptanceScope": "验证演示受理、可信JWT、正式结果回调及防重；自动执行结果由BE-25/33验收。未实现执行器时不得把已接收批准写成权限已生效。",
     "useCases": [
