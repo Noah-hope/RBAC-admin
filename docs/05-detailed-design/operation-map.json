@@ -2700,7 +2700,7 @@
         "ChangePreview"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "submitChange",
@@ -2798,7 +2798,7 @@
         "SubmissionResult"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "retryOaDelivery",
@@ -2881,7 +2881,7 @@
         "ChangeRequest"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listChangeEvents",
@@ -5117,7 +5117,7 @@
         "OaReceipt"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listImportPlanChanges",
@@ -5336,6 +5336,6 @@
         "OaLink"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   }
 ]

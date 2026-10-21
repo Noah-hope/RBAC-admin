@@ -371,6 +371,25 @@
         "verifiedRemoteCommit": "cf27f7f910bf5e904c89542f56e3f56fddd884d9",
         "ownerAccepted": true,
         "evidence": "BE-19-22-AUDIT-REQUEST-QUERIES.md"
+      },
+      {
+        "taskIds": [
+          "BE-21",
+          "BE-23",
+          "BE-24",
+          "BE-25",
+          "BE-31"
+        ],
+        "decision": "D-092",
+        "date": "2026-10-21",
+        "sourceCommit": "adab1861906dc7d973f796961249e1ef87563e29",
+        "mergeCommit": "311aa5d5cbc3d7bfbd064888b4172d48de0a0e99",
+        "remote": "origin",
+        "branch": "main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "311aa5d5cbc3d7bfbd064888b4172d48de0a0e99",
+        "ownerAccepted": false,
+        "evidence": "BE-21-31-APPROVAL-WORKFLOW.md"
       }
     ]
   },
