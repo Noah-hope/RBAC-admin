@@ -39,10 +39,6 @@
       "target": "BE-18"
     },
     {
-      "code": "TASK_NOT_DELIVERED",
-      "target": "BE-18"
-    },
-    {
       "code": "OWNER_ACCEPTANCE_PENDING",
       "target": "BE-21"
     },

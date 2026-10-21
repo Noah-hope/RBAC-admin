@@ -1718,7 +1718,7 @@
     ],
     "deliverable": "主库新快照、完整有效来源并集、进入资格、独立菜单/操作、未知编码与存储错误区分。",
     "notes": "",
-    "status": "IN_PROGRESS",
+    "status": "IMPLEMENTED",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -1733,13 +1733,18 @@
       "implemented": true,
       "httpImplemented": true,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "branch": "codex/be-18-effective-permissions",
       "dependencyBase": "7914788",
       "claimedOwnerSlot": "B",
-      "claimSource": "USER_MESSAGE"
+      "claimSource": "USER_MESSAGE",
+      "deliveryDecision": "D-098",
+      "sourceCommit": "ba2178c60b1ec78b777952845b7bb71e5c9161ce",
+      "mainMergeCommit": "43aeab78fbbf01acd568ff49c8893349e849d958",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "43aeab78fbbf01acd568ff49c8893349e849d958"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
@@ -3366,7 +3371,7 @@
       "implemented": false,
       "fullAcceptanceVerified": false,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "branch": "codex/be-33-35-integration-handoff",
       "dependencyBase": "baeab61",
       "integratedMain": "d79e28a624fd4b9bf3862063c44274d3db602248",
@@ -3374,7 +3379,12 @@
         "BE-27",
         "BE-30"
       ],
-      "transitiveMissingDependencies": []
+      "transitiveMissingDependencies": [],
+      "deliveryDecision": "D-098",
+      "sourceCommit": "ba2178c60b1ec78b777952845b7bb71e5c9161ce",
+      "mainMergeCommit": "43aeab78fbbf01acd568ff49c8893349e849d958",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "43aeab78fbbf01acd568ff49c8893349e849d958"
     },
     "acceptanceScope": "对照全部后端AT收集各模块证据并运行跨模块场景，补齐全67入站契约及AT-38全链路；AT-36目标服务器和AT-39发布证据分别仍由BE-34/35完成。",
     "useCases": [
@@ -3502,14 +3512,19 @@
       "implemented": false,
       "fullAcceptanceVerified": false,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "branch": "codex/be-33-35-integration-handoff",
       "dependencyBase": "baeab61",
       "integratedMain": "d79e28a624fd4b9bf3862063c44274d3db602248",
       "unresolvedDependencies": [
         "BE-34"
       ],
-      "transitiveMissingDependencies": []
+      "transitiveMissingDependencies": [],
+      "deliveryDecision": "D-098",
+      "sourceCommit": "ba2178c60b1ec78b777952845b7bb71e5c9161ce",
+      "mainMergeCommit": "43aeab78fbbf01acd568ff49c8893349e849d958",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "43aeab78fbbf01acd568ff49c8893349e849d958"
     },
     "acceptanceScope": "汇总AT-39完整Issue/PR/commit/候选包与发布证据，检查其他后端AT均有实际结果；有未通过项时不得宣布全量发布完成。",
     "useCases": [],

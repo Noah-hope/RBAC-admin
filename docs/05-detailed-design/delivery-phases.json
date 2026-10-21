@@ -407,6 +407,27 @@
         "ownerAccepted": false,
         "deliveryMode": "LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH",
         "evidence": "BE-26-SOURCE-CLOSURE.md"
+      },
+      {
+        "taskIds": [
+          "BE-18"
+        ],
+        "preparationTaskIds": [
+          "BE-33",
+          "BE-35"
+        ],
+        "decision": "D-098",
+        "date": "2026-10-21",
+        "branch": "main",
+        "sourceCommit": "ba2178c60b1ec78b777952845b7bb71e5c9161ce",
+        "mergeCommit": "43aeab78fbbf01acd568ff49c8893349e849d958",
+        "remote": "origin",
+        "remoteRef": "refs/heads/main",
+        "pushVerified": true,
+        "verifiedRemoteCommit": "43aeab78fbbf01acd568ff49c8893349e849d958",
+        "ownerAccepted": false,
+        "deliveryMode": "LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH",
+        "evidence": "BE-33-35-INTEGRATION-HANDOFF.md"
       }
     ]
   },
