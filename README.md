@@ -1,5 +1,7 @@
 # rbac-admin · 集中权限管理系统
 
+D-092（2026-10-21）：BE-33/35 已补现有模块集成回归、只读发布证据检查和交接准备；执行/失效/导入提交/真实服务器依赖仍缺，不能宣布全链路或发布完成。两项保持 PLANNED、准备单列。见 [剩余验收与交接清单](docs/05-detailed-design/BE-33-35-INTEGRATION-HANDOFF.md)，不改变其他成员进度或验收事实。
+
 D-091（2026-10-21）：B/BE-18 已在本地任务分支实现完整有效权限查询与单项检查，待本人确认和主线交付，未推送/合并。B 六项业务开发已有实现，BE-33/35 与完整项目验收仍开放；本机配置及实际验证见 [BE-18](docs/05-detailed-design/BE-18-EFFECTIVE-PERMISSIONS.md)。下方 BE-18 未实现/等 BE-14 为历史。
 
 D-083：BE-09已通过[PR #3](https://github.com/Noah-hope/RBAC-admin/pull/3)交付main/5f42a2c，本地及远程已核对，任务分支保留；112普通＋227真实MySQL/HTTP通过。A确认沿用D-082，未进行人工演示；组员可更新main接入，见[交付记录](docs/05-detailed-design/BE-09-SCOPE-CREATION.md)。下方待交付为历史。

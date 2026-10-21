@@ -1,5 +1,7 @@
 # 项目协作规则
 
+D-092（2026-10-21）：B 要求完成剩余 BE-33/35。共同 main 仍 7914788，缺 BE-25/27/30/31 与真实服务器 BE-34；本轮在继承 BE-18/baeab61 的 codex/be-33-35-integration-handoff 补已交付模块公共接口集成检查、只读发布证据校验工具和交接清单。两项保持 PLANNED、单列 preparationProgress，不能把准备或绿色回归冒充完整 AT-38/39。见 docs/05-detailed-design/BE-33-35-INTEGRATION-HANDOFF.md；未接管其他成员模块、未推送/合并/部署。
+
 D-091验证结果：BE-18 完整 137 普通＋301 真实隔离 MySQL/HTTP 及设计静态校验通过，失败/错误/跳过均 0。随机库/账号 0/0，测试密钥清理，专属实例关闭。仍待 B 本人确认与主线交付，不虚构整个 B/项目验收完成。
 
 D-091（2026-10-21）：当前 B 用户在同步 main/7914788、说明 BE-14 已交付后要求“那就改”，按上下文实施 BE-18。分支 codex/be-18-effective-permissions，先详细设计、真实 HTTP/MySQL RED 再实现两个业务权限读取接口；同快照复核当前业务身份及完整有效来源并集，无缓存、无目录/角色命令依赖、不改契约/迁移。实现与验证见 docs/05-detailed-design/BE-18-EFFECTIVE-PERMISSIONS.md；本轮仅本地交付，未授权远程推送或合并，负责人确认不代记。B 六项业务开发已实现，BE-33/35 仍开放；下方 BE-18 等 BE-14 为历史。

@@ -300,6 +300,15 @@ def checks(report):
         expected_status={'BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-08':'OWNER_ACCEPTED','BE-09':'OWNER_ACCEPTED','BE-10':'IMPLEMENTED','BE-11':'IN_PROGRESS','BE-12':'IN_PROGRESS','BE-13':'IN_PROGRESS','BE-14':'IMPLEMENTED','BE-15':'IN_PROGRESS','BE-16':'IMPLEMENTED','BE-17':'IN_PROGRESS','BE-19':'OWNER_ACCEPTED','BE-20':'OWNER_ACCEPTED','BE-22':'OWNER_ACCEPTED','BE-28':'IMPLEMENTED','BE-29':'IMPLEMENTED','BE-32':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
         if task['id']=='BE-18': expected_status='IN_PROGRESS'
         require(task['status']==expected_status,'任务准备/实现状态不符')
+        if task['id'] in {'BE-33','BE-35'}:
+            preparation=task.get('preparationProgress',{})
+            require(task['status']=='PLANNED' and preparation.get('decision')=='D-092'
+                    and preparation.get('implemented') is False and preparation.get('fullAcceptanceVerified') is False
+                    and preparation.get('ownerAccepted') is False and preparation.get('mergedToMain') is False
+                    and preparation.get('branch')=='codex/be-33-35-integration-handoff'
+                    and preparation.get('evidence')=='BE-33-35-INTEGRATION-HANDOFF.md'
+                    and preparation.get('unresolvedDependencies')==(['BE-25','BE-27','BE-30','BE-31'] if task['id']=='BE-33' else ['BE-34']),
+                    'BE-33/35准备不能冒充依赖齐备或验收完成')
         if task['id']=='BE-18':
             progress=task.get('implementationProgress',{})
             require(progress.get('decision')=='D-091' and progress.get('implemented') is True

@@ -210,6 +210,11 @@ for case in CASES:
         case.setdefault('additionalEvidence',[]).append('BE-18-EFFECTIVE-PERMISSIONS.md')
         case['verificationScope']='; '.join(filter(None,[case.get('verificationScope',''),'BE18_CURRENT_BUSINESS_QUERY_AND_CHECK_ONLY_NOT_ALL_LIFECYCLE_OR_EXTERNAL_SYSTEMS']))
 
+for case in CASES:
+    if case['id'] in {'AT-04','AT-07','AT-11','AT-13','AT-16','AT-30','AT-31','AT-34','AT-37'}:
+        case.setdefault('additionalEvidence',[]).append('BE-33-35-INTEGRATION-HANDOFF.md')
+        case['verificationScope']='; '.join(filter(None,[case.get('verificationScope',''),'BE33_PREPARATION_DELIVERED_PUBLIC_FLOWS_ONLY_NOT_APPROVAL_EXECUTION_IMPORT_OR_TARGET_SERVER']))
+
 TASKS = []
 def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
     foundation = n <= 5
@@ -241,6 +246,12 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             scope='FRESH_PRIMARY_BUSINESS_PERMISSION_UNION_AND_INDIVIDUAL_CHECK',implemented=True,httpImplemented=True,
             ownerAccepted=False,mergedToMain=False,databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
             branch='codex/be-18-effective-permissions',dependencyBase='7914788',claimedOwnerSlot='B',claimSource='USER_MESSAGE')
+    if n in (33,35):
+        TASKS[-1]['preparationProgress']=dict(evidence='BE-33-35-INTEGRATION-HANDOFF.md',decision='D-092',
+            scope='DELIVERED_MODULE_INTEGRATION_AND_RELEASE_EVIDENCE_PREPARATION_ONLY',
+            implemented=False,fullAcceptanceVerified=False,ownerAccepted=False,mergedToMain=False,
+            branch='codex/be-33-35-integration-handoff',dependencyBase='baeab61',
+            unresolvedDependencies=['BE-25','BE-27','BE-30','BE-31'] if n==33 else ['BE-34'])
     if n == 6:
         TASKS[-1]['implementationProgress']=dict(evidence='BE-06-IDENTITY.md',decision='D-056',
             scope='LOGIN_SESSION_PASSWORD_AND_THREE_JWT_FAMILIES',implemented=True,
@@ -565,6 +576,9 @@ def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text=title+'\n\nD-091（2026-10-21）：B 在已交付 BE-14 后按用户“那就改”实现 BE-18 两个业务权限接口，分支 codex/be-18-effective-permissions、基线 main/7914788。完整来源并集、独立进入/菜单/操作、当前身份与主库新快照、未知与故障分离；不改迁移/契约，不代记验收或主线交付。实际验证见 [BE-18](BE-18-EFFECTIVE-PERMISSIONS.md)。当前 13 项 OWNER_ACCEPTED、5 项 IMPLEMENTED、6 项 IN_PROGRESS、11 项 PLANNED；B 六项业务开发已实现待本人确认，BE-33/35 仍开放。下方 BE-18 等依赖/旧数量为历史。\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body=text.partition('\n')
+        text=title+'\n\nD-092（2026-10-21）：B 要求完成剩余工作，已准备 BE-33 已交付模块的跨模块 HTTP 检查与 BE-35 发布证据校验/交接清单。远程 main/7914788 仍缺 BE-25/27/30/31，BE-34 真实服务器未验收；不能完成完整 AT-38/39。两项保持 PLANNED，单列 preparationProgress，不把准备或局部通过当作整项完成。实际验证及缺口见 [集成与交接准备](BE-33-35-INTEGRATION-HANDOFF.md)，未改其他成员模块、未推送/合并/部署。\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():

@@ -1,5 +1,7 @@
 # 项目共享记忆
 
+D-092（2026-10-21）：B 用户明确“你把剩下的也给做完”。按原 BE-33/35 核对远程 main 仍 7914788，BE-25/27/30/31 及其前置 BE-21/23/24/26 未交付，BE-34 无真实服务器验收；BE-18 本地实现尚未交付共同主线。已在 codex/be-33-35-integration-handoff（继承 baeab61）补已有公共接口跨模块检查和只读发布证据校验/交接清单，实际结果见 [准备记录](../05-detailed-design/BE-33-35-INTEGRATION-HANDOFF.md)。两项保持 PLANNED，preparationProgress 不等于 implemented 或 OWNER_ACCEPTED；全量发布/AT-38/39 尚不能完成。未伪造审批、执行、导入提交或服务器证据，未接管其他成员模块、未推送/合并/部署。
+
 D-091验证完成：BE-18 最终完整 clean verify/mysql-check 为 137 普通＋301 真实 MySQL/HTTP，失败/错误/跳过均 0；含新增 17 项及同学新主线既有全部回归。静态校验 PASS、随机库/账号 0/0、测试密钥清理，专属 13461 实例关闭。源码/测试/记录仅本地任务分支交付，不代记本人验收或推送/合并。
 
 D-091（2026-10-21）：当前 B 用户在拉取同学新增的 31 个提交、说明 BE-14 技术依赖齐备后明确“那就改”，本轮实现 BE-18。基线 main/7914788，分支 codex/be-18-effective-permissions；独立 SQL/DTO 和已有 ReadBoundary/CurrentIdentityReader 实现两个业务系统 POST，完整并集、独立菜单/操作、来源/关系版本、当前任职与故障分离。沿用原契约/迁移，不改同学模块业务代码；实际 TDD、测试及本机接入见 [BE-18](../05-detailed-design/BE-18-EFFECTIVE-PERMISSIONS.md)。状态 IN_PROGRESS 表示已实现待 B 本人确认与主线交付，不代记 OWNER_ACCEPTED，未推送或合并。B 六个业务开发任务均已有实现，BE-33/35 仍等完整集成与部署验收，不表示整个 B/项目完成。

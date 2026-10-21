@@ -1,5 +1,7 @@
 # 本地Issue草案与验收卡
 
+D-092（2026-10-21）：B 要求完成剩余工作，已准备 BE-33 已交付模块的跨模块 HTTP 检查与 BE-35 发布证据校验/交接清单。远程 main/7914788 仍缺 BE-25/27/30/31，BE-34 真实服务器未验收；不能完成完整 AT-38/39。两项保持 PLANNED，单列 preparationProgress，不把准备或局部通过当作整项完成。实际验证及缺口见 [集成与交接准备](BE-33-35-INTEGRATION-HANDOFF.md)，未改其他成员模块、未推送/合并/部署。
+
 D-091（2026-10-21）：B 在已交付 BE-14 后按用户“那就改”实现 BE-18 两个业务权限接口，分支 codex/be-18-effective-permissions、基线 main/7914788。完整来源并集、独立进入/菜单/操作、当前身份与主库新快照、未知与故障分离；不改迁移/契约，不代记验收或主线交付。实际验证见 [BE-18](BE-18-EFFECTIVE-PERMISSIONS.md)。当前 13 项 OWNER_ACCEPTED、5 项 IMPLEMENTED、6 项 IN_PROGRESS、11 项 PLANNED；B 六项业务开发已实现待本人确认，BE-33/35 仍开放。下方 BE-18 等依赖/旧数量为历史。
 
 D-090（2026-10-21）：C明确“确认，然后继续完成剩下的任务”，接受BE-19/22既有137离线＋284真实MySQL/HTTP证据；人工演示未进行。来源cc88885f2c97df838720fc2f7f0e524d72e56351已no-ff合入main/cf27f7f910bf5e904c89542f56e3f56fddd884d9，合并树等于验证来源，main及任务分支原子推送且远程完整SHA回查一致。两项OWNER_ACCEPTED、mergedToMain=true。后续按BE-21→23→24→25→31连续实施，依赖沿同一任务分支继承，各项实现、本人确认、主线交付分开记录；不代其他成员验收、不部署。共13项OWNER_ACCEPTED、5项IMPLEMENTED、5项IN_PROGRESS、12项PLANNED。下方待确认/待交付为历史。

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "baeab6124d5d440b201fbca3ebf41cc457d5e2e3",
+  "candidateIsPartial": true,
+  "sourceSha256": "647515373c7b7842a4d7aea9e54a644ff772e81ae1ddf77959d48c74f1a6987b",
+  "testSourceSha256": "1aff509fbb81d7963864c92e277e7d9bb7396f44087f5e093762db3662d1eb32",
+  "artifact": {
+    "path": "backend/target/backend-0.0.1-SNAPSHOT.jar",
+    "sha256": "0f2a09990dc7be5df6d4de245fc922d4ad2bbe84beb9ea0c4306945c961f70c8"
+  },
+  "reports": {
+    "backend/target/surefire-reports/TEST-com.adgn.backend.BackendApplicationTests.xml": "216db342352c6936d3cbb2ce7db2c9ddc42ee443576ad6bf2d40a459dc875a40",
+    "backend/target/surefire-reports/TEST-com.adgn.backend.DatabaseProfileTest.xml": "77ae4dcadf183c22aa700f0d973a9468043dd1414aa6318c9226642d041e05c5",
+    "backend/target/surefire-reports/TEST-com.adgn.backend.IdempotencyValueTest.xml": "2b5cd1ec70f66f95093ceecfe26fe73c5ff446ad42536eac05e1531bd4089839",
+    "backend/target/surefire-reports/TEST-com.adgn.backend.MigrationEntryTest.xml": "cb0eafef6bef2dec9f4f85271790ecd653af5f4cf3c6611bcb227dd9fe2fe5be",
+    "backend/target/surefire-reports/TEST-com.adgn.backend.MigrationScriptTest.xml": "08549e1920ea969663395395c1c99206a241f44e4ffe579b9f18556c47a13f5f",
+    "backend/target/surefire-reports/TEST-com.adgn.backend.PersistenceFailureTest.xml": "4c5ea7705810f4fdc7c9775ba1125f5e946820776cd500e8a4fe591a38e615a4",
+    "backend/target/surefire-reports/TEST-com.adgn.backend.RuntimeConfigurationTest.xml": "74aa7dbaa6509bae6ea3429a83020c762d789eca2b086110694fadb9d0e9591c",
+    "backend/target/surefire-reports/TEST-com.adgn.backend.UtcInstantConverterTest.xml": "f9d4913b401664460b277fcc17df5b1c4ff0899c623807266e89d70a4fccb2e3",
+    "backend/target/surefire-reports/TEST-com.adgn.backend.web.HttpBoundaryTest.xml": "322d7024040817d172fec57251e768149464580b0e4bdcef10b7225c2f40a854",
+    "backend/target/surefire-reports/TEST-com.adgn.catalogfixture.ImpactPolicyTest.xml": "147b93eb1171205720dd9fd8c41328a9dc9627673bf6d92f9d4d1fedda2ac369",
+    "backend/target/surefire-reports/TEST-com.adgn.deploymentfixture.ServerSettingsTest.xml": "cd0875d9d9eeffed17e81a0b49727b4627d375725f88a3ed8855a90a64db5683",
+    "backend/target/surefire-reports/TEST-com.adgn.grantfixture.GrantReaderBoundaryTest.xml": "6dc13fea4159ff5fabac9af161424f7cbcd3cd20324371b362297b12917af675",
+    "backend/target/surefire-reports/TEST-com.adgn.idempotencyfixture.IdempotencyConfigTest.xml": "ce884d4b396741b56026158d98fef13dcd39e10fb7c977a304331b56348f9221",
+    "backend/target/surefire-reports/TEST-com.adgn.idempotencyfixture.IdempotencyHttpTest.xml": "0a73d1fb81a1b62eead2ab62718c0e6305808a439ad55286dfc70802aba3ee42",
+    "backend/target/surefire-reports/TEST-com.adgn.identityfixture.IdentitySecurityTest.xml": "dfdc77da75c3fdad08e2fea1854907c4dfa9174746a889e8fa263df2b4af656c",
+    "backend/target/surefire-reports/TEST-com.adgn.importfixture.ImportFileParserTest.xml": "228dd9103db410dbebdc9f9abf315e18239565582fc74dcee57eee9cd94079de",
+    "backend/target/surefire-reports/TEST-com.adgn.importfixture.ImportFileStoreTest.xml": "fdaa639661af582dfa67ff5b575ad99da23941e19c14978ccc61813bfc3f8277",
+    "backend/target/surefire-reports/TEST-com.adgn.importfixture.ImportPlannerTest.xml": "e9bcc83dda8d51dca88ce31cd7d1cdc9b04ac62b7c376aa219f54bde1f791977",
+    "backend/target/surefire-reports/TEST-com.adgn.peoplefixture.OrganizationReaderTest.xml": "28b712fa2c0aa6bcbf12543b3bb6083ddf62769d88930bf6cba5c000c66251ed",
+    "backend/target/surefire-reports/TEST-com.adgn.scopefixture.ScopeCoveragePolicyTest.xml": "955f2feb4d08dbcebbe87f3f04add12a1d2434ff0c8a6518d53dceeadc31c8be",
+    "backend/target/failsafe-reports/TEST-com.adgn.authorizationfixture.AuthorizationMySqlCheck.xml": "3aaab57bf0ebedcb193f19eef8568e302099113f9ecd3d91cca3f6a48cb5b690",
+    "backend/target/failsafe-reports/TEST-com.adgn.backend.IdempotencyMySqlCheck.xml": "d61e1c155511f7bb2a8ddfefeb8c80f470a47a842e59f55228f38a7ead3b7828",
+    "backend/target/failsafe-reports/TEST-com.adgn.backend.JpaMappingMySqlCheck.xml": "ff1f3bca9d0635b976420457cbdb755840bdf86ed7e379bc64950b43190c5de5",
+    "backend/target/failsafe-reports/TEST-com.adgn.backend.MigrationMySqlCheck.xml": "772febc8c295075c37d31059977bb40c813ed55f6a7f1a1e79d6b91c632df19f",
+    "backend/target/failsafe-reports/TEST-com.adgn.backend.StartupDatabaseMySqlCheck.xml": "3778948c98b4122ebd0f657f283fa194c2b997c041d5eda72f14e50e913fcc8c",
+    "backend/target/failsafe-reports/TEST-com.adgn.backend.TransactionBoundaryMySqlCheck.xml": "28f0c6ed4930310086066b88cef5b25dcd7a0ce6eab47a740a441a6b455c57e4",
+    "backend/target/failsafe-reports/TEST-com.adgn.bfixture.BModuleMySqlCheck.xml": "4743cded7d3e22aadd77fa3f00d684381f1453310d2598df7249ec865e604f9f",
+    "backend/target/failsafe-reports/TEST-com.adgn.bootstrapfixture.BootstrapMySqlCheck.xml": "da665f0380dc133b3682a9248ddb1a5e2e34196d19aa194289e73c607f7226b1",
+    "backend/target/failsafe-reports/TEST-com.adgn.catalogfixture.CatalogPreviewMySqlCheck.xml": "e8b5e11309ac5b3502b05bf67d1fd46bcc2f424536c838ac32ede2233388b657",
+    "backend/target/failsafe-reports/TEST-com.adgn.changefixture.AuditRequestQueriesMySqlCheck.xml": "b35e984e04f54228a2f767be2476334c189fa22e5c9b4abe0b5d50762e6f4420",
+    "backend/target/failsafe-reports/TEST-com.adgn.changefixture.ChangeDraftMySqlCheck.xml": "32773a56f94e2ffceaf05ea4367d98d65eb6c6bb268a5ba4ed82045669079a6c",
+    "backend/target/failsafe-reports/TEST-com.adgn.grantfixture.GrantMutationsMySqlCheck.xml": "cc7c8d3bf812b3b645abd3e2ff62f280bc7458422bc2ffe01ecea578c8e6e09b",
+    "backend/target/failsafe-reports/TEST-com.adgn.grantfixture.GrantQueriesMySqlCheck.xml": "a18fab388a0d80d9b4d38d26cdc457267a1bce849e8c57a60c08629c4ae8c21d",
+    "backend/target/failsafe-reports/TEST-com.adgn.identityfixture.AccountMySqlCheck.xml": "c7f6e51c9e93248fd71ad671b80080d1ffd7be1d3a83485f9168a4a45ae20780",
+    "backend/target/failsafe-reports/TEST-com.adgn.identityfixture.IdentityMySqlCheck.xml": "c4c893411965de8b61cdeef452a2feb96f4e26b9e506f9df281336769b1d5c31",
+    "backend/target/failsafe-reports/TEST-com.adgn.importfixture.ImportFileMySqlCheck.xml": "958dc4e9a8947bd2ed157c7479beb9861ed05b5d982986fcd7041eba563c206a",
+    "backend/target/failsafe-reports/TEST-com.adgn.importfixture.ImportPrecheckMySqlCheck.xml": "2654cbe07801816414c44a7280a4a16f3a21b1a684f520687b4a599b2d2dbeda",
+    "backend/target/failsafe-reports/TEST-com.adgn.integrationfixture.DeliveredModulesMySqlCheck.xml": "e6f2cce7634b85134cfde4ef3824408a56036cea3a74846d88ef4f36a87e17da",
+    "backend/target/failsafe-reports/TEST-com.adgn.peoplefixture.EmploymentWriterMySqlCheck.xml": "1f932997fd1bd5af1fb753fc94e6dfa648b549ef2592ca9c8c69c0ded093f9a6",
+    "backend/target/failsafe-reports/TEST-com.adgn.peoplefixture.OrganizationReaderMySqlCheck.xml": "fe221e898c7c8d8a5cdf2f2390b84052b452bcc699b7bb832a562550721874d2",
+    "backend/target/failsafe-reports/TEST-com.adgn.peoplefixture.PeopleHttpMySqlCheck.xml": "69bf04b7b97ec080157814f1348f119c2d609e52cb479e8cb190238bac5359ea",
+    "backend/target/failsafe-reports/TEST-com.adgn.scopefixture.ScopeCreationMySqlCheck.xml": "9174e5c14beaffd6a7331351dc82fa1c5a5380d553288089dae00adc9b37aa9a",
+    "backend/target/failsafe-reports/TEST-com.adgn.scopefixture.ScopeHttpMySqlCheck.xml": "9268f00c973e5ded19b2c1ca2d3ffb281e21e8d862a228f8b7aface0848c76c5"
+  },
+  "fullSuite": true,
+  "server": {
+    "verified": false
+  },
+  "endToEnd": {
+    "verified": false
+  },
+  "ownerHandoff": {
+    "verified": false
+  }
+}
