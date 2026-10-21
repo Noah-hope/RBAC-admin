@@ -166,12 +166,10 @@
     "BE-22",
     "BE-32"
   ],
-  "businessTasksPendingMainDelivery": [
-    "BE-27"
-  ],
+  "businessTasksPendingMainDelivery": [],
   "businessAcceptanceDecision": "D-090",
   "businessMainDeliveryDecision": "D-098",
-  "businessMainDeliveryMerge": "43aeab78fbbf01acd568ff49c8893349e849d958",
+  "businessMainDeliveryMerge": "92d126f5465c8ecc5c2b4f293402fb21b0f1df7a",
   "businessMainDeliveryPrUrl": null,
   "priorScopeCreationDeliveryPrUrl": "https://github.com/Noah-hope/RBAC-admin/pull/3",
   "priorScopeDeliveryPrUrl": "https://github.com/Noah-hope/RBAC-admin/pull/2",
@@ -185,18 +183,18 @@
   "businessOperationsAssigned": 68,
   "artifactSha256": {
     "modules.json": "f20c0338e550a72468fb18981f04778461fa93e0421ab9f916d30c97d3fcecdf",
-    "issues.json": "1d2239221cf1164ccdc91b1bb2e84128ded1759bb7449af6f90ed8742f00a3e7",
+    "issues.json": "24c213cf17daddc20c27bcc68feb12e7bd21d459528f676160872645090c3376",
     "acceptance.json": "42d4336b0c96dbba6118b0a5138c4ba173480b241a06f531bdb8048475cf9ca1",
-    "operation-map.json": "aba18aa86bca8fddfc221f870c6ba27c2ccc2391e1766eeef75e36de9b7948ab",
+    "operation-map.json": "fa03ab7429d8872c50cd45e5c9dedb2f52900a975106cc211f308e60c0280da1",
     "estimates.json": "55baeb97978ace7292118acc188ac32fa64f8d8037a4fa32bb1a9d1ffa14d443",
-    "delivery-phases.json": "fe6ff730b66f20cea56f84bc70e9b0ad32d081716a701beda95a2e0626a9f040",
-    "MODULES.md": "c96ddaa5600d882714d9293250583cb84ffb79fbceaf22f12e62424238d7ce34",
-    "TRACEABILITY.md": "4f29aa204de1fdc002d97483f6b50fa5ad7dc23ba3505e49ee54a583f838c831",
+    "delivery-phases.json": "56d20ac7ce7178bde2e38efece8186b9bc92bab26e78ab7e6055a66b7c2dd76d",
+    "MODULES.md": "f39108b8d01b17d974036f0ff2e829e31d7e743a49c3e2f40e2c25d9f62b15fd",
+    "TRACEABILITY.md": "0b726e6a9161e1f265d4056ef3e5ca61f6c0c86ae5154bc5341dbabbab56edc8",
     "HANDLER-CONTRACTS.md": "fc845a172b5360321333b3e274c8d79c8537f264ae28e3b72f804891f350ce0e",
-    "TEST-PLAN.md": "0f4576e799d98c71c03c5529da1d640665d2043c2f1c6f9e03664b53b5c66345",
-    "TASKS.md": "8fc25fac363fa27dce427de40872b22ce6aa39b6ae9c50e104618958790c395c",
-    "IMPLEMENTATION-PLAN.md": "5bc99517740258685b8cb236b36d6fd0f89d7b93cd0fc43f785dbcea19d86cce",
-    "TEAM-ASSIGNMENT.md": "c22f578c6b6852df5f58da8ab4740f898b29d6bde9b436e91154118b8d56594f",
+    "TEST-PLAN.md": "bbcfa4c3f33a9b3e496b764bdff0eac814bf87d2ca4889982935c1e2e9990f28",
+    "TASKS.md": "ccdbb7dc873481fbb423f2c642dcdabf156e13fd9faac506de1dc5504510b8e5",
+    "IMPLEMENTATION-PLAN.md": "0dc2583bcd1c863c3a88f7392d5c4de8642bb426bfd0bc87055c05b33b5b3fed",
+    "TEAM-ASSIGNMENT.md": "83f37d8c6475e5ec21b0f2651799790b5c246f08117be5f830636ddb7e7e1409",
     "module-structure.drawio": "3db24f7f4f13cff20d34834b6cad2a5b48c1526e176d1a27ea0a0aa3e50a93b4",
     "core-flows.drawio": "af62be1624fe1141d5f6c472859e8ed0f7ff07363077ea1a2fa28c6fa206921f"
   }

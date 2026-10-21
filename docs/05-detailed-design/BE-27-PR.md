@@ -15,3 +15,5 @@
 负责人验收仍单独待确认，未进行本机人工演示；本PR交付代码不代记OWNER_ACCEPTED。合入后D可更新main接入BE-30，其实现及整批导入验收仍由D负责。
 
 接入与验证：[BE-27交接文档](BE-27-CROSS-DOMAIN-LIFECYCLE.md)。
+
+实际交付：本PR为[#4](https://github.com/Noah-hope/RBAC-admin/pull/4)，已合并；main合并提交`92d126f5465c8ecc5c2b4f293402fb21b0f1df7a`，来源`682a052e5b38cb5be09d10f4856e93860b5091af`。主线交付与本人验收分别记录。

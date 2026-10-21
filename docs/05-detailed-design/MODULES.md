@@ -1,5 +1,7 @@
 # 模块结构与维护责任
 
+D-100实际交付（2026-10-21）：BE-27已通过PR #4（https://github.com/Noah-hope/RBAC-admin/pull/4）合入远程main。验证实现72daaac009a9778a7446373e2094d2196a836514，PR来源682a052e5b38cb5be09d10f4856e93860b5091af，合并92d126f5465c8ecc5c2b4f293402fb21b0f1df7a；已回查closed/merged=true、远程完整SHA、双亲及合并树等于验证来源。本地主线已同步、任务分支保留。沿用139普通＋406真实MySQL/HTTP及18辅助证据，交付静态检查通过，不重跑Java/SQL；远程检查条目0，不记为CI通过。BE-27为IMPLEMENTED、mergedToMain=true、remotePrNumber=4、ownerAccepted=false；负责人验收仍单独待确认。D可更新main接入BE-30，BE-33仍待BE-30、BE-34仍待完整集成，不部署或自动开新任务；下方待交付为历史。
+
 D-099（2026-10-21）：A要求同步远程并开始BE-27，已在main/8ad17e4上独立实现员工状态预览/保存及范围替换预览/保存，复用BE-16/26的来源与整份申请失效端口。完整139普通＋406真实MySQL/HTTP（含本任务31项）、18辅助工具及静态校验通过，失败/错误/跳过0；专属资源清理关闭，原MySQL84仍Running。详细证据见[BE-27交接](BE-27-CROSS-DOMAIN-LIFECYCLE.md)。实现、本人确认和主线交付分别记录，BE-27为IMPLEMENTED、ownerAccepted=false、mergedToMain=false，不代B/C/D验收，不推送/合并/部署或实施BE-30。下方BE-27尚未实现为历史。
 
 D-098实际主线交付（2026-10-21）：B 明确要求“把你做的东西弄好，然后做好测试后就合并”。来源 ba2178c60b1ec78b777952845b7bb71e5c9161ce 已无冲突 no-ff 合入并推送远程 main/43aeab78fbbf01acd568ff49c8893349e849d958，双亲和合并树等于已验证来源，远程完整 SHA 已回查。合并后完整139普通＋375真实MySQL/HTTP、18辅助工具及静态追踪通过，失败/错误/跳过0；隔离库/账号0/0、密钥清理、专属MySQL关闭。常规Git网络卡住后停止本轮卡住进程，改用官方GitHub Git API按原始SHA、force=false交付。BE-18为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，B六项业务代码均已交付主线；BE-33/35仅已完成的集成/交接准备随同交付，正式任务保持PLANNED，仍缺A/BE-27、D/BE-30及A/BE-34。保留任务分支、不代记本人验收、不部署；下方不合并/未交付为历史，本条后续仅补交付证据文字。

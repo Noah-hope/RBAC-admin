@@ -168,7 +168,7 @@ def checks(report):
     require(subprocess.run(['git','diff','--quiet',business_delivery['sourceCommit'],business_delivery['mergeCommit']],cwd=REPO).returncode==0,
             'BE-06/07合并树与已确认分支不一致')
     deliveries=phase_plan['business'].get('additionalMainDeliveries',[])
-    require(len(deliveries)==15,'主线交付记录缺失或重复（含D-098的BE-18及B准备交付）')
+    require(len(deliveries)==16,'主线交付记录缺失或重复（含D-100的BE-27）')
     query_delivery=deliveries[11]
     require(query_delivery.get('taskIds')==['BE-19','BE-22'] and query_delivery.get('decision')=='D-090'
             and query_delivery.get('sourceCommit')=='cc88885f2c97df838720fc2f7f0e524d72e56351'
@@ -197,7 +197,7 @@ def checks(report):
     require(closure_parents==['6b9a02e4406c5017e9b92b62bd41b026fc726f6c',closure_delivery['sourceCommit']],'BE-26合并双亲不符')
     require(subprocess.run(['git','diff','--quiet',closure_delivery['sourceCommit'],closure_delivery['mergeCommit']],cwd=REPO).returncode==0,'BE-26合并树不符')
     require(subprocess.run(['git','merge-base','--is-ancestor',closure_delivery['mergeCommit'],'HEAD'],cwd=REPO).returncode==0,'BE-26交付不是当前祖先')
-    b18_delivery=deliveries[-1]
+    b18_delivery=next(d for d in deliveries if d.get('decision')=='D-098')
     require(b18_delivery.get('decision')=='D-098' and b18_delivery.get('taskIds')==['BE-18']
             and b18_delivery.get('preparationTaskIds')==['BE-33','BE-35'] and b18_delivery.get('ownerAccepted') is False
             and b18_delivery.get('sourceCommit')=='ba2178c60b1ec78b777952845b7bb71e5c9161ce'
@@ -208,6 +208,16 @@ def checks(report):
     require(b_parents==['d79e28a624fd4b9bf3862063c44274d3db602248',b18_delivery['sourceCommit']], 'B合并双亲不符')
     require(subprocess.run(['git','diff','--quiet',b18_delivery['sourceCommit'],b18_delivery['mergeCommit']],cwd=REPO).returncode==0,'B合并树不符')
     require(subprocess.run(['git','merge-base','--is-ancestor',b18_delivery['mergeCommit'],'HEAD'],cwd=REPO).returncode==0,'B交付不是当前祖先')
+    lifecycle_delivery=next(d for d in deliveries if d.get('decision')=='D-100')
+    require(lifecycle_delivery.get('taskIds')==['BE-27'] and lifecycle_delivery.get('remotePrNumber')==4
+            and lifecycle_delivery.get('sourceCommit')=='682a052e5b38cb5be09d10f4856e93860b5091af'
+            and lifecycle_delivery.get('mergeCommit')=='92d126f5465c8ecc5c2b4f293402fb21b0f1df7a'
+            and lifecycle_delivery.get('ownerAccepted') is False and lifecycle_delivery.get('pushVerified') is True,
+            'BE-27交付不得代记本人验收')
+    lifecycle_parents=subprocess.check_output(['git','show','-s','--format=%P',lifecycle_delivery['mergeCommit']],cwd=REPO,text=True).split()
+    require(lifecycle_parents==['8ad17e40db55b9e49af90d8141d21c6195fda5dd',lifecycle_delivery['sourceCommit']],'BE-27合并双亲不符')
+    require(subprocess.run(['git','diff','--quiet',lifecycle_delivery['sourceCommit'],lifecycle_delivery['mergeCommit']],cwd=REPO).returncode==0,'BE-27合并树不符')
+    require(subprocess.run(['git','merge-base','--is-ancestor',lifecycle_delivery['mergeCommit'],'HEAD'],cwd=REPO).returncode==0,'BE-27交付不是当前祖先')
     bootstrap_delivery=deliveries[0]
     require(bootstrap_delivery.get('taskIds')==['BE-32'] and bootstrap_delivery.get('decision')=='D-063'
             and bootstrap_delivery.get('sourceCommit')=='d5941c902712c92d4d8d8d7505bd6df4f5ceb139'
@@ -344,7 +354,9 @@ def checks(report):
             progress=task.get('implementationProgress',{})
             require(progress.get('implemented') is True and progress.get('httpImplemented') is True
                     and progress.get('internalWritePortImplemented') is True and progress.get('ownerAccepted') is False
-                    and progress.get('mergedToMain') is False and progress.get('decision')=='D-099'
+                    and progress.get('mergedToMain') is True and progress.get('decision')=='D-099'
+                    and task.get('remotePrNumber')==4 and progress.get('deliveryDecision')=='D-100'
+                    and progress.get('mainMergeCommit')=='92d126f5465c8ecc5c2b4f293402fb21b0f1df7a'
                     and progress.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
                     and progress.get('evidence')=='BE-27-CROSS-DOMAIN-LIFECYCLE.md','BE-27实现不可代记本人确认或主线交付')
         require(task['status']==expected_status,'任务准备/实现状态不符')
@@ -356,7 +368,7 @@ def checks(report):
                     and preparation.get('branch')=='codex/be-33-35-integration-handoff'
                     and preparation.get('evidence')=='BE-33-35-INTEGRATION-HANDOFF.md'
                     and preparation.get('integratedMain')=='d79e28a624fd4b9bf3862063c44274d3db602248'
-                    and preparation.get('unresolvedDependencies')==(['BE-27','BE-30'] if task['id']=='BE-33' else ['BE-34'])
+                    and preparation.get('unresolvedDependencies')==(['BE-30'] if task['id']=='BE-33' else ['BE-34'])
                     and preparation.get('transitiveMissingDependencies')==[],
                     'BE-33/35准备不能冒充依赖齐备或验收完成')
             require(preparation.get('deliveryDecision')=='D-098' and preparation.get('mainMergeCommit')==b18_delivery['mergeCommit']
@@ -670,7 +682,7 @@ def checks(report):
                     'BE-32确认版本缺实际初始化实现')
         if task['id'] in foundation_ids:
             require(task['ownerAcceptance'].get('mainMergeCommit')==phase_plan['foundation']['mainDelivery']['mergeCommit'],'基座任务缺主线交付提交')
-        require(task['remoteIssueNumber'] is None and task['remotePrNumber']=={'BE-32':1,'BE-08':2,'BE-09':3}.get(task['id']),'远程事项与实际证据不符')
+        require(task['remoteIssueNumber'] is None and task['remotePrNumber']=={'BE-32':1,'BE-08':2,'BE-09':3,'BE-27':4}.get(task['id']),'远程事项与实际证据不符')
         require(task['suggestedOwnerSlot'] in 'ABCD','建议组无效')
         require(task['reviewerSlot'] is None and task['suggestedReviewerSlot'] is None
                 and task['reviewPolicy']=='OWNER_ACCEPTANCE' and task['reviewRequired'] is False
@@ -735,7 +747,7 @@ def checks(report):
         if task['id'] in {'BE-19','BE-22'}: expected_operation_status='OWNER_ACCEPTED_MAIN_DELIVERED'
         if task['id'] in {'BE-21','BE-23','BE-24','BE-25','BE-31'}: expected_operation_status='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
         if task['id']=='BE-18': expected_operation_status='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
-        if task['id']=='BE-27': expected_operation_status='IMPLEMENTED_PENDING_OWNER_AND_MAIN'
+        if task['id']=='BE-27': expected_operation_status='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
         require(set(row['acceptance'])<=cids and row['status']==expected_operation_status,'验收引用/实施状态不符')
         if direction=='INBOUND':require('AT-37'in row['acceptance'],'入站缺全契约验收')
         require(set(row['requestModels'])<=api['components']['schemas'].keys(),'未知输入模型')

@@ -277,7 +277,7 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             implemented=False,fullAcceptanceVerified=False,ownerAccepted=False,mergedToMain=False,
             branch='codex/be-33-35-integration-handoff',dependencyBase='baeab61',
             integratedMain='d79e28a624fd4b9bf3862063c44274d3db602248',
-            unresolvedDependencies=['BE-27','BE-30'] if n==33 else ['BE-34'],
+            unresolvedDependencies=['BE-30'] if n==33 else ['BE-34'],
             transitiveMissingDependencies=[])
         TASKS[-1]['preparationProgress'].update(mergedToMain=True,deliveryDecision='D-098',
             sourceCommit='ba2178c60b1ec78b777952845b7bb71e5c9161ce',mainMergeCommit='43aeab78fbbf01acd568ff49c8893349e849d958',
@@ -368,7 +368,11 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             ownerAccepted=False,mergedToMain=False,databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
             branch='codex/be-27-cross-domain-invalidation',dependencyBase='8ad17e4',claimedOwnerSlot='A',claimSource='USER_MESSAGE',manualDemoVerified=False,
             automatedUnitTests=139,automatedMySqlTests=406,taskMySqlTests=31,auxiliaryTests=18,
-            deliveryAuthorizationDecision='D-100',deliverySourceCommit='72daaac009a9778a7446373e2094d2196a836514')
+            deliveryAuthorizationDecision='D-100',implementationCommit='72daaac009a9778a7446373e2094d2196a836514')
+        TASKS[-1]['remotePrNumber']=4
+        TASKS[-1]['implementationProgress'].update(mergedToMain=True,deliveryDecision='D-100',
+            sourceCommit='682a052e5b38cb5be09d10f4856e93860b5091af',mainMergeCommit='92d126f5465c8ecc5c2b4f293402fb21b0f1df7a',
+            pushVerified=True,verifiedRemoteCommit='92d126f5465c8ecc5c2b4f293402fb21b0f1df7a')
     if n == 20:
         TASKS[-1]['status']='OWNER_ACCEPTED'
         TASKS[-1]['implementationProgress']=dict(evidence='BE-20-CHANGE-DRAFTS.md',decision='D-086',
@@ -678,6 +682,9 @@ def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text = title+'\n\nD-099（2026-10-21）：A要求同步远程并开始BE-27，已在main/8ad17e4上独立实现员工状态预览/保存及范围替换预览/保存，复用BE-16/26的来源与整份申请失效端口。完整139普通＋406真实MySQL/HTTP（含本任务31项）、18辅助工具及静态校验通过，失败/错误/跳过0；专属资源清理关闭，原MySQL84仍Running。详细证据见[BE-27交接](BE-27-CROSS-DOMAIN-LIFECYCLE.md)。实现、本人确认和主线交付分别记录，BE-27为IMPLEMENTED、ownerAccepted=false、mergedToMain=false，不代B/C/D验收，不推送/合并/部署或实施BE-30。下方BE-27尚未实现为历史。\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text=title+'\n\n'+'D-100实际交付（2026-10-21）：BE-27已通过PR #4（https://github.com/Noah-hope/RBAC-admin/pull/4）合入远程main。验证实现72daaac009a9778a7446373e2094d2196a836514，PR来源682a052e5b38cb5be09d10f4856e93860b5091af，合并92d126f5465c8ecc5c2b4f293402fb21b0f1df7a；已回查closed/merged=true、远程完整SHA、双亲及合并树等于验证来源。本地主线已同步、任务分支保留。沿用139普通＋406真实MySQL/HTTP及18辅助证据，交付静态检查通过，不重跑Java/SQL；远程检查条目0，不记为CI通过。BE-27为IMPLEMENTED、mergedToMain=true、remotePrNumber=4、ownerAccepted=false；负责人验收仍单独待确认。D可更新main接入BE-30，BE-33仍待BE-30、BE-34仍待完整集成，不部署或自动开新任务；下方待交付为历史。'+'\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -794,6 +801,10 @@ def generate():
         branch='main',sourceCommit='ba2178c60b1ec78b777952845b7bb71e5c9161ce',mergeCommit='43aeab78fbbf01acd568ff49c8893349e849d958',
         remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit='43aeab78fbbf01acd568ff49c8893349e849d958',
         ownerAccepted=False,deliveryMode='LOCAL_MERGE_AND_OFFICIAL_GIT_API_PUSH',evidence='BE-33-35-INTEGRATION-HANDOFF.md'))
+    phase_plan['business']['additionalMainDeliveries'].append(dict(taskIds=['BE-27'],decision='D-100',date='2026-10-21',
+        sourceCommit='682a052e5b38cb5be09d10f4856e93860b5091af',mergeCommit='92d126f5465c8ecc5c2b4f293402fb21b0f1df7a',
+        remote='origin',branch='main',pushVerified=True,verifiedRemoteCommit='92d126f5465c8ecc5c2b4f293402fb21b0f1df7a',
+        ownerAccepted=False,remotePrNumber=4,prUrl='https://github.com/Noah-hope/RBAC-admin/pull/4',evidence='BE-27-CROSS-DOMAIN-LIFECYCLE.md'))
     dump('delivery-phases.json',phase_plan)
     dump('modules.json',modules);dump('acceptance.json',CASES);dump('issues.json',TASKS)
     lines=['# 模块结构与维护责任','','修订1.4/D-055：基座已确认并纳入主线，30项任务已登记A～D成员代号，实名与GitHub账号映射待补。D-056用户认领A，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED，由负责人自行确认完成（D-051）。分工详见[四人分工](TEAM-ASSIGNMENT.md)。公共包前缀`com.adgn.backend`、13个逻辑模块及技术依赖不变。','','| 模块 | 包后缀/负责人 | 编译依赖 | 职责与主要接口 |','| --- | --- | --- | --- |']
@@ -837,7 +848,7 @@ def generate():
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
             status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08','BE-09','BE-19','BE-20','BE-22'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-26','BE-28','BE-29'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in {'BE-21','BE-23','BE-24','BE-25','BE-31'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id']=='BE-18' else 'PLANNED_NOT_IMPLEMENTED'))))))
     for entry in op_map:
-        if entry['issue']=='BE-27':entry['status']='IMPLEMENTED_PENDING_OWNER_AND_MAIN'
+        if entry['issue']=='BE-27':entry['status']='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
         owned=[r for r in op_map if r['issue']==task['id']]

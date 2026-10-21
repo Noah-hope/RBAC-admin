@@ -3632,7 +3632,7 @@
         "Preview"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "setEmployeeState",
@@ -3711,7 +3711,7 @@
         "EmployeeStateResult"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listScopes",
@@ -4058,7 +4058,7 @@
         "ScopeResult"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listScopeAppointments",
@@ -4203,7 +4203,7 @@
         "Preview"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listAudit",

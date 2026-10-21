@@ -2747,7 +2747,7 @@
       "design-ready"
     ],
     "remoteIssueNumber": null,
-    "remotePrNumber": null,
+    "remotePrNumber": 4,
     "implementationProgress": {
       "evidence": "BE-27-CROSS-DOMAIN-LIFECYCLE.md",
       "decision": "D-099",
@@ -2756,7 +2756,7 @@
       "httpImplemented": true,
       "internalWritePortImplemented": true,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "branch": "codex/be-27-cross-domain-invalidation",
@@ -2769,7 +2769,12 @@
       "taskMySqlTests": 31,
       "auxiliaryTests": 18,
       "deliveryAuthorizationDecision": "D-100",
-      "deliverySourceCommit": "72daaac009a9778a7446373e2094d2196a836514"
+      "implementationCommit": "72daaac009a9778a7446373e2094d2196a836514",
+      "deliveryDecision": "D-100",
+      "sourceCommit": "682a052e5b38cb5be09d10f4856e93860b5091af",
+      "mainMergeCommit": "92d126f5465c8ecc5c2b4f293402fb21b0f1df7a",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "92d126f5465c8ecc5c2b4f293402fb21b0f1df7a"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
@@ -3399,7 +3404,6 @@
       "dependencyBase": "baeab61",
       "integratedMain": "d79e28a624fd4b9bf3862063c44274d3db602248",
       "unresolvedDependencies": [
-        "BE-27",
         "BE-30"
       ],
       "transitiveMissingDependencies": [],

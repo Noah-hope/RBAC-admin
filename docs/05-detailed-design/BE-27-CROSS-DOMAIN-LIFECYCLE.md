@@ -1,5 +1,7 @@
 # BE-27 员工状态与管理范围替换
 
+D-100实际交付（2026-10-21）：BE-27已通过PR #4（https://github.com/Noah-hope/RBAC-admin/pull/4）合入远程main。验证实现72daaac009a9778a7446373e2094d2196a836514，PR来源682a052e5b38cb5be09d10f4856e93860b5091af，合并92d126f5465c8ecc5c2b4f293402fb21b0f1df7a；已回查closed/merged=true、远程完整SHA、双亲及合并树等于验证来源。本地主线已同步、任务分支保留。沿用139普通＋406真实MySQL/HTTP及18辅助证据，交付静态检查通过，不重跑Java/SQL；远程检查条目0，不记为CI通过。BE-27为IMPLEMENTED、mergedToMain=true、remotePrNumber=4、ownerAccepted=false；负责人验收仍单独待确认。D可更新main接入BE-30，BE-33仍待BE-30、BE-34仍待完整集成，不部署或自动开新任务；下方待交付为历史。
+
 D-100（2026-10-21）：A明确“交付BE-27，推送远程”，授权推送任务分支、创建main目标PR并合并、同步本地主线及实际交付记录。已核对验证来源72daaac、最新main/8ad17e4、完整139普通＋406真实MySQL/HTTP及18辅助结果、jar摘要和资源清理；代码/测试未变，沿用既有证据并做静态核对，不重跑Java/SQL。交付不代记本人验收，BE-27保持IMPLEMENTED、ownerAccepted=false；保留任务分支和无关.codeartsdoer，不强推/部署/实施BE-30。实际PR和合并SHA在成功后补；下方不推送/合并为此前边界。
 
 2026-10-21：A要求更新本地并开始开发，已快进至main/8ad17e4，分支codex/be-27-cross-domain-invalidation。实现、负责人确认、主线交付分别记录；本轮不推送、合并或部署。
