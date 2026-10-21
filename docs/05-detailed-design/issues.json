@@ -1718,7 +1718,7 @@
     ],
     "deliverable": "主库新快照、完整有效来源并集、进入资格、独立菜单/操作、未知编码与存储错误区分。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IN_PROGRESS",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -1726,6 +1726,21 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "implementationProgress": {
+      "evidence": "BE-18-EFFECTIVE-PERMISSIONS.md",
+      "decision": "D-095",
+      "scope": "FRESH_PRIMARY_BUSINESS_PERMISSION_UNION_AND_INDIVIDUAL_CHECK",
+      "implemented": true,
+      "httpImplemented": true,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "branch": "codex/be-18-effective-permissions",
+      "dependencyBase": "7914788",
+      "claimedOwnerSlot": "B",
+      "claimSource": "USER_MESSAGE"
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-01",
@@ -3344,6 +3359,23 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "preparationProgress": {
+      "evidence": "BE-33-35-INTEGRATION-HANDOFF.md",
+      "decision": "D-096",
+      "scope": "DELIVERED_MODULE_INTEGRATION_AND_RELEASE_EVIDENCE_PREPARATION_ONLY",
+      "implemented": false,
+      "fullAcceptanceVerified": false,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "branch": "codex/be-33-35-integration-handoff",
+      "dependencyBase": "baeab61",
+      "integratedMain": "d79e28a624fd4b9bf3862063c44274d3db602248",
+      "unresolvedDependencies": [
+        "BE-27",
+        "BE-30"
+      ],
+      "transitiveMissingDependencies": []
+    },
     "acceptanceScope": "对照全部后端AT收集各模块证据并运行跨模块场景，补齐全67入站契约及AT-38全链路；AT-36目标服务器和AT-39发布证据分别仍由BE-34/35完成。",
     "useCases": [
       "UC-01",
@@ -3463,6 +3495,22 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "preparationProgress": {
+      "evidence": "BE-33-35-INTEGRATION-HANDOFF.md",
+      "decision": "D-096",
+      "scope": "DELIVERED_MODULE_INTEGRATION_AND_RELEASE_EVIDENCE_PREPARATION_ONLY",
+      "implemented": false,
+      "fullAcceptanceVerified": false,
+      "ownerAccepted": false,
+      "mergedToMain": false,
+      "branch": "codex/be-33-35-integration-handoff",
+      "dependencyBase": "baeab61",
+      "integratedMain": "d79e28a624fd4b9bf3862063c44274d3db602248",
+      "unresolvedDependencies": [
+        "BE-34"
+      ],
+      "transitiveMissingDependencies": []
+    },
     "acceptanceScope": "汇总AT-39完整Issue/PR/commit/候选包与发布证据，检查其他后端AT均有实际结果；有未通过项时不得宣布全量发布完成。",
     "useCases": [],
     "tables": [],

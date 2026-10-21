@@ -215,6 +215,21 @@ for case in CASES:
         case.setdefault('additionalEvidence',[]).append('BE-21-31-APPROVAL-WORKFLOW.md')
         case['verificationScope']='; '.join(filter(None,[case.get('verificationScope',''),'BE21_23_24_25_31_FIXED_JCS_OUTBOX_CALLBACK_ATOMIC_EXECUTION_RECOVERY_AND_DEMO_ONLY_NOT_REAL_EXTERNAL_OA_OR_FULL_SYSTEM_ACCEPTANCE']))
 
+for case in CASES:
+    if case['id'] in {'AT-07','AT-10','AT-30','AT-33','AT-37'}:
+        case['status']='PARTIALLY_VERIFIED'
+        case.setdefault('evidence','BE-18-EFFECTIVE-PERMISSIONS.md')
+        case.setdefault('additionalEvidence',[]).append('BE-18-EFFECTIVE-PERMISSIONS.md')
+        case['verificationScope']='; '.join(filter(None,[case.get('verificationScope',''),'BE18_CURRENT_BUSINESS_QUERY_AND_CHECK_ONLY_NOT_ALL_LIFECYCLE_OR_EXTERNAL_SYSTEMS']))
+
+for case in CASES:
+    if case['id'] in {'AT-04','AT-07','AT-11','AT-13','AT-15','AT-16','AT-19','AT-30','AT-31','AT-32','AT-34','AT-37'}:
+        case.setdefault('additionalEvidence',[]).append('BE-33-35-INTEGRATION-HANDOFF.md')
+        case['verificationScope']='; '.join(filter(None,[case.get('verificationScope',''),'BE33_DELIVERED_CONFIG_GRANT_REVOKE_SOURCE_CLOSE_LATE_APPROVAL_AND_BUSINESS_QUERY_DEMO_ONLY_NOT_IMPORT_STATUS_RESTORE_OR_TARGET_SERVER']))
+    if case['id']=='AT-38':
+        case.update(status='PARTIALLY_VERIFIED',evidence='BE-33-35-INTEGRATION-HANDOFF.md',
+            verificationScope='BE33_CONFIG_GRANT_REVOKE_SOURCE_CLOSE_LATE_APPROVAL_AND_NEW_EPOCH_DEMO_ONLY_NOT_IMPORT_STATUS_RESTORE_OR_TARGET_SERVER')
+
 TASKS = []
 def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
     foundation = n <= 5
@@ -240,6 +255,20 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             ownerAccepted=False,mergedToMain=False,databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
             branch='codex/be-17-12-preview-catalog',dependencyBase='93acc63',claimSource='USER_MESSAGE',
             dependencyContinuation='BE-12 consumes BE-17 implemented and verified on the same task branch')
+    if n == 18:
+        TASKS[-1]['status']='IN_PROGRESS'
+        TASKS[-1]['implementationProgress']=dict(evidence='BE-18-EFFECTIVE-PERMISSIONS.md',decision='D-095',
+            scope='FRESH_PRIMARY_BUSINESS_PERMISSION_UNION_AND_INDIVIDUAL_CHECK',implemented=True,httpImplemented=True,
+            ownerAccepted=False,mergedToMain=False,databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
+            branch='codex/be-18-effective-permissions',dependencyBase='7914788',claimedOwnerSlot='B',claimSource='USER_MESSAGE')
+    if n in (33,35):
+        TASKS[-1]['preparationProgress']=dict(evidence='BE-33-35-INTEGRATION-HANDOFF.md',decision='D-096',
+            scope='DELIVERED_MODULE_INTEGRATION_AND_RELEASE_EVIDENCE_PREPARATION_ONLY',
+            implemented=False,fullAcceptanceVerified=False,ownerAccepted=False,mergedToMain=False,
+            branch='codex/be-33-35-integration-handoff',dependencyBase='baeab61',
+            integratedMain='d79e28a624fd4b9bf3862063c44274d3db602248',
+            unresolvedDependencies=['BE-27','BE-30'] if n==33 else ['BE-34'],
+            transitiveMissingDependencies=[])
     if n == 6:
         TASKS[-1]['implementationProgress']=dict(evidence='BE-06-IDENTITY.md',decision='D-056',
             scope='LOGIN_SESSION_PASSWORD_AND_THREE_JWT_FAMILIES',implemented=True,
@@ -602,10 +631,25 @@ def write(name, text):
         text=title+'\n\n'+'D-092（2026-10-21）：C明确数据库暂不处理、先提交合并既有工作。来源adab1861906dc7d973f796961249e1ef87563e29已无冲突no-ff合入远程main/311aa5d5cbc3d7bfbd064888b4172d48de0a0e99，合并树等于已验证来源；main与BE-21-31-申请审批与执行原子推送，远程完整SHA回查一致，任务分支保留。BE-21/23/24/25/31为IMPLEMENTED、mergedToMain=true、ownerAccepted=false；合并授权不代记本机人工验收。核对既有139离线＋316真实MySQL/HTTP报告及jar摘要一致，本轮代码未变，仅静态校验，不重新运行Java/SQL，不配置或连接本机数据库、不部署。C八项代码均已交付主线，本机环境与人工演示仍待后续；下方未交付为历史。'+'\n'+body
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
+        text=title+'\n\nD-095（2026-10-21）：B 在已交付 BE-14 后按用户“那就改”实现 BE-18 两个业务权限接口，分支 codex/be-18-effective-permissions、基线 main/7914788。完整来源并集、独立进入/菜单/操作、当前身份与主库新快照、未知与故障分离；不改迁移/契约，不代记验收或主线交付。实际验证见 [BE-18](BE-18-EFFECTIVE-PERMISSIONS.md)。当前 13 项 OWNER_ACCEPTED、5 项 IMPLEMENTED、6 项 IN_PROGRESS、11 项 PLANNED；B 六项业务开发已实现待本人确认，BE-33/35 仍开放。下方 BE-18 等依赖/旧数量为历史。\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body=text.partition('\n')
+        text=title+'\n\nD-096最新集成（2026-10-21）：B 已接入 C 工作流 main/6b9a02e，修正正式审批预览 /previews 路径，并补真实配置审批→授予→业务查询→撤销串联、发布证据工具与交接清单。原 B D-091/092 为避免与 C 重号统一为 D-095/096，源提交与验收事实保留。BE-33 仍缺 BE-27/30（传递依赖 BE-26），BE-35 缺 BE-34 真实服务器验收，两项保持 PLANNED、单列 preparationProgress，不伪造 AT-38/39 或完整项目通过。本地记录显示 60/67 入站操作已有实现，不等于全部契约验收通过。实际结果见 [集成与交接准备](BE-33-35-INTEGRATION-HANDOFF.md)，未推送/合并远程或部署。下方基线 7914788/缺 C 模块为历史。\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
         text = title+'\n\n'+'D-093集成结果（2026-10-21）：接入远程main/6b9a02e及C/BE-21/23/24/25/31后，完整clean verify/mysql-check通过，139项离线/21组＋350项真实MySQL/HTTP/23组，失败/错误/跳过0，日志backend/.tmp/be26-delivery-final.log。首轮1项演示脚本因本机python3商店占位退出9009，临时测试目录配置真实Python入口后完整重跑通过；未因此修改业务代码或永久环境变量。随机库/账号/测试密钥目录均0，专属MySQL子进程17336正常关闭，原MySQL84仍Running。BE-26保持IMPLEMENTED、ownerAccepted=false，主线交付由用户明确“先进行合并推送”授权，实际成功后登记；共13项OWNER_ACCEPTED、11项IMPLEMENTED、5项IN_PROGRESS、6项PLANNED。原D编号D-091与C重复统一为D-093，C的D-091/092及双方历史保持。'+'\n'+body
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text = title+'\n\n'+'D-094实际交付（2026-10-21）：D明确“先进行合并推送”。BE-26已接入远程main/6b9a02e的C工作流，来源857d4a9d20fa43578f70385d256b86ce02ad3fdc已no-ff合入远程main/b00ffc98277e754757b0e3d9bd0fe3d920db53b4，合并树等于集成验证来源。普通Git连接超时，改用官方GitHub Git API按本地对象原始SHA、force=false交付，main及codex/be-26-source-closure两个完整SHA回查一致，任务分支保留。集成完整139离线/21组＋350真实MySQL/HTTP/23组及静态校验通过，失败/错误/跳过0；本机python3商店占位导致首轮1项环境失败，临时测试入口修正后完整重跑通过，业务代码未因此修改。随机schema/账号/密钥目录均0，专属MySQL子进程17336正常关闭，原MySQL84仍Running。BE-26为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，D人工验收仍开放，其他成员状态保持；共13项OWNER_ACCEPTED、11项IMPLEMENTED、5项IN_PROGRESS、6项PLANNED。原D实施D-091与C重复，统一D-093，原f745648/b011a8a及C的D-091/092事实保留。用户另要求交付后自行继续下一项，后续按依赖核对BE-30，不代A实施BE-27、不部署。下方未授权/待交付为历史。'+'\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\n'+'B 分支交付准备（2026-10-21）：按用户“那你就弄完提交”，已接入 main/d79e28a 的 BE-26，正在完成新增来源关闭/迟到批准与 BE-18 查询的真实集成回归，随后提交推送独立分支，不合并远程 main。B 原 D-093/094 为保留 D 的已交付编号统一为 D-095/096，双方历史及验收事实保持。BE-33 仍缺 A/BE-27、D/BE-30，BE-35 仍缺 A/BE-34；BE-26 不再列作未实现依赖，不接管其他成员任务或部署。下方旧基线、缺 BE-26 和未授权推送为历史。'+'\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\n'+'B 最新验证（2026-10-21/D-097）：已接入 main/d79e28a 的 BE-26，完整 clean verify/mysql-check 通过：139 普通＋375 真实 MySQL/HTTP，失败/错误/跳过 0；18 项辅助工具测试与设计静态校验通过。新增真实来源关闭→下次查询拒绝、迟到批准不复权及新周期重新申请链路，集成组 8 项通过。专属随机库/账号 0/0、临时密钥清理、13461 实例正常关闭；既有数据库未操作。BE-18 与 BE-33/35 当前准备提交至独立 B 分支，远程 main 不合并；BE-33 尚缺 A/BE-27、D/BE-30，BE-35 尚缺 A/BE-34，正式状态及其他成员验收保持。下方缺 BE-26、旧测试数与未授权推送是历史。'+'\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\n'+'B 实际分支交付（2026-10-21/D-097）：已推送 codex/be-33-35-integration-handoff，远程完整 SHA 回查为 a5d5c3557b6da7cb8f52ea42c30ba03b5fcb18a3，包含 BE-18、集成修复/测试和交接证据；远程 main 仍 d79e28a624fd4b9bf3862063c44274d3db602248，未合并或推送 main。完整139＋375及18辅助检查通过，专属资源清理关闭；本条后续仅补交付文字。推送分支不等于主线交付、本人验收或 BE-33/35 完成；A/BE-27、D/BE-30、A/BE-34 及完整验收仍开放。下方准备推送/未授权为历史。'+'\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -759,7 +803,7 @@ def generate():
             acceptance=sorted(set(task['acceptance']+(['AT-37'] if row['direction']=='INBOUND' else ['AT-20']))),
             parameters=parameter_names,requestModels=sorted(schema_refs(operation.get('requestBody',{}),api)),
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
-            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08','BE-09','BE-19','BE-20','BE-22'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-28','BE-29'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in {'BE-21','BE-23','BE-24','BE-25','BE-31'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id']=='BE-26' else 'PLANNED_NOT_IMPLEMENTED'))))))
+            status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08','BE-09','BE-19','BE-20','BE-22'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-26','BE-28','BE-29'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in {'BE-21','BE-23','BE-24','BE-25','BE-31'} else ('IMPLEMENTED_PENDING_OWNER_AND_MAIN' if task['id']=='BE-18' else 'PLANNED_NOT_IMPLEMENTED'))))))
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
         owned=[r for r in op_map if r['issue']==task['id']]
