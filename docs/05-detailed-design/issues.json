@@ -3120,9 +3120,14 @@
       "httpImplemented": true,
       "internalWritePortImplemented": true,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "databaseExecuted": true,
-      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY"
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "sourceCommit": "a669e5f1958ff163a0bcf32e4394887acf6d1130",
+      "mainMergeCommit": "98f14c6a4b53582c9e9efc587a0e3095d1693eea",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "98f14c6a4b53582c9e9efc587a0e3095d1693eea",
+      "deliveryDecision": "D-102"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [

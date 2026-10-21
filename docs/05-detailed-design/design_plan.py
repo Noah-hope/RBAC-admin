@@ -27,6 +27,8 @@ GRANT_MUTATION_SOURCE_COMMIT = 'dba2eaab8990fd17780d7f655fdfa049a6f7b2e1'
 GRANT_MUTATION_MERGE_COMMIT = '7ab021a80e26cbf4e3b4bc245f574fcd5c31c2ff'
 IMPORT_PRECHECK_SOURCE_COMMIT = 'db3419687f8dc43b1959564ddc19b0e7d32826ed'
 IMPORT_PRECHECK_MERGE_COMMIT = '6506cda54c4898e736a2e730ba001294f8de4c2c'
+IMPORT_COMMIT_SOURCE_COMMIT = 'a669e5f1958ff163a0bcf32e4394887acf6d1130'
+IMPORT_COMMIT_MERGE_COMMIT = '98f14c6a4b53582c9e9efc587a0e3095d1693eea'
 SOURCE_CLOSURE_SOURCE_COMMIT = '857d4a9d20fa43578f70385d256b86ce02ad3fdc'
 SOURCE_CLOSURE_MERGE_COMMIT = 'b00ffc98277e754757b0e3d9bd0fe3d920db53b4'
 SCOPE_CREATE_SOURCE_COMMIT = '0fee462503274fbed1ab03826c8d0723c9825c19'
@@ -583,6 +585,10 @@ for task in TASKS:
         task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=SOURCE_CLOSURE_MERGE_COMMIT,
             sourceCommit=SOURCE_CLOSURE_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=SOURCE_CLOSURE_MERGE_COMMIT,
             deliveryDecision='D-094',integrationBase='6b9a02e')
+    if task['id']=='BE-30':
+        task['implementationProgress'].update(mergedToMain=True,sourceCommit=IMPORT_COMMIT_SOURCE_COMMIT,
+            mainMergeCommit=IMPORT_COMMIT_MERGE_COMMIT,pushVerified=True,verifiedRemoteCommit=IMPORT_COMMIT_MERGE_COMMIT,
+            deliveryDecision='D-102')
     if task['id']=='BE-29':
         task['implementationProgress'].update(mergedToMain=True,mainMergeCommit=IMPORT_PRECHECK_MERGE_COMMIT,
             sourceCommit=IMPORT_PRECHECK_SOURCE_COMMIT,pushVerified=True,verifiedRemoteCommit=IMPORT_PRECHECK_MERGE_COMMIT,
@@ -712,6 +718,9 @@ def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text = title+'\n\n'+'D-101实际结果（2026-10-21）：BE-30冻结导入整批提交、历史与失败恢复已实现。完整139普通/21组＋425真实MySQL/HTTP/27组、18辅助工具及静态追踪通过，失败/错误/跳过0，含本任务19项真实检查。覆盖固定候选身份、1000行及第500条/最后审计故障全批回滚、同批长期成功回放、独立来源/角色部门资格、Q-01离岗再任职、员工停用恢复不复权、整份申请claim/outbox失效、部门迁移即时FK及迟到失败记录不覆盖成功。随机库/账号/密钥文件目录0，专属MySQL子进程5840正常关闭，原MySQL84仍Running。BE-30为IMPLEMENTED、ownerAccepted=false、mergedToMain=false，仅本地任务分支提交；D七项代码均具备，既有人工验收不代确认。共13项OWNER_ACCEPTED、14项IMPLEMENTED、5项IN_PROGRESS、3项PLANNED；未合并推送或部署，不接管BE-33/34/35。接入基线main/126fbc9；D原准备D-095与B重复统一D-101，36c6cb5及双方事实保持。详见[BE-30交接](BE-30-IMPORT-COMMIT.md)，下方仅准备/IN_PROGRESS为历史。'+'\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\n'+'D-102实际交付（2026-10-21）：D明确“完成合并并推送”。BE-30来源a669e5f1958ff163a0bcf32e4394887acf6d1130已无冲突no-ff合入远程main/98f14c6a4b53582c9e9efc587a0e3095d1693eea，双亲为main/126fbc9和验证来源，合并树等于已完整验证来源。普通Git原子推送main及codex/be-30-import-commit成功，两个远程完整SHA回查一致，任务分支保留。沿用139普通/21组＋425真实MySQL/HTTP/27组及18辅助检查证据，失败/错误/跳过0；本轮静态追踪通过，代码未变，不重复Java/SQL。专属测试资源此前已清空并正常关闭，原MySQL84保持Running。BE-30为IMPLEMENTED、mergedToMain=true、ownerAccepted=false；D七项实现均已交付共同主线，D人工验收仍开放。共13项OWNER_ACCEPTED、14项IMPLEMENTED、5项IN_PROGRESS、3项PLANNED；BE-33可接入本次交付，其他成员任务及验收状态保持，不部署或自动开新任务。下方未授权/待交付为历史。'+'\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -832,6 +841,10 @@ def generate():
         sourceCommit='682a052e5b38cb5be09d10f4856e93860b5091af',mergeCommit='92d126f5465c8ecc5c2b4f293402fb21b0f1df7a',
         remote='origin',branch='main',pushVerified=True,verifiedRemoteCommit='92d126f5465c8ecc5c2b4f293402fb21b0f1df7a',
         ownerAccepted=False,remotePrNumber=4,prUrl='https://github.com/Noah-hope/RBAC-admin/pull/4',evidence='BE-27-CROSS-DOMAIN-LIFECYCLE.md'))
+    phase_plan['business']['additionalMainDeliveries'].append(dict(taskIds=['BE-30'],decision='D-102',date='2026-10-21',
+        branch='main',sourceCommit=IMPORT_COMMIT_SOURCE_COMMIT,mergeCommit=IMPORT_COMMIT_MERGE_COMMIT,
+        remote='origin',remoteRef='refs/heads/main',pushVerified=True,verifiedRemoteCommit=IMPORT_COMMIT_MERGE_COMMIT,
+        ownerAccepted=False,deliveryMode='LOCAL_MERGE_AND_ATOMIC_PUSH',evidence='BE-30-IMPORT-COMMIT.md'))
     dump('delivery-phases.json',phase_plan)
     dump('modules.json',modules);dump('acceptance.json',CASES);dump('issues.json',TASKS)
     lines=['# 模块结构与维护责任','','修订1.4/D-055：基座已确认并纳入主线，30项任务已登记A～D成员代号，实名与GitHub账号映射待补。D-056用户认领A，BE-06为OWNER_ACCEPTED（D-057，已由D-060交付main）、BE-07为OWNER_ACCEPTED（D-059，已由D-060交付main）、BE-32为OWNER_ACCEPTED（D-062，已由D-063/PR#1交付main），BE-10为IMPLEMENTED（六个查询接口及内部读写端口已实现，已由D-065交付main，待负责人验收），BE-08为OWNER_ACCEPTED（D-068，已由D-069/PR#2交付main），其余25项PLANNED，由负责人自行确认完成（D-051）。分工详见[四人分工](TEAM-ASSIGNMENT.md)。公共包前缀`com.adgn.backend`、13个逻辑模块及技术依赖不变。','','| 模块 | 包后缀/负责人 | 编译依赖 | 职责与主要接口 |','| --- | --- | --- | --- |']
@@ -894,7 +907,7 @@ def generate():
         task['tables']=sorted(set(task['tables'])|set(internal_tables.get(task['id'],[])))
     dump('issues.json',TASKS)
     for entry in op_map:
-        if entry['issue']=='BE-30':entry['status']='IMPLEMENTED_PENDING_OWNER_AND_MAIN'
+        if entry['issue']=='BE-30':entry['status']='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
     dump('operation-map.json',op_map)
     trace=['# UC—API—模块—任务—验收追踪','',f'输入：需求V1.3/D-033、API{api["info"]["version"]}、数据库1.1；交接提交bd26465。契约SHA-256 `{digest}`。全部68操作各有唯一主责任务；按D-055登记A～D成员代号，实名/账号待补。操作、表及T/I不变，BE-06的4个操作已获负责人确认（D-057），已由D-060交付main，BE-07的5个操作已本人确认（D-059），已由D-060交付main，BE-10的6个操作已实现并交付main待D确认，BE-08的4个操作已获A确认（D-068）并由D-069/PR#2交付main，其余49项待实现；启动仍须满足门槛和原依赖。','','| UC | 方法/operationId | 路径/方向 | 模块/负责人 | 本地Issue | 验收 | 事务 |','| --- | --- | --- | --- | --- | --- | --- |']
     for r in op_map:trace.append(f"| {','.join(r['useCases'])} | {r['method']} {r['operationId']} | {r['path']} / {r['direction']} | {r['module']} / {r['ownerSlot']} | {r['issue']} | {','.join(r['acceptance'])} | {','.join(r['transactions'])} |")

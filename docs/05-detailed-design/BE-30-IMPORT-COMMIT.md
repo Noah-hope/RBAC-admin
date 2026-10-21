@@ -1,5 +1,15 @@
 # BE-30 导入整批提交、历史与失败恢复
 
+## D-102交付证据
+
+- 远程基线：`126fbc99f7160a13519ff964b9d62dd57d3bcd08`；验证来源：`a669e5f1958ff163a0bcf32e4394887acf6d1130`；主线合并：`98f14c6a4b53582c9e9efc587a0e3095d1693eea`。双亲和完整合并树已核对。
+- `git push --atomic origin main codex/be-30-import-commit`成功，随后`git ls-remote`回查主线和任务分支完整SHA一致。任务分支保留。
+- 完整验证日志：`backend/.tmp/be30-full-verify.log`，`./mvnw.cmd -q clean verify -Pmysql-check`退出0；139普通、425真实MySQL/HTTP及18辅助检查全部通过，含BE-30的19项真实检查。验证来源交付时业务代码和测试未变，本轮只做静态复核。
+- jar SHA256：`c23ad313e32e45032c6be1f94a69d22297d1c0275144cab70b30e312c4b9574b`；隔离库/账号/密钥文件目录清零，专属MySQL正常关闭，原MySQL84保持Running。
+- BE-30保持IMPLEMENTED待D人工确认；D七项实现均已主线交付。BE-33正式集成和其他成员验收仍由对应负责人安排。下方待合并推送为历史。
+
+D-102实际交付（2026-10-21）：D明确“完成合并并推送”。BE-30来源a669e5f1958ff163a0bcf32e4394887acf6d1130已无冲突no-ff合入远程main/98f14c6a4b53582c9e9efc587a0e3095d1693eea，双亲为main/126fbc9和验证来源，合并树等于已完整验证来源。普通Git原子推送main及codex/be-30-import-commit成功，两个远程完整SHA回查一致，任务分支保留。沿用139普通/21组＋425真实MySQL/HTTP/27组及18辅助检查证据，失败/错误/跳过0；本轮静态追踪通过，代码未变，不重复Java/SQL。专属测试资源此前已清空并正常关闭，原MySQL84保持Running。BE-30为IMPLEMENTED、mergedToMain=true、ownerAccepted=false；D七项实现均已交付共同主线，D人工验收仍开放。共13项OWNER_ACCEPTED、14项IMPLEMENTED、5项IN_PROGRESS、3项PLANNED；BE-33可接入本次交付，其他成员任务及验收状态保持，不部署或自动开新任务。下方未授权/待交付为历史。
+
 ## 实际交付与本机验收入口
 
 实现基线为main/126fbc99f7160a13519ff964b9d62dd57d3bcd08，包含A经PR #4交付的BE-27和B有效权限/集成能力。本轮仍在codex/be-30-import-commit，只本地提交，不把开始实施当作合并推送或本人验收授权。

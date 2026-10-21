@@ -169,7 +169,7 @@ def checks(report):
     require(subprocess.run(['git','diff','--quiet',business_delivery['sourceCommit'],business_delivery['mergeCommit']],cwd=REPO).returncode==0,
             'BE-06/07合并树与已确认分支不一致')
     deliveries=phase_plan['business'].get('additionalMainDeliveries',[])
-    require(len(deliveries)==16,'主线交付记录缺失或重复（含D-100的BE-27）')
+    require(len(deliveries)==17,'主线交付记录缺失或重复（含D-102的BE-30）')
     query_delivery=deliveries[11]
     require(query_delivery.get('taskIds')==['BE-19','BE-22'] and query_delivery.get('decision')=='D-090'
             and query_delivery.get('sourceCommit')=='cc88885f2c97df838720fc2f7f0e524d72e56351'
@@ -219,6 +219,15 @@ def checks(report):
     require(lifecycle_parents==['8ad17e40db55b9e49af90d8141d21c6195fda5dd',lifecycle_delivery['sourceCommit']],'BE-27合并双亲不符')
     require(subprocess.run(['git','diff','--quiet',lifecycle_delivery['sourceCommit'],lifecycle_delivery['mergeCommit']],cwd=REPO).returncode==0,'BE-27合并树不符')
     require(subprocess.run(['git','merge-base','--is-ancestor',lifecycle_delivery['mergeCommit'],'HEAD'],cwd=REPO).returncode==0,'BE-27交付不是当前祖先')
+    import_commit_delivery=next(d for d in deliveries if d.get('decision')=='D-102')
+    require(import_commit_delivery.get('taskIds')==['BE-30'] and import_commit_delivery.get('sourceCommit')=='a669e5f1958ff163a0bcf32e4394887acf6d1130'
+            and import_commit_delivery.get('mergeCommit')=='98f14c6a4b53582c9e9efc587a0e3095d1693eea' and import_commit_delivery.get('ownerAccepted') is False
+            and import_commit_delivery.get('pushVerified') is True
+            and import_commit_delivery.get('verifiedRemoteCommit')==import_commit_delivery['mergeCommit'],'BE-30主线交付与本人验收边界不符')
+    import_commit_parents=subprocess.check_output(['git','show','-s','--format=%P',import_commit_delivery['mergeCommit']],cwd=REPO,text=True).split()
+    require(import_commit_parents==['126fbc99f7160a13519ff964b9d62dd57d3bcd08',import_commit_delivery['sourceCommit']],'BE-30合并双亲不符')
+    require(subprocess.run(['git','diff','--quiet',import_commit_delivery['sourceCommit'],import_commit_delivery['mergeCommit']],cwd=REPO).returncode==0,'BE-30合并树不符')
+    require(subprocess.run(['git','merge-base','--is-ancestor',import_commit_delivery['mergeCommit'],'HEAD'],cwd=REPO).returncode==0,'BE-30交付不是当前祖先')
     bootstrap_delivery=deliveries[0]
     require(bootstrap_delivery.get('taskIds')==['BE-32'] and bootstrap_delivery.get('decision')=='D-063'
             and bootstrap_delivery.get('sourceCommit')=='d5941c902712c92d4d8d8d7505bd6df4f5ceb139'
@@ -435,7 +444,11 @@ def checks(report):
         if task['id']=='BE-30':
             p=task.get('implementationProgress',{})
             require(task['status']=='IMPLEMENTED' and p.get('decision')=='D-101' and p.get('implementationStarted') is True
-                    and p.get('implemented') is True and p.get('httpImplemented') is True and p.get('internalWritePortImplemented') is True and p.get('ownerAccepted') is False and p.get('mergedToMain') is False
+                    and p.get('implemented') is True and p.get('httpImplemented') is True and p.get('internalWritePortImplemented') is True and p.get('ownerAccepted') is False and p.get('mergedToMain') is True
+                    and p.get('sourceCommit')==import_commit_delivery['sourceCommit']
+                    and p.get('mainMergeCommit')==import_commit_delivery['mergeCommit']
+                    and p.get('pushVerified') is True and p.get('verifiedRemoteCommit')==import_commit_delivery['mergeCommit']
+                    and p.get('deliveryDecision')=='D-102'
                     and p.get('databaseExecuted') is True and p.get('databaseExecutionScope')=='DISPOSABLE_INSTANCE_ONLY'
                     and p.get('branch')=='codex/be-30-import-commit' and p.get('dependencyBase')=='126fbc9'
                     and p.get('evidence')=='BE-30-IMPORT-COMMIT.md' and 'ownerAcceptance' not in task,'BE-30实施与本人验收/交付边界不符')
@@ -756,7 +769,7 @@ def checks(report):
         if task['id'] in {'BE-21','BE-23','BE-24','BE-25','BE-31'}: expected_operation_status='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
         if task['id']=='BE-18': expected_operation_status='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
         if task['id']=='BE-27': expected_operation_status='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
-        if task['id']=='BE-30': expected_operation_status='IMPLEMENTED_PENDING_OWNER_AND_MAIN'
+        if task['id']=='BE-30': expected_operation_status='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
         require(set(row['acceptance'])<=cids and row['status']==expected_operation_status,'验收引用/实施状态不符')
         if direction=='INBOUND':require('AT-37'in row['acceptance'],'入站缺全契约验收')
         require(set(row['requestModels'])<=api['components']['schemas'].keys(),'未知输入模型')
@@ -915,7 +928,7 @@ def checks(report):
         preparedBusinessTasksWaitingDependencies=[],preparationDecision='D-101',
         internalPortTasksPendingOwner=['BE-16','BE-25'],implementedBusinessTasksPendingOwner=[t['id'] for t in tasks if t['phase']=='BUSINESS' and t.get('implementationProgress',{}).get('implemented') and not t.get('implementationProgress',{}).get('ownerAccepted')],
         ownerAcceptedBusinessTasks=[t['id'] for t in tasks if t['phase']=='BUSINESS' and t['status']=='OWNER_ACCEPTED'],businessTasksPendingMainDelivery=[t['id'] for t in tasks if t.get('implementationProgress',{}).get('implemented') and not t.get('implementationProgress',{}).get('mergedToMain')],businessAcceptanceDecision='D-090',
-        businessMainDeliveryDecision='D-098',businessMainDeliveryMerge=deliveries[-1]['mergeCommit'],
+        businessMainDeliveryDecision='D-102',businessMainDeliveryMerge=import_commit_delivery['mergeCommit'],
         businessMainDeliveryPrUrl=None,priorScopeCreationDeliveryPrUrl=scope_create_delivery['prUrl'],priorScopeDeliveryPrUrl=scope_delivery['prUrl'],priorBootstrapDeliveryPrUrl=bootstrap_delivery['prUrl'],
         foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:OWNER_ACCEPTED',
         foundationGateStatus=phase_plan['gateStatus'],businessOperationsAwaitingAssignment=0,businessOperationsAssigned=len(mapping),

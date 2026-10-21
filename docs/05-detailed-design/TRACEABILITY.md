@@ -1,5 +1,7 @@
 # UC—API—模块—任务—验收追踪
 
+D-102实际交付（2026-10-21）：D明确“完成合并并推送”。BE-30来源a669e5f1958ff163a0bcf32e4394887acf6d1130已无冲突no-ff合入远程main/98f14c6a4b53582c9e9efc587a0e3095d1693eea，双亲为main/126fbc9和验证来源，合并树等于已完整验证来源。普通Git原子推送main及codex/be-30-import-commit成功，两个远程完整SHA回查一致，任务分支保留。沿用139普通/21组＋425真实MySQL/HTTP/27组及18辅助检查证据，失败/错误/跳过0；本轮静态追踪通过，代码未变，不重复Java/SQL。专属测试资源此前已清空并正常关闭，原MySQL84保持Running。BE-30为IMPLEMENTED、mergedToMain=true、ownerAccepted=false；D七项实现均已交付共同主线，D人工验收仍开放。共13项OWNER_ACCEPTED、14项IMPLEMENTED、5项IN_PROGRESS、3项PLANNED；BE-33可接入本次交付，其他成员任务及验收状态保持，不部署或自动开新任务。下方未授权/待交付为历史。
+
 D-101实际结果（2026-10-21）：BE-30冻结导入整批提交、历史与失败恢复已实现。完整139普通/21组＋425真实MySQL/HTTP/27组、18辅助工具及静态追踪通过，失败/错误/跳过0，含本任务19项真实检查。覆盖固定候选身份、1000行及第500条/最后审计故障全批回滚、同批长期成功回放、独立来源/角色部门资格、Q-01离岗再任职、员工停用恢复不复权、整份申请claim/outbox失效、部门迁移即时FK及迟到失败记录不覆盖成功。随机库/账号/密钥文件目录0，专属MySQL子进程5840正常关闭，原MySQL84仍Running。BE-30为IMPLEMENTED、ownerAccepted=false、mergedToMain=false，仅本地任务分支提交；D七项代码均具备，既有人工验收不代确认。共13项OWNER_ACCEPTED、14项IMPLEMENTED、5项IN_PROGRESS、3项PLANNED；未合并推送或部署，不接管BE-33/34/35。接入基线main/126fbc9；D原准备D-095与B重复统一D-101，36c6cb5及双方事实保持。详见[BE-30交接](BE-30-IMPORT-COMMIT.md)，下方仅准备/IN_PROGRESS为历史。
 
 D-101（2026-10-21）：D明确“开始执行最后一项任务”，已fetch核对并接入远程main/126fbc9，A/BE-27已通过PR #4交付92d126f，直接依赖齐备。D原BE-30准备D-095与B重复，统一为D-101，原36c6cb5及B的D-095/096/097/098、A的D-099/100事实保持。已按现有设计/TDD进入IN_PROGRESS；真实首轮3项断言失败、0错误，commit路由404；核心3项GREEN已通过，后续员工/生命周期和故障场景仍在实现。复用BE-29固定计划、EmploymentWriter与A/EmployeeStateWriter、BE-16/26及guard/幂等/审计，同批整体成功或回滚。共13项OWNER_ACCEPTED、13项IMPLEMENTED、6项IN_PROGRESS、3项PLANNED；不代本人验收、不合并推送或部署。下方仅准备/缺BE-27为历史。

@@ -4922,7 +4922,7 @@
         "ImportBatch"
       ]
     },
-    "status": "IMPLEMENTED_PENDING_OWNER_AND_MAIN"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "authorizationQuery",
