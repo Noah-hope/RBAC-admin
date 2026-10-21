@@ -93,9 +93,9 @@
   "diagramPages": 6,
   "diagramVertices": 59,
   "diagramEdges": 57,
-  "localLinks": 587,
+  "localLinks": 598,
   "pythonSyntaxFiles": 2,
-  "decisionIds": 89,
+  "decisionIds": 90,
   "upstreamSha256": {
     "docs/03-api/openapi.yaml": "9910ceafadea88d85793d00f7bb4e6e5673700a8565366a407185c4517e0cbdf",
     "docs/03-api/apifox-export.json": "67fd08c024a365cfef26485a5984be28c7941cfc9662e1ae8d3ddac558fd5501",
@@ -132,8 +132,10 @@
     "D"
   ],
   "implementationDecision": "D-093",
-  "preparedBusinessTasksWaitingDependencies": [],
-  "preparationDecision": "D-093",
+  "preparedBusinessTasksWaitingDependencies": [
+    "BE-30"
+  ],
+  "preparationDecision": "D-095",
   "internalPortTasksPendingOwner": [
     "BE-16",
     "BE-25"
@@ -183,18 +185,18 @@
   "businessOperationsAssigned": 68,
   "artifactSha256": {
     "modules.json": "f20c0338e550a72468fb18981f04778461fa93e0421ab9f916d30c97d3fcecdf",
-    "issues.json": "e7d0e2eac49a10eb62d28c9f296e940c6e81b55f52644f3bf006bc87b54a9dee",
+    "issues.json": "3ccd94e9ad3389c5b9ca9e62c5e483f928abe447a2a8244f6bf58aaeb070aec7",
     "acceptance.json": "ed9c59b569ec22c33b69f9c95fd44acc8ef8f15a338e43dafc1aaa3341aa9473",
     "operation-map.json": "c61667d903bcd5abe93916ce5ea6b7105498bc2132b211b7b748234a4dcddcd5",
     "estimates.json": "55baeb97978ace7292118acc188ac32fa64f8d8037a4fa32bb1a9d1ffa14d443",
     "delivery-phases.json": "6d3c2c787f568c99dd16e0222e47d68b12f952d733c4e75adb9dc7f66b0f802d",
-    "MODULES.md": "6aa8828aab95717cc245172d54ef1902c2fe88de9ba3d433bf6a20462fd199fa",
-    "TRACEABILITY.md": "b0032b32a6e2d7465322ca6e149be2ab6e542fd1bc71a498a0df16eb884ee127",
+    "MODULES.md": "9c4b38227082e7491931a0d3ad7d8de0a94758dc90bda3ce1bfb2e2e555e99e5",
+    "TRACEABILITY.md": "26d6a959f52dd227b5260d44ca365fe9042c547c19e448627b75f624e6ab9157",
     "HANDLER-CONTRACTS.md": "fc845a172b5360321333b3e274c8d79c8537f264ae28e3b72f804891f350ce0e",
-    "TEST-PLAN.md": "5dd9920a3b227f2409bd651cc0405f33a8f0966cdab5dd1424e85b59fe9b6e87",
-    "TASKS.md": "188874b4f334822a4cb8001e1b4cc480ce388262a95793b1d30894f51832d85b",
-    "IMPLEMENTATION-PLAN.md": "cd9a0b9d783d127c065f10b46f483b7cfa2c1fd2a1291be4197e0dfce2907d21",
-    "TEAM-ASSIGNMENT.md": "ea7840b405c21e7759eab9c625a22696e897fb0d4f6e89e612fe5dcd9b77ab88",
+    "TEST-PLAN.md": "3ab80710e5e60670f488d0b94bf382a284c597d654e160b5720970e12af1a9ab",
+    "TASKS.md": "ea6aaf93e858971b33c2738879f65a2e88911aa94b90a24ebeb3e7b8c783af46",
+    "IMPLEMENTATION-PLAN.md": "8083e160857d53fa3911fc765b316e21028f0606b65189b8ed8d799c860d08df",
+    "TEAM-ASSIGNMENT.md": "e18dd8166dff1fb23e7d8cb0a515bd05562d6168db385f7e8a61242543be6d47",
     "module-structure.drawio": "3db24f7f4f13cff20d34834b6cad2a5b48c1526e176d1a27ea0a0aa3e50a93b4",
     "core-flows.drawio": "af62be1624fe1141d5f6c472859e8ed0f7ff07363077ea1a2fa28c6fa206921f"
   }

@@ -370,6 +370,15 @@ def checks(report):
                     and progress.get('deliveryDecision')=='D-094'
                     and progress.get('dependencyBase')=='7914788' and progress.get('branch')=='codex/be-26-source-closure'
                     and progress.get('evidence')=='BE-26-SOURCE-CLOSURE.md','BE-26实施与本人验收/主线边界不符')
+        if task['id']=='BE-30':
+            preparation=task.get('preparationProgress',{})
+            require(task['status']=='PLANNED' and 'implementationProgress' not in task and 'ownerAcceptance' not in task
+                    and preparation.get('decision')=='D-095' and preparation.get('evidence')=='BE-30-IMPORT-COMMIT.md'
+                    and preparation.get('branch')=='codex/be-30-import-commit' and preparation.get('dependencyBase')=='d79e28a'
+                    and preparation.get('designPrepared') is True and preparation.get('acceptanceScenariosPrepared') is True
+                    and preparation.get('implementationStarted') is False and preparation.get('testsRun') is False
+                    and preparation.get('dependencyStatus')=='WAITING_FOR_MAIN_DELIVERY' and preparation.get('blockedBy')==['BE-27'],
+                    'BE-30仅准备与依赖/实施/测试边界不符')
         if task['id']=='BE-29':
             progress=task.get('implementationProgress',{})
             require(progress.get('decision')=='D-084' and progress.get('implemented') is True
@@ -840,7 +849,7 @@ def checks(report):
         planRevision='1.4',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=0,
         businessTasksAssigned=len(assignments),assignmentDecision='D-055',memberIdentitiesPending=4,
         confirmedUserAlias='D',historicallyConfirmedUserAliases=['A','B','C','D'],implementationDecision='D-093',
-        preparedBusinessTasksWaitingDependencies=[],preparationDecision='D-093',
+        preparedBusinessTasksWaitingDependencies=['BE-30'],preparationDecision='D-095',
         internalPortTasksPendingOwner=['BE-16','BE-25'],implementedBusinessTasksPendingOwner=[t['id'] for t in tasks if t['phase']=='BUSINESS' and t.get('implementationProgress',{}).get('implemented') and not t.get('implementationProgress',{}).get('ownerAccepted')],
         ownerAcceptedBusinessTasks=[t['id'] for t in tasks if t['phase']=='BUSINESS' and t['status']=='OWNER_ACCEPTED'],businessTasksPendingMainDelivery=[t['id'] for t in tasks if t.get('implementationProgress',{}).get('implemented') and not t.get('implementationProgress',{}).get('mergedToMain')],businessAcceptanceDecision='D-090',
         businessMainDeliveryDecision='D-094',businessMainDeliveryMerge=deliveries[-1]['mergeCommit'],
