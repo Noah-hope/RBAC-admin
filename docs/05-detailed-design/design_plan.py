@@ -367,7 +367,8 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             implemented=True,httpImplemented=True,internalWritePortImplemented=True,
             ownerAccepted=False,mergedToMain=False,databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
             branch='codex/be-27-cross-domain-invalidation',dependencyBase='8ad17e4',claimedOwnerSlot='A',claimSource='USER_MESSAGE',manualDemoVerified=False,
-            automatedUnitTests=139,automatedMySqlTests=406,taskMySqlTests=31,auxiliaryTests=18)
+            automatedUnitTests=139,automatedMySqlTests=406,taskMySqlTests=31,auxiliaryTests=18,
+            deliveryAuthorizationDecision='D-100',deliverySourceCommit='72daaac009a9778a7446373e2094d2196a836514')
     if n == 20:
         TASKS[-1]['status']='OWNER_ACCEPTED'
         TASKS[-1]['implementationProgress']=dict(evidence='BE-20-CHANGE-DRAFTS.md',decision='D-086',

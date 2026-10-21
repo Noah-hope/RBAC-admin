@@ -2767,7 +2767,9 @@
       "automatedUnitTests": 139,
       "automatedMySqlTests": 406,
       "taskMySqlTests": 31,
-      "auxiliaryTests": 18
+      "auxiliaryTests": 18,
+      "deliveryAuthorizationDecision": "D-100",
+      "deliverySourceCommit": "72daaac009a9778a7446373e2094d2196a836514"
     },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [

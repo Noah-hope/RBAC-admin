@@ -1,5 +1,7 @@
 # 项目开发流程
 
+D-100（2026-10-21）：A明确“交付BE-27，推送远程”，授权推送任务分支、创建main目标PR并合并、同步本地主线及实际交付记录。已核对验证来源72daaac、最新main/8ad17e4、完整139普通＋406真实MySQL/HTTP及18辅助结果、jar摘要和资源清理；代码/测试未变，沿用既有证据并做静态核对，不重跑Java/SQL。交付不代记本人验收，BE-27保持IMPLEMENTED、ownerAccepted=false；保留任务分支和无关.codeartsdoer，不强推/部署/实施BE-30。实际PR和合并SHA在成功后补；下方不推送/合并为此前边界。
+
 D-099（2026-10-21）：A要求同步远程并开始BE-27，已快进main/8ad17e4并建立codex/be-27-cross-domain-invalidation。先设计、真实HTTP RED再实现员工状态和范围替换四入口，复用BE-16/26与既有身份/预览/幂等/审计；完整139普通＋406真实MySQL/HTTP（含本任务31项）、18辅助工具及静态校验通过，失败/错误/跳过0；专属库/账号/密钥均0且实例关闭、原MySQL84仍Running。证据见docs/05-detailed-design/BE-27-CROSS-DOMAIN-LIFECYCLE.md。BE-27为IMPLEMENTED待A确认及主线交付，不代其他成员验收，不推送/合并/部署或实施BE-30；无关.codeartsdoer保留。下方BE-27未实现为历史。
 
 D-098实际主线交付（2026-10-21）：B 明确要求“把你做的东西弄好，然后做好测试后就合并”。来源 ba2178c60b1ec78b777952845b7bb71e5c9161ce 已无冲突 no-ff 合入并推送远程 main/43aeab78fbbf01acd568ff49c8893349e849d958，双亲和合并树等于已验证来源，远程完整 SHA 已回查。合并后完整139普通＋375真实MySQL/HTTP、18辅助工具及静态追踪通过，失败/错误/跳过0；隔离库/账号0/0、密钥清理、专属MySQL关闭。常规Git网络卡住后停止本轮卡住进程，改用官方GitHub Git API按原始SHA、force=false交付。BE-18为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，B六项业务代码均已交付主线；BE-33/35仅已完成的集成/交接准备随同交付，正式任务保持PLANNED，仍缺A/BE-27、D/BE-30及A/BE-34。保留任务分支、不代记本人验收、不部署；下方不合并/未交付为历史，本条后续仅补交付证据文字。
