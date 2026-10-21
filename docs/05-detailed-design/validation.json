@@ -94,6 +94,8 @@
   "diagramVertices": 59,
   "diagramEdges": 57,
   "localLinks": 595,
+
+  "localLinks": 587,
   "pythonSyntaxFiles": 2,
   "decisionIds": 89,
   "upstreamSha256": {
@@ -103,20 +105,20 @@
     "docs/04-database/immutability.sql": "1d36a1374144c1887ee785102adf9db157246c4e1bf30ef477d22c28c47fb4fc",
     "docs/04-database/schema-model.json": "2acdb668597e7afdcd41a08481aa5bd17fa792b4798fcdc7ad70972414b20d77",
     "docs/04-database/traceability.json": "8ca4ee3edf3c5db6c9e702a9fe236128f46177005bdf5633eaacc187390374fb",
-    "docs/01-requirements/usecases-v1/UC-01_维护业务系统与权限目录.md": "ebbc4f13ba4e69e8b287bbdb056f9ea178c900dc15c9b47644c74f5d472d7819",
-    "docs/01-requirements/usecases-v1/管理范围与人员权限规则.md": "b0638d3a5d8c39feefdd680b9a99d045be7bc5daf42add086e465cbb1999b1a7",
-    "docs/01-requirements/usecases-v1/UC-09_管理员登录与退出.md": "ecdd1cc2ef6983dc7ea2f56fee3e15247d345483fedb2df1601419fa80d7907e",
-    "docs/01-requirements/usecases-v1/UC-04_撤销员工角色.md": "afa3aa691e87c71fbc95ff1c30321cbe1dd7e0079cc4d6dc0d17f40ca6d7061f",
-    "docs/01-requirements/usecases-v1/UC-03_为员工分配角色.md": "50a9b334caf0a63fe8d52d732e175f2e0d56f75e48799b7b85b05c59b2b3e7ef",
-    "docs/01-requirements/usecases-v1/UC-02_创建角色并配置权限.md": "821a274b82c280897e4049b2758db8ff2d2a2bae68016820f94f46c1b854d5cf",
     "docs/01-requirements/usecases-v1/README.md": "58dd20416a8f37a000147dfac9e986802d16fae6c49cd5e526bbe61b32ca8188",
-    "docs/01-requirements/usecases-v1/用例说明.md": "9a74f87cac2b6a3dfdb136cd40f73329ea09159b408630b0679a09efd3a4f640",
-    "docs/01-requirements/usecases-v1/UC-08_查询授权审计记录.md": "8a21c656bd5a3b0b3b98b4573a89e70ab4c75c31a2c40837a3db42bfcc1c721b",
-    "docs/01-requirements/usecases-v1/UC-11_接收审批结果并执行权限变更.md": "3b441804e3e1ac1487815c06fee22fad8cd8f012faa1961d6aeff810ba25e8b9",
-    "docs/01-requirements/usecases-v1/UC-10_导入同步员工组织信息.md": "a9388429fdc4c3863a75768b639f15fb98f0259858cb9a31c8ed886662fb7bdd",
-    "docs/01-requirements/usecases-v1/UC-07_配置管理员及管理范围.md": "97c8fc93184e313efffe7998c4dd68285b7266cb9e6467776200f081805ba8cc",
+    "docs/01-requirements/usecases-v1/UC-01_维护业务系统与权限目录.md": "ebbc4f13ba4e69e8b287bbdb056f9ea178c900dc15c9b47644c74f5d472d7819",
+    "docs/01-requirements/usecases-v1/UC-02_创建角色并配置权限.md": "821a274b82c280897e4049b2758db8ff2d2a2bae68016820f94f46c1b854d5cf",
+    "docs/01-requirements/usecases-v1/UC-03_为员工分配角色.md": "50a9b334caf0a63fe8d52d732e175f2e0d56f75e48799b7b85b05c59b2b3e7ef",
+    "docs/01-requirements/usecases-v1/UC-04_撤销员工角色.md": "afa3aa691e87c71fbc95ff1c30321cbe1dd7e0079cc4d6dc0d17f40ca6d7061f",
+    "docs/01-requirements/usecases-v1/UC-05_查询员工有效权限.md": "ca9779095ff64ded04b5290af1927b0e643aa79b367f17ae273b1ddff44f4153",
     "docs/01-requirements/usecases-v1/UC-06_检查员工指定操作权限.md": "5c834a795a0a6b0fe6b58308d480d0ae4d7927c9daf797199a4d75fe56ae4467",
-    "docs/01-requirements/usecases-v1/UC-05_查询员工有效权限.md": "ca9779095ff64ded04b5290af1927b0e643aa79b367f17ae273b1ddff44f4153"
+    "docs/01-requirements/usecases-v1/UC-07_配置管理员及管理范围.md": "97c8fc93184e313efffe7998c4dd68285b7266cb9e6467776200f081805ba8cc",
+    "docs/01-requirements/usecases-v1/UC-08_查询授权审计记录.md": "8a21c656bd5a3b0b3b98b4573a89e70ab4c75c31a2c40837a3db42bfcc1c721b",
+    "docs/01-requirements/usecases-v1/UC-09_管理员登录与退出.md": "ecdd1cc2ef6983dc7ea2f56fee3e15247d345483fedb2df1601419fa80d7907e",
+    "docs/01-requirements/usecases-v1/UC-10_导入同步员工组织信息.md": "a9388429fdc4c3863a75768b639f15fb98f0259858cb9a31c8ed886662fb7bdd",
+    "docs/01-requirements/usecases-v1/UC-11_接收审批结果并执行权限变更.md": "3b441804e3e1ac1487815c06fee22fad8cd8f012faa1961d6aeff810ba25e8b9",
+    "docs/01-requirements/usecases-v1/用例说明.md": "9a74f87cac2b6a3dfdb136cd40f73329ea09159b408630b0679a09efd3a4f640",
+    "docs/01-requirements/usecases-v1/管理范围与人员权限规则.md": "b0638d3a5d8c39feefdd680b9a99d045be7bc5daf42add086e465cbb1999b1a7"
   },
   "planRevision": "1.4",
   "foundationTasks": 5,
@@ -125,6 +127,8 @@
   "assignmentDecision": "D-055",
   "memberIdentitiesPending": 4,
   "confirmedUserAlias": "B",
+
+  "confirmedUserAlias": "D",
   "historicallyConfirmedUserAliases": [
     "A",
     "B",
@@ -132,6 +136,9 @@
     "D"
   ],
   "implementationDecision": "D-093",
+
+  "preparedBusinessTasksWaitingDependencies": [],
+  "preparationDecision": "D-093",
   "internalPortTasksPendingOwner": [
     "BE-16",
     "BE-25"
@@ -150,6 +157,7 @@
     "BE-23",
     "BE-24",
     "BE-25",
+    "BE-26",
     "BE-28",
     "BE-29",
     "BE-31"
@@ -168,8 +176,8 @@
     "BE-18"
   ],
   "businessAcceptanceDecision": "D-090",
-  "businessMainDeliveryDecision": "D-092",
-  "businessMainDeliveryMerge": "311aa5d5cbc3d7bfbd064888b4172d48de0a0e99",
+  "businessMainDeliveryDecision": "D-094",
+  "businessMainDeliveryMerge": "b00ffc98277e754757b0e3d9bd0fe3d920db53b4",
   "businessMainDeliveryPrUrl": null,
   "priorScopeCreationDeliveryPrUrl": "https://github.com/Noah-hope/RBAC-admin/pull/3",
   "priorScopeDeliveryPrUrl": "https://github.com/Noah-hope/RBAC-admin/pull/2",
@@ -195,6 +203,19 @@
     "TASKS.md": "137e88a33c78384eed1b179fba555a53796590c561df1b1a0f76305ca23e89e5",
     "IMPLEMENTATION-PLAN.md": "2de08bee0df53d71131eb8b12e7a92fe559272baf23b4050959e6fed14a46b46",
     "TEAM-ASSIGNMENT.md": "e5d4ae413287a732dcb07c3cbec277538e0aae5c0b03f0b2d4fd14fed38790c3",
+
+    "issues.json": "e7d0e2eac49a10eb62d28c9f296e940c6e81b55f52644f3bf006bc87b54a9dee",
+    "acceptance.json": "ed9c59b569ec22c33b69f9c95fd44acc8ef8f15a338e43dafc1aaa3341aa9473",
+    "operation-map.json": "c61667d903bcd5abe93916ce5ea6b7105498bc2132b211b7b748234a4dcddcd5",
+    "estimates.json": "55baeb97978ace7292118acc188ac32fa64f8d8037a4fa32bb1a9d1ffa14d443",
+    "delivery-phases.json": "6d3c2c787f568c99dd16e0222e47d68b12f952d733c4e75adb9dc7f66b0f802d",
+    "MODULES.md": "6aa8828aab95717cc245172d54ef1902c2fe88de9ba3d433bf6a20462fd199fa",
+    "TRACEABILITY.md": "b0032b32a6e2d7465322ca6e149be2ab6e542fd1bc71a498a0df16eb884ee127",
+    "HANDLER-CONTRACTS.md": "fc845a172b5360321333b3e274c8d79c8537f264ae28e3b72f804891f350ce0e",
+    "TEST-PLAN.md": "5dd9920a3b227f2409bd651cc0405f33a8f0966cdab5dd1424e85b59fe9b6e87",
+    "TASKS.md": "188874b4f334822a4cb8001e1b4cc480ce388262a95793b1d30894f51832d85b",
+    "IMPLEMENTATION-PLAN.md": "cd9a0b9d783d127c065f10b46f483b7cfa2c1fd2a1291be4197e0dfce2907d21",
+    "TEAM-ASSIGNMENT.md": "ea7840b405c21e7759eab9c625a22696e897fb0d4f6e89e612fe5dcd9b77ab88",
     "module-structure.drawio": "3db24f7f4f13cff20d34834b6cad2a5b48c1526e176d1a27ea0a0aa3e50a93b4",
     "core-flows.drawio": "af62be1624fe1141d5f6c472859e8ed0f7ff07363077ea1a2fa28c6fa206921f"
   }

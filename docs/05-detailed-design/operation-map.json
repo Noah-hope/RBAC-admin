@@ -3210,7 +3210,7 @@
         "Preview"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "closeSource",
@@ -3297,7 +3297,7 @@
         "SourceCloseResult"
       ]
     },
-    "status": "PLANNED_NOT_IMPLEMENTED"
+    "status": "IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER"
   },
   {
     "operationId": "listCompanies",

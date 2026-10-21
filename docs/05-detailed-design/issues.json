@@ -1728,7 +1728,7 @@
     "remotePrNumber": null,
     "implementationProgress": {
       "evidence": "BE-18-EFFECTIVE-PERMISSIONS.md",
-      "decision": "D-093",
+      "decision": "D-095",
       "scope": "FRESH_PRIMARY_BUSINESS_PERMISSION_UNION_AND_INDIVIDUAL_CHECK",
       "implemented": true,
       "httpImplemented": true,
@@ -2603,7 +2603,7 @@
     ],
     "deliverable": "统一RequestInvalidator，关权/关系结束触发整份已提交申请失效，安全计数/可见审计及幂等原子，DRAFT不伪终态。",
     "notes": "",
-    "status": "PLANNED",
+    "status": "IMPLEMENTED",
     "milestone": "后端全范围可部署演示（拟建）",
     "labels": [
       "backend",
@@ -2611,6 +2611,42 @@
     ],
     "remoteIssueNumber": null,
     "remotePrNumber": null,
+    "preparationHistory": {
+      "decision": "D-093",
+      "evidence": "BE-26-SOURCE-CLOSURE.md",
+      "branch": "codex/be-26-source-closure",
+      "dependencyBase": "86089d2",
+      "designPrepared": true,
+      "acceptanceScenariosPrepared": true,
+      "implementationStarted": false,
+      "testsRun": false,
+      "dependencyStatus": "WAITING_FOR_MAIN_DELIVERY",
+      "blockedBy": [
+        "BE-20"
+      ]
+    },
+    "implementationProgress": {
+      "decision": "D-093",
+      "evidence": "BE-26-SOURCE-CLOSURE.md",
+      "branch": "codex/be-26-source-closure",
+      "dependencyBase": "7914788",
+      "claimedOwnerSlot": "D",
+      "implementationStarted": true,
+      "implemented": true,
+      "httpImplemented": true,
+      "internalWritePortImplemented": true,
+      "ownerAccepted": false,
+      "mergedToMain": true,
+      "databaseExecuted": true,
+      "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
+      "scope": "DIRECT_SOURCE_CLOSE_AND_SHARED_REQUEST_INVALIDATION_ONLY_NOT_EMPLOYEE_SCOPE_OR_IMPORT_ENTRYPOINTS",
+      "mainMergeCommit": "b00ffc98277e754757b0e3d9bd0fe3d920db53b4",
+      "sourceCommit": "857d4a9d20fa43578f70385d256b86ce02ad3fdc",
+      "pushVerified": true,
+      "verifiedRemoteCommit": "b00ffc98277e754757b0e3d9bd0fe3d920db53b4",
+      "deliveryDecision": "D-094",
+      "integrationBase": "6b9a02e"
+    },
     "acceptanceScope": "完成所列AT中本任务交付/自有API对应的行为与边界，并记录具体断言；跨模块部分由对应任务补充并在BE-33汇总。不能将局部通过标记为整个AT通过。",
     "useCases": [
       "UC-02",
@@ -3325,7 +3361,7 @@
     "remotePrNumber": null,
     "preparationProgress": {
       "evidence": "BE-33-35-INTEGRATION-HANDOFF.md",
-      "decision": "D-094",
+      "decision": "D-096",
       "scope": "DELIVERED_MODULE_INTEGRATION_AND_RELEASE_EVIDENCE_PREPARATION_ONLY",
       "implemented": false,
       "fullAcceptanceVerified": false,
@@ -3333,14 +3369,12 @@
       "mergedToMain": false,
       "branch": "codex/be-33-35-integration-handoff",
       "dependencyBase": "baeab61",
-      "integratedMain": "6b9a02e4406c5017e9b92b62bd41b026fc726f6c",
+      "integratedMain": "d79e28a624fd4b9bf3862063c44274d3db602248",
       "unresolvedDependencies": [
         "BE-27",
         "BE-30"
       ],
-      "transitiveMissingDependencies": [
-        "BE-26"
-      ]
+      "transitiveMissingDependencies": []
     },
     "acceptanceScope": "对照全部后端AT收集各模块证据并运行跨模块场景，补齐全67入站契约及AT-38全链路；AT-36目标服务器和AT-39发布证据分别仍由BE-34/35完成。",
     "useCases": [
@@ -3463,7 +3497,7 @@
     "remotePrNumber": null,
     "preparationProgress": {
       "evidence": "BE-33-35-INTEGRATION-HANDOFF.md",
-      "decision": "D-094",
+      "decision": "D-096",
       "scope": "DELIVERED_MODULE_INTEGRATION_AND_RELEASE_EVIDENCE_PREPARATION_ONLY",
       "implemented": false,
       "fullAcceptanceVerified": false,
@@ -3471,7 +3505,7 @@
       "mergedToMain": false,
       "branch": "codex/be-33-35-integration-handoff",
       "dependencyBase": "baeab61",
-      "integratedMain": "6b9a02e4406c5017e9b92b62bd41b026fc726f6c",
+      "integratedMain": "d79e28a624fd4b9bf3862063c44274d3db602248",
       "unresolvedDependencies": [
         "BE-34"
       ],

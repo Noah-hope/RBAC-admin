@@ -103,12 +103,57 @@ class DeliveredModulesMySqlCheck {
         var now=Instant.now();var claims=new JWTClaimsSet.Builder().issuer("urn:rbac:oa").audience("rbac-oa-callback").subject(oaInstance).jwtID(id()).issueTime(Date.from(now)).expirationTime(Date.from(now.plusSeconds(300))).claim("oaInstanceId",oaInstance).build();
         var token=new SignedJWT(new JWSHeader.Builder(JWSAlgorithm.RS256).keyID("oa").build(),claims);token.sign(new RSASSASigner(oa));return token.serialize();
     }
-    private Map<String,Object> approve(String draft,long version)throws Exception{
+    private JsonNode submitAndDeliver(String draft,long version)throws Exception{
         var preview=write("POST","change-requests/"+draft+"/previews",Map.of("expectedDraftVersion",version),200);
         write("POST","change-requests/"+draft+"/submissions",Map.of("expectedDraftVersion",version,"previewId",preview.path("preview").path("id").stringValue()),202);
-        assertThat(app.getBean(com.adgn.backend.oa.OaDeliveryService.class).deliver(draft)).isTrue();var fixed=read("change-requests/"+draft);
-        var input=Map.<String,Object>of("eventId",id(),"requestId",draft,"oaApprovalId",fixed.path("oaApprovalId").stringValue(),"submittedVersion",fixed.path("submittedVersion").longValue(),"contentDigest",fixed.path("contentDigest").stringValue(),"decision","APPROVED","isFinal",true,"decidedAt",Instant.now().toString(),"comment","正式模拟OA最终结果");
+        assertThat(app.getBean(com.adgn.backend.oa.OaDeliveryService.class).deliver(draft)).isTrue();return read("change-requests/"+draft);
+    }
+    private Map<String,Object> callback(String draft,JsonNode fixed){
+        return Map.<String,Object>of("eventId",id(),"requestId",draft,"oaApprovalId",fixed.path("oaApprovalId").stringValue(),"submittedVersion",fixed.path("submittedVersion").longValue(),"contentDigest",fixed.path("contentDigest").stringValue(),"decision","APPROVED","isFinal",true,"decidedAt",Instant.now().toString(),"comment","正式模拟OA最终结果");
+    }
+    private Map<String,Object> approve(String draft,long version)throws Exception{
+        var fixed=submitAndDeliver(draft,version);
+        var input=callback(draft,fixed);
         value(request("POST","oa/final-results",input,oaToken(),null),202);return input;
+    }
+    private String configuredRole(Fixture f)throws Exception{
+        var created=role(f);String role=created.path("role").path("id").stringValue(),draft=created.path("draftId").stringValue();
+        write("PUT","change-requests/"+draft,Map.of("expectedDraftVersion",1,"reason","关闭来源集成配置","content",Map.of("kind","ROLE_CONFIGURATION","companyId",f.company(),"roleId",role,"expectedConfigurationVersion",0,"permissionIds",List.of(f.access()))),200);
+        approve(draft,2);app.getBean(com.adgn.backend.execution.ExecutionService.class).execute(draft);return role;
+    }
+    private String grantDraft(Fixture f,String role)throws Exception{
+        var b=write("POST","grant-baselines",Map.of("items",List.of(Map.of("employeeId",f.employee(),"roleId",role,"sourceCompanyId",f.company(),"sourceDepartmentId",f.department()))),200).path("items").get(0);
+        var line=Map.of("employeeId",f.employee(),"roleId",role,"sourceCompanyId",f.company(),"sourceDepartmentId",f.department(),"expectedRoleConfigurationVersion",b.path("roleConfigurationVersion").longValue(),"expectedSourceEpoch",b.path("sourceEpoch").longValue(),"expectedRelationVersion",b.path("relationVersion").longValue(),"employmentIds",json.convertValue(b.path("employmentIds"),List.class));
+        return write("POST","change-requests",Map.of("content",Map.of("kind","ROLE_GRANT","companyId",f.company(),"items",List.of(line)),"reason","关闭来源集成授予"),201).path("id").stringValue();
+    }
+    private JsonNode closeSource(Fixture f)throws Exception{
+        var s=write("POST","source-baselines",Map.of("employeeId",f.employee(),"companyId",f.company(),"departmentId",f.department(),"systemIds",List.of(f.system())),200).path("items").get(0);
+        var input=Map.of("employeeId",f.employee(),"companyId",f.company(),"departmentId",f.department(),"systems",List.of(Map.of("systemId",f.system(),"expectedSourceEpoch",s.path("sourceEpoch").longValue(),"expectedVersion",s.path("version").longValue())),"reason","关闭准确来源集成验证");
+        var preview=write("POST","source-closure-previews",input,200);var body=Map.of("input",input,"previewId",preview.path("id").stringValue());String key=id();
+        var result=value(request("POST","admin/source-closures",body,admin,key),200);
+        var replay=request("POST","admin/source-closures",body,admin,key);value(replay,200);assertThat(replay.headers().firstValue("Idempotent-Replayed")).contains("true");assertThat(json.readTree(replay.body())).isEqualTo(result);return result;
+    }
+    // Caching old grants, or replaying an execution after close, must not restore access.
+    @Test void sourceClosureRemovesExecutedAccessFromTheNextBusinessQuery()throws Exception{
+        var f=fixture();String role=configuredRole(f),grant=grantDraft(f,role);var approved=approve(grant,1);
+        app.getBean(com.adgn.backend.execution.ExecutionService.class).execute(grant);assertThat(business(f).path("canAccessSystem").booleanValue()).isTrue();
+        var closed=closeSource(f);assertThat(closed.path("invalidatedGrantCount").longValue()).isEqualTo(1);
+        assertThat(business(f).path("canAccessSystem").booleanValue()).isFalse();value(request("POST","oa/final-results",approved,oaToken(),null),200);
+        app.getBean(com.adgn.backend.execution.ExecutionService.class).execute(grant);assertThat(business(f).path("canAccessSystem").booleanValue()).isFalse();
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM execution_success WHERE request_id=?",Long.class,grant)).isEqualTo(1);
+    }
+    // A trusted late approval is historical evidence, not permission to revive a closed epoch.
+    @Test void lateApprovalAfterSourceClosureCannotGrantButANewEpochApplicationCan()throws Exception{
+        var f=fixture();String role=configuredRole(f),grant=grantDraft(f,role);var fixed=submitAndDeliver(grant,1);
+        var closed=closeSource(f);assertThat(closed.path("invalidatedRequestCount").longValue()).isEqualTo(1);
+        var late=callback(grant,fixed);value(request("POST","oa/final-results",late,oaToken(),null),202);
+        app.getBean(com.adgn.backend.execution.ExecutionService.class).execute(grant);
+        assertThat(read("change-requests/"+grant).path("state").stringValue()).isEqualTo("INVALIDATED");assertThat(business(f).path("canAccessSystem").booleanValue()).isFalse();
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM execution_success WHERE request_id=?",Long.class,grant)).isZero();
+        String fresh=grantDraft(f,role);approve(fresh,1);assertThat(business(f).path("canAccessSystem").booleanValue()).isFalse();
+        app.getBean(com.adgn.backend.execution.ExecutionService.class).execute(fresh);assertThat(business(f).path("canAccessSystem").booleanValue()).isTrue();
+        value(request("POST","oa/final-results",late,oaToken(),null),200);app.getBean(com.adgn.backend.execution.ExecutionService.class).execute(grant);
+        assertThat(business(f).path("canAccessSystem").booleanValue()).isTrue();assertThat(read("change-requests/"+grant).path("state").stringValue()).isEqualTo("INVALIDATED");
     }
     private JsonNode business(Fixture f)throws Exception{return value(request("POST","integration/authorization-queries",Map.of("employeeKey",f.employee(),"companyId",f.company()),f.businessToken(),null),200);}
     @Test void realConfigurationGrantAndRevocationWorkflowControlsBusinessPermissions()throws Exception{

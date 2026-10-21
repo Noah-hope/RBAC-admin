@@ -147,7 +147,8 @@ public final class ImpactPolicy {
             if(!key.employeeKey().equals(grant.source().employeeKey())||!grant.active()||!grant.current()||!after&&grant.addition()
                     ||after&&(change.closedSources().contains(grant.source())||change.endedGrantIds().contains(grant.id())))continue;
             var role=roles.get(grant.role());if(role==null||!key.companyId().equals(text(role,"company_id"))||!key.systemId().equals(text(role,"system_id")))continue;
-            String department=text(role,"department_id");if(department!=null&&!department.equals(grant.source().departmentId()))continue;
+            String department=text(role,"department_id");
+            if(department!=null&&facts.rows("employments").stream().noneMatch(em->key.employeeId().equals(text(em,"employee_id"))&&key.companyId().equals(text(em,"company_id"))&&department.equals(text(em,"department_id"))&&"ACTIVE".equals(text(em,"status"))))continue;
             if(facts.rows("employments").stream().noneMatch(em->key.employeeId().equals(text(em,"employee_id"))&&key.companyId().equals(text(em,"company_id"))
                     &&grant.source().departmentId().equals(text(em,"department_id"))&&"ACTIVE".equals(text(em,"status"))))continue;
             for(String permission:available(role,after,systems,nodes,permissions,configs,change))if("SYSTEM_ACCESS".equals(text(permissions.get(permission),"permission_type")))return true;
