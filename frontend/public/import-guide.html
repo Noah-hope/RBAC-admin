@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  /><title>资料导入说明 · 权限中心</title
+  ><style>
+    body {
+      font:
+        16px/1.8 system-ui,
+        sans-serif;
+      max-width: 850px;
+      margin: 40px auto;
+      padding: 0 24px;
+      color: #1f1f1f;
+    }
+    code {
+      background: #edf2fa;
+      padding: 2px 6px;
+      overflow-wrap: anywhere;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    td,
+    th {
+      border: 1px solid #c4c7c5;
+      padding: 12px;
+      text-align: left;
+    }
+  </style>
+  <h1>资料导入说明</h1>
+  <p>
+    下载的 CSV 模板只有表头，请按实际资料填写。CSV 使用 UTF-8；XLSX
+    上传后明确选择工作表。最多 1000 行、原文件 10
+    MiB。先上传、配置映射、查看预检报告，再确认整批提交。
+  </p>
+  <h2>选择资料类型</h2>
+  <table>
+    <tr>
+      <th>类型</th>
+      <th>内容</th>
+    </tr>
+    <tr>
+      <td>组织与岗位</td>
+      <td>公司、部门、岗位的编码和名称；更名需提供预期版本。</td>
+    </tr>
+    <tr>
+      <td>员工与任职初始化</td>
+      <td>
+        employeeKey、name、companyCode、departmentCode、positionCode。员工可兼岗，每项任职一行。
+      </td>
+    </tr>
+    <tr>
+      <td>人员变更</td>
+      <td>
+        action
+        明确表达增加任职、结束任职、停用或恢复员工等操作。按预检提示提供目标标识和版本。
+      </td>
+    </tr>
+  </table>
+  <h2>常见 action</h2>
+  <p>
+    组织：<code>CREATE_COMPANY</code>、<code>RENAME_COMPANY</code>、<code>CREATE_DEPARTMENT</code>、<code>RENAME_DEPARTMENT</code>、<code>CREATE_POSITION</code>、<code>RENAME_POSITION</code>。
+  </p>
+  <p>
+    人员变更：<code>ADD_EMPLOYMENT</code>、<code>END_EMPLOYMENT</code>、<code>DISABLE_EMPLOYEE</code>、<code>RESTORE_EMPLOYEE</code>、<code>RENAME_EMPLOYEE</code>、<code>REMAP_EMPLOYEE_KEY</code>。具体允许字段和并发条件以服务端预检结果为准。
+  </p>
+  <h2>映射与版本</h2>
+  <p>
+    源列名必须与文件表头一致。使用中文表头时，在字段映射中填写中文源列名并选择目标字段。未使用的映射应移除，不要把空列误当成清空正式资料。employeeKey
+    是稳定员工编号，不按姓名自动合并。
+  </p>
+  <p>
+    expectedVersion
+    是已读取目标的版本，不能猜测或统一填零。组织名称有歧义时，添加显式组织映射，使用源公司/部门路径和目标稳定编码或标识。
+  </p>
+  <p>
+    来源系统及来源批次号用于防止同批重复提交。刷新后可在“导入批次”查询原批次状态，不要盲目换批次号重做。
+  </p>
+  <h2>核对影响</h2>
+  <p>
+    任职结束、员工停用会影响原授权来源、待处理申请及后台资格。恢复员工或重新任职不会复活旧授权。文件缺行不会自动视为离职。存在阻断问题时不能提交；预检过期后须重新预检。
+  </p>
+</html>
