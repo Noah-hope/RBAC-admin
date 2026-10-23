@@ -60,11 +60,11 @@
 ```powershell
 npm run generate:api # 从 Git OpenAPI 生成管理员路由和类型；契约未改时无需运行
 npm run check        # TypeScript 与 Vue 类型检查
-npm test             # 9 项请求层 + 17 项浏览器检查，使用受控服务/响应
+npm test             # 9 项请求层 + 19 项浏览器检查，使用受控服务/响应
 npm run build        # 生产构建，输出 dist/
 ```
 
-浏览器测试默认使用本机 Microsoft Edge。使用 Chrome 时，PowerShell 设置 `$env:PLAYWRIGHT_CHANNEL='chrome'`；没有系统浏览器时可安装 Playwright Chromium（`npx playwright install chromium`）并设置为 `chromium`。测试自行启动独立的前端 5174 服务，先停止已运行的同端口开发服务；无需真实后端或数据库。仅运行请求层可用 `npm run test:api`。
+浏览器测试默认使用本机 Microsoft Edge。使用 Chrome 时，PowerShell 设置 `$env:PLAYWRIGHT_CHANNEL='chrome'`；没有系统浏览器时可安装 Playwright Chromium（`npx playwright install chromium`）并设置为 `chromium`。测试默认启动独立的前端 5174 服务；若日常前端正在运行，先设置 `$env:FRONTEND_TEST_PORT='5184'` 再执行 `npm test`，即可使用其他端口而不停止日常前端。测试无需真实后端或数据库。仅运行请求层可用 `npm run test:api`。
 
 `src/pages` 按业务页面组织，`src/components` 放表格、选择器、表单、预览等组件，`src/api` 放契约类型和统一客户端，`src/state.ts` 管理内存会话及任命上下文。业务写入复用 `Mutation`，需要预览的操作保留原版本和原预览；不要在页面中直接绕过客户端调用 `fetch`。
 
@@ -72,4 +72,4 @@ npm run build        # 生产构建，输出 dist/
 
 ## 当前验证边界
 
-前端类型检查、构建及 26 项受控测试通过，详见 [验证记录](VALIDATION.md) 和 [API 对应清单](API-COVERAGE.md)。2026-10-23 只读检查本机 `127.0.0.1:8080` 时连接被拒绝，因此还没有完成这套前端与真实后端的登录、审批、导入全链路验证。后端代码、数据库迁移和 API 契约未改；发现后端问题先记录并报告，再决定如何处理。
+前端类型检查、构建及 28 项受控测试通过，详见 [验证记录](VALIDATION.md) 和 [API 对应清单](API-COVERAGE.md)。2026-10-23 只读检查本机 `127.0.0.1:8080` 时连接被拒绝，因此还没有完成这套前端与真实后端的登录、审批、导入全链路验证。后端代码、数据库迁移和 API 契约未改；发现后端问题先记录并报告，再决定如何处理。

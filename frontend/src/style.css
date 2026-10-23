@@ -449,6 +449,10 @@ tr:hover td {
   border-radius: 8px;
 }
 .panel {
+  /* Preflight resets the native dialog margin; restore viewport centering. */
+  position: fixed;
+  inset: 0;
+  margin: auto;
   border: 0;
   border-radius: 24px;
   padding: 0;

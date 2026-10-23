@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, useId } from "vue";
+import { ref, onMounted, onBeforeUnmount, useId } from "vue";
 const props = defineProps<{ title: string; wide?: boolean; busy?: boolean }>();
 const emit = defineEmits<{ close: [] }>();
 const el = ref<HTMLDialogElement>();
 const titleId = useId();
 onMounted(() => el.value?.showModal());
+onBeforeUnmount(() => el.value?.close());
 </script>
 <template>
   <dialog

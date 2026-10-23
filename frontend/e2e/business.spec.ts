@@ -1,5 +1,6 @@
 import { monitor } from "./contract";
 import { test, expect, type Page } from "@playwright/test";
+import type { AuditDetail } from "../src/api/schema";
 let frontendErrors: string[] = [];
 test.beforeEach(({ page }) => {
   frontendErrors = monitor(page);
@@ -42,6 +43,100 @@ const preview = {
   warnings: [],
 };
 let draft: any;
+for (const viewport of [
+  { width: 1440, height: 1000 },
+  { width: 390, height: 844 },
+]) {
+  test(`detail dialogs stay centered and scroll inside the viewport at ${viewport.width}px`, async ({
+    page,
+  }, info) => {
+    await page.setViewportSize(viewport);
+    await boot(page);
+    const audit: AuditDetail = {
+      event: {
+        id: "audit1",
+        occurredAt: time,
+        eventType: "ADMIN_LOGIN",
+        companyId: null,
+        sourceDepartmentId: null,
+        systemId: null,
+        actorId: "a",
+        targetId: "a",
+        result: "SUCCESS",
+        changeRequestId: null,
+        requestId: "layout-check",
+        reason: "后台会话操作",
+      },
+      differences: Array.from({ length: 20 }, (_, i) => ({
+        field: `字段 ${i + 1}`,
+        before: "旧值",
+        after: "新值",
+      })),
+      originalSubmitterId: null,
+      oaApprovalId: null,
+      submittedVersion: null,
+      failureCode: null,
+    };
+    await page.route("**/api/v1/admin/audit-events**", (r) =>
+      r.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(
+          new URL(r.request().url()).pathname.endsWith("/audit1")
+            ? audit
+            : { items: [audit.event], page: 1, pageSize: 20, total: 1 },
+        ),
+      }),
+    );
+    for (const [route, title] of [
+      ["audit", "审计详情"],
+      ["administrators", "后台账号详情"],
+    ]) {
+      await page.goto("/#/" + route);
+      const open = page
+        .getByRole("button", { name: "详情", exact: true })
+        .first();
+      await open.click();
+      const dialog = page.getByRole("dialog", { name: title, exact: true });
+      await expect(dialog).toBeVisible();
+      const bounds = await dialog.evaluate((el) => {
+        const r = el.getBoundingClientRect();
+        return {
+          x: r.x,
+          y: r.y,
+          width: r.width,
+          height: r.height,
+          viewportWidth: document.documentElement.clientWidth,
+          viewportHeight: window.innerHeight,
+        };
+      });
+      expect(
+        Math.abs(bounds.x + bounds.width / 2 - bounds.viewportWidth / 2),
+      ).toBeLessThan(2);
+      expect(
+        Math.abs(bounds.y + bounds.height / 2 - bounds.viewportHeight / 2),
+      ).toBeLessThan(2);
+      expect(bounds.x).toBeGreaterThanOrEqual(0);
+      expect(bounds.y).toBeGreaterThanOrEqual(0);
+      expect(bounds.y + bounds.height).toBeLessThanOrEqual(
+        bounds.viewportHeight,
+      );
+      if (route === "audit") {
+        expect(
+          await dialog.evaluate((el) => el.scrollHeight > el.clientHeight),
+        ).toBe(true);
+        await dialog.evaluate((el) => (el.scrollTop = el.scrollHeight));
+        await expect(
+          dialog.getByRole("button", { name: "关闭对话框" }),
+        ).toBeInViewport();
+      }
+      await page.screenshot({ path: info.outputPath(route + "-centered.png") });
+      await page.keyboard.press("Escape");
+      await expect(dialog).toHaveCount(0);
+      await expect(open).toBeFocused();
+    }
+  });
+}
 async function boot(page: Page) {
   draft = {
     id: "draft1",
@@ -579,15 +674,13 @@ test("CSV upload requires precheck and explicit whole-batch confirmation before 
   await page.getByRole("link", { name: "员工组织" }).click();
   await page.getByRole("button", { name: "导入资料", exact: true }).click();
   const dialog = page.getByRole("dialog");
-  await dialog
-    .getByLabel("选择文件")
-    .setInputFiles({
-      name: "org.csv",
-      mimeType: "text/csv",
-      buffer: Buffer.from(
-        "action,companyCode,companyName,departmentCode,departmentName,positionCode,positionName,expectedVersion\nCREATE_COMPANY,CO,Example,,,,,\n",
-      ),
-    });
+  await dialog.getByLabel("选择文件").setInputFiles({
+    name: "org.csv",
+    mimeType: "text/csv",
+    buffer: Buffer.from(
+      "action,companyCode,companyName,departmentCode,departmentName,positionCode,positionName,expectedVersion\nCREATE_COMPANY,CO,Example,,,,,\n",
+    ),
+  });
   await dialog.getByRole("button", { name: "上传文件", exact: true }).click();
   await dialog.getByLabel("来源系统", { exact: true }).fill("HR");
   await dialog.getByLabel("办理原因", { exact: true }).fill("首次导入");
