@@ -31,7 +31,7 @@ class CatalogPreviewMySqlCheck {
     private Path keys;
     private String base,account,token;
     private final JsonMapper json=JsonMapper.builder().build();
-    private final HttpClient http=HttpClient.newHttpClient();
+    private final HttpClient http=com.adgn.backend.testsupport.ContractHttpClient.create();
     @BeforeAll void start()throws Exception{
         keys=Files.createTempDirectory(Path.of(".tmp"),"catalog-keys-");
         for(String family:List.of("admin","business","oa")){

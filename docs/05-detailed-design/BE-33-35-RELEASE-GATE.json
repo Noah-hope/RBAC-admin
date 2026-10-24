@@ -59,15 +59,7 @@
       "target": "BE-26"
     },
     {
-      "code": "TASK_NOT_IMPLEMENTED",
-      "target": "BE-27"
-    },
-    {
       "code": "OWNER_ACCEPTANCE_PENDING",
-      "target": "BE-27"
-    },
-    {
-      "code": "TASK_NOT_DELIVERED",
       "target": "BE-27"
     },
     {
@@ -79,15 +71,7 @@
       "target": "BE-29"
     },
     {
-      "code": "TASK_NOT_IMPLEMENTED",
-      "target": "BE-30"
-    },
-    {
       "code": "OWNER_ACCEPTANCE_PENDING",
-      "target": "BE-30"
-    },
-    {
-      "code": "TASK_NOT_DELIVERED",
       "target": "BE-30"
     },
     {
@@ -95,10 +79,6 @@
       "target": "BE-31"
     },
     {
-      "code": "TASK_NOT_IMPLEMENTED",
-      "target": "BE-33"
-    },
-    {
       "code": "OWNER_ACCEPTANCE_PENDING",
       "target": "BE-33"
     },
@@ -129,26 +109,6 @@
     {
       "code": "TASK_NOT_DELIVERED",
       "target": "BE-35"
-    },
-    {
-      "code": "OPERATION_NOT_IMPLEMENTED",
-      "target": "employeeStatePreview"
-    },
-    {
-      "code": "OPERATION_NOT_IMPLEMENTED",
-      "target": "setEmployeeState"
-    },
-    {
-      "code": "OPERATION_NOT_IMPLEMENTED",
-      "target": "replaceScope"
-    },
-    {
-      "code": "OPERATION_NOT_IMPLEMENTED",
-      "target": "scopeEditPreview"
-    },
-    {
-      "code": "OPERATION_NOT_IMPLEMENTED",
-      "target": "commitImport"
     },
     {
       "code": "ACCEPTANCE_NOT_VERIFIED",
@@ -323,11 +283,11 @@
       "target": "ownerHandoff"
     }
   ],
-  "implementedInboundOperations": 62,
+  "implementedInboundOperations": 67,
   "inboundOperations": 67,
-  "sourceSha256": "390e89242b5c374ddc86b79604f7fd75ace0f7764d2a83949e287934404194b6",
+  "sourceSha256": "9f1c71c422344a23bde00d1b079cf04a7296f099dd4f8934c293121a68e81f20",
   "testResults": {
-    "tests": 514,
+    "tests": 579,
     "failures": 0,
     "errors": 0,
     "skipped": 0

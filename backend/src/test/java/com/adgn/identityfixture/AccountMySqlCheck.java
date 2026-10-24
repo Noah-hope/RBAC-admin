@@ -27,7 +27,7 @@ class AccountMySqlCheck {
     private String base,superAccount,superToken,hash;
     private final String password="Temporary-Account-123456";
     private final JsonMapper json=JsonMapper.builder().build();
-    private final HttpClient http=HttpClient.newHttpClient();
+    private final HttpClient http=com.adgn.backend.testsupport.ContractHttpClient.create();
     @BeforeAll void start() throws Exception {
         keyDirectory=Files.createTempDirectory(Path.of(".tmp"),"be07-keys-");
         for(String family:List.of("admin","business","oa")) {

@@ -26,7 +26,7 @@ class ImportFileMySqlCheck {
     private Path keys,storage;private String base,superId,global,ordinary,restricted;
     private final String password="Fixture-Import-123456";
     private final byte[] csv="key,name\n007,Person\n".getBytes(StandardCharsets.UTF_8);
-    private final byte[] hmac=new byte[32];private final JsonMapper json=JsonMapper.builder().build();private final HttpClient http=HttpClient.newHttpClient();
+    private final byte[] hmac=new byte[32];private final JsonMapper json=JsonMapper.builder().build();private final HttpClient http=com.adgn.backend.testsupport.ContractHttpClient.create();
     private String id(){return UUID.randomUUID().toString();}
     @BeforeAll void start()throws Exception{
         keys=Files.createTempDirectory(Path.of(".tmp"),"be28-keys-");storage=Files.createTempDirectory(Path.of(".tmp"),"be28-files-");new java.security.SecureRandom().nextBytes(hmac);

@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ImportPrecheckMySqlCheck {
     private IsolatedMySqlDatabase db;private ConfigurableApplicationContext app;private JdbcTemplate jdbc;
-    private Path keys,storage;private String base,account,global,ordinary,restricted;private final JsonMapper json=JsonMapper.builder().build();private final HttpClient http=HttpClient.newHttpClient();
+    private Path keys,storage;private String base,account,global,ordinary,restricted;private final JsonMapper json=JsonMapper.builder().build();private final HttpClient http=com.adgn.backend.testsupport.ContractHttpClient.create();
     private String id(){return UUID.randomUUID().toString();}
     @BeforeAll void start()throws Exception{
         keys=Files.createTempDirectory(Path.of(".tmp"),"be29-keys-");storage=Files.createTempDirectory(Path.of(".tmp"),"be29-files-");
