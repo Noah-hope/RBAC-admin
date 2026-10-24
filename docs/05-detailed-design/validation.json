@@ -93,7 +93,7 @@
   "diagramPages": 6,
   "diagramVertices": 59,
   "diagramEdges": 57,
-  "localLinks": 654,
+  "localLinks": 660,
   "pythonSyntaxFiles": 2,
   "decisionIds": 95,
   "upstreamSha256": {
@@ -170,9 +170,7 @@
     "BE-22",
     "BE-32"
   ],
-  "businessTasksPendingMainDelivery": [
-    "BE-33"
-  ],
+  "businessTasksPendingMainDelivery": [],
   "businessAcceptanceDecision": "D-090",
   "businessMainDeliveryDecision": "D-102",
   "businessMainDeliveryMerge": "98f14c6a4b53582c9e9efc587a0e3095d1693eea",
@@ -189,7 +187,7 @@
   "businessOperationsAssigned": 68,
   "artifactSha256": {
     "modules.json": "f20c0338e550a72468fb18981f04778461fa93e0421ab9f916d30c97d3fcecdf",
-    "issues.json": "840acd4cbd6283c9e60af91c41581ff2200abdda96f4c65cbdc6c418c910f6ae",
+    "issues.json": "185657342b0846c8dd8e3260bae4814c829a534ba09216418f953e1ddff20778",
     "acceptance.json": "2b9535695d25b5deec192d05154eb13c3958a44d5d07fb4414edee341d94f822",
     "operation-map.json": "f5f84c0fc7edcbb1248a0cd4838508e61ecec5282691fa863ccc5293eb054e3f",
     "estimates.json": "b15e9067849f6d0b20ed0c8b32bb5a6f8b6f4dbdfbc73c880bd5699d7f6e42b6",

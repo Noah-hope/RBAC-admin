@@ -389,7 +389,8 @@ def checks(report):
             progress=task.get('implementationProgress',{})
             require(progress.get('decision')=='D-103' and progress.get('claimedOwnerSlot')=='A'
                     and progress.get('implemented') is True and progress.get('automatedSystemVerified') is True
-                    and progress.get('ownerAccepted') is False and progress.get('mergedToMain') is False
+                    and progress.get('ownerAccepted') is False and progress.get('mergedToMain') is True
+                    and progress.get('deliveryDecision')=='D-106' and progress.get('pushVerified') is True
                     and progress.get('fullAcceptanceVerified') is False and progress.get('unresolvedDependencies')==[]
                     and progress.get('automatedUnitTests')==143 and progress.get('automatedMySqlTests')==436
                     and progress.get('successfulContractOperations')==67 and progress.get('auxiliaryTests')==18

@@ -3459,7 +3459,7 @@
       "implemented": true,
       "fullAcceptanceVerified": false,
       "ownerAccepted": false,
-      "mergedToMain": false,
+      "mergedToMain": true,
       "unresolvedDependencies": [],
       "databaseExecutionScope": "DISPOSABLE_INSTANCE_ONLY",
       "databaseExecuted": true,
@@ -3470,7 +3470,11 @@
       "auxiliaryTests": 18,
       "successfulContractOperations": 67,
       "systemEvidence": "BE-33-SYSTEM-EVIDENCE.json",
-      "implementationCommit": "3bad24c13586c93421f72c912955b2c5102cc4bb"
+      "implementationCommit": "3bad24c13586c93421f72c912955b2c5102cc4bb",
+      "deliveryDecision": "D-106",
+      "mergeCommit": "f1a927966f392615e2b17944c0bddca1dc31b840",
+      "deliverySourceCommit": "a7eca56cbb59b7ef39e9edf73d25bcf296f59457",
+      "pushVerified": true
     },
     "acceptanceScope": "对照全部后端AT收集各模块证据并运行跨模块场景，补齐全67入站契约及AT-38全链路；AT-36目标服务器和AT-39发布证据分别仍由BE-34/35完成。",
     "useCases": [
