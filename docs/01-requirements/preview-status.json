@@ -3,5 +3,11 @@
   "preview_revision": "V1.1",
   "policy": "on-demand",
   "updated_on": "2026-10-16",
-  "note": "正文与 drawio 为 V1.3 平级部门修订；保留的 PNG/SVG 是 V1.1 辅助预览，不代表当前组织范围规则。"
+  "note": "用例图四页及对应 PNG/SVG 已按 V1.3 在 2026-10-24 更新并覆盖旧图；其他目录预览仍为 V1.1，不代表全部图片已刷新。",
+  "folder_previews": {
+    "usecases-v1": {
+      "preview_revision": "V1.3",
+      "updated_on": "2026-10-24"
+    }
+  }
 }
