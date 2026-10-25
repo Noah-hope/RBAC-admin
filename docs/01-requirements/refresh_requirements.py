@@ -20,8 +20,6 @@ def main():
         'activities-v1/generate_all.py',
         'sequences-v1/generate_sequences.py',
         'usecase-tables-v1/generate_tables.py',
-        'dataflows-v1/generate_context.py',
-        'dataflows-v1/generate_level1.py',
         'usecases-v1/generate_diagrams.py',
     ]
     for script in scripts:

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="950" viewBox="0 0 1800 950">
+<rect width="100%" height="100%" fill="white"/>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#3569A2"/></marker></defs>
+<text x="900.0" y="50.0" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="34" font-weight="700" fill="#18344D">集中权限管理系统 · 顶层数据流图</text>
+<text x="900.0" y="106.0" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="22" font-weight="700" fill="#18344D">系统边界与主要输入、输出数据</text>
+<rect x="30" y="210" width="210" height="200" rx="0" fill="#D9D9D9" stroke="#737373" stroke-width="2"/>
+<text x="135.0" y="288.0" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="30" font-weight="700" fill="#18344D">权限中心</text>
+<text x="135.0" y="332.0" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="30" font-weight="700" fill="#18344D">总管理员</text>
+<rect x="30" y="590" width="210" height="200" rx="0" fill="#D9D9D9" stroke="#737373" stroke-width="2"/>
+<text x="135.0" y="690.0" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="30" font-weight="700" fill="#18344D">权限管理员</text>
+<rect x="780" y="220" width="240" height="570" rx="30" fill="#17365D" stroke="#17365D" stroke-width="2"/>
+<text x="900.0" y="461.0" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="30" font-weight="700" fill="#FFFFFF">0</text>
+<text x="900.0" y="505.0" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="30" font-weight="700" fill="#FFFFFF">集中权限</text>
+<text x="900.0" y="549.0" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="30" font-weight="700" fill="#FFFFFF">管理系统</text>
+<rect x="1560" y="210" width="210" height="200" rx="0" fill="#D9D9D9" stroke="#737373" stroke-width="2"/>
+<text x="1665.0" y="288.0" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="30" font-weight="700" fill="#18344D">OA 系统</text>
+<text x="1665.0" y="332.0" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="30" font-weight="700" fill="#18344D">（一期模拟）</text>
+<rect x="1560" y="590" width="210" height="200" rx="0" fill="#D9D9D9" stroke="#737373" stroke-width="2"/>
+<text x="1665.0" y="690.0" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="30" font-weight="700" fill="#18344D">业务系统后端</text>
+<path d="M240,260 L780,260" fill="none" stroke="#3569A2" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="510.0" y="235" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="24" font-weight="700" fill="#18344D">登录、配置、授权、人事及查询资料</text>
+<path d="M780,370 L240,370" fill="none" stroke="#3569A2" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="510.0" y="345" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="24" font-weight="700" fill="#18344D">身份、管理结果及审计资料</text>
+<path d="M240,640 L780,640" fill="none" stroke="#3569A2" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="510.0" y="615" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="24" font-weight="700" fill="#18344D">登录及范围内管理、查询资料</text>
+<path d="M780,750 L240,750" fill="none" stroke="#3569A2" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="510.0" y="725" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="24" font-weight="700" fill="#18344D">身份、范围内资料及办理结果</text>
+<path d="M1020,260 L1560,260" fill="none" stroke="#3569A2" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="1290.0" y="235" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="24" font-weight="700" fill="#18344D">权限变更申请、结果接收反馈</text>
+<path d="M1560,370 L1020,370" fill="none" stroke="#3569A2" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="1290.0" y="345" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="24" font-weight="700" fill="#18344D">审批关联、批准／驳回结果</text>
+<path d="M1560,640 L1020,640" fill="none" stroke="#3569A2" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="1290.0" y="615" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="24" font-weight="700" fill="#18344D">员工、公司及权限查询条件</text>
+<path d="M1020,750 L1560,750" fill="none" stroke="#3569A2" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="1290.0" y="725" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="24" font-weight="700" fill="#18344D">有效权限集合或校验结果</text>
+<text x="900.0" y="860.0" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="22" font-weight="700" fill="#18344D">矩形：外部实体　圆角框：权限系统整体　箭头：数据传递方向</text>
+<text x="900.0" y="910.0" text-anchor="middle" dominant-baseline="central" font-family="SimSun,serif" font-size="22" font-weight="700" fill="#18344D">HR 文件由总管理员上传；普通员工通过业务系统使用权限。</text>
+</svg>

@@ -6,7 +6,7 @@ import re
 
 DOCS = Path(__file__).resolve().parent
 FOLDERS = ('usecases-v1', 'usecase-tables-v1', 'flows-v1',
-           'activities-v1', 'sequences-v1', 'dataflows-v1')
+           'activities-v1', 'sequences-v1')
 
 
 def status():
