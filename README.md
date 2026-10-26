@@ -1,5 +1,7 @@
 # rbac-admin · 集中权限管理系统
 
+后端 JaCoCo：2026-10-26 完整 **579 项测试通过，失败/错误/跳过均为 0**；行覆盖率 **95.70%**、分支覆盖率 **72.99%**。团队查看[覆盖率报告与复跑说明](docs/05-detailed-design/JACOCO-COVERAGE.md)，完整 HTML 明细见[报告归档](docs/05-detailed-design/reports/JaCoCo-2026-10-26.zip)（下载解压后打开 `report/index.html`）。这是本次运行快照，后续代码变化需重新生成。
+
 正式前端已在 [`frontend/`](frontend/README.md) 实现，沿用界面原型并请求后端 API。启动：进入 frontend，执行 `npm ci`、`npm run dev`，打开 http://127.0.0.1:5174。请先启动现有 BackendApplication；本轮健康检查时 8080 未运行，真实前后端联调仍待完成。前端 26 项受控测试及构建通过，后端未改；见 [验证记录](frontend/VALIDATION.md)。当前本地分支包含尚未合入主线的 BE-33 工作，未推送或部署。
 
 D-098实际主线交付（2026-10-21）：B 明确要求“把你做的东西弄好，然后做好测试后就合并”。来源 ba2178c60b1ec78b777952845b7bb71e5c9161ce 已无冲突 no-ff 合入并推送远程 main/43aeab78fbbf01acd568ff49c8893349e849d958，双亲和合并树等于已验证来源，远程完整 SHA 已回查。合并后完整139普通＋375真实MySQL/HTTP、18辅助工具及静态追踪通过，失败/错误/跳过0；隔离库/账号0/0、密钥清理、专属MySQL关闭。常规Git网络卡住后停止本轮卡住进程，改用官方GitHub Git API按原始SHA、force=false交付。BE-18为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，B六项业务代码均已交付主线；BE-33/35仅已完成的集成/交接准备随同交付，正式任务保持PLANNED，仍缺A/BE-27、D/BE-30及A/BE-34。保留任务分支、不代记本人验收、不部署；下方不合并/未交付为历史，本条后续仅补交付证据文字。

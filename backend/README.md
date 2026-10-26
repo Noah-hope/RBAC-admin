@@ -1,5 +1,19 @@
 # 后端工程
 
+## JaCoCo 覆盖率报告
+
+团队共享结果见[2026-10-26 覆盖率报告](../docs/05-detailed-design/JACOCO-COVERAGE.md)及[完整 HTML 归档](../docs/05-detailed-design/reports/JaCoCo-2026-10-26.zip)。归档作为本次运行证据纳入版本管理；后续构建仍输出至忽略的 `target` 目录。
+
+已提供可选 `coverage` profile，保留 Surefire/Failsafe 的 Mockito agent，汇总普通测试与真实 MySQL/HTTP 测试覆盖率，不排除正式源码。配置依据见 [JaCoCo 官方 Maven 指南](https://www.jacoco.org/jacoco/trunk/doc/maven.html)及 [agent 参数衔接说明](https://www.jacoco.org/jacoco/trunk/doc/prepare-agent-mojo.html)。
+
+仅运行普通测试：`./mvnw clean verify -Pcoverage`。完整运行前须按下方约束准备专属临时 MySQL8.4 并设置 `RBAC_ISOLATED_MYSQL_PORT`、`RBAC_ISOLATED_MYSQL_DATADIR`，然后执行：
+
+```sh
+./mvnw clean verify -Pcoverage,mysql-check
+```
+
+Windows 将 `./mvnw` 替换为 `mvnw.cmd`，均使用 JDK21。HTML 报告位于 `target/site/jacoco/index.html`，另有同目录的 XML/CSV 及 `target/jacoco.exec`。查看明细需保留整个 HTML 目录；单独打开或复制 `index.html` 会丢失样式和明细。`clean` 会删除旧报告，重要结果须先归档。仅普通测试的报告不可称为完整后端测试覆盖率；JaCoCo 不代表业务验收或服务器部署结果。
+
 BE-33整体自动化测试已在任务分支完成：143普通＋436真实MySQL/HTTP及18辅助检查通过，67入站操作均有真实成功响应契约证据；正式角色元数据修改路径为`PUT /api/v1/admin/roles/{roleId}/metadata`。本人确认、主线交付和BE-34/35服务器/发布分别待办，详见[整体测试报告](../docs/05-detailed-design/BE-33-SYSTEM-ACCEPTANCE.md)。
 
 D-102实际交付（2026-10-21）：D明确“完成合并并推送”。BE-30来源a669e5f1958ff163a0bcf32e4394887acf6d1130已无冲突no-ff合入远程main/98f14c6a4b53582c9e9efc587a0e3095d1693eea，双亲为main/126fbc9和验证来源，合并树等于已完整验证来源。普通Git原子推送main及codex/be-30-import-commit成功，两个远程完整SHA回查一致，任务分支保留。沿用139普通/21组＋425真实MySQL/HTTP/27组及18辅助检查证据，失败/错误/跳过0；本轮静态追踪通过，代码未变，不重复Java/SQL。专属测试资源此前已清空并正常关闭，原MySQL84保持Running。BE-30为IMPLEMENTED、mergedToMain=true、ownerAccepted=false；D七项实现均已交付共同主线，D人工验收仍开放。共13项OWNER_ACCEPTED、14项IMPLEMENTED、5项IN_PROGRESS、3项PLANNED；BE-33可接入本次交付，其他成员任务及验收状态保持，不部署或自动开新任务。下方未授权/待交付为历史。
