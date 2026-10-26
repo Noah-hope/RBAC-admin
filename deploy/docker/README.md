@@ -1,6 +1,6 @@
 # 本项目 Swarm 操作指南
 
-本项目使用现有集群：节点 3 构建并上传镜像，节点 2 运行前后端，新 worker 运行 MySQL。以下操作由服务器操作者执行；当前仅在本地准备文件，尚未部署。总体方案见 [部署方案](../SWARM-DEPLOYMENT.md)。
+本项目使用现有集群：节点 3 构建并上传镜像，节点 2 运行前后端，新 worker 运行 MySQL。以下操作由服务器操作者执行；用户已确认 MySQL、后端达到1/1，后端健康接口返回UP，前端尚待构建与部署。总体方案见 [部署方案](../SWARM-DEPLOYMENT.md)。
 
 ## 1. 节点和目录准备
 
@@ -32,7 +32,7 @@ sudo install -d -o 10001 -g 10001 -m 0750 /srv/rbac-admin/imports
 
 ## 2. 在节点 3 测试、构建并上传
 
-后端使用节点 3 已安装的 JDK 21 和 Maven 3.9.16 打包，Docker 仅封装已生成 JAR。前端构建另需 Node >=22.12.0。先选定实际源码版本，检查工作区并记录完整 SHA。
+后端使用节点 3 已安装的 JDK 21 和 Maven 3.9.16 打包，Docker 仅封装已生成 JAR。前端可直接在 Docker 的 Node 构建阶段打包，节点3宿主机无需另装 Node；选择在宿主机执行 npm 命令时才需 Node >=22.12.0。先选定实际源码版本，检查工作区并记录完整 SHA。
 
 部署文件已按用户要求纳入 `main`，保留来源分支 `codex/swarm-deployment`。节点 3 从实际已推送成功的仓库克隆 `main`：
 
@@ -70,7 +70,7 @@ docker push swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac-backend:d8bd624
 
 JAR 是 Maven 产物，SWR 中保存的是 Docker 镜像。节点 3 只需把 JAR 封装进 Java 基础镜像并上传一次，节点 2 仅拉取运行。已有 `productdemooap` 是实验应用镜像，不等于本项目镜像。JAR 若已对应相同业务源码并构建成功，仅更新部署文件不必重新编译；业务源码改变后必须重新打包。
 
-前端 Dockerfile 仍需要可访问的 Node/Nginx 基础镜像并在构建中执行 npm ci/build；其网络适配尚待确认，不能用后端 Java 镜像代替。前端构建/上传应在解决基础镜像访问后执行，成功后将 stack.yml 的 frontend.image 中 pending 改成真实标签。
+前端 Dockerfile 已改用 DaoCloud 的 Node22/Nginx 镜像地址，npm 依赖按 package-lock.json 从 npmmirror 获取，在构建阶段执行 npm ci/build；最终镜像只保留 Nginx 与 dist 网页文件。完整步骤见文末“节点3构建前端镜像”。本机生产构建通过，云端基础镜像拉取、Docker构建及SWR上传仍待操作者执行；成功后再将 stack.yml 的 frontend.image 中 pending 改成真实标签。
 
 ## 3. 在管理节点准备 Secrets 和检查 YAML
 
@@ -391,3 +391,53 @@ docker secret rm rbac_bootstrap_password
 ### 本阶段工具验证
 
 独立工具先以缺少实现取得4项真实RED，随后Windows JDK21下4项全部通过：RSA私钥CRT关系/公钥字段及一致性、三组独立密钥、HMAC标准Base64与32字节要求、已存在文件和重跑不覆盖。未在Windows声称验证Linux权限，也尚未运行镜像内源文件编译器；这些云端检查留实际执行。本次没有重建后端业务JAR或更改其源码。
+
+## 节点3构建前端镜像
+
+2026-10-26后续云端输出已确认：实验密钥工具在管理节点运行成功，后端和MySQL均达到1/1，course-node2容器内的健康接口返回status=UP。迁移和bootstrap一次性任务此前均已成功，用户已获移除命令，是否实际移除尚未回报。以下继续构建前端，不重复数据库初始化、后端打包或密钥生成。
+
+### 更新代码并拉取基础镜像
+
+在 course-node3 执行，先确认当前为main且工作区没有需要保留的源码修改。origin沿用该节点实际配置的Gitee远程：
+
+```sh
+cd /root/rbac-admin
+git status --short
+git branch --show-current
+git pull --ff-only origin main
+git rev-parse HEAD
+docker pull m.daocloud.io/docker.io/library/node:22-bookworm-slim
+docker pull m.daocloud.io/docker.io/library/nginx:stable-alpine
+docker run --rm --network none m.daocloud.io/docker.io/library/node:22-bookworm-slim node --version
+docker run --rm --network none m.daocloud.io/docker.io/library/nginx:stable-alpine nginx -v
+```
+
+Node版本应满足package.json要求的>=22.12.0。DaoCloud地址沿用此前成功获取MySQL的[官方前缀映射规则](https://github.com/DaoCloud/public-image-mirror#使用方法)，两种基础镜像在该节点的实际可达性仍以拉取输出为准；不修改Docker daemon或重启集群。Node22和nginx stable标签会更新，拉取后记录实际digest，不将它们当作永久固定内容：
+
+```sh
+docker image inspect --format '{{json .RepoDigests}}' m.daocloud.io/docker.io/library/node:22-bookworm-slim
+docker image inspect --format '{{json .RepoDigests}}' m.daocloud.io/docker.io/library/nginx:stable-alpine
+```
+
+### 构建并上传
+
+继续在仓库根目录执行，末尾的点不可省略。宿主机无需安装Node，Docker构建阶段会执行npm ci和npm run build：
+
+```sh
+docker build --pull=false -f frontend/Dockerfile -t rbac-frontend:0.1.0 .
+docker images rbac-frontend
+docker tag rbac-frontend:0.1.0 swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac-frontend:0.1.0
+docker push swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac-frontend:0.1.0
+```
+
+仅在构建成功后执行tag/push。若SWR登录已过期，按控制台指令重新登录，不在文档或聊天中提供真实登录口令。0.1.0对应当前frontend/package.json版本，是首次前端镜像标签；后端仍使用其原有d8bd624标签。后续内容变更应使用新标签并保存源码完整SHA及push输出的digest。
+
+Dockerfile默认从registry.npmmirror.com安装锁定依赖（现有锁文件也引用该源），不修改依赖版本或业务代码；Node/npm仅在构建阶段使用，最终镜像继承Nginx启动入口并包含静态网页与现有代理配置。根目录白名单.dockerignore兼容节点3旧构建器，排除本机node_modules、.env、证书、密钥和临时文件。构建上下文还可包含后端已生成JAR，但前端Dockerfile不复制它进入最终镜像。
+
+Nginx配置仍要求运行时提供TLS证书Secrets，并通过rbac-internal访问backend:8080。构建镜像不需要把证书或私钥放入镜像。上传成功后再准备与实际访问地址匹配的HTTPS证书，更新stack.yml前端镜像与副本数，同时保持已运行后端副本数为1，随后部署到节点2；当前pending/0副本的完整Stack不应直接用于上线。
+
+### 本轮验证边界
+
+独立干净main工作区中，Node22.19.0/npm10.9.3执行npm ci（npmmirror、沿用package-lock）成功安装71个包，npm run build通过vue-tsc和Vite生产打包，生成dist/index.html及CSS/JS；前端源文件和锁文件未修改。业务实现沿用既有28项前端测试证据，本轮只改镜像源与构建命令，不重跑业务测试。git diff --check与文档本地链接检查通过。
+
+本机Docker Desktop Linux引擎仍未运行，未声称Docker镜像构建、镜像内Nginx配置检查、TLS或实际前后端联调通过；这些需节点3构建及节点2后续运行验证。健康UP只证明本次后端探针成功，BE-34/35的完整验收仍开放。

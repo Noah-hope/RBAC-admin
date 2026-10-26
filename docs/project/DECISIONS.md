@@ -1,5 +1,7 @@
 # 项目决策记录
 
+2026-10-26前端镜像网络适配：沿用已成功拉取MySQL的DaoCloud前缀规则，将前端两阶段Dockerfile的Node22和Nginx基础镜像改为m.daocloud.io/docker.io/library路径，npm ci显式使用npmmirror及已有锁文件。构建在节点3 Docker内执行，不要求宿主机安装Node；最终仅复制dist并保留现有HTTPS代理与Secrets方案，密钥/证书不打包。首次前端镜像计划标签0.1.0，与frontend/package.json一致，上传成功后再更新Stack，避免把后端缩回0。Node/nginx可变标签拉取后记录实际digest。干净工作区npm安装及生产构建通过，但本机无Docker引擎，节点3镜像拉取/构建/SWR上传和节点2实际运行仍待回报；已回报的后端健康UP不代表全链路或BE-34/35验收完成。
+
 2026-10-26云端初始化与后端准备：用户截图/日志确认rbac-node的MySQL8.4.8就绪，course-node2迁移任务Complete且三项迁移成功到v3，bootstrap任务Complete并输出BOOTSTRAP_CREATED；initial.admin初始口令由用户自行设定，首次必须改密。新增后端单独启动backend.yml（与mysql.yml组合，保持同名rbac栈），无需等待前端/TLS；新增独立Java21实验密钥工具及4项TDD检查，拒绝覆盖已有文件、RSA公私钥用途分离、32字节HMAC不打印。仅准备工具，未在用户服务器生成/替换密钥，未验证后端启动；真实业务/OA公钥仍须来自对应调用方，不以实验密钥代表完成对接。BE-34实际登录/业务/重启恢复仍开放。
 
 2026-10-26数据库镜像阶段：实验SWR mysql:latest经用户实测为9.2.0，未用于项目持久化；新节点通过DaoCloud获取官方mysql:8.4.8并实测8.4.8/x86_64，用户确认已推送javaee-adgn/mysql:8.4.8。两份YAML固定使用该SWR地址。新增mysql.yml仅部署MySQL并复用完整stack.yml相同配置/服务名/网络/三Secrets，后续同名rbac Stack添加应用；首次无需等待前端证书和JWK齐备。新增一次性随机口令生成及Secrets/部署步骤，禁止覆盖已有口令。已准备目录不等于数据库已启动，BE-34云端运行/迁移/重启恢复继续开放；本次仅配置及静态核对。
