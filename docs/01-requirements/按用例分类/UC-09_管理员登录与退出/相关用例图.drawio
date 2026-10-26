@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<mxfile host="app.diagrams.net" agent="OOAD course diagram generator" pages="4" modified="2026-10-15T00:00:00.000Z">
+<mxfile host="app.diagrams.net" agent="OOAD course diagram generator" pages="4" modified="2026-10-24T00:00:00.000Z">
   <diagram id="01-overview" name="01 系统总体用例图">
     <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1100" pageHeight="1598" math="0" shadow="0">
       <root>
@@ -8,7 +8,7 @@
         <mxCell id="title" parent="1" style="text;html=0;align=left;verticalAlign=middle;whiteSpace=wrap;strokeColor=none;fillColor=none;fontSize=18;fontColor=#17324d;" value="01 系统总体用例图" vertex="1">
           <mxGeometry height="42" width="1030" x="35" y="20" as="geometry" />
         </mxCell>
-        <mxCell id="subtitle" parent="1" style="text;html=0;align=left;verticalAlign=middle;whiteSpace=wrap;strokeColor=none;fillColor=none;fontSize=18;fontColor=#17324d;" value="第一期 RBAC0 · 2026-10-15 · 最终用例需求基线" vertex="1">
+        <mxCell id="subtitle" parent="1" style="text;html=0;align=left;verticalAlign=middle;whiteSpace=wrap;strokeColor=none;fillColor=none;fontSize=18;fontColor=#17324d;" value="第一期 RBAC0 · V1.3 当前用例设计 · 更新于 2026-10-24" vertex="1">
           <mxGeometry height="34" width="1030" x="35" y="67" as="geometry" />
         </mxCell>
         <mxCell id="boundary" parent="1" style="rounded=0;html=0;whiteSpace=wrap;fillColor=#ffffff;strokeColor=#64748b;strokeWidth=2;verticalAlign=top;align=center;spacingTop=12;fontStyle=1;fontSize=19;container=0;verticalLabelPosition=top;verticalAlign=bottom;" value="集中权限管理系统" vertex="1">
@@ -50,7 +50,7 @@
         <mxCell id="group" parent="1" style="shape=umlActor;html=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#ffffff;strokeColor=#17324d;strokeWidth=2;fontSize=17;fontColor=#17324d;whiteSpace=wrap;labelWidth=190;" value="权限中心总管理员" vertex="1">
           <mxGeometry height="90" width="52" x="80" y="370" as="geometry" />
         </mxCell>
-        <mxCell id="dept" parent="1" style="shape=umlActor;html=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#ffffff;strokeColor=#FF0000;strokeWidth=2;fontSize=16;fontColor=#17324d;whiteSpace=wrap;labelWidth=190;" value="部门权限管理员" vertex="1">
+        <mxCell id="dept" parent="1" style="shape=umlActor;html=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#ffffff;strokeColor=#FF0000;strokeWidth=2;fontSize=16;fontColor=#17324d;whiteSpace=wrap;labelWidth=190;" value="权限管理员" vertex="1">
           <mxGeometry height="90" width="52" x="40" y="736" as="geometry" />
         </mxCell>
         <mxCell id="biz" parent="1" style="shape=umlActor;html=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#ffffff;strokeColor=#15871A;strokeWidth=2;fontSize=17;fontColor=#17324d;whiteSpace=wrap;labelWidth=190;" value="业务系统" vertex="1">
@@ -62,7 +62,7 @@
         <mxCell id="oa" parent="1" style="shape=umlActor;html=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#ffffff;strokeColor=#17324d;strokeWidth=2;fontSize=17;fontColor=#17324d;whiteSpace=wrap;labelWidth=190;" value="OA 协同办公系统" vertex="1">
           <mxGeometry height="90" width="52" x="950" y="1330" as="geometry" />
         </mxCell>
-        <mxCell id="notes" parent="1" style="rounded=0;html=0;whiteSpace=wrap;align=left;spacingLeft=15;fillColor=#fff8e8;strokeColor=#d7b76a;fontColor=#5e4b24;fontSize=15;" value="总管理员指定公司、部门子树及系统；同范围协作；普通员工不登录平台。&#10;一般授权经 OA；离岗关权立即生效；全局员工启停仅总管理员；不设计组织启停。" vertex="1">
+        <mxCell id="notes" parent="1" style="rounded=0;html=0;whiteSpace=wrap;align=left;spacingLeft=15;fillColor=#fff8e8;strokeColor=#d7b76a;fontColor=#5e4b24;fontSize=15;" value="权限管理员仅在指定公司、指定部门及系统范围内协作；不跨任命拼接资格。&#10;角色配置、分配和一般撤销经 OA 批准后自动执行；离岗关闭来源立即生效。&#10;全局员工启停仅总管理员办理；恢复不复权；普通员工不登录平台，不设计公司／部门启停。" vertex="1">
           <mxGeometry height="75" width="1030" x="35" y="1504" as="geometry" />
         </mxCell>
         <mxCell id="edge0" edge="1" parent="1" source="group" style="html=0;endArrow=none;startArrow=none;strokeColor=#64748b;strokeWidth=1.4;edgeStyle=none;noEdgeStyle=1;curved=0;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;exitPerimeter=0;entryPerimeter=0;" target="UC-01">

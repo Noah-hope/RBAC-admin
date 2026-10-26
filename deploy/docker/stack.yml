@@ -1,0 +1,150 @@
+version: '3.8'
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: '10m'
+    max-file: '3'
+
+services:
+  mysql:
+    # Confirm this MySQL 8.4 image is reachable; replace here with its SWR mirror if needed.
+    image: mysql:8.4.8
+    environment:
+      MYSQL_DATABASE: rbac_admin_server
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/root-password
+    networks: [internal]
+    volumes:
+      - type: bind
+        source: /srv/rbac-mysql/data
+        target: /var/lib/mysql
+    configs:
+      - source: mysql-config
+        target: /etc/mysql/conf.d/rbac.cnf
+        mode: 0444
+      - source: mysql-init
+        target: /docker-entrypoint-initdb.d/10-rbac.sh
+        mode: 0444
+    secrets:
+      - source: root-password
+        target: root-password
+      - source: app-password
+        target: app-password
+      - source: migration-password
+        target: migration-password
+    healthcheck:
+      test: ['CMD-SHELL', 'mysqladmin ping --host=127.0.0.1 --silent']
+      interval: 15s
+      timeout: 5s
+      start_period: 120s
+      retries: 5
+    logging: *logging
+    stop_grace_period: 60s
+    deploy:
+      replicas: 1
+      placement:
+        constraints: ['node.labels.rbac_mysql == true']
+      resources:
+        limits: {memory: 1G, cpus: '1.5'}
+        reservations: {memory: 512M}
+      update_config: {parallelism: 1, order: stop-first, failure_action: pause}
+      restart_policy: {condition: on-failure, delay: 10s}
+
+  backend:
+    image: swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac-backend:d8bd624
+    environment:
+      SPRING_PROFILES_ACTIVE: server
+      SERVER_ADDRESS: 0.0.0.0
+      SERVER_FORWARD_HEADERS_STRATEGY: framework
+      RBAC_INSTANCE_ID: rbac-server-01
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/rbac_admin_server
+      SPRING_DATASOURCE_USERNAME: rbac_app
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: '5'
+      SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE: '1'
+      RBAC_IMPORT_DIRECTORY: /var/lib/rbac-admin/imports
+      RBAC_IDENTITY_ENABLED: 'true'
+      # Must match the signing key kid in rbac_admin_jwk.
+      RBAC_ADMIN_KEY_ID: admin-v1
+      RBAC_ADMIN_JWK_SET: /run/secrets/admin-jwk
+      RBAC_BUSINESS_JWK_SET: /run/secrets/business-jwk
+      RBAC_OA_JWK_SET: /run/secrets/oa-jwk
+      RBAC_IDEMPOTENCY_ENABLED: 'true'
+      RBAC_IDEMPOTENCY_CURRENT_KEY_ID: server-v1
+      JAVA_TOOL_OPTIONS: '-Xms128m -Xmx512m -XX:+ExitOnOutOfMemoryError'
+    networks: [internal]
+    volumes:
+      - type: bind
+        source: /srv/rbac-admin/imports
+        target: /var/lib/rbac-admin/imports
+    secrets:
+      - {source: app-password, target: app-password, uid: '10001', gid: '10001', mode: 0400}
+      - {source: idempotency-keys, target: idempotency-keys, uid: '10001', gid: '10001', mode: 0400}
+      - {source: admin-jwk, target: admin-jwk, uid: '10001', gid: '10001', mode: 0400}
+      - {source: business-jwk, target: business-jwk, uid: '10001', gid: '10001', mode: 0400}
+      - {source: oa-jwk, target: oa-jwk, uid: '10001', gid: '10001', mode: 0400}
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '-T', '4', '-O', '/dev/null', 'http://127.0.0.1:8080/actuator/health']
+      interval: 30s
+      timeout: 5s
+      start_period: 120s
+      retries: 3
+    logging: *logging
+    stop_grace_period: 45s
+    deploy:
+      # Set to 1 only after explicit migration and initial admin setup succeed.
+      replicas: 0
+      placement:
+        constraints: ['node.labels.rbac_app == true']
+      resources:
+        limits: {memory: 1G, cpus: '1.5'}
+        reservations: {memory: 768M}
+      update_config: {parallelism: 1, order: stop-first, failure_action: pause}
+      rollback_config: {parallelism: 1, order: stop-first}
+      restart_policy: {condition: on-failure, delay: 10s}
+
+  frontend:
+    # Not published yet. Replace pending with the real pushed tag before enabling.
+    image: swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac-frontend:pending
+    networks: [internal]
+    ports:
+      - {target: 80, published: 80, protocol: tcp, mode: host}
+      - {target: 443, published: 443, protocol: tcp, mode: host}
+    secrets:
+      - {source: tls-cert, target: tls-cert, mode: 0444}
+      - {source: tls-key, target: tls-key, mode: 0400}
+    logging: *logging
+    deploy:
+      # Keep disabled until a real frontend image and TLS configuration are ready.
+      replicas: 0
+      placement:
+        constraints: ['node.labels.rbac_app == true']
+      resources:
+        limits: {memory: 128M, cpus: '0.5'}
+        reservations: {memory: 32M}
+      update_config: {parallelism: 1, order: stop-first, failure_action: pause}
+      restart_policy: {condition: on-failure, delay: 5s}
+
+networks:
+  internal:
+    external: true
+    name: rbac-internal
+
+configs:
+  mysql-config:
+    # Swarm configs are immutable; change v1 to v2 when updating this content.
+    name: rbac_mysql_config_v1
+    file: ./mysql.cnf
+  mysql-init:
+    name: rbac_mysql_init_v1
+    file: ./mysql-init.sh
+
+secrets:
+  root-password: {external: true, name: rbac_root_password}
+  app-password: {external: true, name: rbac_app_password}
+  migration-password: {external: true, name: rbac_migration_password}
+  idempotency-keys: {external: true, name: rbac_idempotency_keys}
+  admin-jwk: {external: true, name: rbac_admin_jwk}
+  business-jwk: {external: true, name: rbac_business_jwk}
+  oa-jwk: {external: true, name: rbac_oa_jwk}
+  tls-cert: {external: true, name: rbac_tls_cert}
+  tls-key: {external: true, name: rbac_tls_key}

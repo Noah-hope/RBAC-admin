@@ -1,0 +1,241 @@
+<mxfile host="app.diagrams.net" version="24.7.17">
+  <diagram id="P4-detail" name="P4 员工组织与授权来源">
+    <mxGraphModel grid="0" page="1" pageWidth="2800" pageHeight="3340" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="P4 分图 · 维护员工组织及授权来源" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=38;fontColor=#18344D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="2720" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="沿用第一层原有主要数据流，补充校验读取；仍保留一个整体处理　UC-04,UC-10" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=25;fontColor=#18344D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="105" width="2720" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="P4" value="4.0 维护员工组织&lt;br&gt;及授权来源&lt;br&gt;&lt;br&gt;UC-04,UC-10" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;rounded=1;arcSize=10;fillColor=#17365D;strokeColor=#17365D;strokeWidth=2;fontSize=30;fontColor=#FFFFFF;" vertex="1" parent="1" kind="process" logicalRef="P4">
+          <mxGeometry x="1120" y="240" width="340" height="2672" as="geometry" />
+        </mxCell>
+        <mxCell id="admin" value="权限中心&lt;br&gt;总管理员" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;rounded=0;fillColor=#D9D9D9;strokeColor=#737373;strokeWidth=2;fontSize=29;fontColor=#18344D;" vertex="1" parent="1" kind="external" logicalRef="admin">
+          <mxGeometry x="40" y="1230.0" width="320" height="316" as="geometry" />
+        </mxCell>
+        <mxCell id="L07" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=1;exitY=0.28164556962025317;exitPerimeter=0;entryX=0;entryY=0.4038173652694611;entryPerimeter=0;" edge="1" parent="1" source="admin" target="P4" data="人事文件、变更与关权资料" detail="HR 文件、选表、类型、映射、来源批次、状态意图及确认；或员工全局启停／来源关闭目标、版本及原因" contextFlow="F01" logicalSource="admin" logicalTarget="P4" supplement="false">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-L07" value="人事文件、变更与关权资料" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="L07">
+          <mxGeometry x="380" y="1226.0" width="720" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-L07-0" value="HR 文件、选表、类型、映射、来源批次、状态意图及确认" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="L07">
+          <mxGeometry x="380" y="1259.0" width="720" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-L07-1" value="或员工全局启停／来源关闭目标、版本及原因" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="L07">
+          <mxGeometry x="380" y="1287.0" width="720" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="L08" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=0;exitY=0.4554640718562874;exitPerimeter=0;entryX=1;entryY=0.7183544303797469;entryPerimeter=0;" edge="1" parent="1" source="P4" target="admin" data="预检报告及人员关权结果" detail="文件问题、映射差异、影响预览、计划与实际数量；批次结果、员工状态或来源关闭结果／错误" contextFlow="F02" logicalSource="P4" logicalTarget="admin" supplement="false">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-L08" value="预检报告及人员关权结果" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="L08">
+          <mxGeometry x="380" y="1364.0" width="720" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-L08-0" value="文件问题、映射差异、影响预览、计划与实际数量" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="L08">
+          <mxGeometry x="380" y="1397.0" width="720" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-L08-1" value="批次结果、员工状态或来源关闭结果／错误" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="L08">
+          <mxGeometry x="380" y="1425.0" width="720" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="manager" value="权限管理员" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;rounded=0;fillColor=#D9D9D9;strokeColor=#737373;strokeWidth=2;fontSize=29;fontColor=#18344D;" vertex="1" parent="1" kind="external" logicalRef="manager">
+          <mxGeometry x="40" y="1606.0" width="320" height="316" as="geometry" />
+        </mxCell>
+        <mxCell id="L15" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=1;exitY=0.28164556962025317;exitPerimeter=0;entryX=0;entryY=0.5445359281437125;entryPerimeter=0;" edge="1" parent="1" source="manager" target="P4" data="范围内离岗关权资料" detail="所选单项任命、员工、来源公司／部门、系统、版本与原因" contextFlow="F03" logicalSource="manager" logicalTarget="P4" supplement="false">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-L15" value="范围内离岗关权资料" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="L15">
+          <mxGeometry x="380" y="1632.0" width="720" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-L15-0" value="所选单项任命、员工、来源公司／部门、系统、版本与原因" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="L15">
+          <mxGeometry x="380" y="1665.0" width="720" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="L16" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=0;exitY=0.5961826347305389;exitPerimeter=0;entryX=1;entryY=0.7183544303797469;entryPerimeter=0;" edge="1" parent="1" source="P4" target="manager" data="范围内来源关闭结果" detail="当前范围内关闭预览、已失效关系及实际关闭结果" contextFlow="F04" logicalSource="P4" logicalTarget="manager" supplement="false">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-L16" value="范围内来源关闭结果" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="L16">
+          <mxGeometry x="380" y="1770.0" width="720" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-L16-0" value="当前范围内关闭预览、已失效关系及实际关闭结果" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="L16">
+          <mxGeometry x="380" y="1803.0" width="720" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="D1" value="D1&lt;br&gt;身份、会话与管理范围" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;shape=partialRectangle;left=0;right=0;top=1;bottom=1;fillColor=#FFF2CC;strokeColor=#AD8B36;strokeWidth=2;fontSize=27;fontColor=#18344D;" vertex="1" parent="1" kind="store" logicalRef="D1">
+          <mxGeometry x="2360" y="240.0" width="400" height="316" as="geometry" />
+        </mxCell>
+        <mxCell id="L38" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=1;exitY=0.03330838323353293;exitPerimeter=0;entryX=0;entryY=0.28164556962025317;entryPerimeter=0;" edge="1" parent="1" source="P4" target="D1" data="失效任命与会话依据" detail="因员工／任职变化失效的任命及旧会话失效依据" contextFlow="" logicalSource="P4" logicalTarget="D1" supplement="false">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-L38" value="失效任命与会话依据" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="L38">
+          <mxGeometry x="1480" y="266.0" width="860" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-L38-0" value="因员工／任职变化失效的任命及旧会话失效依据" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="L38">
+          <mxGeometry x="1480" y="299.0" width="860" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="P4-A01" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=0;exitY=0.7183544303797469;exitPerimeter=0;entryX=1;entryY=0.08495508982035928;entryPerimeter=0;" edge="1" parent="1" source="D1" target="P4" data="当前办理资格与已有任命" detail="总管理员资格或当前单项任命、现有任命与会话失效依据" contextFlow="" logicalSource="D1" logicalTarget="P4" supplement="true">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-P4-A01" value="当前办理资格与已有任命" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="P4-A01">
+          <mxGeometry x="1480" y="404.0" width="860" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-P4-A01-0" value="总管理员资格或当前单项任命、现有任命与会话失效依据" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="P4-A01">
+          <mxGeometry x="1480" y="437.0" width="860" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="D2" value="D2&lt;br&gt;组织、员工与任职" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;shape=partialRectangle;left=0;right=0;top=1;bottom=1;fillColor=#FFF2CC;strokeColor=#AD8B36;strokeWidth=2;fontSize=27;fontColor=#18344D;" vertex="1" parent="1" kind="store" logicalRef="D2">
+          <mxGeometry x="2360" y="616.0" width="400" height="316" as="geometry" />
+        </mxCell>
+        <mxCell id="L36" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=0;exitY=0.28164556962025317;exitPerimeter=0;entryX=1;entryY=0.17402694610778444;entryPerimeter=0;" edge="1" parent="1" source="D2" target="P4" data="现有组织、员工与任职" detail="原组织与员工、有效任职、稳定编码及已确认来源映射" contextFlow="" logicalSource="D2" logicalTarget="P4" supplement="false">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-L36" value="现有组织、员工与任职" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="L36">
+          <mxGeometry x="1480" y="642.0" width="860" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-L36-0" value="原组织与员工、有效任职、稳定编码及已确认来源映射" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="L36">
+          <mxGeometry x="1480" y="675.0" width="860" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="L37" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=1;exitY=0.2256736526946108;exitPerimeter=0;entryX=0;entryY=0.7183544303797469;entryPerimeter=0;" edge="1" parent="1" source="P4" target="D2" data="组织、员工与任职变更" detail="正式提交后的组织、员工、任职、来源映射与状态变更" contextFlow="" logicalSource="P4" logicalTarget="D2" supplement="false">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-L37" value="组织、员工与任职变更" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="L37">
+          <mxGeometry x="1480" y="780.0" width="860" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-L37-0" value="正式提交后的组织、员工、任职、来源映射与状态变更" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="L37">
+          <mxGeometry x="1480" y="813.0" width="860" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="D3" value="D3&lt;br&gt;系统与权限目录" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;shape=partialRectangle;left=0;right=0;top=1;bottom=1;fillColor=#FFF2CC;strokeColor=#AD8B36;strokeWidth=2;fontSize=27;fontColor=#18344D;" vertex="1" parent="1" kind="store" logicalRef="D3">
+          <mxGeometry x="2360" y="992.0" width="400" height="178" as="geometry" />
+        </mxCell>
+        <mxCell id="P4-A02" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=0;exitY=0.5;exitPerimeter=0;entryX=1;entryY=0.3147455089820359;entryPerimeter=0;" edge="1" parent="1" source="D3" target="P4" data="系统标识及来源目标依据" detail="所选系统的已登记资料与现有来源所属系统" contextFlow="" logicalSource="D3" logicalTarget="P4" supplement="true">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-P4-A02" value="系统标识及来源目标依据" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="P4-A02">
+          <mxGeometry x="1480" y="1018.0" width="860" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-P4-A02-0" value="所选系统的已登记资料与现有来源所属系统" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="P4-A02">
+          <mxGeometry x="1480" y="1051.0" width="860" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="D4" value="D4&lt;br&gt;角色及角色权限" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;shape=partialRectangle;left=0;right=0;top=1;bottom=1;fillColor=#FFF2CC;strokeColor=#AD8B36;strokeWidth=2;fontSize=27;fontColor=#18344D;" vertex="1" parent="1" kind="store" logicalRef="D4">
+          <mxGeometry x="2360" y="1230.0" width="400" height="178" as="geometry" />
+        </mxCell>
+        <mxCell id="P4-A03" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=0;exitY=0.5;exitPerimeter=0;entryX=1;entryY=0.4038173652694611;entryPerimeter=0;" edge="1" parent="1" source="D4" target="P4" data="角色归属与适用条件" detail="角色公司／部门归属、角色适用任职及组织引用" contextFlow="" logicalSource="D4" logicalTarget="P4" supplement="true">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-P4-A03" value="角色归属与适用条件" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="P4-A03">
+          <mxGeometry x="1480" y="1256.0" width="860" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-P4-A03-0" value="角色公司／部门归属、角色适用任职及组织引用" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="P4-A03">
+          <mxGeometry x="1480" y="1289.0" width="860" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="D5" value="D5&lt;br&gt;员工授权与来源" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;shape=partialRectangle;left=0;right=0;top=1;bottom=1;fillColor=#FFF2CC;strokeColor=#AD8B36;strokeWidth=2;fontSize=27;fontColor=#18344D;" vertex="1" parent="1" kind="store" logicalRef="D5">
+          <mxGeometry x="2360" y="1468.0" width="400" height="316" as="geometry" />
+        </mxCell>
+        <mxCell id="L39" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=1;exitY=0.49288922155688625;exitPerimeter=0;entryX=0;entryY=0.28164556962025317;entryPerimeter=0;" edge="1" parent="1" source="P4" target="D5" data="关闭来源及失效授权" detail="不再合格的授权／来源、关系版本及推进后的来源周期" contextFlow="" logicalSource="P4" logicalTarget="D5" supplement="false">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-L39" value="关闭来源及失效授权" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="L39">
+          <mxGeometry x="1480" y="1494.0" width="860" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-L39-0" value="不再合格的授权／来源、关系版本及推进后的来源周期" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="L39">
+          <mxGeometry x="1480" y="1527.0" width="860" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="P4-A04" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=0;exitY=0.7183544303797469;exitPerimeter=0;entryX=1;entryY=0.5445359281437125;entryPerimeter=0;" edge="1" parent="1" source="D5" target="P4" data="原授权与来源周期" detail="原授权关系、适用任职、关系版本、来源部门与当前周期" contextFlow="" logicalSource="D5" logicalTarget="P4" supplement="true">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-P4-A04" value="原授权与来源周期" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="P4-A04">
+          <mxGeometry x="1480" y="1632.0" width="860" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-P4-A04-0" value="原授权关系、适用任职、关系版本、来源部门与当前周期" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="P4-A04">
+          <mxGeometry x="1480" y="1665.0" width="860" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="D6" value="D6&lt;br&gt;变更申请与审批执行" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;shape=partialRectangle;left=0;right=0;top=1;bottom=1;fillColor=#FFF2CC;strokeColor=#AD8B36;strokeWidth=2;fontSize=27;fontColor=#18344D;" vertex="1" parent="1" kind="store" logicalRef="D6">
+          <mxGeometry x="2360" y="1844.0" width="400" height="316" as="geometry" />
+        </mxCell>
+        <mxCell id="L40" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=1;exitY=0.6336077844311377;exitPerimeter=0;entryX=0;entryY=0.28164556962025317;entryPerimeter=0;" edge="1" parent="1" source="P4" target="D6" data="人员或来源变化的申请失效" detail="人员或来源变化影响的整份申请、关联占用／待办失效记录" contextFlow="" logicalSource="P4" logicalTarget="D6" supplement="false">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-L40" value="人员或来源变化的申请失效" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="L40">
+          <mxGeometry x="1480" y="1870.0" width="860" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-L40-0" value="人员或来源变化影响的整份申请、关联占用／待办失效记录" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="L40">
+          <mxGeometry x="1480" y="1903.0" width="860" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="P4-A05" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=0;exitY=0.7183544303797469;exitPerimeter=0;entryX=1;entryY=0.6852544910179641;entryPerimeter=0;" edge="1" parent="1" source="D6" target="P4" data="受影响申请与历史引用" detail="固定方案、目标关系、原范围依据、占用／待办及组织引用" contextFlow="" logicalSource="D6" logicalTarget="P4" supplement="true">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-P4-A05" value="受影响申请与历史引用" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="P4-A05">
+          <mxGeometry x="1480" y="2008.0" width="860" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-P4-A05-0" value="固定方案、目标关系、原范围依据、占用／待办及组织引用" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="P4-A05">
+          <mxGeometry x="1480" y="2041.0" width="860" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="D7" value="D7&lt;br&gt;授权及管理审计" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;shape=partialRectangle;left=0;right=0;top=1;bottom=1;fillColor=#FFF2CC;strokeColor=#AD8B36;strokeWidth=2;fontSize=27;fontColor=#18344D;" vertex="1" parent="1" kind="store" logicalRef="D7">
+          <mxGeometry x="2360" y="2220.0" width="400" height="316" as="geometry" />
+        </mxCell>
+        <mxCell id="L56" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=1;exitY=0.7743263473053892;exitPerimeter=0;entryX=0;entryY=0.28164556962025317;entryPerimeter=0;" edge="1" parent="1" source="P4" target="D7" data="人员变更与关权审计" detail="人员变更、来源关闭、跨域失效、实际计数与历史审计" contextFlow="" logicalSource="P4" logicalTarget="D7" supplement="false">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-L56" value="人员变更与关权审计" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="L56">
+          <mxGeometry x="1480" y="2246.0" width="860" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-L56-0" value="人员变更、来源关闭、跨域失效、实际计数与历史审计" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="L56">
+          <mxGeometry x="1480" y="2279.0" width="860" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="P4-A06" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=0;exitY=0.7183544303797469;exitPerimeter=0;entryX=1;entryY=0.8259730538922155;entryPerimeter=0;" edge="1" parent="1" source="D7" target="P4" data="历史组织与事件引用" detail="导入对象的历史组织引用与审计来源快照" contextFlow="" logicalSource="D7" logicalTarget="P4" supplement="true">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-P4-A06" value="历史组织与事件引用" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="P4-A06">
+          <mxGeometry x="1480" y="2384.0" width="860" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-P4-A06-0" value="导入对象的历史组织引用与审计来源快照" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="P4-A06">
+          <mxGeometry x="1480" y="2417.0" width="860" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="D8" value="D8&lt;br&gt;导入批次与报告" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;shape=partialRectangle;left=0;right=0;top=1;bottom=1;fillColor=#FFF2CC;strokeColor=#AD8B36;strokeWidth=2;fontSize=27;fontColor=#18344D;" vertex="1" parent="1" kind="store" logicalRef="D8">
+          <mxGeometry x="2360" y="2596.0" width="400" height="316" as="geometry" />
+        </mxCell>
+        <mxCell id="L41" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=0;exitY=0.28164556962025317;exitPerimeter=0;entryX=1;entryY=0.9150449101796407;entryPerimeter=0;" edge="1" parent="1" source="D8" target="P4" data="文件、映射与固定计划" detail="已保存文件、字段映射、冻结计划、批次与防重依据" contextFlow="" logicalSource="D8" logicalTarget="P4" supplement="false">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-L41" value="文件、映射与固定计划" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="L41">
+          <mxGeometry x="1480" y="2622.0" width="860" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-L41-0" value="已保存文件、字段映射、冻结计划、批次与防重依据" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="L41">
+          <mxGeometry x="1480" y="2655.0" width="860" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="L42" value="" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;edgeStyle=none;rounded=0;endArrow=block;endFill=1;strokeColor=#3569A2;strokeWidth=3;exitX=1;exitY=0.9666916167664671;exitPerimeter=0;entryX=0;entryY=0.7183544303797469;entryPerimeter=0;" edge="1" parent="1" source="P4" target="D8" data="文件批次、预检与提交报告" detail="文件与批次、映射／预检问题、冻结计划和实际提交报告" contextFlow="" logicalSource="P4" logicalTarget="D8" supplement="false">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label-L42" value="文件批次、预检与提交报告" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=26;fontColor=#18344D;" vertex="1" parent="1" flowRef="L42">
+          <mxGeometry x="1480" y="2760.0" width="860" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-L42-0" value="文件与批次、映射／预检问题、冻结计划和实际提交报告" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=22;fontColor=#18344D;" vertex="1" parent="1" flowRef="L42">
+          <mxGeometry x="1480" y="2793.0" width="860" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="note-0" value="总管理员办理组织人事导入及员工全局启停；权限管理员仅按单项任命关闭范围内离岗来源。" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=23;fontColor=#18344D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2962" width="2720" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="note-1" value="预检只保存 D8 文件与冻结计划；正式确认后整批原子更新人员、相关持久失效及成功审计。" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=23;fontColor=#18344D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2998" width="2720" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="note-2" value="明确结束任职／停用才产生相应失效，不从文件缺行推断离职；初始化不自动创建账号、任命或授权。" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=23;fontColor=#18344D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="3034" width="2720" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="note-3" value="离岗／人员条件丧失时持久推进来源周期，整份相关申请及占用／待办失效；不等待 OA。" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=23;fontColor=#18344D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="3070" width="2720" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="note-4" value="员工全局停用使授权、任命和旧会话失效；恢复只恢复身份，不自动恢复旧授权、任命或会话。" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=23;fontColor=#18344D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="3106" width="2720" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="note-5" value="同批离岗后重新任职也保留已发生的周期推进；仅原管理员离任不单独阻止合法已提交申请执行。" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=23;fontColor=#18344D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="3142" width="2720" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="note-6" value="导入校验历史引用，阻止不合法组织迁移；读取历史审计不代表可修改历史事件。" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=23;fontColor=#18344D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="3178" width="2720" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="note-7" value="D8 为文件／批次／预检报告，D2 为正式组织与身份映射；全部均为逻辑存储分类。" style="html=1;fontFamily=SimSun;fontStyle=1;whiteSpace=wrap;text;align=center;verticalAlign=middle;fontSize=23;fontColor=#18344D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="3214" width="2720" height="32" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

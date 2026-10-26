@@ -1,0 +1,7 @@
+**
+!backend/
+!backend/target/
+!backend/target/backend-0.0.1-SNAPSHOT.jar
+!deploy/
+!deploy/docker/
+!deploy/docker/backend-entrypoint.sh

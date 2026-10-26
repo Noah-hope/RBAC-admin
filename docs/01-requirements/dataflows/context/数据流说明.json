@@ -1,0 +1,119 @@
+{
+  "level": "系统边界级",
+  "pages": [
+    {
+      "id": "context",
+      "width": 1800,
+      "height": 950,
+      "flows": [
+        {
+          "id": "F01",
+          "source": "admin",
+          "target": "system",
+          "name": "登录、配置、授权、人事及查询资料",
+          "data": [],
+          "usecases": [
+            "UC-01",
+            "UC-02",
+            "UC-03",
+            "UC-04",
+            "UC-07",
+            "UC-08",
+            "UC-09",
+            "UC-10"
+          ]
+        },
+        {
+          "id": "F02",
+          "source": "system",
+          "target": "admin",
+          "name": "身份、管理结果及审计资料",
+          "data": [],
+          "usecases": [
+            "UC-01",
+            "UC-02",
+            "UC-03",
+            "UC-04",
+            "UC-07",
+            "UC-08",
+            "UC-09",
+            "UC-10"
+          ]
+        },
+        {
+          "id": "F03",
+          "source": "manager",
+          "target": "system",
+          "name": "登录及范围内管理、查询资料",
+          "data": [],
+          "usecases": [
+            "UC-02",
+            "UC-03",
+            "UC-04",
+            "UC-08",
+            "UC-09"
+          ]
+        },
+        {
+          "id": "F04",
+          "source": "system",
+          "target": "manager",
+          "name": "身份、范围内资料及办理结果",
+          "data": [],
+          "usecases": [
+            "UC-02",
+            "UC-03",
+            "UC-04",
+            "UC-08",
+            "UC-09"
+          ]
+        },
+        {
+          "id": "F05",
+          "source": "system",
+          "target": "oa",
+          "name": "权限变更申请、结果接收反馈",
+          "data": [],
+          "usecases": [
+            "UC-02",
+            "UC-03",
+            "UC-04",
+            "UC-11"
+          ]
+        },
+        {
+          "id": "F06",
+          "source": "oa",
+          "target": "system",
+          "name": "审批关联、批准／驳回结果",
+          "data": [],
+          "usecases": [
+            "UC-11"
+          ]
+        },
+        {
+          "id": "F07",
+          "source": "business",
+          "target": "system",
+          "name": "员工、公司及权限查询条件",
+          "data": [],
+          "usecases": [
+            "UC-05",
+            "UC-06"
+          ]
+        },
+        {
+          "id": "F08",
+          "source": "system",
+          "target": "business",
+          "name": "有效权限集合或校验结果",
+          "data": [],
+          "usecases": [
+            "UC-05",
+            "UC-06"
+          ]
+        }
+      ]
+    }
+  ]
+}
