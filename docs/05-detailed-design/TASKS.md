@@ -1,5 +1,7 @@
 # 本地Issue草案与验收卡
 
+D-107（2026-10-26）：C负责人在明确本人验收规则及五项待确认范围后回复“确认好了”，BE-21/23/24/25/31登记OWNER_ACCEPTED、ownerAccepted=true，既有主线交付保持。C八项任务均已实现、获负责人确认并交付主线。接受既有139离线＋316真实MySQL/HTTP证据；本轮只同步确认及静态追踪，不新增人工演示、数据库配置、真实外部OA或服务器部署验证，不代其他成员验收。下方C待本人确认记录为历史；本次记录仅本地提交，未推送。
+
 D-103实际结果（2026-10-21）：A已同步main/0ff0ad7并在codex/be-33-system-acceptance完成BE-33整体测试。完整143普通/22组＋436真实MySQL/HTTP/27组、18辅助检查通过，失败/错误/跳过0；19项整体组含本轮新增11项。67/67入站操作均有真实成功响应Schema证据并覆盖缺凭据边界，修复角色元数据正式/metadata路由及幂等路径。两公司/各两部门/兼岗/两系统经正式导入、审批、执行、查询、来源关闭/迟到批准/停用恢复/范围缩放，补两种guard顺序、末审计回滚和上下文重启恢复。BE-33由A接手、IMPLEMENTED待本人确认及主线交付；B原准备保留为历史，不代其他成员验收。BE-34/35及目标服务器/发布仍开放；未推送、合并或部署。详见[整体测试](BE-33-SYSTEM-ACCEPTANCE.md)。
 
 D-102实际交付（2026-10-21）：D明确“完成合并并推送”。BE-30来源a669e5f1958ff163a0bcf32e4394887acf6d1130已无冲突no-ff合入远程main/98f14c6a4b53582c9e9efc587a0e3095d1693eea，双亲为main/126fbc9和验证来源，合并树等于已完整验证来源。普通Git原子推送main及codex/be-30-import-commit成功，两个远程完整SHA回查一致，任务分支保留。沿用139普通/21组＋425真实MySQL/HTTP/27组及18辅助检查证据，失败/错误/跳过0；本轮静态追踪通过，代码未变，不重复Java/SQL。专属测试资源此前已清空并正常关闭，原MySQL84保持Running。BE-30为IMPLEMENTED、mergedToMain=true、ownerAccepted=false；D七项实现均已交付共同主线，D人工验收仍开放。共13项OWNER_ACCEPTED、14项IMPLEMENTED、5项IN_PROGRESS、3项PLANNED；BE-33可接入本次交付，其他成员任务及验收状态保持，不部署或自动开新任务。下方未授权/待交付为历史。
@@ -323,7 +325,7 @@ D-074（2026-10-20）B 状态：BE-17/12 已由 1fb95ad 无冲突合入并交付
 
 ## BE-21 预览确认、固定申请与OA待办
 
-- 状态：IMPLEMENTED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M07,M12。
+- 状态：OWNER_ACCEPTED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M07,M12。
 - 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-17,BE-20；开发估算3/5/8h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：changePreview, submitChange。
@@ -347,7 +349,7 @@ D-074（2026-10-20）B 状态：BE-17/12 已由 1fb95ad 无冲突合入并交付
 
 ## BE-23 OA可靠投递、关联及人工投递重试
 
-- 状态：IMPLEMENTED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M08,M12。
+- 状态：OWNER_ACCEPTED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M08,M12。
 - 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-21；开发估算2/4/6h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：retryOaDelivery, deliverOaSubmission。
@@ -359,7 +361,7 @@ D-074（2026-10-20）B 状态：BE-17/12 已由 1fb95ad 无冲突合入并交付
 
 ## BE-24 OA最终结果接收与三层去重
 
-- 状态：IMPLEMENTED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M08,M12。
+- 状态：OWNER_ACCEPTED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M08,M12。
 - 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-21,BE-23,BE-06；开发估算2/3.5/6h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：receiveOaResult。
@@ -371,7 +373,7 @@ D-074（2026-10-20）B 状态：BE-17/12 已由 1fb95ad 无冲突合入并交付
 
 ## BE-25 自动执行、整份失效与失败恢复
 
-- 状态：IMPLEMENTED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M09。
+- 状态：OWNER_ACCEPTED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M09。
 - 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-15,BE-16,BE-24；开发估算3/5/8h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。
@@ -443,7 +445,7 @@ D-074（2026-10-20）B 状态：BE-17/12 已由 1fb95ad 无冲突合入并交付
 
 ## BE-31 演示OA适配器及受控服务身份工具
 
-- 状态：IMPLEMENTED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M08,M12。
+- 状态：OWNER_ACCEPTED；阶段BUSINESS；负责人C（成员代号），由负责人自检确认；模块M08,M12。
 - 分派依据：D-055；启动条件FOUNDATION_ACCEPTED、BUSINESS_OWNER_ASSIGNED。
 - 依赖：BE-06,BE-23,BE-24；开发估算1.5/3/5h（低/中/高，含自检和负责人确认；不另设评审人）。
 - API：内部能力/部署，无新增公开业务API。

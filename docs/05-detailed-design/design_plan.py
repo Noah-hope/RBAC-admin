@@ -13,6 +13,12 @@ ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parent.parent
 FOUNDATION_IDS = {f'BE-{n:02}' for n in range(1, 6)}
 BUSINESS_START = ['FOUNDATION_ACCEPTED', 'BUSINESS_OWNER_ASSIGNED']
+C_ACCEPTED_TASKS = {'BE-21', 'BE-23', 'BE-24', 'BE-25', 'BE-31'}
+C_ACCEPTANCE_NOTE = ('D-107（2026-10-26）：C负责人在明确本人验收规则及五项待确认范围后回复“确认好了”，'
+    'BE-21/23/24/25/31登记OWNER_ACCEPTED、ownerAccepted=true，既有主线交付保持。'
+    'C八项任务均已实现、获负责人确认并交付主线。接受既有139离线＋316真实MySQL/HTTP证据；'
+    '本轮只同步确认及静态追踪，不新增人工演示、数据库配置、真实外部OA或服务器部署验证，'
+    '不代其他成员验收。下方C待本人确认记录为历史；本次记录仅本地提交，未推送。')
 B_MAIN_DELIVERED = {'BE-11', 'BE-13', 'BE-15'}
 B_CURRENT = {'BE-12', 'BE-17'}
 B_IMPLEMENTED = B_MAIN_DELIVERED | B_CURRENT
@@ -393,14 +399,21 @@ def t(n,title,owner,estimate,deps,mods,ops,cases,deliverable,notes=''):
             decision='D-090',source='USER_MESSAGE',message='确认，然后继续完成剩下的任务',manualDemoVerified=False,
             automatedUnitTests=137,automatedMySqlTests=284,mergedToMain=True,evidence='BE-19-22-AUDIT-REQUEST-QUERIES.md')
     if n in (21,23,24,25,31):
-        TASKS[-1]['status']='IMPLEMENTED'
+        TASKS[-1]['status']='OWNER_ACCEPTED'
         TASKS[-1]['implementationProgress']=dict(evidence='BE-21-31-APPROVAL-WORKFLOW.md',decision='D-091',
             scope={21:'FIXED_JCS_SUBMISSION_PREVIEW_AND_ATOMIC_OUTBOX',23:'LEASED_DELIVERY_RELIABLE_LINK_AND_RETRY',24:'TRUSTED_CALLBACK_THREE_LAYER_DEDUPLICATION',25:'WHOLE_REQUEST_ATOMIC_EXECUTION_INVALIDATION_AND_RECOVERY',31:'DEMO_ONLY_OA_AND_CONTROLLED_SERVICE_CLI'}[n],
             implemented=True,httpImplemented=n in (21,23,24),internalPortImplemented=n==25,cliImplemented=n==31,
-            ownerAccepted=False,mergedToMain=True,databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
+            ownerAccepted=True,mergedToMain=True,databaseExecuted=True,databaseExecutionScope='DISPOSABLE_INSTANCE_ONLY',
             branch='BE-21-31-申请审批与执行',dependencyBase='7914788',claimedOwnerSlot='C',claimedBy='USER',claimSource='USER_MESSAGE',
             realExternalOaConnected=False,manualDemoVerified=False,deliveryDecision='D-092',
             sourceCommit='adab1861906dc7d973f796961249e1ef87563e29',mainMergeCommit='311aa5d5cbc3d7bfbd064888b4172d48de0a0e99',pushVerified=True,verifiedRemoteCommit='311aa5d5cbc3d7bfbd064888b4172d48de0a0e99')
+        TASKS[-1]['ownerAcceptance']=dict(acceptedBy='USER',ownerSlot='C',date='2026-10-26',
+            scope=f'BE-{n:02}',decision='D-107',source='USER_MESSAGE',message='确认好了',
+            interpretation='OWNER_CONFIRMATION_OF_FIVE_DELIVERED_C_TASKS_AFTER_ACCEPTANCE_POLICY_EXPLANATION',
+            implementationCommit='adab1861906dc7d973f796961249e1ef87563e29',
+            manualDemoVerified=False,automatedUnitTests=139,automatedMySqlTests=316,
+            mergedToMain=True,mainMergeCommit='311aa5d5cbc3d7bfbd064888b4172d48de0a0e99',
+            evidence='BE-21-31-APPROVAL-WORKFLOW.md')
     if n == 27:
         TASKS[-1]['status']='IMPLEMENTED'
         TASKS[-1]['implementationProgress']=dict(evidence='BE-27-CROSS-DOMAIN-LIFECYCLE.md',decision='D-099',
@@ -745,6 +758,9 @@ def write(name, text):
     if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
         title, _, body = text.partition('\n')
         text = title+'\n\nD-103实际结果（2026-10-21）：A已同步main/0ff0ad7并在codex/be-33-system-acceptance完成BE-33整体测试。完整143普通/22组＋436真实MySQL/HTTP/27组、18辅助检查通过，失败/错误/跳过0；19项整体组含本轮新增11项。67/67入站操作均有真实成功响应Schema证据并覆盖缺凭据边界，修复角色元数据正式/metadata路由及幂等路径。两公司/各两部门/兼岗/两系统经正式导入、审批、执行、查询、来源关闭/迟到批准/停用恢复/范围缩放，补两种guard顺序、末审计回滚和上下文重启恢复。BE-33由A接手、IMPLEMENTED待本人确认及主线交付；B原准备保留为历史，不代其他成员验收。BE-34/35及目标服务器/发布仍开放；未推送、合并或部署。详见[整体测试](BE-33-SYSTEM-ACCEPTANCE.md)。\n'+body
+    if name in {'MODULES.md','TRACEABILITY.md','TEST-PLAN.md','TASKS.md','TEAM-ASSIGNMENT.md','IMPLEMENTATION-PLAN.md'}:
+        title, _, body = text.partition('\n')
+        text = title+'\n\n'+C_ACCEPTANCE_NOTE+'\n'+body
     (ROOT/name).write_text(text.rstrip()+'\n',encoding='utf-8',newline='\n')
 
 def load_inputs():
@@ -912,6 +928,7 @@ def generate():
             successResponseModels={str(code):sorted(schema_refs(response,api)) for code,response in operation.get('responses',{}).items() if str(code).startswith('2')},
             status=('OWNER_ACCEPTED_MAIN_DELIVERED' if task['id'] in {'BE-06','BE-07','BE-08','BE-09','BE-19','BE-20','BE-22'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in B_IMPLEMENTED | {'BE-10','BE-14','BE-26','BE-28','BE-29'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id'] in {'BE-21','BE-23','BE-24','BE-25','BE-31'} else ('IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER' if task['id']=='BE-18' else 'PLANNED_NOT_IMPLEMENTED'))))))
     for entry in op_map:
+        if entry['issue'] in C_ACCEPTED_TASKS:entry['status']='OWNER_ACCEPTED_MAIN_DELIVERED'
         if entry['issue']=='BE-27':entry['status']='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
     assert set(primary)==set(task_by_op)=={r['operationId'] for r in old_trace}
     for task in TASKS:
