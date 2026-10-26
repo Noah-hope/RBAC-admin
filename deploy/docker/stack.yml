@@ -8,8 +8,8 @@ x-logging: &logging
 
 services:
   mysql:
-    # Confirm this MySQL 8.4 image is reachable; replace here with its SWR mirror if needed.
-    image: mysql:8.4.8
+    # MySQL 8.4.8 pulled via DaoCloud, version checked and pushed to this SWR repository.
+    image: swr.cn-north-4.myhuaweicloud.com/javaee-adgn/mysql:8.4.8
     environment:
       MYSQL_DATABASE: rbac_admin_server
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/root-password
@@ -103,8 +103,8 @@ services:
       restart_policy: {condition: on-failure, delay: 10s}
 
   frontend:
-    # Not published yet. Replace pending with the real pushed tag before enabling.
-    image: swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac-frontend:pending
+    # Pushed successfully; enable only after TLS secrets are ready.
+    image: swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac-frontend:0.1.0
     networks: [internal]
     ports:
       - {target: 80, published: 80, protocol: tcp, mode: host}
@@ -114,7 +114,7 @@ services:
       - {source: tls-key, target: tls-key, mode: 0400}
     logging: *logging
     deploy:
-      # Keep disabled until a real frontend image and TLS configuration are ready.
+      # Keep disabled until TLS is ready; frontend.yml enables this service in stages.
       replicas: 0
       placement:
         constraints: ['node.labels.rbac_app == true']

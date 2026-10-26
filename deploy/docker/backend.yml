@@ -1,0 +1,74 @@
+# Deploy with mysql.yml using the same rbac stack name; frontend/TLS are prepared later.
+version: '3.8'
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: '10m'
+    max-file: '3'
+
+services:
+
+  backend:
+    image: swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac-backend:d8bd624
+    environment:
+      SPRING_PROFILES_ACTIVE: server
+      SERVER_ADDRESS: 0.0.0.0
+      SERVER_FORWARD_HEADERS_STRATEGY: framework
+      RBAC_INSTANCE_ID: rbac-server-01
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/rbac_admin_server
+      SPRING_DATASOURCE_USERNAME: rbac_app
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: '5'
+      SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE: '1'
+      RBAC_IMPORT_DIRECTORY: /var/lib/rbac-admin/imports
+      RBAC_IDENTITY_ENABLED: 'true'
+      # Must match the signing key kid in rbac_admin_jwk.
+      RBAC_ADMIN_KEY_ID: admin-v1
+      RBAC_ADMIN_JWK_SET: /run/secrets/admin-jwk
+      RBAC_BUSINESS_JWK_SET: /run/secrets/business-jwk
+      RBAC_OA_JWK_SET: /run/secrets/oa-jwk
+      RBAC_IDEMPOTENCY_ENABLED: 'true'
+      RBAC_IDEMPOTENCY_CURRENT_KEY_ID: server-v1
+      JAVA_TOOL_OPTIONS: '-Xms128m -Xmx512m -XX:+ExitOnOutOfMemoryError'
+    networks: [internal]
+    volumes:
+      - type: bind
+        source: /srv/rbac-admin/imports
+        target: /var/lib/rbac-admin/imports
+    secrets:
+      - {source: app-password, target: app-password, uid: '10001', gid: '10001', mode: 0400}
+      - {source: idempotency-keys, target: idempotency-keys, uid: '10001', gid: '10001', mode: 0400}
+      - {source: admin-jwk, target: admin-jwk, uid: '10001', gid: '10001', mode: 0400}
+      - {source: business-jwk, target: business-jwk, uid: '10001', gid: '10001', mode: 0400}
+      - {source: oa-jwk, target: oa-jwk, uid: '10001', gid: '10001', mode: 0400}
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '-T', '4', '-O', '/dev/null', 'http://127.0.0.1:8080/actuator/health']
+      interval: 30s
+      timeout: 5s
+      start_period: 120s
+      retries: 3
+    logging: *logging
+    stop_grace_period: 45s
+    deploy:
+      # Migration and initial admin creation must succeed before deploying this file.
+      replicas: 1
+      placement:
+        constraints: ['node.labels.rbac_app == true']
+      resources:
+        limits: {memory: 1G, cpus: '1.5'}
+        reservations: {memory: 768M}
+      update_config: {parallelism: 1, order: stop-first, failure_action: pause}
+      rollback_config: {parallelism: 1, order: stop-first}
+      restart_policy: {condition: on-failure, delay: 10s}
+
+networks:
+  internal:
+    external: true
+    name: rbac-internal
+
+secrets:
+  app-password: {external: true, name: rbac_app_password}
+  idempotency-keys: {external: true, name: rbac_idempotency_keys}
+  admin-jwk: {external: true, name: rbac_admin_jwk}
+  business-jwk: {external: true, name: rbac_business_jwk}
+  oa-jwk: {external: true, name: rbac_oa_jwk}

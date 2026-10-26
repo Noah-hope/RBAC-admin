@@ -1,5 +1,13 @@
 # 项目决策记录
 
+2026-10-26前端已上传及公网IP方案：用户截图确认node3构建rbac-frontend:0.1.0成功（ed14c043248d、Nginx1.30.6），SWR推送digest为sha256:4c9839aeb9ec8926315de8ad7831343ac303635405c182c3c77fb6be5abef563。用户选择node2公网IP且无证书，准备90天IP SAN自签名TLS，经rbac_tls_cert/rbac_tls_key运行时注入，不重建镜像。新增frontend.yml与mysql.yml/backend.yml组合，三个服务均1副本；stack.yml同步真实前端镜像但保留初始0副本模板。补安全组80/443、容器nginx配置/healthz、HTTPS入口及首次登录改密步骤。仅配置/工具本地核对，云端证书生成、前端启动与浏览器登录仍待用户执行，BE-34/35整体验收保持开放。
+
+2026-10-26前端镜像网络适配：沿用已成功拉取MySQL的DaoCloud前缀规则，将前端两阶段Dockerfile的Node22和Nginx基础镜像改为m.daocloud.io/docker.io/library路径，npm ci显式使用npmmirror及已有锁文件。构建在节点3 Docker内执行，不要求宿主机安装Node；最终仅复制dist并保留现有HTTPS代理与Secrets方案，密钥/证书不打包。首次前端镜像计划标签0.1.0，与frontend/package.json一致，上传成功后再更新Stack，避免把后端缩回0。Node/nginx可变标签拉取后记录实际digest。干净工作区npm安装及生产构建通过，但本机无Docker引擎，节点3镜像拉取/构建/SWR上传和节点2实际运行仍待回报；已回报的后端健康UP不代表全链路或BE-34/35验收完成。
+
+2026-10-26云端初始化与后端准备：用户截图/日志确认rbac-node的MySQL8.4.8就绪，course-node2迁移任务Complete且三项迁移成功到v3，bootstrap任务Complete并输出BOOTSTRAP_CREATED；initial.admin初始口令由用户自行设定，首次必须改密。新增后端单独启动backend.yml（与mysql.yml组合，保持同名rbac栈），无需等待前端/TLS；新增独立Java21实验密钥工具及4项TDD检查，拒绝覆盖已有文件、RSA公私钥用途分离、32字节HMAC不打印。仅准备工具，未在用户服务器生成/替换密钥，未验证后端启动；真实业务/OA公钥仍须来自对应调用方，不以实验密钥代表完成对接。BE-34实际登录/业务/重启恢复仍开放。
+
+2026-10-26数据库镜像阶段：实验SWR mysql:latest经用户实测为9.2.0，未用于项目持久化；新节点通过DaoCloud获取官方mysql:8.4.8并实测8.4.8/x86_64，用户确认已推送javaee-adgn/mysql:8.4.8。两份YAML固定使用该SWR地址。新增mysql.yml仅部署MySQL并复用完整stack.yml相同配置/服务名/网络/三Secrets，后续同名rbac Stack添加应用；首次无需等待前端证书和JWK齐备。新增一次性随机口令生成及Secrets/部署步骤，禁止覆盖已有口令。已准备目录不等于数据库已启动，BE-34云端运行/迁移/重启恢复继续开放；本次仅配置及静态核对。
+
 2026-10-26部署配置简化：用户要求部署文件不要过多使用环境变量。stack.yml移除全部shell参数插值，直接填写SWR后端d8bd624镜像、目录、端口、副本数、实例ID、key id及Config版本，删除swarm.env.example；应用已有environment配置保留固定值，密码/私钥继续走Secrets。操作指南改为直接编辑YAML并stack deploy，不再export/source。前端pending标签和MySQL镜像获取仍明确待准备，0副本不代表免除外部Secrets准备。节点3截图已确认后端镜像7f274485d01b构建成功且推送javaee-adgn，未据此代记服务启动或BE-34验收；本次无业务源码/入口脚本/镜像内容变更。
 
 2026-10-26节点3网络适配：用户在course-node3执行mvn clean verify并于14:33取得BUILD SUCCESS和可执行JAR；Docker Hub超时，docker images确认本地已有SWR oomall-javaee/openjdk:21-alpine。默认后端Dockerfile改为宿主机编译后复制JAR，不再在Docker内下载JDK/Maven或apt；非root UID10001及Secret入口保持，健康探针改wget，补兼容旧Docker构建器的根目录白名单.dockerignore。节点3封装镜像后上传SWR，节点2仅拉取运行，不重复编译。基础镜像内Java/wget及完整镜像构建待节点3实际验证；本机无运行中的Docker引擎，前端基础镜像网络另待确认，无业务/API/Schema变化，不代记云端验收。

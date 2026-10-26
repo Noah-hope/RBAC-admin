@@ -1,0 +1,38 @@
+# Deploy with mysql.yml and backend.yml after both TLS secrets have been created.
+version: '3.8'
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: '10m'
+    max-file: '3'
+
+services:
+  frontend:
+    image: swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac-frontend:0.1.0
+    networks: [internal]
+    ports:
+      - {target: 80, published: 80, protocol: tcp, mode: host}
+      - {target: 443, published: 443, protocol: tcp, mode: host}
+    secrets:
+      - {source: tls-cert, target: tls-cert, mode: 0444}
+      - {source: tls-key, target: tls-key, mode: 0400}
+    logging: *logging
+    deploy:
+      replicas: 1
+      placement:
+        constraints: ['node.labels.rbac_app == true']
+      resources:
+        limits: {memory: 128M, cpus: '0.5'}
+        reservations: {memory: 32M}
+      update_config: {parallelism: 1, order: stop-first, failure_action: pause}
+      restart_policy: {condition: on-failure, delay: 5s}
+
+networks:
+  internal:
+    external: true
+    name: rbac-internal
+
+secrets:
+  tls-cert: {external: true, name: rbac_tls_cert}
+  tls-key: {external: true, name: rbac_tls_key}
