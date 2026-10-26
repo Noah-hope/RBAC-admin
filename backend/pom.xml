@@ -28,6 +28,8 @@
     </scm>
     <properties>
         <java.version>21</java.version>
+        <!-- 未启用 coverage 时为空，保留现有测试 JVM 参数。 -->
+        <jacocoArgLine/>
         <!-- Stable archive entries; SOURCE commit and SHA256 are recorded beside the release. -->
         <project.build.outputTimestamp>2026-10-19T00:00:00Z</project.build.outputTimestamp>
     </properties>
@@ -106,14 +108,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine>-javaagent:"${org.mockito:mockito-core:jar}" -Xshare:off</argLine>
+                    <argLine>@{jacocoArgLine} -javaagent:"${org.mockito:mockito-core:jar}" -Xshare:off</argLine>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
-                    <argLine>-javaagent:"${org.mockito:mockito-core:jar}" -Xshare:off</argLine>
+                    <argLine>@{jacocoArgLine} -javaagent:"${org.mockito:mockito-core:jar}" -Xshare:off</argLine>
                 </configuration>
                 <executions>
                     <execution><goals><goal>integration-test</goal><goal>verify</goal></goals></execution>
@@ -151,6 +153,33 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.8.15</version>
+                        <configuration>
+                            <propertyName>jacocoArgLine</propertyName>
+                            <append>true</append>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>coverage-agent</id>
+                                <goals><goal>prepare-agent</goal></goals>
+                            </execution>
+                            <execution>
+                                <id>coverage-report</id>
+                                <phase>verify</phase>
+                                <goals><goal>report</goal></goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>mysql-check</id>
             <build>
