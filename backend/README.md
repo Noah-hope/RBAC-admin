@@ -2,7 +2,7 @@
 
 ## JaCoCo 覆盖率报告
 
-团队共享结果见[2026-10-26 覆盖率报告](../docs/05-detailed-design/JACOCO-COVERAGE.md)及[最新完整 HTML 归档](../docs/05-detailed-design/reports/JaCoCo-2026-10-26-improved.zip)。归档作为本次运行证据纳入版本管理；后续构建仍输出至忽略的 `target` 目录。
+团队共享结果见[2026-10-26 覆盖率报告](../docs/05-detailed-design/JACOCO-COVERAGE.md)及[完整 HTML 归档](../docs/05-detailed-design/reports/JaCoCo-2026-10-26.zip)。归档作为本次运行证据纳入版本管理；后续构建仍输出至忽略的 `target` 目录。
 
 已提供可选 `coverage` profile，保留 Surefire/Failsafe 的 Mockito agent，汇总普通测试与真实 MySQL/HTTP 测试覆盖率，不排除正式源码。配置依据见 [JaCoCo 官方 Maven 指南](https://www.jacoco.org/jacoco/trunk/doc/maven.html)及 [agent 参数衔接说明](https://www.jacoco.org/jacoco/trunk/doc/prepare-agent-mojo.html)。
 

@@ -1,6 +1,6 @@
 # rbac-admin · 集中权限管理系统
 
-后端 JaCoCo 改进：2026-10-26 完整 **602 项测试通过，失败/错误/跳过均为 0**；行覆盖率 **98.50%**、分支覆盖率 **76.60%**。团队查看[覆盖率对比与复跑说明](docs/05-detailed-design/JACOCO-COVERAGE.md)，[最新完整 HTML 报告](docs/05-detailed-design/reports/JaCoCo-2026-10-26-improved.zip)下载解压后打开 `report/index.html`。首次报告保留供对照；结果为本次运行快照。
+后端 JaCoCo：**602 项测试通过，失败/错误/跳过均为0**；行覆盖率 **98.50%**、分支覆盖率 **76.60%**。团队查看[覆盖率报告与复跑说明](docs/05-detailed-design/JACOCO-COVERAGE.md)，[完整HTML报告](docs/05-detailed-design/reports/JaCoCo-2026-10-26.zip)下载解压后打开 report/index.html。
 
 正式前端已在 [`frontend/`](frontend/README.md) 实现，沿用界面原型并请求后端 API。启动：进入 frontend，执行 `npm ci`、`npm run dev`，打开 http://127.0.0.1:5174。请先启动现有 BackendApplication；本轮健康检查时 8080 未运行，真实前后端联调仍待完成。前端 26 项受控测试及构建通过，后端未改；见 [验证记录](frontend/VALIDATION.md)。当前本地分支包含尚未合入主线的 BE-33 工作，未推送或部署。
 
