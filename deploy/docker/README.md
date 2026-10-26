@@ -70,7 +70,7 @@ docker push swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac-backend:d8bd624
 
 JAR 是 Maven 产物，SWR 中保存的是 Docker 镜像。节点 3 只需把 JAR 封装进 Java 基础镜像并上传一次，节点 2 仅拉取运行。已有 `productdemooap` 是实验应用镜像，不等于本项目镜像。JAR 若已对应相同业务源码并构建成功，仅更新部署文件不必重新编译；业务源码改变后必须重新打包。
 
-前端 Dockerfile 已改用 DaoCloud 的 Node22/Nginx 镜像地址，npm 依赖按 package-lock.json 从 npmmirror 获取，在构建阶段执行 npm ci/build；最终镜像只保留 Nginx 与 dist 网页文件。完整步骤见文末“节点3构建前端镜像”。本机生产构建通过，云端基础镜像拉取、Docker构建及SWR上传仍待操作者执行；成功后再将 stack.yml 的 frontend.image 中 pending 改成真实标签。
+前端 Dockerfile 已改用 DaoCloud 的 Node22/Nginx 镜像地址，npm 依赖按 package-lock.json 从 npmmirror 获取，在构建阶段执行 npm ci/build；最终镜像只保留 Nginx 与 dist 网页文件。完整步骤见文末“节点3构建前端镜像”。本机生产构建通过，云端基础镜像拉取、Docker构建及SWR上传仍待操作者执行；成功后再将 stack.yml 的 frontend.image 改成实际已上传标签。
 
 ## 3. 在管理节点准备 Secrets 和检查 YAML
 
@@ -120,7 +120,7 @@ Secret 已存在时先核对部署记录，不删除正在使用的 Secret。后
 | --- | --- |
 | backend.image | 已上传的 SWR javaee-adgn/rbac-backend:d8bd624 |
 | mysql.image | 已推送的 swr.cn-north-4.myhuaweicloud.com/javaee-adgn/mysql:8.4.8；不要使用实验镜像 latest（实测为9.2.0） |
-| frontend.image | 标记为 pending，尚未发布；发布后直接填真实标签再启用 |
+| frontend.image | 已推送的 javaee-adgn/rbac-frontend:0.1.0，TLS准备后再启用 |
 | mysql.volumes / backend.volumes | /srv/rbac-mysql/data 与 /srv/rbac-admin/imports |
 | backend.deploy.replicas / frontend.deploy.replicas | 初始均为 0；完成对应准备后分别改为 1 |
 | backend.environment.RBAC_ADMIN_KEY_ID | admin-v1；必须与 admin-private.json 中真实 signing kid 一致，不一致直接修改 YAML |
@@ -242,7 +242,7 @@ docker secret rm rbac_bootstrap_password
 
 ## 6. 启动前后端及验证
 
-直接编辑 stack.yml，将 services.backend.deploy.replicas 从 0 改为 1 并部署。检查后端健康后，确认真实前端镜像和 TLS 已就绪，将 frontend.image 的 pending 换成真实已上传标签，再将 services.frontend.deploy.replicas 改为 1，重新部署：
+直接编辑 stack.yml，将 services.backend.deploy.replicas 从 0 改为 1 并部署。检查后端健康后，确认 TLS 已就绪，前端镜像已设为上传成功的0.1.0，再将 services.frontend.deploy.replicas 改为 1，重新部署：
 
 ```sh
 docker stack deploy --with-registry-auth -c stack.yml rbac
@@ -434,10 +434,84 @@ docker push swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac-frontend:0.1.0
 
 Dockerfile默认从registry.npmmirror.com安装锁定依赖（现有锁文件也引用该源），不修改依赖版本或业务代码；Node/npm仅在构建阶段使用，最终镜像继承Nginx启动入口并包含静态网页与现有代理配置。根目录白名单.dockerignore兼容节点3旧构建器，排除本机node_modules、.env、证书、密钥和临时文件。构建上下文还可包含后端已生成JAR，但前端Dockerfile不复制它进入最终镜像。
 
-Nginx配置仍要求运行时提供TLS证书Secrets，并通过rbac-internal访问backend:8080。构建镜像不需要把证书或私钥放入镜像。上传成功后再准备与实际访问地址匹配的HTTPS证书，更新stack.yml前端镜像与副本数，同时保持已运行后端副本数为1，随后部署到节点2；当前pending/0副本的完整Stack不应直接用于上线。
+Nginx配置仍要求运行时提供TLS证书Secrets，并通过rbac-internal访问backend:8080。构建镜像不需要把证书或私钥放入镜像。上传成功后再准备与实际访问地址匹配的HTTPS证书，更新stack.yml前端镜像与副本数，同时保持已运行后端副本数为1，随后部署到节点2；初始0副本的完整Stack不应直接用于上线；本次上传后的配置见下节。
 
 ### 本轮验证边界
 
 独立干净main工作区中，Node22.19.0/npm10.9.3执行npm ci（npmmirror、沿用package-lock）成功安装71个包，npm run build通过vue-tsc和Vite生产打包，生成dist/index.html及CSS/JS；前端源文件和锁文件未修改。业务实现沿用既有28项前端测试证据，本轮只改镜像源与构建命令，不重跑业务测试。git diff --check与文档本地链接检查通过。
 
 本机Docker Desktop Linux引擎仍未运行，未声称Docker镜像构建、镜像内Nginx配置检查、TLS或实际前后端联调通过；这些需节点3构建及节点2后续运行验证。健康UP只证明本次后端探针成功，BE-34/35的完整验收仍开放。
+
+
+## 公网IP启用前端
+
+用户在course-node3已成功构建并推送javaee-adgn/rbac-frontend:0.1.0，镜像ID ed14c043248d，构建日志显示Nginx1.30.6及wget可用，SWR输出digest为sha256:4c9839aeb9ec8926315de8ad7831343ac303635405c182c3c77fb6be5abef563。用户选择使用节点2公网IP访问，暂时没有证书；先用临时自签名证书保留现有HTTPS入口，无需重新打镜像。证书文件和私钥只放仓库外，经Secrets注入Nginx。
+
+### 管理节点生成临时证书
+
+以下在course-manager执行，输入的是course-node2的公网IPv4地址，不是管理节点或数据库节点地址。此变量仅用于这次生成证书，不是额外部署环境文件。仅首次执行；若文件已存在应核对复用，不覆盖。
+
+```bash
+install -d -m 0700 /etc/rbac-deploy/tls
+read -r -p '请输入节点2公网IPv4地址: ' RBAC_PUBLIC_IP
+(
+  set -eu
+  umask 077
+  if [ -e /etc/rbac-deploy/tls/privkey.pem ] || [ -e /etc/rbac-deploy/tls/fullchain.pem ]; then
+    echo 'TLS文件已存在，请核对复用，不覆盖。' >&2
+    exit 1
+  fi
+  openssl req -x509 -nodes -newkey rsa:2048 -sha256 -days 90 \
+    -keyout /etc/rbac-deploy/tls/privkey.pem \
+    -out /etc/rbac-deploy/tls/fullchain.pem \
+    -subj "/CN=$RBAC_PUBLIC_IP" -extensions v3 -config /dev/stdin <<EOF
+[req]
+distinguished_name=dn
+[dn]
+[v3]
+basicConstraints=critical,CA:FALSE
+keyUsage=critical,digitalSignature,keyEncipherment
+extendedKeyUsage=serverAuth
+subjectAltName=IP:$RBAC_PUBLIC_IP
+EOF
+)
+```
+
+使用配置段写入IP SAN，不依赖旧版OpenSSL可能缺少的-addext选项。证书有效期90天，私钥无交互口令以便容器启动，通过0700目录和Secrets权限保护；这些TLS密钥与前面应用JWT/幂等密钥用途不同。生成失败时先处理报错，不继续创建Secret。已有Secret时核对其来源，不能删除正在使用的证书Secret。
+
+```sh
+openssl x509 -in /etc/rbac-deploy/tls/fullchain.pem -noout -subject -dates
+docker secret create rbac_tls_cert /etc/rbac-deploy/tls/fullchain.pem
+docker secret create rbac_tls_key /etc/rbac-deploy/tls/privkey.pem
+```
+
+自签名证书不会自动获得浏览器信任，首次浏览器访问会出现证书警告；仅本次自用实验，在确认是自己生成的证书后手动继续。证书到期前需更换；之后采用受信证书时使用新Secret版本并更新两个前端YAML引用，无需把私钥加入镜像。生成方法参考[OpenSSL req](https://docs.openssl.org/3.0/man1/openssl-req/)，运行时注入参考[Docker Secrets](https://docs.docker.com/engine/swarm/secrets/)。
+
+### 管理节点发布三个服务
+
+管理节点更新main，再组合三个阶段文件；backend.yml副本数为1，避免完整stack.yml初始模板把已运行后端缩回0。frontend.yml与完整Stack前端服务保持一致，仅初始副本数不同。两份文件均已填入上传成功的0.1.0镜像。
+
+```sh
+cd /root/rbac-admin
+git pull --ff-only origin main
+cd deploy/docker
+docker stack config -c mysql.yml -c backend.yml -c frontend.yml > /etc/rbac-deploy/rendered-stack.yml
+docker stack deploy --with-registry-auth -c mysql.yml -c backend.yml -c frontend.yml rbac
+docker service ps rbac_frontend --no-trunc
+docker service logs --tail 100 rbac_frontend
+docker service ls
+```
+
+管理节点需已有有效SWR登录；上述文件不使用shell变量替换。三个服务分别为mysql/backend/frontend且各1副本，沿用同一个rbac Stack和rbac-internal，不使用prune。前端固定在course-node2，使用host模式发布80/443，确保节点2上端口空闲，云安全组和系统防火墙允许浏览器来源访问80/443；不开放MySQL3306或后端8080。
+
+在course-node2核对前端容器和入口：
+
+```sh
+docker exec "$(docker ps -q --filter label=com.docker.swarm.service.name=rbac_frontend)" nginx -t
+docker exec "$(docker ps -q --filter label=com.docker.swarm.service.name=rbac_frontend)" wget -q -O - http://127.0.0.1:8081/healthz
+curl -k -I https://127.0.0.1/
+```
+
+预期nginx配置检查成功、healthz输出ok、HTTPS根路径返回200；curl的-k仅用于这次自签名连通性检查，不代表浏览器已信任证书或业务验收完成。之后在浏览器打开https://节点2公网IP，确认是自己生成的证书后继续，使用initial.admin及用户此前自设密码登录并按要求改密；不把密码或令牌贴到聊天。还需实际验证SPA刷新、API代理、导入持久化、业务流程和重启恢复，不能仅凭Nginx探针判定BE-34/35完成。
+
+本轮仅更新镜像引用、增加前端阶段YAML和证书/运行步骤；Docker CLI原生stack config及三服务组合一致性检查通过。本机使用独立临时测试IP证书核对SAN/有效期/密钥匹配，不是云端真实证书；本机Docker引擎未运行，Nginx运行和TLS/登录仍留云端实际验证。

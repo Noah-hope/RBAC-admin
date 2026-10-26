@@ -1,5 +1,7 @@
 # 项目决策记录
 
+2026-10-26前端已上传及公网IP方案：用户截图确认node3构建rbac-frontend:0.1.0成功（ed14c043248d、Nginx1.30.6），SWR推送digest为sha256:4c9839aeb9ec8926315de8ad7831343ac303635405c182c3c77fb6be5abef563。用户选择node2公网IP且无证书，准备90天IP SAN自签名TLS，经rbac_tls_cert/rbac_tls_key运行时注入，不重建镜像。新增frontend.yml与mysql.yml/backend.yml组合，三个服务均1副本；stack.yml同步真实前端镜像但保留初始0副本模板。补安全组80/443、容器nginx配置/healthz、HTTPS入口及首次登录改密步骤。仅配置/工具本地核对，云端证书生成、前端启动与浏览器登录仍待用户执行，BE-34/35整体验收保持开放。
+
 2026-10-26前端镜像网络适配：沿用已成功拉取MySQL的DaoCloud前缀规则，将前端两阶段Dockerfile的Node22和Nginx基础镜像改为m.daocloud.io/docker.io/library路径，npm ci显式使用npmmirror及已有锁文件。构建在节点3 Docker内执行，不要求宿主机安装Node；最终仅复制dist并保留现有HTTPS代理与Secrets方案，密钥/证书不打包。首次前端镜像计划标签0.1.0，与frontend/package.json一致，上传成功后再更新Stack，避免把后端缩回0。Node/nginx可变标签拉取后记录实际digest。干净工作区npm安装及生产构建通过，但本机无Docker引擎，节点3镜像拉取/构建/SWR上传和节点2实际运行仍待回报；已回报的后端健康UP不代表全链路或BE-34/35验收完成。
 
 2026-10-26云端初始化与后端准备：用户截图/日志确认rbac-node的MySQL8.4.8就绪，course-node2迁移任务Complete且三项迁移成功到v3，bootstrap任务Complete并输出BOOTSTRAP_CREATED；initial.admin初始口令由用户自行设定，首次必须改密。新增后端单独启动backend.yml（与mysql.yml组合，保持同名rbac栈），无需等待前端/TLS；新增独立Java21实验密钥工具及4项TDD检查，拒绝覆盖已有文件、RSA公私钥用途分离、32字节HMAC不打印。仅准备工具，未在用户服务器生成/替换密钥，未验证后端启动；真实业务/OA公钥仍须来自对应调用方，不以实验密钥代表完成对接。BE-34实际登录/业务/重启恢复仍开放。

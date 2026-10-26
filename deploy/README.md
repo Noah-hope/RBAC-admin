@@ -10,13 +10,14 @@
 | [Swarm 逐步操作指南](docker/README.md) | 节点准备、镜像构建上传、Secrets、迁移、初始化及启动 |
 | [首次数据库配置](docker/mysql.yml) | 仅部署 MySQL，只需三个数据库 Secrets |
 | [后端单独启动](docker/backend.yml) | 密钥准备后与 mysql.yml 一起部署，前端和TLS可后续准备 |
+| [前端单独启用](docker/frontend.yml) | TLS准备后与 mysql.yml、backend.yml组合，三个服务均为1副本 |
 | [完整 Stack 配置](docker/stack.yml) | 后续添加前端；与分阶段部署使用相同 Stack 名称 rbac |
 | [Stack 中的固定配置](docker/stack.yml) | 直接修改镜像、目录、副本数、端口及 key id，无需额外环境文件 |
 | [后端 Dockerfile](../backend/Dockerfile) / [前端 Dockerfile](../frontend/Dockerfile) | 在节点 3 构建镜像，构建上下文为仓库根目录 |
 
 默认先运行 MySQL，前后端保持 0 副本；显式迁移、首次管理员初始化成功后，再依次启用后端和前端。真实账号密码、密钥及证书放在仓库外，通过 Secrets 提供，不写进镜像。
 
-按用户要求，当前部署不依赖 swarm.env、shell export 或 YAML 变量替换；YAML 的 environment 部分仅用于向现有应用传入固定配置。后端已使用上传成功的 d8bd624 镜像，无需因本次配置调整重新构建。用户已确认MySQL8.4.8与后端均为1/1、后端健康UP，密钥生成及管理员初始化已成功。前端镜像与HTTPS证书仍待准备；[前端构建步骤](docker/README.md#节点3构建前端镜像)使用DaoCloud获取Node/Nginx并通过npmmirror安装锁定依赖。
+按用户要求，当前部署不依赖 swarm.env、shell export 或 YAML 变量替换；YAML 的 environment 部分仅用于向现有应用传入固定配置。后端已使用上传成功的 d8bd624 镜像，无需因本次配置调整重新构建。用户已确认MySQL8.4.8与后端均为1/1、后端健康UP，密钥生成及管理员初始化已成功。前端0.1.0已构建并推送SWR，选择使用节点2公网IP和临时自签名证书；按[公网IP部署步骤](docker/README.md#公网ip启用前端)准备TLS后启用。证书和配置不要求重建前端镜像。
 
 部署文件已完成文档所列本地检查，云端进度来自用户提供的输出；前端、真实登录/首次改密和重启恢复仍待验证，不据后端健康UP宣布完整服务器验收通过。
 
