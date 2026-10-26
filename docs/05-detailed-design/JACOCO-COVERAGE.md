@@ -75,3 +75,7 @@ Windows使用 `mvnw.cmd`。只运行普通测试可用 `./mvnw clean verify -Pco
 `clean`会删除target，固定归档保存在docs，不受影响。为避免旧采集记录混入，正式覆盖率报告使用clean完整运行。
 
 配置核实来源：[JaCoCo agent](https://www.jacoco.org/jacoco/trunk/doc/agent.html)、[Maven参数衔接](https://www.jacoco.org/jacoco/trunk/doc/prepare-agent-mojo.html)、[exec合并](https://www.jacoco.org/jacoco/trunk/doc/merge-mojo.html)。
+
+## 最新交付记录
+
+改进来源 [`b40bc20`](https://github.com/Noah-hope/RBAC-admin/commit/b40bc20e2061f63a43a500177a0ac473a8b70c99) 已合入主线 [`42431f5`](https://github.com/Noah-hope/RBAC-admin/commit/42431f578cdbb76ed6d841663be961e6a18fd6ff)，合并树等于核验来源；主线与任务分支已原子推送，两个完整SHA回查一致。接入的最新部署配置未改变被测源码、测试和pom，保留本次602项结果；交付补录仅修改文档，不重跑Java/MySQL、不部署。
