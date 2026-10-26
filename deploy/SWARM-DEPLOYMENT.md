@@ -48,7 +48,7 @@ docker node inspect <节点2实际节点名> --format '{{json .Spec.Labels}}'
 | 新服务器 | `/srv/rbac-mysql/data` | MySQL 数据，挂载到 `/var/lib/mysql` |
 | 新服务器 | `/srv/rbac-mysql/backups` | 备份输出；还需保存异机副本，不能仅依赖同机磁盘 |
 | 节点 2 | `/srv/rbac-admin/imports` | 导入文件，可写挂载到 `/var/lib/rbac-admin/imports` |
-| 管理节点 | `/etc/rbac-deploy/` | 仓库外的受限部署变量与凭据源文件；TLS/JWK 通过 Secrets 分发 |
+| 管理节点 | `/etc/rbac-deploy/` | 仓库外的受限凭据源文件；TLS/JWK 通过 Secrets 分发，无需额外部署环境文件 |
 
 后端 server profile 会校验导入目录为已存在、绝对、可写路径。设置 `RBAC_IMPORT_DIRECTORY=/var/lib/rbac-admin/imports`。导入文件必须与数据库一起纳入备份恢复，不能存入容器临时层。
 
@@ -70,7 +70,7 @@ docker node inspect <节点2实际节点名> --format '{{json .Spec.Labels}}'
 | [前端 Dockerfile](../frontend/Dockerfile) 与同目录 `Dockerfile.dockerignore` | Node 构建前端，Nginx 提供静态文件 |
 | [容器 Nginx 配置](docker/nginx.conf) | SPA 路由、API 原路径代理、HTTPS 与上传限制 |
 | [Swarm Stack](docker/stack.yml) | 镜像、节点约束、网络、挂载、Secrets、资源和日志限制 |
-| [无凭据变量示例](docker/swarm.env.example)及[操作指南](docker/README.md) | 数据库创建、独立迁移、管理员初始化、应用启动 |
+| [固定参数 Stack](docker/stack.yml)及[操作指南](docker/README.md) | 直接编辑 YAML 配置，再创建数据库、独立迁移、管理员初始化和启动应用 |
 
 当前后端默认监听 `127.0.0.1`，Stack 通过 `SERVER_ADDRESS=0.0.0.0` 覆盖以允许 Nginx 容器访问，不发布宿主机 8080。容器配置使用 framework 代理头处理，Nginx 覆盖转发头，仅允许本项目受控服务接入专用网络。
 
@@ -90,7 +90,7 @@ docker node inspect <节点2实际节点名> --format '{{json .Spec.Labels}}'
 6. 启动后端并检查容器内健康与日志，然后启动前端 Nginx、验证实际访问入口。不得依赖 Stack 的服务声明顺序保证 MySQL 和迁移已完成。
 7. 验证登录、首次改密、业务读写、文件导入与持久化；执行服务重建及隔离备份恢复检查后记录真实结果。
 
-完成网络、挂载、Secrets、变量、镜像准备后，在管理节点的 `deploy/docker` 同步目录运行。默认应用副本数为 0，先部署 MySQL，再按操作指南分别执行迁移、初始化和启用前后端：
+完成网络、挂载、Secrets、镜像及 YAML 固定参数核对后，在管理节点的 `deploy/docker` 同步目录运行。无需 export 或加载 swarm.env。默认应用副本数为 0，先部署 MySQL，再按操作指南分别执行迁移、初始化和启用前后端：
 
 ```sh
 docker stack deploy --with-registry-auth -c stack.yml rbac

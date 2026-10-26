@@ -9,10 +9,12 @@
 | [Swarm 部署方案](SWARM-DEPLOYMENT.md) | 节点分工、网络、存储和实施顺序 |
 | [Swarm 逐步操作指南](docker/README.md) | 节点准备、镜像构建上传、Secrets、迁移、初始化及启动 |
 | [Stack 配置](docker/stack.yml) | 三个服务的调度、资源、网络、挂载和日志 |
-| [部署变量示例](docker/swarm.env.example) | 填写镜像、版本、目录和副本数，不含真实凭据 |
+| [Stack 中的固定配置](docker/stack.yml) | 直接修改镜像、目录、副本数、端口及 key id，无需额外环境文件 |
 | [后端 Dockerfile](../backend/Dockerfile) / [前端 Dockerfile](../frontend/Dockerfile) | 在节点 3 构建镜像，构建上下文为仓库根目录 |
 
 默认先运行 MySQL，前后端保持 0 副本；显式迁移、首次管理员初始化成功后，再依次启用后端和前端。真实账号密码、密钥及证书放在仓库外，通过 Secrets 提供，不写进镜像。
+
+按用户要求，当前部署不依赖 swarm.env、shell export 或 YAML 变量替换；YAML 的 environment 部分仅用于向现有应用传入固定配置。后端已使用上传成功的 d8bd624 镜像，无需因本次 YAML 调整重新构建。前端镜像仍待发布，MySQL 镜像可达性及密钥/证书仍需按指南准备。
 
 部署文件已在本地准备并完成文档所列检查，尚未执行真实云端部署。镜像构建和实际容器验证限制见操作指南，不据此宣布服务器验收通过。
 
