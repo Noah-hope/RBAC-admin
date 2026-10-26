@@ -12,7 +12,7 @@ class BootstrapMySqlCheck {
     private static final String PASSWORD="Fixture-initial-123456";
 
     private ProcessBuilder command(IsolatedMySqlDatabase database) {
-        var process=new ProcessBuilder(Path.of(System.getProperty("java.home"),"bin","java").toString(),
+        var process=com.adgn.backend.testsupport.JavaSubprocess.command(
                 "-Dloader.main=com.adgn.backend.bootstrap.BootstrapAdminApplication", "-cp",
                 "target/backend-0.0.1-SNAPSHOT.jar", "org.springframework.boot.loader.launch.PropertiesLauncher");
         process.environment().keySet().removeIf(k->k.startsWith("RBAC_")||k.startsWith("SPRING_")||k.equals("JAVA_TOOL_OPTIONS")||k.equals("JDK_JAVA_OPTIONS"));
@@ -125,6 +125,30 @@ class BootstrapMySqlCheck {
             var result=run(command(database));
             assertThat(result.exit()).isEqualTo(4);
             assertThat(database.scalar("SELECT COUNT(*) FROM flyway_schema_history WHERE version='3'")).isEqualTo("0");
+        }
+    }
+
+    @Test void bootstrapRejectsSystemCatalogCredentialsAndAmbiguousUrlBeforeWriting() throws Exception {
+        try(var database=new IsolatedMySqlDatabase()) {
+            var mutations=List.<java.util.function.Consumer<ProcessBuilder>>of(
+                    p->p.environment().put("RBAC_BOOTSTRAP_ADMIN_LOGIN","_invalid"),
+                    p->p.environment().put("RBAC_BOOTSTRAP_ADMIN_LOGIN","a".repeat(101)),
+                    p->p.environment().put("RBAC_BOOTSTRAP_USER"," "),
+                    p->p.environment().put("RBAC_BOOTSTRAP_CONFIRM_DATABASE","mysql"),
+                    p->p.environment().put("RBAC_BOOTSTRAP_CONFIRM_DATABASE","bad-name"),
+                    p->p.environment().put("RBAC_BOOTSTRAP_URL","jdbc:postgresql://127.0.0.1/db"),
+                    p->p.environment().put("RBAC_BOOTSTRAP_URL",p.environment().get("RBAC_BOOTSTRAP_URL").replace("127.0.0.1","embedded:private-fixture@127.0.0.1")),
+                    p->p.environment().put("RBAC_BOOTSTRAP_URL",p.environment().get("RBAC_BOOTSTRAP_URL")+"#fragment"),
+                    p->p.environment().put("RBAC_BOOTSTRAP_URL","jdbc:mysql://127.0.0.1:0/"+p.environment().get("RBAC_BOOTSTRAP_CONFIRM_DATABASE")),
+                    p->p.environment().put("RBAC_BOOTSTRAP_URL","jdbc:mysql://127.0.0.1:65536/"+p.environment().get("RBAC_BOOTSTRAP_CONFIRM_DATABASE")));
+            for(var mutation:mutations){
+                var process=command(database);mutation.accept(process);var result=run(process);
+                assertThat(result.exit()).isEqualTo(2);
+                assertThat(result.output()).contains("INVALID_CONFIGURATION").doesNotContain(PASSWORD,"private-fixture","jdbc:");
+            }
+            assertThat(database.scalar("SELECT COUNT(*) FROM admin_account")).isEqualTo("0");
+            assertThat(database.scalar("SELECT COUNT(*) FROM audit_event")).isEqualTo("0");
+            assertThat(database.scalar("SELECT revision FROM mutation_guard WHERE id=1")).isEqualTo("0");
         }
     }
 

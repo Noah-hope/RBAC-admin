@@ -15,7 +15,7 @@ public record SafeResult(int status,String body,String location) {
                 || location.contains("//") || location.contains("%") || location.contains("/..")
                 || location.chars().anyMatch(Character::isISOControl))) throw new IllegalArgumentException("Invalid safe location");
         if (body!=null) {
-            try { var node=JSON.readTree(body); if(node==null) throw new IllegalArgumentException(); rejectSecrets(node); body=JSON.writeValueAsString(node); }
+            try { var node=JSON.readTree(body); if(node==null || node.isMissingNode()) throw new IllegalArgumentException(); rejectSecrets(node); body=JSON.writeValueAsString(node); }
             catch (RuntimeException failure) { throw new IllegalArgumentException("Unsafe response projection"); }
         }
     }

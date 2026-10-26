@@ -26,7 +26,7 @@ class SubmissionWorkflowMySqlCheck {
     JdbcTemplate jdbc;
     Path keys;
     String[] webArgs;
-    com.nimbusds.jose.jwk.RSAKey oaKey;
+    com.nimbusds.jose.jwk.RSAKey oaKey,businessKey;
     String base,token,otherToken,restrictedToken,superAccount,company,department,otherDepartment,system,account,employee,passwordHash;
     final JsonMapper json=JsonMapper.builder().build();
     final HttpClient http=com.adgn.backend.testsupport.ContractHttpClient.create();
@@ -35,7 +35,7 @@ class SubmissionWorkflowMySqlCheck {
     @BeforeAll void start()throws Exception{
         keys=Files.createTempDirectory(Path.of(".tmp"),"workflow-keys-");
         for(String family:List.of("admin","business","oa")){
-            var key=new RSAKeyGenerator(2048).keyID(family).generate();if(family.equals("oa"))oaKey=key;
+            var key=new RSAKeyGenerator(2048).keyID(family).generate();if(family.equals("oa"))oaKey=key;if(family.equals("business"))businessKey=key;
             Files.writeString(keys.resolve(family+".json"),new JWKSet(family.equals("admin")?key:key.toPublicJWK()).toString(!family.equals("admin")));
         }
         byte[] secret=new byte[32];new java.security.SecureRandom().nextBytes(secret);
@@ -313,13 +313,67 @@ class SubmissionWorkflowMySqlCheck {
         String draft=submitted();try{restart(false,true);invokeService("com.adgn.backend.oa.OaDeliveryService","deliver",draft);assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM oa_link WHERE request_id=?",Long.class,draft)).isEqualTo(1);assertThat(jdbc.queryForObject("SELECT oa_approval_id FROM oa_link WHERE request_id=?",String.class,draft)).isEqualTo("DEMO-"+draft);assertThat(requestState(draft)).isEqualTo("PENDING");restart(false,true);var cls=Class.forName("com.adgn.backend.demo.DemoOaSubmissionAdapter");var port=(com.adgn.backend.oa.OaSubmissionPort)app.getBean(cls);var bytes=jdbc.queryForObject("SELECT fixed_payload_bytes FROM change_request WHERE id=?",byte[].class,draft);var payload=(tools.jackson.databind.node.ObjectNode)json.readTree(bytes);String digest=HexFormat.of().formatHex(jdbc.queryForObject("SELECT content_digest FROM change_request WHERE id=?",byte[].class,draft));payload.put("contentDigest",digest);assertThat(port.send(new com.adgn.backend.oa.OaSubmissionPort.Submission(oa,draft,2,digest,payload)).oaApprovalId()).isEqualTo("DEMO-"+draft);}finally{restart(false,false);}
         assertThat(app.getBeansOfType(com.adgn.backend.oa.OaSubmissionPort.class)).isEmpty();
     }
-    ProcessBuilder demoCommand(String command,String identity,Path output,Path signer){var pb=new ProcessBuilder(Path.of(System.getProperty("java.home"),"bin","java").toString(),"-Dloader.main=com.adgn.backend.demo.DemoServiceApplication","-cp","target/backend-0.0.1-SNAPSHOT.jar","org.springframework.boot.loader.launch.PropertiesLauncher",command);pb.environment().keySet().removeIf(k->k.startsWith("RBAC_")||k.startsWith("SPRING_")||k.equals("JAVA_TOOL_OPTIONS")||k.equals("JDK_JAVA_OPTIONS"));db.configureBootstrap(pb);var env=pb.environment();for(String name:List.of("URL","USER","PASSWORD","CONFIRM_DATABASE")){env.put("RBAC_DEMO_"+name,env.remove("RBAC_BOOTSTRAP_"+name));}env.put("RBAC_DEMO_MODE","demo");env.put("RBAC_DEMO_SERVICE_ID",identity);env.put("RBAC_DEMO_SUBJECT",identity);env.put("RBAC_DEMO_KIND","OA");env.put("RBAC_DEMO_SIGNING_JWK",signer.toAbsolutePath().toString());env.put("RBAC_DEMO_VERIFY_JWK_SET",keys.resolve("oa.json").toAbsolutePath().toString());env.put("RBAC_DEMO_OUTPUT",output.toAbsolutePath().toString());return pb.redirectErrorStream(true);}
+    ProcessBuilder demoCommand(String command,String identity,Path output,Path signer){var pb=com.adgn.backend.testsupport.JavaSubprocess.command("-Dloader.main=com.adgn.backend.demo.DemoServiceApplication","-cp","target/backend-0.0.1-SNAPSHOT.jar","org.springframework.boot.loader.launch.PropertiesLauncher",command);pb.environment().keySet().removeIf(k->k.startsWith("RBAC_")||k.startsWith("SPRING_")||k.equals("JAVA_TOOL_OPTIONS")||k.equals("JDK_JAVA_OPTIONS"));db.configureBootstrap(pb);var env=pb.environment();for(String name:List.of("URL","USER","PASSWORD","CONFIRM_DATABASE")){env.put("RBAC_DEMO_"+name,env.remove("RBAC_BOOTSTRAP_"+name));}env.put("RBAC_DEMO_MODE","demo");env.put("RBAC_DEMO_SERVICE_ID",identity);env.put("RBAC_DEMO_SUBJECT",identity);env.put("RBAC_DEMO_KIND","OA");env.put("RBAC_DEMO_SIGNING_JWK",signer.toAbsolutePath().toString());env.put("RBAC_DEMO_VERIFY_JWK_SET",keys.resolve("oa.json").toAbsolutePath().toString());env.put("RBAC_DEMO_OUTPUT",output.toAbsolutePath().toString());return pb.redirectErrorStream(true);}
     record CliResult(int code,String text){}
     CliResult runCli(ProcessBuilder pb)throws Exception{Path log=Files.createTempFile(Path.of(".tmp"),"demo-cli-",".log");Process p=pb.redirectOutput(log.toFile()).start();try{assertThat(p.waitFor(30,TimeUnit.SECONDS)).isTrue();return new CliResult(p.exitValue(),Files.readString(log));}finally{if(p.isAlive())p.destroyForcibly().waitFor();Files.deleteIfExists(log);}}
     @Test void demoCliConfiguresServiceAndWritesShortTokenWithoutExposingOrOverwritingSecrets()throws Exception{
         String identity=id();Path output=keys.resolve("demo.jwt"),signer=keys.resolve("demo-private.json");Files.writeString(signer,new JWKSet(oaKey).toString(false));
         try{var configure=runCli(demoCommand("configure-demo-service",identity,output,signer));assertThat(configure.code()).as(configure.text()).isZero();assertThat(runCli(demoCommand("configure-demo-service",identity,output,signer)).code()).isNotZero();var wrong=demoCommand("issue-demo-service-token",identity,output,signer);wrong.environment().put("RBAC_DEMO_VERIFY_JWK_SET",keys.resolve("business.json").toAbsolutePath().toString());assertThat(runCli(wrong).code()).isNotZero();assertThat(Files.exists(output)).isFalse();var issue=runCli(demoCommand("issue-demo-service-token",identity,output,signer));assertThat(issue.code()).as(issue.text()).isZero();String raw=Files.readString(output).strip();var verified=app.getBean(com.adgn.backend.identity.security.IdentityTokens.class).verify(raw,com.adgn.backend.identity.security.IdentityTokens.Family.OA);assertThat(verified.getSubject()).isEqualTo(identity);assertThat(java.time.Duration.between(verified.getIssuedAt(),verified.getExpiresAt()).toSeconds()).isBetween(1L,300L);assertThat(issue.text()).doesNotContain(raw,json.readTree(oaKey.toJSONString()).path("d").stringValue());assertThat(runCli(demoCommand("issue-demo-service-token",identity,output,signer)).code()).isNotZero();assertThat(Files.readString(output).strip()).isEqualTo(raw);
         }finally{jdbc.update("UPDATE service_identity SET enabled=0,version=version+1 WHERE id=?",identity);Files.deleteIfExists(output);Files.deleteIfExists(signer);}
+    }
+
+    @Test void demoCliInvalidConfigurationCannotCreateServiceOrAppendAudit()throws Exception{
+        String identity=id();long audits=jdbc.queryForObject("SELECT COUNT(*) FROM audit_event",Long.class);
+        var mutations=List.<java.util.function.Consumer<ProcessBuilder>>of(
+                p->p.environment().remove("RBAC_DEMO_MODE"),
+                p->p.environment().put("RBAC_DEMO_MODE","production"),
+                p->p.environment().put("RBAC_DEMO_SUBJECT"," "),
+                p->p.environment().put("RBAC_DEMO_SUBJECT","a".repeat(101)),
+                p->p.environment().put("RBAC_DEMO_SERVICE_ID","1-1-1-1-1"),
+                p->p.environment().put("RBAC_DEMO_KIND","ADMIN"),
+                p->p.environment().put("RBAC_DEMO_KIND","BUSINESS"),
+                p->p.environment().put("RBAC_DEMO_CONFIRM_DATABASE","mysql"),
+                p->p.environment().put("RBAC_DEMO_URL",p.environment().get("RBAC_DEMO_URL")+"?user=root"),
+                p->p.command().set(p.command().size()-1,"unknown-command"));
+        for(var mutation:mutations){
+            var process=demoCommand("configure-demo-service",identity,keys.resolve("unused.jwt"),keys.resolve("unused.json"));
+            mutation.accept(process);var result=runCli(process);
+            assertThat(result.code()).isEqualTo(2);
+            assertThat(result.text()).contains("DEMO_COMMAND_REFUSED").doesNotContain("jdbc:","Exception");
+        }
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM service_identity WHERE id=?",Long.class,identity)).isZero();
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM audit_event",Long.class)).isEqualTo(audits);
+    }
+
+    @Test void businessDemoTokenUsesBoundSystemAndDisabledServiceCannotIssueAgain()throws Exception{
+        String identity=id();Path signer=keys.resolve("business-private.json"),output=keys.resolve("business-demo.jwt");
+        Files.writeString(signer,businessKey.toJSONString());
+        java.util.function.BiFunction<String,Path,ProcessBuilder> command=(operation,destination)->{
+            var process=demoCommand(operation,identity,destination,signer);var env=process.environment();
+            env.put("RBAC_DEMO_KIND","BUSINESS");env.put("RBAC_DEMO_SYSTEM_ID",system);
+            env.put("RBAC_DEMO_SIGNING_KEY_ID","business");env.put("RBAC_DEMO_VERIFY_JWK_SET",keys.resolve("business.json").toAbsolutePath().toString());
+            return process;
+        };
+        Path denied=keys.resolve("disabled-business.jwt");
+        try{
+            var missing=command.apply("configure-demo-service",output);missing.environment().put("RBAC_DEMO_SYSTEM_ID",id());
+            assertThat(runCli(missing).code()).isEqualTo(2);
+            assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM service_identity WHERE id=?",Long.class,identity)).isZero();
+            assertThat(runCli(command.apply("configure-demo-service",output)).code()).isZero();
+            var issued=runCli(command.apply("issue-demo-service-token",output));assertThat(issued.code()).as(issued.text()).isZero();
+            String token=Files.readString(output).strip();var claims=app.getBean(com.adgn.backend.identity.security.IdentityTokens.class)
+                    .verify(token,com.adgn.backend.identity.security.IdentityTokens.Family.BUSINESS);
+            assertThat(claims.getSubject()).isEqualTo(identity);assertThat(claims.getClaimAsString("systemId")).isEqualTo(system);
+            assertThat(claims.getAudience()).containsExactly("rbac-business");
+            assertThat(issued.text()).doesNotContain(token,json.readTree(businessKey.toJSONString()).path("d").stringValue());
+            jdbc.update("UPDATE service_identity SET enabled=0,version=version+1 WHERE id=?",identity);
+            assertThat(runCli(command.apply("issue-demo-service-token",denied)).code()).isEqualTo(2);
+            assertThat(Files.exists(denied)).isFalse();
+            assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM audit_event WHERE event_type='DEMO_SERVICE_TOKEN_ISSUED' AND target_id=?",Long.class,identity)).isEqualTo(1);
+        }finally{
+            jdbc.update("UPDATE service_identity SET enabled=0 WHERE id=?",identity);
+            Files.deleteIfExists(signer);Files.deleteIfExists(output);Files.deleteIfExists(denied);
+        }
     }
 
     @Test void fullWorkflowTimelineIncludesSubmissionAndReliableDelivery()throws Exception{
