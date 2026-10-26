@@ -1,5 +1,7 @@
 # 项目共享记忆
 
+2026-10-26数据库镜像阶段：实验SWR mysql:latest经用户实测为9.2.0，未用于项目持久化；新节点通过DaoCloud获取官方mysql:8.4.8并实测8.4.8/x86_64，用户确认已推送javaee-adgn/mysql:8.4.8。两份YAML固定使用该SWR地址。新增mysql.yml仅部署MySQL并复用完整stack.yml相同配置/服务名/网络/三Secrets，后续同名rbac Stack添加应用；首次无需等待前端证书和JWK齐备。新增一次性随机口令生成及Secrets/部署步骤，禁止覆盖已有口令。已准备目录不等于数据库已启动，BE-34云端运行/迁移/重启恢复继续开放；本次仅配置及静态核对。
+
 2026-10-26 JaCoCo实际交付：用户明确同意提交、合并并推送。已接入远程main/5b05c7f，来源测试-JaCoCo覆盖率共享/a5aa7cba1871e2890db06b51f3ddd3277a8d526f保留历史no-ff合入main/fb0134ec0a7813bf3e33a94d225a51526efc72ed，合并树等于核验来源；普通Git原子推送main及任务分支成功，两个远程完整SHA回查一致，任务分支保留。覆盖率配置、说明、约1.8MB固定HTML/XML/CSV/exec归档及SHA-256已交付，团队从项目首页进入[覆盖率报告](../05-detailed-design/JACOCO-COVERAGE.md)。沿用本轮143普通＋436真实MySQL/HTTP全通过及默认profile另4项证据，失败/错误/跳过0；行95.70%、分支72.99%、指令93.00%，未排除低覆盖包，独立Java CLI子进程未采集边界保留。接入后源码/测试/pom摘要与报告证据一致，归档/链接/范围检查通过，不重复Java/MySQL；隔离库/账号0/0且测试实例已关闭。远程新增设计/部署与双方共享记录完整保留；根目录既有未跟踪TEAM-ASSIGNMENT.md未修改/提交。不改变成员验收状态、不部署；本段为实际推送后的文档补录。
 
 2026-10-26部署配置简化：用户要求部署文件不要过多使用环境变量。stack.yml移除全部shell参数插值，直接填写SWR后端d8bd624镜像、目录、端口、副本数、实例ID、key id及Config版本，删除swarm.env.example；应用已有environment配置保留固定值，密码/私钥继续走Secrets。操作指南改为直接编辑YAML并stack deploy，不再export/source。前端pending标签和MySQL镜像获取仍明确待准备，0副本不代表免除外部Secrets准备。节点3截图已确认后端镜像7f274485d01b构建成功且推送javaee-adgn，未据此代记服务启动或BE-34验收；本次无业务源码/入口脚本/镜像内容变更。

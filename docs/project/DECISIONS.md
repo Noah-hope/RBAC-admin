@@ -1,5 +1,7 @@
 # 项目决策记录
 
+2026-10-26数据库镜像阶段：实验SWR mysql:latest经用户实测为9.2.0，未用于项目持久化；新节点通过DaoCloud获取官方mysql:8.4.8并实测8.4.8/x86_64，用户确认已推送javaee-adgn/mysql:8.4.8。两份YAML固定使用该SWR地址。新增mysql.yml仅部署MySQL并复用完整stack.yml相同配置/服务名/网络/三Secrets，后续同名rbac Stack添加应用；首次无需等待前端证书和JWK齐备。新增一次性随机口令生成及Secrets/部署步骤，禁止覆盖已有口令。已准备目录不等于数据库已启动，BE-34云端运行/迁移/重启恢复继续开放；本次仅配置及静态核对。
+
 2026-10-26部署配置简化：用户要求部署文件不要过多使用环境变量。stack.yml移除全部shell参数插值，直接填写SWR后端d8bd624镜像、目录、端口、副本数、实例ID、key id及Config版本，删除swarm.env.example；应用已有environment配置保留固定值，密码/私钥继续走Secrets。操作指南改为直接编辑YAML并stack deploy，不再export/source。前端pending标签和MySQL镜像获取仍明确待准备，0副本不代表免除外部Secrets准备。节点3截图已确认后端镜像7f274485d01b构建成功且推送javaee-adgn，未据此代记服务启动或BE-34验收；本次无业务源码/入口脚本/镜像内容变更。
 
 2026-10-26节点3网络适配：用户在course-node3执行mvn clean verify并于14:33取得BUILD SUCCESS和可执行JAR；Docker Hub超时，docker images确认本地已有SWR oomall-javaee/openjdk:21-alpine。默认后端Dockerfile改为宿主机编译后复制JAR，不再在Docker内下载JDK/Maven或apt；非root UID10001及Secret入口保持，健康探针改wget，补兼容旧Docker构建器的根目录白名单.dockerignore。节点3封装镜像后上传SWR，节点2仅拉取运行，不重复编译。基础镜像内Java/wget及完整镜像构建待节点3实际验证；本机无运行中的Docker引擎，前端基础镜像网络另待确认，无业务/API/Schema变化，不代记云端验收。

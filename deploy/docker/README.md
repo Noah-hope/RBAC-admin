@@ -87,7 +87,7 @@ openssl rand -base64 32 | tr '+/' '-_' | tr -d '=\n' > /etc/rbac-deploy/root-pas
 
 上级目录须先由操作者创建并授予本人访问权限。不要覆盖已有部署的密码文件；更改文件或 Secret 不会自动修改数据库账号密码。
 
-另外准备以下文件：
+仅启动数据库时到此只需三个数据库密码 Secret；先按下文“数据库先启动”完成部署。准备后端和前端阶段，再准备以下文件：
 
 | 文件 | 内容 |
 | --- | --- |
@@ -119,7 +119,7 @@ Secret 已存在时先核对部署记录，不删除正在使用的 Secret。后
 | 配置位置 | 当前值或操作 |
 | --- | --- |
 | backend.image | 已上传的 SWR javaee-adgn/rbac-backend:d8bd624 |
-| mysql.image | mysql:8.4.8；部署前确认可拉取，若网络受限先准备 SWR 镜像并直接改此值 |
+| mysql.image | 已推送的 swr.cn-north-4.myhuaweicloud.com/javaee-adgn/mysql:8.4.8；不要使用实验镜像 latest（实测为9.2.0） |
 | frontend.image | 标记为 pending，尚未发布；发布后直接填真实标签再启用 |
 | mysql.volumes / backend.volumes | /srv/rbac-mysql/data 与 /srv/rbac-admin/imports |
 | backend.deploy.replicas / frontend.deploy.replicas | 初始均为 0；完成对应准备后分别改为 1 |
@@ -128,14 +128,14 @@ Secret 已存在时先核对部署记录，不删除正在使用的 Secret。后
 | frontend.ports | 节点2的80/443；冲突时调整实际端口及 Nginx HTTPS 跳转 |
 | configs 名称 | rbac_mysql_config_v1 / rbac_mysql_init_v1；内容修改后直接改为 v2 等新版本名 |
 
-YAML 的 environment 部分是应用已有的配置接口，其值已直接写在 YAML，不需要操作者另外在终端设置。Secrets 仍只通过文件读取，不能把口令或私钥写进 YAML。确认所有外部 Secrets 均已准备，包括0副本应用所引用的密钥/证书；不能以副本为0代替资源准备。
+YAML 的 environment 部分是应用已有的配置接口，其值已直接写在 YAML，不需要操作者另外在终端设置。Secrets 仍只通过文件读取，不能把口令或私钥写进 YAML。首次仅数据库使用 mysql.yml，只引用三个数据库 Secrets。后续使用完整 stack.yml 时，须准备它引用的全部外部 Secrets，包括0副本应用的密钥/证书。
 
-在管理节点登录 SWR 后，从部署文件所在目录执行：
+在管理节点登录 SWR 后，第一次仅部署数据库使用 mysql.yml：
 
 ```sh
 cd /opt/rbac-deploy/docker
-docker stack config -c stack.yml > /etc/rbac-deploy/rendered-stack.yml
-docker stack deploy --with-registry-auth -c stack.yml rbac
+docker stack config -c mysql.yml > /etc/rbac-deploy/rendered-mysql.yml
+docker stack deploy --with-registry-auth -c mysql.yml rbac
 docker stack services rbac
 docker service ps rbac_mysql --no-trunc
 docker service logs --tail 100 rbac_mysql
@@ -144,6 +144,39 @@ docker service logs --tail 100 rbac_mysql
 默认只运行 MySQL。确认数据库任务稳定、容器健康，并核对 `rbac_admin_server`、两类账号及授权；`mysqladmin ping` 仅证明服务响应，不能替代账号/结构检查。可在新节点进入对应 MySQL 容器使用 `mysql -uroot -p` 交互检查，不在命令中写口令。
 
 首次空目录初始化自动创建目标库和 app/migrator 账号；不创建业务表。已有数据目录不会重跑初始化脚本，也不会重设密码。初始化中途失败要检查已有对象与数据后处理，不自动清空重来。迁移账号仅拥有目标 schema 的完整权限；运行账号只有 SELECT/INSERT/UPDATE/DELETE。MySQL 配置开启 `log_bin_trust_function_creators` 支持项目触发器，不给应用全局管理权限。
+
+
+### 数据库先启动：当前操作
+
+用户已在 rbac-node 从 DaoCloud 拉取官方 mysql:8.4.8 并通过 mysqld --version 确认 8.4.8/x86_64，随后确认推送到 javaee-adgn/mysql:8.4.8。新节点数据/备份目录已创建，应用运行和数据库初始化尚未验收。
+
+mysql.yml 仅包含数据库，复用完整 stack.yml 中同名 mysql 服务、Config 名称、网络和三个数据库 Secrets；使用相同 Stack 名称 rbac，后续切换到完整 stack.yml 即可添加前后端。当前不要使用 --prune；数据库运行后也不要用这份数据库文件更新已部署的完整应用。数据库配置变更时两份 YAML 同步修改，并核对其 mysql 服务完全一致。
+
+管理节点先确认 rbac-node 已有 rbac_mysql=true 标签、rbac-internal overlay 已创建，新节点的 /srv/rbac-mysql/data 已准备。随后更新仓库并从 deploy/docker 目录操作。密码文件创建仅执行一次，以下子 shell 禁止覆盖已有文件，48字符随机十六进制满足初始化脚本的字符及长度要求：
+
+```sh
+install -d -m 0700 /etc/rbac-deploy
+(
+  set -euC
+  umask 077
+  openssl rand -hex 24 > /etc/rbac-deploy/root-password
+  openssl rand -hex 24 > /etc/rbac-deploy/app-password
+  openssl rand -hex 24 > /etc/rbac-deploy/migration-password
+)
+docker secret create rbac_root_password /etc/rbac-deploy/root-password
+docker secret create rbac_app_password /etc/rbac-deploy/app-password
+docker secret create rbac_migration_password /etc/rbac-deploy/migration-password
+```
+
+若文件或 Secret 已存在先核对并复用，不覆盖、不自动删除，也不要把口令内容贴到聊天。管理节点使用 SWR 控制台提供的登录命令认证，再执行：
+
+```sh
+docker stack deploy --with-registry-auth -c mysql.yml rbac
+docker service ps rbac_mysql --no-trunc
+docker service logs --tail 100 rbac_mysql
+```
+
+期望服务在 rbac-node 上运行，随后核对健康、目标库及账号。运行状态不是业务表已迁移，后端和前端仍未启用。mysql.yml 不发布3306，后续迁移/应用通过 overlay 访问。
 
 ## 4. 显式迁移并检查退出结果
 
@@ -270,3 +303,5 @@ docker images rbac-backend
 用户已通过节点3截图确认上述封装成功、Java21/wget可用，且镜像已推送华北四 javaee-adgn 组织。这里只记录镜像构建与推送，应用启动、数据库连接、Secrets挂载和Swarm业务运行仍待实际验证。本机Docker引擎未运行，不能将服务器截图当作本机容器测试。
 
 2026-10-26配置简化：按用户要求将镜像、目录、端口、key id、副本数及Config版本直接写入stack.yml，删除swarm.env.example。固定参数不依赖终端环境；保留应用必需的YAML environment配置和Secret入口。只修改部署配置，无需重新编译后端或重新上传已发布镜像。
+
+本次新增 mysql.yml 已通过无需环境文件的 Docker CLI 原生解析，并与 stack.yml 的 mysql/Config/网络/Secrets 做一致性核对；仅本地配置检查，没有连接云端或代记数据库启动成功。

@@ -8,8 +8,8 @@ x-logging: &logging
 
 services:
   mysql:
-    # Confirm this MySQL 8.4 image is reachable; replace here with its SWR mirror if needed.
-    image: mysql:8.4.8
+    # MySQL 8.4.8 pulled via DaoCloud, version checked and pushed to this SWR repository.
+    image: swr.cn-north-4.myhuaweicloud.com/javaee-adgn/mysql:8.4.8
     environment:
       MYSQL_DATABASE: rbac_admin_server
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/root-password

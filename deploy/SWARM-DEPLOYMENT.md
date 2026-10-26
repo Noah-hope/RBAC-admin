@@ -69,7 +69,7 @@ docker node inspect <节点2实际节点名> --format '{{json .Spec.Labels}}'
 | [后端 Dockerfile](../backend/Dockerfile) 与同目录 `Dockerfile.dockerignore` | Java 21 运行镜像、非 root 运行、排除凭据和临时文件 |
 | [前端 Dockerfile](../frontend/Dockerfile) 与同目录 `Dockerfile.dockerignore` | Node 构建前端，Nginx 提供静态文件 |
 | [容器 Nginx 配置](docker/nginx.conf) | SPA 路由、API 原路径代理、HTTPS 与上传限制 |
-| [Swarm Stack](docker/stack.yml) | 镜像、节点约束、网络、挂载、Secrets、资源和日志限制 |
+| [首次数据库](docker/mysql.yml) / [完整 Swarm Stack](docker/stack.yml) | 首次仅部署数据库，后续同名 Stack 添加应用；镜像、调度、挂载与Secrets均直接填写 |
 | [固定参数 Stack](docker/stack.yml)及[操作指南](docker/README.md) | 直接编辑 YAML 配置，再创建数据库、独立迁移、管理员初始化和启动应用 |
 
 当前后端默认监听 `127.0.0.1`，Stack 通过 `SERVER_ADDRESS=0.0.0.0` 覆盖以允许 Nginx 容器访问，不发布宿主机 8080。容器配置使用 framework 代理头处理，Nginx 覆盖转发头，仅允许本项目受控服务接入专用网络。
@@ -90,10 +90,10 @@ docker node inspect <节点2实际节点名> --format '{{json .Spec.Labels}}'
 6. 启动后端并检查容器内健康与日志，然后启动前端 Nginx、验证实际访问入口。不得依赖 Stack 的服务声明顺序保证 MySQL 和迁移已完成。
 7. 验证登录、首次改密、业务读写、文件导入与持久化；执行服务重建及隔离备份恢复检查后记录真实结果。
 
-完成网络、挂载、Secrets、镜像及 YAML 固定参数核对后，在管理节点的 `deploy/docker` 同步目录运行。无需 export 或加载 swarm.env。默认应用副本数为 0，先部署 MySQL，再按操作指南分别执行迁移、初始化和启用前后端：
+完成网络、挂载、Secrets、镜像及 YAML 固定参数核对后，在管理节点的 `deploy/docker` 同步目录运行。无需 export 或加载 swarm.env。首次用 mysql.yml 单独部署 MySQL（只需三个数据库 Secrets），后续用同名 rbac 的 stack.yml 添加应用，再按操作指南执行迁移、初始化和启用前后端：
 
 ```sh
-docker stack deploy --with-registry-auth -c stack.yml rbac
+docker stack deploy --with-registry-auth -c mysql.yml rbac
 docker stack services rbac
 docker stack ps rbac --no-trunc
 docker service logs --tail 100 rbac_backend
