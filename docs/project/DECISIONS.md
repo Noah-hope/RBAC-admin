@@ -1,5 +1,7 @@
 # 项目决策记录
 
+D-127（2026-10-26）：A确认复用既有Swarm，节点2以前后端单副本运行（rbac_app=true）、节点3构建上传SWR、新worker仅运行MySQL（rbac_mysql=true）。新增前后端Dockerfile、专用网络/持久目录/Secrets/资源与日志限制及分阶段Stack；旧systemd七模板与指南归档legacy-systemd并同步引用校验。入口5项及Stack解析通过，前端生产构建通过；上传前JDK21离线clean verify的143普通测试全过并重新生成JAR。本机Docker引擎未运行，未做镜像构建/容器与云端部署/全量MySQL；BE-34当前为A的部署准备，BE-35仍待服务器验收后收尾，不代记完成。用户授权向Gitee Noah_lzh/rbac-admin及GitHub Noah-hope/RBAC-admin同步部署分支codex/swarm-deployment，实际交付以远程完整SHA回查为准；不合并main，不包含其他在途设计文档或本机插件缓存。
+
 ## 设计资料维护分支（2026-10-24）
 
 | 编号 | 用户依据 | 执行范围 |

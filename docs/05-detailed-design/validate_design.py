@@ -920,9 +920,10 @@ def checks(report):
             require(sha(REPO/entry['source'])==entry['sourceSha256'],'迁移上游草案变化未核对')
     report['migrationPreparationFiles']=3
     report['migrationEngineExecutedByThisCheck']=False
+    require((REPO/'deploy/README.md').is_file(),'缺当前部署入口说明')
     for expected in ('README.md','server.env.example','migrate.env.example','bootstrap.env.example',
                      'rbac-admin.service','rbac-migrate.service','rbac-bootstrap.service','nginx.conf.example'):
-        require((REPO/'deploy'/expected).is_file(),'BE-32缺部署说明或模板 '+expected)
+        require((REPO/'deploy/legacy-systemd'/expected).is_file(),'BE-32缺归档部署说明或模板 '+expected)
     for directory in ('.github',):
         require(not (REPO/directory).exists(),'本设计阶段提前创建工程/远程配置目录 '+directory)
     require({p.name for p in (REPO/'tools').iterdir()}=={'demo_oa_result.py'},'BE-31工具目录包含未授权额外文件')

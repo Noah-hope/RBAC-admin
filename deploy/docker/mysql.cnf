@@ -1,0 +1,10 @@
+[mysqld]
+character-set-server=utf8mb4
+collation-server=utf8mb4_0900_bin
+default-time-zone=+00:00
+transaction-isolation=READ-COMMITTED
+innodb-buffer-pool-size=256M
+max-connections=40
+performance-schema=OFF
+# Required for the project's immutable triggers with binary logging enabled.
+log-bin-trust-function-creators=ON

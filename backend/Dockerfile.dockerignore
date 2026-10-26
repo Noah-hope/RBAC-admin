@@ -1,0 +1,11 @@
+**
+!backend/
+!backend/.mvn/
+!backend/.mvn/**
+!backend/mvnw
+!backend/pom.xml
+!backend/src/
+!backend/src/**
+!deploy/
+!deploy/docker/
+!deploy/docker/backend-entrypoint.sh

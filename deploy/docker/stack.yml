@@ -1,0 +1,144 @@
+version: '3.8'
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: '10m'
+    max-file: '3'
+
+services:
+  mysql:
+    image: ${RBAC_MYSQL_IMAGE:?Set RBAC_MYSQL_IMAGE}
+    environment:
+      MYSQL_DATABASE: rbac_admin_server
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/root-password
+    networks: [internal]
+    volumes:
+      - type: bind
+        source: ${RBAC_MYSQL_DATA:?Set RBAC_MYSQL_DATA}
+        target: /var/lib/mysql
+    configs:
+      - source: mysql-config
+        target: /etc/mysql/conf.d/rbac.cnf
+        mode: 0444
+      - source: mysql-init
+        target: /docker-entrypoint-initdb.d/10-rbac.sh
+        mode: 0444
+    secrets:
+      - source: root-password
+        target: root-password
+      - source: app-password
+        target: app-password
+      - source: migration-password
+        target: migration-password
+    healthcheck:
+      test: ['CMD-SHELL', 'mysqladmin ping --host=127.0.0.1 --silent']
+      interval: 15s
+      timeout: 5s
+      start_period: 120s
+      retries: 5
+    logging: *logging
+    stop_grace_period: 60s
+    deploy:
+      replicas: 1
+      placement:
+        constraints: ['node.labels.rbac_mysql == true']
+      resources:
+        limits: {memory: 1G, cpus: '1.5'}
+        reservations: {memory: 512M}
+      update_config: {parallelism: 1, order: stop-first, failure_action: pause}
+      restart_policy: {condition: on-failure, delay: 10s}
+
+  backend:
+    image: ${RBAC_BACKEND_IMAGE:?Set RBAC_BACKEND_IMAGE}
+    environment:
+      SPRING_PROFILES_ACTIVE: server
+      SERVER_ADDRESS: 0.0.0.0
+      SERVER_FORWARD_HEADERS_STRATEGY: framework
+      RBAC_INSTANCE_ID: '{{.Task.Name}}'
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/rbac_admin_server
+      SPRING_DATASOURCE_USERNAME: rbac_app
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: '5'
+      SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE: '1'
+      RBAC_IMPORT_DIRECTORY: /var/lib/rbac-admin/imports
+      RBAC_IDENTITY_ENABLED: 'true'
+      RBAC_ADMIN_KEY_ID: ${RBAC_ADMIN_KEY_ID:?Set RBAC_ADMIN_KEY_ID}
+      RBAC_ADMIN_JWK_SET: /run/secrets/admin-jwk
+      RBAC_BUSINESS_JWK_SET: /run/secrets/business-jwk
+      RBAC_OA_JWK_SET: /run/secrets/oa-jwk
+      RBAC_IDEMPOTENCY_ENABLED: 'true'
+      RBAC_IDEMPOTENCY_CURRENT_KEY_ID: ${RBAC_IDEMPOTENCY_CURRENT_KEY_ID:?Set RBAC_IDEMPOTENCY_CURRENT_KEY_ID}
+      JAVA_TOOL_OPTIONS: '-Xms128m -Xmx512m -XX:+ExitOnOutOfMemoryError'
+    networks: [internal]
+    volumes:
+      - type: bind
+        source: ${RBAC_IMPORTS:?Set RBAC_IMPORTS}
+        target: /var/lib/rbac-admin/imports
+    secrets:
+      - {source: app-password, target: app-password, uid: '10001', gid: '10001', mode: 0400}
+      - {source: idempotency-keys, target: idempotency-keys, uid: '10001', gid: '10001', mode: 0400}
+      - {source: admin-jwk, target: admin-jwk, uid: '10001', gid: '10001', mode: 0400}
+      - {source: business-jwk, target: business-jwk, uid: '10001', gid: '10001', mode: 0400}
+      - {source: oa-jwk, target: oa-jwk, uid: '10001', gid: '10001', mode: 0400}
+    healthcheck:
+      test: ['CMD', 'curl', '--fail', '--silent', '--max-time', '4', 'http://127.0.0.1:8080/actuator/health']
+      interval: 30s
+      timeout: 5s
+      start_period: 120s
+      retries: 3
+    logging: *logging
+    stop_grace_period: 45s
+    deploy:
+      replicas: ${RBAC_BACKEND_REPLICAS:-0}
+      placement:
+        constraints: ['node.labels.rbac_app == true']
+      resources:
+        limits: {memory: 1G, cpus: '1.5'}
+        reservations: {memory: 768M}
+      update_config: {parallelism: 1, order: stop-first, failure_action: pause}
+      rollback_config: {parallelism: 1, order: stop-first}
+      restart_policy: {condition: on-failure, delay: 10s}
+
+  frontend:
+    image: ${RBAC_FRONTEND_IMAGE:?Set RBAC_FRONTEND_IMAGE}
+    networks: [internal]
+    ports:
+      - {target: 80, published: '${RBAC_HTTP_PORT:-80}', protocol: tcp, mode: host}
+      - {target: 443, published: '${RBAC_HTTPS_PORT:-443}', protocol: tcp, mode: host}
+    secrets:
+      - {source: tls-cert, target: tls-cert, mode: 0444}
+      - {source: tls-key, target: tls-key, mode: 0400}
+    logging: *logging
+    deploy:
+      replicas: ${RBAC_FRONTEND_REPLICAS:-0}
+      placement:
+        constraints: ['node.labels.rbac_app == true']
+      resources:
+        limits: {memory: 128M, cpus: '0.5'}
+        reservations: {memory: 32M}
+      update_config: {parallelism: 1, order: stop-first, failure_action: pause}
+      restart_policy: {condition: on-failure, delay: 5s}
+
+networks:
+  internal:
+    external: true
+    name: rbac-internal
+
+configs:
+  mysql-config:
+    name: rbac_mysql_config_${RBAC_RELEASE:?Set RBAC_RELEASE}
+    file: ./mysql.cnf
+  mysql-init:
+    name: rbac_mysql_init_${RBAC_RELEASE:?Set RBAC_RELEASE}
+    file: ./mysql-init.sh
+
+secrets:
+  root-password: {external: true, name: rbac_root_password}
+  app-password: {external: true, name: rbac_app_password}
+  migration-password: {external: true, name: rbac_migration_password}
+  idempotency-keys: {external: true, name: rbac_idempotency_keys}
+  admin-jwk: {external: true, name: rbac_admin_jwk}
+  business-jwk: {external: true, name: rbac_business_jwk}
+  oa-jwk: {external: true, name: rbac_oa_jwk}
+  tls-cert: {external: true, name: rbac_tls_cert}
+  tls-key: {external: true, name: rbac_tls_key}

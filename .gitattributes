@@ -8,3 +8,7 @@
 *.pdf binary
 *.xlsx binary
 *.zip binary
+
+# Container/Linux entrypoints must retain LF even when edited on Windows.
+deploy/docker/*.sh text eol=lf
+backend/mvnw text eol=lf
