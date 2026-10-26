@@ -1,0 +1,20 @@
+# Common allowlist also works with node 3's legacy Docker builder.
+# Newer builders can use the more specific Dockerfile.dockerignore files.
+**
+!backend/
+!backend/target/
+!backend/target/backend-0.0.1-SNAPSHOT.jar
+!frontend/
+!frontend/package.json
+!frontend/package-lock.json
+!frontend/index.html
+!frontend/tsconfig.json
+!frontend/vite.config.ts
+!frontend/src/
+!frontend/src/**
+!frontend/public/
+!frontend/public/**
+!deploy/
+!deploy/docker/
+!deploy/docker/backend-entrypoint.sh
+!deploy/docker/nginx.conf

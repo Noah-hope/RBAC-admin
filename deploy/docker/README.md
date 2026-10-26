@@ -32,42 +32,48 @@ sudo install -d -o 10001 -g 10001 -m 0750 /srv/rbac-admin/imports
 
 ## 2. 在节点 3 测试、构建并上传
 
-使用 JDK 21、仓库 Maven Wrapper、Node >=22.12.0 和 Docker。先选定实际源码版本，检查工作区并记录完整 SHA。示例从仓库根目录运行：
+后端使用节点 3 已安装的 JDK 21 和 Maven 3.9.16 打包，Docker 仅封装已生成 JAR。前端构建另需 Node >=22.12.0。先选定实际源码版本，检查工作区并记录完整 SHA。
 
 部署文件已按用户要求纳入 `main`，保留来源分支 `codex/swarm-deployment`。节点 3 从实际已推送成功的仓库克隆 `main`：
 
 ```sh
-git clone --branch main https://github.com/Noah-hope/RBAC-admin.git
+git clone --branch main https://gitee.com/Noah_lzh/rbac-admin.git
 cd rbac-admin
 ```
 
-Gitee 地址为 `https://gitee.com/Noah_lzh/rbac-admin.git`，只有确认 `main` 推送成功后才改用该地址；此前 Gitee HTTPS 推送返回403、SSH无可用公钥，不能假定镜像仓库已同步。两个仓库的实际提交号以交付结果为准。节点 3 已由用户截图确认 Java 21.0.2、Maven 3.9.16、amd64；本项目仍优先用 Wrapper 固定的 Maven 3.9.11。版本查询使用 `java --version`、`javac --version`、`mvn --version`。
+Gitee 与 GitHub 的 main/0f2880f 已在用户完成认证后回查一致，后续提交仍分别核验。GitHub 地址为 `https://github.com/Noah-hope/RBAC-admin.git`。节点 3 已由用户截图确认 Java 21.0.2、Maven 3.9.16、amd64，且执行 `mvn clean verify` 于 2026-10-26 14:33 成功生成可执行 JAR。版本查询使用 `java --version`、`javac --version`、`mvn --version`；Wrapper 仍可选，但本次使用服务器已安装的 Maven，避免额外下载 Maven 发行包。
 
 ```sh
 git rev-parse HEAD
 git status --short
 cd backend
-./mvnw --batch-mode --no-transfer-progress clean verify
+mvn --batch-mode --no-transfer-progress clean verify
 cd ../frontend
 npm ci
 npm run build
 cd ..
 ```
 
-发布前沿用 [后端部署指南](../README.md)的隔离 MySQL 检查及前端相关测试要求。真实 MySQL 测试需要专属临时实例和显式隔离参数，不对新部署业务库运行。镜像构建中的普通测试不能替代完整发布验证。
+发布前沿用 [后端部署指南](../README.md)的隔离 MySQL 检查及前端相关测试要求。真实 MySQL 测试需要专属临时实例和显式隔离参数，不对新部署业务库运行。上述普通测试不能替代完整发布验证。
 
 替换区域、组织和版本，按 SWR 控制台生成的登录指令登录。版本应对应已提交源码，不能将未提交修改标记成旧提交。构建机器架构须匹配节点 2：
 
 ```sh
 export RBAC_BACKEND_IMAGE=swr.REGION.myhuaweicloud.com/ORGANIZATION/rbac-backend:COMMIT
 export RBAC_FRONTEND_IMAGE=swr.REGION.myhuaweicloud.com/ORGANIZATION/rbac-frontend:COMMIT
-docker build --pull -f backend/Dockerfile -t "$RBAC_BACKEND_IMAGE" .
+docker build --pull=false -f backend/Dockerfile -t "$RBAC_BACKEND_IMAGE" .
 docker build --pull -f frontend/Dockerfile -t "$RBAC_FRONTEND_IMAGE" .
 docker push "$RBAC_BACKEND_IMAGE"
 docker push "$RBAC_FRONTEND_IMAGE"
 ```
 
-两个 Dockerfile 均以仓库根目录为构建上下文，使用各自 `Dockerfile.dockerignore` 排除无关资料、环境文件和本地依赖。后端镜像构建执行普通 `clean verify`；前端执行 `npm ci` 和生产构建。首次构建需要访问镜像仓库及依赖源。基础镜像标签是起始默认值，验证后记录或固定 digest，前后端最终镜像优先按 digest 发布。
+两个 Dockerfile 均以仓库根目录为构建上下文。根目录 `.dockerignore` 兼容节点 3 的旧版构建器，另外保留各自的 `Dockerfile.dockerignore`，仅允许必要产物/前端构建输入进入上下文，排除凭据和临时文件。
+
+后端 Dockerfile 不再运行 Maven、不再访问 Docker Hub 或 apt；直接复制 `backend/target/backend-0.0.1-SNAPSHOT.jar` 和启动脚本，使用节点 3 已有的 `swr.cn-north-4.myhuaweicloud.com/oomall-javaee/openjdk:21-alpine`。构建时检查 java 和 wget 可用，健康检查使用 wget。若需换成其他可访问且含 Java21、POSIX shell、wget 的镜像，使用 `--build-arg JAVA_RUNTIME_IMAGE=实际镜像`。不添加 `--pull`，保持使用已确认的本地基础镜像。基础镜像验证后记录/固定 digest；镜像封装并不替代 Maven 测试。
+
+JAR 是 Maven 产物，SWR 中保存的是 Docker 镜像。节点 3 只需把 JAR 封装进 Java 基础镜像并上传一次，节点 2 仅拉取运行。已有 `productdemooap` 是实验应用镜像，不等于本项目镜像。JAR 若已对应相同业务源码并构建成功，仅更新部署文件不必重新编译；业务源码改变后必须重新打包。
+
+前端 Dockerfile 仍需要可访问的 Node/Nginx 基础镜像并在构建中执行 npm ci/build；其网络适配尚待确认，不能用后端 Java 镜像代替。上面前端构建命令应在解决基础镜像访问后执行。
 
 ## 3. 在管理节点准备 Secrets 和发布变量
 
@@ -240,3 +246,19 @@ Git Bash 在 Windows 沙箱内受命名对象权限限制，入口测试在沙�
 当前 Windows 有 Docker CLI，但 Docker Desktop Linux 引擎未运行，因此尚未执行镜像构建、容器 Nginx 检查、真实 MySQL 初始化、Secrets 挂载或 Swarm 实际部署。本轮未重跑隔离 MySQL/HTTP 全量检查，未推送镜像；源码 Git 交付以实际分支提交及远程回查为准，这些本地检查不代表服务器验收。
 
 参考：[Stack 发布](https://docs.docker.com/engine/swarm/stack-deploy/)、[Swarm 服务与挂载](https://docs.docker.com/engine/swarm/services/)、[MySQL 官方镜像初始化](https://hub.docker.com/_/mysql/)。
+
+## 节点 3 现成 JAR 的后端镜像封装
+
+用户已在节点 3 生成 JAR，更新 main 的部署文件后从仓库根目录执行（先确认 git status 没有需要保留的源码修改）：
+
+```sh
+cd /root/rbac-admin
+git pull --ff-only origin main
+ls -lh backend/target/backend-0.0.1-SNAPSHOT.jar
+docker run --rm --entrypoint /bin/sh swr.cn-north-4.myhuaweicloud.com/oomall-javaee/openjdk:21-alpine -c 'java -version && command -v wget'
+RBAC_IMAGE_TAG=$(git rev-parse --short HEAD)
+docker build --pull=false -f backend/Dockerfile -t "rbac-backend:$RBAC_IMAGE_TAG" .
+docker images rbac-backend
+```
+
+以上是服务器待执行步骤；本机 Docker 引擎未运行，无法代验该 SWR 基础镜像内的 Java/wget、完整镜像构建或容器运行。封装成功后再按实际 SWR 组织对最终 rbac-backend 镜像 tag/push，应用节点不重新编译。

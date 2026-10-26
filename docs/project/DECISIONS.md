@@ -1,5 +1,7 @@
 # 项目决策记录
 
+2026-10-26节点3网络适配：用户在course-node3执行mvn clean verify并于14:33取得BUILD SUCCESS和可执行JAR；Docker Hub超时，docker images确认本地已有SWR oomall-javaee/openjdk:21-alpine。默认后端Dockerfile改为宿主机编译后复制JAR，不再在Docker内下载JDK/Maven或apt；非root UID10001及Secret入口保持，健康探针改wget，补兼容旧Docker构建器的根目录白名单.dockerignore。节点3封装镜像后上传SWR，节点2仅拉取运行，不重复编译。基础镜像内Java/wget及完整镜像构建待节点3实际验证；本机无运行中的Docker引擎，前端基础镜像网络另待确认，无业务/API/Schema变化，不代记云端验收。
+
 2026-10-26：用户明确要求部署分支合并main并更新远程。基于最新main/e557a70整合codex/swarm-deployment/5796220，保留C已确认验收与分支既有设计资料；三个共享记录仅有新增段落冲突，双方事实完整保留。部署实现沿用143普通测试与入口5项及Stack解析证据，合并时复核实现摘要/配置和链接；未执行云端部署或代记BE-34验收。GitHub与Gitee分别回查交付结果；此前Gitee写入403，成功前不记已同步。
 
 ## 2026-10-26：C验收记录主线交付

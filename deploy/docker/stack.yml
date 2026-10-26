@@ -81,7 +81,7 @@ services:
       - {source: business-jwk, target: business-jwk, uid: '10001', gid: '10001', mode: 0400}
       - {source: oa-jwk, target: oa-jwk, uid: '10001', gid: '10001', mode: 0400}
     healthcheck:
-      test: ['CMD', 'curl', '--fail', '--silent', '--max-time', '4', 'http://127.0.0.1:8080/actuator/health']
+      test: ['CMD', 'wget', '-q', '-T', '4', '-O', '/dev/null', 'http://127.0.0.1:8080/actuator/health']
       interval: 30s
       timeout: 5s
       start_period: 120s

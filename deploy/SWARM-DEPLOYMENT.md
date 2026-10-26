@@ -76,7 +76,7 @@ docker node inspect <节点2实际节点名> --format '{{json .Spec.Labels}}'
 
 旧宿主机代理示例已归档到 `deploy/legacy-systemd/nginx.conf.example`，使用 `127.0.0.1:8080` 且根路径返回 404。当前容器使用 `deploy/docker/nginx.conf`，通过后端服务名代理并提供前端静态页面。
 
-后端使用 Java 21、仓库 Maven Wrapper；前端要求 Node >=22.12.0，依赖通过锁文件安装。构建机器和目标节点的 CPU 架构须匹配。镜像应使用明确版本或源码提交号，并记录实际 digest，不依赖可覆盖的 `latest`。
+后端使用节点 3 已安装的 Java 21 和 Maven 执行 clean verify，默认 Dockerfile 仅复制已生成 JAR，并复用本地 SWR 的 openjdk:21-alpine 基础镜像；不再使用容器下载构建 JDK/Maven或 apt。前端要求 Node >=22.12.0，依赖通过锁文件安装，其 Node/Nginx 基础镜像网络访问另行核对。构建机器和目标节点的 CPU 架构须匹配。镜像应使用明确版本或源码提交号，并记录实际 digest，不依赖可覆盖的 `latest`。
 
 先执行项目规定的后端普通与隔离 MySQL 检查、前端构建与相关检查，再构建和推送镜像。不得照抄实验的跳过测试命令作为发布验证。`docker stack deploy` 不负责构建镜像，Stack 中引用预先推送到 SWR 的镜像。
 
