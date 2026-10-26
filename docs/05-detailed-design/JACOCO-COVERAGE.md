@@ -12,6 +12,8 @@
 
 交付集成核对：已接入远程主线 `5b05c7f69731ee32ad606fba310fefe9c859d00d` 的设计图与部署配置；被测正式源码、测试源码及本轮 `pom.xml` 的 SHA-256 与归档 `results.json` 一致，沿用上述真实运行结果。本次合并仅补摘要、归档完整性和入口链接检查，未重新运行 Java/MySQL 测试。
 
+交付结果：来源提交 [`a5aa7cb`](https://github.com/Noah-hope/RBAC-admin/commit/a5aa7cba1871e2890db06b51f3ddd3277a8d526f) 已保留历史合入主线 [`fb0134e`](https://github.com/Noah-hope/RBAC-admin/commit/fb0134ec0a7813bf3e33a94d225a51526efc72ed)，合并树等于核验来源；主线与任务分支原子推送成功，两个远程完整 SHA 已回查一致。团队可从仓库首页查看摘要并下载归档；本段为交付后的文档补录，归档及被测代码未改变。
+
 ## 覆盖率
 
 | 指标 | 已覆盖 / 总数 | 覆盖率 |
