@@ -14,6 +14,41 @@ import static org.assertj.core.api.Assertions.*;
 
 class ImportFileStoreTest {
     @TempDir Path root;
+    @Test void oversizedStreamIsRejectedAndItsPartialStageIsRemoved()throws Exception {
+        var store=new ImportFileStore(root);
+        byte[] oversized=new byte[com.adgn.backend.imports.ImportFileParser.MAX_FILE+1];
+        assertThatThrownBy(()->store.stage(new ByteArrayInputStream(oversized)))
+                .isInstanceOfSatisfying(IdentityFailure.class,e->assertThat(e.status()).isEqualTo(413));
+        try(var files=Files.list(root)){assertThat(files.count()).isZero();}
+    }
+    @Test void stageBelongsToItsStoreAndTamperingPreventsPublication()throws Exception {
+        var store=new ImportFileStore(root);var other=new ImportFileStore(root.resolve("other"));
+        assertThatThrownBy(()->store.publish(null)).isInstanceOf(IllegalStateException.class);
+        try(var stage=store.stage(new ByteArrayInputStream("a,b".getBytes(StandardCharsets.UTF_8)))){
+            assertThatThrownBy(()->other.publish(stage)).isInstanceOf(IllegalStateException.class);
+            Files.writeString(stage.path(),"changed size");
+            assertThatThrownBy(()->store.publish(stage)).isInstanceOfSatisfying(PersistenceFailure.class,
+                    e->assertThat(e.kind()).isEqualTo(PersistenceFailure.Kind.DATA_INTEGRITY_ERROR));
+        }
+        try(var files=Files.list(root)){assertThat(files.filter(p->p.toString().endsWith(".blob")).count()).isZero();}
+    }
+    @Test void metadataBoundsAndNonRegularBlobCannotBypassIntegrityChecks()throws Exception {
+        var store=new ImportFileStore(root);String reference="123e4567-e89b-12d3-a456-426614174000.blob";
+        for(long size:new long[]{0,com.adgn.backend.imports.ImportFileParser.MAX_FILE+1L})
+            assertThatThrownBy(()->store.verifiedPath(reference,size,"a".repeat(64))).isInstanceOf(PersistenceFailure.class);
+        for(String hash:new String[]{null,"bad","A".repeat(64)})
+            assertThatThrownBy(()->store.verifiedPath(reference,1,hash)).isInstanceOf(PersistenceFailure.class);
+        assertThatThrownBy(()->store.verifiedPath(null,1,"a".repeat(64))).isInstanceOf(PersistenceFailure.class);
+        Files.createDirectory(root.resolve(reference));
+        assertThatThrownBy(()->store.verifiedPath(reference,1,"a".repeat(64)))
+                .isInstanceOfSatisfying(PersistenceFailure.class,e->assertThat(e.kind()).isEqualTo(PersistenceFailure.Kind.DATA_INTEGRITY_ERROR));
+    }
+    @Test void anExistingRegularFileCannotBecomeTheStorageRoot()throws Exception {
+        Path file=root.resolve("file");Files.writeString(file,"existing");
+        assertThatThrownBy(()->new ImportFileStore(file)).isInstanceOfSatisfying(PersistenceFailure.class,
+                e->assertThat(e.kind()).isEqualTo(PersistenceFailure.Kind.DEPENDENCY_UNAVAILABLE));
+        assertThat(Files.readString(file)).isEqualTo("existing");
+    }
     @Test void durableBytesSurviveReopeningAndNoClientFileNameBecomesAPath()throws Exception{
         var store=new ImportFileStore(root);byte[] bytes="key,name\n007,Person\n".getBytes(StandardCharsets.UTF_8);
         ImportFileStore.Stored stored;

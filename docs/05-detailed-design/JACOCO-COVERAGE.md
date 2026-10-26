@@ -1,68 +1,77 @@
 # 后端 JaCoCo 测试报告
 
-## 本次结果
+## 最新结果：采集与边界测试改进
 
-2026-10-26 11:40:46（Asia/Shanghai）完整运行成功，Maven 耗时 2 分 58 秒。基线提交 `e557a70be1901558f08b9a3b69a00c1e6f1ff6b1`，另含本轮 `pom.xml` 覆盖率配置；正式业务源码与测试源码均未修改。
+2026-10-26 22:10:49（Asia/Shanghai）完整运行通过，耗时 **4分45秒**。基于 `c22e922ded55c4616cc6c3ed86598304b4967b67`，新增子进程采集、23项测试，并最小修复 SafeResult 接受空白 JSON 的问题。首次运行报告与原归档保留，供前后对照。
 
-| 测试类型 | 测试组 | 测试数 | 失败 | 错误 | 跳过 |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| 普通测试（Surefire） | 22 | 143 | 0 | 0 | 0 |
-| 真实 MySQL/HTTP（Failsafe） | 27 | 436 | 0 | 0 | 0 |
-| 合计 | 49 | 579 | 0 | 0 | 0 |
+| 测试类型 | 测试组 | 本次数量 | 首次数量 | 失败 / 错误 / 跳过 |
+| --- | ---: | ---: | ---: | --- |
+| 普通测试（Surefire） | 24 | 163 | 143 | 0 / 0 / 0 |
+| 真实 MySQL/HTTP（Failsafe） | 27 | 439 | 436 | 0 / 0 / 0 |
+| 合计 | 51 | **602** | 579 | **0 / 0 / 0** |
 
-交付集成核对：已接入远程主线 `5b05c7f69731ee32ad606fba310fefe9c859d00d` 的设计图与部署配置；被测正式源码、测试源码及本轮 `pom.xml` 的 SHA-256 与归档 `results.json` 一致，沿用上述真实运行结果。本次合并仅补摘要、归档完整性和入口链接检查，未重新运行 Java/MySQL 测试。
+未启用 coverage 的默认 `clean verify` 也完整通过，163项普通测试无失败/错误/跳过，不依赖子进程 agent；该次与上述 coverage 运行是两次验证，不把重复执行计为新增测试。
 
-交付结果：来源提交 [`a5aa7cb`](https://github.com/Noah-hope/RBAC-admin/commit/a5aa7cba1871e2890db06b51f3ddd3277a8d526f) 已保留历史合入主线 [`fb0134e`](https://github.com/Noah-hope/RBAC-admin/commit/fb0134ec0a7813bf3e33a94d225a51526efc72ed)，合并树等于核验来源；主线与任务分支原子推送成功，两个远程完整 SHA 已回查一致。团队可从仓库首页查看摘要并下载归档；本段为交付后的文档补录，归档及被测代码未改变。
+## 覆盖率对比
 
-## 覆盖率
+| 指标 | 首次运行 | 改进后 | 改进后已覆盖 / 总数 |
+| --- | ---: | ---: | ---: |
+| 行 | 95.70% | **98.50%** | 4075 / 4137 |
+| 分支 | 72.99% | **76.60%** | 4440 / 5796 |
+| 指令 | 93.00% | **95.38%** | 56227 / 58950 |
+| 方法 | 97.09% | **98.48%** | 1625 / 1650 |
+| 类 | 97.67% | **99.71%** | 343 / 344 |
 
-| 指标 | 已覆盖 / 总数 | 覆盖率 |
-| --- | ---: | ---: |
-| 行 | 3959 / 4137 | 95.70% |
-| 分支 | 4229 / 5794 | 72.99% |
-| 指令 | 54821 / 58947 | 93.00% |
-| 方法 | 1602 / 1650 | 97.09% |
-| 类 | 336 / 344 | 97.67% |
-| 复杂度 | 3127 / 4567 | 68.47% |
+全部344个正式编译类保持在统计范围内，没有新增包或类排除规则。测试夹具不属于正式源码报告。数值读取自 XML 顶层 counter，百分比四舍五入保留两位；HTML 的整数展示与这里的小数可能不同。修复增加了空 JSON 文档判断，因此指令/分支总数略有变化，不通过删除代码提高覆盖率。
 
-统计来自 `backend/target/site/jacoco/jacoco.xml` 的顶层 counter，百分比四舍五入保留两位。HTML 默认表格展示指令/分支的整数百分比，其显示值可能与这里的四舍五入值不同；行覆盖率须使用 LINE counter。报告覆盖全部 344 个正式编译类，没有人为排除包或类；测试夹具不属于正式源码统计范围。
+提升同时来自子进程采集修复和新增测试，不把原本已经执行但未采集的代码说成新增业务测试。覆盖率仍未达到100%，不据此声称所有路径已验证或系统没有缺陷。
 
-当前课程截图要求运行后端 JaCoCo 并检查覆盖率，未规定最低比例。本轮未增设达标阈值，不以测试通过或覆盖率较高代记负责人验收、真实外部 OA 接入或服务器部署。
+## 团队查看方式
 
-## 团队共享与报告查看
+仓库可直接阅读本说明；完整明细下载[最新完整 HTML 报告](reports/JaCoCo-2026-10-26-improved.zip)，解压后用浏览器打开 `report/index.html`，不要只复制一个 HTML 文件。归档 SHA-256 见[校验文件](reports/JaCoCo-2026-10-26-improved.zip.sha256)。
 
-团队统一从项目首页的 JaCoCo 链接进入本说明，在线查看本次测试数量、覆盖率、采集限制与复跑方法。完整明细使用[HTML 报告归档](reports/JaCoCo-2026-10-26.zip)，下载解压后打开 `report/index.html`，无需单独传给某位成员。归档的 SHA-256 见[校验文件](reports/JaCoCo-2026-10-26.zip.sha256)。
+归档包括完整 HTML/XML/CSV、结构化测试计数、被测源码与配置摘要、父进程/48个子进程及合并后的原始 exec，以及包内 SHA-256 清单。报告是本次运行快照，后续代码变化需要重新运行并归档。
 
-仓库直接展示本 Markdown；HTML 明细通过归档在本机浏览，没有另建公开报告站点。归档固定对应本次运行，不是自动更新的实时覆盖率。
+首次记录：579项通过，行95.70%、分支72.99%、指令93.00%，耗时2分58秒。原[首次完整归档](reports/JaCoCo-2026-10-26.zip)及其[校验文件](reports/JaCoCo-2026-10-26.zip.sha256)保持原样。首次来源 `a5aa7cb` 已合入主线 `fb0134e`，该次交付补录为 `c22e922`；不能将本次602项结果倒记到首次交付。
 
-- HTML 入口：`backend/target/site/jacoco/index.html`，可点击包、类和源码查看红/黄/绿标记。
-- XML/CSV：同目录 `jacoco.xml`、`jacoco.csv`。
-- 原始采集数据：`backend/target/jacoco.exec`。
-- 团队共享归档：`docs/05-detailed-design/reports/JaCoCo-2026-10-26.zip`；包含完整 HTML、XML/CSV、生成时的本说明、结构化测试计数、配置与源码摘要和原始 exec。本机 `.tmp` 保留同内容副本。
-- 本机完整构建日志：`backend/.tmp/jacoco-full-verify.log`；每组详细结果位于 `target/surefire-reports` 与 `target/failsafe-reports`。
+## 本轮改进内容
 
-`target` 与 `.tmp` 均被 Git 忽略；本次选择将上述固定归档纳入版本管理，避免只有运行者能看到完整报告。单个 HTML 文件缺少样式、图片与包/源码明细。`clean` 将删除 `target`，但不会删除 `docs` 中的共享归档。
+1. **补全采集。**测试专用 JavaSubprocess 工厂从测试 JVM 获取当前 JaCoCo agent，每个 Java 子进程写独立 exec。现有凭据环境清理和 Mockito agent 均保留，不把 Mockito 或凭据通过新工厂转交给子进程。Maven 在 post-integration-test 合并父子进程记录，verify 生成报告。
+2. **管理员初始化。**新增系统库、错误登录名、空账号配置、嵌入 URL 凭据、URL 片段及端口边界检查，断言退出码、无账号/审计写入和输出脱敏。bootstrap 包原为0%行覆盖，本次为75/79行（94.94%）。
+3. **演示命令。**新增非法配置不写服务/审计、BUSINESS服务与系统绑定、真实 JWT 验证、停用后禁止再次签发及不落盘检查。demo 包行覆盖从16.28%升为42/43行（97.67%）；仍是显式演示能力，不表示真实外部 OA 已接通。
+4. **输入和文件边界。**新增 Unicode 长度、版本安全整数、分页溢出、完整 UUID、布尔输入、搜索转义、上传大小/类型、损坏 XLSX、关系与单元格结构、文件元数据和发布完整性检查。
+5. **幂等响应与摘要。**新增状态/Location边界、嵌套敏感字段别名、错误 JSON、请求元数据、输入/返回数组防御性复制、密钥配置与独立 HMAC 测试向量断言。
+6. **实际缺陷修复。**空字符串或空白串经 JSON 解析成为 MissingNode，原校验未拒绝。先以真实失败测试复现，再增加 isMissingNode 拒绝；合法 JSON 字面量 null 与204空响应保持原设计。
 
-## 统计边界
+实现顺序、RED/GREEN和测试有效性证据见[改进记录](JACOCO-IMPROVEMENT.md)。除上述一处输入校验外，未更改业务授权、API契约或数据库迁移。
 
-JaCoCo agent 同时挂载于 Surefire、Failsafe 的测试 JVM，追加写入一个 exec 文件，在 verify 阶段汇总。原 Mockito agent 和 `-Xshare:off` 保留；未启用 coverage 时仍按原方式运行测试，已额外运行默认 profile 的 4 项 `IdempotencyHttpTest` 验证通过。
+## 验证与剩余边界
 
-独立子进程不继承测试 JVM agent。管理员初始化的 8 项打包命令测试及演示 CLI 测试实际通过，但其独立 Java 子进程内执行的代码未计入本次覆盖率，因此 bootstrap 包显示 0%，demo 包行覆盖率为 16.28%。这是本次采集范围的限制，不能理解为这些测试未运行；本轮保留全部源码作为分母，没有删除低覆盖包提高比例。
+- 子进程采集测试先失败（应有1个记录、实际0），接入后通过；本次48个子进程文件均非空，已实际合并，没有 class/execution mismatch 警告。
+- 空白 JSON 回归先真实失败（1失败、0错误），最小修复后通过。新增的既有行为回归用例不冒充新功能的首次 RED。
+- 临时移除分页溢出保护、请求正文防御性复制时，各有1项新增断言失败、0错误；两处临时变异均已恢复，未进入交付实现。
+- 真实数据库使用本轮新建回环非3306的MySQL8.4.8，测试核对实例身份后再创建随机库/账号。完成后剩余随机库/账号0/0、专属实例正常退出0；未操作已有业务数据库。
+- 日志中的预期错误响应、配置拒绝及故障注入不等于最终 JUnit 失败。以51份 JUnit XML和 Maven BUILD SUCCESS确认本次结果。
+- 尚有62行、1356个分支未覆盖，包含普通 Web main入口、依赖失败处理和防御性状态判断；未通过调用私有构造器、制造无意义断言或排除低覆盖类追求满分。剩余分支应结合运行条件逐项分析，不能只按数字推断业务遗漏。
+- 覆盖率不替代负责人确认、目标服务器部署与真实外部服务联调。
 
-测试使用本轮新建的回环非 3306 MySQL8.4.8 实例，执行前由测试核对 datadir、版本和 binlog 关闭。结束核对剩余随机 schema/账号为 0/0，实例正常退出（退出码 0）。未连接或修改已有业务数据库。临时实例数据目录保留在 `.tmp` 以便审计。
+## 复跑与原始文件
 
-日志中的预期错误响应与故障注入不等于 JUnit 失败；最终以 49 份 JUnit XML 的失败/错误/跳过均为 0 及 Maven `BUILD SUCCESS` 判定本次测试结果。
+使用JDK21及Maven Wrapper，先准备专属临时MySQL8.4，数据目录必须位于 `backend/.tmp`，端口必须为非3306的回环端口，关闭binlog；仅在本次终端设置 `RBAC_ISOLATED_MYSQL_PORT` 和 `RBAC_ISOLATED_MYSQL_DATADIR`。严禁指向现有开发库或业务库。
 
-## 复跑方式
-
-使用 JDK21、Maven Wrapper，先准备专属临时 MySQL8.4，数据目录必须位于 `backend/.tmp`，端口必须是非 3306 的回环端口，binlog 关闭；仅在本次终端设置 `RBAC_ISOLATED_MYSQL_PORT` 和 `RBAC_ISOLATED_MYSQL_DATADIR`。测试会使用临时 root 空口令创建/清理随机库和账号，严禁指向已有开发库或业务库。
-
-在 `backend` 目录执行：
+在 backend 目录执行：
 
 ```sh
 ./mvnw clean verify -Pcoverage,mysql-check
 ```
 
-Windows 使用 `mvnw.cmd`。仅运行普通测试可用 `./mvnw clean verify -Pcoverage`，但应明确标注未包含真实 MySQL/HTTP 测试。首次执行需要下载 JaCoCo 及 Maven 依赖。
+Windows使用 `mvnw.cmd`。只运行普通测试可用 `./mvnw clean verify -Pcoverage`，该报告应明确标记未包含真实MySQL/HTTP检查。默认无采集验证为 `./mvnw clean verify`。
 
-配置与版本核实来源：[JaCoCo 官方 Maven 使用说明](https://www.jacoco.org/jacoco/trunk/doc/maven.html)、[prepare-agent 参数及 argLine 衔接](https://www.jacoco.org/jacoco/trunk/doc/prepare-agent-mojo.html)、[0.8.15 正式发布记录](https://www.jacoco.org/jacoco/trunk/doc/changes.html)。
+- 最终HTML/XML/CSV：`backend/target/site/jacoco/`。
+- 父进程记录：`backend/target/jacoco.exec`；子进程记录：`backend/target/jacoco-subprocess/*.exec`；合并记录：`backend/target/jacoco-merged.exec`。
+- 完整日志：`backend/.tmp/jacoco-improved-full-verify.log`；默认运行日志：`backend/.tmp/jacoco-improved-default-verify.log`。
+- JUnit XML：`backend/target/surefire-reports/`、`backend/target/failsafe-reports/`。
+
+`clean`会删除target，固定归档保存在docs，不受影响。为避免旧采集记录混入，正式覆盖率报告使用clean完整运行。
+
+配置核实来源：[JaCoCo agent](https://www.jacoco.org/jacoco/trunk/doc/agent.html)、[Maven参数衔接](https://www.jacoco.org/jacoco/trunk/doc/prepare-agent-mojo.html)、[exec合并](https://www.jacoco.org/jacoco/trunk/doc/merge-mojo.html)。

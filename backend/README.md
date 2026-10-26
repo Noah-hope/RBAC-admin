@@ -2,7 +2,7 @@
 
 ## JaCoCo 覆盖率报告
 
-团队共享结果见[2026-10-26 覆盖率报告](../docs/05-detailed-design/JACOCO-COVERAGE.md)及[完整 HTML 归档](../docs/05-detailed-design/reports/JaCoCo-2026-10-26.zip)。归档作为本次运行证据纳入版本管理；后续构建仍输出至忽略的 `target` 目录。
+团队共享结果见[2026-10-26 覆盖率报告](../docs/05-detailed-design/JACOCO-COVERAGE.md)及[最新完整 HTML 归档](../docs/05-detailed-design/reports/JaCoCo-2026-10-26-improved.zip)。归档作为本次运行证据纳入版本管理；后续构建仍输出至忽略的 `target` 目录。
 
 已提供可选 `coverage` profile，保留 Surefire/Failsafe 的 Mockito agent，汇总普通测试与真实 MySQL/HTTP 测试覆盖率，不排除正式源码。配置依据见 [JaCoCo 官方 Maven 指南](https://www.jacoco.org/jacoco/trunk/doc/maven.html)及 [agent 参数衔接说明](https://www.jacoco.org/jacoco/trunk/doc/prepare-agent-mojo.html)。
 
@@ -12,7 +12,7 @@
 ./mvnw clean verify -Pcoverage,mysql-check
 ```
 
-Windows 将 `./mvnw` 替换为 `mvnw.cmd`，均使用 JDK21。HTML 报告位于 `target/site/jacoco/index.html`，另有同目录的 XML/CSV 及 `target/jacoco.exec`。查看明细需保留整个 HTML 目录；单独打开或复制 `index.html` 会丢失样式和明细。`clean` 会删除旧报告，重要结果须先归档。仅普通测试的报告不可称为完整后端测试覆盖率；JaCoCo 不代表业务验收或服务器部署结果。
+Windows 将 `./mvnw` 替换为 `mvnw.cmd`，均使用 JDK21。HTML 报告位于 `target/site/jacoco/index.html`，另有同目录的 XML/CSV；父进程 `target/jacoco.exec` 与子进程 `target/jacoco-subprocess/*.exec` 汇总为 `target/jacoco-merged.exec` 后生成报告。查看明细需保留整个 HTML 目录；单独打开或复制 `index.html` 会丢失样式和明细。`clean` 会删除旧报告，重要结果须先归档。仅普通测试的报告不可称为完整后端测试覆盖率；JaCoCo 不代表业务验收或服务器部署结果。
 
 BE-33整体自动化测试已在任务分支完成：143普通＋436真实MySQL/HTTP及18辅助检查通过，67入站操作均有真实成功响应契约证据；正式角色元数据修改路径为`PUT /api/v1/admin/roles/{roleId}/metadata`。本人确认、主线交付和BE-34/35服务器/发布分别待办，详见[整体测试报告](../docs/05-detailed-design/BE-33-SYSTEM-ACCEPTANCE.md)。
 

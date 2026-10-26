@@ -16,6 +16,47 @@ class ImportFileParserTest {
     private final ImportFileParser parser=new ImportFileParser();
     private Path csv(String value)throws Exception{Path p=directory.resolve(UUID.randomUUID()+".csv");Files.writeString(p,value,StandardCharsets.UTF_8);return p;}
     private void rejected(Path p,String name,String mime,int status){assertThatThrownBy(()->parser.inspect(p,name,mime)).isInstanceOfSatisfying(IdentityFailure.class,e->assertThat(e.status()).isEqualTo(status));}
+    @Test void namesAndMimeBoundariesRejectAmbiguousUploads()throws Exception {
+        for(String name:new String[]{null,"", " ",".csv","data","a\\b.csv","a\n.csv","a".repeat(201)+".csv"})
+            assertThatThrownBy(()->ImportFileParser.extension(name)).isInstanceOf(IdentityFailure.class);
+        Path file=csv("key,name\na,A\n");
+        rejected(file,"data.csv",null,422);
+        assertThat(parser.inspect(file,"DATA.CSV"," Text/CSV; charset=UTF-8 ").sheetNames()).containsExactly("CSV");
+    }
+    @Test void originalSizeAndMissingStorageFailBeforeAnyParsing()throws Exception {
+        Path empty=directory.resolve("empty.csv");Files.createFile(empty);rejected(empty,"data.csv","text/csv",422);
+        Path huge=directory.resolve("huge.csv");
+        try(var file=new RandomAccessFile(huge.toFile(),"rw")){file.setLength(ImportFileParser.MAX_FILE+1L);}
+        rejected(huge,"data.csv","text/csv",413);
+        assertThatThrownBy(()->parser.inspect(directory.resolve("missing.csv"),"data.csv","text/csv"))
+                .isInstanceOfSatisfying(com.adgn.backend.core.transaction.PersistenceFailure.class,
+                        e->assertThat(e.kind()).isEqualTo(com.adgn.backend.core.transaction.PersistenceFailure.Kind.DEPENDENCY_UNAVAILABLE));
+    }
+    @Test void worksheetRejectsOutOfOrderRowsDuplicateColumnsAndInvalidCellTypes()throws Exception {
+        for(String rows:List.of(
+                "<row r=\"2\"/><row r=\"1\"/>",
+                "<row r=\"1048577\"/>",
+                "<row r=\"1\"><c r=\"A1\"/><c r=\"A1\"/></row>",
+                "<row r=\"1\"><c r=\"A2\"/></row>",
+                "<row r=\"1\"><c r=\"XFE1\"/></row>",
+                "<row r=\"1\"><c r=\"1\"/></row>",
+                "<row r=\"1\"><c r=\"A1\" t=\"b\"><v>2</v></c></row>",
+                "<row r=\"1\"><c r=\"A1\" t=\"unexpected\"><v>x</v></c></row>",
+                "<c r=\"A1\"/>"))
+            rejected(xlsx(packageParts(sheet(rows))),"data.xlsx",XLSX,422);
+    }
+    @Test void brokenPackagesAndAmbiguousRelationshipsAreRejected()throws Exception {
+        rejected(csv("not a zip archive"),"data.xlsx",XLSX,422);
+        for(String target:List.of("https://example.invalid/book.xml","//example.invalid/book.xml","workbook.xml?x=1","workbook.xml#x","%2e%2e/workbook.xml","a\\book.xml")){
+            var parts=packageParts(sheet(""));
+            parts.put("_rels/.rels",parts.get("_rels/.rels").replace("xl/workbook.xml",target));
+            rejected(xlsx(parts),"data.xlsx",XLSX,422);
+        }
+        var duplicate=packageParts(sheet(""));String relations=duplicate.get("xl/_rels/workbook.xml.rels");
+        duplicate.put("xl/_rels/workbook.xml.rels",relations.replace("</Relationships>",relations.substring(relations.indexOf("<Relationship Id="),relations.indexOf("</Relationships>"))+"</Relationships>"));
+        rejected(xlsx(duplicate),"data.xlsx",XLSX,422);
+        var malformed=packageParts(sheet(""));malformed.put("xl/workbook.xml","<workbook>");rejected(xlsx(malformed),"data.xlsx",XLSX,422);
+    }
     @Test void csvPreservesEscapedQuotesCommaNewlinesLeadingZeroAndTrailingEmptyCell()throws Exception{
         Path p=csv("\ufeffkey,name,note,empty\r\n007,\"王,明\",\"line1\nline2 \"\"quoted\"\"\",\r\n");
         assertThat(parser.inspect(p,"people.csv","text/csv").sheetNames()).containsExactly("CSV");

@@ -1,5 +1,7 @@
 # 项目共享记忆
 
+2026-10-26 JaCoCo改进：按继续改进请求，在测试-JaCoCo采集与边界改进补全48个独立Java子进程的agent采集和exec合并，新增23项有断言的边界/回归测试。发现SafeResult接受空白JSON，真实RED后最小增加isMissingNode拒绝，合法JSON null与204设计保持；无其他业务/API/迁移修改。完整默认163项与coverage下163普通＋439真实MySQL/HTTP共602项/51组通过，失败/错误/跳过0；行98.50%、分支76.60%、指令95.38%，344正式类未排除。两项临时变异均被新增断言捕获并还原；专属随机库/账号0/0且MySQL正常关闭。最新完整归档、校验和、首次对照与说明见[覆盖率报告](../05-detailed-design/JACOCO-COVERAGE.md)及[改进记录](../05-detailed-design/JACOCO-IMPROVEMENT.md)。当前本地完成，远程交付结果待实际成功后补录；不部署、不改变成员验收，无关根目录TEAM-ASSIGNMENT.md保留。
+
 2026-10-26 JaCoCo实际交付：用户明确同意提交、合并并推送。已接入远程main/5b05c7f，来源测试-JaCoCo覆盖率共享/a5aa7cba1871e2890db06b51f3ddd3277a8d526f保留历史no-ff合入main/fb0134ec0a7813bf3e33a94d225a51526efc72ed，合并树等于核验来源；普通Git原子推送main及任务分支成功，两个远程完整SHA回查一致，任务分支保留。覆盖率配置、说明、约1.8MB固定HTML/XML/CSV/exec归档及SHA-256已交付，团队从项目首页进入[覆盖率报告](../05-detailed-design/JACOCO-COVERAGE.md)。沿用本轮143普通＋436真实MySQL/HTTP全通过及默认profile另4项证据，失败/错误/跳过0；行95.70%、分支72.99%、指令93.00%，未排除低覆盖包，独立Java CLI子进程未采集边界保留。接入后源码/测试/pom摘要与报告证据一致，归档/链接/范围检查通过，不重复Java/MySQL；隔离库/账号0/0且测试实例已关闭。远程新增设计/部署与双方共享记录完整保留；根目录既有未跟踪TEAM-ASSIGNMENT.md未修改/提交。不改变成员验收状态、不部署；本段为实际推送后的文档补录。
 
 2026-10-26部署配置简化：用户要求部署文件不要过多使用环境变量。stack.yml移除全部shell参数插值，直接填写SWR后端d8bd624镜像、目录、端口、副本数、实例ID、key id及Config版本，删除swarm.env.example；应用已有environment配置保留固定值，密码/私钥继续走Secrets。操作指南改为直接编辑YAML并stack deploy，不再export/source。前端pending标签和MySQL镜像获取仍明确待准备，0副本不代表免除外部Secrets准备。节点3截图已确认后端镜像7f274485d01b构建成功且推送javaee-adgn，未据此代记服务启动或BE-34验收；本次无业务源码/入口脚本/镜像内容变更。
