@@ -69,7 +69,7 @@ docker node inspect <节点2实际节点名> --format '{{json .Spec.Labels}}'
 | [后端 Dockerfile](../backend/Dockerfile) 与同目录 `Dockerfile.dockerignore` | Java 21 运行镜像、非 root 运行、排除凭据和临时文件 |
 | [前端 Dockerfile](../frontend/Dockerfile) 与同目录 `Dockerfile.dockerignore` | Node 构建前端，Nginx 提供静态文件 |
 | [容器 Nginx 配置](docker/nginx.conf) | SPA 路由、API 原路径代理、HTTPS 与上传限制 |
-| [首次数据库](docker/mysql.yml) / [完整 Swarm Stack](docker/stack.yml) | 首次仅部署数据库，后续同名 Stack 添加应用；镜像、调度、挂载与Secrets均直接填写 |
+| [首次数据库](docker/mysql.yml) / [后端](docker/backend.yml) / [完整 Swarm Stack](docker/stack.yml) | 首次仅部署数据库，后续同名 Stack 添加应用；镜像、调度、挂载与Secrets均直接填写 |
 | [固定参数 Stack](docker/stack.yml)及[操作指南](docker/README.md) | 直接编辑 YAML 配置，再创建数据库、独立迁移、管理员初始化和启动应用 |
 
 当前后端默认监听 `127.0.0.1`，Stack 通过 `SERVER_ADDRESS=0.0.0.0` 覆盖以允许 Nginx 容器访问，不发布宿主机 8080。容器配置使用 framework 代理头处理，Nginx 覆盖转发头，仅允许本项目受控服务接入专用网络。
@@ -108,3 +108,5 @@ docker service logs --tail 100 rbac_backend
 初始资源配置为节点 2 后端 1GiB 上限（Java 堆 512MiB）、前端 128MiB，新节点 MySQL 1GiB 上限（buffer pool 256MiB）。使用 stop-first 更新，接受短暂停机；实际容量须实测。
 
 正式操作前还需填写：新节点与节点 2 的实际节点名、Docker/OS 与架构、SWR 区域及组织、镜像版本、域名和端口、证书来源及备份去向。当前文档不代表 BE-34 或实际服务器验收完成。
+
+当前云端已由用户日志确认MySQL就绪、schema迁移到v3及初始管理员创建成功。下一阶段使用独立Java密钥工具、4个运行Secrets及mysql.yml+backend.yml部署后端，前端和TLS可后续准备。工具不覆盖已有密钥，后端镜像继续使用d8bd624，无需重新编译业务代码。

@@ -305,3 +305,89 @@ docker images rbac-backend
 2026-10-26配置简化：按用户要求将镜像、目录、端口、key id、副本数及Config版本直接写入stack.yml，删除swarm.env.example。固定参数不依赖终端环境；保留应用必需的YAML environment配置和Secret入口。只修改部署配置，无需重新编译后端或重新上传已发布镜像。
 
 本次新增 mysql.yml 已通过无需环境文件的 Docker CLI 原生解析，并与 stack.yml 的 mysql/Config/网络/Secrets 做一致性核对；仅本地配置检查，没有连接云端或代记数据库启动成功。
+
+## 后端单独启动：管理员初始化成功之后
+
+云端证据：MySQL 8.4.8 已在 rbac-node 达到1/1并就绪；迁移任务在 course-node2 完成，日志显示三项迁移成功且schema到v3；管理员初始化输出 BOOTSTRAP_CREATED，账号为 initial.admin，密码由用户自行指定，首次登录必须改密。以下后端操作仍待实际执行，不据此前置成功宣布服务部署/BE-34整体验收通过。
+
+### 密钥是什么
+
+管理员RSA私钥用于签发登录JWT；业务系统和OA的公钥用于验证它们提交的令牌。HMAC密钥用于幂等请求的摘要校验。它们与数据库密码、管理员登录密码用途不同，由应用读取，登录用户无需手动填写。
+
+当前为独立实验部署，工具生成 admin-v1、business-v1、oa-v1 三套RSA2048密钥和 server-v1 的32字节HMAC密钥。业务/OA私钥只用于后续受控模拟调用，由部署操作者保管，不提供给普通后端；接入真实系统时，应使用真实调用方提供的公钥，生成实验密钥不代表完成外部系统接入。现有部署的密钥必须保留，不能在每次更新/重启时重新生成。
+
+### 管理节点生成实验部署密钥
+
+更新仓库后从 deploy/docker 目录操作。GenerateDeploymentKeys.java 是使用JDK标准库的独立Java源程序，无需Maven或额外第三方包。下例在已上传的后端镜像中运行此工具，覆盖容器入口，不启动后端；禁止网络，只挂载只读工具和独立的输出目录：
+
+```sh
+install -d -m 0700 /etc/rbac-deploy/identity
+docker run --rm --network none --user 0:0 --memory 512m \
+  --mount type=bind,source=/root/rbac-admin/deploy/docker,target=/tools,readonly \
+  --mount type=bind,source=/etc/rbac-deploy/identity,target=/output \
+  --entrypoint java \
+  swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac-backend:d8bd624 \
+  -Xmx256m /tools/GenerateDeploymentKeys.java /output
+```
+
+预期输出 KEY_SETUP_CREATED。要求镜像包含JDK的源文件启动编译器模块，尚需在云端实际核对；若提示 compiler 不可用，保留输出目录现状，将原始报错用于定位，可在已有JDK21的节点3运行同一个工具后受控转移生成文件，而不是重新打业务镜像。
+
+工具要求绝对输出路径，拒绝非空目录或符号链接，不覆盖任何已有文件，不打印密钥。Linux新目录0700、文件0600。生成的6份JWK和1份HMAC JSON应长期受控保存；文件已存在时复用并核对，禁止为了绕过拒绝而删除旧部署密钥。工具本身不接触数据库、不注册服务身份或创建管理员。
+
+创建后端需要的4个Secrets（数据库应用密码Secret已存在）：
+
+```sh
+docker secret create rbac_admin_jwk /etc/rbac-deploy/identity/admin-private.json
+docker secret create rbac_business_jwk /etc/rbac-deploy/identity/business-public.json
+docker secret create rbac_oa_jwk /etc/rbac-deploy/identity/oa-public.json
+docker secret create rbac_idempotency_keys /etc/rbac-deploy/identity/idempotency-keys.json
+```
+
+admin-public.json、business-private.json、oa-private.json不挂载给后端。新文件中的kid与backend.yml的admin-v1/server-v1匹配；使用已有密钥时直接修改YAML到真实kid，不重生成替代。
+
+### 应用节点准备文件目录
+
+在 course-node2 上执行：
+
+```sh
+install -d -o 10001 -g 10001 -m 0750 /srv/rbac-admin/imports
+```
+
+### 管理节点启动后端
+
+backend.yml只含后端且副本数为1，无需前端镜像、TLS证书；与mysql.yml合并到现有同名rbac Stack。当前不会发布后端8080，外部网页入口待后续Nginx提供。
+
+```sh
+docker stack deploy --with-registry-auth -c mysql.yml -c backend.yml rbac
+docker service ps rbac_backend --no-trunc
+docker service logs --tail 100 rbac_backend
+```
+
+要求 backend.yml 与 stack.yml 的后端配置保持一致（仅初始副本数不同）。后续切换完整stack.yml时，先将其backend副本数从0改为1，避免把已启用后端缩回0。数据库配置沿用mysql.yml，三阶段均使用rbac栈，不使用prune。
+
+后端就绪后，在 course-node2 上检查容器内健康：
+
+```sh
+docker exec "$(docker ps -q --filter label=com.docker.swarm.service.name=rbac_backend)" \
+  wget -q -O - http://127.0.0.1:8080/actuator/health
+```
+
+预期status为UP。还需后续通过真实访问入口验证登录、首次改密、业务读写、导入、重启与恢复；健康UP不能替代这些验收。
+
+### 归档并清理一次性任务
+
+管理节点先保存迁移/初始化日志，确认任务Complete、退出码0，且初始化输出BOOTSTRAP_CREATED后再移除临时服务：
+
+```sh
+umask 077
+docker service logs rbac-migrate > /etc/rbac-deploy/migration-success.log 2>&1
+docker service logs rbac-bootstrap > /etc/rbac-deploy/bootstrap-success.log 2>&1
+docker service rm rbac-migrate rbac-bootstrap
+docker secret rm rbac_bootstrap_password
+```
+
+若Secret暂时仍被使用，等待服务移除完成后再清理。管理员首次改密前保留自己设定的登录密码；删除临时Secret不影响数据库中已保存的密码哈希。常驻MySQL和后端不移除，不删除数据目录或已有有效签名密钥。
+
+### 本阶段工具验证
+
+独立工具先以缺少实现取得4项真实RED，随后Windows JDK21下4项全部通过：RSA私钥CRT关系/公钥字段及一致性、三组独立密钥、HMAC标准Base64与32字节要求、已存在文件和重跑不覆盖。未在Windows声称验证Linux权限，也尚未运行镜像内源文件编译器；这些云端检查留实际执行。本次没有重建后端业务JAR或更改其源码。

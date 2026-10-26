@@ -9,7 +9,8 @@
 | [Swarm 部署方案](SWARM-DEPLOYMENT.md) | 节点分工、网络、存储和实施顺序 |
 | [Swarm 逐步操作指南](docker/README.md) | 节点准备、镜像构建上传、Secrets、迁移、初始化及启动 |
 | [首次数据库配置](docker/mysql.yml) | 仅部署 MySQL，只需三个数据库 Secrets |
-| [完整 Stack 配置](docker/stack.yml) | 后续添加前后端；与首次部署使用相同 Stack 名称 rbac |
+| [后端单独启动](docker/backend.yml) | 密钥准备后与 mysql.yml 一起部署，前端和TLS可后续准备 |
+| [完整 Stack 配置](docker/stack.yml) | 后续添加前端；与分阶段部署使用相同 Stack 名称 rbac |
 | [Stack 中的固定配置](docker/stack.yml) | 直接修改镜像、目录、副本数、端口及 key id，无需额外环境文件 |
 | [后端 Dockerfile](../backend/Dockerfile) / [前端 Dockerfile](../frontend/Dockerfile) | 在节点 3 构建镜像，构建上下文为仓库根目录 |
 
@@ -34,3 +35,5 @@
 A 当前进行的是 **BE-34「实际服务器部署、重启与演示验收」的部署准备**：确定目标节点、Docker/Swarm 包装、网络、持久化和发布流程。真实目标服务器部署、迁移、HTTPS、重启持久化及隔离恢复检查仍待执行，本地文件准备不能代替 BE-34 验收。
 
 **BE-35「交接、任务证据与发布收尾」**在 BE-34 完成后汇总发布说明、提交/产物/验收证据和已知限制。两项负责人均为 A，定义见 [任务清单](../docs/05-detailed-design/TASKS.md)。本次归档不改变既有任务或负责人的验收状态。
+
+后端密钥及无前端启动步骤见 [操作指南](docker/README.md#后端单独启动管理员初始化成功之后)。密钥生成工具位于 [GenerateDeploymentKeys.java](docker/GenerateDeploymentKeys.java)，只为本次实验部署生成初始密钥，不自动替换已有密钥或代表真实OA/业务系统已对接。
