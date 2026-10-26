@@ -358,7 +358,7 @@ def checks(report):
         require(module['assignmentStatus']==('OWNER_CONFIRMED' if module['id']=='M00' else ('SHARED_BY_TASK' if module['id'] in shared else 'ASSIGNED')),'共享模块未按任务区分责任')
     referenced=set()
     for task in tasks:
-        expected_status={'BE-30':'IMPLEMENTED','BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-08':'OWNER_ACCEPTED','BE-09':'OWNER_ACCEPTED','BE-10':'IMPLEMENTED','BE-11':'IN_PROGRESS','BE-12':'IN_PROGRESS','BE-13':'IN_PROGRESS','BE-14':'IMPLEMENTED','BE-15':'IN_PROGRESS','BE-16':'IMPLEMENTED','BE-17':'IN_PROGRESS','BE-19':'OWNER_ACCEPTED','BE-21':'IMPLEMENTED','BE-23':'IMPLEMENTED','BE-24':'IMPLEMENTED','BE-25':'IMPLEMENTED','BE-31':'IMPLEMENTED','BE-20':'OWNER_ACCEPTED','BE-22':'OWNER_ACCEPTED','BE-26':'IMPLEMENTED','BE-28':'IMPLEMENTED','BE-29':'IMPLEMENTED','BE-32':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
+        expected_status={'BE-30':'IMPLEMENTED','BE-01':'OWNER_ACCEPTED','BE-02':'OWNER_ACCEPTED','BE-03':'OWNER_ACCEPTED','BE-04':'OWNER_ACCEPTED','BE-05':'OWNER_ACCEPTED','BE-06':'OWNER_ACCEPTED','BE-07':'OWNER_ACCEPTED','BE-08':'OWNER_ACCEPTED','BE-09':'OWNER_ACCEPTED','BE-10':'IMPLEMENTED','BE-11':'IN_PROGRESS','BE-12':'IN_PROGRESS','BE-13':'IN_PROGRESS','BE-14':'IMPLEMENTED','BE-15':'IN_PROGRESS','BE-16':'IMPLEMENTED','BE-17':'IN_PROGRESS','BE-19':'OWNER_ACCEPTED','BE-21':'OWNER_ACCEPTED','BE-23':'OWNER_ACCEPTED','BE-24':'OWNER_ACCEPTED','BE-25':'OWNER_ACCEPTED','BE-31':'OWNER_ACCEPTED','BE-20':'OWNER_ACCEPTED','BE-22':'OWNER_ACCEPTED','BE-26':'IMPLEMENTED','BE-28':'IMPLEMENTED','BE-29':'IMPLEMENTED','BE-32':'OWNER_ACCEPTED'}.get(task['id'],'PLANNED')
         if task['id'] in {'BE-18','BE-27'}: expected_status='IMPLEMENTED'
         if task['id']=='BE-33': expected_status='IMPLEMENTED'
         if task['id']=='BE-27':
@@ -420,12 +420,19 @@ def checks(report):
                     'BE-19/22实现与负责人确认、主线交付边界不符')
         if task['id'] in {'BE-21','BE-23','BE-24','BE-25','BE-31'}:
             p=task.get('implementationProgress',{})
-            require(p.get('decision')=='D-091' and p.get('implemented') is True and p.get('ownerAccepted') is False
+            require(p.get('decision')=='D-091' and p.get('implemented') is True and p.get('ownerAccepted') is True
                     and p.get('mergedToMain') is True and p.get('databaseExecuted') is True
                     and p.get('claimedOwnerSlot')=='C' and p.get('branch')=='BE-21-31-申请审批与执行'
                     and p.get('evidence')=='BE-21-31-APPROVAL-WORKFLOW.md' and p.get('realExternalOaConnected') is False
                     and p.get('sourceCommit')=='adab1861906dc7d973f796961249e1ef87563e29' and p.get('mainMergeCommit')=='311aa5d5cbc3d7bfbd064888b4172d48de0a0e99'
-                    and p.get('pushVerified') is True and p.get('deliveryDecision')=='D-092' and 'ownerAcceptance' not in task,'C剩余实现/验收/交付及外部OA边界不符')
+                    and p.get('pushVerified') is True and p.get('deliveryDecision')=='D-092'
+                    and task.get('ownerAcceptance',{}).get('decision')=='D-107'
+                    and task['ownerAcceptance'].get('ownerSlot')=='C'
+                    and task['ownerAcceptance'].get('date')=='2026-10-26'
+                    and task['ownerAcceptance'].get('message')=='确认好了'
+                    and task['ownerAcceptance'].get('source')=='USER_MESSAGE'
+                    and task['ownerAcceptance'].get('manualDemoVerified') is False
+                    and p.get('manualDemoVerified') is False,'C实现/本人确认/交付及外部OA边界不符')
         if task['id']=='BE-20':
             progress=task.get('implementationProgress',{});acceptance=task.get('ownerAcceptance',{})
             require(progress.get('decision')=='D-086' and progress.get('implemented') is True
@@ -779,7 +786,7 @@ def checks(report):
         if task['id']=='BE-20': expected_operation_status='OWNER_ACCEPTED_MAIN_DELIVERED'
         if task['id']=='BE-26': expected_operation_status='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
         if task['id'] in {'BE-19','BE-22'}: expected_operation_status='OWNER_ACCEPTED_MAIN_DELIVERED'
-        if task['id'] in {'BE-21','BE-23','BE-24','BE-25','BE-31'}: expected_operation_status='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
+        if task['id'] in {'BE-21','BE-23','BE-24','BE-25','BE-31'}: expected_operation_status='OWNER_ACCEPTED_MAIN_DELIVERED'
         if task['id']=='BE-18': expected_operation_status='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
         if task['id']=='BE-27': expected_operation_status='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
         if task['id']=='BE-30': expected_operation_status='IMPLEMENTED_MAIN_DELIVERED_PENDING_OWNER'
@@ -937,10 +944,10 @@ def checks(report):
         decisionIds=len(decisions),upstreamSha256=source_hashes,
         planRevision='1.4',foundationTasks=len(foundation_ids),businessTasksAwaitingAssignment=0,
         businessTasksAssigned=len(assignments),assignmentDecision='D-055',memberIdentitiesPending=4,
-        confirmedUserAlias='D',historicallyConfirmedUserAliases=['A','B','C','D'],implementationDecision='D-101',
+        confirmedUserAlias='C',historicallyConfirmedUserAliases=['A','B','C','D'],implementationDecision='D-101',
         preparedBusinessTasksWaitingDependencies=[],preparationDecision='D-101',
-        internalPortTasksPendingOwner=['BE-16','BE-25'],implementedBusinessTasksPendingOwner=[t['id'] for t in tasks if t['phase']=='BUSINESS' and t.get('implementationProgress',{}).get('implemented') and not t.get('implementationProgress',{}).get('ownerAccepted')],
-        ownerAcceptedBusinessTasks=[t['id'] for t in tasks if t['phase']=='BUSINESS' and t['status']=='OWNER_ACCEPTED'],businessTasksPendingMainDelivery=[t['id'] for t in tasks if t.get('implementationProgress',{}).get('implemented') and not t.get('implementationProgress',{}).get('mergedToMain')],businessAcceptanceDecision='D-090',
+        internalPortTasksPendingOwner=['BE-16'],implementedBusinessTasksPendingOwner=[t['id'] for t in tasks if t['phase']=='BUSINESS' and t.get('implementationProgress',{}).get('implemented') and not t.get('implementationProgress',{}).get('ownerAccepted')],
+        ownerAcceptedBusinessTasks=[t['id'] for t in tasks if t['phase']=='BUSINESS' and t['status']=='OWNER_ACCEPTED'],businessTasksPendingMainDelivery=[t['id'] for t in tasks if t.get('implementationProgress',{}).get('implemented') and not t.get('implementationProgress',{}).get('mergedToMain')],businessAcceptanceDecision='D-107',
         businessMainDeliveryDecision='D-102',businessMainDeliveryMerge=import_commit_delivery['mergeCommit'],
         businessMainDeliveryPrUrl=None,priorScopeCreationDeliveryPrUrl=scope_create_delivery['prUrl'],priorScopeDeliveryPrUrl=scope_delivery['prUrl'],priorBootstrapDeliveryPrUrl=bootstrap_delivery['prUrl'],
         foundationReviewPolicy='OWNER_ACCEPTANCE',businessReviewPolicy='OWNER_ACCEPTANCE',collaborationDecision='D-051',environmentPreparationTask='BE-01:OWNER_ACCEPTED',
