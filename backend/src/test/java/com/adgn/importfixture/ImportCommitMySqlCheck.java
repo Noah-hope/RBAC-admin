@@ -24,6 +24,49 @@ import static org.assertj.core.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class ImportCommitMySqlCheck {
+    @Test void fileAccessRejectionAfterReservationDoesNotBecomeStorageFailureOrMutateTheBatch()throws Exception{
+        String batch=batch(organization());long companies=count("company");var jwt=app.getBean(com.adgn.backend.identity.security.IdentityTokens.class)
+                .verify(global,com.adgn.backend.identity.security.IdentityTokens.Family.ADMIN);
+        var files=org.mockito.Mockito.spy(app.getBean(ImportFileService.class));
+        var failure=new com.adgn.backend.identity.security.IdentityFailure(404,"NOT_FOUND");
+        org.mockito.Mockito.doThrow(failure).when(files).get(org.mockito.ArgumentMatchers.anyString(),org.mockito.ArgumentMatchers.eq(jwt));
+        var service=new ImportCommitService(app.getBean(DataSource.class),app.getBean(com.adgn.backend.core.transaction.ReadBoundary.class),
+                app.getBean(com.adgn.backend.core.transaction.CommandBoundary.class),app.getBean(com.adgn.backend.identity.service.CurrentIdentityReader.class),
+                app.getBeanProvider(com.adgn.backend.core.idempotency.IdempotencyCoordinator.class),app.getBean(ImportPlanService.class),app.getBean(ImportSnapshot.class),files,
+                app.getBean(com.adgn.backend.people.EmploymentWriter.class),app.getBean(com.adgn.backend.core.audit.AuditAppender.class),json,
+                app.getBeanProvider(com.adgn.backend.lifecycle.EmployeeStateWriter.class),app.getBeanProvider(com.adgn.backend.lifecycle.EmploymentLifecycleWriter.class),app.getBean(ImportFailureRecorder.class));
+        assertThatThrownBy(()->service.commit(jwt,batch,id(),json.valueToTree(commitInput(batch)),id())).isSameAs(failure);
+        assertThat(body(get("/"+batch)).path("state").stringValue()).isEqualTo("READY");
+        assertThat(jdbc.queryForObject("SELECT failure_code FROM import_batch WHERE id=?",String.class,batch)).isNull();
+        assertThat(count("company")).isEqualTo(companies);
+    }
+
+    @Test void unknownActionInSealedPersistedPlanRejectsTheWholeBatchWithoutDisablingImmutability()throws Exception{
+        String original=batch(organization()),corrupted=id();
+        var record=new LinkedHashMap<>(jdbc.queryForMap("SELECT * FROM import_batch WHERE id=?",original));
+        record.put("id",corrupted);record.put("source_batch_id",id());record.put("sealed_at",null);
+        var input=json.readTree((String)record.get("input_snapshot"));
+        var normalized=(tools.jackson.databind.node.ObjectNode)input;normalized.put("sourceBatchId",record.get("source_batch_id").toString());
+        record.put("input_snapshot",json.writeValueAsString(normalized));insertFixture("import_batch",record);
+        var rows=jdbc.queryForList("SELECT * FROM import_plan_row WHERE batch_id=? ORDER BY `row_number`,plan_no",original);
+        for(int n=0;n<rows.size();n++){
+            var row=new LinkedHashMap<>(rows.get(n));row.put("batch_id",corrupted);
+            if(n==rows.size()-1)row.put("action","UNSUPPORTED_ACTION");insertFixture("import_plan_row",row);
+        }
+        jdbc.update("UPDATE import_batch SET sealed_at=UTC_TIMESTAMP(6) WHERE id=?",corrupted);
+        assertThatThrownBy(()->jdbc.update("UPDATE import_plan_row SET action='UNCHANGED' WHERE batch_id=?",corrupted)).isInstanceOf(org.springframework.dao.DataAccessException.class);
+        long companies=count("company"),departments=count("department");String key=id();var data=commitInput(corrupted);
+        var response=commit(corrupted,data,key);assertThat(response.statusCode()).as(response.body()).isEqualTo(422);
+        assertThat(body(response).path("code").stringValue()).isEqualTo("VALIDATION_ERROR");
+        assertThat(count("company")).isEqualTo(companies);assertThat(count("department")).isEqualTo(departments);
+        assertThat(body(get("/"+corrupted)).path("state").stringValue()).isEqualTo("READY");
+        assertThat(commit(corrupted,data,key).headers().firstValue("Idempotent-Replayed")).contains("true");
+    }
+
+    private void insertFixture(String table,Map<String,Object> record){
+        String columns=record.keySet().stream().map(k->"`"+k+"`").collect(java.util.stream.Collectors.joining(","));
+        jdbc.update("INSERT INTO `"+table+"`("+columns+") VALUES("+String.join(",",Collections.nCopies(record.size(),"?"))+")",record.values().toArray());
+    }
     @Test void internalLifecycleAndFailureRecordingRejectServiceIdentityAndPoisonTransaction() throws Exception {
         var writes=app.getBean(com.adgn.backend.core.transaction.CommandBoundary.class);
         long before=jdbc.queryForObject("SELECT revision FROM mutation_guard WHERE id=1",Long.class);

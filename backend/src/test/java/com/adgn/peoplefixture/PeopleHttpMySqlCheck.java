@@ -22,6 +22,14 @@ import static org.assertj.core.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PeopleHttpMySqlCheck {
+    @Test void unsupportedInternalResourceIsRejectedInsteadOfBecomingAnUnboundedQuery()throws Exception{
+        var jwt=app.getBean(com.adgn.backend.identity.security.IdentityTokens.class).verify(global,com.adgn.backend.identity.security.IdentityTokens.Family.ADMIN);
+        var queries=app.getBean(com.adgn.backend.people.PeopleQueries.class);
+        assertThatThrownBy(()->queries.list(jwt,new com.adgn.backend.people.PeopleQueries.Context(null,null,null),"unsupported",null,
+                new com.adgn.backend.people.PeopleQueries.Filter(null,null,null,null,null,null)))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThat(get("employees",global).statusCode()).isEqualTo(200);
+    }
     private IsolatedMySqlDatabase db;
     private ConfigurableApplicationContext app;
     private JdbcTemplate jdbc;

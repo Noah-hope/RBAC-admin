@@ -27,6 +27,34 @@ import static org.assertj.core.api.Assertions.*;
 /** Real HTTP and persisted facts. Synthetic fixed requests do not represent real OA delivery. */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SourceClosureMySqlCheck {
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(strings={"SOURCE_VERSION_CHANGED","RELATION_VERSION_CHANGED","VALIDATION_ERROR"})
+    void sourcePersistenceRejectionsRollbackAndOnlyVersionConflictsBecomeReplayable(String code)throws Exception{
+        var f=data();var in=input(f);String p=preview(in),key=id();
+        long auditCount=count("SELECT COUNT(*) FROM audit_event WHERE event_type='AUTHORIZATION_SOURCE_CLOSED'");
+        var failure=new com.adgn.backend.grant.GrantMutationFailure(code);
+        var closer=org.mockito.Mockito.mock(com.adgn.backend.grant.SourceCloser.class);
+        org.mockito.Mockito.doAnswer(call->{
+            WriteContext<?> c=call.getArgument(0);c.requireActive(app.getBean(DataSource.class));c.markFailed(failure);throw failure;
+        }).when(closer).close(org.mockito.ArgumentMatchers.any(),org.mockito.ArgumentMatchers.anyList(),org.mockito.ArgumentMatchers.eq("Fixture source closure"));
+        var service=new com.adgn.backend.lifecycle.SourceClosureService(app.getBean(DataSource.class),app.getBean(ManagementAccess.class),
+                app.getBean(CommandBoundary.class),app.getBeanProvider(com.adgn.backend.core.idempotency.IdempotencyCoordinator.class),
+                app.getBean(GrantReader.class),closer,app.getBean(com.adgn.backend.query.preview.PreviewService.class),
+                app.getBean(com.adgn.backend.query.preview.ImpactService.class),app.getBean(com.adgn.backend.core.audit.AuditAppender.class),json,
+                app.getBean(RequestInvalidator.class),app.getBean(com.adgn.backend.query.change.RequestVisibility.class));
+        var jwt=app.getBean(IdentityTokens.class).verify(token,IdentityTokens.Family.ADMIN);
+        var raw=json.valueToTree(Map.of("input",in,"previewId",p));var context=new ManagementAccess.Context(null,null,null);
+        if(code.equals("VALIDATION_ERROR")){
+            assertThatThrownBy(()->service.close(jwt,context,key,raw,id())).isSameAs(failure);
+            assertThat(jdbc.queryForObject("SELECT state FROM http_idempotency WHERE idempotency_key=?",String.class,key)).isEqualTo("IN_PROGRESS");
+        }else{
+            var result=service.close(jwt,context,key,raw,id());assertThat(result.result().status()).isEqualTo(409);
+            assertThat(json.readTree(result.result().body()).path("code").stringValue()).isEqualTo("VERSION_CONFLICT");
+            assertThat(service.close(jwt,context,key,raw,id()).replayed()).isTrue();
+        }
+        assertThat(count("SELECT COUNT(*) FROM authorization_source WHERE employee_id=?",f.employee())).isZero();
+        assertThat(count("SELECT COUNT(*) FROM audit_event WHERE event_type='AUTHORIZATION_SOURCE_CLOSED'")).isEqualTo(auditCount);
+    }
     private IsolatedMySqlDatabase db; private ConfigurableApplicationContext app; private JdbcTemplate jdbc;
     private Path keys; private String base,account,token;
     private final JsonMapper json=JsonMapper.builder().build(); private final HttpClient http=com.adgn.backend.testsupport.ContractHttpClient.create();

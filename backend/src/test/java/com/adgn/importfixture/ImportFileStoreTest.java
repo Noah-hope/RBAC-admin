@@ -13,6 +13,21 @@ import java.util.HexFormat;
 import static org.assertj.core.api.Assertions.*;
 
 class ImportFileStoreTest {
+    @Test void publicationCollisionNeverOverwritesExistingBytesAndLeavesStageRetryable()throws Exception{
+        var store=new ImportFileStore(root);var fixed=java.util.UUID.fromString("11111111-1111-4111-8111-111111111111");
+        Path existing=root.resolve(fixed+".blob");Files.writeString(existing,"previous-upload");
+        try(var stage=store.stage(new ByteArrayInputStream("new-upload".getBytes(StandardCharsets.UTF_8)))){
+            try(var random=org.mockito.Mockito.mockStatic(java.util.UUID.class,org.mockito.Mockito.CALLS_REAL_METHODS)){
+                random.when(java.util.UUID::randomUUID).thenReturn(fixed);
+                assertThatThrownBy(()->store.publish(stage)).isInstanceOfSatisfying(PersistenceFailure.class,
+                        e->assertThat(e.kind()).isEqualTo(PersistenceFailure.Kind.DEPENDENCY_UNAVAILABLE));
+            }
+            assertThat(Files.readString(existing)).isEqualTo("previous-upload");
+            assertThat(Files.readString(stage.path())).isEqualTo("new-upload");
+            var published=store.publish(stage);
+            assertThat(Files.readString(store.verifiedPath(published.storageRef(),published.sizeBytes(),published.sha256()))).isEqualTo("new-upload");
+        }
+    }
     @TempDir Path root;
     @Test void oversizedStreamIsRejectedAndItsPartialStageIsRemoved()throws Exception {
         var store=new ImportFileStore(root);

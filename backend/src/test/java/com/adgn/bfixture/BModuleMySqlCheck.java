@@ -24,6 +24,23 @@ import static org.assertj.core.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BModuleMySqlCheck {
+    @Test void cachedGlobalOnlyRoleResultCannotBeReplayedByAScopedAdministrator()throws Exception{
+        String sid=createSystem("replay-guard"+id()).path("id").stringValue();var actor=scoped(sid);
+        String role=role(sid,actor.company(),actor.department(),true),key=id(),path="/api/v1/admin/roles/"+role+"/metadata";
+        var jwt=application.getBean(com.adgn.backend.identity.security.IdentityTokens.class).verify(actor.token(),com.adgn.backend.identity.security.IdentityTokens.Family.ADMIN);
+        var fields=Arrays.asList(role,1L,"试图重放","角色说明","改名",actor.appointment(),"1","1");
+        var request=new com.adgn.backend.core.idempotency.IdempotencyRequest(UUID.fromString(jwt.getSubject()),"updateRoleMetadata","PUT",path,UUID.fromString(key),json.writeValueAsBytes(fields));
+        var ring=application.getBean(com.adgn.backend.core.idempotency.HmacKeyRing.class);
+        var basis=new com.adgn.backend.core.idempotency.AuthorizationBasis("updateRoleMetadata",com.adgn.backend.core.idempotency.AuthorizationBasis.Policy.GLOBAL_ONLY,List.of());
+        jdbc.update("INSERT INTO http_idempotency(id,principal_id,http_method,canonical_path,idempotency_key,request_digest,digest_key_id,state,http_status,safe_response,authorization_basis,expires_at,created_at) VALUES(?,?,?,?,?,?,?,'COMPLETED',200,?,?,UTC_TIMESTAMP(6)+INTERVAL 7 DAY,UTC_TIMESTAMP(6))",
+                id(),jwt.getSubject(),"PUT",path,key,ring.digest(ring.currentId(),request),ring.currentId(),"{\"schemaVersion\":1,\"body\":{\"name\":\"private-cached-role\"}}",json.writeValueAsString(basis));
+        long audit=jdbc.queryForObject("SELECT COUNT(*) FROM audit_event WHERE target_id=?",Long.class,role);
+        var denied=request("PUT",path,metadata(1,"试图重放"),actor.token(),key,actor.headers());
+        assertThat(denied.statusCode()).as(denied.body()).isEqualTo(403);assertThat(body(denied).path("code").stringValue()).isEqualTo("FORBIDDEN");
+        assertThat(denied.body()).doesNotContain("private-cached-role");
+        assertThat(jdbc.queryForObject("SELECT metadata_version FROM business_role WHERE id=?",Long.class,role)).isEqualTo(1);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM audit_event WHERE target_id=?",Long.class,role)).isEqualTo(audit);
+    }
     private IsolatedMySqlDatabase database;
     private ConfigurableApplicationContext application;
     private JdbcTemplate jdbc;
@@ -256,8 +273,10 @@ class BModuleMySqlCheck {
         String sid=createSystem("invalid-config"+id()).path("id").stringValue();var s=scoped(sid);jdbc.update("UPDATE business_system SET enabled=1 WHERE id=?",sid);
         String role=role(sid,s.company(),s.department(),true),fn=function(sid,null,true),disabled=permission(sid,fn,false),operation=permission(sid,fn,true),request=approved(role,s.company(),sid,s.department(),1);
         List<String> before=permissions(role);String foreign=createSystem("foreign"+id()).path("systemAccessPermissionId").stringValue();
+        int index=0;String[] codes={"EMPTY_CONFIGURATION","VALIDATION_ERROR","INVALID_OWNERSHIP","PERMISSION_UNAVAILABLE","INVALID_OWNERSHIP"};
         for(List<String> invalid:List.of(List.<String>of(),List.of(operation,operation),List.of(id()),List.of(operation,disabled),List.of(foreign))){
-            assertThatThrownBy(()->executeApply(request,role,1,invalid)).isInstanceOf(RoleConfigurationApplier.Rejection.class);
+            String expected=codes[index++];
+            assertThatThrownBy(()->executeApply(request,role,1,invalid)).isInstanceOfSatisfying(RoleConfigurationApplier.Rejection.class,e->assertThat(e.code()).isEqualTo(expected));
             assertThat(permissions(role)).isEqualTo(before);
         }
         jdbc.update("UPDATE directory_node SET enabled=0 WHERE id=?",fn);
