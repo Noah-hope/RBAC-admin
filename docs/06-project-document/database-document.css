@@ -1,0 +1,30 @@
+/* 独立数据库说明书；复用项目设计书排版，不修改既有文档。 */
+.er-section { break-before:page; break-after:page; padding-top:2mm; }
+.er-section .imageblock img { width:100%; height:auto; }
+.dictionary-table { font-size:9pt!important; line-height:1.45; }
+table.dictionary-table { break-inside:auto!important; }
+.dictionary-table th,.dictionary-table td { padding:1.7mm; }
+.dictionary-table tr { break-inside:avoid; }
+.dictionary-table thead { display:table-header-group; }
+.dictionary-table code { font-size:1em; }
+.table-definition { margin-bottom:5mm; }
+.table-definition h4 { margin-top:5mm; }
+.table-definition > .paragraph { break-after:avoid; }
+.table-definition > .paragraph:last-child { break-after:auto; font-size:9pt; line-height:1.5; }
+.table-definition .tableblock { margin-top:2mm; margin-bottom:2mm; }
+.dictionary-group { break-before:auto; }
+.dictionary-group > h3 { margin-top:0; }
+.dictionary-table thead,.dictionary-table tbody tr:nth-child(-n+3) { break-after:avoid; }
+@media screen {
+ body { max-width:1100px; margin:0 auto; padding:32px 40px 64px; overflow-wrap:anywhere; }
+ .cover { height:auto; padding:45px 0; }
+ .sect1 { margin-top:45px; }
+ .table-scroll { overflow-x:auto; margin:16px 0; }
+ .table-scroll table { min-width:650px; }
+}
+@media screen and (max-width:600px) {
+ body { padding:20px 16px 40px; }
+ .cover-title { font-size:27px; }
+ .cover-subtitle { font-size:23px; }
+ h2 { font-size:25px; }
+}

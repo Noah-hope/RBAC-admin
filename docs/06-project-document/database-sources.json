@@ -1,0 +1,146 @@
+{
+  "date": "2026-10-27",
+  "tables": 43,
+  "columns": 356,
+  "migrationColumnsMatch": true,
+  "sources": [
+    {
+      "path": "docs/04-database/schema-model.json",
+      "sha256": "2acdb668597e7afdcd41a08481aa5bd17fa792b4798fcdc7ad70972414b20d77"
+    },
+    {
+      "path": "docs/04-database/schema.sql",
+      "sha256": "af293b847fa0445c657bb17466d56fb44c4a4cd348e5e683a3275293121f0619"
+    },
+    {
+      "path": "docs/04-database/immutability.sql",
+      "sha256": "1d36a1374144c1887ee785102adf9db157246c4e1bf30ef477d22c28c47fb4fc"
+    },
+    {
+      "path": "docs/04-database/database-erd.drawio",
+      "sha256": "822a5fb7f7f405c599fdbd75f922d902d34bc982bc0ca8e9085f0936b6a9b446"
+    },
+    {
+      "path": "docs/04-database/LOGICAL-MODEL.md",
+      "sha256": "c30e4a0a91a8b215d7754c17c8d42c83ce7ab8151f17b6cca872ad70cb67639d"
+    },
+    {
+      "path": "docs/04-database/DATA-DICTIONARY.md",
+      "sha256": "07847cbdf5d4fb447838cfd2ceed3209152f65073e9daf6f9e5599d3d1f85390"
+    },
+    {
+      "path": "docs/04-database/INVARIANTS.md",
+      "sha256": "83086c8cbec40a01c89d14fe454c06faa39d2ec0b7577a74e9b69389c8ec1474"
+    },
+    {
+      "path": "docs/04-database/TRANSACTIONS.md",
+      "sha256": "8985d3db385e4400d384a7b73a2212db22bb16916b6cc049ee0fa231bae84406"
+    },
+    {
+      "path": "docs/04-database/INDEXES.md",
+      "sha256": "391325bed2a18b4c7e01a29891facf4b2765b8075363996af267d7051352de27"
+    },
+    {
+      "path": "backend/src/main/resources/db/migration/V1__create_tables_and_constraints.sql",
+      "sha256": "fc5802ad0b7417fe657cac87a9559fac01a5481ca7804163309cdead3415c416"
+    },
+    {
+      "path": "backend/src/main/resources/db/migration/V2__create_immutability_triggers.sql",
+      "sha256": "1f175592813306bc1598b4c68552fee5c97d5fbbd449963627c4165fc3ff7599"
+    },
+    {
+      "path": "backend/src/main/resources/db/migration/V3__initialize_mutation_guard.sql",
+      "sha256": "3ecbca2080c5be1e2ccb9e608e8fbb2e2a4b1b1f26739f4e94f9b126506c3d55"
+    },
+    {
+      "path": "backend/src/main/java/com/adgn/backend/core/transaction/CommandBoundary.java",
+      "sha256": "d4e19cd160c15aeb61dc1df864422bb92bb5f57f18b1c5ceb150f53bde0f59cc"
+    },
+    {
+      "path": "backend/src/main/java/com/adgn/backend/core/transaction/ReadBoundary.java",
+      "sha256": "4c681268d038bd5300385f7c71c4fa21fe446c6fe1efdb8f4d3f2525ee541c32"
+    },
+    {
+      "path": "backend/src/main/java/com/adgn/backend/core/transaction/WriteContext.java",
+      "sha256": "ec3064ee5149d1c8217e34a1a5176c229e5b10dd6bdf7f189d8c9f67cfe6905d"
+    }
+  ],
+  "figures": [
+    {
+      "id": "er-1",
+      "file": "er-1.png",
+      "source": "docs/04-database/database-erd.drawio",
+      "page": 1,
+      "title": "组织与后台身份",
+      "width": 2200,
+      "height": 1800,
+      "nodes": 11,
+      "edges": 10,
+      "panel": null,
+      "fontColors": [
+        "#000000"
+      ],
+      "scale": 1.5,
+      "documentTypography": "SimHei bold headings; FangSong body; black text; dark fill lightened for contrast",
+      "sourceSha256": "822a5fb7f7f405c599fdbd75f922d902d34bc982bc0ca8e9085f0936b6a9b446",
+      "pngSha256": "14fe4bb1731820692bd7edf2a6dacf9c0f540ce767f423640bdb0c2a108d3913"
+    },
+    {
+      "id": "er-2",
+      "file": "er-2.png",
+      "source": "docs/04-database/database-erd.drawio",
+      "page": 2,
+      "title": "目录、角色与独立来源",
+      "width": 2200,
+      "height": 1800,
+      "nodes": 13,
+      "edges": 16,
+      "panel": null,
+      "fontColors": [
+        "#000000"
+      ],
+      "scale": 1.5,
+      "documentTypography": "SimHei bold headings; FangSong body; black text; dark fill lightened for contrast",
+      "sourceSha256": "822a5fb7f7f405c599fdbd75f922d902d34bc982bc0ca8e9085f0936b6a9b446",
+      "pngSha256": "3de5d7d2af5cd1686858704a052102465459742712aff22126d3469ed95decad"
+    },
+    {
+      "id": "er-3",
+      "file": "er-3.png",
+      "source": "docs/04-database/database-erd.drawio",
+      "page": 3,
+      "title": "固定申请、OA与执行",
+      "width": 2200,
+      "height": 1800,
+      "nodes": 14,
+      "edges": 15,
+      "panel": null,
+      "fontColors": [
+        "#000000"
+      ],
+      "scale": 1.5,
+      "documentTypography": "SimHei bold headings; FangSong body; black text; dark fill lightened for contrast",
+      "sourceSha256": "822a5fb7f7f405c599fdbd75f922d902d34bc982bc0ca8e9085f0936b6a9b446",
+      "pngSha256": "47b6204a87fc631f0ecd852d028f9431179978ed4c26be6d8cb94c8cceb2a7b9"
+    },
+    {
+      "id": "er-4",
+      "file": "er-4.png",
+      "source": "docs/04-database/database-erd.drawio",
+      "page": 4,
+      "title": "导入、预览与可靠性",
+      "width": 2200,
+      "height": 1800,
+      "nodes": 11,
+      "edges": 6,
+      "panel": null,
+      "fontColors": [
+        "#000000"
+      ],
+      "scale": 1.5,
+      "documentTypography": "SimHei bold headings; FangSong body; black text; dark fill lightened for contrast",
+      "sourceSha256": "822a5fb7f7f405c599fdbd75f922d902d34bc982bc0ca8e9085f0936b6a9b446",
+      "pngSha256": "d964009550a498a45ee4d4235d11c8f83da366d81c6cc68d996b5c15fd47dfef"
+    }
+  ]
+}

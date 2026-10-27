@@ -1,235 +1,76 @@
-# rbac-admin · 集中权限管理系统
+# RBAC权限管理系统
 
-后端 JaCoCo：**700 项测试通过，失败/错误/跳过均为0**；行覆盖率 **100.00%**、方法覆盖率 **100.00%**、分支覆盖率 **78.59%**。团队查看[覆盖率报告与复跑说明](docs/05-detailed-design/JACOCO-COVERAGE.md)，[完整HTML报告](docs/05-detailed-design/reports/JaCoCo-2026-10-27.zip)下载解压后打开 report/index.html。
+面向多公司、多部门和多个业务系统的集中功能权限管理系统。统一维护员工组织、管理员范围、权限目录和角色授权；权限变更经OA审批后执行，并向业务系统提供有效权限查询、单项权限检查及审计追溯。项目采用结构化分析与设计，使用Vue 3、Spring Boot和MySQL实现。
 
-正式前端已在 [`frontend/`](frontend/README.md) 实现，沿用界面原型并请求后端 API。启动：进入 frontend，执行 `npm ci`、`npm run dev`，打开 http://127.0.0.1:5174。请先启动现有 BackendApplication；本轮健康检查时 8080 未运行，真实前后端联调仍待完成。前端 26 项受控测试及构建通过，后端未改；见 [验证记录](frontend/VALIDATION.md)。当前本地分支包含尚未合入主线的 BE-33 工作，未推送或部署。
+## 项目资料与访问地址
 
-D-098实际主线交付（2026-10-21）：B 明确要求“把你做的东西弄好，然后做好测试后就合并”。来源 ba2178c60b1ec78b777952845b7bb71e5c9161ce 已无冲突 no-ff 合入并推送远程 main/43aeab78fbbf01acd568ff49c8893349e849d958，双亲和合并树等于已验证来源，远程完整 SHA 已回查。合并后完整139普通＋375真实MySQL/HTTP、18辅助工具及静态追踪通过，失败/错误/跳过0；隔离库/账号0/0、密钥清理、专属MySQL关闭。常规Git网络卡住后停止本轮卡住进程，改用官方GitHub Git API按原始SHA、force=false交付。BE-18为IMPLEMENTED、mergedToMain=true、ownerAccepted=false，B六项业务代码均已交付主线；BE-33/35仅已完成的集成/交接准备随同交付，正式任务保持PLANNED，仍缺A/BE-27、D/BE-30及A/BE-34。保留任务分支、不代记本人验收、不部署；下方不合并/未交付为历史，本条后续仅补交付证据文字。
-
-B 实际分支交付（2026-10-21/D-097）：已推送 codex/be-33-35-integration-handoff，远程完整 SHA 回查为 a5d5c3557b6da7cb8f52ea42c30ba03b5fcb18a3，包含 BE-18、集成修复/测试和交接证据；远程 main 仍 d79e28a624fd4b9bf3862063c44274d3db602248，未合并或推送 main。完整139＋375及18辅助检查通过，专属资源清理关闭；本条后续仅补交付文字。推送分支不等于主线交付、本人验收或 BE-33/35 完成；A/BE-27、D/BE-30、A/BE-34 及完整验收仍开放。下方准备推送/未授权为历史。
-
-B 最新验证（2026-10-21/D-097）：已接入 main/d79e28a 的 BE-26，完整 clean verify/mysql-check 通过：139 普通＋375 真实 MySQL/HTTP，失败/错误/跳过 0；18 项辅助工具测试与设计静态校验通过。新增真实来源关闭→下次查询拒绝、迟到批准不复权及新周期重新申请链路，集成组 8 项通过。专属随机库/账号 0/0、临时密钥清理、13461 实例正常关闭；既有数据库未操作。BE-18 与 BE-33/35 当前准备提交至独立 B 分支，远程 main 不合并；BE-33 尚缺 A/BE-27、D/BE-30，BE-35 尚缺 A/BE-34，正式状态及其他成员验收保持。下方缺 BE-26、旧测试数与未授权推送是历史。
-
-D-094更新：已接入 C 工作流 main/6b9a02e 并补配置审批→授予→业务查询→撤销集成，修正正式 /previews 路由。BE-33 仍缺 BE-26/27/30 相关完整验收，BE-35 缺真实服务器 BE-34，不能关闭或发布。当前交付清单与可重复的只读发布检查见 [集成/交接](docs/05-detailed-design/BE-33-35-INTEGRATION-HANDOFF.md)；下方缺 C 为历史。
-
-D-094（2026-10-21）：BE-33/35 已补现有模块集成回归、只读发布证据检查和交接准备；执行/失效/导入提交/真实服务器依赖仍缺，不能宣布全链路或发布完成。两项保持 PLANNED、准备单列。见 [剩余验收与交接清单](docs/05-detailed-design/BE-33-35-INTEGRATION-HANDOFF.md)，不改变其他成员进度或验收事实。
-
-D-093（2026-10-21）：B/BE-18 已在本地任务分支实现完整有效权限查询与单项检查，待本人确认和主线交付，未推送/合并。B 六项业务开发已有实现，BE-33/35 与完整项目验收仍开放；本机配置及实际验证见 [BE-18](docs/05-detailed-design/BE-18-EFFECTIVE-PERMISSIONS.md)。下方 BE-18 未实现/等 BE-14 为历史。
-
-D-083：BE-09已通过[PR #3](https://github.com/Noah-hope/RBAC-admin/pull/3)交付main/5f42a2c，本地及远程已核对，任务分支保留；112普通＋227真实MySQL/HTTP通过。A确认沿用D-082，未进行人工演示；组员可更新main接入，见[交付记录](docs/05-detailed-design/BE-09-SCOPE-CREATION.md)。下方待交付为历史。
-
-D-083：A已授权BE-09通过PR交付main，已接入最新BE-16，正在完整集成验证。实际PR及合并结果成功后补录；下方待授权/未整合是历史，见[BE-09交接](docs/05-detailed-design/BE-09-SCOPE-CREATION.md)。
-
-D-082：A已确认BE-09按自动化测试通过验收，OWNER_ACCEPTED、待主线交付，本机演示未进行。下一步可办理BE-09交付；A剩余BE-27等D/BE-26、BE-34等B/BE-33。下方待A确认是此前历史，见[验收依据及后续演示步骤](docs/05-detailed-design/BE-09-SCOPE-CREATION.md)。
-
-D-081：A/BE-09 的创建预览与范围/任命原子创建已在 `codex/be-09-scope-creation` 实现，待A本人确认，尚未交付main。实现、验证及逐步Apifox操作见[BE-09验收说明](docs/05-detailed-design/BE-09-SCOPE-CREATION.md)；BE-05/08/17技术依赖已在main，下方仍需等待的描述为历史。
-
-D-074（2026-10-20）：BE-17/12 已检查并交付远程 main/3103b35，来源 1fb95ad、任务分支保留。完整 93 普通＋169 真实 MySQL/HTTP 通过，合并后 93 普通回归及静态校验再次通过；组员更新 main 即可复用。本人验收仍开放，BE-18/33/35 未完成；下方待交付为历史，见 [交付与接入](docs/05-detailed-design/BE-17-12-PREVIEW-CATALOG.md)。
-
-D-073（2026-10-20）：B/BE-17 安全影响预览及 BE-12 系统/目录编辑已在任务分支实现，完整 93 普通＋169 真实 MySQL/HTTP 检查通过。两项待本人确认与主线交付，尚未推送/合并 main；BE-18/33/35 仍开放。见 [实现与接入](docs/05-detailed-design/BE-17-12-PREVIEW-CATALOG.md)，下方未实现说明为历史。
-
-D-072（2026-10-20）：B 的 BE-11/13/15 已合入并交付远程 main/0e391c6，来源 b92cdbb；完整 85 普通＋150 真实 MySQL/接口检查及静态校验通过，原设计管理上下文校验已统一。B 分支保留，待负责人验收；其余 B 任务与 OA/发布未完成。详见 [集成交付](docs/05-detailed-design/B-MAIN-INTEGRATION.md)，下方待推送及旧依赖说明为历史。
-
-D-070（2026-10-19）：B 的 BE-11、BE-13、BE-15 已在独立任务分支实现，真实测试和接入约定见 [B 实施记录](docs/05-detailed-design/BE-11-13-15-B-MODULE.md)。待负责人确认，未合并或推送；BE-17/12/18 仍按原依赖等待，完整后端与发布验收尚未完成。下方旧日期的任务数量与运行结果为历史。
-D-069：BE-08已按A确认并通过[PR #2](https://github.com/Noah-hope/RBAC-admin/pull/2)交付main/ca85189。本地及远程主线已核对，组员可pull并按[BE-08交接](docs/05-detailed-design/BE-08-MANAGEMENT-SCOPE.md)复用；B可推进BE-17，A/BE-09仍等BE-17。下方待交付为历史。
-
-D-068：A已确认BE-08验证通过，当前待共同main交付。已准备[PR正文](docs/05-detailed-design/BE-08-PR.md)，尚未推送、创建或合并；A后续BE-09仍等B/BE-17。下方待A确认是此前历史。
-
-D-067：A 已在 `codex/be-08-management-scope` 实现任命/范围四查询和单项上下文/覆盖策略，使用 Spring Data JPA 只读仓储，接入 D 已交付的 BE-10。当前待 A 确认、未交付 main；验证结果、Apifox 步骤及 B/C/D 内部接口约定见 [BE-08](docs/05-detailed-design/BE-08-MANAGEMENT-SCOPE.md)。下方较早的任务数量与状态为历史，以共享记忆和任务清单为准。
-
-D-061：A 已实现 BE-32 部署产物、配置与管理员初始化，80 离线＋88 真实 MySQL 检查通过；任务已获本人确认（D-062），并已通过[PR #1](https://github.com/Noah-hope/RBAC-admin/pull/1)合入远程main/609ee4b（D-063）。[IDEA 初始化与发布步骤](deploy/README.md)使用同一份 Java 代码/jar，无需组员现在选择服务器模板或新增一套密钥；实际服务器部署仍由 BE-34 验证。测试与交接见 [BE-32 记录](docs/05-detailed-design/BE-32-DEPLOYMENT.md)，其余27项保持 PLANNED。下方 D-060 及更早的数量/状态为历史。
-
-身份模块与后续目录样例：见[BE-06实现](docs/05-detailed-design/BE-06-IDENTITY.md)和[本机启用及组员接入](docs/05-detailed-design/BE-06-LOCAL-SETUP.md)。
-
-D-060：BE-06身份认证与[BE-07后台账号管理](docs/05-detailed-design/BE-07-ACCOUNTS.md)均已本人确认，已合入并推送main/ff19d17、远程回查一致。当前75离线＋80真实MySQL检查通过；其余28项待实现，下方待主线/旧29项为此前记录。成员可pull共同main后按身份启用说明配置，密钥不随代码提交。
-
-公共基座已完成本人整体确认：BE-01～05为OWNER_ACCEPTED，F-01～06通过，FOUNDATION_ACCEPTED；2026-10-18已合并并推送main/b68aa9a，远程回查一致。BE-06最终74离线＋59真实MySQL检查通过（含基座原64＋42回归），开发/测试库迁移和普通启动已确认；30项业务已按D-055登记A～D分工；D-056用户认领A，BE-06在开发分支实现并获本人确认（D-057），待合入，其余29项待实现。见[整体核对报告](docs/05-detailed-design/FOUNDATION-REVIEW.md)和[后续开发简明指南](docs/05-detailed-design/FOUNDATION-USAGE.md)。
-
-当前业务范围：**仅管理功能权限**。员工经角色获得系统进入及查看、编辑、新增等操作权限；不设计业务数据权限。需求于 2026-10-15 按用户要求修订，说明见[变更记录](docs/project/FUNCTION_PERMISSIONS.md)。
-
-权限管理员按公司、指定部门及系统范围管理；员工离岗关权直接生效。规则见[管理范围与人员权限](docs/01-requirements/usecases-v1/管理范围与人员权限规则.md)。PNG/SVG 按需生成，现有 V1.1 预览已标记，详见[预览维护规则](docs/project/PREVIEWS.md)。
-
-## 四人分工
-
-| 成员 | 负责领域 | 全部任务 |
-| --- | --- | --- |
-| A | 身份与管理范围、运行交付 | BE-06、07、08、09、27、32、34 |
-| B | 系统、角色与功能权限、集成验收 | BE-11、12、13、15、17、18、33、35 |
-| C | 申请、OA审批与执行、审计 | BE-19、20、21、22、23、24、25、31 |
-| D | 组织、人员与授权来源、导入 | BE-10、14、16、26、28、29、30 |
-
-具体交付、各人推进顺序与接口交接见[四人分工说明](docs/05-detailed-design/TEAM-ASSIGNMENT.md)。A～D为成员代号，用户已认领A（D-056），其他成员姓名/GitHub账号待补；各任务由负责人自行确认完成，不另设评审人。
-
-## 业务开发顺序
-
-基座BE-01～05已通过，图中只展示后续任务。箭头从前置任务指向后续任务；多个箭头汇入同一节点时，须等待全部前置完成。没有前后依赖路径的分支可以并行，BE-06/07已按D-060交付main，D的BE-10、B的BE-11等可按依赖推进；后续任务仍须满足依赖及成员本机接入。
-
-为便于阅读，省略了已经由路径表达的重复前置依赖；完整依赖以[任务清单](docs/05-detailed-design/TASKS.md)和[任务数据](docs/05-detailed-design/issues.json)为准。
-
-```mermaid
-flowchart TD
-    BE06["BE-06<br/>三类JWT与后台登录、<br/>退出、本人改密"]
-    BE07["BE-07<br/>后台账号管理与密码重置"]
-    BE08["BE-08<br/>当前单项任命、<br/>范围读模型与覆盖策略"]
-    BE09["BE-09<br/>创建管理范围及任命、<br/>创建预览"]
-    BE10["BE-10<br/>组织、员工与任职读取<br/>及基础变更端口"]
-    BE11["BE-11<br/>系统登记及查询"]
-    BE12["BE-12<br/>目录原子编辑、<br/>系统启停及影响预览"]
-    BE13["BE-13<br/>角色元数据和当前配置读取"]
-    BE14["BE-14<br/>来源和关系基线、<br/>授权历史及当前资格"]
-    BE15["BE-15<br/>有效角色配置应用器"]
-    BE16["BE-16<br/>授予/撤销及关闭来源<br/>底层原子操作"]
-    BE17["BE-17<br/>安全影响预览与分页、<br/>依赖集合快照"]
-    BE18["BE-18<br/>业务系统有效权限<br/>和单项检查"]
-    BE19["BE-19<br/>审计列表、详情与敏感访问"]
-    BE20["BE-20<br/>角色创建与配置/<br/>授予/撤销草稿、占用"]
-    BE21["BE-21<br/>预览确认、固定申请<br/>与OA待办"]
-    BE22["BE-22<br/>申请列表、详情<br/>及安全时间线"]
-    BE23["BE-23<br/>OA可靠投递、关联<br/>及人工投递重试"]
-    BE24["BE-24<br/>OA最终结果接收<br/>与三层去重"]
-    BE25["BE-25<br/>自动执行、整份失效<br/>与失败恢复"]
-    BE26["BE-26<br/>直接来源关闭<br/>与统一申请失效编排"]
-    BE27["BE-27<br/>员工状态及管理范围替换<br/>的跨域失效"]
-    BE28["BE-28<br/>CSV/XLSX文件上传、<br/>元数据及解析"]
-    BE29["BE-29<br/>冻结导入预检、<br/>差异与问题报告"]
-    BE30["BE-30<br/>导入整批提交、历史<br/>与失败恢复"]
-    BE31["BE-31<br/>演示OA适配器<br/>及受控服务身份工具"]
-    BE32["BE-32<br/>部署产物、配置<br/>与管理员初始化"]
-    BE33["BE-33<br/>完整业务链路<br/>及并发/失败集成验收"]
-    BE34["BE-34<br/>实际服务器部署、<br/>重启与演示验收"]
-    BE35["BE-35<br/>交接、任务证据与发布收尾"]
-
-    BE06 --> BE07
-    BE06 --> BE08
-    BE06 --> BE11
-    BE06 --> BE28
-    BE06 --> BE32
-    BE07 --> BE27
-    BE08 --> BE17
-    BE08 --> BE19
-    BE08 --> BE20
-    BE09 --> BE27
-    BE10 --> BE08
-    BE10 --> BE14
-    BE11 --> BE12
-    BE11 --> BE13
-    BE11 --> BE14
-    BE12 --> BE33
-    BE13 --> BE15
-    BE13 --> BE20
-    BE14 --> BE16
-    BE14 --> BE18
-    BE14 --> BE20
-    BE15 --> BE25
-    BE16 --> BE25
-    BE16 --> BE26
-    BE17 --> BE09
-    BE17 --> BE12
-    BE17 --> BE21
-    BE17 --> BE26
-    BE17 --> BE29
-    BE18 --> BE33
-    BE19 --> BE33
-    BE20 --> BE21
-    BE20 --> BE22
-    BE20 --> BE26
-    BE21 --> BE23
-    BE22 --> BE33
-    BE23 --> BE24
-    BE24 --> BE25
-    BE24 --> BE31
-    BE25 --> BE33
-    BE26 --> BE27
-    BE27 --> BE30
-    BE28 --> BE29
-    BE29 --> BE30
-    BE30 --> BE33
-    BE31 --> BE33
-    BE32 --> BE34
-    BE33 --> BE34
-    BE34 --> BE35
-```
-
-## 已确认技术栈
-
-2026-10-16 用户确认，决策见 [D-028](docs/project/DECISIONS.md)：
-
-| 领域 | 已确认选型 |
+| 资料 | 地址与说明 |
 | --- | --- |
-| 前端 | Vue 3 + TypeScript + Tailwind CSS |
-| 后端 | Spring Boot + Spring Data JPA |
-| 数据库 | MySQL |
-| API 风格 | RESTful API；使用 Apifox 管理契约 |
-| 身份认证凭证 | JWT；功能授权仍按 RBAC 规则判断 |
-| 分析与设计方法 | 结构化分析与结构化设计 |
+| 项目设计文档（PDF） | [项目设计说明书](output/pdf/集中权限管理系统项目设计说明书.pdf) |
+| 数据库设计文档（PDF） | [数据库设计说明书](output/pdf/RBAC权限管理系统数据库设计说明书.pdf) |
+| 数据库ER图资源 | [数据库设计资源目录](docs/04-database/) · [四页ER图源文件](docs/04-database/database-erd.drawio) |
+| 顶层数据流图 | [顶层资源目录](docs/01-requirements/dataflows/context/) · [系统边界级图源](docs/01-requirements/dataflows/context/系统边界级数据流图.drawio) |
+| 第一层数据流图 | [第一层精简总览图源](docs/01-requirements/dataflows/第一层数据流总览.drawio) |
+| API文档 | [https://wpqk6zdtzr.apifox.cn](https://wpqk6zdtzr.apifox.cn) |
+| JaCoCo测试报告（PDF） | [JaCoCo测试报告](output/pdf/JaCoCo测试报告-2026-10-27.pdf) · [完整HTML报告压缩包](docs/05-detailed-design/reports/JaCoCo-2026-10-27.zip) |
+| 项目前端 | [https://121.36.30.6/](https://121.36.30.6/) |
 
-选型已确认，[API 契约 1.2.0](docs/03-api/README.md) 已完成正式跨阶段评审修订及静态校验，设计层面有条件通过；Apifox1.2.0指定客户端导出核心一致已核对，历史证据及MCP限制保留；JWT 生命周期及失效规则已有接口设计。[数据库设计草案](docs/04-database/README.md)已交付，MySQL8.4及后端具体版本已有可评审技术取值；BE-02～05公共机制已实现并单项确认，结构迁移及基础持久化/事务/幂等已验证；正式业务/认证尚未实现，[正式需求—API—数据库一致性评审](docs/04-database/CONSISTENCY-REVIEW.md)已完成修订，数据库草案1.1；[后端详细设计1.3](docs/05-detailed-design/README.md)及35个本地Issue草案已交付，迁移/测试/工程布局已有设计取值；真实引擎已验证公共机制，完整业务及服务器验收留后续。
+设计文档的AsciiDoc源文件位于[项目文档目录](docs/06-project-document/)。JaCoCo报告对应2026-10-27的700项后端测试：失败、错误、跳过均为0，行覆盖率和方法覆盖率均为100%，分支覆盖率为78.59%。
 
-## 分析与设计方法
+## API测试说明
 
-本项目采用**结构化分析与结构化设计方法**，以自顶向下、逐步求精的方式分解业务处理和系统模块，并以高内聚、低耦合作为模块划分原则。
+1. 打开上方API文档，访问密码为 **`rbacadgn`**。
+2. 选择“管理员登录”接口：**`POST /api/v1/admin/sessions`**。登录接口无需携带令牌，鉴权选择“无需鉴权”。
+3. 使用文档配置的运行环境发送以下JSON请求体：
 
-- 需求分析阶段：结合用例明确参与者、业务规则和验收行为，通过数据流图描述系统边界、处理过程、数据流和逻辑存储。旧数据流图已于 2026-10-25 按用户要求删除，目前保留[系统边界级图](docs/01-requirements/dataflows/context/README.md)，已新增[第一层总图](docs/01-requirements/dataflows/第一层数据流图.drawio)，P1～P7处理分图已补齐，后续是否分解第二层按需要决定。
-- 设计阶段：在需求、界面、API 和数据库设计的基础上，将处理过程逐步细化为职责明确的模块，说明模块层次、调用关系、输入输出、接口、异常及事务边界，并建立需求到模块和测试的追踪关系。数据流中的处理过程和逻辑存储不直接等同于代码模块和数据库表。
-- 表达与验证：用例、活动图和时序图辅助描述业务行为；详细设计通过模块结构与接口说明落实结构化设计，实现通过 TDD 验证业务结果及边界。
+   ```json
+   {
+     "loginName": "initial.admin",
+     "password": "newcode123456"
+   }
+   ```
 
-上述内容说明项目采用的方法；详细设计已交付，公共基座已有实际TDD、隔离数据库及本机验证，完整业务与部署仍待实现。当前阶段及交付事实以[项目共享记忆](docs/project/MEMORY.md)为准，详细流程见[开发流程](docs/project/WORKFLOW.md)。
+4. 登录成功返回 **`201 Created`**，响应中的`accessToken`用于后续管理员接口。在鉴权栏填写该令牌，或设置请求头`Authorization: Bearer <accessToken>`。
+5. 调用 **`GET /api/v1/admin/sessions/current`**，返回`200 OK`即可查看当前管理员会话和身份。
 
-## 阅读入口
+API文档访问密码用于打开文档，管理员账号密码用于登录测试系统。上述令牌用于管理员接口；业务系统权限查询、OA结果接口使用各自的服务身份。
 
-- [协作规则](AGENTS.md)：每次开展工作先读。
-- [项目共享记忆](docs/project/MEMORY.md)：当前阶段、事实、待办和交接入口。
-- [开发流程](docs/project/WORKFLOW.md)：五个阶段及 TDD 执行要求。
-- [决策记录](docs/project/DECISIONS.md)：用户已确定的约束与后续变更依据。
-- [统一术语表](docs/project/GLOSSARY.md)：团队及 agent 交流使用的名称、别称、定义和边界示例。
-- [团队文档总入口](docs/README.md)：共享记忆及五个阶段的资料导航。
-- [需求资料](docs/01-requirements/README.md)：正式需求分析及配套图。
-- [需求总览与统一规则](docs/01-requirements/usecases-v1/用例说明.md)：2026-10-15 功能权限修订，保留 UC-01～UC-11。
-- [按用例分类阅读](docs/01-requirements/按用例分类/README.md)：详细说明、简表和图的同步阅读副本。
-- [导入说明](docs/project/IMPORT.md)：资料来源、校验方式及导入边界。
-- [前端界面原型](docs/02-ui-design/README.md)：页面、启动方式和原型验证。
-- [Material 3 界面方案](docs/02-ui-design/MATERIAL3-PLAN.md)：已确认并实施的页面、导航、Token 与改造清单。
-- [阶段评审](docs/02-ui-design/STAGE-REVIEW.md)：原型有条件通过，可作为 API 设计输入；3 项原型缺口及契约同步待办。
-- [数据库设计](docs/04-database/README.md)：实体关系、数据字典、并发/幂等/JPA、DDL草案、静态自查及交接。
-- [后端详细设计与实施任务](docs/05-detailed-design/README.md)：1.3实施计划；负责人自行确认，13模块、5项用户先行基座、30项验收后待分派任务及局部验证边界。
-- [项目技能](docs/project/SKILLS.md)：仓库内四个技能的入口、来源、版本和文件摘要。
+## 公共基座与四个主要模块
 
-## 当前目录
+**公共基座**提供统一配置、持久化支持、读写事务边界、请求幂等、审计追加和错误响应。业务写入与关键审计在同一事务中提交，失败整体回滚；写入前重新检查当前资格，重复请求在重新鉴权后回放原结果。
+
+| 模块 | 主要功能 |
+| --- | --- |
+| A：后台身份与管理范围 | 管理员登录、退出、改密、账号启停与重置；维护管理范围和独立任命，处理资格变化及旧会话失效。 |
+| B：系统、角色与功能权限 | 维护业务系统、目录和独立权限项，管理角色及有效配置；提供影响预览、员工有效权限查询和单项权限检查。 |
+| C：申请、OA审批执行与审计 | 编制与提交权限变更申请，对接OA投递和结果接收；批准后整份执行、处理失败恢复，提供申请和审计查询。 |
+| D：组织人员、授权来源与导入 | 维护公司、部门、岗位、员工及任职；保存独立授权来源和授予历史，处理离岗关权及CSV/XLSX文件预检、整批导入。 |
+
+四个模块共同使用公共基座。员工状态、范围变化和导入涉及多个领域，由生命周期服务协调相关授权、会话和申请的失效。
+
+## 后端代码包结构
+
+代码位置：[backend/src/main/java/com/adgn/backend](backend/src/main/java/com/adgn/backend/)。
 
 ```text
-rbac-admin/
-├── AGENTS.md
-├── README.md
-├── .agents/skills/
-│   ├── grill-me/
-│   ├── grilling/
-│   ├── frontend-design/
-│   └── test-driven-development/
-├── backend/                 # 正式后端Maven工程
-└── docs/
-    ├── README.md
-    ├── project/
-    ├── 01-requirements/
-    ├── 02-ui-design/
-    ├── 03-api/
-    ├── 04-database/
-    └── 05-detailed-design/
+com/adgn/backend/
+├── bootstrap/   # 独立管理员初始化入口
+├── catalog/     # 业务系统、目录节点与权限项的查询、规划和保存
+├── change/      # 角色配置、分配和撤销草稿，目标占用及固定申请提交
+├── core/        # 公共配置、持久化、事务、幂等和审计追加能力
+├── demo/        # 受控OA演示适配器及服务身份令牌工具
+├── execution/   # 已批准申请的整份执行、失败记录与后台恢复
+├── grant/       # 授权来源、关系基线、具体授予、撤销和来源关闭
+├── identity/    # 后台账号、密码、JWT、会话及当前身份检查
+├── imports/     # 导入文件存储与解析、冻结预检计划及整批提交
+├── lifecycle/   # 离岗、员工停用和范围替换引起的跨领域失效
+├── migration/   # 独立数据库迁移入口
+├── oa/          # OA可靠投递、审批关联及最终结果接收
+├── people/      # 公司、部门、岗位、员工与任职的基础读取和写入
+├── query/       # 安全查询投影、有效权限计算、影响预览和审计查询
+├── role/        # 角色元数据、当前配置读取及有效配置应用
+├── scope/       # 管理范围、管理员任命、上下文与范围覆盖检查
+└── web/         # HTTP控制器、请求响应对象、鉴权适配与统一错误处理
 ```
 
-界面阶段已有可运行交互原型，位于 `docs/02-ui-design/prototype/`，可作为 API 设计输入。API 本地设计与[评审修订](docs/03-api/REVIEW.md)已交付于 `docs/03-api/`，已导入Apifox并核对指定客户端导出，MCP暴露差异见同步记录；数据库设计已交付于`docs/04-database/`，初始迁移及基础持久化/事务/幂等已有真实隔离MySQL验证；BE-01～05公共基座已实现、本人确认并交付main，BE-06～35业务/交付任务仍待分派和实现；按 D-029，3 项原型展示/演示补齐后续跟踪，不作为 API 启动或契约定稿前置，对应业务规则保留。目录约定及迁移说明见 [LAYOUT.md](docs/project/LAYOUT.md)。
-
-## 规定的项目流程
-
-1. 需求分析：使用 `grill-me`（实际调用 `grilling`）。本项目已有需求分析作为起点，新增或变更需求再按该方式澄清。
-2. 界面原型设计：使用 `frontend-design`，Vue 3 + TypeScript + Tailwind CSS。
-3. API 设计：使用 Apifox，并通过 Apifox MCP 协作，契约同时纳入 Git。
-4. 数据库设计：依据已确定的需求与接口契约设计。
-5. 详细设计与实现：先生成设计文档、分解业务流程和模块，再使用 TDD skill，逐模块执行“失败测试 → 最小实现 → 重构”。
-
-各阶段的交付内容见[开发流程](docs/project/WORKFLOW.md)。技术栈已按 D-028 确认，具体版本、工程布局与测试框架已有详细设计取值，公共基座组合已验证，完整业务与目标服务器部署继续按对应任务验收。
-
-## Git 共享记忆
-
-阶段状态、待办、设计决策、需求和验证证据统一写入 `docs/`，与对应改动一起提交。其他协作者或新的会话从 `AGENTS.md` 进入并读取 `docs/project/`，不另建根目录状态文件。`.agents/skills/` 仅保存技能，不作为项目事实记忆。
-
-远程仓库：[Noah-hope/RBAC-admin](https://github.com/Noah-hope/RBAC-admin)。设计与公共基座已合并并推送至 `main`；后续任务使用任务分支和Issue/PR记录协作，按D-051由唯一负责人核对证据并确认完成，不设置独立评审人。
+`web`接收请求并调用相应业务服务；业务服务通过`core`的事务边界完成校验和保存。`query`按业务场景读取多个领域的数据并生成安全响应，`lifecycle`负责协调多领域失效。`bootstrap`和`migration`是独立运维入口，普通后端启动不会自动执行管理员初始化或数据库迁移。

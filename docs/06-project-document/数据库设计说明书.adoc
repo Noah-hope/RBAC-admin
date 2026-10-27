@@ -1,0 +1,1128 @@
+= RBAC权限管理系统数据库设计说明书
+项目小组 A / B / C / D
+v1.0, 2026-10-27
+:doctype: book
+:lang: zh-CN
+:encoding: utf-8
+:toc: macro
+:toc-title: 目录
+:toclevels: 1
+:sectnums:
+:sectnumlevels: 3
+:chapter-signifier:
+:appendix-caption: 附录
+:figure-caption: 图
+:table-caption: 表
+:imagesdir: images
+:notitle:
+
+[.cover]
+--
+[.cover-title]
+RBAC权限管理系统
+
+[.cover-subtitle]
+数据库设计说明书
+--
+
+toc::[]
+
+== 数据库设计概述
+
+=== 设计目标
+
+本系统集中管理多个业务系统的功能权限。数据库需要记录员工是谁、在哪些部门任职、管理员能管理什么范围、角色包含哪些权限，以及员工通过哪个部门来源获得了角色。同时需要保存权限申请、OA审批结果、执行结果和审计记录，使每次授权和撤销都能找到依据。
+
+系统采用RBAC0模型，员工通过业务角色获得权限。组织岗位用于表达任职和资格，后台任命用于表达管理权限，两者分别保存。权限配置、角色分配和一般撤销通过OA审批后执行；离岗和员工停用引起的失效直接处理。
+
+=== 存储方案与设计依据
+
+数据库采用MySQL 8.4和InnoDB，字符集为utf8mb4，默认排序规则为utf8mb4_0900_bin。实体通过稳定内部ID关联，业务编码用于定位和对接，显示名称可以修改。UUID保存为CHAR(36)，日期时间使用DATETIME(6)并统一按UTC保存。
+
+本文依据现有数据库逻辑模型、表元数据、建表SQL、不可变触发器、事务设计和后端实现整理。数据库结构沿用当前关系模型，文中ER图复用项目设计说明书已经采用的最新四页图。图中展示主要字段和关系，附录给出完整字段定义及外键引用。
+
+=== 数据如何分组
+
+[cols="2,5",options="header"]
+|===
+|数据主题 |保存的内容
+|组织与后台身份 |公司、部门、岗位、员工、任职、后台账号、会话、管理范围与任命。
+|目录、角色与独立来源 |业务系统、功能目录、权限项、角色配置，以及按员工和来源部门区分的角色授权。
+|固定申请、OA与执行 |申请草稿、提交时固定的目标、OA投递与审批结果、执行成功凭据和审计记录。
+|导入、预览与可靠性 |文件与导入计划、来源映射、影响预览、HTTP幂等结果和写事务协调记录。
+|===
+
+这些分组按数据职责划分。相同员工可能同时出现在任职、授权和申请中，各处都引用同一个员工ID。数据流图中的D1～D8是逻辑存储，一份逻辑存储可以由多张表共同实现。
+
+== 组织与后台身份
+
+=== 组织与任职的保存方式
+
+company、department和position分别保存公司、部门和岗位。一个公司有多个平级部门，一个部门有多个岗位。employee只保存员工的统一身份和全局状态，具体在哪家公司、哪个部门和岗位任职，由employment记录。
+
+这种分离可以表达兼岗：同一个员工可以拥有多条有效任职。员工离开某个岗位时结束对应任职记录，其他有效任职继续保留；以后重新任职时建立新记录，原来的结束历史仍然可查。
+
+=== 账号、范围和任命分别负责什么
+
+admin_account保存后台登录账号、密码摘要和凭据版本；admin_session保存已签发会话的标识、有效期和撤销状态。会话表不保存JWT原文。总管理员可由部署初始化，普通后台账号关联员工身份。
+
+management_scope确定一个公司、一个部门；scope_system列出该范围可管理的业务系统。admin_appointment把账号与一个范围连接起来，表示一次独立任命。一个账号可以有多项任命，每次操作选择其中一项，服务端按该项范围检查目标。
+
+例如，管理员同时负责A公司销售部和B公司财务部，数据库中保存两项任命。办理A公司的申请时，只使用A公司那项任命中的部门和系统集合，不能把另一项任命的系统集合拼进来。
+
+=== 资格变化如何即时生效
+
+账号停用、员工全局停用、密码重置和最后一项管理资格结束，都会影响旧会话的可用性。账号记录中的credential_version、session_epoch与会话中保存的值共同用于检查，服务端还会读取当前员工状态、任命与范围。
+
+范围变化时保存新的scope_version，并检查原范围关联的未结束申请。如果新范围实质上不能覆盖某份固定申请的全部目标，该申请整份失效；仅增加无关系统或原提交人离任，不单独使仍被覆盖的申请失效。
+
+[.er-section]
+--
+.组织与后台身份
+image::er-1.png[组织与后台身份ER图,width=100%]
+--
+
+== 目录、角色与独立来源
+
+=== 系统、目录和权限项
+
+business_system保存业务系统，directory_node保存导航与功能节点，通过parent_id连接父节点。permission保存独立功能操作，以及每个系统唯一的系统进入权限。
+
+功能与操作通过permission.function_id关联：一个功能可以有多个操作。功能节点还可以通过directory_node.visibility_permission_id选择本功能中的一个操作，作为菜单是否显示的依据。这两条引用分别表达“操作属于哪个功能”和“菜单选哪个操作判断可见”，因此在ER图中分别连接。
+
+系统与进入权限在同一事务中创建。目录保存前检查最终树无环、同系统、菜单绑定合法，再一起提交。
+
+=== 角色配置与配置历史
+
+business_role保存角色名称、归属及配置版本，role_permission保存角色当前生效的权限集合，展开角色与权限的多对多关系。角色元数据与权限配置使用不同版本。
+
+角色配置审批成功并执行后，系统替换role_permission中的有效集合，递增配置版本，同时向role_configuration_history追加一份完整配置快照。因此，一个角色可以对应多条配置历史，每条历史记录只属于一个角色。
+
+员工的有效角色授权使用更新后的权限集合，历史配置保留过去审批和执行的内容。
+
+=== 为什么授权要区分来源
+
+authorization_source按员工、公司、来源部门和业务系统记录一个独立来源。grant_baseline保存这个来源与某个角色之间的持久关系及版本，role_grant保存每一次具体授予。grant_employment_evidence保存授予时采用的任职依据。
+
+例如，员工在销售部和财务部兼岗，两部门授予相同角色时分别保存来源。销售部撤销自己的授予，只结束其对应的role_grant，财务部的授予仍有效。
+
+一般撤销结束选中的具体授予，并推进关系版本。离岗关闭来源时还会推进source_epoch，即使当时没有有效授予也会记录这个变化。旧申请保存的是提交时的周期和版本，迟到的批准无法绕过已经发生的关闭。后来重新任职、重新授权，需要建立新的授予记录。
+
+有效权限查询检查员工及适用任职，读取周期一致的来源、有效授予和角色当前配置，并检查系统、目录和进入资格。同一公司、同一系统的合法来源取权限并集，全部读取在同一个快照内完成。
+
+[.er-section]
+--
+.目录、角色与独立来源
+image::er-2.png[目录、角色与独立来源ER图,width=100%]
+--
+
+== 固定申请、OA与执行
+
+=== 草稿与提交后的固定内容
+
+change_request保存申请类型、内容、原因、提交依据和办理状态。change_target把申请涉及的角色、员工、来源和具体授予列成可检索的明细，便于执行复核，以及在范围、来源变化时查找受影响的申请。
+
+草稿可以编辑。正式提交时，系统固定申请内容、目标清单、原管理依据及相关版本，并保存规范字节和内容摘要。OA审批和后续执行都针对这份固定内容，提交后不再通过修改草稿改变待执行事项。
+
+role_change_claim和relation_change_claim保存正在办理的角色配置或授权关系占用，阻止同一目标同时出现互相冲突的申请。申请结束后释放占用；历史仍保留在申请、执行和审计记录中。
+
+=== OA投递、关联和结果
+
+oa_outbox保存需要发送给OA的待办、重试时间和领取租约。申请提交和投递待办一起落库；后台发送器随后调用OA，网络等待放在数据库事务外。可靠取得OA审批编号后，oa_link保存本地申请与外部审批的对应关系。
+
+service_identity记录受信服务主体及其绑定系统或OA实例。oa_callback_event保存收到的回调事件，按OA实例和事件编号防重；oa_final_result保存一份申请的最终批准或驳回结果。同一个事件重复发送、不同事件重复报告相同结果，都不会形成第二份业务执行。
+
+=== 批准结果与实际执行分开保存
+
+OA批准表示同意这份申请，实际生效还需要本地事务完成角色配置或授权修改。执行前重新检查固定内容、原范围覆盖、来源周期和目标版本；任何目标已不再符合条件，就不能执行整份申请。
+
+execution_success记录一份申请已经成功执行的凭据，并关联成功审计。业务修改、成功凭据、申请状态和占用释放在同一事务中提交。execution_attempt记录执行尝试；业务失败先回滚，随后再用独立事务保存失败尝试，保存前重新确认没有已经成功的结果。
+
+audit_event保存操作者、目标、来源范围、原因和当时的变化快照；audit_subject为事件关联员工、角色等稳定目标，支持后续筛选。历史展示使用记录时的快照，避免当前名称或任职变化改变旧事件的含义。
+
+[.er-section]
+--
+.固定申请、OA与执行
+image::er-3.png[固定申请OA与执行ER图,width=100%]
+--
+
+== 导入、预览与可靠性
+
+=== 文件导入如何落库
+
+import_file保存上传文件的名称、摘要、大小和受控存储位置，文件本体放在文件存储中。import_batch保存来源批号、处理类型、冻结输入和执行结果；import_plan_row保存预检产生的规范行、候选ID、稳定编码、字段前后值与依赖版本，import_issue保存预检问题。
+
+预检只生成待执行计划。首次导入缺少组织编码时，可在计划中为明确的组织路径分配候选ID和编码，正式提交时再检查冲突，并依次建立公司、部门、岗位、员工和任职。organization_mapping保存来源组织路径到正式组织的映射，employee_source_identity保存来源员工标识到内部员工的映射。
+
+正式导入按冻结计划逐项重新校验。整批业务修改、相关失效、审计和批次成功结果在同一事务中保存，任意一行失败都会回滚整批。成功来源批号长期防重，重复提交同一成功批次返回原结果。
+
+=== 影响预览如何保持一致
+
+impact_preview保存预览输入、当时的管理依据、依赖版本及到期时间；preview_item保存可分页查看的安全明细。统计和各页明细来自同一份预览，避免翻页过程中重新计算而出现前后不一致。
+
+预览有效期为五分钟。保存或提交时仍需检查当前身份、范围和依赖；过期或关键依赖变化后重新预览。预览编号用于定位这份计算结果，本身不能授予管理权限。
+
+=== 重复请求与事务协调
+
+http_idempotency按主体、HTTP方法、规范路径和幂等键记录请求摘要、处理租约及安全响应。相同内容重试可以在重新鉴权后回放原结果；相同幂等键换成其他内容则冲突。它处理HTTP重试，OA事件编号、执行成功凭据和成功导入批号分别处理各自的长期防重。
+
+mutation_guard只有一条固定写协调记录。后端在正式写事务开始时锁定这条记录，使参与协议的写事务按顺序完成资格复核和提交。它协调数据库写入，不代表管理员资格或员工业务权限。
+
+[.er-section]
+--
+.导入、预览与可靠性
+image::er-4.png[导入预览与可靠性ER图,width=100%]
+--
+
+== 数据一致性与事务实现
+
+=== 原子保存的实际过程
+
+后端的CommandBoundary使用Spring TransactionTemplate开启独立的READ COMMITTED事务。首先执行以下加锁读取，要求固定记录存在：
+
+[source,sql]
+----
+SELECT revision FROM mutation_guard WHERE id=1 FOR UPDATE;
+----
+
+取得锁后重新检查当前账号、员工和所选任命资格，再创建绑定当前线程、数据源和事务连接的WriteContext。领域写入和审计追加共用这个上下文；提交前检查事务是否已标记回滚，随后更新写协调记录的内部revision，由事务管理器统一提交。
+
+例如管理员范围替换，会一起保存范围系统集合、任命变化、需要撤销的会话、受影响申请失效以及审计。只要其中一步失败，包括最后的审计写入失败，事务就整体回滚，原范围和相关状态一起保留。WriteContext会拒绝在事务结束后、其他线程或其他数据源上继续使用。
+
+这个单写协调方案适用于一期的一致性实现。它使本地短写事务串行执行；文件解析、密码慢哈希和OA网络调用在事务外完成，避免持锁等待外部系统。
+
+=== 数据库约束与业务检查如何配合
+
+[cols="3,4,4",options="header"]
+|===
+|具体要求 |数据库层保存和限制 |业务事务继续检查
+|组织归属一致 |任职通过复合外键引用部门所属公司、岗位所属部门。
+|检查当前任职是否适用，以及结束任职后的资格和授权影响。
+|角色权限属于同一系统 |role_permission通过角色、权限及system_id的复合引用限制归属。
+|审批执行时复核权限可用性和有效配置版本。
+|同来源同角色只有一个有效授予 |基线唯一键固定来源与角色；role_grant的有效槽唯一键限制当前授予。
+|核对来源周期、关系版本，以及撤销目标是否仍为原grantId。
+|最终结果和执行成功不能重复 |oa_final_result、execution_success以request_id作为主键。
+|校验OA身份、关联和摘要，防止矛盾结果及旧请求重复执行。
+|目录必须为合法树 |外键限制父节点同系统，检查约束排除自身引用。
+|在同一写事务中检查整棵最终树，排除多节点环和非法菜单绑定。
+|===
+
+=== 当前记录、历史和版本
+
+当前有效集合放在role_permission、scope_system等关系表中；角色配置历史、固定申请、审批结果和审计使用历史记录或快照保存。JSON快照保存当时的审批、差异和报告，当前角色权限集合仍由关系表表示。
+
+任职、任命和具体授予结束后保留原行，重新建立时使用新ID。授权来源和关系基线持续保留并推进版本，避免删除之后丢掉旧申请的失效依据。active_slot是数据库计算的当前有效标记，配合唯一键限制当前记录，结束历史的槽值为NULL，允许保留多段记录。
+
+业务版本分开表达不同变化：scope_version用于范围，appointment_version用于任命，configuration_version用于角色有效配置，source_epoch用于来源周期，relation_version用于同来源同角色关系。row_version用于内部并发控制，mutation_guard.revision用于内部写提交顺序，各自承担不同职责。
+
+=== 查询快照与访问路径
+
+ReadBoundary开启独立的REPEATABLE READ只读事务，先读取写协调记录建立快照，再完成当前资格检查和结果查询。有效权限计算和安全审计查询在同一快照内读取需要的表，保证一个响应采用一致的事实。
+
+[cols="3,6",options="header"]
+|===
+|查询目标 |现有设计采用的定位路径
+|登录及会话 |按login_name定位后台账号，按会话ID和token_jti检查会话。
+|员工有效权限 |employee_key定位员工，经员工、公司、来源部门和系统找到来源，再关联基线、有效授予及角色权限。
+|范围变化影响 |按scope_id定位相关申请，再检查change_target中整份目标清单的覆盖情况。
+|审计列表 |按来源公司、部门、系统和发生时间过滤，按occurred_at、id稳定排序；员工和角色筛选经audit_subject定位。
+|后台恢复 |按待办或申请状态、下次重试时间定位候选记录，逐份进入受控写事务重新检查。
+|===
+
+=== 初始化与结构维护
+
+数据库初始化由Flyway迁移完成：V1建立表和约束，V2建立不可变保护触发器，V3建立固定的写协调记录。应用启动时检查该记录是否正确存在，避免数据库没有初始化就继续写入。
+
+后续结构变更通过新增迁移表达，同时同步表元数据、数据字典及相应设计说明。本文生成过程只读取当前文件，不执行DDL、连接数据库或重跑业务测试。
+
+// BEGIN GENERATED DATABASE DICTIONARY
+
+[appendix]
+== 物理表与字段定义
+
+本附录按前文四个数据主题列出字段。PK表示主键组成列；“可空”为该列是否允许SQL NULL。类型列保留类型和长度，字符排序规则采用第一章所述约定；UUID列使用ASCII字符集及ascii_bin排序规则。缺少默认值的必填列由写入方提供，生成列由数据库计算。每张表后列出其实际唯一键和外键，不把跨表业务检查误写成数据库已经保证的约束。
+
+[.dictionary-group]
+=== 组织与后台身份
+
+[.table-definition]
+==== 公司表
+
+`company`：公司；无启停或公司层级授权。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`code` |VARCHAR(100) |否 |全局唯一稳定公司编码
+|`name` |VARCHAR(100) |否 |显示名称
+|`version` |BIGINT |否 |API 对象业务版本；仅实质变更递增；默认值：`1`
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|===
+
+主键：`id`。 唯一组合：`code`。
+
+[.table-definition]
+==== 部门表
+
+`department`：一公司内平级部门；无父级和状态。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`company_id` |CHAR(36) |否 |所属公司
+|`code` |VARCHAR(100) |否 |公司内稳定编码
+|`name` |VARCHAR(100) |否 |显示名称
+|`version` |BIGINT |否 |API 对象业务版本；仅实质变更递增；默认值：`1`
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|===
+
+主键：`id`。 唯一组合：`company_id, code`；`id, company_id`。 外键：`company_id` → `company(id)`。
+
+[.table-definition]
+==== 岗位表
+
+`position`：明确部门内岗位；不关联业务角色。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`department_id` |CHAR(36) |否 |所属部门
+|`code` |VARCHAR(100) |否 |部门内稳定编码
+|`name` |VARCHAR(100) |否 |显示名称
+|`version` |BIGINT |否 |API 对象业务版本；仅实质变更递增；默认值：`1`
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|===
+
+主键：`id`。 唯一组合：`department_id, code`；`id, department_id`。 外键：`department_id` → `department(id)`。
+
+[.table-definition]
+==== 员工表
+
+`employee`：统一员工身份；全局停用独立于后台账号。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`employee_key` |VARCHAR(100) |否 |平台当前统一员工标识，全局唯一，不按姓名匹配
+|`name` |VARCHAR(100) |否 |必要姓名
+|`status` |VARCHAR(32) |否 |全局身份状态；枚举：ACTIVE/INACTIVE；默认值：`'ACTIVE'`
+|`version` |BIGINT |否 |API 对象业务版本；仅实质变更递增；默认值：`1`
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|===
+
+主键：`id`。 唯一组合：`employee_key`。
+
+[.table-definition]
+==== 员工任职表
+
+`employment`：独立任职及结束历史；同员工同岗位至多一个当前任职。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`employee_id` |CHAR(36) |否 |员工
+|`company_id` |CHAR(36) |否 |任职公司
+|`department_id` |CHAR(36) |否 |任职部门
+|`position_id` |CHAR(36) |否 |任职岗位
+|`status` |VARCHAR(32) |否 |任职状态；枚举：ACTIVE/ENDED；默认值：`'ACTIVE'`
+|`started_at` |DATETIME(6) |是 |源资料明确的业务开始时间；初始化未知为NULL
+|`ended_at` |DATETIME(6) |是 |源资料明确的业务结束时间；未知可为NULL，状态不靠时间推断
+|`recorded_end_at` |DATETIME(6) |是 |平台记录结束动作时间；ENDED必须有值
+|`version` |BIGINT |否 |API 对象业务版本；仅实质变更递增；默认值：`1`
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|`active_slot` |TINYINT |是 |ACTIVE 时为1，结束历史为NULL；利用唯一键允许多份历史；生成表达式：`CASE WHEN status = 'ACTIVE' THEN 1 ELSE NULL END`
+|===
+
+主键：`id`。 唯一组合：`employee_id, position_id, active_slot`。 外键：`employee_id` → `employee(id)`；`department_id, company_id` → `department(id, company_id)`；`position_id, department_id` → `position(id, department_id)`。
+
+[.table-definition]
+==== 后台账号表
+
+`admin_account`：后台账号及凭据失效依据；总管理员仅部署初始化。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`employee_id` |CHAR(36) |是 |关联员工；部署总管理员允许为空
+|`login_name` |VARCHAR(100) |否 |当前登录名全局唯一
+|`password_hash` |VARCHAR(255) |否 |带算法参数和盐的专用密码摘要；不存密码历史
+|`enabled` |TINYINT |否 |后台账号启用；默认值：`1`
+|`is_super_admin` |TINYINT |否 |部署管理的全局后台身份；普通创建API不得写；默认值：`0`
+|`must_change_password` |TINYINT |否 |临时密码强制修改；默认值：`1`
+|`version` |BIGINT |否 |API 对象业务版本；仅实质变更递增；默认值：`1`
+|`credential_version` |BIGINT |否 |改密/重置递增，JWT须精确匹配；默认值：`1`
+|`session_epoch` |BIGINT |否 |失去全部资格/停用等递增，恢复不回退；默认值：`1`
+|`row_version` |BIGINT |否 |JPA @Version 专用存储修订；不直接作为 API 业务版本；默认值：`0`
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|===
+
+主键：`id`。 唯一组合：`login_name`；`employee_id`。
+
+[.table-definition]
+==== 后台会话表
+
+`admin_session`：可即时撤销的后台会话；不存JWT原文。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |JWT sid，不可猜测 UUID
+|`account_id` |CHAR(36) |否 |所属后台账号
+|`token_jti` |CHAR(36) |否 |本会话唯一JWT jti
+|`mode` |VARCHAR(32) |否 |会话模式；枚举：NORMAL/PASSWORD_CHANGE_ONLY
+|`credential_version` |BIGINT |否 |登录时凭据版本；默认值：`1`
+|`session_epoch` |BIGINT |否 |登录时账号会话周期；默认值：`1`
+|`expires_at` |DATETIME(6) |否 |正常15分钟/受限5分钟的到期时刻
+|`revoked_at` |DATETIME(6) |是 |单会话退出撤销时刻
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|===
+
+主键：`id`。 唯一组合：`token_jti`。 外键：`account_id` → `admin_account(id)`。
+
+[.table-definition]
+==== 管理范围表
+
+`management_scope`：稳定范围记录；一个公司一个部门，可无人及空系统集合。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`company_id` |CHAR(36) |否 |当前管理公司
+|`department_id` |CHAR(36) |否 |当前指定部门
+|`scope_version` |BIGINT |否 |API scopeVersion / Scope.version；名单/范围实质变更递增；默认值：`1`
+|`row_version` |BIGINT |否 |JPA @Version 专用存储修订；不直接作为 API 业务版本；默认值：`0`
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|===
+
+主键：`id`。 外键：`department_id, company_id` → `department(id, company_id)`。
+
+[.table-definition]
+==== 范围系统关联表
+
+`scope_system`：当前范围系统集合；不授予业务进入权限。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`scope_id`（PK） |CHAR(36) |否 |范围
+|`system_id`（PK） |CHAR(36) |否 |获准系统
+|===
+
+主键：`scope_id, system_id`。 外键：`scope_id` → `management_scope(id)`；`system_id` → `business_system(id)`。
+
+[.table-definition]
+==== 管理员任命表
+
+`admin_appointment`：单账号单范围独立任命；结束后不恢复原任命。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`scope_id` |CHAR(36) |否 |稳定范围
+|`account_id` |CHAR(36) |否 |后台账号，员工由账号取得
+|`status` |VARCHAR(32) |否 |任命状态；枚举：ACTIVE/REVOKED/INVALIDATED；默认值：`'ACTIVE'`
+|`appointment_version` |BIGINT |否 |API appointmentVersion / Appointment.version；默认值：`1`
+|`ended_at` |DATETIME(6) |是 |撤销/资格失效时刻
+|`ended_reason` |VARCHAR(500) |是 |结束原因
+|`row_version` |BIGINT |否 |JPA @Version 专用存储修订；不直接作为 API 业务版本；默认值：`0`
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|`active_slot` |TINYINT |是 |ACTIVE 时为1，结束历史为NULL；利用唯一键允许多份历史；生成表达式：`CASE WHEN status = 'ACTIVE' THEN 1 ELSE NULL END`
+|===
+
+主键：`id`。 唯一组合：`scope_id, account_id, active_slot`。 外键：`scope_id` → `management_scope(id)`；`account_id` → `admin_account(id)`。
+
+[.dictionary-group]
+=== 目录、角色与独立来源
+
+[.table-definition]
+==== 业务系统表
+
+`business_system`：业务系统及目录聚合版本；新建同事务建立进入权限。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`code` |VARCHAR(100) |否 |全局唯一稳定编码；新建API限制93字符
+|`name` |VARCHAR(100) |否 |名称
+|`description` |VARCHAR(500) |否 |说明；默认值：`''`
+|`enabled` |TINYINT |否 |系统资源启用；默认值：`1`
+|`version` |BIGINT |否 |API 对象业务版本；仅实质变更递增；默认值：`1`
+|`catalog_version` |BIGINT |否 |仅目录实质变化递增；默认值：`1`
+|`row_version` |BIGINT |否 |JPA @Version 专用存储修订；不直接作为 API 业务版本；默认值：`0`
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|===
+
+主键：`id`。 唯一组合：`code`。
+
+[.table-definition]
+==== 目录节点表
+
+`directory_node`：同系统导航/功能树；操作不作为树节点。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`system_id` |CHAR(36) |否 |所属业务系统
+|`code` |VARCHAR(100) |否 |系统内稳定目录编码
+|`name` |VARCHAR(100) |否 |名称
+|`node_type` |VARCHAR(32) |否 |创建后不改类型；枚举：NAVIGATION/FUNCTION
+|`parent_id` |CHAR(36) |是 |同系统父节点；根为NULL
+|`sort_order` |INT |否 |同父级按此值、code、id排序，允许负数/并列；默认值：`0`
+|`enabled` |TINYINT |否 |节点自身状态；默认值：`0`
+|`visibility_permission_id` |CHAR(36) |是 |本功能menuEligible操作；导航必须为空
+|`version` |BIGINT |否 |API 对象业务版本；仅实质变更递增；默认值：`1`
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|===
+
+主键：`id`。 唯一组合：`system_id, code`；`id, system_id`。 外键：`system_id` → `business_system(id)`；`parent_id, system_id` → `directory_node(id, system_id)`；`visibility_permission_id, id, system_id` → `permission(id, function_id, system_id)`。
+
+[.table-definition]
+==== 权限项表
+
+`permission`：独立功能操作或唯一系统进入权限；不含数据权限。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`system_id` |CHAR(36) |否 |所属系统
+|`code` |VARCHAR(100) |否 |系统内唯一稳定权限编码
+|`name` |VARCHAR(100) |否 |同功能内名称唯一
+|`permission_type` |VARCHAR(32) |否 |权限类型；枚举：SYSTEM_ACCESS/FUNCTION_OPERATION
+|`function_id` |CHAR(36) |是 |FUNCTION_OPERATION关联功能节点；进入权限为空
+|`menu_eligible` |TINYINT |否 |显式查看/进入页面语义；不解析code；默认值：`0`
+|`enabled` |TINYINT |否 |操作自身状态；默认值：`1`
+|`version` |BIGINT |否 |API 对象业务版本；仅实质变更递增；默认值：`1`
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|`access_slot` |TINYINT |是 |系统进入权限为1，其余NULL；系统内唯一；生成表达式：`CASE WHEN permission_type='SYSTEM_ACCESS' THEN 1 ELSE NULL END`
+|===
+
+主键：`id`。 唯一组合：`system_id, code`；`system_id, access_slot`；`function_id, name`；`id, system_id`；`id, function_id, system_id`。 外键：`system_id` → `business_system(id)`；`function_id, system_id` → `directory_node(id, system_id)`。
+
+[.table-definition]
+==== 业务角色表
+
+`business_role`：业务角色元数据和有效配置基线；无角色启停。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`code` |VARCHAR(100) |否 |后端生成 ROLE_ 加UUID无连字符；全局唯一且不可更改
+|`name` |VARCHAR(100) |否 |可重名的显示名称
+|`description` |VARCHAR(500) |否 |说明；默认值：`''`
+|`company_id` |CHAR(36) |否 |固定公司
+|`department_id` |CHAR(36) |是 |部门角色固定部门；公司级共享角色为NULL
+|`system_id` |CHAR(36) |否 |固定业务系统
+|`state` |VARCHAR(32) |否 |首次配置执行成功后EFFECTIVE；枚举：UNCONFIGURED/EFFECTIVE；默认值：`'UNCONFIGURED'`
+|`metadata_version` |BIGINT |否 |仅名称/说明实质变化递增；默认值：`1`
+|`configuration_version` |BIGINT |否 |有效权限集合版本；未配置0；默认值：`0`
+|`row_version` |BIGINT |否 |JPA @Version 专用存储修订；不直接作为 API 业务版本；默认值：`0`
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|===
+
+主键：`id`。 唯一组合：`code`；`id, company_id, system_id`；`id, system_id`。 外键：`company_id` → `company(id)`；`department_id, company_id` → `department(id, company_id)`；`system_id` → `business_system(id)`。
+
+[.table-definition]
+==== 角色权限关联表
+
+`role_permission`：当前有效角色配置集合；关系只表示授予。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`role_id`（PK） |CHAR(36) |否 |业务角色
+|`permission_id`（PK） |CHAR(36) |否 |权限项
+|`system_id` |CHAR(36) |否 |约束角色与权限同系统
+|===
+
+主键：`role_id, permission_id`。 外键：`role_id, system_id` → `business_role(id, system_id)`；`permission_id, system_id` → `permission(id, system_id)`。
+
+[.table-definition]
+==== 角色配置历史表
+
+`role_configuration_history`：每次成功配置的完整历史快照，不是当前授权事实。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`role_id`（PK） |CHAR(36) |否 |角色
+|`configuration_version`（PK） |BIGINT |否 |成功配置版本，无重复；默认值：`1`
+|`request_id` |CHAR(36) |否 |唯一成功来源申请
+|`configuration_snapshot` |JSON |否 |权限稳定ID/类型/code/当时名称及完整集合，schemaVersion=1；JSON顶层OBJECT
+|`applied_at` |DATETIME(6) |否 |成功配置提交时刻
+|===
+
+主键：`role_id, configuration_version`。 唯一组合：`request_id`。 外键：`role_id` → `business_role(id)`；`request_id` → `change_request(id)`。
+
+[.table-definition]
+==== 授权来源表
+
+`authorization_source`：员工+公司+来源部门+系统的持久周期；无关系也可存在。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`employee_id` |CHAR(36) |否 |员工
+|`company_id` |CHAR(36) |否 |来源公司
+|`department_id` |CHAR(36) |否 |来源部门
+|`system_id` |CHAR(36) |否 |系统
+|`source_epoch` |BIGINT |否 |关闭/资格丧失推进的周期；未落库逻辑基线为0；默认值：`0`
+|`source_version` |BIGINT |否 |API SourceBaseline.version；该来源变更递增；默认值：`0`
+|`row_version` |BIGINT |否 |JPA @Version 专用存储修订；不直接作为 API 业务版本；默认值：`0`
+|===
+
+主键：`id`。 唯一组合：`employee_id, company_id, department_id, system_id`；`id, company_id, system_id`。 外键：`employee_id` → `employee(id)`；`department_id, company_id` → `department(id, company_id)`；`system_id` → `business_system(id)`。
+
+[.table-definition]
+==== 角色授权关系基线表
+
+`grant_baseline`：同一来源同角色的永久关系版本锚点；不随授权结束删除。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`source_id` |CHAR(36) |否 |独立来源
+|`role_id` |CHAR(36) |否 |业务角色
+|`company_id` |CHAR(36) |否 |用于复合归属约束
+|`system_id` |CHAR(36) |否 |用于复合同系统约束
+|`relation_version` |BIGINT |否 |API当前关系基线；每次授予/结束递增，未落库为0；默认值：`0`
+|`row_version` |BIGINT |否 |JPA @Version 专用存储修订；不直接作为 API 业务版本；默认值：`0`
+|===
+
+主键：`id`。 唯一组合：`source_id, role_id`。 外键：`source_id, company_id, system_id` → `authorization_source(id, company_id, system_id)`；`role_id, company_id, system_id` → `business_role(id, company_id, system_id)`。
+
+[.table-definition]
+==== 员工角色授予表
+
+`role_grant`：一次具体来源授予；结束后重授必须新ID。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`baseline_id` |CHAR(36) |否 |永久关系锚点
+|`relation_version` |BIGINT |否 |该grant当前演进版本；结束时推进到基线新值；默认值：`1`
+|`source_epoch` |BIGINT |否 |授予时固定来源周期；默认值：`0`
+|`status` |VARCHAR(32) |否 |授权关系状态；枚举：ACTIVE/REVOKED/INVALIDATED；默认值：`'ACTIVE'`
+|`granted_by_request_id` |CHAR(36) |否 |成功授予申请
+|`ended_by_request_id` |CHAR(36) |是 |一般撤销申请；直接关权时为空
+|`ended_at` |DATETIME(6) |是 |结束提交时刻
+|`ended_reason` |VARCHAR(500) |是 |撤销/失效原因
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|`active_slot` |TINYINT |是 |ACTIVE 时为1，结束历史为NULL；利用唯一键允许多份历史；生成表达式：`CASE WHEN status = 'ACTIVE' THEN 1 ELSE NULL END`
+|===
+
+主键：`id`。 唯一组合：`baseline_id, active_slot`；`baseline_id, relation_version`。 外键：`baseline_id` → `grant_baseline(id)`；`granted_by_request_id` → `change_request(id)`；`ended_by_request_id` → `change_request(id)`。
+
+[.table-definition]
+==== 授权任职依据表
+
+`grant_employment_evidence`：实际授予时适用任职依据；后续不因岗位改名改写。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`grant_id`（PK） |CHAR(36) |否 |授权关系
+|`employment_id`（PK） |CHAR(36) |否 |当时适用任职
+|===
+
+主键：`grant_id, employment_id`。 外键：`grant_id` → `role_grant(id)`；`employment_id` → `employment(id)`。
+
+[.dictionary-group]
+=== 固定申请、OA与执行
+
+[.table-definition]
+==== 权限变更申请表
+
+`change_request`：草稿与固定申请共用生命周期；七响应模型不建七表。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`kind` |VARCHAR(32) |否 |变更类型；枚举：ROLE_CONFIGURATION/ROLE_GRANT/ROLE_REVOCATION
+|`company_id` |CHAR(36) |否 |一申请一个公司
+|`content` |JSON |否 |草稿可编辑；提交后实际明细冻结，与规范字节一致；JSON顶层OBJECT
+|`reason` |VARCHAR(500) |否 |提交原因；提交后不可改
+|`draft_version` |BIGINT |否 |协作编辑版本；提交后冻结；默认值：`1`
+|`status_version` |BIGINT |否 |投递/审批/执行状态修订；默认值：`1`
+|`submitted_version` |BIGINT |是 |固定提交版本；取提交时draftVersion，提交后不变
+|`submitted_at` |DATETIME(6) |是 |固定提交时刻，进入摘要
+|`submitted_by_account_id` |CHAR(36) |是 |原提交人；离任不改写
+|`state` |VARCHAR(32) |否 |受三轴约束的聚合展示状态；枚举：DRAFT/PENDING/REJECTED/APPROVED/EXECUTION_FAILED/EXECUTED/INVALIDATED；默认值：`'DRAFT'`
+|`delivery_status` |VARCHAR(32) |否 |OA投递状态；枚举：NOT_SUBMITTED/PENDING_SEND/SEND_FAILED/LINKED；默认值：`'NOT_SUBMITTED'`
+|`approval_result` |VARCHAR(32) |否 |可信最终结果；枚举：NONE/APPROVED/REJECTED；默认值：`'NONE'`
+|`execution_status` |VARCHAR(32) |否 |本地执行状态；枚举：NOT_STARTED/PENDING/FAILED/SUCCEEDED/INVALIDATED；默认值：`'NOT_STARTED'`
+|`authority_type` |VARCHAR(10) |是 |NULL草稿；GLOBAL或SCOPE
+|`scope_id` |CHAR(36) |是 |原范围ID，仅SCOPE；范围保留
+|`appointment_id` |CHAR(36) |是 |原任命ID；历史保留，执行不要求仍ACTIVE
+|`original_authority` |JSON |是 |固定原资格完整快照，API Authority形状；JSON顶层OBJECT
+|`fixed_payload_bytes` |MEDIUMBLOB |是 |RFC8785规范UTF-8摘要包原字节；不从MySQL JSON序列化重建
+|`content_digest` |BINARY(32) |是 |规范字节SHA-256；API输出64位小写hex
+|`failure_code` |VARCHAR(64) |是 |失效或可重试失败安全码
+|`next_retry_at` |DATETIME(6) |是 |执行恢复计划；非取消期限
+|`row_version` |BIGINT |否 |JPA @Version 专用存储修订；不直接作为 API 业务版本；默认值：`0`
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|===
+
+主键：`id`。 唯一组合：`id, kind`。 外键：`company_id` → `company(id)`；`scope_id` → `management_scope(id)`；`appointment_id` → `admin_appointment(id)`；`submitted_by_account_id` → `admin_account(id)`。
+
+[.table-definition]
+==== 申请变更目标表
+
+`change_target`：草稿目标/提交后实际清单的可检索投影；必须与对应content一致。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`request_id`（PK） |CHAR(36) |否 |所属申请
+|`line_no`（PK） |INT |否 |固定清单序号，从0起
+|`line_kind` |VARCHAR(32) |否 |匹配父申请类型；枚举：ROLE_CONFIGURATION/ROLE_GRANT/ROLE_REVOCATION
+|`company_id` |CHAR(36) |否 |固定公司
+|`system_id` |CHAR(36) |否 |固定系统
+|`department_id` |CHAR(36) |是 |固定来源/角色部门；共享配置可为空
+|`employee_id` |CHAR(36) |是 |分配/撤销目标员工；配置为空
+|`role_id` |CHAR(36) |否 |明确角色
+|`source_id` |CHAR(36) |是 |分配/撤销来源；配置为空
+|`baseline_id` |CHAR(36) |是 |分配/撤销永久关系锚点；配置为空
+|`grant_id` |CHAR(36) |是 |撤销的准确历史ID；分配/配置为空
+|`expected_configuration_version` |BIGINT |是 |配置/授予检查；一般撤销为空
+|`expected_source_epoch` |BIGINT |是 |授予固定周期；其他类型为空
+|`expected_relation_version` |BIGINT |是 |授予/撤销固定关系版本
+|`target_snapshot` |JSON |否 |schemaVersion=1；当时名称、适用employmentIds、完整权限差异/依据；JSON顶层OBJECT
+|===
+
+主键：`request_id, line_no`。 唯一组合：`request_id, baseline_id`；`request_id, grant_id`。 外键：`request_id, line_kind` → `change_request(id, kind)`；`role_id, company_id, system_id` → `business_role(id, company_id, system_id)`；`department_id, company_id` → `department(id, company_id)`；`employee_id` → `employee(id)`；`source_id` → `authorization_source(id)`；`baseline_id` → `grant_baseline(id)`；`grant_id` → `role_grant(id)`；`system_id` → `business_system(id)`。
+
+[.table-definition]
+==== 角色变更占用表
+
+`role_change_claim`：当前角色配置通道；终态删除占用，历史不靠本表。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`role_id`（PK） |CHAR(36) |否 |角色唯一配置通道
+|`request_id` |CHAR(36) |否 |占用申请
+|===
+
+主键：`role_id`。 唯一组合：`request_id`。 外键：`role_id` → `business_role(id)`；`request_id` → `change_request(id)`。
+
+[.table-definition]
+==== 授权关系变更占用表
+
+`relation_change_claim`：当前关系变更通道；同来源去重，不阻塞其他来源。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`baseline_id`（PK） |CHAR(36) |否 |关系唯一通道
+|`request_id` |CHAR(36) |否 |占用申请
+|===
+
+主键：`baseline_id`。 外键：`baseline_id` → `grant_baseline(id)`；`request_id` → `change_request(id)`。
+
+[.table-definition]
+==== 服务身份表
+
+`service_identity`：部署管理的服务身份和绑定；不保存私钥/令牌。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`subject` |VARCHAR(100) |否 |JWT sub，全局唯一
+|`kind` |VARCHAR(32) |否 |入口类型；枚举：BUSINESS/OA
+|`system_id` |CHAR(36) |是 |BUSINESS唯一绑定系统，OA为空
+|`enabled` |TINYINT |否 |当前服务身份状态；默认值：`1`
+|`version` |BIGINT |否 |API 对象业务版本；仅实质变更递增；默认值：`1`
+|===
+
+主键：`id`。 唯一组合：`subject`。 外键：`system_id` → `business_system(id)`。
+
+[.table-definition]
+==== OA投递待办表
+
+`oa_outbox`：同一固定申请可靠投递待办及租约；不复制可变申请内容。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`request_id`（PK） |CHAR(36) |否 |申请，一申请一待办
+|`oa_instance_id` |CHAR(36) |否 |目标OA实例
+|`task_state` |VARCHAR(32) |否 |仅内部调度状态；枚举：READY/LEASED/DONE/STOPPED；默认值：`'READY'`
+|`next_attempt_at` |DATETIME(6) |否 |下次投递时刻
+|`lease_token` |CHAR(36) |是 |每次领取随机令牌
+|`lease_until` |DATETIME(6) |是 |领取过期时间
+|`attempt_count` |INT |否 |已开始尝试数；默认值：`0`
+|`last_failure_code` |VARCHAR(64) |是 |安全故障码
+|`row_version` |BIGINT |否 |JPA @Version 专用存储修订；不直接作为 API 业务版本；默认值：`0`
+|===
+
+主键：`request_id`。 外键：`request_id` → `change_request(id)`；`oa_instance_id` → `service_identity(id)`。
+
+[.table-definition]
+==== OA审批关联表
+
+`oa_link`：可靠外部审批关联；先由投递响应落地，回调不得抢绑。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`request_id`（PK） |CHAR(36) |否 |申请，一对一
+|`oa_instance_id` |CHAR(36) |否 |部署OA服务身份
+|`oa_approval_id` |VARCHAR(64) |否 |外部审批编号
+|`accepted_at` |DATETIME(6) |否 |OA受理时刻
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|===
+
+主键：`request_id`。 唯一组合：`oa_instance_id, oa_approval_id`。 外键：`request_id` → `change_request(id)`；`oa_instance_id` → `service_identity(id)`。
+
+[.table-definition]
+==== OA回调事件表
+
+`oa_callback_event`：OA实例+事件ID防重；同事件不同内容不得覆盖。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`oa_instance_id` |CHAR(36) |否 |可信OA实例
+|`event_id` |VARCHAR(64) |否 |OA最终结果事件编号
+|`request_id` |CHAR(36) |否 |匹配的固定申请
+|`payload_digest` |BINARY(32) |否 |完整规范化回调内容摘要
+|`safe_payload` |JSON |否 |不含认证凭据的最终结果原字段；JSON顶层OBJECT
+|`received_at` |DATETIME(6) |否 |首次可靠接收时刻
+|===
+
+主键：`id`。 唯一组合：`oa_instance_id, event_id`。 外键：`oa_instance_id` → `service_identity(id)`；`request_id` → `change_request(id)`。
+
+[.table-definition]
+==== OA最终审批结果表
+
+`oa_final_result`：一申请一不可反转最终结果；新eventId不绕过。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`request_id`（PK） |CHAR(36) |否 |申请
+|`first_event_id` |CHAR(36) |否 |首次可信回调记录ID
+|`decision` |VARCHAR(32) |否 |最终结果；枚举：APPROVED/REJECTED
+|`decided_at` |DATETIME(6) |否 |OA决定时刻；不是覆盖优先级
+|`comment` |VARCHAR(500) |否 |意见摘要
+|`received_at` |DATETIME(6) |否 |平台接收时刻
+|===
+
+主键：`request_id`。 唯一组合：`first_event_id`。 外键：`request_id` → `change_request(id)`；`first_event_id` → `oa_callback_event(id)`。
+
+[.table-definition]
+==== 权限变更执行成功表
+
+`execution_success`：一申请一次成功凭据；业务写入/成功审计同事务。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`request_id`（PK） |CHAR(36) |否 |成功申请唯一键
+|`audit_event_id` |CHAR(36) |否 |唯一成功业务事件
+|`executed_at` |DATETIME(6) |否 |成功提交时刻
+|`result_snapshot` |JSON |否 |实际授予ID/撤销ID/配置版本与计数，不含凭据；JSON顶层OBJECT
+|===
+
+主键：`request_id`。 唯一组合：`audit_event_id`。 外键：`request_id` → `change_request(id)`；`audit_event_id` → `audit_event(id)`。
+
+[.table-definition]
+==== 执行尝试表
+
+`execution_attempt`：本地执行尝试历史；业务失败回滚后独立记录。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`request_id` |CHAR(36) |否 |原固定申请
+|`attempt_no` |INT |否 |该申请递增尝试序号
+|`outcome` |VARCHAR(32) |否 |尝试结果；枚举：FAILED/INVALIDATED/SUCCEEDED
+|`failure_code` |VARCHAR(64) |是 |安全失败/失效码
+|`started_at` |DATETIME(6) |否 |开始时间
+|`finished_at` |DATETIME(6) |否 |记录结果时间
+|===
+
+主键：`id`。 唯一组合：`request_id, attempt_no`。 外键：`request_id` → `change_request(id)`。
+
+[.table-definition]
+==== 审计事件表
+
+`audit_event`：追加式授权/管理审计和申请事件；不通过当前资料倒推历史。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`occurred_at` |DATETIME(6) |否 |事件发生时刻，UTC
+|`event_type` |VARCHAR(64) |否 |事件类型；提交/批准/执行分别记录
+|`actor_kind` |VARCHAR(16) |否 |ACCOUNT / SERVICE / DEPLOYMENT
+|`actor_id` |VARCHAR(64) |否 |当时操作者稳定标识；部署事件可无账号FK
+|`original_submitter_id` |CHAR(36) |是 |原申请人账号，已提交申请事件适用
+|`target_id` |VARCHAR(64) |否 |稳定目标标识或聚合ID
+|`change_request_id` |CHAR(36) |是 |申请；草稿删除事件仅快照保留被删除ID
+|`company_id` |CHAR(36) |是 |单来源公司；全局/混合无法安全分隔为空
+|`source_department_id` |CHAR(36) |是 |单来源部门
+|`system_id` |CHAR(36) |是 |单来源系统
+|`visibility` |VARCHAR(32) |否 |全局记录仅总管理员；SCOPED按固定来源；枚举：GLOBAL/SCOPED
+|`result` |VARCHAR(64) |否 |安全业务结果
+|`correlation_id` |VARCHAR(64) |否 |HTTP X-Request-Id，不是防重键
+|`reason` |VARCHAR(500) |否 |业务原因
+|`event_snapshot` |JSON |否 |schemaVersion=1；当时名称、原/实际差异、审批编号/版本、失败码、敏感信息脱敏；JSON顶层OBJECT
+|===
+
+主键：`id`。 外键：`original_submitter_id` → `admin_account(id)`；`company_id` → `company(id)`；`source_department_id, company_id` → `department(id, company_id)`；`system_id` → `business_system(id)`。
+
+[.table-definition]
+==== 审计关联主体表
+
+`audit_subject`：审计按稳定员工/角色等目标筛选的历史索引；可指已删除草稿对象。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`audit_event_id`（PK） |CHAR(36) |否 |所属审计事件
+|`subject_type`（PK） |VARCHAR(16) |否 |EMPLOYEE / ROLE / GRANT / ACCOUNT / REQUEST等稳定类型
+|`subject_id`（PK） |VARCHAR(64) |否 |当时稳定对象标识，有意不设多态外键
+|===
+
+主键：`audit_event_id, subject_type, subject_id`。 外键：`audit_event_id` → `audit_event(id)`。
+
+[.dictionary-group]
+=== 导入、预览与可靠性
+
+[.table-definition]
+==== 导入文件表
+
+`import_file`：导入文件元数据；文件本体受控存储且不可原地覆盖。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`file_name` |VARCHAR(200) |否 |原文件名，仅显示不参与路径拼接
+|`sha256` |BINARY(32) |否 |原文件字节摘要
+|`size_bytes` |BIGINT |否 |原文件大小
+|`storage_ref` |VARCHAR(300) |否 |服务端受控文件引用，非客户端任意URL
+|`sheet_names` |JSON |否 |可用工作表名称，CSV固定CSV；JSON顶层ARRAY
+|`uploaded_by` |CHAR(36) |否 |上传总管理员
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|===
+
+主键：`id`。 外键：`uploaded_by` → `admin_account(id)`。
+
+[.table-definition]
+==== 导入批次表
+
+`import_batch`：冻结的预检与原子导入结果；成功sourceBatchId长期防重。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`file_id` |CHAR(36) |否 |不可变原文件
+|`source_system` |VARCHAR(100) |否 |来源系统
+|`source_batch_id` |VARCHAR(100) |否 |来源批次业务编号
+|`import_type` |VARCHAR(32) |否 |导入类别；枚举：ORGANIZATION/EMPLOYEE_INITIALIZATION/PERSONNEL_CHANGES
+|`input_snapshot` |JSON |否 |完整ImportInput：worksheet、字段/组织映射、初始化状态、原因；JSON顶层OBJECT
+|`input_digest` |BINARY(32) |否 |文件SHA+完整规范输入摘要，定位同批同内容
+|`content_digest` |BINARY(32) |否 |规范行、前后值、候选代码和依赖基线摘要
+|`state` |VARCHAR(32) |否 |API预检/执行状态；枚举：BLOCKED/READY/SUCCEEDED/FAILED/STALE
+|`version` |BIGINT |否 |API 对象业务版本；仅实质变更递增；默认值：`1`
+|`planned_counts` |JSON |否 |冻结计划ImportCounts八字段；JSON顶层OBJECT
+|`actual_counts` |JSON |是 |仅成功时实际八字段计数；JSON顶层OBJECT
+|`blocking_issue_count` |INT |否 |阻断问题数；默认值：`0`
+|`warning_count` |INT |否 |警告数；默认值：`0`
+|`failure_code` |VARCHAR(64) |是 |安全故障码
+|`sealed_at` |DATETIME(6) |是 |预检完成冻结时间；API只暴露已冻结批次
+|`committed_at` |DATETIME(6) |是 |成功提交时刻
+|`created_by` |CHAR(36) |否 |发起总管理员
+|`row_version` |BIGINT |否 |JPA @Version 专用存储修订；不直接作为 API 业务版本；默认值：`0`
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|===
+
+主键：`id`。 唯一组合：`source_system, source_batch_id`。 外键：`file_id` → `import_file(id)`；`created_by` → `admin_account(id)`。
+
+[.table-definition]
+==== 导入计划明细表
+
+`import_plan_row`：冻结规范行及逐字段前后值；候选组织尚未建正式记录。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`batch_id`（PK） |CHAR(36) |否 |所属预检
+|`row_number`（PK） |INT |否 |原文件行号
+|`plan_no`（PK） |INT |否 |行内规范动作序号，同一原行可产生多动作
+|`action` |VARCHAR(32) |否 |ImportPlanChange.action明确动作或UNCHANGED
+|`target_id` |CHAR(36) |是 |既有或预分配候选ID；无FK以允许尚未创建对象
+|`stable_code` |VARCHAR(100) |是 |候选/既有稳定编码
+|`company_code` |VARCHAR(100) |是 |完整公司归属编码
+|`department_code` |VARCHAR(100) |是 |完整部门归属编码
+|`position_code` |VARCHAR(100) |是 |完整岗位归属编码
+|`expected_version` |BIGINT |是 |既有目标预检版本；新对象为空
+|`summary` |VARCHAR(500) |否 |安全摘要
+|`normalized_values` |JSON |否 |类型校验后的完整规范输入，不执行公式；JSON顶层OBJECT
+|`field_changes` |JSON |否 |ImportValueChange[]，明确字段及before/after；JSON顶层ARRAY
+|`dependency_snapshot` |JSON |否 |目标版本、唯一键不存在断言、引用集合摘要和来源周期；JSON顶层OBJECT
+|===
+
+主键：`batch_id, row_number, plan_no`。 外键：`batch_id` → `import_batch(id)`。
+
+[.table-definition]
+==== 导入预检问题表
+
+`import_issue`：冻结预检报告；仅总管理员可读。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`batch_id` |CHAR(36) |否 |预检批次
+|`row_number` |INT |否 |原始行号
+|`field` |VARCHAR(100) |否 |字段定位
+|`severity` |VARCHAR(32) |否 |问题严重性；枚举：WARNING/BLOCKING
+|`code` |VARCHAR(64) |否 |稳定问题码
+|`message` |VARCHAR(500) |否 |安全问题说明
+|===
+
+主键：`id`。 外键：`batch_id` → `import_batch(id)`。
+
+[.table-definition]
+==== 组织路径映射表
+
+`organization_mapping`：经过确认的完整来源路径映射；没有组织自动合并。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`source_system` |VARCHAR(100) |否 |来源系统
+|`source_path` |VARCHAR(300) |否 |完整来源路径，二进制区分比较
+|`object_kind` |VARCHAR(32) |否 |映射对象类型；枚举：COMPANY/DEPARTMENT/POSITION
+|`company_id` |CHAR(36) |否 |明确公司
+|`department_id` |CHAR(36) |是 |明确部门；公司映射为空
+|`position_id` |CHAR(36) |是 |明确岗位；非岗位映射为空
+|`version` |BIGINT |否 |API 对象业务版本；仅实质变更递增；默认值：`1`
+|===
+
+主键：`id`。 唯一组合：`source_system, source_path`。 外键：`company_id` → `company(id)`；`department_id, company_id` → `department(id, company_id)`；`position_id, department_id` → `position(id, department_id)`。
+
+[.table-definition]
+==== 员工来源身份映射表
+
+`employee_source_identity`：当前来源标识到内部员工的显式映射；重映射旧值另存审计。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`source_system` |VARCHAR(100) |否 |来源系统标识
+|`source_key` |VARCHAR(100) |否 |来源的当前唯一标识
+|`employee_id` |CHAR(36) |否 |内部员工
+|`version` |BIGINT |否 |API 对象业务版本；仅实质变更递增；默认值：`1`
+|===
+
+主键：`id`。 唯一组合：`source_system, source_key`。 外键：`employee_id` → `employee(id)`。
+
+[.table-definition]
+==== 影响预览表
+
+`impact_preview`：五分钟固定预览；不是授权凭证。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`creator_account_id` |CHAR(36) |否 |创建身份
+|`appointment_id` |CHAR(36) |是 |创建时所选任命；总管理员为空
+|`authority_snapshot` |JSON |否 |创建时范围/版本及可见边界；JSON顶层OBJECT
+|`operation` |VARCHAR(64) |否 |绑定操作语义与目标资源
+|`input_digest` |BINARY(32) |否 |规范输入及目标版本摘要
+|`content_digest` |BINARY(32) |否 |预览确认摘要
+|`dependency_snapshot` |JSON |否 |影响实际清单/分类/统计的版本和集合依赖，见TRANSACTIONS；JSON顶层OBJECT
+|`result_snapshot` |JSON |否 |Preview/ChangePreview的固定汇总、实际清单与noChangeItems；JSON顶层OBJECT
+|`expires_at` |DATETIME(6) |否 |创建后五分钟
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|===
+
+主键：`id`。 外键：`creator_account_id` → `admin_account(id)`；`appointment_id` → `admin_appointment(id)`。
+
+[.table-definition]
+==== 预览明细表
+
+`preview_item`：同一预览的可见员工/目标分页快照；禁止实时重算混页。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`preview_id` |CHAR(36) |否 |预览
+|`item_kind` |VARCHAR(32) |否 |目标类别；枚举：EMPLOYEE/ROLE/GRANT/SOURCE/APPOINTMENT/PENDING_REQUEST
+|`stable_key` |VARCHAR(200) |否 |稳定ID或SOURCE完整四元键；员工项按员工公司系统键
+|`safe_item` |JSON |否 |API ImpactEmployee/ImpactTarget；仅创建时有权明细；JSON顶层OBJECT
+|`visibility_basis` |JSON |否 |读取时重新检查的固定来源边界，混合申请须全部覆盖；JSON顶层OBJECT
+|===
+
+主键：`id`。 唯一组合：`preview_id, item_kind, stable_key`。 外键：`preview_id` → `impact_preview(id)`。
+
+[.table-definition]
+==== 写事务协调锁表
+
+`mutation_guard`：一期本地写事务串行化锚点；没有业务权限含义。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |SMALLINT |否 |固定为1
+|`revision` |BIGINT |否 |内部提交序号，不映射API版本；默认值：`0`
+|===
+
+主键：`id`。
+
+[.table-definition]
+==== HTTP请求幂等表
+
+`http_idempotency`：HTTP接受结果窗口；独立于OA与业务成功防重。
+
+[cols="27,16,7,50",options="header",role="dictionary-table"]
+|===
+|字段 |类型与长度 |可空 |含义与取值
+|`id`（PK） |CHAR(36) |否 |不可变内部 UUID v4；API 原样输出小写带连字符字符串
+|`principal_id` |CHAR(36) |否 |当前后台账号主体
+|`http_method` |VARCHAR(10) |否 |大写HTTP方法
+|`canonical_path` |VARCHAR(300) |否 |包含稳定资源ID的规范路径，不包含易变查询排序
+|`idempotency_key` |CHAR(36) |否 |客户端UUID键
+|`request_digest` |BINARY(32) |否 |包含版本/目标/规范内容的受保护摘要
+|`digest_key_id` |VARCHAR(64) |否 |摘要HMAC密钥版本；密钥不入库
+|`state` |VARCHAR(32) |否 |处理中或已接受结果；枚举：IN_PROGRESS/COMPLETED
+|`http_status` |SMALLINT |是 |原接受HTTP状态码
+|`resource_location` |VARCHAR(300) |是 |原创建/接受资源地址，无则NULL
+|`safe_response` |JSON |是 |原安全响应；不含密码/JWT/哈希；JSON顶层OBJECT
+|`authorization_basis` |JSON |是 |内部重放授权事实：操作策略及完整目标范围；不能替代当前资格；完成时固定；JSON顶层OBJECT
+|`lease_token` |CHAR(36) |是 |当前处理者随机栅栏令牌；完成后清空
+|`lease_until` |DATETIME(6) |是 |处理中租约；过期仅允许同内容恢复接管
+|`expires_at` |DATETIME(6) |否 |至少首次接受后7天；不删除长期业务防重
+|`created_at` |DATETIME(6) |否 |记录创建时刻，UTC，非源系统业务起始日期
+|===
+
+主键：`id`。 唯一组合：`principal_id, http_method, canonical_path, idempotency_key`。 外键：`principal_id` → `admin_account(id)`。
