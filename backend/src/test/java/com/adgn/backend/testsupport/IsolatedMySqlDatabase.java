@@ -95,6 +95,13 @@ public final class IsolatedMySqlDatabase implements AutoCloseable {
         process.environment().put("RBAC_BOOTSTRAP_CONFIRM_DATABASE", schema);
     }
 
+    /** 向显式迁移子进程提供本夹具的专属迁移账号。 */
+    public void configureMigration(ProcessBuilder process) {
+        process.environment().put("RBAC_MIGRATION_URL",url);
+        process.environment().put("RBAC_MIGRATION_USER",migrator);
+        process.environment().put("RBAC_MIGRATION_PASSWORD",password);
+    }
+
     public String scalar(String sql) throws SQLException {
         try (var statement = admin.createStatement(); var rows = statement.executeQuery(sql)) {
             if (!rows.next()) throw new IllegalStateException("Expected one row");

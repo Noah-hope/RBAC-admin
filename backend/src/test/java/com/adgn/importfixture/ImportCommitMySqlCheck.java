@@ -24,6 +24,34 @@ import static org.assertj.core.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class ImportCommitMySqlCheck {
+    @Test void internalLifecycleAndFailureRecordingRejectServiceIdentityAndPoisonTransaction() throws Exception {
+        var writes=app.getBean(com.adgn.backend.core.transaction.CommandBoundary.class);
+        long before=jdbc.queryForObject("SELECT revision FROM mutation_guard WHERE id=1",Long.class);
+        for(boolean lifecycle:List.of(false,true)){
+            assertThatThrownBy(()->writes.execute(()->new com.adgn.backend.core.transaction.CommandBoundary.Identity<>("fixture",
+                    new com.adgn.backend.core.audit.AuditRecord.Actor(com.adgn.backend.core.audit.AuditRecord.ActorKind.SERVICE,"fixture-worker")),c->{
+                try{
+                    if(lifecycle)app.getBean(com.adgn.backend.lifecycle.EmploymentLifecycleWriter.class).ended(c,
+                            new com.adgn.backend.people.EmploymentWriter.EndResult(UUID.randomUUID(),1,true,UUID.randomUUID(),UUID.randomUUID(),UUID.randomUUID(),true),"fixture","fixture");
+                    else app.getBean(ImportFailureRecorder.class).record(c,"FAILED");
+                    throw new AssertionError("service identity must not enter administrative writes");
+                }catch(com.adgn.backend.identity.security.IdentityFailure refused){assertThat(refused.status()).isEqualTo(403);}
+                return null;
+            })).isInstanceOfSatisfying(com.adgn.backend.identity.security.IdentityFailure.class,e->assertThat(e.status()).isEqualTo(403));
+        }
+        assertThat(jdbc.queryForObject("SELECT revision FROM mutation_guard WHERE id=1",Long.class)).isEqualTo(before);
+    }
+
+    @Test void databaseUniquenessFailureMakesFrozenBatchStaleAndRollsBackAllWrites() throws Exception {
+        String batch=batch(organization());long companies=count("company");
+        db.execute("CREATE TRIGGER coverage_duplicate BEFORE INSERT ON company FOR EACH ROW SIGNAL SQLSTATE '23000' SET MYSQL_ERRNO=1062, MESSAGE_TEXT='private-duplicate-fixture'");
+        try{
+            var response=commit(batch,commitInput(batch),id());assertThat(response.statusCode()).as(response.body()).isEqualTo(409);
+            assertThat(response.body()).contains("PREVIEW_STALE").doesNotContain("private-duplicate-fixture");
+            assertThat(body(get("/"+batch)).path("state").stringValue()).isEqualTo("STALE");
+            assertThat(count("company")).isEqualTo(companies);
+        }finally{db.execute("DROP TRIGGER coverage_duplicate");}
+    }
     private IsolatedMySqlDatabase db;private ConfigurableApplicationContext app;private JdbcTemplate jdbc;
     private Path keys,storage;private String base,account,global,ordinary,restricted;private final JsonMapper json=JsonMapper.builder().build();private final HttpClient http=com.adgn.backend.testsupport.ContractHttpClient.create();
     private String id(){return UUID.randomUUID().toString();}

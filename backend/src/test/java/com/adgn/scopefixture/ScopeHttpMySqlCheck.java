@@ -27,6 +27,15 @@ import static org.assertj.core.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ScopeHttpMySqlCheck {
+    @Test void appointmentJpaMappingLoadsPersistedHistoricalStatusAndVersion() {
+        var factory=app.getBean(jakarta.persistence.EntityManagerFactory.class);
+        try(var manager=factory.createEntityManager()){
+            assertThat(manager.find(com.adgn.backend.scope.repository.AppointmentEntity.class,revoked)).isNotNull();
+            var row=manager.createQuery("select a.status,a.version from AppointmentReadEntity a where a.id=:id",Object[].class)
+                    .setParameter("id",revoked).getSingleResult();
+            assertThat(row).containsExactly("REVOKED",9L);
+        }
+    }
     IsolatedMySqlDatabase db;
     ConfigurableApplicationContext app;
     JdbcTemplate jdbc;

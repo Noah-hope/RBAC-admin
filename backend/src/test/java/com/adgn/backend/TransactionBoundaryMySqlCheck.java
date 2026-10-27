@@ -36,6 +36,28 @@ import static org.assertj.core.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TransactionBoundaryMySqlCheck {
+    @Test void unexpectedGuardMutationCannotCommitBusinessChanges() throws Exception {
+        long before=revision();UUID company=UUID.randomUUID();
+        assertThatThrownBy(()->commands.execute(()->identity("fixture"),c->{
+            insertCompany(company,"Must roll back");jdbc.update("UPDATE mutation_guard SET revision=revision+1 WHERE id=1");return null;
+        })).isInstanceOfSatisfying(PersistenceFailure.class,e->assertThat(e.kind()).isEqualTo(PersistenceFailure.Kind.DATA_INTEGRITY_ERROR));
+        assertThat(revision()).isEqualTo(before);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM company WHERE id=?",Long.class,company.toString())).isZero();
+    }
+
+    @Test void invalidAuditFieldPoisonsTransactionEvenIfCallerCatchesTheException() throws Exception {
+        long before=revision();UUID company=UUID.randomUUID();String correlation=UUID.randomUUID().toString();
+        assertThatThrownBy(()->commands.execute(()->identity("fixture"),c->{
+            insertCompany(company,"Must roll back");
+            try{audits.append(c,new AuditRecord("",company.toString(),null,null,
+                    new AuditRecord.Scope(AuditRecord.Visibility.GLOBAL,null,null,null),"SUCCEEDED",correlation,"reason","{\"schemaVersion\":1}",List.of()));}
+            catch(IllegalArgumentException expected){assertThat(expected.getMessage()).contains("audit field");}
+            return null;
+        })).isInstanceOf(Exception.class);
+        assertThat(revision()).isEqualTo(before);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM company WHERE id=?",Long.class,company.toString())).isZero();
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM audit_event WHERE correlation_id=?",Long.class,correlation)).isZero();
+    }
     private IsolatedMySqlDatabase database;
     private ConfigurableApplicationContext application;
     private CommandBoundary commands;

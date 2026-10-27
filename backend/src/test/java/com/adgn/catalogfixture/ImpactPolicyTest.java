@@ -9,6 +9,39 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.*;
 
 class ImpactPolicyTest {
+    @Test void hiddenRoleConfigurationChangesNeverDiscloseTheForeignRole() {
+        var result=policy.calculate(new ImpactPolicy.Facts(facts()),change(Map.of("role-B",Set.of()),Set.of()),viewer());
+        assertThat(result.impact().get("visibleRoleCount")).isEqualTo(0L);
+        assertThat(result.impact().get("hasUndisclosedImpact")).isEqualTo(true);
+        assertThat(json.writeValueAsString(result)).doesNotContain("role-B","grant-B","source-B");
+    }
+
+    @Test void explicitRoleGrantAndSourceTargetsAreIndependentlyCountedAndDeduplicated() {
+        var targets=new ArrayList<tools.jackson.databind.JsonNode>();
+        for(String type:List.of("ROLE","GRANT","SOURCE")){
+            var target=json.createObjectNode().put("targetType",type).put("targetId",type+"-1");targets.add(target);targets.add(target);
+        }
+        var change=new ImpactPolicy.Change(Set.of(),Map.of(),Map.of(),Map.of(),Map.of(),Set.of(),Set.of(),Set.of(),Set.of(),List.of(),Set.of(),targets);
+        var global=new ManagementAccess.Authority(new IdentityRepository.Account("admin",null,"unused",true,true,false,1,1,true),null,null,null,Set.of());
+        var result=policy.calculate(new ImpactPolicy.Facts(facts()),change,global);
+        assertThat(result.impact().get("visibleRoleCount")).isEqualTo(1L);
+        assertThat(result.impact().get("visibleGrantCount")).isEqualTo(1L);
+        assertThat(result.impact().get("visibleSourceCount")).isEqualTo(1L);
+        assertThat(result.targets()).hasSize(3);
+    }
+
+    @Test void appointmentImpactIsVisibleOnlyToGlobalAdministrator() {
+        var rows=facts();rows.put("appointments",List.of(row("id","appointment-X","company_id","company","department_id","B","appointment_version",7L)));
+        var change=new ImpactPolicy.Change(Set.of(),Map.of(),Map.of(),Map.of(),Map.of(),Set.of(),Set.of(),Set.of(),Set.of("appointment-X"),List.of(),Set.of(),List.of());
+        var hidden=policy.calculate(new ImpactPolicy.Facts(rows),change,viewer());
+        assertThat(hidden.impact().get("hasUndisclosedImpact")).isEqualTo(true);
+        assertThat(hidden.impact().get("visibleAppointmentCount")).isEqualTo(0L);
+        assertThat(json.writeValueAsString(hidden)).doesNotContain("appointment-X");
+        var global=new ManagementAccess.Authority(new IdentityRepository.Account("admin",null,"unused",true,true,false,1,1,true),null,null,null,Set.of());
+        var visible=policy.calculate(new ImpactPolicy.Facts(rows),change,global);
+        assertThat(visible.impact().get("visibleAppointmentCount")).isEqualTo(1L);
+        assertThat(visible.targets().getFirst().path("targetId").stringValue()).isEqualTo("appointment-X");
+    }
     private final JsonMapper json=JsonMapper.builder().build();
     private final ImpactPolicy policy=new ImpactPolicy(json);
     private final ImpactPolicy.Source a=new ImpactPolicy.Source("employee","company","A","system");

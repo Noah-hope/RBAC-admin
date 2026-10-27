@@ -79,6 +79,20 @@ class IdentityMySqlCheck {
     }
     private JsonNode body(HttpResponse<String> response) { return json.readTree(response.body()); }
 
+    @Test void corruptedReadGuardCannotAuthenticateOrExposeTheSession() throws Exception {
+        String account=account(false),token=token(account);
+        long revision=jdbc.queryForObject("SELECT revision FROM mutation_guard WHERE id=1",Long.class);
+        jdbc.update("DELETE FROM mutation_guard WHERE id=1");
+        try {
+            var denied=request("GET","/api/v1/admin/sessions/current",null,token);
+            assertThat(denied.statusCode()).as(denied.body()).isEqualTo(500);
+            assertThat(body(denied).path("code").stringValue()).isEqualTo("DATA_INTEGRITY_ERROR");
+            assertThat(denied.headers().firstValue("Cache-Control")).contains("no-store");
+            assertThat(denied.body()).doesNotContain(token,password,passwordHash,"SELECT","mutation_guard");
+            assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM admin_session WHERE account_id=?",Long.class,account)).isEqualTo(1);
+        } finally { jdbc.update("INSERT INTO mutation_guard(id,revision) VALUES(1,?)",revision); }
+        assertThat(request("GET","/api/v1/admin/sessions/current",null,token).statusCode()).isEqualTo(200);
+    }
     @Test void loginCreatesPersistentSessionAndOnlyReturnsTokenOnce() throws Exception {
         String account=account(false);
         var response=login(account);
