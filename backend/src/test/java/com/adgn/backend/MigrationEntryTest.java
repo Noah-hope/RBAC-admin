@@ -23,6 +23,16 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MigrationEntryTest {
+    @Test void migrationRejectsMixedRuntimeProfilesBeforeOpeningDatabase() throws Exception {
+        assertThatThrownBy(()->application().run("--spring.profiles.active=dev"))
+                .isInstanceOf(IllegalStateException.class).hasMessageContaining("cannot combine");
+    }
+
+    @Test void migrationRejectsOtherJdbcProtocolsBeforeOpeningDatabase() throws Exception {
+        assertThatThrownBy(()->application().run("--RBAC_MIGRATION_URL=jdbc:postgresql://localhost/unused",
+                "--RBAC_MIGRATION_USER=fixture","--RBAC_MIGRATION_PASSWORD=private-fixture"))
+                .isInstanceOf(IllegalStateException.class).hasMessageContaining("MySQL JDBC");
+    }
     private SpringApplication application() throws Exception {
         String entry = "com.adgn.backend.migration.MigrationApplication";
         assertThatCode(() -> Class.forName(entry)).as("dedicated non-Web migration entry").doesNotThrowAnyException();

@@ -8,6 +8,20 @@ import static com.adgn.backend.imports.ImportPlan.*;
 import static org.assertj.core.api.Assertions.*;
 
 class ImportPlannerTest {
+    @Test void explicitDepartmentMappingResolvesTheCompanyAndDepartmentBeforePlanningPositionCreation() {
+        var base=input("ORGANIZATION","companyCode","companyName","departmentCode","departmentName","positionCode","positionName");
+        var mapped=new Input(base.fileId(),base.sourceSystem(),base.sourceBatchId(),base.importType(),base.worksheet(),base.fieldMappings(),
+                List.of(new OrganizationMapping("Company/Department/New position",C,D,"C","D")),base.initialEmploymentState(),base.reason());
+        var p=plan(mapped,new String[][]{{"companyCode","companyName","departmentCode","departmentName","positionCode","positionName"},
+                {"C","Company","D","Department","NEW","New position"}},data());
+        assertThat(p.issues()).isEmpty();assertThat(actions(p)).containsExactly("UNCHANGED","UNCHANGED","CREATE_POSITION");
+        var after=(Map<?,?>)p.changes().getLast().normalizedValues().get("after");
+        assertThat(after.get("department_id")).isEqualTo(D);assertThat(after.get("code")).isEqualTo("NEW");
+    }
+    @Test void unsupportedImportTypeProducesBlockingIssueWithoutAnyPlannedMutation() {
+        var p=plan(input("UNSUPPORTED","name"),new String[][]{{"name"},{"Fixture"}},data());
+        issue(p,"INVALID_ACTION");assertThat(p.changes()).isEmpty();
+    }
     private final ImportPlanner planner=new ImportPlanner();
     private static final String C=id(1),D=id(2),P=id(3),E=id(4),JOB=id(5),SRC=id(6),ROLE=id(7),B=id(8),G=id(9),A=id(10),SCOPE=id(11),SYS=id(12),AP=id(13);
     private static String id(int n){return String.format("00000000-0000-4000-8000-%012d",n);}

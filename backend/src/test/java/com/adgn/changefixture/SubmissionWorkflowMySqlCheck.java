@@ -21,6 +21,29 @@ import static org.assertj.core.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SubmissionWorkflowMySqlCheck {
+    @Test void mutableDraftCannotBeLoadedAsApprovedFixedWork() throws Exception {
+        String draft=configurationDraft();long version=jdbc.queryForObject("SELECT status_version FROM change_request WHERE id=?",Long.class,draft);
+        assertThatThrownBy(()->app.getBean(com.adgn.backend.core.transaction.CommandBoundary.class).execute(
+                com.adgn.backend.change.FixedRequestStore::worker,c->app.getBean(com.adgn.backend.change.FixedRequestStore.class).load(draft)))
+                .isInstanceOfSatisfying(com.adgn.backend.core.transaction.PersistenceFailure.class,e->assertThat(e.kind()).isEqualTo(com.adgn.backend.core.transaction.PersistenceFailure.Kind.DATA_INTEGRITY_ERROR));
+        assertThat(requestState(draft)).isEqualTo("DRAFT");
+        assertThat(jdbc.queryForObject("SELECT status_version FROM change_request WHERE id=?",Long.class,draft)).isEqualTo(version);
+    }
+
+    @Test void executedRoleConfigurationInvalidatesOldPendingGrantAndReleasesItsClaim() throws Exception {
+        String role=effectiveRole();String pending=submitContent(grants(List.of(grantLine(role,employee,department))));
+        String function=id(),operation=id();
+        jdbc.update("INSERT INTO directory_node(id,system_id,code,name,node_type,created_at) VALUES(?,?,?,'Function','FUNCTION',UTC_TIMESTAMP(6))",function,system,"F_"+function.replace("-",""));
+        jdbc.update("INSERT INTO permission(id,system_id,function_id,code,name,permission_type,menu_eligible,created_at) VALUES(?,?,?,'VIEW','View','FUNCTION_OPERATION',1,UTC_TIMESTAMP(6))",operation,system,function);
+        jdbc.update("UPDATE directory_node SET enabled=1,visibility_permission_id=? WHERE id=?",operation,function);
+        String access=jdbc.queryForObject("SELECT id FROM permission WHERE system_id=? AND permission_type='SYSTEM_ACCESS'",String.class,system);
+        String configuration=submitContent(configuration(role,1,List.of(access,operation)));approveExisting(configuration);execute(configuration);
+        assertThat(requestState(configuration)).isEqualTo("EXECUTED");assertThat(requestState(pending)).isEqualTo("INVALIDATED");
+        assertThat(jdbc.queryForObject("SELECT failure_code FROM change_request WHERE id=?",String.class,pending)).isEqualTo("ROLE_CONFIGURATION_CHANGED");
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM relation_change_claim WHERE request_id=?",Long.class,pending)).isZero();
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM role_grant WHERE granted_by_request_id=?",Long.class,pending)).isZero();
+        assertThat(jdbc.queryForObject("SELECT configuration_version FROM business_role WHERE id=?",Long.class,role)).isEqualTo(2);
+    }
     IsolatedMySqlDatabase db;
     ConfigurableApplicationContext app;
     JdbcTemplate jdbc;
