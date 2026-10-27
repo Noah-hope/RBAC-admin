@@ -1,6 +1,6 @@
 # 后端详细设计与协作实施入口
 
-后端 JaCoCo：180普通＋464真实MySQL/HTTP，共644项通过；行覆盖率100.00%、分支77.93%。见[覆盖率报告](JACOCO-COVERAGE.md)、[完整HTML归档](reports/JaCoCo-2026-10-27.zip)和[测试与采集验证](JACOCO-IMPROVEMENT.md)。
+后端 JaCoCo：231普通＋469真实MySQL/HTTP，共700项通过；行覆盖率100.00%、方法100.00%、分支78.59%。见[覆盖率报告](JACOCO-COVERAGE.md)、[完整HTML归档](reports/JaCoCo-2026-10-27.zip)和[测试与采集验证](JACOCO-IMPROVEMENT.md)。
 
 D-108（2026-10-26）：C明确同意继续合并推送验收记录。来源d816d0f4f976e7a603cf98b054388d0d9ca387ef已无冲突no-ff合入main/b9ce0d32147a0742b9a61e71995c3fd342922566，合并树等于确认来源；main与文档-C任务验收确认分支普通Git原子推送成功，两个远程完整SHA回查一致，分支保留。C八项均为OWNER_ACCEPTED且既有业务主线交付保持；本轮只同步验收记录及静态追踪，不重跑业务测试、连接数据库或部署。D-107仅本地提交、未推送的描述为当轮历史，其他成员验收状态保持。
 

@@ -19,6 +19,19 @@ import static org.assertj.core.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GrantQueriesMySqlCheck {
+    @Test void inconsistentGrantProjectionFailsInsteadOfReturningAFalsePageTotal()throws Exception{
+        var f=data();String source=source(f,f.department(),f.system(),0,0),baseline=baseline(f,source,f.role(),1);
+        String grant=grant(f,baseline,1,0,"ACTIVE",f.employment());
+        var reader=org.mockito.Mockito.spy(app.getBean(com.adgn.backend.grant.GrantReader.class));
+        org.mockito.Mockito.doReturn(Optional.empty()).when(reader).grant(grant);
+        var queries=new com.adgn.backend.grant.GrantQueries(app.getBean(DataSource.class),app.getBean(com.adgn.backend.core.transaction.ReadBoundary.class),
+                app.getBean(com.adgn.backend.scope.service.ManagementContextResolver.class),reader);
+        var jwt=app.getBean(com.adgn.backend.identity.security.IdentityTokens.class).verify(token,com.adgn.backend.identity.security.IdentityTokens.Family.ADMIN);
+        assertThatThrownBy(()->queries.list(jwt,new com.adgn.backend.scope.service.ManagementContextResolver.Selection(null,null,null),"1","20",
+                new com.adgn.backend.grant.GrantQueries.Filter(f.employee(),null,null,null,null,null)))
+                .isInstanceOf(IllegalStateException.class).hasMessageContaining("snapshot");
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM role_grant WHERE id=?",Long.class,grant)).isEqualTo(1);
+    }
     private IsolatedMySqlDatabase db;private ConfigurableApplicationContext app;private JdbcTemplate jdbc;
     private Path keys;private String base,account,token,hash;
     private final JsonMapper json=JsonMapper.builder().build();private final HttpClient http=com.adgn.backend.testsupport.ContractHttpClient.create();
