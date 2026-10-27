@@ -1,5 +1,11 @@
 # 仓库目录约定
 
+2026-10-27项目说明书当前布局：`docs/06-project-document/项目设计说明书.adoc`为1.2版七章正文及接口/追踪附录，`images/`仅保留正文引用的12张当前PNG；`output/pdf/`保存同名最新PDF及源码图片包，`output/html/`保存同步HTML阅读版。旧说明书及派生附件由同名当前产物替换，原数据库字典及drawio仍在原目录保留。
+
+2026-10-26/D-125：新增 `docs/06-project-document/` 存放当前AsciiDoc整合说明书、`images/`引用PNG、来源摘要、构建及元数据附录维护脚本；最终PDF位于 `output/pdf/集中权限管理系统项目设计说明书.pdf`。浏览器临时HTML及页面栅格检查保存在忽略的 `.tmp/project-document/`；不覆盖各阶段权威文档，不删除或替换原drawio。
+
+2026-10-26 设计图入口状态：当前数据流图统一在 `docs/01-requirements/dataflows/`，横向总览文件包含总览及P1～P7共8页；顶层简图、分区总图及七张独立分图保留。数据库ER图仍为 `docs/04-database/database-erd.drawio` 四页，表字段与约束仍以同目录字典和DDL为准。均已完成图源检查，只维护原生drawio，不恢复已删除的 `dataflows-v1` 或新增状态文档。
+
 2026-10-23/D-104：用户明确授权根目录 `frontend/` 作为正式前端，沿用同一 Git 仓库。`src/pages` 按业务组织，`src/components` 放公共交互组件，`src/api` 从 Git OpenAPI 派生并封装请求；使用与检查见 [前端指南](../../frontend/README.md)。此前“不创建 frontend”为历史约定，原型仍保留供设计对照。
 
 2026-10-18/D-056业务代码样例：web/identity/controller与dto放HTTP适配；identity/service、repository、security、config放身份应用流程、受控SQL和认证配置。其他成员按各自业务域建立对应文件，沿用单Maven和原逻辑模块。具体文件与调用说明见[BE-06记录](../05-detailed-design/BE-06-IDENTITY.md)，不要求为未实现业务建立空接口或空实现。

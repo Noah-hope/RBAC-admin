@@ -49,7 +49,7 @@ erDiagram
     impact_preview ||--o{ preview_item : freezes
 ```
 
-可编辑图在[database-erd.drawio](database-erd.drawio)，分四页减少单图拥挤。Mermaid为逻辑关系摘要；权限的SYSTEM_ACCESS例外、可空外键及全部辅助关系以数据字典为准。图源尚未在桌面客户端打开验收。
+当前可编辑图为[database-erd.drawio](database-erd.drawio)，共四页，展示43张不同表与46条关系；中文及英文表名、核心居中与辅助围绕、45跨表直线及1自关联回线已于2026-10-26完成原生渲染检查。验证使用本地Edge和官方drawio运行时，不代记桌面客户端人工验收。Mermaid为逻辑关系摘要；SYSTEM_ACCESS例外、可空外键及全部辅助关系以数据字典为准。与数据流图D1～D8的逻辑存储区分：同一逻辑存储可以由多张物理表实现，本次未改变关系模型。
 
 ## 正规化与历史边界
 

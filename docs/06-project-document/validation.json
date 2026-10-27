@@ -1,0 +1,71 @@
+{
+  "status": "PASSED",
+  "date": "2026-10-27",
+  "version": "1.2",
+  "processor": "Asciidoctor.js 3.0.4 -> local Edge PDF -> PyMuPDF TOC numbers",
+  "pages": 35,
+  "chapters": 7,
+  "appendices": [
+    "A",
+    "B"
+  ],
+  "outlineEntries": 58,
+  "embeddedPngs": 12,
+  "dictionaryAppendixRemoved": true,
+  "bodyUnchanged": true,
+  "coverOnlyTitleAndSubtitle": true,
+  "figure10MatchesLatestPng": true,
+  "apiTextSha256": {
+    "body": "0bc729b58139e7d9dbebd9474dd4699b240dd00467227334620a7986199d9ce2",
+    "appendix": "84b78515ab21ac41590fc36f54b7e3da6ea8c25eaeed02a3c2989e82ad4fc9ad"
+  },
+  "apiAppendixUnchanged": true,
+  "inboundOperations": 67,
+  "outOfBoundsText": [],
+  "sourceRecordsVerified": 21,
+  "imageHashesVerified": 12,
+  "visualReview": "All current pages rasterized and reviewed via contact sheets; cover, TOC, tables, compact DFD and ER pages inspected; representative Poppler renders checked",
+  "typography": {
+    "headings": "SimHei bold",
+    "body": "FangSong",
+    "allTextColor": "black",
+    "compactProcessFlows": [
+      9,
+      5,
+      12,
+      12,
+      7,
+      6,
+      6
+    ],
+    "erWidth": "A4 body width"
+  },
+  "drawioLinksInPdf": 0,
+  "originalSourcesVerified": 108,
+  "originalSourcesModified": false,
+  "businessTestsRun": false,
+  "sqlExecuted": false,
+  "canonicalPdfReplacementPending": false,
+  "artifacts": [
+    {
+      "path": "docs/06-project-document/项目设计说明书.adoc",
+      "bytes": 50215,
+      "sha256": "4d14d4056a9a487b43360a83259c2bcac9f6cacac56070de8d012248dbb13026"
+    },
+    {
+      "path": "output/pdf/集中权限管理系统项目设计说明书.pdf",
+      "bytes": 4620596,
+      "sha256": "7a7a1d79eb7b4d5967b446e2440c65c6b022ad53d2d71a27649da859bc08ff26"
+    },
+    {
+      "path": "output/html/集中权限管理系统项目设计说明书.html",
+      "bytes": 5029554,
+      "sha256": "7218241ad75286012c3ad3e34b88a5f225df643f91d7c900e030ca09b6d67020"
+    },
+    {
+      "path": "output/pdf/项目设计说明书源文件及图片.zip",
+      "bytes": 3511038,
+      "sha256": "0f2e15f698caa317c4a9fa32e7947124b5bbefb196e2b0fa62cdcacefb3293b1"
+    }
+  ]
+}

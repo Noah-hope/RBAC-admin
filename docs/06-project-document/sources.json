@@ -1,0 +1,93 @@
+{
+  "date": "2026-10-27",
+  "requirements": "V1.3",
+  "api": "1.2.0",
+  "database": "1.1",
+  "inboundOperations": 67,
+  "sources": [
+    {
+      "path": "docs/03-api/openapi.yaml",
+      "sha256": "9910ceafadea88d85793d00f7bb4e6e5673700a8565366a407185c4517e0cbdf"
+    },
+    {
+      "path": "docs/04-database/schema-model.json",
+      "sha256": "2acdb668597e7afdcd41a08481aa5bd17fa792b4798fcdc7ad70972414b20d77"
+    },
+    {
+      "path": "docs/05-detailed-design/MODULES.md",
+      "sha256": "5cfdceec3266d7d0b62ae5b44ca0947732c93fbf2b8a93dd5ab8b32f04b1b083"
+    },
+    {
+      "path": "docs/01-requirements/usecases-v1/UC-01_维护业务系统与权限目录.md",
+      "sha256": "ebbc4f13ba4e69e8b287bbdb056f9ea178c900dc15c9b47644c74f5d472d7819"
+    },
+    {
+      "path": "docs/01-requirements/usecases-v1/UC-02_创建角色并配置权限.md",
+      "sha256": "821a274b82c280897e4049b2758db8ff2d2a2bae68016820f94f46c1b854d5cf"
+    },
+    {
+      "path": "docs/01-requirements/usecases-v1/UC-03_为员工分配角色.md",
+      "sha256": "50a9b334caf0a63fe8d52d732e175f2e0d56f75e48799b7b85b05c59b2b3e7ef"
+    },
+    {
+      "path": "docs/01-requirements/usecases-v1/UC-04_撤销员工角色.md",
+      "sha256": "afa3aa691e87c71fbc95ff1c30321cbe1dd7e0079cc4d6dc0d17f40ca6d7061f"
+    },
+    {
+      "path": "docs/01-requirements/usecases-v1/UC-05_查询员工有效权限.md",
+      "sha256": "ca9779095ff64ded04b5290af1927b0e643aa79b367f17ae273b1ddff44f4153"
+    },
+    {
+      "path": "docs/01-requirements/usecases-v1/UC-06_检查员工指定操作权限.md",
+      "sha256": "5c834a795a0a6b0fe6b58308d480d0ae4d7927c9daf797199a4d75fe56ae4467"
+    },
+    {
+      "path": "docs/01-requirements/usecases-v1/UC-07_配置管理员及管理范围.md",
+      "sha256": "97c8fc93184e313efffe7998c4dd68285b7266cb9e6467776200f081805ba8cc"
+    },
+    {
+      "path": "docs/01-requirements/usecases-v1/UC-08_查询授权审计记录.md",
+      "sha256": "8a21c656bd5a3b0b3b98b4573a89e70ab4c75c31a2c40837a3db42bfcc1c721b"
+    },
+    {
+      "path": "docs/01-requirements/usecases-v1/UC-09_管理员登录与退出.md",
+      "sha256": "ecdd1cc2ef6983dc7ea2f56fee3e15247d345483fedb2df1601419fa80d7907e"
+    },
+    {
+      "path": "docs/01-requirements/usecases-v1/UC-10_导入同步员工组织信息.md",
+      "sha256": "a9388429fdc4c3863a75768b639f15fb98f0259858cb9a31c8ed886662fb7bdd"
+    },
+    {
+      "path": "docs/01-requirements/usecases-v1/UC-11_接收审批结果并执行权限变更.md",
+      "sha256": "3b441804e3e1ac1487815c06fee22fad8cd8f012faa1961d6aeff810ba25e8b9"
+    },
+    {
+      "path": "docs/01-requirements/usecases-v1/用例说明.md",
+      "sha256": "9a74f87cac2b6a3dfdb136cd40f73329ea09159b408630b0679a09efd3a4f640"
+    },
+    {
+      "path": "docs/01-requirements/usecases-v1/管理范围与人员权限规则.md",
+      "sha256": "b0638d3a5d8c39feefdd680b9a99d045be7bc5daf42add086e465cbb1999b1a7"
+    },
+    {
+      "path": "docs/05-detailed-design/ARCHITECTURE.md",
+      "sha256": "37993dcdb9ceb499277a8bea19c36015e77b268af2139fd79ee9e219de218ebb"
+    },
+    {
+      "path": "docs/05-detailed-design/CORE-FLOWS.md",
+      "sha256": "6d0b47e63c8491321e873bb7caed1e79790c4fc79eed4e30d1a05bce01d3b188"
+    },
+    {
+      "path": "docs/04-database/TRANSACTIONS.md",
+      "sha256": "8985d3db385e4400d384a7b73a2212db22bb16916b6cc049ee0fa231bae84406"
+    },
+    {
+      "path": "docs/05-detailed-design/BE-33-SYSTEM-ACCEPTANCE.md",
+      "sha256": "94da847d4e9d36c538330444d6e01142d229bebbc20bb81725dc337a4cb72841"
+    },
+    {
+      "path": "docs/project/MEMORY.md",
+      "sha256": "7b3fe39a2cc867429c5e4ad59fbbf46fdbee2d4936bc39367d55e05b2fed6b93"
+    }
+  ]
+}

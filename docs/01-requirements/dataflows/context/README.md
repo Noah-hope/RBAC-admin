@@ -17,7 +17,9 @@
 
 HR 文件由总管理员上传，不增加独立 HR 接口；普通员工通过业务系统使用权限。身份、管理范围与业务权限相互独立。OA 接收成功不等于权限执行生效。校验失败等错误包含在相应办理或调用结果中。
 
-原业务详页和逐字段说明已移除。当前已新增[第一层总图](../第一层数据流图.drawio)，顶层简图保持；P1～P7处理分图已补齐，链接见[需求总入口](../../README.md)；各分图保留一个整体处理。
+原业务详页和逐字段说明已移除。当前配套图已补齐：[第一层横向总览](../第一层数据流总览.drawio)共8页（总览＋P1～P7），每个子页保留全部4实体和D1～D8、只显示对应处理及关联流；[第一层分区总图](../第一层数据流图.drawio)保留57条有向主要流。横向总览把同对象间往返流合并为38条连接，双向箭头表示数据交换。七张独立处理分图共80流（57主要流＋23校验读取），入口见[需求总入口](../../README.md)；仍只保留处理整体，没有分解第二层。
+
+状态更新（2026-10-26）：顶层、第一层总览/子页及独立分图均已完成原生渲染检查。逻辑存储的物理实现查看[当前四页ER图](../../../04-database/database-erd.drawio)及数据库字典；D编号不代表单张表。需求V1.3、API和数据库结构保持。
 
 用户最新交付约定：后续绘图只生成drawio，不生成PNG/SVG/HTML。下方旧生成命令会同时刷新辅助预览，保留为历史维护说明，后续不直接运行；现有图片未在第一层绘制中更新。
 
@@ -28,7 +30,7 @@ python docs/01-requirements/dataflows/context/generate_context.py
 python docs/01-requirements/dataflows/context/test_context.py
 ```
 
-官方 drawio 查看器的本地渲染检查：
+历史官方 drawio 查看器检查命令（含截图参数，当前只交付drawio时不直接运行）：
 
 ```powershell
 node docs/01-requirements/dataflows/context/verify_drawio.cjs .tmp/drawio-render-check/viewer-static.min.js .tmp/drawio-render-check/simple.png

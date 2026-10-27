@@ -479,6 +479,9 @@ def generate_diagram():
                 edge+=1
                 cell=ET.SubElement(root,'mxCell',{'id':f'e{edge}','value':'写事务先锁','edge':'1','parent':'1','source':name,'target':'mutation_guard','style':'edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;endArrow=open;strokeColor=#777777;'})
                 ET.SubElement(cell,'mxGeometry',{'relative':'1','as':'geometry'})
+    # 图的布局独立于数据库元数据；只调整展示，不改变上方实体与关系。
+    from erd_layout import arrange_erd
+    arrange_erd(mx)
     ET.indent(mx)
     ET.ElementTree(mx).write(ROOT/'database-erd.drawio',encoding='utf-8',xml_declaration=True)
 

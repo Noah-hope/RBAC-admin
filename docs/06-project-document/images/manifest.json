@@ -1,0 +1,234 @@
+{
+  "renderer": "Official drawio viewer runtime in local Edge; page-independent native XML rendering",
+  "images": [
+    {
+      "id": "df-context",
+      "file": "df-context.png",
+      "source": "docs/01-requirements/dataflows/context/系统边界级数据流图.drawio",
+      "page": 1,
+      "title": "集中权限管理系统 · 顶层数据流图",
+      "width": 1800,
+      "height": 950,
+      "nodes": 9,
+      "edges": 8,
+      "panel": null,
+      "fontColors": [
+        "#000000"
+      ],
+      "scale": 1.5,
+      "documentTypography": "SimHei bold headings; FangSong body; black text; dark fill lightened for contrast",
+      "sourceSha256": "3367e208b2b1665d5c400df4f66253a42e67f616397cb7dc357782b413490212",
+      "pngSha256": "dee9b65273bc972a7f1f7afeefba42e025d31cc9fb0d0b48afeb0c9ffc709136"
+    },
+    {
+      "id": "df-p1",
+      "file": "df-p1.png",
+      "source": "docs/01-requirements/dataflows/第一层数据流图.drawio",
+      "page": 1,
+      "title": "P1 精简数据流图",
+      "width": 2020,
+      "height": 881,
+      "nodes": 18,
+      "edges": 9,
+      "panel": "P1",
+      "fontColors": [
+        "#000000"
+      ],
+      "scale": 1.5,
+      "documentTypography": "SimHei bold headings; FangSong body; black text; dark fill lightened for contrast",
+      "sourceSha256": "9a20ab6093cdb2754dbb5cc324f9b8f6c40e0c8ffbac63bc3cac3c24d4b9d93c",
+      "pngSha256": "e7ec82fcc0ca35d0ef928d07e91441fd1dcc85a2e5be64a8d67e46da6da5112b"
+    },
+    {
+      "id": "df-p2",
+      "file": "df-p2.png",
+      "source": "docs/01-requirements/dataflows/第一层数据流图.drawio",
+      "page": 1,
+      "title": "P2 精简数据流图",
+      "width": 2020,
+      "height": 501,
+      "nodes": 11,
+      "edges": 5,
+      "panel": "P2",
+      "fontColors": [
+        "#000000"
+      ],
+      "scale": 1.5,
+      "documentTypography": "SimHei bold headings; FangSong body; black text; dark fill lightened for contrast",
+      "sourceSha256": "9a20ab6093cdb2754dbb5cc324f9b8f6c40e0c8ffbac63bc3cac3c24d4b9d93c",
+      "pngSha256": "50aa60b7557ab2be13260035ba159e6e8edc8eef907b0e2bd193b40b76d1b1a6"
+    },
+    {
+      "id": "df-p3",
+      "file": "df-p3.png",
+      "source": "docs/01-requirements/dataflows/第一层数据流图.drawio",
+      "page": 1,
+      "title": "P3 精简数据流图",
+      "width": 2020,
+      "height": 925,
+      "nodes": 22,
+      "edges": 12,
+      "panel": "P3",
+      "fontColors": [
+        "#000000"
+      ],
+      "scale": 1.5,
+      "documentTypography": "SimHei bold headings; FangSong body; black text; dark fill lightened for contrast",
+      "sourceSha256": "9a20ab6093cdb2754dbb5cc324f9b8f6c40e0c8ffbac63bc3cac3c24d4b9d93c",
+      "pngSha256": "9244d275eeaecf6ac93991cfbb73c37a0693f051b9c6cd426edefa11b2a3bd98"
+    },
+    {
+      "id": "df-p4",
+      "file": "df-p4.png",
+      "source": "docs/01-requirements/dataflows/第一层数据流图.drawio",
+      "page": 1,
+      "title": "P4 精简数据流图",
+      "width": 2020,
+      "height": 1305,
+      "nodes": 23,
+      "edges": 12,
+      "panel": "P4",
+      "fontColors": [
+        "#000000"
+      ],
+      "scale": 1.5,
+      "documentTypography": "SimHei bold headings; FangSong body; black text; dark fill lightened for contrast",
+      "sourceSha256": "9a20ab6093cdb2754dbb5cc324f9b8f6c40e0c8ffbac63bc3cac3c24d4b9d93c",
+      "pngSha256": "bb012ef0cfa7a7940ab64c945591b1a896d875bbd7860edcd15de781734c7336"
+    },
+    {
+      "id": "df-p5",
+      "file": "df-p5.png",
+      "source": "docs/01-requirements/dataflows/第一层数据流图.drawio",
+      "page": 1,
+      "title": "P5 精简数据流图",
+      "width": 2020,
+      "height": 881,
+      "nodes": 15,
+      "edges": 7,
+      "panel": "P5",
+      "fontColors": [
+        "#000000"
+      ],
+      "scale": 1.5,
+      "documentTypography": "SimHei bold headings; FangSong body; black text; dark fill lightened for contrast",
+      "sourceSha256": "9a20ab6093cdb2754dbb5cc324f9b8f6c40e0c8ffbac63bc3cac3c24d4b9d93c",
+      "pngSha256": "dea3f4833a10c8575eed118800b928bc1e72d0681b8ac9c0c8c79d6ab22aa6e4"
+    },
+    {
+      "id": "df-p6",
+      "file": "df-p6.png",
+      "source": "docs/01-requirements/dataflows/第一层数据流图.drawio",
+      "page": 1,
+      "title": "P6 精简数据流图",
+      "width": 2020,
+      "height": 837,
+      "nodes": 14,
+      "edges": 6,
+      "panel": "P6",
+      "fontColors": [
+        "#000000"
+      ],
+      "scale": 1.5,
+      "documentTypography": "SimHei bold headings; FangSong body; black text; dark fill lightened for contrast",
+      "sourceSha256": "9a20ab6093cdb2754dbb5cc324f9b8f6c40e0c8ffbac63bc3cac3c24d4b9d93c",
+      "pngSha256": "f3988e1c935667fd282fe731b53acc837647c71b991bd178395be1a03063be96"
+    },
+    {
+      "id": "df-p7",
+      "file": "df-p7.png",
+      "source": "docs/01-requirements/dataflows/第一层数据流图.drawio",
+      "page": 1,
+      "title": "P7 精简数据流图",
+      "width": 2020,
+      "height": 545,
+      "nodes": 13,
+      "edges": 6,
+      "panel": "P7",
+      "fontColors": [
+        "#000000"
+      ],
+      "scale": 1.5,
+      "documentTypography": "SimHei bold headings; FangSong body; black text; dark fill lightened for contrast",
+      "sourceSha256": "9a20ab6093cdb2754dbb5cc324f9b8f6c40e0c8ffbac63bc3cac3c24d4b9d93c",
+      "pngSha256": "b2653a561e8442b7b2e091fa2c032d6c2f4dc5c46405acdcdab4192f998b6a8e"
+    },
+    {
+      "id": "er-1",
+      "file": "er-1.png",
+      "source": "docs/04-database/database-erd.drawio",
+      "page": 1,
+      "title": "组织与后台身份",
+      "width": 2200,
+      "height": 1800,
+      "nodes": 11,
+      "edges": 10,
+      "panel": null,
+      "fontColors": [
+        "#000000"
+      ],
+      "scale": 1.5,
+      "documentTypography": "SimHei bold headings; FangSong body; black text; dark fill lightened for contrast",
+      "sourceSha256": "822a5fb7f7f405c599fdbd75f922d902d34bc982bc0ca8e9085f0936b6a9b446",
+      "pngSha256": "14fe4bb1731820692bd7edf2a6dacf9c0f540ce767f423640bdb0c2a108d3913"
+    },
+    {
+      "id": "er-2",
+      "file": "er-2.png",
+      "source": "docs/04-database/database-erd.drawio",
+      "page": 2,
+      "title": "目录、角色与独立来源",
+      "width": 2200,
+      "height": 1800,
+      "nodes": 13,
+      "edges": 16,
+      "panel": null,
+      "fontColors": [
+        "#000000"
+      ],
+      "scale": 1.5,
+      "documentTypography": "SimHei bold headings; FangSong body; black text; dark fill lightened for contrast",
+      "sourceSha256": "822a5fb7f7f405c599fdbd75f922d902d34bc982bc0ca8e9085f0936b6a9b446",
+      "pngSha256": "3de5d7d2af5cd1686858704a052102465459742712aff22126d3469ed95decad"
+    },
+    {
+      "id": "er-3",
+      "file": "er-3.png",
+      "source": "docs/04-database/database-erd.drawio",
+      "page": 3,
+      "title": "固定申请、OA与执行",
+      "width": 2200,
+      "height": 1800,
+      "nodes": 14,
+      "edges": 15,
+      "panel": null,
+      "fontColors": [
+        "#000000"
+      ],
+      "scale": 1.5,
+      "documentTypography": "SimHei bold headings; FangSong body; black text; dark fill lightened for contrast",
+      "sourceSha256": "822a5fb7f7f405c599fdbd75f922d902d34bc982bc0ca8e9085f0936b6a9b446",
+      "pngSha256": "47b6204a87fc631f0ecd852d028f9431179978ed4c26be6d8cb94c8cceb2a7b9"
+    },
+    {
+      "id": "er-4",
+      "file": "er-4.png",
+      "source": "docs/04-database/database-erd.drawio",
+      "page": 4,
+      "title": "导入、预览与可靠性",
+      "width": 2200,
+      "height": 1800,
+      "nodes": 11,
+      "edges": 6,
+      "panel": null,
+      "fontColors": [
+        "#000000"
+      ],
+      "scale": 1.5,
+      "documentTypography": "SimHei bold headings; FangSong body; black text; dark fill lightened for contrast",
+      "sourceSha256": "822a5fb7f7f405c599fdbd75f922d902d34bc982bc0ca8e9085f0936b6a9b446",
+      "pngSha256": "d964009550a498a45ee4d4235d11c8f83da366d81c6cc68d996b5c15fd47dfef"
+    }
+  ],
+  "errors": []
+}

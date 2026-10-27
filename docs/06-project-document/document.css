@@ -1,0 +1,89 @@
+@page { size:A4; margin:18mm 16mm 21mm; }
+@page a3-landscape { size:420mm 297mm; margin:14mm; }
+@page a2-landscape { size:594mm 420mm; margin:14mm; }
+@page a2-portrait { size:420mm 594mm; margin:14mm; }
+@page a1-landscape { size:841mm 594mm; margin:14mm; }
+* { box-sizing:border-box; }
+html,body { padding:0; margin:0; background:#fff; color:#18293b; }
+body { font-family:FangSong,serif; font-size:11pt; line-height:1.65; }
+p { margin:0 0 3mm; text-align:justify; orphans:3; widows:3; }
+h1,h2,h3,h4 { color:#17365d; font-weight:bold; line-height:1.35; break-after:avoid; }
+h2 { font-size:21pt; margin:0 0 7mm; padding-bottom:3mm; border-bottom:1.4pt solid #17365d; }
+h3 { font-size:15pt; margin:7mm 0 3mm; }
+h4 { font-size:12pt; margin:5mm 0 2mm; }
+.sect1 { break-before:page; }
+.sect2,.sect3 { margin:0; }
+a { color:inherit; text-decoration:none; }
+.cover { height:242mm; padding:0; break-after:page; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+.cover p { text-align:center; }
+.cover-eyebrow { color:#52718f; font-size:13pt; letter-spacing:1pt; margin-bottom:14mm; }
+.cover-title { color:#17365d; font-size:35pt; font-weight:bold; line-height:1.3; margin-bottom:4mm; }
+.cover-subtitle { color:#17365d; font-size:24pt; font-weight:bold; margin-bottom:11mm; }
+.cover-description { font-size:13pt; line-height:1.9; max-width:150mm; margin-bottom:10mm; }
+.cover table { width:100%; margin:0 0 14mm; border:0; background:#f0f4f8; }
+.cover td { border:0; padding:3mm 4mm; font-size:11pt; }
+.cover-note { color:#596b7d; font-size:9.5pt; line-height:1.7; border-top:1pt solid #d7e1eb; padding-top:5mm; }
+#toc { break-before:page; break-after:page; }
+#toctitle { color:#17365d; font-size:25pt; font-weight:bold; margin:7mm 0 10mm; }
+#toc ul { list-style:none; margin:0; padding:0; }
+#toc li { margin:0 0 4mm; padding-bottom:2.5mm; border-bottom:.5pt solid #dde5ee; font-size:12pt; }
+table { border-collapse:collapse; width:100%; margin:4mm 0 5mm; table-layout:fixed; font-size:9.7pt; line-height:1.5; }
+thead { display:table-header-group; background:#e7eef6; color:#17365d; }
+th,td { border:.6pt solid #c0cedd; padding:2.2mm; vertical-align:top; overflow-wrap:anywhere; word-break:normal; }
+th { text-align:left; font-weight:bold; }
+td p,th p { margin:0; text-align:left; orphans:1; widows:1; }
+tr { break-inside:avoid; }
+table.dictionary-table { font-size:9.3pt; }
+table.api-table { font-size:9pt; }
+table code { font-size:.9em; }
+ul,ol { padding-left:7mm; margin:2mm 0 4mm; }
+li { margin:0 0 2.5mm; break-inside:avoid; }
+li p { margin:0 0 1.5mm; }
+pre { white-space:pre-wrap; overflow-wrap:anywhere; border:.6pt solid #c4d1df; background:#f4f7fa; padding:4mm; line-height:1.6; font-size:9pt; }
+code,pre { font-family:FangSong,serif; }
+.listingblock,.admonitionblock { break-inside:avoid; margin:4mm 0; }
+.title { font-weight:bold; color:#17365d; margin:0 0 3mm; break-after:avoid; }
+.diagram-page,.diagram-section { break-before:page; break-after:page; padding:0; margin:0; }
+.figure-a3-landscape { page:a3-landscape; width:392mm; }
+.figure-a2-landscape { page:a2-landscape; width:566mm; }
+.figure-a2-portrait { page:a2-portrait; width:392mm; }
+.figure-a1-landscape { page:a1-landscape; width:813mm; }
+.diagram-section h3 { text-align:center; font-size:18pt; margin:0 0 4mm; }
+.diagram-section > .paragraph { max-width:260mm; margin-left:auto; margin-right:auto; }
+.diagram-page .imageblock,.diagram-section .imageblock { margin:0; width:100%; }
+.diagram-page .imageblock .title,.diagram-section .imageblock .title { font-size:13pt; margin-bottom:4mm; text-align:center; }
+.diagram-page img,.diagram-section img { display:block; object-fit:contain; margin:0 auto; }
+.diagram-page .figure-note,.diagram-section .figure-note { color:#465b70; font-size:10.5pt; line-height:1.7; margin:4mm auto 0; max-width:260mm; text-align:center; }
+.diagram-page .figure-note p,.diagram-section .figure-note p { text-align:center; }
+#footer { display:none; }
+.sect1:has(> h2) > h2 { break-before:auto; }
+@media screen { body { padding:10mm; } }
+
+/* 本次文档排版要求：黑体粗标题、仿宋正文、所有文字为黑色。 */
+body,body * { color:#000000 !important; }
+h1,h2,h3,h4,h5,h6,.title,#toctitle,.cover-eyebrow,.cover-title,.cover-subtitle,th,th * {
+ font-family:SimHei,sans-serif !important; font-weight:700 !important;
+}
+.cover td:first-child { font-family:SimHei,sans-serif; font-weight:700; }
+.compact-flow { break-inside:avoid; margin:4mm 0 6mm; width:100%; }
+.compact-flow .imageblock { margin:0; }
+.compact-flow img { display:block; width:100%; height:auto; }
+.compact-flow .title { text-align:center; font-size:10.5pt; margin:2mm 0; }
+.compact-flow .figure-note { font-size:9pt; margin-top:2mm; line-height:1.5; }
+.compact-flow .figure-note p { text-align:left; }
+
+/* ER随正文页宽展示；四个主题各占一页，不再采用大幅横向图页。 */
+.er-section { break-before:page; break-after:page; width:100%; }
+.er-section h3 { margin-top:0; }
+.er-section .imageblock { width:100%; margin:5mm 0 0; }
+.er-section .imageblock img { display:block; width:100%; height:auto; }
+.er-section .imageblock .title { text-align:center; font-size:10.5pt; }
+/* 将处理说明和对应图片作为整体分页，避免说明与图跨页分离。 */
+.sect2:has(> .compact-flow) { break-inside:avoid; }
+.sect2:has(> h3[id^="_p"]) { break-before:page; }
+.sect2 > .paragraph:has(+ .compact-flow) { break-after:avoid; }
+.compact-flow { break-before:avoid; }
+.sect2:has(> h3#_分层设计),
+.sect2:has(> h3#_管理员登录与范围访问),
+.sect2:has(> h3#_角色分配审批执行与权限查询) { break-inside:avoid; }
+table:not(.api-table) { break-inside:avoid; }
