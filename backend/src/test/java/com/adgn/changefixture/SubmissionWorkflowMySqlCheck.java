@@ -21,6 +21,19 @@ import static org.assertj.core.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SubmissionWorkflowMySqlCheck {
+    @Test void missingFixedRequestIsNotFoundAndCreatesNoWorkerWrite()throws Exception{
+        long revision=jdbc.queryForObject("SELECT revision FROM mutation_guard WHERE id=1",Long.class);
+        assertThatThrownBy(()->app.getBean(com.adgn.backend.core.transaction.CommandBoundary.class).execute(
+                com.adgn.backend.change.FixedRequestStore::worker,c->app.getBean(com.adgn.backend.change.FixedRequestStore.class).load(id())))
+                .isInstanceOfSatisfying(com.adgn.backend.identity.security.IdentityFailure.class,e->{assertThat(e.status()).isEqualTo(404);assertThat(e.code()).isEqualTo("NOT_FOUND");});
+        assertThat(jdbc.queryForObject("SELECT revision FROM mutation_guard WHERE id=1",Long.class)).isEqualTo(revision);
+    }
+    @Test void revocationOfMissingGrantCannotCreateADraft()throws Exception{
+        long drafts=jdbc.queryForObject("SELECT COUNT(*) FROM change_request",Long.class);
+        var response=create(revokes(id(),1));assertThat(response.statusCode()).as(response.body()).isEqualTo(404);
+        assertThat(body(response).path("code").stringValue()).isEqualTo("NOT_FOUND");
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM change_request",Long.class)).isEqualTo(drafts);
+    }
     @Test void mutableDraftCannotBeLoadedAsApprovedFixedWork() throws Exception {
         String draft=configurationDraft();long version=jdbc.queryForObject("SELECT status_version FROM change_request WHERE id=?",Long.class,draft);
         assertThatThrownBy(()->app.getBean(com.adgn.backend.core.transaction.CommandBoundary.class).execute(

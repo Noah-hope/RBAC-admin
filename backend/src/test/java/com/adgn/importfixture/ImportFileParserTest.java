@@ -12,6 +12,22 @@ import java.util.zip.*;
 import static org.assertj.core.api.Assertions.*;
 
 class ImportFileParserTest {
+    @Test void externalResolverRefusesProviderResolutionWithoutBreakingOrdinaryWorkbookParsing()throws Exception{
+        var factory=org.mockito.Mockito.spy(javax.xml.stream.XMLInputFactory.newFactory());
+        var checked=new java.util.concurrent.atomic.AtomicInteger();
+        org.mockito.Mockito.doAnswer(call->{
+            javax.xml.stream.XMLResolver resolver=call.getArgument(0);
+            assertThatThrownBy(()->resolver.resolveEntity(null,"file:///private-import-fixture",null,null)).isInstanceOf(javax.xml.stream.XMLStreamException.class);
+            checked.incrementAndGet();return call.callRealMethod();
+        }).when(factory).setXMLResolver(org.mockito.ArgumentMatchers.any());
+        Path book=xlsx(packageParts(sheet("<row r=\"1\"><c t=\"inlineStr\"><is><t>safe</t></is></c></row>")));
+        try(var provider=org.mockito.Mockito.mockStatic(javax.xml.stream.XMLInputFactory.class,org.mockito.Mockito.CALLS_REAL_METHODS)){
+            provider.when(javax.xml.stream.XMLInputFactory::newFactory).thenReturn(factory);
+            assertThat(parser.inspect(book,"data.xlsx",XLSX).sheetNames()).containsExactly("人员");
+            assertThat(parser.readSheet(book,"data.xlsx","人员").getFirst().cells()).containsEntry(1,"safe");
+        }
+        assertThat(checked.get()).isPositive();
+    }
     @TempDir Path directory;
     private final ImportFileParser parser=new ImportFileParser();
     private Path csv(String value)throws Exception{Path p=directory.resolve(UUID.randomUUID()+".csv");Files.writeString(p,value,StandardCharsets.UTF_8);return p;}
