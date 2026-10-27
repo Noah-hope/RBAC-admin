@@ -16,6 +16,26 @@ import static org.assertj.core.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class IdempotencyMySqlCheck {
+    @Test void reservationRejectsMissingServiceOrDifferentPrincipalBeforeWriting() throws Exception {
+        var request=request();long revision=jdbc.queryForObject("SELECT revision FROM mutation_guard WHERE id=1",Long.class);
+        java.util.List<CommandBoundary.CheckedSupplier<CommandBoundary.Identity<String>>> actors=Arrays.asList(
+                ()->null,()->new CommandBoundary.Identity<>("current",new AuditRecord.Actor(AuditRecord.ActorKind.SERVICE,principal.toString())),
+                ()->new CommandBoundary.Identity<>("current",new AuditRecord.Actor(AuditRecord.ActorKind.ACCOUNT,UUID.randomUUID().toString())));
+        for(var actor:actors)assertCode(()->coordinator.reserve(request,actor,this::authorize),IdempotencyFailure.Code.AUTHENTICATION_FAILED);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM http_idempotency WHERE idempotency_key=?",Long.class,request.key().toString())).isZero();
+        assertThat(jdbc.queryForObject("SELECT revision FROM mutation_guard WHERE id=1",Long.class)).isEqualTo(revision);
+    }
+
+    @Test void corruptedCachedProjectionCannotReplaySensitiveFieldsOrRunBusinessAgain() throws Exception {
+        var request=request();
+        // 插入受损持久化夹具；已完成结果的不可变触发器保持启用。
+        jdbc.update("INSERT INTO http_idempotency(id,principal_id,http_method,canonical_path,idempotency_key,request_digest,digest_key_id,state,http_status,safe_response,authorization_basis,expires_at,created_at) VALUES(?,?,?,?,?,?,?,'COMPLETED',201,?,?,UTC_TIMESTAMP(6)+INTERVAL 7 DAY,UTC_TIMESTAMP(6))",
+                UUID.randomUUID().toString(),principal.toString(),request.method(),request.path(),request.key().toString(),keys.digest("old",request),"old",
+                "{\"schemaVersion\":1,\"body\":{\"password\":\"private-fixture\"}}",json.writeValueAsString(basis()));
+        assertThatThrownBy(()->coordinator.execute(request,this::qualify,this::authorize,c->{throw new AssertionError("must not rerun");}))
+                .isInstanceOfSatisfying(PersistenceFailure.class,e->assertThat(e.kind()).isEqualTo(PersistenceFailure.Kind.DATA_INTEGRITY_ERROR));
+        assertThat(state(request)).isEqualTo("COMPLETED");
+    }
     private IsolatedMySqlDatabase database;
     private ConfigurableApplicationContext application;
     private JdbcTemplate jdbc;

@@ -19,6 +19,16 @@ import static org.assertj.core.api.Assertions.*;
 /** Synthetic reliable-approval fixtures exercise M06, not real OA or C's canonical validator. */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GrantMutationsMySqlCheck {
+    @Test void missingActiveGrantReadRejectsClosureWithoutAdvancingSourceOrBaseline()throws Exception{
+        var f=data();String grant=apply(approved("ROLE_GRANT",target(f))).relations().getFirst().grantId();
+        var damaged=org.mockito.Mockito.spy(reader);org.mockito.Mockito.doReturn(Optional.empty()).when(damaged).grant(grant);
+        var service=new SourceCloser(app.getBean(DataSource.class),damaged,baselines);
+        assertThatThrownBy(()->write(c->service.close(c,List.of(new SourceCloser.Selection(f.sourceKey(),0,0)),"Fixture storage mismatch")))
+                .isInstanceOfSatisfying(GrantMutationFailure.class,e->assertThat(e.code()).isEqualTo("RELATION_VERSION_CHANGED"));
+        assertThat(scalar("SELECT source_epoch FROM authorization_source WHERE id=?",f.source())).isZero();
+        assertThat(scalar("SELECT relation_version FROM grant_baseline WHERE id=?",f.baseline())).isEqualTo(1);
+        assertThat(jdbc.queryForObject("SELECT status FROM role_grant WHERE id=?",String.class,grant)).isEqualTo("ACTIVE");
+    }
     private IsolatedMySqlDatabase db;private ConfigurableApplicationContext app;private JdbcTemplate jdbc;
     private CommandBoundary commands;private GrantReader reader;private BaselineWriter baselines;private GrantApplier applier;private SourceCloser closer;private String account;
     private final JsonMapper json=JsonMapper.builder().build();

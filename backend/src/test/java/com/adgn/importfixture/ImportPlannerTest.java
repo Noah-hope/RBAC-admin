@@ -8,6 +8,56 @@ import static com.adgn.backend.imports.ImportPlan.*;
 import static org.assertj.core.api.Assertions.*;
 
 class ImportPlannerTest {
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(strings={"-1","1.1","+1","1e0","9007199254740992","9223372036854775808","not-a-version"})
+    void invalidExplicitVersionsCannotEndEmployment(String version){
+        var result=plan(input("PERSONNEL_CHANGES","action","employmentId","expectedVersion"),
+                new String[][]{{"action","employmentId","expectedVersion"},{"END_EMPLOYMENT",JOB,version}},data());
+        issue(result,"INVALID_VERSION");assertThat(result.changes()).isEmpty();assertThat(result.effects().closedSources()).isEmpty();
+    }
+    @Test void missingMandatoryVersionCannotEndEmployment(){
+        var result=plan(input("PERSONNEL_CHANGES","action","employmentId"),new String[][]{{"action","employmentId"},{"END_EMPLOYMENT",JOB}},data());
+        issue(result,"MISSING_VALUE");assertThat(result.changes()).isEmpty();
+    }
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(strings={"not-a-date","2026-99-27T00:00:00Z","2026-10-27","2026-10-19T00:00:00Z"})
+    void invalidOrBackdatedEmploymentEndCannotProduceLossEvents(String end){
+        var snapshot=data();snapshot.get("employment").getFirst().put("started_at","2026-10-20T00:00:00Z");
+        var result=plan(input("PERSONNEL_CHANGES","action","employmentId","expectedVersion","endedAt"),
+                new String[][]{{"action","employmentId","expectedVersion","endedAt"},{"END_EMPLOYMENT",JOB,"1",end}},snapshot);
+        issue(result,"INVALID_DATE");assertThat(result.changes()).isEmpty();assertThat(result.effects().endedGrants()).isEmpty();
+        assertThat(snapshot.get("employment").getFirst().get("status")).isEqualTo("ACTIVE");
+    }
+    @Test void anotherEmployeeCannotEndTheOwnersEmployment(){
+        var result=plan(input("PERSONNEL_CHANGES","action","employmentId","expectedVersion","employeeId"),
+                new String[][]{{"action","employmentId","expectedVersion","employeeId"},{"END_EMPLOYMENT",JOB,"1",id(99)}},data());
+        issue(result,"IDENTITY_CONFLICT");assertThat(result.changes()).isEmpty();
+    }
+    @Test void alreadyEndedEmploymentCannotProduceAnotherLossEvent(){
+        var snapshot=data();snapshot.get("employment").getFirst().put("status","ENDED");
+        var result=plan(input("PERSONNEL_CHANGES","action","employmentId","expectedVersion"),
+                new String[][]{{"action","employmentId","expectedVersion"},{"END_EMPLOYMENT",JOB,"1"}},snapshot);
+        issue(result,"EMPLOYMENT_ENDED");assertThat(result.changes()).isEmpty();assertThat(result.effects().closedSources()).isEmpty();
+    }
+    @Test void missingEmployeeTableProducesBlockingUnknownEmployeeInsteadOfCreatingOne(){
+        var result=plan(input("PERSONNEL_CHANGES","action","employeeId","name","expectedVersion"),
+                new String[][]{{"action","employeeId","name","expectedVersion"},{"RENAME_EMPLOYEE",E,"Changed","1"}},Map.of());
+        issue(result,"UNKNOWN_EMPLOYEE");assertThat(result.changes()).isEmpty();
+    }
+    @Test void explicitDepartmentMappingResolvesTheCompanyAndDepartmentBeforePlanningPositionCreation() {
+        var base=input("ORGANIZATION","companyCode","companyName","departmentCode","departmentName","positionCode","positionName");
+        var mapped=new Input(base.fileId(),base.sourceSystem(),base.sourceBatchId(),base.importType(),base.worksheet(),base.fieldMappings(),
+                List.of(new OrganizationMapping("Company/Department/New position",C,D,"C","D")),base.initialEmploymentState(),base.reason());
+        var p=plan(mapped,new String[][]{{"companyCode","companyName","departmentCode","departmentName","positionCode","positionName"},
+                {"C","Company","D","Department","NEW","New position"}},data());
+        assertThat(p.issues()).isEmpty();assertThat(actions(p)).containsExactly("UNCHANGED","UNCHANGED","CREATE_POSITION");
+        var after=(Map<?,?>)p.changes().getLast().normalizedValues().get("after");
+        assertThat(after.get("department_id")).isEqualTo(D);assertThat(after.get("code")).isEqualTo("NEW");
+    }
+    @Test void unsupportedImportTypeProducesBlockingIssueWithoutAnyPlannedMutation() {
+        var p=plan(input("UNSUPPORTED","name"),new String[][]{{"name"},{"Fixture"}},data());
+        issue(p,"INVALID_ACTION");assertThat(p.changes()).isEmpty();
+    }
     private final ImportPlanner planner=new ImportPlanner();
     private static final String C=id(1),D=id(2),P=id(3),E=id(4),JOB=id(5),SRC=id(6),ROLE=id(7),B=id(8),G=id(9),A=id(10),SCOPE=id(11),SYS=id(12),AP=id(13);
     private static String id(int n){return String.format("00000000-0000-4000-8000-%012d",n);}

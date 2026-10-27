@@ -25,6 +25,19 @@ import static org.assertj.core.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CatalogPreviewMySqlCheck {
+    @Test void appointmentVersionIsPartOfThePreviewDependencySnapshot()throws Exception{
+        String sid=system().path("id").stringValue();var m=member();var selected=scoped(m,sid);String appointment=selected.selection().appointmentId();
+        var change=new ImpactPolicy.Change(Set.of(sid),Map.of(),Map.of(),Map.of(),Map.of(),Set.of(),Set.of(),Set.of(),Set.of(appointment),List.of(),Set.of(),List.of());
+        var authority=new ManagementAccess.Authority(application.getBean(IdentityRepository.class).byId(account),null,null,null,Set.of());
+        var writes=application.getBean(CommandBoundary.class);var impacts=application.getBean(ImpactService.class);
+        var before=writes.execute(()->new CommandBoundary.Identity<>(authority,new AuditRecord.Actor(AuditRecord.ActorKind.ACCOUNT,account)),c->impacts.analyze(authority,change));
+        assertThat(before.projection().impact().get("visibleAppointmentCount")).isEqualTo(1L);
+        assertThat(before.projection().targets()).anySatisfy(t->{assertThat(t.path("targetId").stringValue()).isEqualTo(appointment);assertThat(t.path("targetType").stringValue()).isEqualTo("APPOINTMENT");});
+        jdbc.update("UPDATE admin_appointment SET appointment_version=appointment_version+1 WHERE id=?",appointment);
+        var after=writes.execute(()->new CommandBoundary.Identity<>(authority,new AuditRecord.Actor(AuditRecord.ActorKind.ACCOUNT,account)),c->impacts.analyze(authority,change));
+        assertThat(after.dependencies()).isNotEqualTo(before.dependencies());
+        assertThat(jdbc.queryForObject("SELECT status FROM admin_appointment WHERE id=?",String.class,appointment)).isEqualTo("ACTIVE");
+    }
     private IsolatedMySqlDatabase database;
     private ConfigurableApplicationContext application;
     private JdbcTemplate jdbc;
