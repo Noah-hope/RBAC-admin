@@ -17,6 +17,24 @@
 
 设计文档的AsciiDoc源文件位于[项目文档目录](docs/06-project-document/)。JaCoCo报告对应2026-10-27的700项后端测试：失败、错误、跳过均为0，行覆盖率和方法覆盖率均为100%，分支覆盖率为78.59%。
 
+## 数据库ER图
+
+### 组织与后台身份
+
+![组织与后台身份 ER 图](docs/04-database/readme-images/organization.png)
+
+### 导入、预览与可靠性
+
+![导入、预览与可靠性 ER 图](docs/04-database/readme-images/import.png)
+
+### 目录、角色与独立来源
+
+![目录、角色与独立来源 ER 图](docs/04-database/readme-images/catalog.png)
+
+### 固定申请、OA与执行
+
+![固定申请、OA与执行 ER 图](docs/04-database/readme-images/workflow.png)
+
 ## API测试说明
 
 1. 打开上方API文档，访问密码为 **`rbacadgn`**。
