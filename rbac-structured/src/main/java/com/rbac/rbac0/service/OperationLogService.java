@@ -6,6 +6,7 @@ import java.time.ZoneOffset;
 import com.rbac.rbac0.dto.SessionDtos.SessionUser;
 import com.rbac.rbac0.entity.OperationLog;
 import com.rbac.rbac0.entity.OperationLogTarget;
+import com.rbac.rbac0.entity.UserAccount;
 import com.rbac.rbac0.mapper.OperationLogMapper;
 import com.rbac.rbac0.mapper.OperationLogTargetMapper;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,21 @@ public class OperationLogService {
 
     public void recordGlobalChange(SessionUser actor, String action, String detail, String targetType,
                                    long targetId, String targetName) {
+        recordChange(actor, action, detail, "GLOBAL", targetType, targetId, targetName, null);
+    }
+
+    public void recordUserChange(SessionUser actor, String action, String detail, UserAccount user, long departmentIdAtEvent) {
+        recordChange(actor, action, detail, "USER_SCOPE", "USER", user.id, user.name, departmentIdAtEvent);
+    }
+
+    private void recordChange(SessionUser actor, String action, String detail, String scope, String targetType,
+                              long targetId, String targetName, Long departmentIdAtEvent) {
         var log = new OperationLog();
         log.occurredAt = LocalDateTime.now(ZoneOffset.UTC);
         log.actorUserId = actor.id();
         log.actorName = actor.name();
         log.action = action;
-        log.scope = "GLOBAL";
+        log.scope = scope;
         log.detail = detail;
         log.result = "SUCCESS";
         logs.save(log);
@@ -39,6 +49,7 @@ public class OperationLogService {
         target.targetType = targetType;
         target.targetId = targetId;
         target.targetName = targetName;
+        target.departmentIdAtEvent = departmentIdAtEvent;
         targets.save(target);
     }
 }

@@ -10,4 +10,8 @@ public interface SessionMapper extends JpaRepository<LoginSession, byte[]> {
     @Modifying
     @Query("delete from LoginSession session where session.tokenHash = :tokenHash")
     int revoke(byte[] tokenHash);
+
+    @Modifying
+    @Query("delete from LoginSession session where session.userId = :userId")
+    void revokeAllForUser(long userId);
 }

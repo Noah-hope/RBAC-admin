@@ -1,5 +1,6 @@
 package com.rbac.rbac0.service;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,7 @@ import com.rbac.rbac0.mapper.DepartmentMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.rbac.rbac0.service.DepartmentFailure.Reason.*;
+import static com.rbac.rbac0.service.ManagementFailure.Reason.*;
 
 @Service
 public class DepartmentService {
@@ -34,28 +35,51 @@ public class DepartmentService {
 
     @Transactional(readOnly = true)
     public DepartmentTree listTree(SessionUser actor) {
-        boolean totalAdmin = "TOTAL_ADMIN".equals(actor.managementRole());
-        if (!totalAdmin && !"DEPARTMENT_ADMIN".equals(actor.managementRole())) {
-            throw new DepartmentFailure(FORBIDDEN, "当前角色无权查看部门结构。");
+        var visible = managedDepartments(actor, null);
+        var children = groupChildren(visible);
+        var roots = isTotalAdmin(actor) ? children.getOrDefault(null, List.of()) : List.of(visible.getFirst());
+        return new DepartmentTree(roots.stream().map(department -> node(department, children)).toList());
+    }
+
+    public List<Department> managedDepartments(SessionUser actor, Long selectedId) {
+        requireAdministrator(actor);
+        var all = departments.findAllByOrderByIdAsc();
+        boolean totalAdmin = isTotalAdmin(actor);
+        if (totalAdmin && selectedId == null) {
+            return all;
         }
 
-        Map<Long, List<Department>> children = new HashMap<>();
-        Department managedRoot = null;
-        for (var department : departments.findAllByOrderByIdAsc()) {
-            children.computeIfAbsent(department.parentId, key -> new ArrayList<>()).add(department);
-            if (department.id.equals(actor.departmentId())) {
-                managedRoot = department;
-            }
+        var byId = all.stream().collect(Collectors.toMap(department -> department.id, Function.identity()));
+        var root = byId.get(totalAdmin ? selectedId : actor.departmentId());
+        var selected = selectedId == null ? root : byId.get(selectedId);
+        if (selectedId != null && selected == null) {
+            throw new ManagementFailure(NOT_FOUND, "部门不存在。");
+        }
+        if (root == null) {
+            throw new ManagementFailure(FORBIDDEN, "当前部门管理员没有所属部门。");
+        }
+        var ancestor = selected;
+        while (ancestor != null && !ancestor.id.equals(root.id)) {
+            ancestor = byId.get(ancestor.parentId);
+        }
+        if (ancestor == null) {
+            throw new ManagementFailure(OUTSIDE_MANAGEMENT_SCOPE, "请选择本部门或下级部门内的对象。");
         }
 
-        if (totalAdmin) {
-            return new DepartmentTree(children.getOrDefault(null, List.of()).stream()
-                    .map(department -> node(department, children)).toList());
+        var children = groupChildren(all);
+        var visible = new ArrayList<Department>();
+        var pending = new ArrayDeque<Department>();
+        pending.add(selected);
+        while (!pending.isEmpty()) {
+            var department = pending.removeFirst();
+            visible.add(department);
+            pending.addAll(children.getOrDefault(department.id, List.of()));
         }
-        if (managedRoot == null) {
-            throw new DepartmentFailure(FORBIDDEN, "当前部门管理员没有所属部门。");
-        }
-        return new DepartmentTree(List.of(node(managedRoot, children)));
+        return visible;
+    }
+
+    public Department requireManagedDepartment(SessionUser actor, long id) {
+        return isTotalAdmin(actor) ? requireDepartment(id) : managedDepartments(actor, id).getFirst();
     }
 
     @Transactional
@@ -76,7 +100,7 @@ public class DepartmentService {
     public DepartmentView update(SessionUser actor, long id, DepartmentUpdate request) {
         requireTotalAdmin(actor);
         if (request.name == null && !request.parentProvided()) {
-            throw new DepartmentFailure(INVALID_REQUEST, "请填写部门名称或上级部门。");
+            throw new ManagementFailure(INVALID_REQUEST, "请填写部门名称或上级部门。");
         }
 
         var department = requireDepartment(id);
@@ -90,11 +114,11 @@ public class DepartmentService {
                     .collect(Collectors.toMap(item -> item.id, Function.identity()));
             var parent = byId.get(request.parentId());
             if (request.parentId() != null && parent == null) {
-                throw new DepartmentFailure(NOT_FOUND, "上级部门不存在。");
+                throw new ManagementFailure(NOT_FOUND, "上级部门不存在。");
             }
             for (var ancestor = parent; ancestor != null; ancestor = byId.get(ancestor.parentId)) {
                 if (ancestor.id.equals(department.id)) {
-                    throw new DepartmentFailure(INVALID_REQUEST, "上级部门不能是本部门或其下级部门。");
+                    throw new ManagementFailure(INVALID_REQUEST, "上级部门不能是本部门或其下级部门。");
                 }
             }
             changes.add("上级从" + parentName(byId.get(department.parentId)) + "改为" + parentName(parent));
@@ -110,13 +134,31 @@ public class DepartmentService {
 
     private Department requireDepartment(long id) {
         return departments.findById(id)
-                .orElseThrow(() -> new DepartmentFailure(NOT_FOUND, "部门不存在。"));
+                .orElseThrow(() -> new ManagementFailure(NOT_FOUND, "部门不存在。"));
     }
 
-    private static void requireTotalAdmin(SessionUser actor) {
-        if (!"TOTAL_ADMIN".equals(actor.managementRole())) {
-            throw new DepartmentFailure(FORBIDDEN, "只有总管理员可以维护部门结构。");
+    static boolean isTotalAdmin(SessionUser actor) {
+        return "TOTAL_ADMIN".equals(actor.managementRole());
+    }
+
+    static void requireAdministrator(SessionUser actor) {
+        if (!isTotalAdmin(actor) && !"DEPARTMENT_ADMIN".equals(actor.managementRole())) {
+            throw new ManagementFailure(FORBIDDEN, "当前角色无权管理用户和部门。");
         }
+    }
+
+    static void requireTotalAdmin(SessionUser actor) {
+        if (!isTotalAdmin(actor)) {
+            throw new ManagementFailure(FORBIDDEN, "当前操作仅限总管理员。");
+        }
+    }
+
+    private static Map<Long, List<Department>> groupChildren(List<Department> departments) {
+        Map<Long, List<Department>> children = new HashMap<>();
+        for (var department : departments) {
+            children.computeIfAbsent(department.parentId, key -> new ArrayList<>()).add(department);
+        }
+        return children;
     }
 
     private static DepartmentNode node(Department department, Map<Long, List<Department>> children) {

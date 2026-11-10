@@ -16,4 +16,19 @@ public interface RoleMapper extends JpaRepository<Role, Long> {
               and role.roleType in ('TOTAL_ADMIN', 'DEPARTMENT_ADMIN')
             """)
     List<String> findManagementRoles(long userId);
+
+    @Query("""
+            select assignment.userId as userId, role.id as id, role.name as name, role.roleType as roleType
+            from Role role, UserRole assignment
+            where assignment.userId in :userIds and assignment.roleId = role.id
+            order by role.id
+            """)
+    List<UserRoleRow> findAssignedRoles(List<Long> userIds);
+
+    interface UserRoleRow {
+        long getUserId();
+        long getId();
+        String getName();
+        String getRoleType();
+    }
 }

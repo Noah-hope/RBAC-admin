@@ -22,7 +22,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(sessionInterceptor)
-                .addPathPatterns("/api/v1/departments", "/api/v1/departments/**");
+                .addPathPatterns("/api/v1/departments", "/api/v1/departments/**",
+                        "/api/v1/users", "/api/v1/users/**", "/api/v1/applications", "/api/v1/applications/**");
     }
 
     @Bean
@@ -35,6 +36,9 @@ public class WebConfig implements WebMvcConfigurer {
             mapper.coercionConfigFor(LogicalType.Integer)
                     .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
                     .setCoercion(CoercionInputShape.Float, CoercionAction.Fail);
+            mapper.coercionConfigFor(LogicalType.Boolean)
+                    .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
+                    .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail);
         });
     }
 }
