@@ -21,14 +21,16 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice(assignableTypes = {
-        SessionController.class, DepartmentController.class, UserController.class, ApplicationController.class
+        SessionController.class, DepartmentController.class, UserController.class, ApplicationController.class,
+        RoleController.class
 })
 class ApiExceptionHandler {
 
     private static final Map<String, String> DUPLICATE_DETAILS = Map.of(
             "uq_user_username", "该用户名已存在。",
             "uq_application_name", "该应用名称已存在。",
-            "uq_permission_application_code", "该应用内已存在相同的权限标识。"
+            "uq_permission_application_code", "该应用内已存在相同的权限标识。",
+            "uq_role_name", "该角色名称已存在。"
     );
 
     @ExceptionHandler(AuthenticationFailure.class)
