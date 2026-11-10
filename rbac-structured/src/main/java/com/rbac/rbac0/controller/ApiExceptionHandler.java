@@ -22,7 +22,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @RestControllerAdvice(assignableTypes = {
         SessionController.class, DepartmentController.class, UserController.class, ApplicationController.class,
-        RoleController.class, AuthorizationController.class
+        RoleController.class, AuthorizationController.class, OperationLogController.class
 })
 class ApiExceptionHandler {
 
