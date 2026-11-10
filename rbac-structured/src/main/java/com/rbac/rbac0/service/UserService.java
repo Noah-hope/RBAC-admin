@@ -106,7 +106,9 @@ public class UserService {
 
     @Transactional
     public UserView update(SessionUser actor, long id, UserUpdate request) {
-        var user = requireUser(actor, id);
+        DepartmentService.requireAdministrator(actor);
+        var user = users.findOrganizationUsersForUpdate(List.of(id)).stream().findFirst()
+                .orElseThrow(() -> new ManagementFailure(NOT_FOUND, "用户不存在。"));
         var originalDepartment = departments.requireManagedDepartment(actor, user.departmentId);
         requireManagementAuthority(actor, request.departmentId != null || request.departmentAdministrator != null);
         if (request.username == null && request.name == null && request.status == null

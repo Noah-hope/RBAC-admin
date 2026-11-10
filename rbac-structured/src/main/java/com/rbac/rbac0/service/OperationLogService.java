@@ -2,6 +2,8 @@ package com.rbac.rbac0.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.rbac.rbac0.dto.SessionDtos.SessionUser;
 import com.rbac.rbac0.entity.OperationLog;
@@ -24,15 +26,25 @@ public class OperationLogService {
 
     public void recordGlobalChange(SessionUser actor, String action, String detail, String targetType,
                                    long targetId, String targetName) {
-        recordChange(actor, action, detail, "GLOBAL", targetType, targetId, targetName, null);
+        var log = saveLog(actor, action, detail, "GLOBAL");
+        targets.save(target(log.id, 1, targetType, targetId, targetName, null));
     }
 
     public void recordUserChange(SessionUser actor, String action, String detail, UserAccount user, long departmentIdAtEvent) {
-        recordChange(actor, action, detail, "USER_SCOPE", "USER", user.id, user.name, departmentIdAtEvent);
+        var log = saveLog(actor, action, detail, "USER_SCOPE");
+        targets.save(target(log.id, 1, "USER", user.id, user.name, departmentIdAtEvent));
     }
 
-    private void recordChange(SessionUser actor, String action, String detail, String scope, String targetType,
-                              long targetId, String targetName, Long departmentIdAtEvent) {
+    public void recordUserChanges(SessionUser actor, String action, String detail, List<UserAccount> users) {
+        var log = saveLog(actor, action, detail, "USER_SCOPE");
+        var snapshots = new ArrayList<OperationLogTarget>();
+        for (var user : users) {
+            snapshots.add(target(log.id, snapshots.size() + 1, "USER", user.id, user.name, user.departmentId));
+        }
+        targets.saveAll(snapshots);
+    }
+
+    private OperationLog saveLog(SessionUser actor, String action, String detail, String scope) {
         var log = new OperationLog();
         log.occurredAt = LocalDateTime.now(ZoneOffset.UTC);
         log.actorUserId = actor.id();
@@ -41,15 +53,18 @@ public class OperationLogService {
         log.scope = scope;
         log.detail = detail;
         log.result = "SUCCESS";
-        logs.save(log);
+        return logs.save(log);
+    }
 
+    private static OperationLogTarget target(long logId, int number, String targetType, long targetId,
+                                             String targetName, Long departmentIdAtEvent) {
         var target = new OperationLogTarget();
-        target.operationLogId = log.id;
-        target.targetNo = 1;
+        target.operationLogId = logId;
+        target.targetNo = number;
         target.targetType = targetType;
         target.targetId = targetId;
         target.targetName = targetName;
         target.departmentIdAtEvent = departmentIdAtEvent;
-        targets.save(target);
+        return target;
     }
 }

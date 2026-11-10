@@ -24,6 +24,23 @@ Flyway 创建 10 张业务表并登记两个预置管理角色。首次启动创
 | `GET /api/v1/me` | 用 `Authorization: Bearer <令牌>` 查询当前用户 |
 | `DELETE /api/v1/sessions/current` | 撤销请求所带令牌对应的会话 |
 
+## 业务系统接入
+
+登记应用后，为它生成一个随机令牌，并计算令牌文本的 SHA-256 摘要。PowerShell 7 示例
+
+```powershell
+$applicationToken = [Convert]::ToHexString([Security.Cryptography.RandomNumberGenerator]::GetBytes(32))
+$tokenHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($applicationToken)))
+```
+
+由数据库管理员将 `$tokenHash` 写入对应应用。把示例中的摘要占位符和应用 ID 换成实际值。
+
+```sql
+UPDATE sys_application SET token_hash = UNHEX('<SHA-256 十六进制摘要>') WHERE id = 1;
+```
+
+在业务系统后端保管 `$applicationToken`。用 `X-Application-Token` 请求头发送该令牌，并向 `POST /api/v1/applications/{applicationId}/permission-checks` 提交 `userId` 和 `permissionCode`。
+
 ## 测试
 
 为测试单独建一个空 MySQL 库，例如 `rbac_structured_test`。设置 `RBAC_TEST_DB_URL`、`RBAC_TEST_DB_USERNAME` 和 `RBAC_TEST_DB_PASSWORD` 后运行 `mvn -f rbac-structured/pom.xml verify`。测试会在该库写入用户和会话。

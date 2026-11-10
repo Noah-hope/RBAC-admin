@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "sys_application")
@@ -17,4 +19,8 @@ public class BusinessApplication {
 
     @Column(nullable = false, length = 24)
     public String name;
+
+    @JdbcTypeCode(SqlTypes.BINARY)
+    @Column(length = 32, insertable = false, updatable = false)
+    public byte[] tokenHash;
 }

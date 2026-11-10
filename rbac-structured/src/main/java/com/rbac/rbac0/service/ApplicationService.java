@@ -79,7 +79,10 @@ public class ApplicationService {
     public ApplicationPermissions permissionTree(SessionUser actor, long applicationId) {
         requireTotalAdmin(actor);
         var app = requireApplication(applicationId);
-        var entries = permissions.findByApplicationIdOrderByIdAsc(applicationId);
+        return permissionTree(app, permissions.findByApplicationIdOrderByIdAsc(applicationId));
+    }
+
+    static ApplicationPermissions permissionTree(BusinessApplication app, List<Permission> entries) {
         Map<Long, List<PermissionRef>> buttons = new HashMap<>();
         for (var entry : entries) {
             if (entry.parentId != null) {

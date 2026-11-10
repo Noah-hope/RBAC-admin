@@ -15,7 +15,7 @@ import static com.rbac.rbac0.dto.DepartmentDtos.MAX_ID;
 
 public final class ApplicationDtos {
 
-    private static final String PERMISSION_CODE = "(?U)[^:\\s]+:[^:\\s]+";
+    public static final String PERMISSION_CODE = "(?U)[^:\\s]+:[^:\\s]+";
 
     private ApplicationDtos() {}
 

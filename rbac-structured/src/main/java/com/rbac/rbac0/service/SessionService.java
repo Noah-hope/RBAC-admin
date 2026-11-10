@@ -1,8 +1,5 @@
 package com.rbac.rbac0.service;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
@@ -63,7 +60,7 @@ public class SessionService {
         var token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
         var expiresAt = Instant.now().plus(SESSION_LIFETIME);
         var session = new LoginSession();
-        session.tokenHash = hashToken(token);
+        session.tokenHash = TokenHash.sha256(token);
         session.userId = user.id;
         session.expiresAt = LocalDateTime.ofInstant(expiresAt, ZoneOffset.UTC);
         sessions.save(session);
@@ -74,12 +71,12 @@ public class SessionService {
 
     @Transactional(readOnly = true)
     public SessionUser currentUser(String token) {
-        return identity(authenticate(hashToken(token)));
+        return identity(authenticate(TokenHash.sha256(token)));
     }
 
     @Transactional
     public void logout(String token) {
-        var tokenHash = hashToken(token);
+        var tokenHash = TokenHash.sha256(token);
         authenticate(tokenHash);
         if (sessions.revoke(tokenHash) == 0) {
             throw new AuthenticationFailure(UNAUTHENTICATED);
@@ -102,11 +99,4 @@ public class SessionService {
         return new SessionUser(user.id, user.username, user.name, user.departmentId, managementRole);
     }
 
-    private static byte[] hashToken(String token) {
-        try {
-            return MessageDigest.getInstance("SHA-256").digest(token.getBytes(StandardCharsets.UTF_8));
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("SHA-256 is unavailable", e);
-        }
-    }
 }

@@ -22,7 +22,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @RestControllerAdvice(assignableTypes = {
         SessionController.class, DepartmentController.class, UserController.class, ApplicationController.class,
-        RoleController.class
+        RoleController.class, AuthorizationController.class
 })
 class ApiExceptionHandler {
 
@@ -59,6 +59,8 @@ class ApiExceptionHandler {
                     "请求不符合要求", failure.getMessage());
             case OUTSIDE_MANAGEMENT_SCOPE -> problem(HttpStatus.FORBIDDEN, "outside-management-scope",
                     "OUTSIDE_MANAGEMENT_SCOPE", "超出管理范围", failure.getMessage());
+            case APPLICATION_MISMATCH -> problem(HttpStatus.FORBIDDEN, "application-mismatch",
+                    "APPLICATION_MISMATCH", "应用不匹配", failure.getMessage());
         };
     }
 

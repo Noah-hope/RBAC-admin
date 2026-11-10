@@ -24,7 +24,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(sessionInterceptor)
                 .addPathPatterns("/api/v1/departments", "/api/v1/departments/**",
                         "/api/v1/users", "/api/v1/users/**", "/api/v1/applications", "/api/v1/applications/**",
-                        "/api/v1/roles", "/api/v1/roles/**");
+                        "/api/v1/roles", "/api/v1/roles/**", "/api/v1/me/permissions", "/api/v1/user-role-assignments")
+                .excludePathPatterns("/api/v1/applications/{applicationId}/permission-checks");
     }
 
     @Bean
