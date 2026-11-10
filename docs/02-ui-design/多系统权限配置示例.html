@@ -1,0 +1,1517 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>权限中心 · 交互草稿</title>
+<style>
+  :root {
+    color-scheme: light;
+    --ink: #172a3d; --muted: #536679; --nav: #172c43; --line: #dce5ee;
+    --canvas: #f3f6fa; --paper: #fff; --accent: #096a5a; --soft: #e6f4ef;
+    background: var(--canvas); color: var(--ink);
+    font: 14px/1.55 "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body, h1, h2, h3, p { margin: 0; }
+  body:has(dialog[open]) { overflow: hidden; }
+  [hidden] { display: none !important; }
+  button, input, select { font: inherit; }
+  button { cursor: pointer; }
+  button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #429d89; outline-offset: 3px; }
+  .icon { width: 19px; height: 19px; flex: none; vertical-align: middle; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .shell { display: grid; grid-template-columns: 224px minmax(0, 1fr); min-height: 100vh; }
+  .sidebar {
+    display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh;
+    padding: 28px 16px 19px; background: var(--nav); color: #edf4fc;
+  }
+  .brand, .identity, .crumb, .person { display: flex; align-items: center; gap: 10px; }
+  .brand { padding-inline: 7px; }
+  .brand strong { display: block; font-size: 17px; letter-spacing: .035em; }
+  .brand small, .nav-label, .sidebar-foot { color: #b9c9da; font-size: 12px; }
+  .brand-mark, .avatar, .app-mark {
+    display: inline-grid; place-items: center; flex: none; font-weight: 700;
+    color: var(--accent); background: var(--soft);
+  }
+  .brand-mark { width: 40px; height: 40px; border-radius: 11px; background: #bde8dd; }
+  .brand-mark .icon { width: 23px; height: 23px; }
+  .nav { display: grid; gap: 5px; margin-top: 35px; }
+  .nav-label { margin: 0 10px 5px; }
+  .nav button {
+    display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 7px 10px;
+    text-align: left; color: #dbe7f2; background: transparent; border: 1px solid transparent; border-radius: 8px;
+  }
+  .nav button:hover { background: #213c54; }
+  .nav button[aria-current="page"] { color: #f3fffa; background: #24455a; border-color: #3c5a6c; font-weight: 700; }
+  .nav button[aria-current="page"] .icon { color: #a8e6d7; }
+  .sidebar-foot { margin-top: auto; padding: 14px 7px 0; border-top: 1px solid #3c5269; }
+  .workspace { min-width: 0; }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 64px;
+    padding: 8px clamp(16px, 3.4vw, 48px); background: var(--paper); border-bottom: 1px solid var(--line);
+  }
+  .crumb, .identity { font-size: 13px; white-space: nowrap; }
+  .crumb { color: var(--muted); }
+  .crumb strong { color: var(--ink); }
+  .crumb .icon { width: 12px; height: 12px; }
+  .top-actions { display: flex; align-items: center; gap: 12px; }
+  .top-actions .button { min-height: 34px; padding-inline: 9px; font-size: 12px; }
+  .avatar { width: 33px; height: 33px; border-radius: 50%; }
+  .content { max-width: 1430px; margin: auto; padding: 32px clamp(16px, 3.4vw, 48px) 48px; }
+  .page-head { display: flex; justify-content: space-between; align-items: end; gap: 12px; margin-bottom: 23px; }
+  h1 { font-size: clamp(27px, 3vw, 37px); line-height: 1.2; letter-spacing: -.04em; }
+  h2 { font-size: 18px; line-height: 1.4; }
+  h3 { font-size: 15px; }
+  .page-head p { margin-top: 8px; color: var(--muted); }
+  .button {
+    display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 39px;
+    padding: 6px 13px; border: 1px solid var(--line); border-radius: 8px;
+    background: var(--paper); color: var(--ink); font-weight: 700; white-space: nowrap;
+  }
+  .button:hover { background: #f4f7fb; border-color: #abbdd0; }
+  .button.primary { color: #fff; border-color: var(--accent); background: var(--accent); }
+  .button.primary:hover { background: #075648; }
+  .button:disabled { cursor: default; opacity: .55; }
+  .button .icon { width: 16px; height: 16px; }
+  .button.icon-only { width: 36px; min-height: 36px; padding: 0; }
+  .link-button { min-height: 35px; padding: 4px 6px; border: 0; border-radius: 6px; background: transparent; color: var(--accent); font-weight: 700; white-space: nowrap; }
+  .link-button:hover { background: var(--soft); }
+  .board { display: grid; grid-template-columns: minmax(0, 1fr) 282px; align-items: start; gap: 17px; }
+  .catalog-board { display: grid; grid-template-columns: 218px minmax(0, 1fr); align-items: start; gap: 17px; }
+  .catalog-apps .app-list { padding: 0 10px 10px; }
+  .catalog-head { flex-wrap: wrap; }
+  .catalog-head h2, .app-card .panel-head h2 { white-space: normal; overflow-wrap: anywhere; }
+  .catalog-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+  .catalog-menu td { background: #f9fbfd; }
+  .catalog-child td:first-child { padding-left: 46px; }
+  .catalog-child td:first-child::before { content: '↳'; margin-right: 6px; color: var(--muted); }
+  .catalog-label { overflow-wrap: anywhere; }
+  .menu-heading { display: flex; align-items: center; gap: 5px; }
+  .menu-toggle, .menu-toggle-spacer { display: inline-grid; place-items: center; flex: none; width: 28px; height: 28px; }
+  .menu-toggle { padding: 0; border: 1px solid transparent; border-radius: 6px; background: transparent; color: var(--muted); }
+  .menu-toggle:hover { border-color: var(--line); background: var(--soft); color: var(--accent); }
+  .menu-toggle .icon { width: 15px; height: 15px; }
+  .menu-toggle[aria-expanded="true"] .icon { transform: rotate(90deg); }
+  .permission-code { color: #344e66; overflow-wrap: anywhere; font-size: 12px; }
+  .panel { min-width: 0; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; }
+  .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 15px 17px; }
+  .panel-head h2 { white-space: nowrap; }
+  .quiet { color: var(--muted); font-size: 12px; }
+  .search { display: flex; align-items: center; gap: 7px; width: min(235px, 60%); padding: 0 8px; background: #f6f8fb; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); }
+  .search input { width: 100%; min-width: 0; min-height: 36px; padding: 5px 0; border: 0; outline-offset: 0; background: transparent; color: var(--ink); }
+  .scroll-table { overflow-x: auto; }
+  .batch-tools {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 7px;
+    padding: 9px 17px; border-top: 1px solid var(--line);
+  }
+  .batch-tools .quiet { margin-right: auto; }
+  th.select-user, td.select-user { width: 42px; padding-right: 0; }
+  .select-user input { vertical-align: middle; }
+  table { width: 100%; border-collapse: collapse; text-align: left; }
+  th, td { padding: 9px 13px; border-top: 1px solid var(--line); }
+  th:first-child, td:first-child { padding-left: 17px; }
+  th:last-child, td:last-child { padding-right: 17px; text-align: right; white-space: nowrap; }
+  th { color: var(--muted); background: #f6f8fb; font-size: 12px; }
+  td { height: 67px; }
+  tr:hover td { background: #f9fbfd; }
+  .person { min-width: 110px; }
+  .person .avatar { border-radius: 8px; }
+  .person strong { display: block; overflow-wrap: anywhere; }
+  .person small, .choice small { display: block; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag { display: inline-block; padding: 2px 7px; border-radius: 5px; background: #edf2f7; color: #344e66; font-size: 12px; white-space: nowrap; }
+  .tag.positive { background: var(--soft); color: var(--accent); }
+  .panel-foot { padding: 10px 17px; border-top: 1px solid var(--line); }
+  .empty { padding: 21px 14px; color: var(--muted); text-align: center !important; }
+  .overview { overflow: hidden; }
+  .overview-head { padding: 17px; background: #e8f3f0; border-bottom: 1px solid #d6e7e3; }
+  .overview-head .quiet { display: block; margin-bottom: 7px; }
+  .overview-head p { margin-top: 4px; color: var(--muted); overflow-wrap: anywhere; }
+  .overview-body { padding: 3px 13px; }
+  .overview-item { display: flex; align-items: center; gap: 8px; min-height: 54px; }
+  .overview-item + .overview-item { border-top: 1px solid var(--line); }
+  .overview-item .quiet, .app-card .quiet.count { margin-left: auto; white-space: nowrap; }
+  .app-mark { width: 31px; height: 31px; border-radius: 8px; }
+  .app-mark.hr { background: #eaf0ff; color: #385988; }
+  .app-mark.project { background: #f7efdf; color: #785a2d; }
+  .scope { display: flex; gap: 8px; align-items: center; margin-bottom: 15px; padding: 11px 13px; border: 1px solid #cfe2dc; border-radius: 9px; background: var(--soft); color: #225e50; }
+  .scope strong { margin-right: 7px; }
+  .org-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 15px; }
+  .org-toolbar .scope { margin: 0; }
+  .view-switch { display: flex; align-items: center; gap: 7px; color: var(--muted); }
+  .view-switch select { padding: 6px 8px; color: var(--ink); background: var(--paper); border: 1px solid #bdcbd9; border-radius: 7px; }
+  .org-tree, .org-subtree { display: grid; gap: 3px; }
+  .org-tree { padding: 0 10px 10px; }
+  .org-subtree { padding-left: 13px; }
+  .org-tree .app-picker { justify-content: start; }
+  .org-tree .menu-heading .app-picker { flex: 1; width: auto; min-width: 0; }
+  .org-dept-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+  .org-dept-actions .button { font-size: 12px; }
+  .fields .check-field { display: flex; align-items: center; gap: 8px; min-height: 34px; }
+  .fields .check-field input { width: 17px; min-height: 0; }
+  .tag.inactive { background: #f6ebeb; color: #8a3b3b; }
+  .org-status { white-space: nowrap; }
+  .profile { display: flex; align-items: center; gap: 11px; margin-bottom: 16px; padding: 14px 16px; }
+  .profile .tags { margin-left: auto; }
+  .app-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 14px; }
+  .app-card .panel-head { justify-content: start; }
+  .owned-menu { padding: 12px 15px; border-top: 1px solid var(--line); }
+  .owned-menu h3 { margin-bottom: 5px; }
+  .owned-menu > .tags, .owned-menu > .quiet { margin-left: 33px; }
+  dialog {
+    max-width: none; width: min(710px, calc(100% - 24px)); max-height: calc(100dvh - 24px);
+    padding: 0; overflow: hidden; color: var(--ink); background: var(--paper);
+    border: 1px solid #cbd8e2; border-radius: 15px; box-shadow: 0 18px 65px #1020343b;
+  }
+  dialog::backdrop { background: #13273e83; }
+  dialog form { display: flex; flex-direction: column; max-height: calc(100dvh - 26px); }
+  .dialog-head, .dialog-foot { display: flex; align-items: center; justify-content: space-between; flex: none; gap: 10px; padding: 14px 18px; }
+  .dialog-head { border-bottom: 1px solid var(--line); }
+  .dialog-head p { margin-top: 3px; }
+  .dialog-body { min-height: 0; padding: 14px 18px 17px; overflow-y: auto; }
+  .dialog-foot { border-top: 1px solid var(--line); }
+  .dialog-actions { display: flex; gap: 7px; margin-left: auto; }
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-bottom: 15px; }
+  .fields label { display: grid; gap: 4px; min-width: 0; font-weight: 700; }
+  .fields input, .fields select { width: 100%; min-width: 0; min-height: 37px; padding: 5px 8px; color: var(--ink); background: var(--paper); border: 1px solid #bdcbd9; border-radius: 7px; font-weight: 400; }
+  .fields.stacked { grid-template-columns: minmax(0, 1fr); margin-bottom: 0; }
+  .field-help { margin-top: 5px; }
+  .config-layout { display: grid; grid-template-columns: 155px minmax(0, 1fr); gap: 11px; margin-top: 8px; }
+  .app-list { display: grid; align-content: start; gap: 4px; }
+  .app-picker { display: flex; align-items: center; gap: 7px; width: 100%; min-height: 40px; padding: 3px 6px; text-align: left; color: var(--ink); background: transparent; border: 1px solid transparent; border-radius: 7px; }
+  .app-picker:hover { background: #f1f5f9; }
+  .app-picker[aria-pressed="true"] { color: var(--accent); background: var(--soft); border-color: #c9e1d8; font-weight: 700; }
+  .app-picker .app-mark { width: 25px; height: 25px; }
+  .app-name { min-width: 0; overflow-wrap: anywhere; }
+  .permission-tree, .choices { min-width: 0; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
+  .tree-help { padding: 7px 9px; border-bottom: 1px solid var(--line); background: #f6f8fb; }
+  .tree-group + .tree-group, .choice + .choice { border-top: 1px solid var(--line); }
+  .tree-row, .choice { display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 5px 10px; cursor: pointer; }
+  .tree-row:hover, .choice:hover { background: #f6f9fc; }
+  .tree-row.menu { font-weight: 700; }
+  .tree-menu-heading { padding-left: 6px; }
+  .tree-menu-heading .tree-row { flex: 1; padding-left: 0; }
+  .tree-row.child { padding-left: 53px; }
+  .tree-row .tag { margin-left: auto; }
+  input[type="checkbox"] { width: 17px; height: 17px; flex: none; margin: 0; accent-color: var(--accent); cursor: pointer; }
+  .assign-dialog { width: min(490px, calc(100% - 24px)); }
+  .choice { padding: 9px 11px; }
+  .toast { position: fixed; right: 14px; bottom: 14px; z-index: 2; max-width: calc(100% - 28px); padding: 10px 13px; border: 1px solid #bddbd0; border-radius: 8px; background: var(--soft); color: #144f43; box-shadow: 0 5px 18px #1635471a; }
+  .login-page { display: grid; place-items: center; min-height: 100dvh; padding: 22px 14px; }
+  .login-card { display: grid; grid-template-columns: 250px minmax(0, 1fr); width: min(690px, 100%); overflow: hidden; }
+  .login-brand { padding: 27px 22px; background: var(--nav); color: #eef7fc; }
+  .login-brand h2 { margin-top: 12px; }
+  .login-brand p { margin: 7px 0 17px; color: #b9c9da; }
+  .login-samples { display: grid; gap: 7px; }
+  .login-samples button { text-align: left; color: #e9f3f9; background: #244258; border: 1px solid #3b566c; border-radius: 7px; padding: 6px 8px; }
+  .login-samples button:hover { background: #2c5265; }
+  .login-samples strong, .login-samples small { display: block; }
+  .login-samples small { color: #bdceda; }
+  .login-form { display: grid; align-content: center; gap: 14px; padding: 26px 24px; }
+  .login-form h1 { font-size: 26px; }
+  .login-form .fields { margin: 0; }
+  .login-error { color: #893636; font-size: 13px; }
+  .audit-table { min-width: 580px; }
+  .audit-table th:last-child, .audit-table td:last-child { text-align: left; }
+  .audit-table td:first-child { white-space: nowrap; }
+  .audit-table td { overflow-wrap: anywhere; }
+  .audit-detail { display: block; color: var(--muted); font-size: 12px; }
+  @media (max-width: 1050px) {
+    .shell { grid-template-columns: 190px minmax(0, 1fr); }
+    .board { grid-template-columns: minmax(0, 1fr); }
+    .overview { max-width: 430px; }
+    .app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 690px) {
+    .shell { display: block; }
+    .sidebar { position: static; height: auto; padding: 11px 11px 8px; }
+    .brand-mark { width: 34px; height: 34px; }
+    .brand small, .nav-label, .sidebar-foot, .identity .avatar, .identity small { display: none; }
+    .nav { display: flex; margin-top: 9px; }
+    .nav button { flex: 1; justify-content: center; min-height: 36px; padding: 4px; gap: 4px; font-size: 12px; white-space: nowrap; }
+    .nav button .icon { width: 15px; height: 15px; }
+    .topbar { min-height: 46px; padding-inline: 12px; }
+    .content { padding: 19px 12px 25px; }
+    .page-head { gap: 7px; margin-bottom: 14px; }
+    .page-head p { font-size: 12px; }
+    .catalog-board { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .catalog-child td:first-child { padding-left: 34px; }
+    .panel-head, .panel-foot, .batch-tools { padding-inline: 11px; }
+    th, td, th:first-child, td:first-child, th:last-child, td:last-child { padding-inline: 8px; }
+    .person { min-width: 85px; }
+    .person .avatar { display: none; }
+    .app-grid { grid-template-columns: 1fr; gap: 9px; }
+    .profile { flex-wrap: wrap; }
+    .profile .tags { margin-left: 0; }
+    .dialog-head, .dialog-body, .dialog-foot { padding-inline: 11px; }
+    .config-layout { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+    .app-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .app-picker { justify-content: center; gap: 3px; padding-inline: 3px; font-size: 12px; }
+    .app-picker .app-mark { display: none; }
+  }
+  @media (max-width: 450px) {
+    .mobile-hide, .nav button .icon { display: none; }
+    .nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .top-actions { gap: 6px; }
+    .crumb { gap: 4px; font-size: 12px; }
+  }
+  @media (max-width: 590px) {
+    .login-card { grid-template-columns: minmax(0, 1fr); }
+    .login-brand, .login-form { padding: 17px; }
+    .login-brand h2 { display: inline-block; margin: 0 0 0 7px; vertical-align: middle; }
+    .login-samples { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .login-samples button { padding: 5px 4px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+  <svg aria-hidden="true" style="display:none" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 21 7v5c0 4.8-4.4 8.2-9 9.5C7.4 20.2 3 16.8 3 12V7l9-4Z"/><path d="m8 12 2.5 2.5L16 9"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 16l9 5 9-5"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2M16 5a3 3 0 0 1 0 6m2 3a4 4 0 0 1 3 4v2"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="10" r="4"/><path d="m11 13 7 7 3-3-2-2-2 2-2-2 2-2"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="5.5"/><path d="m15 15 4.5 4.5"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  </svg>
+
+  <div class="shell" id="workspace-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg></span>
+        <div><strong>权限中心</strong><small>多应用权限管理</small></div>
+      </div>
+      <nav class="nav" aria-label="演示流程">
+        <p class="nav-label">演示流程</p>
+        <button type="button" data-page="catalog"><svg class="icon" aria-hidden="true"><use href="#i-grid"></use></svg>应用与权限</button>
+        <button type="button" data-page="roles" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-layers"></use></svg>角色管理</button>
+        <button type="button" data-page="org"><svg class="icon" aria-hidden="true"><use href="#i-users"></use></svg>用户与部门</button>
+        <button type="button" data-page="users"><svg class="icon" aria-hidden="true"><use href="#i-users"></use></svg>用户授权</button>
+        <button type="button" data-page="mine"><svg class="icon" aria-hidden="true"><use href="#i-key"></use></svg>我的权限</button>
+        <button type="button" data-page="audit"><svg class="icon" aria-hidden="true"><use href="#i-layers"></use></svg>操作记录</button>
+      </nav>
+      <p class="sidebar-foot">界面草稿 · 演示数据</p>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div class="crumb">权限中心 <svg class="icon" aria-hidden="true"><use href="#i-chevron"></use></svg><strong id="crumb">角色管理</strong></div>
+        <div class="top-actions">
+          <div class="identity"><small class="quiet" id="identity-context">演示视角</small><span class="avatar" id="identity-mark" aria-hidden="true">总</span><strong id="identity-name">总管理员</strong></div>
+          <button type="button" class="button" id="login-entry">体验登录</button>
+        </div>
+      </header>
+      <main class="content">
+        <section id="catalog-page" aria-labelledby="catalog-title" hidden>
+          <div class="page-head">
+            <div><h1 id="catalog-title">应用与权限</h1><p>登记业务应用，维护角色可选的菜单和按钮。</p></div>
+            <button class="button primary" id="add-app" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>新增应用</button>
+          </div>
+          <div class="catalog-board">
+            <section class="panel catalog-apps" aria-labelledby="catalog-apps-title">
+              <div class="panel-head"><h2 id="catalog-apps-title">业务应用</h2></div>
+              <div id="catalog-app-list" class="app-list" role="group" aria-label="选择应用"></div>
+            </section>
+            <section class="panel" aria-labelledby="catalog-app-title">
+              <div class="panel-head catalog-head">
+                <h2 id="catalog-app-title"></h2>
+                <div class="catalog-actions">
+                  <button type="button" class="button" id="edit-app">编辑应用</button>
+                  <button type="button" class="button primary" id="add-permission"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>新增权限</button>
+                </div>
+              </div>
+              <div class="scroll-table">
+                <table aria-label="菜单和按钮权限">
+                  <thead><tr><th scope="col">权限名称</th><th scope="col">类型</th><th scope="col" class="mobile-hide">权限标识</th><th scope="col">操作</th></tr></thead>
+                  <tbody id="catalog-rows"></tbody>
+                </table>
+              </div>
+              <p class="panel-foot quiet" id="catalog-count"></p>
+            </section>
+          </div>
+        </section>
+
+        <section id="roles-page" aria-labelledby="roles-title">
+          <div class="page-head">
+            <div><h1 id="roles-title">角色管理</h1><p>为角色选择各个业务应用的菜单和按钮。</p></div>
+            <button class="button primary" id="add-role" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>新增角色</button>
+          </div>
+          <div class="board">
+            <section class="panel" aria-labelledby="role-list-title">
+              <div class="panel-head">
+                <h2 id="role-list-title">业务角色</h2>
+                <label class="search"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg><input id="role-search" type="search" aria-label="搜索角色" placeholder="搜索角色"></label>
+              </div>
+              <div class="scroll-table">
+                <table aria-label="业务角色">
+                  <thead><tr><th scope="col">角色名称</th><th scope="col" class="mobile-hide">已授权应用</th><th scope="col">操作</th></tr></thead>
+                  <tbody id="role-rows"></tbody>
+                </table>
+              </div>
+              <p class="panel-foot quiet" id="role-count"></p>
+            </section>
+            <aside class="panel overview" aria-label="角色概览" id="role-overview"></aside>
+          </div>
+        </section>
+
+        <section id="org-page" aria-labelledby="org-title" hidden>
+          <div class="page-head">
+            <div><h1 id="org-title">用户与部门</h1><p>维护部门、用户和账号状态。</p></div>
+            <button class="button primary" id="add-user" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>新增用户</button>
+          </div>
+          <div class="org-toolbar">
+            <label class="view-switch" id="org-view-switch" for="org-view">管理视角
+              <select id="org-view"><option value="global">总管理员</option><option value="department">部门管理员</option></select>
+            </label>
+            <div class="scope"><strong>管理范围</strong><span id="org-scope"></span></div>
+          </div>
+          <div class="catalog-board">
+            <section class="panel" aria-labelledby="department-list-title">
+              <div class="panel-head catalog-head">
+                <h2 id="department-list-title">部门结构</h2>
+                <div class="org-dept-actions" id="org-dept-actions">
+                  <button type="button" class="button" id="add-department">新增部门</button>
+                  <button type="button" class="button" id="edit-department" hidden>编辑部门</button>
+                </div>
+              </div>
+              <div class="org-tree" id="org-department-list" role="group" aria-label="部门筛选"></div>
+            </section>
+            <section class="panel" aria-labelledby="org-users-title">
+              <div class="panel-head">
+                <h2 id="org-users-title">用户列表</h2>
+                <label class="search"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg><input id="org-search" type="search" aria-label="搜索用户" placeholder="搜索姓名或用户名"></label>
+              </div>
+              <div class="scroll-table">
+                <table aria-label="用户与部门名单">
+                  <thead><tr><th scope="col">用户</th><th scope="col" class="mobile-hide">所属部门</th><th scope="col">角色</th><th scope="col">账号状态</th><th scope="col">操作</th></tr></thead>
+                  <tbody id="org-user-rows"></tbody>
+                </table>
+              </div>
+              <p class="panel-foot quiet" id="org-count"></p>
+            </section>
+          </div>
+        </section>
+
+        <section id="users-page" aria-labelledby="users-title" hidden>
+          <div class="page-head"><div><h1 id="users-title">用户授权</h1><p>为管理范围内的用户分配或撤销已有角色。</p></div></div>
+          <div class="scope"><svg class="icon" aria-hidden="true"><use href="#i-users"></use></svg><span><strong>管理范围</strong><span id="user-scope"></span></span></div>
+          <section class="panel" aria-labelledby="user-list-title">
+            <div class="panel-head">
+              <h2 id="user-list-title">用户列表</h2>
+              <label class="search"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg><input id="user-search" type="search" aria-label="搜索用户" placeholder="搜索姓名或部门"></label>
+            </div>
+            <div class="batch-tools" id="batch-tools" role="group" aria-label="批量授权">
+              <span class="quiet" id="selected-user-count" aria-live="polite">已选 0 人</span>
+              <button class="button" type="button" data-batch="grant" disabled>批量分配</button>
+              <button class="button" type="button" data-batch="revoke" disabled>批量撤销</button>
+            </div>
+            <div class="scroll-table">
+              <table aria-label="用户列表">
+                <thead><tr><th scope="col" class="select-user" aria-label="选择用户"></th><th scope="col">用户</th><th scope="col" class="mobile-hide">所属部门</th><th scope="col">已有角色</th><th scope="col">操作</th></tr></thead>
+                <tbody id="user-rows"></tbody>
+              </table>
+            </div>
+            <p class="panel-foot quiet" id="user-count"></p>
+          </section>
+        </section>
+
+        <section id="mine-page" aria-labelledby="mine-title" hidden>
+          <div class="page-head"><div><h1 id="mine-title">我的权限</h1><p>按应用查看可以打开的菜单和使用的按钮。</p></div></div>
+          <div class="panel profile" id="profile"></div>
+          <p class="scope" id="inactive-user-note" hidden>账号已停用，业务权限暂不可用。</p>
+          <div class="app-grid" id="my-apps"></div>
+        </section>
+        <section id="audit-page" aria-labelledby="audit-title" hidden>
+          <div class="page-head"><div><h1 id="audit-title">操作记录</h1><p>查看管理操作的时间、对象和结果。</p></div></div>
+          <div class="scope"><strong>查看范围</strong><span id="audit-scope"></span></div>
+          <section class="panel" aria-labelledby="audit-list-title">
+            <div class="panel-head">
+              <h2 id="audit-list-title">记录列表</h2>
+              <label class="search"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg><input id="audit-search" type="search" aria-label="搜索操作记录" placeholder="搜索操作人、对象或内容"></label>
+            </div>
+            <div class="scroll-table">
+              <table class="audit-table" aria-label="操作记录">
+                <thead><tr><th scope="col">时间</th><th scope="col">操作人</th><th scope="col">操作</th><th scope="col">操作对象</th><th scope="col">结果</th></tr></thead>
+                <tbody id="audit-rows"></tbody>
+              </table>
+            </div>
+            <p class="panel-foot quiet" id="audit-count"></p>
+          </section>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <main class="login-page" id="login-page" aria-labelledby="login-title" hidden>
+    <section class="panel login-card">
+      <aside class="login-brand">
+        <span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg></span>
+        <h2>权限中心</h2>
+        <p>选择演示账号。演示密码为 <code>demo1234</code>。</p>
+        <div class="login-samples" id="login-samples" role="group" aria-label="演示账号"></div>
+      </aside>
+      <form class="login-form" id="login-form">
+        <div><h1 id="login-title">登录权限中心</h1><p class="quiet">输入用户名和密码。</p></div>
+        <div class="fields stacked">
+          <label for="login-account">用户名<input id="login-account" required autocomplete="username"></label>
+          <label for="login-password">密码<input id="login-password" type="password" required autocomplete="current-password"></label>
+        </div>
+        <p class="login-error" id="login-error" role="alert" hidden></p>
+        <button type="submit" class="button primary">登录</button>
+        <button type="button" class="link-button" id="return-demo">返回原型</button>
+      </form>
+    </section>
+  </main>
+
+  <dialog id="role-dialog" aria-labelledby="role-dialog-title">
+    <form id="role-form">
+      <header class="dialog-head">
+        <div><h2 id="role-dialog-title"></h2><p class="quiet">在各应用中勾选权限，配好后一起保存。</p></div>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body">
+        <div class="fields">
+          <label for="role-name">角色名称<input id="role-name" required maxlength="24" autocomplete="off" placeholder="例如 公文审批员"></label>
+          <label for="role-description">角色说明<input id="role-description" maxlength="48" autocomplete="off" placeholder="简要说明角色用途"></label>
+        </div>
+        <h3>应用权限</h3>
+        <div class="config-layout">
+          <div id="app-list" class="app-list" role="group" aria-label="业务应用"></div>
+          <div class="permission-tree">
+            <p class="tree-help quiet">勾选按钮时，系统会同时勾选所在菜单。</p>
+            <div id="permissions" role="group" aria-label="菜单和按钮"></div>
+          </div>
+        </div>
+      </div>
+      <footer class="dialog-foot">
+        <span id="permission-count" class="quiet" aria-live="polite"></span>
+        <div class="dialog-actions">
+          <button type="button" class="button" data-close>取消</button>
+          <button type="submit" class="button primary">保存角色</button>
+        </div>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog id="assign-dialog" class="assign-dialog" aria-labelledby="assign-dialog-title">
+    <form id="assign-form">
+      <header class="dialog-head">
+        <div><h2 id="assign-dialog-title">分配角色</h2><p id="assign-person" class="quiet"></p></div>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body"><div id="role-choices" class="choices"></div></div>
+      <footer class="dialog-foot">
+        <span class="quiet">保存后直接生效</span>
+        <div class="dialog-actions">
+          <button type="button" class="button" data-close>取消</button>
+          <button type="submit" class="button primary" id="assign-save">保存分配</button>
+        </div>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog id="app-dialog" class="assign-dialog" aria-labelledby="app-dialog-title">
+    <form id="app-form">
+      <header class="dialog-head">
+        <h2 id="app-dialog-title"></h2>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body fields stacked">
+        <label for="app-name">应用名称<input id="app-name" required maxlength="24" autocomplete="off" placeholder="例如 工单系统" autofocus></label>
+      </div>
+      <footer class="dialog-foot"><div class="dialog-actions">
+        <button type="button" class="button" data-close>取消</button>
+        <button type="submit" class="button primary">保存应用</button>
+      </div></footer>
+    </form>
+  </dialog>
+
+  <dialog id="permission-dialog" class="assign-dialog" aria-labelledby="permission-dialog-title">
+    <form id="permission-form">
+      <header class="dialog-head">
+        <div><h2 id="permission-dialog-title"></h2><p class="quiet" id="permission-context"></p></div>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body fields stacked">
+        <label for="permission-type" id="permission-type-field">权限类型
+          <select id="permission-type"><option value="menu">菜单</option><option value="button">按钮</option></select>
+        </label>
+        <label for="permission-name">权限名称<input id="permission-name" required maxlength="24" autocomplete="off" placeholder="例如 工单管理"></label>
+        <label for="permission-parent" id="permission-parent-field" hidden>所属菜单
+          <select id="permission-parent"></select>
+        </label>
+        <div>
+          <label for="permission-code">权限标识
+            <input id="permission-code" required maxlength="64" autocomplete="off" spellcheck="false" autocapitalize="none" placeholder="例如 ticket:close" aria-describedby="permission-code-help">
+          </label>
+          <p id="permission-code-help" class="quiet field-help">按 <code>资源:操作</code> 填写业务系统约定的标识。例如，关闭工单接口使用 <code>ticket:close</code> 检查权限。</p>
+        </div>
+      </div>
+      <footer class="dialog-foot"><div class="dialog-actions">
+        <button type="button" class="button" data-close>取消</button>
+        <button type="submit" class="button primary">保存权限</button>
+      </div></footer>
+    </form>
+  </dialog>
+
+  <dialog id="department-dialog" class="assign-dialog" aria-labelledby="department-dialog-title">
+    <form id="department-form">
+      <header class="dialog-head">
+        <h2 id="department-dialog-title"></h2>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body fields stacked">
+        <label for="department-name">部门名称<input id="department-name" required maxlength="24" autocomplete="off"></label>
+        <label for="department-parent">上级部门<select id="department-parent"></select></label>
+      </div>
+      <footer class="dialog-foot"><div class="dialog-actions">
+        <button type="button" class="button" data-close>取消</button>
+        <button type="submit" class="button primary">保存部门</button>
+      </div></footer>
+    </form>
+  </dialog>
+
+  <dialog id="user-dialog" class="assign-dialog" aria-labelledby="user-dialog-title">
+    <form id="user-form">
+      <header class="dialog-head">
+        <div><h2 id="user-dialog-title"></h2><p class="quiet" id="user-dialog-context"></p></div>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body fields stacked">
+        <label for="user-name">姓名<input id="user-name" required maxlength="24" autocomplete="off"></label>
+        <label for="user-account">用户名<input id="user-account" required maxlength="32" autocomplete="off"></label>
+        <label for="user-department">所属部门<select id="user-department" required></select></label>
+        <label for="user-status">账号状态<select id="user-status"><option value="active">正常</option><option value="disabled">停用</option></select></label>
+        <label for="user-admin" id="user-admin-field" class="check-field"><input id="user-admin" type="checkbox">设为部门管理员</label>
+      </div>
+      <footer class="dialog-foot"><div class="dialog-actions">
+        <button type="button" class="button" data-close>取消</button>
+        <button type="submit" class="button primary">保存用户</button>
+      </div></footer>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+  <script>
+    const applications = [
+      { id: 'oa', name: 'OA 协同办公', short: 'OA', symbol: '办', groups: [
+        { key: 'oa.documents', name: '公文管理', code: 'document:view', actions: [
+          { key: 'oa.documents.create', name: '新建公文', code: 'document:create' },
+          { key: 'oa.documents.approve', name: '审批公文', code: 'document:approve' }
+        ] },
+        { key: 'oa.notices', name: '公告管理', code: 'notice:view', actions: [
+          { key: 'oa.notices.publish', name: '发布公告', code: 'notice:publish' }
+        ] }
+      ] },
+      { id: 'hr', name: '人事系统', short: '人事', symbol: '人', groups: [
+        { key: 'hr.employees', name: '员工档案', code: 'employee:view', actions: [
+          { key: 'hr.employees.edit', name: '编辑档案', code: 'employee:edit' },
+          { key: 'hr.employees.export', name: '导出档案', code: 'employee:export' }
+        ] }
+      ] },
+      { id: 'project', name: '项目管理', short: '项目', symbol: '项', groups: [
+        { key: 'project.records', name: '项目台账', code: 'project:view', actions: [
+          { key: 'project.records.create', name: '新建项目', code: 'project:create' },
+          { key: 'project.records.edit', name: '修改项目', code: 'project:edit' }
+        ] }
+      ] }
+    ];
+
+    const rootAdminRole = 'root-admin';
+    const departmentAdminRole = 'department-admin';
+    const roles = new Map([
+      ['approver', { name: '公文审批员', description: '查看和审批 OA 公文', granted: new Set(['oa.documents', 'oa.documents.approve']) }],
+      ['staff', { name: '普通员工', description: '查看日常工作页面', granted: new Set(['oa.documents', 'oa.notices', 'hr.employees', 'project.records']) }],
+      ['lead', { name: '部门主管', description: '处理公文并新建项目', granted: new Set(['oa.documents', 'oa.documents.create', 'oa.documents.approve', 'project.records', 'project.records.create']) }],
+      ['records', { name: '档案维护员', description: '查看和编辑员工档案', granted: new Set(['hr.employees', 'hr.employees.edit']) }],
+      [departmentAdminRole, { name: '部门管理员', description: '管理本部门及下级部门的用户', granted: new Set(), management: true }],
+      [rootAdminRole, { name: '总管理员', description: '负责全局管理', granted: new Set(), management: true }]
+    ]);
+
+    const departments = new Map([
+      ['company', { name: '远川科技', parent: null }],
+      ['admin', { name: '行政部', parent: 'company' }],
+      ['office', { name: '综合办公室', parent: 'admin' }],
+      ['finance', { name: '财务部', parent: 'company' }]
+    ]);
+    const users = [
+      { id: 'lin', name: '林晓', account: 'lin.xiao', department: 'office', active: true, roles: new Set(['staff']) },
+      { id: 'gu', name: '顾晨', account: 'gu.chen', department: 'admin', active: true, roles: new Set(['lead', 'staff', departmentAdminRole]) },
+      { id: 'he', name: '何雨桐', account: 'he.yutong', department: 'office', active: true, roles: new Set(['staff', 'records']) },
+      { id: 'ye', name: '叶宁', account: 'ye.ning', department: 'finance', active: true, roles: new Set(['staff']) }
+    ];
+    const demoEmployee = users[0];
+    const demoManager = users[1];
+    const demoRoot = { name: '总管理员', account: 'admin', active: true, roles: new Set([rootAdminRole]) };
+    const demoAccounts = [[demoRoot, '总管理员'], [demoManager, '部门管理员'], [demoEmployee, '普通用户']];
+    const demoPassword = 'demo1234';
+    const operationLogs = [];
+    const logTime = new Intl.DateTimeFormat('zh-CN', {
+      timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+    });
+    const views = {
+      catalog: { title: '应用与权限', identity: '总管理员', mark: '总' },
+      roles: { title: '角色管理', identity: '总管理员', mark: '总' },
+      org: { title: '用户与部门', identity: '总管理员', mark: '总' },
+      users: { title: '用户授权', identity: '部门管理员', mark: '部' },
+      mine: { title: '我的权限' },
+      audit: { title: '操作记录', identity: '总管理员', mark: '总' }
+    };
+
+    const $ = id => document.getElementById(id);
+    const nav = document.querySelector('.nav');
+    const loginAccount = $('login-account');
+    const loginPassword = $('login-password');
+    const roleDialog = $('role-dialog');
+    const assignDialog = $('assign-dialog');
+    const assignSave = $('assign-save');
+    const roleChoices = $('role-choices');
+    const appDialog = $('app-dialog');
+    const permissionDialog = $('permission-dialog');
+    const departmentDialog = $('department-dialog');
+    const userDialog = $('user-dialog');
+    const orgView = $('org-view');
+    const orgDepartmentList = $('org-department-list');
+    const orgUserRows = $('org-user-rows');
+    const userName = $('user-name');
+    const userAccount = $('user-account');
+    const userDepartment = $('user-department');
+    const appName = $('app-name');
+    const permissionName = $('permission-name');
+    const permissionType = $('permission-type');
+    const permissionParent = $('permission-parent');
+    const permissionCode = $('permission-code');
+    const catalogAppList = $('catalog-app-list');
+    const catalogRows = $('catalog-rows');
+    const roleName = $('role-name');
+    const roleDescription = $('role-description');
+    const appList = $('app-list');
+    const permissions = $('permissions');
+    const roleRows = $('role-rows');
+    const userRows = $('user-rows');
+    const batchTools = $('batch-tools');
+    const selectedUsers = new Set();
+    const collapsedBranches = new Set();
+    const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+    let selectedRole = 'approver';
+    let sessionUser = null;
+    let roleEditor;
+    let assignment;
+    let nextRoleId = 1;
+    let nextAppId = 1;
+    let nextPermissionId = 1;
+    let nextDepartmentId = 1;
+    let nextUserId = 1;
+    let departmentFilter = '';
+    let editingDepartment;
+    let editingUser;
+    let catalogApp = applications[0];
+    let editedApp;
+    let editedPermission;
+    let toastTimer;
+
+    function escapeText(value) {
+      return value.replace(/[&<>"']/g, character => entities[character]);
+    }
+
+    function appMark(app) {
+      return `<span class="app-mark ${app.id}" aria-hidden="true">${escapeText(app.symbol)}</span>`;
+    }
+
+    function renderAppChoices(container, selectedApp) {
+      container.innerHTML = applications.map(app => `<button type="button" class="app-picker"
+        data-app="${app.id}" aria-pressed="${app === selectedApp}">${appMark(app)}
+        <span class="app-name">${escapeText(app.name)}</span></button>`).join('');
+    }
+
+    function treeDisclosure(id, name, targets = [id]) {
+      if (!targets.length) return '<span class="menu-toggle-spacer" aria-hidden="true"></span>';
+      const expanded = !collapsedBranches.has(id);
+      return `<button type="button" class="menu-toggle" data-branch-toggle="${id}" data-branch-name="${escapeText(name)}"
+        aria-label="${expanded ? '收起' : '展开'}${escapeText(name)}" aria-expanded="${expanded}" aria-controls="${targets.join(' ')}">
+        <svg class="icon" aria-hidden="true"><use href="#i-chevron"></use></svg></button>`;
+    }
+
+    function catalogRow(permission, isMenu, hidden = false) {
+      const label = `<span class="catalog-label">${escapeText(permission.name)}</span>`;
+      const title = isMenu ? `<div class="menu-heading">${treeDisclosure('catalog-' + permission.key, permission.name,
+        permission.actions.map(action => 'catalog-row-' + action.key))}${label}</div>` : label;
+      return `<tr id="catalog-row-${permission.key}" class="${isMenu ? 'catalog-menu' : 'catalog-child'}" ${hidden ? 'hidden' : ''}>
+        <td>${title}</td>
+        <td><span class="tag">${isMenu ? '菜单' : '按钮'}</span></td>
+        <td class="mobile-hide"><code class="permission-code">${escapeText(permission.code)}</code></td>
+        <td><button class="link-button" type="button" data-edit-permission="${permission.key}">编辑</button></td></tr>`;
+    }
+
+    function renderCatalog() {
+      renderAppChoices(catalogAppList, catalogApp);
+      $('catalog-app-title').textContent = catalogApp.name;
+      const groups = catalogApp.groups;
+      catalogRows.innerHTML = groups.map(group => catalogRow(group, true) +
+        group.actions.map(action => catalogRow(action, false, collapsedBranches.has('catalog-' + group.key))).join('')).join('') ||
+        '<tr><td class="empty" colspan="4">这个应用还没有权限。先添加一个菜单。</td></tr>';
+      const buttons = groups.reduce((total, group) => total + group.actions.length, 0);
+      $('catalog-count').textContent = `${groups.length} 个菜单，${buttons} 个按钮`;
+    }
+
+    function openAppEditor(app) {
+      editedApp = app;
+      $('app-dialog-title').textContent = app ? '编辑应用' : '新增应用';
+      appName.value = app?.name ?? '';
+      appName.setCustomValidity('');
+      appDialog.showModal();
+      appName.focus();
+    }
+
+    function updatePermissionParent() {
+      const showParent = !editedPermission && permissionType.value === 'button';
+      $('permission-parent-field').hidden = !showParent;
+      permissionParent.disabled = !showParent;
+      permissionParent.required = showParent;
+      permissionName.placeholder = showParent ? '例如 关闭工单' : '例如 工单管理';
+    }
+
+    function openPermissionEditor(permission, menu) {
+      editedPermission = permission;
+      $('permission-dialog-title').textContent = permission ? '编辑权限' : '新增权限';
+      $('permission-context').textContent = [catalogApp.name, menu?.name].filter(Boolean).join(' / ');
+      $('permission-type-field').hidden = Boolean(permission);
+      permissionType.value = 'menu';
+      permissionType.options[1].disabled = catalogApp.groups.length === 0;
+      permissionName.value = permission?.name ?? '';
+      permissionName.setCustomValidity('');
+      permissionCode.value = permission?.code ?? '';
+      permissionCode.setCustomValidity('');
+      permissionParent.innerHTML = '<option value="">请选择菜单</option>' + catalogApp.groups.map(group =>
+        `<option value="${group.key}">${escapeText(group.name)}</option>`).join('');
+      updatePermissionParent();
+      permissionDialog.showModal();
+      (permission ? permissionName : permissionType).focus();
+    }
+
+    function appPermissionCount(app, grants) {
+      return app.groups.flatMap(group => [group, ...group.actions]).filter(item => grants.has(item.key)).length;
+    }
+
+    function tags(labels, positive = false) {
+      const style = positive ? 'tag positive' : 'tag';
+      return labels.length
+        ? labels.map(label => `<span class="${style}">${escapeText(label)}</span>`).join('')
+        : '<span class="quiet">暂无</span>';
+    }
+
+    function roleLabels(user) {
+      return [...user.roles].map(id => roles.get(id).name);
+    }
+
+    function person(name, detail) {
+      return `<div class="person"><span class="avatar" aria-hidden="true">${escapeText(name.charAt(0))}</span>
+        <div><strong>${escapeText(name)}</strong><small>${escapeText(detail)}</small></div></div>`;
+    }
+
+    function renderOverview() {
+      const role = roles.get(selectedRole);
+      const summary = applications.map(app => `<div class="overview-item">${appMark(app)}<strong class="app-name">${escapeText(app.name)}</strong>
+        <span class="quiet">${appPermissionCount(app, role.granted)} 项权限</span></div>`).join('');
+      $('role-overview').innerHTML = `<div class="overview-head"><span class="quiet">角色概览</span>
+        <h2>${escapeText(role.name)}</h2><p>${escapeText(role.description)}</p></div>
+        <div class="overview-body">${summary}</div>`;
+    }
+
+    function renderRoles() {
+      const search = $('role-search').value.trim().toLowerCase();
+      const found = [...roles].filter(([, role]) => !role.management && role.name.toLowerCase().includes(search));
+      roleRows.innerHTML = found.map(([id, role]) => {
+        const names = applications.filter(app => appPermissionCount(app, role.granted)).map(app => app.short);
+        return `<tr><td>${person(role.name, role.description)}</td><td class="mobile-hide"><div class="tags">${tags(names)}</div></td>
+          <td><button class="link-button" type="button" data-edit-role="${id}">配置权限</button></td></tr>`;
+      }).join('') || '<tr><td class="empty" colspan="3">未找到角色，可以换个名称搜索。</td></tr>';
+      $('role-count').textContent = `共 ${found.length} 个角色`;
+      if (found.length && !found.some(([id]) => id === selectedRole)) selectedRole = found[0][0];
+      $('role-overview').hidden = found.length === 0;
+      renderOverview();
+    }
+
+    function withinDepartment(department, ancestor) {
+      while (department) {
+        if (department === ancestor) return true;
+        department = departments.get(department)?.parent;
+      }
+      return false;
+    }
+
+    function hasDepartmentScope() {
+      const manager = sessionUser ?? demoManager;
+      return manager.active && manager.roles.has(departmentAdminRole);
+    }
+
+    function isRootSession() {
+      return Boolean(sessionUser?.roles.has(rootAdminRole));
+    }
+
+    function inManagementScope(user) {
+      return isRootSession() || (hasDepartmentScope() && withinDepartment(user.department, (sessionUser ?? demoManager).department));
+    }
+
+    function departmentScopeText() {
+      if (isRootSession()) return '全部部门';
+      return hasDepartmentScope()
+        ? `${departments.get((sessionUser ?? demoManager).department).name}及下级部门`
+        : '当前演示账号暂无部门管理权限';
+    }
+
+    function isGlobalView() {
+      return sessionUser ? isRootSession() : orgView.value === 'global';
+    }
+
+    function canMaintainDepartment(department) {
+      return isGlobalView() || inManagementScope({ department });
+    }
+
+    function departmentTree(parent = null, depth = 0) {
+      return [...departments].filter(([, department]) => department.parent === parent)
+        .flatMap(([id, department]) => [{ id, name: department.name, depth }, ...departmentTree(id, depth + 1)]);
+    }
+
+    function departmentOptions(entries) {
+      return entries.map(({ id, name, depth }) =>
+        `<option value="${id}">${'　'.repeat(depth)}${escapeText(name)}</option>`).join('');
+    }
+
+    function departmentFilterButton(id, name) {
+      return `<button class="app-picker" type="button" data-department="${id}" aria-pressed="${id === departmentFilter}">
+        <span class="app-name">${escapeText(name)}</span></button>`;
+    }
+
+    function renderDepartmentBranches(parent) {
+      return [...departments].filter(([id, department]) => department.parent === parent && canMaintainDepartment(id))
+        .map(([id, department]) => {
+          const branch = 'org-children-' + id;
+          const children = renderDepartmentBranches(id);
+          return `<div class="menu-heading">${treeDisclosure(branch, department.name, children ? [branch] : [])}
+            ${departmentFilterButton(id, department.name)}</div>
+            ${children ? `<div class="org-subtree" id="${branch}" ${collapsedBranches.has(branch) ? 'hidden' : ''}>${children}</div>` : ''}`;
+        }).join('');
+    }
+
+    function renderOrganization() {
+      const global = isGlobalView();
+      if (!sessionUser) {
+        $('identity-name').textContent = global ? '总管理员' : '部门管理员';
+        $('identity-mark').textContent = global ? '总' : '部';
+      }
+      $('org-view-switch').hidden = Boolean(sessionUser);
+      $('org-scope').textContent = global ? '全部部门' : departmentScopeText();
+      $('org-dept-actions').hidden = !global;
+      $('edit-department').hidden = !departmentFilter;
+      $('add-user').disabled = !global && !hasDepartmentScope();
+
+      const rootParent = global ? null : departments.get((sessionUser ?? demoManager).department).parent;
+      orgDepartmentList.innerHTML = departmentFilterButton('', global ? '全部部门' : '全部可管理部门') +
+        renderDepartmentBranches(rootParent);
+
+      const search = $('org-search').value.trim().toLowerCase();
+      const found = users.filter(user => canMaintainDepartment(user.department) &&
+        (!departmentFilter || withinDepartment(user.department, departmentFilter)) &&
+        [user.name, user.account].some(value => value.toLowerCase().includes(search)));
+      orgUserRows.innerHTML = found.map(user => `<tr><td>${person(user.name, user.account)}</td>
+        <td class="mobile-hide">${escapeText(departments.get(user.department).name)}</td>
+        <td><div class="tags">${tags(roleLabels(user), true)}</div></td>
+        <td class="org-status"><span class="tag ${user.active ? 'positive' : 'inactive'}">${user.active ? '正常' : '已停用'}</span></td>
+        <td><button class="link-button" type="button" data-edit-user="${user.id}">编辑用户</button></td></tr>`).join('') ||
+        '<tr><td class="empty" colspan="5">这个范围内没有匹配的用户。</td></tr>';
+      $('org-count').textContent = `共 ${found.length} 名用户`;
+    }
+
+    function openDepartmentEditor(id) {
+      if (!isGlobalView()) return;
+      editingDepartment = id;
+      const department = departments.get(id);
+      $('department-dialog-title').textContent = department ? '编辑部门' : '新增部门';
+      $('department-name').value = department?.name ?? '';
+      $('department-name').setCustomValidity('');
+      const availableParents = departmentTree().filter(entry => !id || !withinDepartment(entry.id, id));
+      const parent = $('department-parent');
+      parent.innerHTML = '<option value="">无上级部门</option>' + departmentOptions(availableParents);
+      parent.value = department ? (department.parent ?? '') : (departmentFilter || 'company');
+      departmentDialog.showModal();
+      $('department-name').focus();
+    }
+
+    function openUserEditor(user) {
+      if ((user && !canMaintainDepartment(user.department)) || (!isGlobalView() && !hasDepartmentScope())) return;
+      editingUser = user;
+      $('user-dialog-title').textContent = user ? '编辑用户' : '新增用户';
+      $('user-dialog-context').textContent = user && isGlobalView() ? '修改所属部门后，用户保留原有的业务角色。' : '';
+      userName.value = user?.name ?? '';
+      userName.setCustomValidity('');
+      userAccount.value = user?.account ?? '';
+      userAccount.setCustomValidity('');
+      const allowed = departmentTree().filter(entry => canMaintainDepartment(entry.id));
+      userDepartment.innerHTML = '<option value="">请选择部门</option>' + departmentOptions(allowed);
+      userDepartment.value = user?.department ?? (departmentFilter || (isGlobalView() ? '' : (sessionUser ?? demoManager).department));
+      userDepartment.disabled = Boolean(user && !isGlobalView());
+      $('user-status').value = user && !user.active ? 'disabled' : 'active';
+      $('user-admin-field').hidden = !isGlobalView();
+      $('user-admin').checked = Boolean(user?.roles.has(departmentAdminRole));
+      userDialog.showModal();
+      userName.focus();
+    }
+
+    function renderBatchSelection() {
+      $('selected-user-count').textContent = `已选 ${selectedUsers.size} 人`;
+      for (const button of batchTools.querySelectorAll('button')) {
+        button.disabled = selectedUsers.size === 0;
+      }
+    }
+
+    function renderUsers() {
+      $('user-scope').textContent = departmentScopeText();
+      const search = $('user-search').value.trim().toLowerCase();
+      const found = users.filter(user => {
+        const department = departments.get(user.department).name;
+        return inManagementScope(user) && [user.name, user.account, department].some(value => value.toLowerCase().includes(search));
+      });
+      for (const id of selectedUsers) {
+        if (!found.some(user => user.id === id)) selectedUsers.delete(id);
+      }
+      userRows.innerHTML = found.map(user => `<tr><td class="select-user">
+        <input type="checkbox" data-select-user="${user.id}" aria-label="选择${escapeText(user.name)}" ${selectedUsers.has(user.id) ? 'checked' : ''}></td>
+        <td>${person(user.name, user.account)}</td>
+        <td class="mobile-hide">${escapeText(departments.get(user.department).name)}</td>
+        <td><div class="tags">${tags(roleLabels(user), true)}</div></td>
+        <td><button class="link-button" type="button" data-assign="${user.id}">分配角色</button></td></tr>`).join('') ||
+        '<tr><td class="empty" colspan="5">未找到用户，可以换个姓名或部门搜索。</td></tr>';
+      $('user-count').textContent = `共 ${found.length} 名用户`;
+      renderBatchSelection();
+    }
+
+    function renderMyPermissions() {
+      const signedInUser = sessionUser ?? demoEmployee;
+      const departmentName = departments.get(signedInUser.department)?.name ?? '权限中心';
+      $('profile').innerHTML = `<span class="avatar" aria-hidden="true">${escapeText(signedInUser.name.charAt(0))}</span><div><h2>${escapeText(signedInUser.name)}</h2>
+        <p class="quiet">${escapeText(departmentName)}</p></div>
+        <div class="tags">${tags(roleLabels(signedInUser), true)}</div>`;
+      $('inactive-user-note').hidden = signedInUser.active;
+      $('my-apps').hidden = !signedInUser.active;
+      if (!signedInUser.active) {
+        $('my-apps').replaceChildren();
+        return;
+      }
+      const grants = new Set([...signedInUser.roles].flatMap(id => [...roles.get(id).granted]));
+      $('my-apps').innerHTML = applications.map(app => {
+        const menus = app.groups.filter(group => grants.has(group.key)).map(group => {
+          const actions = group.actions.filter(action => grants.has(action.key)).map(action => action.name);
+          const id = 'my-menu-' + group.key;
+          return `<section class="owned-menu"><div class="menu-heading">
+            ${treeDisclosure(id, group.name, actions.length ? [id] : [])}
+            <h3 class="catalog-label">${escapeText(group.name)}</h3></div>
+            ${actions.length ? `<div class="tags" id="${id}" ${collapsedBranches.has(id) ? 'hidden' : ''}>${tags(actions, true)}</div>`
+              : '<p class="quiet">可以打开页面</p>'}</section>`;
+        });
+        const id = 'my-app-' + app.id;
+        return `<article class="panel app-card"><div class="panel-head">${treeDisclosure(id, app.name, menus.length ? [id] : [])}
+          ${appMark(app)}<h2>${escapeText(app.name)}</h2>
+          <span class="quiet count">${appPermissionCount(app, grants)} 项权限</span></div>
+          ${menus.length ? `<div id="${id}" ${collapsedBranches.has(id) ? 'hidden' : ''}>${menus.join('')}</div>`
+            : '<p class="empty">暂未获得此应用的权限。</p>'}</article>`;
+      }).join('');
+    }
+
+    function recordOperation(action, target, detail, demoActor = demoRoot.name, result = '成功') {
+      const targets = Array.isArray(target) ? target.map(({ name, department }) => ({ name, department })) : null;
+      operationLogs.unshift({
+        time: logTime.format(new Date()), actor: sessionUser?.name ?? demoActor, action,
+        target: targets ? targets.map(user => user.name).join('、') : target,
+        targets, detail, result
+      });
+    }
+
+    function renderAudit() {
+      const fullAccess = !sessionUser || isRootSession();
+      $('audit-scope').textContent = fullAccess ? '全部记录' : departmentScopeText();
+      const visible = fullAccess ? operationLogs : operationLogs.flatMap(entry => {
+        const targets = entry.targets?.filter(inManagementScope) ?? [];
+        return targets.length ? [{ ...entry, target: targets.map(user => user.name).join('、') }] : [];
+      });
+      const search = $('audit-search').value.trim().toLowerCase();
+      const found = visible.filter(entry => [entry.actor, entry.action, entry.target, entry.detail, entry.result]
+        .some(value => value.toLowerCase().includes(search)));
+      $('audit-rows').innerHTML = found.map(entry => `<tr>
+        <td>${entry.time}</td><td>${escapeText(entry.actor)}</td>
+        <td><strong>${escapeText(entry.action)}</strong><span class="audit-detail">${escapeText(entry.detail)}</span></td>
+        <td>${escapeText(entry.target)}</td><td><span class="tag ${entry.result === '成功' ? 'positive' : 'inactive'}">${entry.result}</span></td>
+      </tr>`).join('') || '<tr><td class="empty" colspan="5">没有匹配的操作记录。</td></tr>';
+      $('audit-count').textContent = `共 ${found.length} 条记录`;
+    }
+
+    function canOpenView(page) {
+      return !sessionUser || isRootSession() || page === 'mine' ||
+        (hasDepartmentScope() && ['org', 'users', 'audit'].includes(page));
+    }
+
+    function showView(page) {
+      if (!canOpenView(page)) return;
+      for (const button of nav.querySelectorAll('button')) {
+        const active = button.dataset.page === page;
+        button.hidden = !canOpenView(button.dataset.page);
+        if (active) button.setAttribute('aria-current', 'page');
+        else button.removeAttribute('aria-current');
+        $(button.dataset.page + '-page').hidden = !active;
+      }
+      $('crumb').textContent = views[page].title;
+      const identity = sessionUser?.name ?? (page === 'mine' ? demoEmployee.name : views[page].identity);
+      $('identity-mark').textContent = sessionUser || page === 'mine' ? identity.charAt(0) : views[page].mark;
+      $('identity-name').textContent = identity;
+      if (page === 'catalog') renderCatalog();
+      if (page === 'roles') renderRoles();
+      if (page === 'org') renderOrganization();
+      if (page === 'users') renderUsers();
+      if (page === 'mine') renderMyPermissions();
+      if (page === 'audit') renderAudit();
+    }
+
+    function setLoginError(message = '') {
+      const error = $('login-error');
+      error.textContent = message;
+      error.hidden = !message;
+    }
+
+    function openLogin(message = '') {
+      sessionUser = null;
+      $('workspace-shell').hidden = true;
+      $('login-page').hidden = false;
+      $('login-form').reset();
+      setLoginError(message);
+      $('login-samples').innerHTML = demoAccounts.map(([user, label], index) => `<button type="button" data-example="${index}">
+        <strong>${label}</strong><small>${escapeText(user.account)}</small></button>`).join('');
+      loginAccount.focus();
+    }
+
+    function enterWorkspace(page) {
+      $('login-page').hidden = true;
+      $('workspace-shell').hidden = false;
+      $('login-entry').textContent = sessionUser ? '退出登录' : '体验登录';
+      $('identity-context').textContent = sessionUser ? '当前账号' : '演示视角';
+      selectedUsers.clear();
+      collapsedBranches.clear();
+      departmentFilter = '';
+      orgView.value = 'global';
+      for (const id of ['org-search', 'user-search', 'role-search', 'audit-search']) $(id).value = '';
+      showView(page);
+      nav.querySelector('[aria-current="page"]').focus();
+    }
+
+    function permissionRow(permission, menu, parent) {
+      return `<label class="tree-row ${menu ? 'menu' : 'child'}"><input type="checkbox" value="${permission.key}"
+        data-parent="${parent}" aria-label="${escapeText(permission.name)}" ${roleEditor.grants.has(permission.key) ? 'checked' : ''}>
+        <span class="catalog-label">${escapeText(permission.name)}</span><span class="tag">${menu ? '菜单' : '按钮'}</span></label>`;
+    }
+
+    function updatePermissionCount() {
+      $('permission-count').textContent = `共选择 ${roleEditor.grants.size} 项权限`;
+    }
+
+    function renderPermissionTree() {
+      const app = roleEditor.app;
+      for (const button of appList.querySelectorAll('button')) {
+        button.setAttribute('aria-pressed', String(button.dataset.app === app.id));
+      }
+      permissions.innerHTML = app.groups.map(group => {
+        const id = 'role-menu-' + group.key;
+        return `<div class="tree-group"><div class="menu-heading tree-menu-heading">
+          ${treeDisclosure(id, group.name, group.actions.length ? [id] : [])}
+          ${permissionRow(group, true, group.key)}</div>
+          <div id="${id}" ${collapsedBranches.has(id) ? 'hidden' : ''}>
+            ${group.actions.map(action => permissionRow(action, false, group.key)).join('')}</div></div>`;
+      }).join('') ||
+        '<p class="empty">此应用暂时没有可选权限。</p>';
+      updatePermissionCount();
+    }
+
+    function openRole(id) {
+      const role = roles.get(id);
+      roleEditor = { id, app: applications[0], grants: new Set(role?.granted) };
+      if (role) {
+        selectedRole = id;
+        renderOverview();
+      }
+      $('role-dialog-title').textContent = role ? '配置角色' : '新增角色';
+      roleName.value = role?.name ?? '';
+      roleDescription.value = role?.description ?? '';
+      roleName.setCustomValidity('');
+      renderAppChoices(appList, roleEditor.app);
+      renderPermissionTree();
+      roleDialog.showModal();
+      roleName.focus();
+    }
+
+    function openAssignment(targets, mode = 'single') {
+      if (!targets.length || !targets.every(inManagementScope)) return;
+      assignment = { targets, mode };
+      const batch = mode !== 'single';
+      const action = mode === 'revoke' ? '撤销' : '分配';
+      const first = targets[0];
+      $('assign-dialog-title').textContent = `${batch ? '批量' : ''}${action}角色`;
+      $('assign-person').textContent = batch
+        ? targets.map(user => user.name).join('、')
+        : `${first.name} / ${departments.get(first.department).name}`;
+      assignSave.textContent = `保存${action}`;
+      assignSave.disabled = batch;
+      roleChoices.innerHTML = [...roles].filter(([, role]) => !role.management).map(([id, role]) => `<label class="choice">
+        <input type="checkbox" value="${id}" aria-label="${escapeText(role.name)}" ${!batch && first.roles.has(id) ? 'checked' : ''}>
+        <span><strong>${escapeText(role.name)}</strong><small>${escapeText(role.description)}</small></span></label>`).join('');
+      assignDialog.showModal();
+    }
+
+    function notify(message) {
+      const toast = $('toast');
+      clearTimeout(toastTimer);
+      toast.textContent = message;
+      toast.hidden = false;
+      toastTimer = setTimeout(() => { toast.hidden = true; }, 3500);
+    }
+
+    $('login-entry').addEventListener('click', () => openLogin());
+    $('return-demo').addEventListener('click', () => enterWorkspace('roles'));
+    $('login-samples').addEventListener('click', event => {
+      const button = event.target.closest('[data-example]');
+      if (!button) return;
+      loginAccount.value = demoAccounts[Number(button.dataset.example)][0].account;
+      loginPassword.value = demoPassword;
+      setLoginError();
+    });
+    $('login-form').addEventListener('input', () => setLoginError());
+    $('login-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const name = loginAccount.value.trim().toLowerCase();
+      const user = [demoRoot, ...users].find(candidate => candidate.account.toLowerCase() === name);
+      if (!user || loginPassword.value !== demoPassword) {
+        setLoginError('用户名或密码错误。');
+        return;
+      }
+      if (!user.active) {
+        setLoginError('该账号已停用。');
+        return;
+      }
+      sessionUser = user;
+      loginPassword.value = '';
+      const landing = isRootSession() ? 'roles' : hasDepartmentScope() ? 'users' : 'mine';
+      enterWorkspace(landing);
+    });
+    $('audit-search').addEventListener('input', renderAudit);
+    nav.addEventListener('click', event => {
+      const button = event.target.closest('button[data-page]');
+      if (button) showView(button.dataset.page);
+    });
+    document.addEventListener('click', event => {
+      const button = event.target.closest('[data-branch-toggle]');
+      if (!button) return;
+      const branch = button.dataset.branchToggle;
+      const collapse = button.getAttribute('aria-expanded') === 'true';
+      if (collapse) collapsedBranches.add(branch);
+      else collapsedBranches.delete(branch);
+      for (const id of button.getAttribute('aria-controls').split(' ')) $(id).hidden = collapse;
+      button.setAttribute('aria-expanded', String(!collapse));
+      button.setAttribute('aria-label', (collapse ? '展开' : '收起') + button.dataset.branchName);
+    });
+    orgView.addEventListener('change', () => {
+      departmentFilter = '';
+      $('org-search').value = '';
+      renderOrganization();
+    });
+    orgDepartmentList.addEventListener('click', event => {
+      const button = event.target.closest('[data-department]');
+      if (!button) return;
+      departmentFilter = button.dataset.department;
+      renderOrganization();
+      orgDepartmentList.querySelector('[aria-pressed="true"]').focus();
+    });
+    $('org-search').addEventListener('input', renderOrganization);
+    $('add-department').addEventListener('click', () => openDepartmentEditor(null));
+    $('edit-department').addEventListener('click', () => openDepartmentEditor(departmentFilter));
+    $('add-user').addEventListener('click', () => openUserEditor(null));
+    orgUserRows.addEventListener('click', event => {
+      const button = event.target.closest('[data-edit-user]');
+      if (button) openUserEditor(users.find(user => user.id === button.dataset.editUser));
+    });
+    $('department-name').addEventListener('input', event => event.target.setCustomValidity(''));
+    $('department-form').addEventListener('submit', event => {
+      event.preventDefault();
+      if (!isGlobalView()) return;
+      const field = $('department-name');
+      const name = field.value.trim();
+      if (!name) {
+        field.setCustomValidity('请输入部门名称。');
+        field.reportValidity();
+        return;
+      }
+      const parent = $('department-parent').value || null;
+      if (parent && withinDepartment(parent, editingDepartment)) return;
+      const id = editingDepartment ?? 'dept-' + nextDepartmentId++;
+      departments.set(id, { name, parent });
+      recordOperation(editingDepartment ? '修改部门' : '新增部门', name, parent ? `上级部门 ${departments.get(parent).name}` : '设为顶层部门');
+      departmentFilter = id;
+      departmentDialog.close();
+      renderOrganization();
+      $('edit-department').focus();
+      notify('部门已保存');
+    });
+    userName.addEventListener('input', () => userName.setCustomValidity(''));
+    userAccount.addEventListener('input', () => userAccount.setCustomValidity(''));
+    $('user-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const name = userName.value.trim();
+      const account = userAccount.value.trim();
+      if (!name) {
+        userName.setCustomValidity('请输入姓名。');
+        userName.reportValidity();
+        return;
+      }
+      const duplicate = [demoRoot, ...users].some(user => user !== editingUser && user.account.toLowerCase() === account.toLowerCase());
+      if (!account || duplicate) {
+        userAccount.setCustomValidity(account ? '这个用户名已存在。' : '请输入用户名。');
+        userAccount.reportValidity();
+        return;
+      }
+      const department = userDepartment.disabled ? editingUser.department : userDepartment.value;
+      if (!canMaintainDepartment(department) || (editingUser && !canMaintainDepartment(editingUser.department))) return;
+      const previousDepartment = editingUser?.department;
+      const previouslyActive = editingUser?.active;
+      const previouslyManager = Boolean(editingUser?.roles.has(departmentAdminRole));
+      const user = editingUser ?? { id: 'user-' + nextUserId++, roles: new Set() };
+      Object.assign(user, { name, account, department, active: $('user-status').value === 'active' });
+      if (isGlobalView()) {
+        if ($('user-admin').checked) user.roles.add(departmentAdminRole);
+        else user.roles.delete(departmentAdminRole);
+      }
+      if (!editingUser) users.push(user);
+      const actor = isGlobalView() ? demoRoot.name : demoManager.name;
+      const departmentName = departments.get(department).name;
+      if (previousDepartment && previousDepartment !== department) {
+        recordOperation('跨部门调动', user.name, `${departments.get(previousDepartment).name} → ${departmentName}`, actor);
+      }
+      if (!editingUser) {
+        recordOperation('新增用户', [user], departmentName, actor);
+      } else if (previouslyActive !== user.active) {
+        recordOperation(user.active ? '启用账号' : '停用账号', [user], departmentName, actor);
+      }
+      if (previouslyManager !== user.roles.has(departmentAdminRole)) {
+        recordOperation(previouslyManager ? '撤销部门管理员' : '指定部门管理员', [user], departmentName, actor);
+      }
+      if (departmentFilter && !withinDepartment(department, departmentFilter)) departmentFilter = department;
+      $('org-search').value = '';
+      userDialog.close();
+      if (sessionUser === user && !user.active) {
+        openLogin('该账号已停用。');
+        return;
+      }
+      renderOrganization();
+      (orgUserRows.querySelector(`[data-edit-user="${user.id}"]`) ?? $('org-search')).focus();
+      notify('用户已保存');
+    });
+    catalogAppList.addEventListener('click', event => {
+      const button = event.target.closest('[data-app]');
+      if (!button) return;
+      catalogApp = applications.find(app => app.id === button.dataset.app);
+      renderCatalog();
+      catalogAppList.querySelector('[aria-pressed="true"]').focus();
+    });
+    $('add-app').addEventListener('click', () => openAppEditor(null));
+    $('edit-app').addEventListener('click', () => openAppEditor(catalogApp));
+    $('add-permission').addEventListener('click', () => openPermissionEditor(null));
+    catalogRows.addEventListener('click', event => {
+      const button = event.target.closest('[data-edit-permission]');
+      if (!button) return;
+      const key = button.dataset.editPermission;
+      const menu = catalogApp.groups.find(group => group.key === key || group.actions.some(action => action.key === key));
+      if (menu.key === key) openPermissionEditor(menu);
+      else openPermissionEditor(menu.actions.find(action => action.key === key), menu);
+    });
+    permissionType.addEventListener('change', updatePermissionParent);
+    appName.addEventListener('input', () => appName.setCustomValidity(''));
+    permissionName.addEventListener('input', () => permissionName.setCustomValidity(''));
+    permissionCode.addEventListener('input', () => permissionCode.setCustomValidity(''));
+    $('app-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const name = appName.value.trim();
+      const duplicate = applications.some(app => app !== editedApp && app.name.toLowerCase() === name.toLowerCase());
+      if (!name || duplicate) {
+        appName.setCustomValidity(name ? '这个应用名称已存在。' : '请输入应用名称。');
+        appName.reportValidity();
+        return;
+      }
+      if (editedApp) {
+        if (editedApp.name !== name) editedApp.short = name;
+        editedApp.name = name;
+      } else {
+        catalogApp = { id: 'app-' + nextAppId++, name, short: name, symbol: '应', groups: [] };
+        applications.push(catalogApp);
+      }
+      recordOperation(editedApp ? '修改应用' : '登记应用', name, '维护业务应用');
+      appDialog.close();
+      renderCatalog();
+      $('edit-app').focus();
+      notify('应用已保存');
+    });
+    $('permission-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const name = permissionName.value.trim();
+      if (!name) {
+        permissionName.setCustomValidity('请输入权限名称。');
+        permissionName.reportValidity();
+        return;
+      }
+      const code = permissionCode.value.trim();
+      if (!/^[^:\s]+:[^:\s]+$/.test(code)) {
+        permissionCode.setCustomValidity('请按 资源:操作 的格式填写，例如 ticket:close。');
+        permissionCode.reportValidity();
+        return;
+      }
+      const duplicate = catalogApp.groups.flatMap(group => [group, ...group.actions])
+        .some(permission => permission !== editedPermission && permission.code === code);
+      if (duplicate) {
+        permissionCode.setCustomValidity('这个应用内已存在相同的权限标识。');
+        permissionCode.reportValidity();
+        return;
+      }
+      if (editedPermission) {
+        Object.assign(editedPermission, { name, code });
+      } else {
+        const permission = { key: 'permission-' + nextPermissionId++, name, code };
+        if (permissionType.value === 'menu') {
+          catalogApp.groups.push({ ...permission, actions: [] });
+        } else {
+          const menu = catalogApp.groups.find(group => group.key === permissionParent.value);
+          menu.actions.push(permission);
+        }
+      }
+      recordOperation(editedPermission ? '修改权限' : '登记权限', name, `${catalogApp.name} · ${code}`);
+      permissionDialog.close();
+      renderCatalog();
+      $('add-permission').focus();
+      notify('权限已保存');
+    });
+    $('role-search').addEventListener('input', renderRoles);
+    $('user-search').addEventListener('input', () => {
+      selectedUsers.clear();
+      renderUsers();
+    });
+    userRows.addEventListener('change', event => {
+      const { checked, dataset: { selectUser } } = event.target;
+      if (!selectUser) return;
+      if (checked) selectedUsers.add(selectUser);
+      else selectedUsers.delete(selectUser);
+      renderBatchSelection();
+    });
+    batchTools.addEventListener('click', event => {
+      const button = event.target.closest('[data-batch]');
+      if (button) openAssignment(users.filter(user => selectedUsers.has(user.id)), button.dataset.batch);
+    });
+    roleChoices.addEventListener('change', () => {
+      if (assignment.mode !== 'single') assignSave.disabled = !roleChoices.querySelector('input:checked');
+    });
+    $('add-role').addEventListener('click', () => openRole(null));
+    roleRows.addEventListener('click', event => {
+      const button = event.target.closest('[data-edit-role]');
+      if (button) openRole(button.dataset.editRole);
+    });
+    userRows.addEventListener('click', event => {
+      const button = event.target.closest('[data-assign]');
+      if (!button) return;
+      const user = users.find(item => item.id === button.dataset.assign);
+      if (user) openAssignment([user]);
+    });
+    appList.addEventListener('click', event => {
+      const button = event.target.closest('[data-app]');
+      if (!button) return;
+      roleEditor.app = applications.find(app => app.id === button.dataset.app);
+      renderPermissionTree();
+    });
+    permissions.addEventListener('change', event => {
+      const { value: key, checked, dataset: { parent } } = event.target;
+      if (checked) {
+        roleEditor.grants.add(key);
+        roleEditor.grants.add(parent);
+      } else {
+        roleEditor.grants.delete(key);
+        if (key === parent) {
+          const menu = roleEditor.app.groups.find(group => group.key === key);
+          for (const action of menu.actions) roleEditor.grants.delete(action.key);
+        }
+      }
+      for (const field of permissions.querySelectorAll('input')) field.checked = roleEditor.grants.has(field.value);
+      updatePermissionCount();
+    });
+    roleName.addEventListener('input', () => roleName.setCustomValidity(''));
+    $('role-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const name = roleName.value.trim();
+      const duplicate = [...roles].some(([id, role]) => id !== roleEditor.id && role.name === name);
+      if (!name || duplicate) {
+        roleName.setCustomValidity(name ? '这个角色名称已存在。' : '请输入角色名称。');
+        roleName.reportValidity();
+        return;
+      }
+      const id = roleEditor.id ?? 'custom-' + nextRoleId++;
+      roles.set(id, { name, description: roleDescription.value.trim(), granted: roleEditor.grants });
+      recordOperation('配置角色权限', name, `保存 ${roleEditor.grants.size} 项权限`);
+      selectedRole = id;
+      roleDialog.close();
+      if (!roleEditor.id) $('role-search').value = '';
+      renderRoles();
+      (roleRows.querySelector(`[data-edit-role="${id}"]`) ?? $('role-search')).focus();
+      notify('角色已保存');
+    });
+    $('assign-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const { targets, mode } = assignment;
+      if (!targets.every(inManagementScope)) {
+        recordOperation('更新角色分配', targets, '目标用户已超出管理范围', demoManager.name, '失败');
+        assignDialog.close();
+        selectedUsers.clear();
+        renderUsers();
+        notify('请重新选择管理范围内的用户。');
+        return;
+      }
+      const chosen = [...roleChoices.querySelectorAll('input:checked')].map(input => input.value);
+      const first = targets[0];
+      let message = `${first.name}的角色已更新`;
+      if (mode === 'single') {
+        const management = [...first.roles].filter(id => roles.get(id).management);
+        const added = chosen.filter(id => !first.roles.has(id));
+        const removed = [...first.roles].filter(id => !roles.get(id).management && !chosen.includes(id));
+        first.roles = new Set([...management, ...chosen]);
+        if (added.length) recordOperation('分配角色', [first], added.map(id => roles.get(id).name).join('、'), demoManager.name);
+        if (removed.length) recordOperation('撤销角色', [first], removed.map(id => roles.get(id).name).join('、'), demoManager.name);
+      } else {
+        if (!chosen.length) return;
+        for (const user of targets) {
+          for (const id of chosen) {
+            if (mode === 'grant') user.roles.add(id);
+            else user.roles.delete(id);
+          }
+        }
+        selectedUsers.clear();
+        message = mode === 'grant' ? `已为 ${targets.length} 人分配角色` : `已撤销 ${targets.length} 人的所选角色`;
+        recordOperation(mode === 'grant' ? '批量分配角色' : '批量撤销角色', targets,
+          chosen.map(id => roles.get(id).name).join('、'), demoManager.name);
+      }
+      assignDialog.close();
+      renderUsers();
+      const focusAttribute = mode === 'single' ? 'data-assign' : 'data-select-user';
+      (userRows.querySelector(`[${focusAttribute}="${first.id}"]`) ?? $('user-search')).focus();
+      notify(message);
+    });
+    for (const button of document.querySelectorAll('[data-close]')) {
+      button.addEventListener('click', () => button.closest('dialog').close());
+    }
+    recordOperation('登记权限', '审批公文', 'OA 协同办公 · document:approve');
+    recordOperation('指定部门管理员', [demoManager], '行政部及下级部门');
+    showView('roles');
+  </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: ${RBAC_DB_URL}
+    username: ${RBAC_DB_USERNAME}
+    password: ${RBAC_DB_PASSWORD:}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+
+rbac:
+  bootstrap:
+    username: ${RBAC_ADMIN_USERNAME:admin}
+    password: ${RBAC_ADMIN_PASSWORD:}
