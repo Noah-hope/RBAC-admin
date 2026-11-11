@@ -3,7 +3,7 @@ package com.rbac.rbac0.service;
 public final class ManagementFailure extends RuntimeException {
 
     public enum Reason {
-        FORBIDDEN, NOT_FOUND, INVALID_REQUEST, OUTSIDE_MANAGEMENT_SCOPE, APPLICATION_MISMATCH
+        FORBIDDEN, NOT_FOUND, CONFLICT, INVALID_REQUEST, OUTSIDE_MANAGEMENT_SCOPE, APPLICATION_MISMATCH
     }
 
     private final Reason reason;

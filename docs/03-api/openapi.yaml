@@ -362,6 +362,24 @@ paths:
         '404': { $ref: '#/components/responses/NotFound' }
         '409': { $ref: '#/components/responses/Conflict' }
         '500': { $ref: '#/components/responses/InternalError' }
+    delete:
+      operationId: deleteRole
+      tags: [角色管理]
+      summary: 删除未关联用户的业务角色
+      x-ui-operations: [R05]
+      description: |
+        仅总管理员可删除业务角色。预置管理角色不能通过本接口删除，返回 404。
+        角色仍关联任何用户（包括停用账号）时返回 409，提示关联人数，须先撤销用户关联。
+        未关联用户时，在同一事务中删除角色权限关联和角色，并记录包含角色名称的操作日志。
+        保留权限本身、用户和历史日志。
+      responses:
+        '204': { description: 角色已删除，无响应正文 }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '500': { $ref: '#/components/responses/InternalError' }
   /departments:
     get:
       operationId: getDepartmentTree
@@ -939,7 +957,7 @@ components:
             code: NOT_FOUND
             detail: 请检查目标 ID 后重试。
     Conflict:
-      description: 名称、用户名或应用内权限标识与已有数据重复
+      description: 名称、用户名或应用内权限标识与已有数据重复，或待删除角色仍关联用户
       content:
         application/problem+json:
           schema: { $ref: '#/components/schemas/Problem' }

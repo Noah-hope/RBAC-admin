@@ -16,6 +16,7 @@ import com.rbac.rbac0.entity.Role;
 import com.rbac.rbac0.entity.RolePermission;
 import com.rbac.rbac0.mapper.PermissionMapper;
 import com.rbac.rbac0.mapper.RoleMapper;
+import com.rbac.rbac0.mapper.UserRoleMapper;
 import com.rbac.rbac0.mapper.RolePermissionMapper;
 import com.rbac.rbac0.mapper.RolePermissionMapper.RoleApplicationRow;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.rbac.rbac0.service.DepartmentService.requireAdministrator;
 import static com.rbac.rbac0.service.DepartmentService.requireTotalAdmin;
 import static com.rbac.rbac0.service.ManagementFailure.Reason.INVALID_REQUEST;
+import static com.rbac.rbac0.service.ManagementFailure.Reason.CONFLICT;
 import static com.rbac.rbac0.service.ManagementFailure.Reason.NOT_FOUND;
 
 @Service
@@ -34,13 +36,15 @@ public class RoleService {
     private final PermissionMapper permissions;
     private final RolePermissionMapper rolePermissions;
     private final OperationLogService operationLogs;
+    private final UserRoleMapper assignments;
 
     public RoleService(RoleMapper roles, PermissionMapper permissions, RolePermissionMapper rolePermissions,
-                       OperationLogService operationLogs) {
+                       OperationLogService operationLogs, UserRoleMapper assignments) {
         this.roles = roles;
         this.permissions = permissions;
         this.rolePermissions = rolePermissions;
         this.operationLogs = operationLogs;
+        this.assignments = assignments;
     }
 
     @Transactional(readOnly = true)
@@ -113,6 +117,24 @@ public class RoleService {
             operationLogs.recordGlobalChange(actor, "修改角色", String.join("，", changes), "ROLE", role.id, role.name);
         }
         return details(role);
+    }
+
+    @Transactional
+    public void delete(SessionUser actor, long roleId) {
+        requireTotalAdmin(actor);
+        var role = roles.findBusinessRoleForUpdate(roleId)
+                .orElseThrow(() -> new ManagementFailure(NOT_FOUND, "业务角色不存在。"));
+        long assignedUsers = assignments.countByRoleId(roleId);
+        if (assignedUsers > 0) {
+            throw new ManagementFailure(CONFLICT,
+                    "该角色仍关联 " + assignedUsers + " 个用户，请先撤销用户关联。");
+        }
+
+        rolePermissions.deleteAll(rolePermissions.findByRoleIdOrderByPermissionIdAsc(roleId));
+        rolePermissions.flush();
+        roles.delete(role);
+        operationLogs.recordGlobalChange(actor, "删除角色", "删除未关联用户的业务角色及其权限关联",
+                "ROLE", role.id, role.name);
     }
 
     private void validatePermissionSelection(Set<Long> ids) {

@@ -76,6 +76,9 @@
   .button.icon-only { width: 36px; min-height: 36px; padding: 0; }
   .link-button { min-height: 35px; padding: 4px 6px; border: 0; border-radius: 6px; background: transparent; color: var(--accent); font-weight: 700; white-space: nowrap; }
   .link-button:hover { background: var(--soft); }
+  .link-button.danger { color: #9b3e3e; }
+  .button.danger { color: #fff; background: #a53e3e; border-color: #a53e3e; }
+  .button.danger:hover { background: #8c3030; }
   .board { display: grid; grid-template-columns: minmax(0, 1fr) 282px; align-items: start; gap: 17px; }
   .catalog-board { display: grid; grid-template-columns: 218px minmax(0, 1fr); align-items: start; gap: 17px; }
   .catalog-apps .app-list { padding: 0 10px 10px; }
@@ -523,6 +526,23 @@
     </form>
   </dialog>
 
+  <dialog id="delete-role-dialog" class="assign-dialog" aria-labelledby="delete-role-title" aria-describedby="delete-role-message">
+    <form id="delete-role-form">
+      <header class="dialog-head">
+        <h2 id="delete-role-title">删除角色</h2>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body">
+        <p id="delete-role-name"></p>
+        <p id="delete-role-message" class="quiet field-help"></p>
+      </div>
+      <footer class="dialog-foot"><div class="dialog-actions">
+        <button type="button" class="button" id="delete-role-cancel" data-close>取消</button>
+        <button type="submit" class="button danger" id="delete-role-confirm">删除角色</button>
+      </div></footer>
+    </form>
+  </dialog>
+
   <dialog id="assign-dialog" class="assign-dialog" aria-labelledby="assign-dialog-title">
     <form id="assign-form">
       <header class="dialog-head">
@@ -648,7 +668,8 @@
           { operationId: 'getRole', method: 'GET', path: '/api/v1/roles/{roleId}' }
         ], actions: [
           { key: 'rbac.roles.create', name: '新增角色', code: 'role:create', apis: [{ operationId: 'createRole', method: 'POST', path: '/api/v1/roles' }] },
-          { key: 'rbac.roles.edit', name: '配置角色权限', code: 'role:edit', apis: [{ operationId: 'updateRole', method: 'PUT', path: '/api/v1/roles/{roleId}' }] }
+          { key: 'rbac.roles.edit', name: '配置角色权限', code: 'role:edit', apis: [{ operationId: 'updateRole', method: 'PUT', path: '/api/v1/roles/{roleId}' }] },
+          { key: 'rbac.roles.delete', name: '删除角色', code: 'role:delete', apis: [{ operationId: 'deleteRole', method: 'DELETE', path: '/api/v1/roles/{roleId}' }] }
         ] },
         { key: 'rbac.organization', name: '用户与部门', code: 'user:view', apis: [
           { operationId: 'getDepartmentTree', method: 'GET', path: '/api/v1/departments' },
@@ -759,6 +780,7 @@
     const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
     let sessionUser = null;
     let roleEditor;
+    let deletingRole;
     let assignment;
     let nextRoleId = 1;
     let nextAppId = 1;
@@ -911,7 +933,8 @@
       roleRows.innerHTML = found.map(([id, role]) => {
         const names = applications.filter(app => appPermissionCount(app, role.granted)).map(app => app.short);
         return `<tr><td>${person(role.name, role.description)}</td><td><div class="tags">${tags(names)}</div></td>
-          <td><button class="link-button" type="button" data-edit-role="${id}" ${userGrants().has('rbac.roles.edit') ? '' : 'hidden'}>${id === rootAdminRole ? '查看权限' : '配置权限'}</button></td></tr>`;
+          <td><button class="link-button" type="button" data-edit-role="${id}" ${userGrants().has('rbac.roles.edit') ? '' : 'hidden'}>${id === rootAdminRole ? '查看权限' : '配置权限'}</button>
+          ${!role.management && isRootSession() ? `<button class="link-button danger" type="button" data-delete-role="${id}">删除</button>` : ''}</td></tr>`;
       }).join('') || '<tr><td class="empty" colspan="3">没有匹配的角色。</td></tr>';
       $('role-count').textContent = `共 ${found.length} 个角色`;
     }
@@ -1539,6 +1562,37 @@
     roleRows.addEventListener('click', event => {
       const button = event.target.closest('[data-edit-role]');
       if (button) openRole(button.dataset.editRole);
+      const remove = event.target.closest('[data-delete-role]');
+      if (!remove) return;
+      deletingRole = remove.dataset.deleteRole;
+      const role = roles.get(deletingRole);
+      const assignedUsers = users.filter(user => user.roles.has(deletingRole)).length;
+      $('delete-role-title').textContent = assignedUsers ? '暂不能删除' : '删除角色';
+      $('delete-role-name').textContent = assignedUsers ? `角色「${role.name}」` : `确定删除角色「${role.name}」吗？`;
+      $('delete-role-message').textContent = assignedUsers
+        ? `该角色仍关联 ${assignedUsers} 个用户，请先撤销用户关联。停用账号也计入。`
+        : '将删除角色及其权限配置，保留权限定义和历史操作记录。';
+      $('delete-role-confirm').hidden = assignedUsers > 0;
+      $('delete-role-cancel').textContent = assignedUsers ? '知道了' : '取消';
+      $('delete-role-dialog').showModal();
+      $('delete-role-cancel').focus();
+    });
+    $('delete-role-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const role = roles.get(deletingRole);
+      if (!isRootSession() || role.management) return;
+      const assignedUsers = users.filter(user => user.roles.has(deletingRole)).length;
+      if (assignedUsers) {
+        $('delete-role-message').textContent = `该角色仍关联 ${assignedUsers} 个用户，请先撤销用户关联。停用账号也计入。`;
+        $('delete-role-confirm').hidden = true;
+        return;
+      }
+      roles.delete(deletingRole);
+      recordOperation('删除角色', role.name, '删除未关联用户的业务角色及其权限配置');
+      $('delete-role-dialog').close();
+      renderRoles();
+      $('role-search').focus();
+      notify('角色已删除');
     });
     userRows.addEventListener('click', event => {
       const button = event.target.closest('[data-assign]');

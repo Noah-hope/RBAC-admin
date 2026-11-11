@@ -119,10 +119,84 @@ class RoleApiTest {
         mvc.perform(body(bearer(put(ROLES + "/" + role), managerToken), Map.of("name", "越权", "permissionIds", List.of())))
                 .andExpect(status().isForbidden());
 
+        mvc.perform(bearer(delete(ROLES + "/" + role), managerToken)).andExpect(status().isForbidden());
+        assertThat(database.queryForObject("SELECT COUNT(*) FROM sys_role WHERE id = ?", Long.class, role)).isEqualTo(1L);
+
         long systemRole = database.queryForObject("SELECT id FROM sys_role WHERE role_type = 'DEPARTMENT_ADMIN'", Long.class);
         mvc.perform(bearer(get(ROLES + "/" + systemRole), token)).andExpect(status().isNotFound());
         mvc.perform(bearer(get(ROLES).param("keyword", "部门管理员"), token))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.items").isEmpty());
+    }
+
+    @Test
+    void deletesUnusedRoleAndGrantsButKeepsPermissionAndAuditHistory() throws Exception {
+        var token = admin();
+        String suffix = unique();
+        long app = create(token, API + "/applications", Map.of("name", "删除-" + suffix)).path("id").asLong();
+        long permission = menu(token, app);
+        String name = "待删除-" + suffix;
+        long role = create(token, ROLES, Map.of("name", name, "permissionIds", List.of(permission)))
+                .path("id").asLong();
+
+        mvc.perform(delete(ROLES + "/" + role)).andExpect(status().isUnauthorized());
+        mvc.perform(bearer(delete(ROLES + "/" + role), token))
+                .andExpect(status().isNoContent()).andExpect(content().string(""));
+        assertThat(database.queryForObject("SELECT COUNT(*) FROM sys_role WHERE id = ?", Long.class, role)).isZero();
+        assertThat(database.queryForObject("SELECT COUNT(*) FROM sys_role_permission WHERE role_id = ?", Long.class, role)).isZero();
+        assertThat(database.queryForObject("SELECT COUNT(*) FROM sys_permission WHERE id = ?", Long.class, permission)).isEqualTo(1L);
+        assertThat(database.queryForObject("""
+                SELECT COUNT(*) FROM sys_operation_log log
+                JOIN sys_operation_log_target target ON target.operation_log_id = log.id
+                WHERE log.action = '删除角色' AND log.scope = 'GLOBAL' AND target.target_type = 'ROLE'
+                  AND target.target_id = ? AND target.target_name = ?
+                """, Long.class, role, name)).isEqualTo(1L);
+        assertThat(database.queryForObject("""
+                SELECT COUNT(*) FROM sys_operation_log log
+                JOIN sys_operation_log_target target ON target.operation_log_id = log.id
+                WHERE log.action = '新增角色' AND target.target_type = 'ROLE' AND target.target_id = ?
+                """, Long.class, role)).isEqualTo(1L);
+        mvc.perform(bearer(delete(ROLES + "/" + role), token)).andExpect(status().isNotFound());
+
+        for (long systemRole : database.queryForList("SELECT id FROM sys_role WHERE role_type <> 'BUSINESS'", Long.class)) {
+            mvc.perform(bearer(delete(ROLES + "/" + systemRole), token)).andExpect(status().isNotFound());
+            assertThat(database.queryForObject("SELECT COUNT(*) FROM sys_role WHERE id = ?", Long.class, systemRole)).isEqualTo(1L);
+        }
+    }
+
+    @Test
+    void rejectsUsedRoleEvenForDisabledUserUntilAssignmentIsRevoked() throws Exception {
+        var token = admin();
+        String suffix = unique();
+        long app = create(token, API + "/applications", Map.of("name", "在用-" + suffix)).path("id").asLong();
+        long permission = menu(token, app);
+        long role = create(token, ROLES, Map.of("name", "在用-" + suffix, "permissionIds", List.of(permission)))
+                .path("id").asLong();
+        long department = create(token, API + "/departments",
+                json.createObjectNode().put("name", "删除测试部").putNull("parentId")).path("id").asLong();
+        long user = create(token, API + "/users", Map.of("username", "delete-role-" + suffix,
+                "name", "角色关联用户", "departmentId", department)).path("user").path("id").asLong();
+        mvc.perform(body(bearer(put(API + "/users/" + user + "/roles"), token), Map.of("roleIds", List.of(role))))
+                .andExpect(status().isOk());
+
+        for (String accountStatus : List.of("ACTIVE", "DISABLED")) {
+            database.update("UPDATE sys_user SET status = ? WHERE id = ?", accountStatus, user);
+            mvc.perform(bearer(delete(ROLES + "/" + role), token))
+                    .andExpect(status().isConflict()).andExpect(jsonPath("$.code").value("CONFLICT"))
+                    .andExpect(jsonPath("$.detail").value("该角色仍关联 1 个用户，请先撤销用户关联。"));
+        }
+        assertThat(database.queryForObject("SELECT COUNT(*) FROM sys_role WHERE id = ?", Long.class, role)).isEqualTo(1L);
+        assertThat(database.queryForObject("SELECT COUNT(*) FROM sys_user_role WHERE user_id = ? AND role_id = ?",
+                Long.class, user, role)).isEqualTo(1L);
+        assertThat(database.queryForObject("SELECT COUNT(*) FROM sys_role_permission WHERE role_id = ?", Long.class, role)).isEqualTo(1L);
+        assertThat(database.queryForObject("""
+                SELECT COUNT(*) FROM sys_operation_log log
+                JOIN sys_operation_log_target target ON target.operation_log_id = log.id
+                WHERE log.action = '删除角色' AND target.target_type = 'ROLE' AND target.target_id = ?
+                """, Long.class, role)).isZero();
+        mvc.perform(body(bearer(put(API + "/users/" + user + "/roles"), token), Map.of("roleIds", List.of())))
+                .andExpect(status().isOk());
+        mvc.perform(bearer(delete(ROLES + "/" + role), token)).andExpect(status().isNoContent());
+        assertThat(database.queryForObject("SELECT COUNT(*) FROM sys_user WHERE id = ?", Long.class, user)).isEqualTo(1L);
     }
 
     private long updateLogs(long role) {
