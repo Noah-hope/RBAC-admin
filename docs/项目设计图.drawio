@@ -287,7 +287,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="rbac-database-tables" name="数据库表结构">
-<mxGraphModel dx="1920" dy="1560" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2008" pageHeight="1670" background="#FFFFFF" math="0" shadow="0" adaptiveColors="none">
+<mxGraphModel dx="1920" dy="2020" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2008" pageHeight="2130" background="#FFFFFF" math="0" shadow="0" adaptiveColors="none">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -864,6 +864,114 @@
         <mxCell id="db-application-row-token-hash-3" value="可空" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-application-row-token-hash">
           <mxGeometry x="408" y="0" width="108" height="33" as="geometry" />
         </mxCell>
+        <mxCell id="db-api" value="接口表　sys_api" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;swimlane;horizontal=1;startSize=50;rounded=0;collapsible=0;align=left;verticalAlign=middle;spacingLeft=14;fillColor=#EAF2F8;swimlaneFillColor=#FFFFFF;strokeColor=#17365D;strokeWidth=2;fontSize=21;" vertex="1" parent="1" kind="database-table">
+          <mxGeometry x="744" y="1210" width="520" height="286" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-heading" value="" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;strokeColor=none;fillColor=#EDF3F8;rounded=0;resizable=0;" vertex="1" parent="db-api" kind="database-row">
+          <mxGeometry x="1" y="51" width="518" height="29" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-heading-0" value="键" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=14;fontColor=#39556F;" vertex="1" parent="db-api-row-heading">
+          <mxGeometry x="8" y="0" width="64" height="29" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-heading-1" value="字段" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=14;fontColor=#39556F;" vertex="1" parent="db-api-row-heading">
+          <mxGeometry x="73" y="0" width="206" height="29" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-heading-2" value="类型" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=14;fontColor=#39556F;" vertex="1" parent="db-api-row-heading">
+          <mxGeometry x="283" y="0" width="121" height="29" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-heading-3" value="约束" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=14;fontColor=#39556F;" vertex="1" parent="db-api-row-heading">
+          <mxGeometry x="408" y="0" width="108" height="29" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-id" value="" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;strokeColor=none;fillColor=#FFFFFF;rounded=0;resizable=0;" vertex="1" parent="db-api" kind="database-row">
+          <mxGeometry x="1" y="81" width="518" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-id-0" value="PK" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-id">
+          <mxGeometry x="8" y="0" width="64" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-id-1" value="id" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-id">
+          <mxGeometry x="73" y="0" width="206" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-id-2" value="BIGINT" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-id">
+          <mxGeometry x="283" y="0" width="121" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-id-3" value="非空，自增" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-id">
+          <mxGeometry x="408" y="0" width="108" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-application-id" value="" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;strokeColor=none;fillColor=#F7F9FC;rounded=0;resizable=0;" vertex="1" parent="db-api" kind="database-row">
+          <mxGeometry x="1" y="115" width="518" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-application-id-0" value="FK" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-application-id">
+          <mxGeometry x="8" y="0" width="64" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-application-id-1" value="application_id" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-application-id">
+          <mxGeometry x="73" y="0" width="206" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-application-id-2" value="BIGINT" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-application-id">
+          <mxGeometry x="283" y="0" width="121" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-application-id-3" value="非空" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-application-id">
+          <mxGeometry x="408" y="0" width="108" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-permission-id" value="" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;strokeColor=none;fillColor=#FFFFFF;rounded=0;resizable=0;" vertex="1" parent="db-api" kind="database-row">
+          <mxGeometry x="1" y="149" width="518" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-permission-id-0" value="FK" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-permission-id">
+          <mxGeometry x="8" y="0" width="64" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-permission-id-1" value="permission_id" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-permission-id">
+          <mxGeometry x="73" y="0" width="206" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-permission-id-2" value="BIGINT" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-permission-id">
+          <mxGeometry x="283" y="0" width="121" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-permission-id-3" value="非空" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-permission-id">
+          <mxGeometry x="408" y="0" width="108" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-operation-id" value="" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;strokeColor=none;fillColor=#F7F9FC;rounded=0;resizable=0;" vertex="1" parent="db-api" kind="database-row">
+          <mxGeometry x="1" y="183" width="518" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-operation-id-0" value="UQ" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-operation-id">
+          <mxGeometry x="8" y="0" width="64" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-operation-id-1" value="operation_id" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-operation-id">
+          <mxGeometry x="73" y="0" width="206" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-operation-id-2" value="VARCHAR(128)" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-operation-id">
+          <mxGeometry x="283" y="0" width="121" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-operation-id-3" value="非空，见下方" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-operation-id">
+          <mxGeometry x="408" y="0" width="108" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-http-method" value="" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;strokeColor=none;fillColor=#FFFFFF;rounded=0;resizable=0;" vertex="1" parent="db-api" kind="database-row">
+          <mxGeometry x="1" y="217" width="518" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-http-method-0" value="" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-http-method">
+          <mxGeometry x="8" y="0" width="64" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-http-method-1" value="http_method" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-http-method">
+          <mxGeometry x="73" y="0" width="206" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-http-method-2" value="VARCHAR(10)" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-http-method">
+          <mxGeometry x="283" y="0" width="121" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-http-method-3" value="非空，大写" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-http-method">
+          <mxGeometry x="408" y="0" width="108" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-path" value="" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;strokeColor=none;fillColor=#F7F9FC;rounded=0;resizable=0;" vertex="1" parent="db-api" kind="database-row">
+          <mxGeometry x="1" y="251" width="518" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-path-0" value="" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-path">
+          <mxGeometry x="8" y="0" width="64" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-path-1" value="path" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-path">
+          <mxGeometry x="73" y="0" width="206" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-path-2" value="VARCHAR(255)" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-path">
+          <mxGeometry x="283" y="0" width="121" height="33" as="geometry" />
+        </mxCell>
+        <mxCell id="db-api-row-path-3" value="非空，见下方" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=15;" vertex="1" parent="db-api-row-path">
+          <mxGeometry x="408" y="0" width="108" height="33" as="geometry" />
+        </mxCell>
         <mxCell id="db-operation-log" value="操作记录表　sys_operation_log" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;swimlane;horizontal=1;startSize=50;rounded=0;collapsible=0;align=left;verticalAlign=middle;spacingLeft=14;fillColor=#EAF2F8;swimlaneFillColor=#FFFFFF;strokeColor=#17365D;strokeWidth=2;fontSize=21;" vertex="1" parent="1" kind="database-table">
           <mxGeometry x="1416" y="946" width="520" height="354" as="geometry" />
         </mxCell>
@@ -1141,53 +1249,87 @@
             <mxPoint x="52" y="0" as="offset" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="db-rel-application-api" value="所属应用" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;whiteSpace=nowrap;noEdgeStyle=1;rounded=0;strokeWidth=3;strokeColor=#17365D;fontSize=16;startArrow=ERmandOne;startFill=0;endArrow=ERzeroToMany;endFill=0;startSize=13;endSize=13;labelBackgroundColor=#FFFFFF;exitPerimeter=0;entryPerimeter=0;labelWidth=130;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="db-application" target="db-api" kind="database-relationship">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="54" y="0" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="db-rel-permission-api" value="保护接口" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;whiteSpace=nowrap;noEdgeStyle=1;rounded=0;strokeWidth=3;strokeColor=#17365D;fontSize=16;startArrow=ERmandOne;startFill=0;endArrow=ERzeroToMany;endFill=0;startSize=13;endSize=13;labelBackgroundColor=#FFFFFF;exitPerimeter=0;entryPerimeter=0;labelWidth=130;exitX=1;exitY=0.75;entryX=0;entryY=0.45;" edge="1" parent="1" source="db-permission" target="db-api" kind="database-relationship">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-20" y="0" as="offset" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="db-note-authorization" value="" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;fillColor=#F4F8FC;strokeColor=#CCD9E6;rounded=0;" vertex="1" parent="1" kind="note-box">
-          <mxGeometry x="72" y="1261" width="520" height="346" as="geometry" />
+          <mxGeometry x="72" y="1710" width="520" height="346" as="geometry" />
         </mxCell>
         <mxCell id="db-note-authorization-title" value="授权与会话" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=19;fontColor=#17365D;" vertex="1" parent="1" kind="note">
-          <mxGeometry x="86" y="1269" width="492" height="28" as="geometry" />
+          <mxGeometry x="86" y="1718" width="492" height="28" as="geometry" />
         </mxCell>
         <mxCell id="db-note-authorization-1" value="角色类型为 BUSINESS、TOTAL_ADMIN 或 DEPARTMENT_ADMIN。后两种为系统预置角色。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
-          <mxGeometry x="86" y="1305" width="492" height="45" as="geometry" />
+          <mxGeometry x="86" y="1754" width="492" height="45" as="geometry" />
         </mxCell>
         <mxCell id="db-note-authorization-2" value="管理角色通过用户角色表分配。部门管理员的范围从用户所属部门推导，业务角色分配接口只接受 BUSINESS。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
-          <mxGeometry x="86" y="1353" width="492" height="45" as="geometry" />
+          <mxGeometry x="86" y="1802" width="492" height="45" as="geometry" />
         </mxCell>
         <mxCell id="db-note-authorization-3" value="菜单的 parent_id 为空。按钮须指向同应用的菜单。角色勾选按钮时也须勾选所属菜单。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
-          <mxGeometry x="86" y="1401" width="492" height="45" as="geometry" />
+          <mxGeometry x="86" y="1850" width="492" height="45" as="geometry" />
         </mxCell>
         <mxCell id="db-note-authorization-4" value="权限标识按原值精确匹配，UQ(application_id, code)。关联表用联合主键防止重复授权。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
-          <mxGeometry x="86" y="1449" width="492" height="45" as="geometry" />
+          <mxGeometry x="86" y="1898" width="492" height="45" as="geometry" />
         </mxCell>
         <mxCell id="db-note-authorization-5" value="用户状态默认 ACTIVE，另有 DISABLED。密码只存哈希。退出或停用时删除对应会话，过期会话无效。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
-          <mxGeometry x="86" y="1497" width="492" height="45" as="geometry" />
+          <mxGeometry x="86" y="1946" width="492" height="45" as="geometry" />
         </mxCell>
         <mxCell id="db-note-authorization-6" value="应用接入时配置独立随机令牌。应用及会话只存令牌的 SHA-256 摘要。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
-          <mxGeometry x="86" y="1545" width="492" height="45" as="geometry" />
+          <mxGeometry x="86" y="1994" width="492" height="45" as="geometry" />
         </mxCell>
         <mxCell id="db-note-consistency" value="" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;fillColor=#F4F8FC;strokeColor=#CCD9E6;rounded=0;" vertex="1" parent="1" kind="note-box">
-          <mxGeometry x="744" y="1261" width="520" height="346" as="geometry" />
+          <mxGeometry x="744" y="1710" width="520" height="346" as="geometry" />
         </mxCell>
         <mxCell id="db-note-consistency-title" value="数据约束与操作记录" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=19;fontColor=#17365D;" vertex="1" parent="1" kind="note">
-          <mxGeometry x="758" y="1269" width="492" height="28" as="geometry" />
+          <mxGeometry x="758" y="1718" width="492" height="28" as="geometry" />
         </mxCell>
         <mxCell id="db-note-consistency-1" value="顶层部门可无上级，组织树禁止循环。新建用户须选部门，预置总管理员可无部门。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
-          <mxGeometry x="758" y="1305" width="492" height="45" as="geometry" />
+          <mxGeometry x="758" y="1754" width="492" height="45" as="geometry" />
         </mxCell>
         <mxCell id="db-note-consistency-2" value="外键列有索引，已被主键或索引前缀覆盖的列复用现有索引。外键删除规则为 RESTRICT。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
-          <mxGeometry x="758" y="1353" width="492" height="45" as="geometry" />
+          <mxGeometry x="758" y="1802" width="492" height="45" as="geometry" />
         </mxCell>
         <mxCell id="db-note-consistency-3" value="角色权限替换、用户批量授权等使用事务，按固定顺序锁定相应角色或用户行，变更和成功记录一起提交。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
-          <mxGeometry x="758" y="1401" width="492" height="45" as="geometry" />
+          <mxGeometry x="758" y="1850" width="492" height="45" as="geometry" />
         </mxCell>
         <mxCell id="db-note-consistency-4" value="日志范围为 GLOBAL 或 USER_SCOPE。结果为 SUCCESS 或 FAILURE。业务对象和操作人信息保存当时的快照。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
-          <mxGeometry x="758" y="1449" width="492" height="45" as="geometry" />
+          <mxGeometry x="758" y="1898" width="492" height="45" as="geometry" />
         </mxCell>
         <mxCell id="db-note-consistency-5" value="用户管理记录须保存对象的部门快照。部门管理员先按快照筛选，再搜索、分页。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
-          <mxGeometry x="758" y="1497" width="492" height="45" as="geometry" />
+          <mxGeometry x="758" y="1946" width="492" height="45" as="geometry" />
         </mxCell>
         <mxCell id="db-note-consistency-6" value="批量日志正文只存共用信息。部门索引为 (department_id_at_event, operation_log_id)。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
-          <mxGeometry x="758" y="1545" width="492" height="45" as="geometry" />
+          <mxGeometry x="758" y="1994" width="492" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="db-note-api" value="" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;fillColor=#F4F8FC;strokeColor=#CCD9E6;rounded=0;" vertex="1" parent="1" kind="note-box">
+          <mxGeometry x="1416" y="1710" width="520" height="346" as="geometry" />
+        </mxCell>
+        <mxCell id="db-note-api-title" value="API 关联与检查" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=19;fontColor=#17365D;" vertex="1" parent="1" kind="note">
+          <mxGeometry x="1430" y="1718" width="492" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="db-note-api-1" value="每个 API 关联一项菜单或按钮权限，二者属于同一应用。保存时校验应用一致。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
+          <mxGeometry x="1430" y="1754" width="492" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="db-note-api-2" value="接口标识应用内唯一：UQ(application_id, operation_id)。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
+          <mxGeometry x="1430" y="1802" width="492" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="db-note-api-3" value="请求方法与路径应用内唯一：UQ(application_id, http_method, path)。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
+          <mxGeometry x="1430" y="1850" width="492" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="db-note-api-4" value="operation_id、path 按原值精确匹配；http_method 统一使用大写。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
+          <mxGeometry x="1430" y="1898" width="492" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="db-note-api-5" value="permission_id 建外键索引。application_id 复用唯一索引前缀；外键删除规则为 RESTRICT。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
+          <mxGeometry x="1430" y="1946" width="492" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="db-note-api-6" value="按 API 找到所属权限，再检查用户角色。API 未登记或用户无权限时拒绝；配置变更记全局操作记录。" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#14283D;text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;fontSize=16;fontColor=#39556F;" vertex="1" parent="1" kind="note">
+          <mxGeometry x="1430" y="1994" width="492" height="45" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
