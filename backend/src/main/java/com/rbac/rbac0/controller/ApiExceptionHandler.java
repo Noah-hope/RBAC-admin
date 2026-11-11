@@ -53,6 +53,7 @@ class ApiExceptionHandler {
     @ExceptionHandler(ManagementFailure.class)
     ProblemDetail managementFailure(ManagementFailure failure) {
         return switch (failure.reason()) {
+            case CONFLICT -> problem(HttpStatus.CONFLICT, "conflict", "CONFLICT", "当前状态不允许操作", failure.getMessage());
             case FORBIDDEN -> problem(HttpStatus.FORBIDDEN, "forbidden", "FORBIDDEN", "操作不被允许", failure.getMessage());
             case NOT_FOUND -> problem(HttpStatus.NOT_FOUND, "not-found", "NOT_FOUND", "对象不存在", failure.getMessage());
             case INVALID_REQUEST -> problem(HttpStatus.BAD_REQUEST, "invalid-request", "INVALID_REQUEST",

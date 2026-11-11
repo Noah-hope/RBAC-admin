@@ -1,2 +1,9 @@
 .codeartsdoer/
 .idea/
+
+# Maven 构建产物与本地环境
+**/target/
+.DS_Store
+.env
+.env.*
+!.env.example

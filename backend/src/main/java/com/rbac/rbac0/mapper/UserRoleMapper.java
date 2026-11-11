@@ -10,6 +10,8 @@ public interface UserRoleMapper extends JpaRepository<UserRole, UserRole.Key> {
 
     boolean existsByRoleId(Long roleId);
 
+    long countByRoleId(long roleId);
+
     @Query("""
             select link from UserRole link, Role role
             where link.userId in :userIds and link.roleId = role.id and role.roleType = 'BUSINESS'
