@@ -29,7 +29,14 @@ public final class AuthorizationDtos {
   public record BatchRoleResult(String action, int affectedUsers) {}
 
   public record MyPermissions(
-      List<RoleRef> businessRoles, List<ApplicationPermissions> applications) {}
+      List<RoleRef> businessRoles, List<MyApplicationPermissions> applications) {}
+
+  public record MyPermissionRef(long id, String name, String code, List<RoleRef> sourceRoles) {}
+
+  public record MyMenu(long id, String name, String code, List<RoleRef> sourceRoles, List<MyPermissionRef> buttons) {}
+
+  public record MyApplicationPermissions(long applicationId, String applicationName,
+      String applicationCode, List<MyMenu> menus) {}
 
   public record PermissionCheckResult(boolean allowed) {}
 }

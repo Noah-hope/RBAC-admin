@@ -1,6 +1,6 @@
 package com.rbac.rbac1.service;
 
-import com.rbac.rbac1.dto.AuthorizationDtos.MyPermissions;
+import com.rbac.rbac1.dto.AuthorizationDtos.*;
 import com.rbac.rbac1.dto.AuthorizationDtos.PermissionCheckResult;
 import com.rbac.rbac1.dto.SessionDtos;
 import com.rbac.rbac1.dto.UserDtos.RoleRef;
@@ -31,40 +31,37 @@ public class PermissionCheckService {
   private final ApiMapper apis;
   private final ApiPermissionMapper links;
   private final ApplicationMapper applications;
-  private final RoleMapper roles;
-  private final PermissionMapper permissions;
+  private final RolePermissionService effective;
 
   public PermissionCheckService(
       ApplicationMapper applications,
-      RoleMapper roles,
-      PermissionMapper permissions,
+      RolePermissionService effective,
       ApiMapper apis,
       ApiPermissionMapper links) {
     this.apis = apis;
     this.links = links;
     this.applications = applications;
-    this.roles = roles;
-    this.permissions = permissions;
+    this.effective = effective;
   }
 
   @Transactional(readOnly = true)
   public MyPermissions mine(long userId) {
-    var assigned =
-        roles.findAssignedRoles(List.of(userId)).stream()
-            .filter(role -> "BUSINESS".equals(role.getRoleType()))
-            .map(role -> new RoleRef(role.getId(), role.getName()))
-            .toList();
-    var effective =
-        permissions.findEffectiveForUser(userId).stream()
-            .collect(Collectors.groupingBy(permission -> permission.applicationId));
-    var trees =
-        applications.findAll(Sort.by("id")).stream()
-            .map(
-                app ->
-                    ApplicationService.permissionTree(
-                        app, effective.getOrDefault(app.id, List.of())))
-            .toList();
-    return new MyPermissions(assigned, trees);
+    var user=effective.forUser(userId); var graph=user.graph();
+    var assigned=effective.references(graph,user.roleIds().stream()
+        .filter(id -> "BUSINESS".equals(graph.roles().get(id).roleType)).toList());
+    var trees=graph.applications().values().stream().sorted(java.util.Comparator.comparing(a -> a.id))
+        .map(app -> {
+          var menus=user.sources().keySet().stream().map(graph.permissions()::get)
+              .filter(p -> p.applicationId.equals(app.id) && "MENU".equals(p.type))
+              .map(menu -> new MyMenu(menu.id,menu.name,menu.code,
+                  effective.references(graph,user.sources().get(menu.id)),
+                  user.sources().keySet().stream().map(graph.permissions()::get)
+                      .filter(button -> menu.id.equals(button.parentId))
+                      .map(button -> new MyPermissionRef(button.id,button.name,button.code,
+                          effective.references(graph,user.sources().get(button.id)))).toList())).toList();
+          return new MyApplicationPermissions(app.id,app.name,app.code,menus);
+        }).toList();
+    return new MyPermissions(assigned,trees);
   }
 
   public record ApiCheckResult(String operationId, boolean allowed) {}
@@ -82,18 +79,16 @@ public class PermissionCheckService {
   @Transactional(readOnly = true)
   public AuthUser current(SessionDtos.SessionUser actor, String code) {
     var app = requireApplication(code);
-    var effective =
-        permissions.findEffectiveForUser(actor.id()).stream()
-            .filter(p -> p.applicationId.equals(app.id))
-            .toList();
-    var assigned =
-        roles.findAssignedRoleIdsForApplication(actor.id(), app.id).stream()
-            .map(Object::toString)
-            .toList();
+    var user=effective.forUser(actor.id()); var graph=user.graph();
+    var granted=user.sources().keySet().stream().map(graph.permissions()::get)
+        .filter(p -> p.applicationId.equals(app.id)).toList();
+    var assigned=user.roleIds().stream().filter(id -> effective.effectiveIds(graph,id).stream()
+        .anyMatch(permission -> graph.permissions().get(permission).applicationId.equals(app.id)))
+        .map(Object::toString).toList();
     return new AuthUser(
         Long.toString(actor.id()),
         assigned,
-        effective.stream().map(p -> p.code).distinct().toList(),
+        granted.stream().map(p -> p.code).distinct().toList(),
         actor.name(),
         actor.username(),
         actor.id(),
@@ -103,8 +98,11 @@ public class PermissionCheckService {
 
   @Transactional(readOnly = true)
   public PermissionCheckResult checkPermission(long user, String app, String code) {
-    return new PermissionCheckResult(
-        permissions.hasEffectivePermission(user, requireApplication(app).id, code));
+    var application=requireApplication(app);
+    var granted=effective.forUser(user);
+    return new PermissionCheckResult(granted.sources().keySet().stream()
+        .map(granted.graph().permissions()::get)
+        .anyMatch(p -> p.applicationId.equals(application.id) && p.code.equals(code)));
   }
 
   @Transactional(readOnly = true)
@@ -115,11 +113,10 @@ public class PermissionCheckService {
                 () -> new ManagementFailure(ManagementFailure.Reason.NOT_FOUND, "API未登记。"));
     if ("permission-center".equals(app) && SELF_SERVICE.contains(operation))
       return new ApiCheckResult(operation, true);
-    var effective =
-        permissions.findEffectiveForUser(user).stream().map(p -> p.id).collect(Collectors.toSet());
+    var permissionIds = effective.forUser(user).sources().keySet();
     return new ApiCheckResult(
         operation,
-        links.findByApiId(api.id).stream().anyMatch(l -> effective.contains(l.permissionId)));
+        links.findByApiId(api.id).stream().anyMatch(l -> permissionIds.contains(l.permissionId)));
   }
 
   @Transactional(readOnly = true)

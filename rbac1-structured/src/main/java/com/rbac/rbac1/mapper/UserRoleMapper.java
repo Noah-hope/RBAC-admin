@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface UserRoleMapper extends JpaRepository<UserRole, UserRole.Key> {
 
+    List<UserRole> findByUserIdIn(java.util.Collection<Long> userIds);
+
     boolean existsByRoleId(Long roleId);
 
     long countByRoleId(long roleId);

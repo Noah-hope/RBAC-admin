@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class RolePermissionService {
+  private final UserMapper users;
+  private final UserRoleMapper assignments;
   private final RoleMapper roles;
   private final RolePermissionMapper grants;
   private final RoleInheritanceMapper inheritance;
@@ -20,7 +22,9 @@ public class RolePermissionService {
   private final ApplicationMapper applications;
 
   public RolePermissionService(RoleMapper roles, RolePermissionMapper grants,
-      RoleInheritanceMapper inheritance, PermissionMapper permissions, ApplicationMapper applications) {
+      RoleInheritanceMapper inheritance, PermissionMapper permissions, ApplicationMapper applications,
+      UserMapper users, UserRoleMapper assignments) {
+    this.users=users; this.assignments=assignments;
     this.roles=roles; this.grants=grants; this.inheritance=inheritance;
     this.permissions=permissions; this.applications=applications;
   }
@@ -37,6 +41,26 @@ public class RolePermissionService {
     return new Graph(roles.findAll().stream().collect(Collectors.toMap(r -> r.id, r -> r)),
         permissions.findAll().stream().collect(Collectors.toMap(p -> p.id, p -> p)),
         applications.findAll().stream().collect(Collectors.toMap(a -> a.id, a -> a)), direct, parents);
+  }
+
+  public record UserPermissions(Graph graph, List<Long> roleIds, Map<Long, Set<Long>> sources) {}
+
+  public UserPermissions forUser(long userId) {
+    return forUsers(load(),List.of(userId)).get(userId);
+  }
+
+  public Map<Long, UserPermissions> forUsers(Graph graph, Collection<Long> userIds) {
+    if (userIds.isEmpty()) return Map.of();
+    var active=users.findAllById(userIds).stream().filter(u -> "ACTIVE".equals(u.status))
+        .map(u -> u.id).collect(Collectors.toSet());
+    var assigned=assignments.findByUserIdIn(userIds).stream().collect(Collectors.groupingBy(
+        a -> a.userId,Collectors.mapping(a -> a.roleId,Collectors.toList())));
+    var result=new HashMap<Long, UserPermissions>();
+    for (var id : userIds) {
+      var ids=active.contains(id) ? assigned.getOrDefault(id,List.of()).stream().sorted().toList() : List.<Long>of();
+      result.put(id,new UserPermissions(graph,ids,sources(graph,ids)));
+    }
+    return result;
   }
 
   public Set<Long> ancestors(Graph graph, Collection<Long> roleIds) {

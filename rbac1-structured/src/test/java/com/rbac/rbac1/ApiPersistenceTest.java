@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Import;
 
 @DataJpaTest(
     properties = {"spring.flyway.enabled=false", "spring.jpa.hibernate.ddl-auto=create-drop"})
-@Import({ApiService.class, OperationLogService.class, PermissionCheckService.class})
+@Import({ApiService.class, OperationLogService.class, PermissionCheckService.class, RolePermissionService.class})
 class ApiPersistenceTest {
   @Autowired PermissionCheckService checks;
   @Autowired UserMapper users;
