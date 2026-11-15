@@ -121,6 +121,17 @@ public class RolePermissionService {
     }).toList();
   }
 
+  public List<EffectivePermission> preview(Graph graph, Set<Long> direct, List<Long> parents) {
+    var inherited=sources(graph,parents);
+    var ids=new TreeSet<>(inherited.keySet()); ids.addAll(direct);
+    return ids.stream().map(id -> {
+      var p=graph.permissions.get(id);
+      var acquisition=direct.contains(id) ? inherited.containsKey(id) ? "BOTH" : "DIRECT" : "INHERITED";
+      return new EffectivePermission(p.id,p.applicationId,p.name,p.code,p.type,p.parentId,
+          acquisition,references(graph,inherited.getOrDefault(id,Set.of())));
+    }).toList();
+  }
+
   public List<RoleApplicationSummary> applications(Graph graph, Set<Long> permissionIds) {
     var counts=new TreeMap<Long, Long>();
     permissionIds.forEach(id -> counts.merge(graph.permissions.get(id).applicationId,1L,Long::sum));

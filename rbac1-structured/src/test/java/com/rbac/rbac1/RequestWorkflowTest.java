@@ -71,7 +71,7 @@ class RequestWorkflowTest {
     user =
         new SessionUser(user.id(), user.username(), user.name(), department.id, "DEPARTMENT_ADMIN");
     var proposal = proposals.submit(user, role("课程审核", List.of(permission().id)));
-    assertThat(proposals.get(root, proposal.id()).status()).isEqualTo("PENDING");
+    assertThat(proposals.get(root, proposal.id()).request().status()).isEqualTo("PENDING");
     assertThat(roles.findAll()).isEmpty();
     var result =
         proposals.review(

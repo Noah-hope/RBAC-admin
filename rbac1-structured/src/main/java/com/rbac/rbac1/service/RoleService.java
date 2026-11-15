@@ -116,12 +116,13 @@ public class RoleService {
   }
 
   @Transactional(readOnly = true)
-  public void validateNew(RoleInput input) {
+  public List<com.rbac.rbac1.dto.UserDtos.RoleRef> validateNew(RoleInput input) {
     var graph=effective.load();
     validateSelection(graph,input,Set.of());
     var ids=new TreeSet<>(input.permissionIds);
     ids.addAll(effective.sources(graph,input.inheritedRoleIds).keySet());
     validateMenus(graph,ids,input.name);
+    return effective.references(graph,input.inheritedRoleIds);
   }
 
   private void validateSelection(Graph graph, RoleInput input, Set<Long> existingDirect) {
@@ -145,13 +146,6 @@ public class RoleService {
         throw new ManagementFailure(INVALID_REQUEST,"角色「" + roleName + "」的按钮「" + permission.name
             + "」缺少所属菜单「" + graph.permissions().get(permission.parentId).name + "」。");
     }
-  }
-
-  // RBAC0 申请流程在适配前仍使用直接权限校验。
-  void validatePermissionSelection(Set<Long> ids) {
-    var graph=effective.load();
-    if (!graph.permissions().keySet().containsAll(ids)) throw new ManagementFailure(INVALID_REQUEST,"选择的权限不存在。");
-    validateMenus(graph,ids,"申请角色");
   }
 
   private Role requireEditableRole(long id) {

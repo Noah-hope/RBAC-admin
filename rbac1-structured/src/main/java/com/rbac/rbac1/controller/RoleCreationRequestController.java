@@ -37,7 +37,7 @@ public class RoleCreationRequestController {
   }
 
   @GetMapping("/{requestId}")
-  public RoleCreationView get(
+  public RoleCreationDetails get(
       @RequestAttribute(ACTOR) SessionUser actor, @PathVariable @Positive long requestId) {
     return service.get(actor, requestId);
   }

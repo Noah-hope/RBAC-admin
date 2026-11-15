@@ -1,6 +1,7 @@
 package com.rbac.rbac1.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.rbac.rbac1.dto.ApiDtos.PermissionSummary;
 import com.rbac.rbac1.dto.RoleDtos.*;
 import jakarta.validation.Valid;
@@ -54,11 +55,17 @@ public final class RequestDtos {
       String name,
       String description,
       List<Long> permissionIds,
+      List<RequestInheritedRole> inheritedRoles,
       String status,
       Long reviewerUserId,
       Long createdRoleId,
       Instant createdAt,
       Instant reviewedAt) {}
+
+  public record RequestInheritedRole(long id, String name, boolean exists) {}
+
+  public record RoleCreationDetails(@JsonUnwrapped RoleCreationView request,
+      List<EffectivePermission> effectivePermissions) {}
 
   public record RoleCreationReview(
       @NotNull @Pattern(regexp = "APPROVE|REJECT") String decision, @Valid RoleInput role) {
