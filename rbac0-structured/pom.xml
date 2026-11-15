@@ -10,7 +10,7 @@
         <relativePath/>
     </parent>
     <groupId>com.rbac</groupId>
-    <artifactId>rbac-structured</artifactId>
+    <artifactId>rbac0-structured</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 
     <properties>

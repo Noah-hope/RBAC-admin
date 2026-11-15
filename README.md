@@ -9,7 +9,7 @@
 | 项目范围和业务规则 | [核心需求](docs/01-requirements/核心需求草稿.md) |
 | 全部设计资料 | [文档索引](docs/README.md) |
 | 代码结构和阅读顺序 | [代码阅读指南](docs/04-development/代码阅读指南.md) |
-| 启动、测试和业务系统接入 | [后端说明](rbac-structured/README.md) |
+| 启动、测试和业务系统接入 | [后端说明](rbac0-structured/README.md) |
 | HTTP 接口契约 | [OpenAPI](docs/03-api/openapi.yaml) |
 
 ## 目录结构
@@ -18,7 +18,7 @@
 RBAC-admin/
 ├── README.md                 项目入口
 ├── AGENTS.md                 协作约定
-├── rbac-structured/          RBAC0 Java 后端（Maven 模块）
+├── rbac0-structured/          RBAC0 Java 后端（Maven 模块）
 │   ├── README.md             运行和测试说明
 │   ├── pom.xml               依赖和构建配置
 │   └── src/

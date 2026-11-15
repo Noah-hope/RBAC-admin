@@ -11,6 +11,6 @@
 | 3 | [RBAC1 界面原型](02-ui-design/RBAC1界面原型.html) | 演示角色多继承、继承来源和删除约束 |
 | 4 | [OpenAPI](03-api/openapi.yaml) | 查看请求、响应和接口约束 |
 | 5 | [代码阅读指南](04-development/代码阅读指南.md) | 对照业务找到实现位置 |
-| 6 | [后端说明](../rbac-structured/README.md) | 配置数据库、启动和测试 |
+| 6 | [后端说明](../rbac0-structured/README.md) | 配置数据库、启动和测试 |
 
 [返回项目首页](../README.md)

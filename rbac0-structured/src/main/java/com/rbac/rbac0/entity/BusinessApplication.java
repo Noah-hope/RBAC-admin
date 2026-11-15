@@ -20,6 +20,9 @@ public class BusinessApplication {
     @Column(nullable = false, length = 24)
     public String name;
 
+    @Column(nullable = false, length = 64)
+    public String code;
+
     @JdbcTypeCode(SqlTypes.BINARY)
     @Column(length = 32, insertable = false, updatable = false)
     public byte[] tokenHash;
