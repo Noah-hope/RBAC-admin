@@ -1,0 +1,35 @@
+package com.rbac.rbac1.mapper;
+
+import com.rbac.rbac1.entity.UserRole;
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+public interface UserRoleMapper extends JpaRepository<UserRole, UserRole.Key> {
+
+  List<UserRole> findByUserIdIn(java.util.Collection<Long> userIds);
+
+  List<UserRole> findByRoleIdIn(java.util.Collection<Long> roleIds);
+
+  @Query(
+      "select a.roleId as roleId, count(a.userId) as userCount from UserRole a group by a.roleId")
+  List<RoleUserCount> countRoleUsers();
+
+  interface RoleUserCount {
+    long getRoleId();
+
+    long getUserCount();
+  }
+
+  boolean existsByRoleId(Long roleId);
+
+  long countByRoleId(long roleId);
+
+  @Query(
+      """
+      select link from UserRole link, Role role
+      where link.userId in :userIds and link.roleId = role.id and role.roleType = 'BUSINESS'
+      order by link.userId, link.roleId
+      """)
+  List<UserRole> findBusinessAssignments(List<Long> userIds);
+}

@@ -1,0 +1,24 @@
+server:
+  port: ${RBAC1_PORT:8081}
+
+spring:
+  datasource:
+    url: ${RBAC1_DB_URL}
+    username: ${RBAC1_DB_USERNAME}
+    password: ${RBAC1_DB_PASSWORD:}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+
+rbac:
+  jwt:
+    issuer: ${RBAC1_JWT_ISSUER:http://localhost:8081}
+    private-key: ${RBAC1_JWT_PRIVATE_KEY:file:./jwt-private.pem}
+    public-key: ${RBAC1_JWT_PUBLIC_KEY:file:./jwt-public.pem}
+  bootstrap:
+    username: ${RBAC1_ADMIN_USERNAME:admin}
+    password: ${RBAC1_ADMIN_PASSWORD:}

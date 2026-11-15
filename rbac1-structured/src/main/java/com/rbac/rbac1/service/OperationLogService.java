@@ -1,0 +1,94 @@
+package com.rbac.rbac1.service;
+
+import com.rbac.rbac1.dto.SessionDtos.SessionUser;
+import com.rbac.rbac1.entity.OperationLog;
+import com.rbac.rbac1.entity.OperationLogTarget;
+import com.rbac.rbac1.entity.UserAccount;
+import com.rbac.rbac1.mapper.OperationLogMapper;
+import com.rbac.rbac1.mapper.OperationLogTargetMapper;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class OperationLogService {
+
+  private final OperationLogMapper logs;
+  private final OperationLogTargetMapper targets;
+
+  public OperationLogService(OperationLogMapper logs, OperationLogTargetMapper targets) {
+    this.logs = logs;
+    this.targets = targets;
+  }
+
+  @Transactional(propagation = Propagation.MANDATORY)
+  public void recordGlobalChange(
+      SessionUser actor,
+      String action,
+      String detail,
+      String targetType,
+      long targetId,
+      String targetName) {
+    var log = saveLog(actor, action, detail, "GLOBAL");
+    targets.save(target(log.id, 1, targetType, targetId, targetName, null));
+  }
+
+  @Transactional(propagation = Propagation.MANDATORY)
+  public void recordUserChange(
+      SessionUser actor, String action, String detail, UserAccount user, long departmentIdAtEvent) {
+    var log = saveLog(actor, action, detail, "USER_SCOPE");
+    targets.save(target(log.id, 1, "USER", user.id, user.name, departmentIdAtEvent));
+  }
+
+  @Transactional(propagation = Propagation.MANDATORY)
+  public void recordUserChanges(
+      SessionUser actor, String action, String detail, List<UserAccount> users) {
+    var log = saveLog(actor, action, detail, "USER_SCOPE");
+    var snapshots = new ArrayList<OperationLogTarget>();
+    for (var user : users) {
+      snapshots.add(
+          target(log.id, snapshots.size() + 1, "USER", user.id, user.name, user.departmentId));
+    }
+    targets.saveAll(snapshots);
+  }
+
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void recordFailure(SessionUser actor, String method, String path, String reason) {
+    var log = saveLog(actor, "操作失败", method + " " + path + "，" + reason, "GLOBAL");
+    log.result = "FAILURE";
+    targets.save(target(log.id, 1, "API", null, path, null));
+  }
+
+  private OperationLog saveLog(SessionUser actor, String action, String detail, String scope) {
+    var log = new OperationLog();
+    log.occurredAt = LocalDateTime.now(ZoneOffset.UTC);
+    log.actorUserId = actor.id();
+    log.actorName = actor.name();
+    log.action = action;
+    log.scope = scope;
+    log.detail = detail;
+    log.result = "SUCCESS";
+    return logs.save(log);
+  }
+
+  private static OperationLogTarget target(
+      long logId,
+      int number,
+      String targetType,
+      Long targetId,
+      String targetName,
+      Long departmentIdAtEvent) {
+    var target = new OperationLogTarget();
+    target.operationLogId = logId;
+    target.targetNo = number;
+    target.targetType = targetType;
+    target.targetId = targetId;
+    target.targetName = targetName;
+    target.departmentIdAtEvent = departmentIdAtEvent;
+    return target;
+  }
+}
