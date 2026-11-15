@@ -24,10 +24,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class SessionApiTest {
 
-    private static final String SESSIONS = "/api/v1/sessions";
+    private static final String SESSIONS = "/auth/login";
     private static final String ME = "/api/v1/me";
     private static final String ADMIN = """
-            {"username":"integration-admin","password":"integration-test-password"}
+            {"username":"integration-admin","password":"integration-test-password","systems":["permission-center"]}
             """;
     private static final String WRONG_PASSWORD = """
             {"username":"integration-admin","password":"wrong-password"}

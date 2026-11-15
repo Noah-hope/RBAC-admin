@@ -3,7 +3,6 @@ package com.rbac.rbac0.controller;
 import com.rbac.rbac0.dto.AuthorizationDtos.BatchRoleChange;
 import com.rbac.rbac0.dto.AuthorizationDtos.BatchRoleResult;
 import com.rbac.rbac0.dto.AuthorizationDtos.MyPermissions;
-import com.rbac.rbac0.dto.AuthorizationDtos.PermissionCheck;
 import com.rbac.rbac0.dto.AuthorizationDtos.PermissionCheckResult;
 import com.rbac.rbac0.dto.AuthorizationDtos.ReplaceUserRoles;
 import com.rbac.rbac0.dto.AuthorizationDtos.UserRoleResult;
@@ -56,10 +55,4 @@ public class AuthorizationController {
         return permissions.mine(actor.id());
     }
 
-    @PostMapping("/applications/{applicationId}/permission-checks")
-    public PermissionCheckResult check(@PathVariable @Positive @Max(MAX_ID) long applicationId,
-                                       @RequestHeader(value = "X-Application-Token", required = false) String token,
-                                       @Valid @RequestBody PermissionCheck request) {
-        return permissions.check(applicationId, token, request);
-    }
 }

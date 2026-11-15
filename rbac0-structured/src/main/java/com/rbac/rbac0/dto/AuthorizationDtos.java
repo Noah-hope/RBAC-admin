@@ -33,10 +33,5 @@ public final class AuthorizationDtos {
 
     public record MyPermissions(List<RoleRef> businessRoles, List<ApplicationPermissions> applications) {}
 
-    public record PermissionCheck(
-            @NotNull @Positive @Max(MAX_ID) Long userId,
-            @NotNull @CodePointLength(max = 64) @Pattern(regexp = PERMISSION_CODE) String permissionCode
-    ) {}
-
     public record PermissionCheckResult(boolean allowed) {}
 }

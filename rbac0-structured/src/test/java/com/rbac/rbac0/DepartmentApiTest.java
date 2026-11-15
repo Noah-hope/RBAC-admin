@@ -109,7 +109,7 @@ class DepartmentApiTest {
     }
 
     private String login(String username) throws Exception {
-        var response = mvc.perform(body(post("/api/v1/sessions"),
+        var response = mvc.perform(body(post("/auth/login"),
                         Map.of("username", username, "password", "integration-test-password")))
                 .andExpect(status().isCreated()).andReturn().getResponse();
         return json.readTree(response.getContentAsByteArray()).path("accessToken").asText();

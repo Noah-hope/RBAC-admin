@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.rbac.rbac0.dto.AuthorizationDtos.MyPermissions;
-import com.rbac.rbac0.dto.AuthorizationDtos.PermissionCheck;
 import com.rbac.rbac0.dto.AuthorizationDtos.PermissionCheckResult;
 import com.rbac.rbac0.dto.UserDtos.RoleRef;
 import com.rbac.rbac0.mapper.ApplicationMapper;
@@ -42,17 +41,4 @@ public class PermissionCheckService {
         return new MyPermissions(assigned, trees);
     }
 
-    @Transactional(readOnly = true)
-    public PermissionCheckResult check(long applicationId, String token, PermissionCheck request) {
-        if (token == null || token.isBlank()) {
-            throw new AuthenticationFailure(UNAUTHENTICATED);
-        }
-        var authenticatedApplication = applications.findIdByTokenHash(TokenHash.sha256(token))
-                .orElseThrow(() -> new AuthenticationFailure(UNAUTHENTICATED));
-        if (authenticatedApplication != applicationId) {
-            throw new ManagementFailure(APPLICATION_MISMATCH, "应用 ID 必须与应用令牌对应。");
-        }
-        return new PermissionCheckResult(permissions.hasEffectivePermission(
-                request.userId(), applicationId, request.permissionCode()));
-    }
 }

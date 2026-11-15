@@ -57,6 +57,7 @@ public class ApplicationService {
         requireTotalAdmin(actor);
         var app = new BusinessApplication();
         app.name = request.name();
+        app.code = "app-" + java.util.UUID.randomUUID();
         applications.save(app);
         operationLogs.recordGlobalChange(actor, "新增应用", "登记应用「" + app.name + "」",
                 "APPLICATION", app.id, app.name);

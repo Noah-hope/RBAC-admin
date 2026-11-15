@@ -23,7 +23,10 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        request.setAttribute(ACTOR, sessions.currentUser(bearerToken(request.getHeader(HttpHeaders.AUTHORIZATION))));
+        var token = bearerToken(request.getHeader(HttpHeaders.AUTHORIZATION));
+        request.setAttribute(ACTOR, sessions.currentUser(token));
+        if (request.getRequestURI().startsWith("/api/v1/")) sessions.applicationContext(token, "permission-center");
+        response.setHeader("Cache-Control", "no-store");
         return true;
     }
 

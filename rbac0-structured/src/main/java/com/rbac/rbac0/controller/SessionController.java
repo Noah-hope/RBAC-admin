@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static com.rbac.rbac0.controller.SessionInterceptor.bearerToken;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/auth")
 public class SessionController {
 
     private final SessionService sessions;
@@ -30,9 +30,9 @@ public class SessionController {
         this.sessions = sessions;
     }
 
-    @PostMapping("/sessions")
+    @PostMapping("/login")
     public ResponseEntity<LoginResult> login(@Valid @RequestBody LoginRequest request, HttpServletRequest http) {
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.ok()
                 .cacheControl(CacheControl.noStore())
                 .body(sessions.login(request, http.getRemoteAddr()));
     }
@@ -42,7 +42,7 @@ public class SessionController {
         return sessions.currentUser(bearerToken(authorization));
     }
 
-    @DeleteMapping("/sessions/current")
+    @PostMapping("/logout")
     public ResponseEntity<Void> logout(
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
         sessions.logout(bearerToken(authorization));

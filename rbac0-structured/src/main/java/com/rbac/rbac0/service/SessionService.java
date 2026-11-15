@@ -25,9 +25,11 @@ import static com.rbac.rbac0.service.AuthenticationFailure.Reason.UNAUTHENTICATE
 @Service
 public class SessionService {
 
-    private static final Duration SESSION_LIFETIME = Duration.ofHours(8);
+    private static final Duration SESSION_LIFETIME = Duration.ofHours(2);
     private static final SecureRandom RANDOM = new SecureRandom();
 
+    private final JwtTokens tokens;
+    private final com.rbac.rbac0.mapper.ApplicationMapper applications;
     private final UserMapper users;
     private final RoleMapper roles;
     private final SessionMapper sessions;
@@ -35,7 +37,10 @@ public class SessionService {
     private final LoginAttempts loginAttempts;
 
     public SessionService(UserMapper users, RoleMapper roles, SessionMapper sessions,
-                          PasswordEncoder passwords, LoginAttempts loginAttempts) {
+                          PasswordEncoder passwords, LoginAttempts loginAttempts, JwtTokens tokens,
+                          com.rbac.rbac0.mapper.ApplicationMapper applications) {
+        this.tokens = tokens;
+        this.applications = applications;
         this.users = users;
         this.roles = roles;
         this.sessions = sessions;
@@ -55,10 +60,12 @@ public class SessionService {
             throw new AuthenticationFailure(ACCOUNT_DISABLED);
         }
 
-        var bytes = new byte[32];
-        RANDOM.nextBytes(bytes);
-        var token = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+        if (request.systems().stream().distinct().count() != request.systems().size()
+                || request.systems().stream().anyMatch(code -> applications.findByCode(code).isEmpty())) {
+            throw new ManagementFailure(ManagementFailure.Reason.INVALID_REQUEST, "请选择已登记的应用。");
+        }
         var expiresAt = Instant.now().plus(SESSION_LIFETIME);
+        var token = tokens.issue(user.id, request.systems(), expiresAt);
         var session = new LoginSession();
         session.tokenHash = TokenHash.sha256(token);
         session.userId = user.id;
@@ -66,12 +73,15 @@ public class SessionService {
         sessions.save(session);
         var identity = identity(user);
         loginAttempts.recordSuccess(address);
-        return new LoginResult(token, expiresAt, identity);
+        return new LoginResult(token, "Bearer", SESSION_LIFETIME.toSeconds());
     }
 
     @Transactional(readOnly = true)
     public SessionUser currentUser(String token) {
-        return identity(authenticate(TokenHash.sha256(token)));
+        var jwt = tokens.verify(token);
+        var user = authenticate(TokenHash.sha256(token));
+        if (!Long.toString(user.id).equals(jwt.getSubject())) throw new AuthenticationFailure(UNAUTHENTICATED);
+        return identity(user);
     }
 
     @Transactional
@@ -81,6 +91,17 @@ public class SessionService {
         if (sessions.revoke(tokenHash) == 0) {
             throw new AuthenticationFailure(UNAUTHENTICATED);
         }
+    }
+
+    public String applicationContext(String token, String applicationCode) {
+        var audience = tokens.verify(token).getAudience();
+        var code = applicationCode;
+        if (code == null) {
+            if (audience.size() != 1) throw new ManagementFailure(ManagementFailure.Reason.INVALID_REQUEST, "请指定目标应用。");
+            code = audience.getFirst();
+        }
+        if (!audience.contains(code)) throw new ManagementFailure(ManagementFailure.Reason.APPLICATION_MISMATCH, "令牌不适用于该应用。");
+        return code;
     }
 
     private UserAccount authenticate(byte[] tokenHash) {
