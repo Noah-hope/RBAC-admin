@@ -86,22 +86,19 @@ public class UserService {
         var department = departments.requireManagedDepartment(actor, request.departmentId);
         requireManagementAuthority(actor, request.departmentAdministrator != null);
 
-        var random = new byte[24];
-        RANDOM.nextBytes(random);
-        var initialPassword = Base64.getUrlEncoder().withoutPadding().encodeToString(random);
         var user = new UserAccount();
         user.username = request.username;
         user.name = request.name;
         user.departmentId = department.id;
         user.status = request.status;
-        user.passwordHash = passwords.encode(initialPassword);
+        user.passwordHash = passwords.encode(request.initialPassword);
         users.save(user);
 
         operationLogs.recordUserChange(actor, "新增用户", "初始状态为" + user.status, user, department.id);
         if (Boolean.TRUE.equals(request.departmentAdministrator)) {
             setDepartmentAdministrator(actor, user, true);
         }
-        return new UserCreated(view(user, department, roles.findAssignedRoles(List.of(user.id))), initialPassword);
+        return new UserCreated(view(user, department, roles.findAssignedRoles(List.of(user.id))));
     }
 
     @Transactional

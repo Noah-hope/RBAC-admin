@@ -62,7 +62,7 @@ public class RoleService {
 
     @Transactional(readOnly = true)
     public RoleDetails get(SessionUser actor, long roleId) {
-        requireTotalAdmin(actor);
+        requireAdministrator(actor);
         var role = roles.findByIdAndRoleType(roleId, "BUSINESS")
                 .orElseThrow(() -> new ManagementFailure(NOT_FOUND, "业务角色不存在。"));
         return details(role);
@@ -137,7 +137,7 @@ public class RoleService {
                 "ROLE", role.id, role.name);
     }
 
-    private void validatePermissionSelection(Set<Long> ids) {
+    void validatePermissionSelection(Set<Long> ids) {
         var selected = permissions.findAllById(ids);
         if (selected.size() != ids.size()) {
             throw new ManagementFailure(INVALID_REQUEST, "选择的权限不存在。");
@@ -162,7 +162,7 @@ public class RoleService {
                 .map(link -> link.permissionId).toList();
         var applications = rolePermissions.summarizeApplications(List.of(role.id)).stream()
                 .map(RoleService::applicationSummary).toList();
-        return new RoleDetails(role.id, role.name, role.description, applications, permissionIds);
+        return new RoleDetails(role.id, role.name, role.description, applications, permissionIds, permissions.findAllById(permissionIds).stream().map(com.rbac.rbac0.dto.ApiDtos.PermissionSummary::of).toList());
     }
 
     private static RoleApplicationSummary applicationSummary(RoleApplicationRow row) {

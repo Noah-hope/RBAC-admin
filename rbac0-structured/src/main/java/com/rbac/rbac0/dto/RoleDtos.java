@@ -34,7 +34,7 @@ public final class RoleDtos {
     public record RoleSummary(long id, String name, String description, List<RoleApplicationSummary> applications) {}
 
     public record RoleDetails(long id, String name, String description, List<RoleApplicationSummary> applications,
-                              List<Long> permissionIds) {}
+                              List<Long> permissionIds, List<ApiDtos.PermissionSummary> permissions) {}
 
     public record RolePage(List<RoleSummary> items, int page, int pageSize, long total) {}
 }
