@@ -1,7 +1,8 @@
 package com.rbac.rbac0.dto;
 
-import java.util.List;
+import static com.rbac.rbac0.dto.DepartmentDtos.MAX_ID;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import jakarta.validation.constraints.Max;
@@ -9,65 +10,75 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
+import java.util.List;
 import org.hibernate.validator.constraints.CodePointLength;
-
-import static com.rbac.rbac0.dto.DepartmentDtos.MAX_ID;
 
 public final class UserDtos {
 
-    private UserDtos() {}
+  private UserDtos() {}
 
-    public static final class UserCreate {
-        @NotEmpty @CodePointLength(max = 32)
-        public String username;
+  public static final class UserCreate {
+    @NotEmpty
+    @CodePointLength(max = 32)
+    public String username;
 
-        @NotEmpty
-        @com.fasterxml.jackson.annotation.JsonProperty(access = com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY)
-        public String initialPassword;
+    @NotEmpty
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    public String initialPassword;
 
-        @NotEmpty @CodePointLength(max = 24)
-        public String name;
+    @NotEmpty
+    @CodePointLength(max = 24)
+    public String name;
 
-        @NotNull @Positive @Max(MAX_ID)
-        public Long departmentId;
+    @NotNull
+    @Positive
+    @Max(MAX_ID)
+    public Long departmentId;
 
-        @JsonSetter(nulls = Nulls.FAIL)
-        @Pattern(regexp = "ACTIVE|DISABLED")
-        public String status = "ACTIVE";
+    @JsonSetter(nulls = Nulls.FAIL)
+    @Pattern(regexp = "ACTIVE|DISABLED")
+    public String status = "ACTIVE";
 
-        @JsonSetter(nulls = Nulls.FAIL)
-        public Boolean departmentAdministrator;
-    }
+    @JsonSetter(nulls = Nulls.FAIL)
+    public Boolean departmentAdministrator;
+  }
 
-    public static final class UserUpdate {
-        @JsonSetter(nulls = Nulls.FAIL)
-        @CodePointLength(min = 1, max = 32)
-        public String username;
+  public static final class UserUpdate {
+    @JsonSetter(nulls = Nulls.FAIL)
+    @CodePointLength(min = 1, max = 32)
+    public String username;
 
-        @JsonSetter(nulls = Nulls.FAIL)
-        @CodePointLength(min = 1, max = 24)
-        public String name;
+    @JsonSetter(nulls = Nulls.FAIL)
+    @CodePointLength(min = 1, max = 24)
+    public String name;
 
-        @JsonSetter(nulls = Nulls.FAIL)
-        @Positive @Max(MAX_ID)
-        public Long departmentId;
+    @JsonSetter(nulls = Nulls.FAIL)
+    @Positive
+    @Max(MAX_ID)
+    public Long departmentId;
 
-        @JsonSetter(nulls = Nulls.FAIL)
-        @Pattern(regexp = "ACTIVE|DISABLED")
-        public String status;
+    @JsonSetter(nulls = Nulls.FAIL)
+    @Pattern(regexp = "ACTIVE|DISABLED")
+    public String status;
 
-        @JsonSetter(nulls = Nulls.FAIL)
-        public Boolean departmentAdministrator;
-    }
+    @JsonSetter(nulls = Nulls.FAIL)
+    public Boolean departmentAdministrator;
+  }
 
-    public record DepartmentRef(long id, String name) {}
+  public record DepartmentRef(long id, String name) {}
 
-    public record RoleRef(long id, String name) {}
+  public record RoleRef(long id, String name) {}
 
-    public record UserView(long id, String username, String name, DepartmentRef department, String status,
-                           boolean departmentAdministrator, List<RoleRef> businessRoles) {}
+  public record UserView(
+      long id,
+      String username,
+      String name,
+      DepartmentRef department,
+      String status,
+      boolean departmentAdministrator,
+      List<RoleRef> businessRoles) {}
 
-    public record UserCreated(UserView user) {}
+  public record UserCreated(UserView user) {}
 
-    public record UserPage(List<UserView> items, int page, int pageSize, long total) {}
+  public record UserPage(List<UserView> items, int page, int pageSize, long total) {}
 }

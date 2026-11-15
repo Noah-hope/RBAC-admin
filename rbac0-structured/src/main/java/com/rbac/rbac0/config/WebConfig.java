@@ -13,32 +13,38 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration(proxyBeanMethods = false)
 public class WebConfig implements WebMvcConfigurer {
 
-    private final SessionInterceptor sessionInterceptor;
+  private final SessionInterceptor sessionInterceptor;
 
-    public WebConfig(SessionInterceptor sessionInterceptor) {
-        this.sessionInterceptor = sessionInterceptor;
-    }
+  public WebConfig(SessionInterceptor sessionInterceptor) {
+    this.sessionInterceptor = sessionInterceptor;
+  }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(sessionInterceptor)
-                .addPathPatterns("/api/v1/**", "/auth/**")
-                .excludePathPatterns("/auth/login");
-    }
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry
+        .addInterceptor(sessionInterceptor)
+        .addPathPatterns("/api/v1/**", "/auth/**")
+        .excludePathPatterns("/auth/login");
+  }
 
-    @Bean
-    Jackson2ObjectMapperBuilderCustomizer strictJsonScalars() {
-        return builder -> builder.postConfigurer(mapper -> {
-            mapper.coercionConfigFor(LogicalType.Textual)
-                    .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
-                    .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
-                    .setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail);
-            mapper.coercionConfigFor(LogicalType.Integer)
-                    .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
-                    .setCoercion(CoercionInputShape.Float, CoercionAction.Fail);
-            mapper.coercionConfigFor(LogicalType.Boolean)
-                    .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
-                    .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail);
-        });
-    }
+  @Bean
+  Jackson2ObjectMapperBuilderCustomizer strictJsonScalars() {
+    return builder ->
+        builder.postConfigurer(
+            mapper -> {
+              mapper
+                  .coercionConfigFor(LogicalType.Textual)
+                  .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
+                  .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
+                  .setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail);
+              mapper
+                  .coercionConfigFor(LogicalType.Integer)
+                  .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
+                  .setCoercion(CoercionInputShape.Float, CoercionAction.Fail);
+              mapper
+                  .coercionConfigFor(LogicalType.Boolean)
+                  .setCoercion(CoercionInputShape.String, CoercionAction.Fail)
+                  .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail);
+            });
+  }
 }

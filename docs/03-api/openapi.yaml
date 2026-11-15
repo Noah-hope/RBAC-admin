@@ -3,7 +3,7 @@ info:
   title: RBAC 权限中心 API
   version: 2.1.0
   description: >-
-    新版设计契约，依据已确认需求、界面操作清单和课程系统的统一身份接口。后端尚未按本版改造。
+    新版设计契约，依据已确认需求、界面操作清单和课程系统的统一身份接口。RBAC0 后端已按本版实现，实际 MySQL 迁移与外部系统联调待验证。
 
 
     本系统及所有接入应用使用统一账号、登录、退出和权限检查。统一身份接口使用 /auth 路径，权限中心管理接口保留 /api/v1 路径。成功响应直接返回业务数据，错误使用 application/problem+json。
@@ -27,7 +27,7 @@ info:
     列表保留 page、pageSize，部门树和权限树完整返回。权限、API 关联和成功记录一起保存，失败则整次回滚；下一次检查反映成功的变更。x-ui-operations 对应界面操作编号。
 
 
-    2.1 设计修订：权限与 API 为多对多；API 独立登记，解除权限关联不会删除 API。补齐权限申请、角色创建申请及审核。本文是待实现契约，不代表现有后端已完成。
+    2.1 设计修订：权限与 API 为多对多；API 独立登记，解除权限关联不会删除 API。补齐权限申请、角色创建申请及审核。接口实现位于 rbac0-structured，内存数据库与 HTTP 测试不代替真实接入验证。
 
     权限中心的新增、编辑部门仅总管理员使用，部门管理员页面不显示这两个按钮；直接调用仍返回 403。权限授予不能绕过固定管理员职责。我的权限、我的申请和提交本人申请属于登录后的基础能力。
 
@@ -112,7 +112,7 @@ paths:
       externalDocs:
         description: 课程管理系统统一身份鉴权契约
         url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/api-523792399e0
-      x-implementation-status: 待后端实现
+      x-implementation-status: 已实现，待外部联调
   /auth/logout:
     post:
       operationId: logout
@@ -132,7 +132,7 @@ paths:
       externalDocs:
         description: 课程管理系统统一身份鉴权契约
         url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/api-523792400e0
-      x-implementation-status: 待后端实现
+      x-implementation-status: 已实现，待外部联调
   /auth/me:
     get:
       operationId: getCurrentUserAndPermissions
@@ -183,7 +183,7 @@ paths:
       externalDocs:
         description: 课程管理系统统一身份鉴权契约
         url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/api-523792401e0
-      x-implementation-status: 待后端实现
+      x-implementation-status: 已实现，待外部联调
   "/auth/permissions/{permission}":
     get:
       operationId: checkCurrentFrontendPermission
@@ -227,7 +227,7 @@ paths:
       externalDocs:
         description: 课程管理系统统一身份鉴权契约
         url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/api-534170404e0
-      x-implementation-status: 待后端实现
+      x-implementation-status: 已实现，待外部联调
   "/auth/api-permissions/{operationId}":
     get:
       operationId: checkCurrentApiPermission
@@ -277,7 +277,7 @@ paths:
       externalDocs:
         description: 课程管理系统统一身份鉴权契约
         url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/api-534180421e0
-      x-implementation-status: 待后端实现
+      x-implementation-status: 已实现，待外部联调
   /.well-known/jwks.json:
     get:
       operationId: getSigningPublicKeys

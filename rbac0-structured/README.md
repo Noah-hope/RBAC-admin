@@ -1,63 +1,52 @@
 # RBAC0 结构化后端
 
-独立的 Spring Boot / Spring Data JPA 模块，使用 Java 21、Maven 和 MySQL。接口以 [OpenAPI](../docs/03-api/openapi.yaml) 为准。
+Java 21、Spring Boot、Spring Data JPA、MySQL 8 和 Flyway。接口以 [OpenAPI](../docs/03-api/openapi.yaml) 为准，RBAC1 不在本模块中实现。
 
-代码结构见[代码阅读指南](../docs/04-development/代码阅读指南.md)，文档总入口见[文档索引](../docs/README.md)。RBAC0 后端位于 `rbac0-structured/`，Maven artifactId 为 `rbac0-structured`。
+Controller 接收并校验请求，Service 按业务步骤组织处理，mapper 目录中的 Spring Data Repository 完成持久化。实体只承载数据；不引入角色继承、领域服务接口或 version 字段。
 
-## 本地运行
+## 启动
 
-需要 Java 21、Maven 和 MySQL。以下命令均从仓库根目录执行。
-
-macOS / Linux：
-
-```sh
-export RBAC_DB_URL='jdbc:mysql://127.0.0.1:3306/rbac_structured'
-export RBAC_DB_USERNAME='<MySQL 用户名>'
-# 在本地设置 RBAC_DB_PASSWORD 和 RBAC_ADMIN_PASSWORD。
-# 避免把真实密码提交到仓库。
-mvn -f rbac0-structured/pom.xml spring-boot:run
-```
-
-启动前按下面说明创建数据库并设置密码。
-
-
-先在 MySQL 新建空库 `rbac_structured`，给应用账号授予该库的建表和读写权限。在仓库根目录执行：
+以下命令从仓库根目录执行。先在 MySQL 创建空数据库 `rbac0`，为应用账号配置该库的建表与读写权限。
 
 ```powershell
-$env:RBAC_DB_URL = 'jdbc:mysql://127.0.0.1:3306/rbac_structured'
+java rbac0-structured/tools/GenerateJwtKeys.java rbac0-structured/.local
+$env:RBAC_JWT_PRIVATE_KEY = 'file:' + (Resolve-Path rbac0-structured/.local/jwt-private.pem).Path
+$env:RBAC_JWT_PUBLIC_KEY = 'file:' + (Resolve-Path rbac0-structured/.local/jwt-public.pem).Path
+$env:RBAC_JWT_ISSUER = 'http://localhost:8080'
+$env:RBAC_DB_URL = 'jdbc:mysql://127.0.0.1:3306/rbac0'
 $env:RBAC_DB_USERNAME = '<MySQL 用户名>'
 $env:RBAC_DB_PASSWORD = Read-Host 'MySQL 密码' -MaskInput
-$env:RBAC_ADMIN_PASSWORD = Read-Host '初始总管理员密码' -MaskInput
+$env:RBAC_ADMIN_PASSWORD = Read-Host '首次启动管理员密码' -MaskInput
 mvn -f rbac0-structured/pom.xml spring-boot:run
 ```
 
-Flyway 创建 10 张业务表并登记两个预置管理角色。首次启动创建总管理员，用户名默认为 `admin`，可通过 `RBAC_ADMIN_USERNAME` 设置。数据库已有总管理员时，启动时保留其密码。
+密钥只生成一次，重复启动使用原密钥；私钥不能提交或提供给业务系统。接入系统使用实际 `issuer` 和 `/.well-known/jwks.json` 验签地址。
 
-## 会话接口
+Flyway 按 V1→V4 增量迁移为 15 张表。V2 为已有应用生成 `app-数字ID` 接入标识；新应用通过登记时的 code 接入。V3 移除旧应用令牌并清理旧会话，所有用户需重新登录。V4 登记权限中心自身的管理 API、菜单按钮及预置管理员权限。不要修改已经执行的迁移文件。
 
-| 方法与路径 | 行为 |
+首次启动创建总管理员，默认用户名 `admin`，可由 `RBAC_ADMIN_USERNAME` 设置；已存在管理员时保留原密码。
+
+## 接入与鉴权
+
+| 方法与路径 | 用途 |
 | --- | --- |
-| `POST /api/v1/sessions` | 提交用户名和密码，返回令牌和当前用户 |
-| `GET /api/v1/me` | 用 `Authorization: Bearer <令牌>` 查询当前用户 |
-| `DELETE /api/v1/sessions/current` | 撤销请求所带令牌对应的会话 |
+| `POST /auth/login` | 提交 username、password、systems，返回 JWT |
+| `POST /auth/logout` | 撤销当前令牌，204 无正文 |
+| `GET /auth/me` | 当前应用的用户、角色和前端权限 |
+| `GET /auth/permissions/{permission}` | 当前应用单项菜单或按钮检查 |
+| `GET /auth/api-permissions/{operationId}` | 当前应用 API 功能权限检查 |
+| `GET /.well-known/jwks.json` | 公开验签公钥 |
 
-## 业务系统接入
+登录权限中心时 `systems=["permission-center"]`；课程应用须先登记 `code=course-project-management`。多个应用的令牌通过 `X-Application-Code` 指定本次查询目标。JWT 不包含权限；后端同时检查会话、账号状态和当前授权，退出和角色撤销均影响后续请求。
 
-登记应用后，为它生成一个随机令牌，并计算令牌文本的 SHA-256 摘要。PowerShell 7 示例
+管理请求按后端实际方法及路径查找登记 API，不接受客户端伪造 operationId 来代替实际路由。API 允许任一关联权限满足；总管理员职责、部门范围和业务对象范围仍分别校验。本人权限与申请查询是登录基础能力，不能依赖先获得管理菜单权限。
 
-```powershell
-$applicationToken = [Convert]::ToHexString([Security.Cryptography.RandomNumberGenerator]::GetBytes(32))
-$tokenHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($applicationToken)))
-```
-
-由数据库管理员将 `$tokenHash` 写入对应应用。把示例中的摘要占位符和应用 ID 换成实际值。
-
-```sql
-UPDATE sys_application SET token_hash = UNHEX('<SHA-256 十六进制摘要>') WHERE id = 1;
-```
-
-在业务系统后端保管 `$applicationToken`。用 `X-Application-Token` 请求头发送该令牌，并向 `POST /api/v1/applications/{applicationId}/permission-checks` 提交 `userId` 和 `permissionCode`。
+API 登记与权限关联分开维护，解绑保留 API。权限申请通过时分配现有最小业务角色；角色创建申请在角色成功创建后才通过，不自动分配。业务写入、成功日志和申请状态由事务一起保存；失败写操作的结果单独记录为全局审计，不记录密码和令牌。
 
 ## 测试
 
-为测试单独建一个空 MySQL 库，例如 `rbac_structured_test`。设置 `RBAC_TEST_DB_URL`、`RBAC_TEST_DB_USERNAME` 和 `RBAC_TEST_DB_PASSWORD` 后运行 `mvn -f rbac0-structured/pom.xml verify`。测试会在该库写入用户和会话。
+```powershell
+mvn -f rbac0-structured/pom.xml verify
+```
+
+JWT 测试、JPA 行为测试和完整 Spring MVC 测试使用临时密钥与测试专用 H2，不需要本地 MySQL。测试覆盖共享 API 解绑、实时授权、退出失效、申请审批、角色创建与日志部门快照。内存数据库测试不代替 MySQL Flyway 迁移验证；真实数据库及课程系统联调仍须在配置好环境后执行。

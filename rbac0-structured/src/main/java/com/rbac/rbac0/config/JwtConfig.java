@@ -10,13 +10,18 @@ import org.springframework.security.converter.RsaKeyConverters;
 
 @Configuration(proxyBeanMethods = false)
 public class JwtConfig {
-    @Bean
-    JwtTokens jwtTokens(@Value("${rbac.jwt.public-key}") Resource publicKey,
-                        @Value("${rbac.jwt.private-key}") Resource privateKey,
-                        @Value("${rbac.jwt.issuer}") String issuer) throws IOException {
-        try (var publicInput = publicKey.getInputStream(); var privateInput = privateKey.getInputStream()) {
-            return new JwtTokens(RsaKeyConverters.x509().convert(publicInput),
-                    RsaKeyConverters.pkcs8().convert(privateInput), issuer);
-        }
+  @Bean
+  JwtTokens jwtTokens(
+      @Value("${rbac.jwt.public-key}") Resource publicKey,
+      @Value("${rbac.jwt.private-key}") Resource privateKey,
+      @Value("${rbac.jwt.issuer}") String issuer)
+      throws IOException {
+    try (var publicInput = publicKey.getInputStream();
+        var privateInput = privateKey.getInputStream()) {
+      return new JwtTokens(
+          RsaKeyConverters.x509().convert(publicInput),
+          RsaKeyConverters.pkcs8().convert(privateInput),
+          issuer);
     }
+  }
 }

@@ -1,6 +1,6 @@
 package com.rbac.rbac0.dto;
 
-import java.util.List;
+import static com.rbac.rbac0.dto.DepartmentDtos.MAX_ID;
 
 import com.rbac.rbac0.dto.ApplicationDtos.ApplicationPermissions;
 import com.rbac.rbac0.dto.UserDtos.RoleRef;
@@ -9,29 +9,27 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
-import org.hibernate.validator.constraints.CodePointLength;
+import java.util.List;
 import org.hibernate.validator.constraints.UniqueElements;
-
-import static com.rbac.rbac0.dto.ApplicationDtos.PERMISSION_CODE;
-import static com.rbac.rbac0.dto.DepartmentDtos.MAX_ID;
 
 public final class AuthorizationDtos {
 
-    private AuthorizationDtos() {}
+  private AuthorizationDtos() {}
 
-    public record ReplaceUserRoles(@NotNull @UniqueElements List<@NotNull @Positive @Max(MAX_ID) Long> roleIds) {}
+  public record ReplaceUserRoles(
+      @NotNull @UniqueElements List<@NotNull @Positive @Max(MAX_ID) Long> roleIds) {}
 
-    public record UserRoleResult(long userId, List<Long> roleIds) {}
+  public record UserRoleResult(long userId, List<Long> roleIds) {}
 
-    public record BatchRoleChange(
-            @NotNull @Pattern(regexp = "GRANT|REVOKE") String action,
-            @NotEmpty @UniqueElements List<@NotNull @Positive @Max(MAX_ID) Long> userIds,
-            @NotEmpty @UniqueElements List<@NotNull @Positive @Max(MAX_ID) Long> roleIds
-    ) {}
+  public record BatchRoleChange(
+      @NotNull @Pattern(regexp = "GRANT|REVOKE") String action,
+      @NotEmpty @UniqueElements List<@NotNull @Positive @Max(MAX_ID) Long> userIds,
+      @NotEmpty @UniqueElements List<@NotNull @Positive @Max(MAX_ID) Long> roleIds) {}
 
-    public record BatchRoleResult(String action, int affectedUsers) {}
+  public record BatchRoleResult(String action, int affectedUsers) {}
 
-    public record MyPermissions(List<RoleRef> businessRoles, List<ApplicationPermissions> applications) {}
+  public record MyPermissions(
+      List<RoleRef> businessRoles, List<ApplicationPermissions> applications) {}
 
-    public record PermissionCheckResult(boolean allowed) {}
+  public record PermissionCheckResult(boolean allowed) {}
 }

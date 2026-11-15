@@ -7,11 +7,9 @@ import java.io.Serializable;
 @Table(name = "sys_api_permission")
 @IdClass(ApiPermission.Key.class)
 public class ApiPermission {
-    @Id
-    public Long permissionId;
+  @Id public Long permissionId;
 
-    @Id
-    public Long apiId;
+  @Id public Long apiId;
 
-    public record Key(Long permissionId, Long apiId) implements Serializable {}
+  public record Key(Long permissionId, Long apiId) implements Serializable {}
 }
