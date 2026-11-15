@@ -32,6 +32,7 @@ import static com.rbac.rbac0.service.ManagementFailure.Reason.NOT_FOUND;
 @Service
 public class RoleService {
 
+    private final RequestStatusService statuses;
     private final RoleMapper roles;
     private final PermissionMapper permissions;
     private final RolePermissionMapper rolePermissions;
@@ -39,7 +40,8 @@ public class RoleService {
     private final UserRoleMapper assignments;
 
     public RoleService(RoleMapper roles, PermissionMapper permissions, RolePermissionMapper rolePermissions,
-                       OperationLogService operationLogs, UserRoleMapper assignments) {
+                       OperationLogService operationLogs, UserRoleMapper assignments, RequestStatusService statuses) {
+        this.statuses = statuses;
         this.roles = roles;
         this.permissions = permissions;
         this.rolePermissions = rolePermissions;
@@ -116,6 +118,7 @@ public class RoleService {
         if (!changes.isEmpty()) {
             operationLogs.recordGlobalChange(actor, "修改角色", String.join("，", changes), "ROLE", role.id, role.name);
         }
+        statuses.settle();
         return details(role);
     }
 

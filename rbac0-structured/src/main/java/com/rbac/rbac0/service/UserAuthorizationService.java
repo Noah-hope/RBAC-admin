@@ -27,12 +27,14 @@ public class UserAuthorizationService {
 
     private final UserMapper users;
     private final DepartmentService departments;
+    private final RequestStatusService statuses;
     private final RoleMapper roles;
     private final UserRoleMapper assignments;
     private final OperationLogService operationLogs;
 
     public UserAuthorizationService(UserMapper users, DepartmentService departments, RoleMapper roles,
-                                    UserRoleMapper assignments, OperationLogService operationLogs) {
+                                    UserRoleMapper assignments, OperationLogService operationLogs, RequestStatusService statuses) {
+        this.statuses = statuses;
         this.users = users;
         this.departments = departments;
         this.roles = roles;
@@ -62,6 +64,7 @@ public class UserAuthorizationService {
             }
             operationLogs.recordUserChange(actor, "修改用户授权", String.join("，", detail), user, user.departmentId);
         }
+        statuses.settle();
         return new UserRoleResult(userId, roleIds.stream().sorted().toList());
     }
 
@@ -101,6 +104,7 @@ public class UserAuthorizationService {
             var detail = "所选角色：" + String.join("、", businessRoles.stream().map(role -> role.name).sorted().toList());
             operationLogs.recordUserChanges(actor, action, detail, affected);
         }
+        statuses.settle();
         return new BatchRoleResult(request.action(), affected.size());
     }
 
