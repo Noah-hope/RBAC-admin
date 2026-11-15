@@ -175,13 +175,220 @@ class RbacApiTest {
         401);
   }
 
+  @Test
+  void inheritedRolesAreValidatedAndManagePermissionsImmediately() throws Exception {
+    var admin = login("admin");
+    var app =
+        send(
+                post("/api/v1/applications"),
+                admin,
+                Map.of("name", "继承端到端", "code", "inheritance-http"),
+                201)
+            .path("id")
+            .asLong();
+    var menu =
+        send(
+                post("/api/v1/applications/" + app + "/permissions"),
+                admin,
+                Map.of("name", "课程菜单", "code", "course:view", "type", "MENU"),
+                201)
+            .path("id")
+            .asLong();
+    var button =
+        send(
+                post("/api/v1/applications/" + app + "/permissions"),
+                admin,
+                Map.of("name", "审核课程", "code", "course:review", "type", "BUTTON", "parentId", menu),
+                201)
+            .path("id")
+            .asLong();
+    var parent =
+        send(post("/api/v1/roles"), admin, configuration("HTTP父", List.of(menu), List.of()), 201)
+            .path("id")
+            .asLong();
+    var child =
+        send(
+                post("/api/v1/roles"),
+                admin,
+                configuration("HTTP子", List.of(button), List.of(parent)),
+                201)
+            .path("id")
+            .asLong();
+    send(post("/api/v1/roles"), admin, Map.of("name", "缺少父角色列表", "permissionIds", List.of()), 400);
+    send(
+        post("/api/v1/roles"),
+        admin,
+        configuration("重复父角色", List.of(), List.of(parent, parent)),
+        400);
+    send(
+        post("/api/v1/roles"),
+        admin,
+        configuration("继承重复直接配置", List.of(menu), List.of(parent)),
+        400);
+    var saved = send(get("/api/v1/roles/" + child), admin, null, 200);
+    assertThat(saved.path("inheritedRoles").get(0).path("id").asLong()).isEqualTo(parent);
+    assertThat(saved.path("effectivePermissionCount").asInt()).isEqualTo(2);
+    send(
+        put("/api/v1/roles/" + parent),
+        admin,
+        configuration("HTTP父", List.of(menu), List.of(child)),
+        400);
+    send(
+        put("/api/v1/roles/" + parent), admin, configuration("不应保存的名称", List.of(), List.of()), 400);
+    assertThat(send(get("/api/v1/roles/" + parent), admin, null, 200).path("name").asText())
+        .isEqualTo("HTTP父");
+    var dept =
+        send(
+                post("/api/v1/departments"),
+                admin,
+                json.createObjectNode().put("name", "继承学院").putNull("parentId"),
+                201)
+            .path("id")
+            .asLong();
+    var user =
+        send(
+                post("/api/v1/users"),
+                admin,
+                Map.of(
+                    "username",
+                    "inheritance-user",
+                    "name",
+                    "继承教师",
+                    "departmentId",
+                    dept,
+                    "initialPassword",
+                    "demo1234"),
+                201)
+            .path("user")
+            .path("id")
+            .asLong();
+    send(put("/api/v1/users/" + user + "/roles"), admin, Map.of("roleIds", List.of(child)), 200);
+    var token = login("inheritance-user");
+    var mine = send(get("/api/v1/me/permissions"), token, null, 200);
+    assertThat(mine.path("businessRoles").findValuesAsText("name")).containsExactly("HTTP子");
+    assertThat(mine.toString()).contains("sourceRoles", "HTTP父", "course:review");
+    send(delete("/api/v1/roles/" + parent), admin, null, 409);
+    send(
+        put("/api/v1/roles/" + child),
+        admin,
+        configuration("HTTP子", List.of(), List.of(parent)),
+        200);
+    send(put("/api/v1/roles/" + parent), admin, configuration("HTTP父", List.of(), List.of()), 200);
+    assertThat(send(get("/api/v1/me/permissions"), token, null, 200).toString())
+        .doesNotContain("course:view");
+    var audit = send(get("/api/v1/operation-logs").param("keyword", "继承角色"), admin, null, 200);
+    assertThat(audit.path("items").size()).isPositive();
+  }
+
+  @Test
+  void roleApplicationApprovalRollsBackOnNameConflictAndPreservesParentSnapshot() throws Exception {
+    var admin = login("admin");
+    var dept =
+        send(
+                post("/api/v1/departments"),
+                admin,
+                json.createObjectNode().put("name", "申请学院").putNull("parentId"),
+                201)
+            .path("id")
+            .asLong();
+    var managerUser =
+        send(
+                post("/api/v1/users"),
+                admin,
+                Map.of(
+                    "username",
+                    "proposal-manager",
+                    "name",
+                    "申请管理员",
+                    "departmentId",
+                    dept,
+                    "initialPassword",
+                    "demo1234",
+                    "departmentAdministrator",
+                    true),
+                201)
+            .path("user")
+            .path("id")
+            .asLong();
+    var manager = login("proposal-manager");
+    var parent =
+        send(post("/api/v1/roles"), admin, configuration("申请父角色", List.of(), List.of()), 201)
+            .path("id")
+            .asLong();
+    var request =
+        send(
+                post("/api/v1/role-creation-requests"),
+                manager,
+                configuration("HTTP申请角色", List.of(), List.of(parent)),
+                201)
+            .path("id")
+            .asLong();
+    var preview = send(get("/api/v1/role-creation-requests/" + request), manager, null, 200);
+    assertThat(preview.has("request")).isFalse();
+    assertThat(preview.path("inheritedRoles").get(0).path("exists").asBoolean()).isTrue();
+    assertThat(preview.path("effectivePermissions").isArray()).isTrue();
+    send(
+        post("/api/v1/role-creation-requests/" + request + "/reviews"),
+        admin,
+        Map.of("decision", "APPROVE", "role", configuration("申请父角色", List.of(), List.of(parent))),
+        409);
+    assertThat(
+            send(get("/api/v1/role-creation-requests/" + request), admin, null, 200)
+                .path("status")
+                .asText())
+        .isEqualTo("PENDING");
+    send(delete("/api/v1/roles/" + parent), admin, null, 204);
+    var missing = send(get("/api/v1/role-creation-requests/" + request), manager, null, 200);
+    assertThat(missing.path("inheritedRoles").get(0).path("exists").asBoolean()).isFalse();
+    assertThat(missing.path("effectivePermissions").isNull()).isTrue();
+    send(
+        post("/api/v1/role-creation-requests/" + request + "/reviews"),
+        admin,
+        Map.of(
+            "decision", "APPROVE", "role", configuration("HTTP申请角色", List.of(), List.of(parent))),
+        400);
+    var approved =
+        send(
+            post("/api/v1/role-creation-requests/" + request + "/reviews"),
+            admin,
+            Map.of("decision", "APPROVE", "role", configuration("HTTP申请角色", List.of(), List.of())),
+            200);
+    assertThat(approved.path("status").asText()).isEqualTo("APPROVED");
+    assertThat(approved.path("inheritedRoles").get(0).path("name").asText()).isEqualTo("申请父角色");
+    assertThat(
+            send(get("/api/v1/users/" + managerUser), admin, null, 200)
+                .path("businessRoles")
+                .size())
+        .isZero();
+    var predefined =
+        send(get("/api/v1/roles").param("roleType", "TOTAL_ADMIN"), admin, null, 200)
+            .path("items")
+            .get(0)
+            .path("id")
+            .asLong();
+    send(
+        put("/api/v1/roles/" + predefined),
+        admin,
+        configuration("非法修改管理角色", List.of(), List.of()),
+        403);
+    send(get("/api/v1/roles").param("roleType", "TOTAL_ADMIN"), manager, null, 403);
+    var restricted = send(get("/api/v1/roles"), manager, null, 200);
+    assertThat(restricted.path("items").findValuesAsText("roleType")).containsOnly("BUSINESS");
+    send(post("/api/v1/roles"), manager, configuration("越权角色", List.of(), List.of()), 403);
+  }
+
+  private Map<String, Object> configuration(
+      String name, List<Long> permissions, List<Long> parents) {
+    return Map.of("name", name, "permissionIds", permissions, "inheritedRoleIds", parents);
+  }
+
   @Autowired
   org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping mappings;
 
   @Test
   void allFortyFourDocumentedOperationsHaveControllerMappings() throws Exception {
-    var document = Path.of("../docs/03-api/openapi.yaml");
-    if (!Files.exists(document)) document = Path.of("docs/03-api/openapi.yaml");
+    var document = Path.of("../docs/03-api/RBAC1-api.yaml");
+    if (!Files.exists(document)) document = Path.of("docs/03-api/RBAC1-api.yaml");
     var spec = new org.yaml.snakeyaml.Yaml().loadAs(Files.readString(document), Map.class);
     var expected = new HashSet<String>();
     var paths = (Map<?, ?>) spec.get("paths");
@@ -228,11 +435,27 @@ class RbacApiTest {
       throws Exception {
     if (token != null) request.header("Authorization", "Bearer " + token);
     if (body != null) request.contentType("application/json").content(json.writeValueAsBytes(body));
-    return json.readTree(
-        mvc.perform(request)
-            .andExpect(status().is(expected))
-            .andReturn()
-            .getResponse()
-            .getContentAsString());
+    var result = mvc.perform(request).andExpect(status().is(expected)).andReturn();
+    var content = result.getResponse().getContentAsString();
+    var response = content.isEmpty() ? json.nullNode() : json.readTree(content);
+    var fixtures = Path.of("target/contract-responses");
+    Files.createDirectories(fixtures);
+    Files.writeString(
+        fixtures.resolve(UUID.randomUUID() + ".json"),
+        json.writeValueAsString(
+            Map.of(
+                "method",
+                result.getRequest().getMethod().toLowerCase(),
+                "path",
+                result
+                    .getRequest()
+                    .getAttribute(
+                        org.springframework.web.servlet.HandlerMapping
+                            .BEST_MATCHING_PATTERN_ATTRIBUTE),
+                "status",
+                Integer.toString(expected),
+                "body",
+                response)));
+    return response;
   }
 }

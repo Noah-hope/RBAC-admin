@@ -11,6 +11,7 @@ import com.rbac.rbac1.mapper.*;
 import jakarta.persistence.criteria.Predicate;
 import java.time.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,13 +30,15 @@ public class RoleCreationRequestService {
       RoleCreationRequestMapper requests,
       RoleCreationRequestPermissionMapper links,
       RoleService roles,
-      RoleCreationRequestInheritanceMapper parents, RolePermissionService effective,
+      RoleCreationRequestInheritanceMapper parents,
+      RolePermissionService effective,
       UserMapper users,
       OperationLogService logs) {
     this.requests = requests;
     this.links = links;
     this.roles = roles;
-    this.parents = parents; this.effective = effective;
+    this.parents = parents;
+    this.effective = effective;
     this.users = users;
     this.logs = logs;
   }
@@ -44,7 +47,7 @@ public class RoleCreationRequestService {
   public RoleCreationView submit(SessionUser actor, RoleInput input) {
     if (!"DEPARTMENT_ADMIN".equals(actor.managementRole()))
       throw new ManagementFailure(FORBIDDEN, "仅部门管理员提交角色创建申请。");
-    var selectedParents=roles.validateNew(input);
+    var selectedParents = roles.validateNew(input);
     var request = new RoleCreationRequest();
     request.applicantUserId = actor.id();
     request.roleName = input.name;
@@ -62,10 +65,17 @@ public class RoleCreationRequestService {
                   return link;
                 })
             .toList());
-    parents.saveAll(selectedParents.stream().map(parent -> {
-      var link=new RoleCreationRequestInheritance(); link.requestId=request.id;
-      link.inheritedRoleId=parent.id(); link.inheritedRoleName=parent.name(); return link;
-    }).toList());
+    parents.saveAll(
+        selectedParents.stream()
+            .map(
+                parent -> {
+                  var link = new RoleCreationRequestInheritance();
+                  link.requestId = request.id;
+                  link.inheritedRoleId = parent.id();
+                  link.inheritedRoleName = parent.name();
+                  return link;
+                })
+            .toList());
     log(actor, request, "提交角色创建申请");
     return view(request);
   }
@@ -84,7 +94,7 @@ public class RoleCreationRequestService {
             },
             PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt", "id")));
     return new PageResult<>(
-        views(found.getContent(),effective.load()), page, size, found.getTotalElements());
+        views(found.getContent(), effective.load()), page, size, found.getTotalElements());
   }
 
   @Transactional(readOnly = true)
@@ -92,11 +102,16 @@ public class RoleCreationRequestService {
     var request = requireRequest(id);
     if (!isTotalAdmin(actor) && request.applicantUserId != actor.id())
       throw new ManagementFailure(NOT_FOUND, "申请不存在。");
-    var graph=effective.load();
-    var original=views(List.of(request),graph).getFirst();
-    var preview=original.inheritedRoles().stream().anyMatch(parent -> !parent.exists()) ? null
-        : effective.preview(graph,Set.copyOf(original.permissionIds()),original.inheritedRoles().stream().map(RequestInheritedRole::id).toList());
-    return new RoleCreationDetails(original,preview);
+    var graph = effective.load();
+    var original = views(List.of(request), graph).getFirst();
+    var preview =
+        original.inheritedRoles().stream().anyMatch(parent -> !parent.exists())
+            ? null
+            : effective.preview(
+                graph,
+                Set.copyOf(original.permissionIds()),
+                original.inheritedRoles().stream().map(RequestInheritedRole::id).toList());
+    return new RoleCreationDetails(original, preview);
   }
 
   @Transactional
@@ -120,26 +135,60 @@ public class RoleCreationRequestService {
   }
 
   private RoleCreationView view(RoleCreationRequest r) {
-    return views(List.of(r),effective.load()).getFirst();
+    return views(List.of(r), effective.load()).getFirst();
   }
 
-  private List<RoleCreationView> views(List<RoleCreationRequest> rows, RolePermissionService.Graph graph) {
+  private List<RoleCreationView> views(
+      List<RoleCreationRequest> rows, RolePermissionService.Graph graph) {
     if (rows.isEmpty()) return List.of();
-    var ids=rows.stream().map(r -> r.id).toList();
-    var names=users.findAllById(rows.stream().map(r -> r.applicantUserId).distinct().toList()).stream()
-        .collect(java.util.stream.Collectors.toMap(u -> u.id,u -> u.name));
-    var direct=links.findByRequestIdInOrderByPermissionId(ids).stream().collect(java.util.stream.Collectors.groupingBy(
-        link -> link.requestId,java.util.stream.Collectors.mapping(link -> link.permissionId,java.util.stream.Collectors.toList())));
-    var snapshots=parents.findByRequestIdInOrderByInheritedRoleId(ids).stream().collect(java.util.stream.Collectors.groupingBy(
-        link -> link.requestId,java.util.stream.Collectors.mapping(link -> new RequestInheritedRole(link.inheritedRoleId,
-            link.inheritedRoleName,graph.roles().containsKey(link.inheritedRoleId)),java.util.stream.Collectors.toList())));
-    return rows.stream().map(r -> new RoleCreationView(r.id,r.applicantUserId,names.get(r.applicantUserId),
-        r.roleName,r.roleDescription,direct.getOrDefault(r.id,List.of()),snapshots.getOrDefault(r.id,List.of()),
-        r.status,r.reviewerUserId,r.createdRoleId,r.createdAt.toInstant(ZoneOffset.UTC),
-        r.reviewedAt==null ? null : r.reviewedAt.toInstant(ZoneOffset.UTC))).toList();
+    var ids = rows.stream().map(r -> r.id).toList();
+    var names =
+        users.findAllById(rows.stream().map(r -> r.applicantUserId).distinct().toList()).stream()
+            .collect(Collectors.toMap(u -> u.id, u -> u.name));
+    var direct =
+        links.findByRequestIdInOrderByPermissionId(ids).stream()
+            .collect(
+                Collectors.groupingBy(
+                    link -> link.requestId,
+                    Collectors.mapping(link -> link.permissionId, Collectors.toList())));
+    var snapshots =
+        parents.findByRequestIdInOrderByInheritedRoleId(ids).stream()
+            .collect(
+                Collectors.groupingBy(
+                    link -> link.requestId,
+                    Collectors.mapping(
+                        link ->
+                            new RequestInheritedRole(
+                                link.inheritedRoleId,
+                                link.inheritedRoleName,
+                                graph.roles().containsKey(link.inheritedRoleId)),
+                        Collectors.toList())));
+    return rows.stream()
+        .map(
+            r ->
+                new RoleCreationView(
+                    r.id,
+                    r.applicantUserId,
+                    names.get(r.applicantUserId),
+                    r.roleName,
+                    r.roleDescription,
+                    direct.getOrDefault(r.id, List.of()),
+                    snapshots.getOrDefault(r.id, List.of()),
+                    r.status,
+                    r.reviewerUserId,
+                    r.createdRoleId,
+                    r.createdAt.toInstant(ZoneOffset.UTC),
+                    r.reviewedAt == null ? null : r.reviewedAt.toInstant(ZoneOffset.UTC)))
+        .toList();
   }
 
   private void log(SessionUser actor, RoleCreationRequest r, String action) {
-    logs.recordGlobalChange(actor, action, "状态 " + r.status, "ROLE_REQUEST", r.id, r.roleName);
+    logs.recordGlobalChange(
+        actor,
+        action,
+        "状态 " + r.status + (r.createdRoleId == null ? "" : "，实际创建角色 ID " + r.createdRoleId),
+        "ROLE_REQUEST",
+        r.id,
+        r.roleName);
   }
 }

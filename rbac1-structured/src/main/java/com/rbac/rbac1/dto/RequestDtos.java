@@ -64,8 +64,8 @@ public final class RequestDtos {
 
   public record RequestInheritedRole(long id, String name, boolean exists) {}
 
-  public record RoleCreationDetails(@JsonUnwrapped RoleCreationView request,
-      List<EffectivePermission> effectivePermissions) {}
+  public record RoleCreationDetails(
+      @JsonUnwrapped RoleCreationView request, List<EffectivePermission> effectivePermissions) {}
 
   public record RoleCreationReview(
       @NotNull @Pattern(regexp = "APPROVE|REJECT") String decision, @Valid RoleInput role) {

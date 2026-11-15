@@ -109,17 +109,18 @@ public class PermissionRequestService {
       SessionUser actor, String mode, String status, int page, int size) {
     boolean review = "REVIEW".equals(mode);
     if (review) requireAdministrator(actor);
-    var scope=review && !isTotalAdmin(actor)
-        ? departments.managedDepartments(actor,null).stream().map(d -> d.id).toList() : List.<Long>of();
+    var scope =
+        review && !isTotalAdmin(actor)
+            ? departments.managedDepartments(actor, null).stream().map(d -> d.id).toList()
+            : List.<Long>of();
     var found =
         requests.findAll(
             (root, query, cb) -> {
               var predicates = new ArrayList<Predicate>();
               if (!review) predicates.add(cb.equal(root.get("applicantUserId"), actor.id()));
-              else if (!isTotalAdmin(actor))
-                {
-                var applicant=query.subquery(Long.class);
-                var account=applicant.from(UserAccount.class);
+              else if (!isTotalAdmin(actor)) {
+                var applicant = query.subquery(Long.class);
+                var account = applicant.from(UserAccount.class);
                 applicant.select(account.get("id")).where(account.get("departmentId").in(scope));
                 predicates.add(root.get("applicantUserId").in(applicant));
               }
@@ -127,8 +128,23 @@ public class PermissionRequestService {
               return cb.and(predicates.toArray(Predicate[]::new));
             },
             PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt", "id")));
+    var applicants =
+        users.findAllById(found.stream().map(r -> r.applicantUserId).distinct().toList()).stream()
+            .collect(Collectors.toMap(u -> u.id, u -> u));
+    var requested =
+        permissions
+            .findAllById(found.stream().map(r -> r.permissionId).distinct().toList())
+            .stream()
+            .collect(Collectors.toMap(p -> p.id, p -> p));
     return new PageResult<>(
-        found.stream().map(r -> view(r, null)).toList(), page, size, found.getTotalElements());
+        found.stream()
+            .map(
+                r ->
+                    view(r, applicants.get(r.applicantUserId), requested.get(r.permissionId), null))
+            .toList(),
+        page,
+        size,
+        found.getTotalElements());
   }
 
   @Transactional(readOnly = true)
@@ -137,7 +153,7 @@ public class PermissionRequestService {
     return view(
         request,
         canReview(actor, users.findById(request.applicantUserId).orElseThrow())
-            ? options(actor, request)
+            ? options(request)
             : null);
   }
 
@@ -161,7 +177,7 @@ public class PermissionRequestService {
     }
     if ("APPROVE".equals(input.decision())) {
       var candidate =
-          options(actor, request).stream()
+          options(request).stream()
               .filter(o -> o.role().id() == input.roleId())
               .findFirst()
               .orElseThrow(() -> new ManagementFailure(INVALID_REQUEST, "请选择包含申请权限的业务角色。"));
@@ -181,18 +197,30 @@ public class PermissionRequestService {
     return view(request, null);
   }
 
-  private List<ApprovalOption> options(SessionUser actor, PermissionRequest request) {
-    var permission=permissions.findById(request.permissionId).orElseThrow();
-    var user=effective.forUser(request.applicantUserId); var graph=user.graph();
-    var counts=assignments.countRoleUsers().stream().collect(Collectors.toMap(
-        UserRoleMapper.RoleUserCount::getRoleId,UserRoleMapper.RoleUserCount::getUserCount));
-    var candidates=new ArrayList<ApprovalOption>();
-    for (var role : graph.roles().values().stream().sorted(Comparator.comparing(r -> r.id)).toList()) {
+  private List<ApprovalOption> options(PermissionRequest request) {
+    var permission = permissions.findById(request.permissionId).orElseThrow();
+    var user = effective.forUser(request.applicantUserId);
+    var graph = user.graph();
+    var counts =
+        assignments.countRoleUsers().stream()
+            .collect(
+                Collectors.toMap(
+                    UserRoleMapper.RoleUserCount::getRoleId,
+                    UserRoleMapper.RoleUserCount::getUserCount));
+    var candidates = new ArrayList<ApprovalOption>();
+    for (var role :
+        graph.roles().values().stream().sorted(Comparator.comparing(r -> r.id)).toList()) {
       if (!"BUSINESS".equals(role.roleType)) continue;
-      var rights=effective.effectiveIds(graph,role.id);
+      var rights = effective.effectiveIds(graph, role.id);
       if (!rights.contains(request.permissionId)) continue;
-      var extra=ApprovalRules.extraPermissions(rights,user.sources().keySet(),permission.id,permission.parentId);
-      candidates.add(new ApprovalOption(effective.details(graph,role,counts.getOrDefault(role.id,0L)),extra.isEmpty(),extra));
+      var extra =
+          ApprovalRules.extraPermissions(
+              rights, user.sources().keySet(), permission.id, permission.parentId);
+      candidates.add(
+          new ApprovalOption(
+              effective.details(graph, role, counts.getOrDefault(role.id, 0L)),
+              extra.isEmpty(),
+              extra));
     }
     return candidates;
   }
@@ -230,13 +258,24 @@ public class PermissionRequestService {
   }
 
   private PermissionRequestView view(PermissionRequest request, List<ApprovalOption> options) {
-    var user = users.findById(request.applicantUserId).orElseThrow();
+    return view(
+        request,
+        users.findById(request.applicantUserId).orElseThrow(),
+        permissions.findById(request.permissionId).orElseThrow(),
+        options);
+  }
+
+  private PermissionRequestView view(
+      PermissionRequest request,
+      UserAccount user,
+      Permission permission,
+      List<ApprovalOption> options) {
     return new PermissionRequestView(
         request.id,
         request.applicantUserId,
         user.name,
         user.departmentId,
-        PermissionSummary.of(permissions.findById(request.permissionId).orElseThrow()),
+        PermissionSummary.of(permission),
         request.reason,
         request.status,
         request.reviewerUserId,

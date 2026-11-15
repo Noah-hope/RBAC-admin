@@ -2,7 +2,6 @@ package com.rbac.rbac1.dto;
 
 import static com.rbac.rbac1.dto.DepartmentDtos.MAX_ID;
 
-import com.rbac.rbac1.dto.ApplicationDtos.ApplicationPermissions;
 import com.rbac.rbac1.dto.UserDtos.RoleRef;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotEmpty;
@@ -33,10 +32,15 @@ public final class AuthorizationDtos {
 
   public record MyPermissionRef(long id, String name, String code, List<RoleRef> sourceRoles) {}
 
-  public record MyMenu(long id, String name, String code, List<RoleRef> sourceRoles, List<MyPermissionRef> buttons) {}
+  public record MyMenu(
+      long id,
+      String name,
+      String code,
+      List<RoleRef> sourceRoles,
+      List<MyPermissionRef> buttons) {}
 
-  public record MyApplicationPermissions(long applicationId, String applicationName,
-      String applicationCode, List<MyMenu> menus) {}
+  public record MyApplicationPermissions(
+      long applicationId, String applicationName, String applicationCode, List<MyMenu> menus) {}
 
   public record PermissionCheckResult(boolean allowed) {}
 }

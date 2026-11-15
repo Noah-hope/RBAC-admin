@@ -11,18 +11,19 @@ public class RequestStatusService {
   private final RolePermissionService effective;
 
   public RequestStatusService(PermissionRequestMapper requests, RolePermissionService effective) {
-    this.requests=requests; this.effective=effective;
+    this.requests = requests;
+    this.effective = effective;
   }
 
   @Transactional
   public void settleUsers(Collection<Long> userIds) {
     if (userIds.isEmpty()) return;
-    var pending=requests.findByStatusAndApplicantUserIdIn("PENDING",userIds);
+    var pending = requests.findByStatusAndApplicantUserIdIn("PENDING", userIds);
     if (pending.isEmpty()) return;
-    var applicants=pending.stream().map(r -> r.applicantUserId).distinct().toList();
-    var rights=effective.forUsers(effective.load(),applicants);
+    var applicants = pending.stream().map(r -> r.applicantUserId).distinct().toList();
+    var rights = effective.forUsers(effective.load(), applicants);
     for (var request : pending)
       if (rights.get(request.applicantUserId).sources().containsKey(request.permissionId))
-        request.status="SATISFIED";
+        request.status = "SATISFIED";
   }
 }

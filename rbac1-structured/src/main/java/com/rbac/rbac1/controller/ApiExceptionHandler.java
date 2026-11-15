@@ -123,7 +123,8 @@ class ApiExceptionHandler {
   ProblemDetail integrityViolation(
       DataIntegrityViolationException error, HttpServletRequest request) {
     recordFailure(request, "CONFLICT");
-    if (error.getMostSpecificCause() instanceof SQLException sql && sql.getErrorCode() == 1062) {
+    if (error.getMostSpecificCause() instanceof SQLException sql
+        && (sql.getErrorCode() == 1062 || "23505".equals(sql.getSQLState()))) {
       for (var duplicate : DUPLICATE_DETAILS.entrySet()) {
         if (sql.getMessage().contains(duplicate.getKey())) {
           return problem(
@@ -131,8 +132,9 @@ class ApiExceptionHandler {
         }
       }
     }
-    if (error.getMostSpecificCause() instanceof SQLException sql && sql.getErrorCode() == 1062) {
-      return problem(HttpStatus.CONFLICT, "conflict", "CONFLICT", "数据已存在", "应用标识、接口标识或路由已存在。");
+    if (error.getMostSpecificCause() instanceof SQLException sql
+        && (sql.getErrorCode() == 1062 || "23505".equals(sql.getSQLState()))) {
+      return problem(HttpStatus.CONFLICT, "conflict", "CONFLICT", "数据已存在", "名称、应用标识、接口标识或路由已存在。");
     }
     return internalError(error);
   }

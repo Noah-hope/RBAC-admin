@@ -1,33 +1,35 @@
 package com.rbac.rbac1.mapper;
 
-import java.util.List;
-
 import com.rbac.rbac1.entity.UserRole;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface UserRoleMapper extends JpaRepository<UserRole, UserRole.Key> {
 
-    List<UserRole> findByUserIdIn(java.util.Collection<Long> userIds);
+  List<UserRole> findByUserIdIn(java.util.Collection<Long> userIds);
 
-    List<UserRole> findByRoleIdIn(java.util.Collection<Long> roleIds);
+  List<UserRole> findByRoleIdIn(java.util.Collection<Long> roleIds);
 
-    @Query("select a.roleId as roleId, count(a.userId) as userCount from UserRole a group by a.roleId")
-    List<RoleUserCount> countRoleUsers();
+  @Query(
+      "select a.roleId as roleId, count(a.userId) as userCount from UserRole a group by a.roleId")
+  List<RoleUserCount> countRoleUsers();
 
-    interface RoleUserCount {
-      long getRoleId();
-      long getUserCount();
-    }
+  interface RoleUserCount {
+    long getRoleId();
 
-    boolean existsByRoleId(Long roleId);
+    long getUserCount();
+  }
 
-    long countByRoleId(long roleId);
+  boolean existsByRoleId(Long roleId);
 
-    @Query("""
-            select link from UserRole link, Role role
-            where link.userId in :userIds and link.roleId = role.id and role.roleType = 'BUSINESS'
-            order by link.userId, link.roleId
-            """)
-    List<UserRole> findBusinessAssignments(List<Long> userIds);
+  long countByRoleId(long roleId);
+
+  @Query(
+      """
+      select link from UserRole link, Role role
+      where link.userId in :userIds and link.roleId = role.id and role.roleType = 'BUSINESS'
+      order by link.userId, link.roleId
+      """)
+  List<UserRole> findBusinessAssignments(List<Long> userIds);
 }

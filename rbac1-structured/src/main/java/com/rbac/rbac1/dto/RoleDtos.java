@@ -33,19 +33,40 @@ public final class RoleDtos {
   public record RoleApplicationSummary(
       long applicationId, String applicationName, long permissionCount) {}
 
-  public record EffectivePermission(long id, long applicationId, String name, String code,
-      String type, Long parentId, String acquisition, List<UserDtos.RoleRef> sourceRoles) {}
+  public record EffectivePermission(
+      long id,
+      long applicationId,
+      String name,
+      String code,
+      String type,
+      Long parentId,
+      String acquisition,
+      List<UserDtos.RoleRef> sourceRoles) {}
 
-  public record RoleSummary(long id, String name, String description,
-      List<RoleApplicationSummary> applications, String roleType,
-      List<UserDtos.RoleRef> inheritedRoles, List<UserDtos.RoleRef> inheritedByRoles,
-      int directPermissionCount, int effectivePermissionCount) {}
+  public record RoleSummary(
+      long id,
+      String name,
+      String description,
+      List<RoleApplicationSummary> applications,
+      String roleType,
+      List<UserDtos.RoleRef> inheritedRoles,
+      List<UserDtos.RoleRef> inheritedByRoles,
+      int directPermissionCount,
+      int effectivePermissionCount) {}
 
-  public record RoleDetails(long id, String name, String description,
-      List<RoleApplicationSummary> applications, String roleType,
-      List<UserDtos.RoleRef> inheritedRoles, List<UserDtos.RoleRef> inheritedByRoles,
-      int directPermissionCount, int effectivePermissionCount, List<Long> permissionIds,
-      List<EffectivePermission> effectivePermissions, long assignedUserCount) {}
+  public record RoleDetails(
+      long id,
+      String name,
+      String description,
+      List<RoleApplicationSummary> applications,
+      String roleType,
+      List<UserDtos.RoleRef> inheritedRoles,
+      List<UserDtos.RoleRef> inheritedByRoles,
+      int directPermissionCount,
+      int effectivePermissionCount,
+      List<Long> permissionIds,
+      List<EffectivePermission> effectivePermissions,
+      long assignedUserCount) {}
 
   public record RolePage(List<RoleSummary> items, int page, int pageSize, long total) {}
 }

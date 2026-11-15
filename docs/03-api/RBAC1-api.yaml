@@ -1,0 +1,5501 @@
+openapi: 3.1.0
+info:
+  title: RBAC1 权限中心 API
+  version: 1.3.0
+  description: >-
+    RBAC1 独立设计契约，基于 RBAC0 的 openapi.yaml。RBAC1
+    结构化后端已实现；面向对象实现遵循同一契约。除本文的继承扩展外，沿用 RBAC0 的统一身份、用户部门、应用、权限与 API
+    管理、授权和操作记录规则。本文件用于独立 RBAC1 服务，在 Apifox 中导入 RBAC1 项目或模块，保留 RBAC0 原契约。
+
+
+    仅业务角色参与多重、多层继承，禁止自继承和循环继承。TOTAL_ADMIN、DEPARTMENT_ADMIN 既不继承业务角色，也不被业务角色继承。继承不受应用边界限制，查询与检查权限时仍按目标应用筛选。用户仍只显式分配业务角色，不为其额外保存用户与祖先角色的关联。
+
+
+    RoleConfigurationInput.permissionIds 只提交直接配置权限；inheritedRoleIds 只提交直接继承的角色。POST 和 PUT 均提交两个完整列表，[] 表示无直接权限或无继承角色，不能把完整有效权限列表当成直接权限保存。PUT 中省略继承列表是无效请求，不表示保留。角色创建申请及审批创建复用同一配置结构，父角色名称快照由服务端查询保存。
+
+
+    有效权限为直接权限与全部可达父角色权限的并集，按权限 ID 去重。RoleConfiguration.effectivePermissions 每项返回 acquisition（DIRECT/INHERITED/BOTH）和 sourceRoles，来源是直接配置该权限的角色；中间传递角色不是来源，多条路径指向同一来源只显示一次。inheritedRoles 仅列当前直接父角色，编辑表单取其 id 作为 inheritedRoleIds。
+
+
+    仅继承的权限只读，不能新增为重复的直接配置。已有直接权限后来因父角色配置或继承关系变化与继承重叠时保留，允许取消直接关联，继承来源仍在则继续有效。后端比较保存前的直接权限与本次最终继承关系进行校验，不依赖前端只读控件。
+
+
+    按钮所属菜单按本次最终有效权限判断：可由直接配置或继承满足，不能要求把已继承菜单重复加入 permissionIds。直接权限与继承关系一起校验、一起提交，失败整次回滚，原配置不变。成功修改父角色权限或继承关系后，受影响角色及用户的下一次权限查询和 API 检查反映变更，不依赖重新登录。
+
+
+    登录返回 RS256 JWT（sub、aud、iss、iat、exp、jti），不包含角色或权限。Bearer 认证、签名公钥、统一退出、账号停用及 X-Application-Code 的规则沿用 RBAC0；单应用 aud 自动选定，多应用需明确目标，管理接口要求 aud 包含 permission-center。权限中心查询当前有效授权；业务系统保留对象范围检查。
+
+
+    成功响应直接返回数据，错误使用 application/problem+json。列表沿用 page/pageSize；部门树和权限目录完整返回。接口路径和 operationId 沿用 RBAC0，角色字段扩展只适用于独立 RBAC1 服务，不在 RBAC0 项目中覆盖导入。
+
+
+    权限申请按用户及候选角色的全部有效权限判断，包含所有应用中的继承权限。角色创建申请保存直接权限及父角色 ID、名称快照；详情按当前父角色计算有效权限预览。审批按最新配置校验，创建角色、直接授权、继承关系、审批结果和成功日志一起保存；不自动给员工分配角色。
+
+
+    角色列表支持角色类型筛选并返回父子关系和权限统计；角色详情返回关联用户数供删除前提示。预置管理角色仅总管理员可查看，始终只读且不参与继承。我的权限按菜单和按钮返回实际配置来源，字段只用于查询展示，不增加数据库存储字段。
+
+
+    修改权限或继承关系时，按拟保存的配置检查当前角色及全部直接、间接子角色。若修改后某个角色仍拥有按钮，却不再拥有其所属菜单，返回 400，提示受影响角色、按钮和菜单，整次修改不保存。其他直接或继承来源仍提供菜单时，不因该菜单依赖拒绝修改。前端预览用于提示，后端保存时执行同一校验。
+
+
+    父角色快照不阻止角色删除。已删除的父角色仍显示申请中保存的父角色 ID 和名称快照，exists=false；此时申请权限预览为 null，审批创建前须改选有效业务角色。申请原配置保留，审批调整后的创建结果通过 createdRoleId 查询。
+servers:
+  - url: /
+    description: 系统部署域名；身份接口 /auth，管理接口 /api/v1
+security:
+  - BearerAuth: []
+tags:
+  - name: 统一身份鉴权
+    description: 所有接入系统共用的登录、退出和当前用户权限检查。
+  - name: 签名公钥
+    description: 业务系统验证 JWT 的公开密钥。
+  - name: 应用与权限
+    description: 登记应用、菜单按钮及其关联 API。
+  - name: 角色管理
+    description: 配置业务角色并删除未关联用户的角色。
+  - name: 用户与部门
+    description: 维护用户、所属部门和组织结构。
+  - name: 用户授权
+    description: 单人和批量分配、撤销角色。
+  - name: 我的权限
+    description: 权限中心按应用汇总当前用户权限。
+  - name: 操作记录
+    description: 按管理范围查看重要操作。
+  - name: API 登记
+    description: 总管理员维护独立的 API 清单和权限关联。
+  - name: 权限申请
+    description: 本人申请与撤回，管理员按范围审核。
+  - name: 角色创建申请
+    description: 部门管理员提出配置，总管理员保存角色后完成审批。
+paths:
+  /auth/login:
+    post:
+      operationId: login
+      tags:
+        - 统一身份鉴权
+      summary: 统一登录
+      description: 使用统一用户名和密码登录。systems 填目标应用 code：课程系统为
+        course-project-management，本系统为 permission-center。所有 code 必须已登记，返回 JWT 的
+        aud 与此列表一致。aud 表示目标应用，不代表自动拥有该应用权限。凭据错误或账号停用均返回 401。
+      x-ui-operations:
+        - L01
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+            example:
+              username: lin.xiao
+              password: DemoPassword2026
+              systems:
+                - course-project-management
+      responses:
+        "200":
+          description: 登录成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResult"
+              example:
+                accessToken: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InJiYWMtZXhhbXBsZSJ9.eyJpc3MiOiJodHRwczovL2lkZW50aXR5LmV4YW1wbGUuZWR1Iiwic3ViIjoiMTIiLCJhdWQiOlsiY291cnNlLXByb2plY3QtbWFuYWdlbWVudCJdLCJpYXQiOjE3OTQ0MTI4MDAsImV4cCI6MTc5NDQyMDAwMCwianRpIjoiZXhhbXBsZS1sb2dpbi0xMiJ9.mQzs-2wRjx0sc4SREwTe4T2Ed7Ai3sz69naXUEGmatXdkAh1NX4TNOvRXjzQYvCoR1knJEfi7Ryv8tXZ8Z_FDZW8JJ5Uda7rSENcs8Z_tySIc1LlSvBvg9dHbVmIvtgC1IZLyCMeAOYKBvevDIlBqVTi8WORm2vC84oAjY8NyRfYG9nerWe5DEJcYholoOjazBM9Id__jJY5WA3UVKWoRbbmKqHX0igeZ8aNQVavTjXkH1xJJDwKcdvCKqa8vYnszPFb-n86xVA67GouJISM3tvQwKFk2vIIwCWQR_jfcgcLQ2cQANclu6GQQAu9GQe1Pl8-3Mjf0ltS764oU-4a2A
+                tokenType: Bearer
+                expiresIn: 7200
+          headers:
+            Cache-Control:
+              description: 不缓存当前身份或授权结果
+              schema:
+                type: string
+                const: no-store
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+      externalDocs:
+        description: 课程管理系统统一身份鉴权契约
+        url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/api-523792399e0
+      x-implementation-status: RBAC1 结构化后端已实现
+  /auth/logout:
+    post:
+      operationId: logout
+      tags:
+        - 统一身份鉴权
+      summary: 统一退出登录
+      description: 使用当前 Bearer 令牌退出，不提交用户 ID。中心使当前令牌失效，所有使用它的接入系统后续检查均返回 401。
+      x-ui-operations:
+        - L02
+      responses:
+        "204":
+          description: 当前令牌已失效，无响应正文
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+      externalDocs:
+        description: 课程管理系统统一身份鉴权契约
+        url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/api-523792400e0
+      x-implementation-status: RBAC1 结构化后端已实现
+  /auth/me:
+    get:
+      operationId: getCurrentUserAndPermissions
+      tags:
+        - 统一身份鉴权
+      summary: 当前用户、角色与权限
+      description: 从令牌识别当前用户与目标应用，返回该应用的角色和前端菜单、按钮权限。roles 用已有角色数字 ID
+        的字符串表示，不新增角色标识字段；subject 为用户 ID 字符串，no
+        为统一账号用户名。id、departmentId、managementRole
+        是供权限中心页面使用的补充字段。权限结果用于页面显示，业务后端仍须检查。 RBAC1 中 permissions
+        包含当前应用的直接与全部继承权限并去重；roles 返回直接分配且为当前应用提供有效权限的角色 ID，不把祖先角色伪装为额外直接分配。
+      x-ui-operations:
+        - L03
+      parameters:
+        - $ref: "#/components/parameters/ApplicationContext"
+      responses:
+        "200":
+          description: 当前用户在目标应用中的身份、角色和权限
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+              example:
+                subject: "12"
+                roles:
+                  - "4"
+                permissions:
+                  - course:viewOwn
+                  - course:create
+                name: 林晓
+                no: lin.xiao
+                id: 12
+                departmentId: 3
+                managementRole: NONE
+          headers:
+            Cache-Control:
+              description: 不缓存当前身份或授权结果
+              schema:
+                type: string
+                const: no-store
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+      externalDocs:
+        description: 课程管理系统统一身份鉴权契约
+        url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/api-523792401e0
+      x-implementation-status: RBAC1 继承鉴权待实现
+  "/auth/permissions/{permission}":
+    get:
+      operationId: checkCurrentFrontendPermission
+      tags:
+        - 统一身份鉴权
+      summary: 校验当前用户是否具备指定前端权限
+      description: 检查当前用户在目标应用中的一项菜单或按钮权限，只返回 allowed。不接受 userId。权限未登记或未获授权返回
+        200、allowed=false；令牌无效或账号停用返回 401。 RBAC1
+        使用直接权限与全部可达祖先权限的并集；移除一条继承路径后仍有其他来源时继续允许。
+      x-requirement: 核心需求 7 权限检查
+      parameters:
+        - $ref: "#/components/parameters/FrontendPermission"
+        - $ref: "#/components/parameters/ApplicationContext"
+      responses:
+        "200":
+          description: 单项前端权限检查结果
+          headers:
+            Cache-Control:
+              description: 不缓存当前身份或授权结果
+              schema:
+                type: string
+                const: no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionCheckResult"
+              examples:
+                allowed:
+                  value:
+                    allowed: true
+                denied:
+                  value:
+                    allowed: false
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+      externalDocs:
+        description: 课程管理系统统一身份鉴权契约
+        url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/api-534170404e0
+      x-implementation-status: RBAC1 继承鉴权待实现
+  "/auth/api-permissions/{operationId}":
+    get:
+      operationId: checkCurrentApiPermission
+      tags:
+        - 统一身份鉴权
+      summary: 判断当前用户能否调用指定 API 接口
+      description: 业务后端转交当前用户的 Bearer 令牌，并从实际请求确定 operationId，不信任前端自行声明的目标接口。按目标应用查找
+        API，读取其全部关联权限；当前有效角色拥有其中任意一项即 allowed=true（OR），没有关联权限则 allowed=false。API
+        未登记返回 404；未获授权返回 200、allowed=false；无效令牌、退出或停用账号返回 401；检查不可用返回
+        503，均不得执行操作。只检查功能权限，固定管理员职责、部门范围及业务对象范围仍由目标后端落实。 RBAC1
+        的任一关联权限判断包含角色继承得到的权限，仍按目标应用隔离。
+      x-requirement: 核心需求 7 权限检查
+      parameters:
+        - $ref: "#/components/parameters/OperationId"
+        - $ref: "#/components/parameters/ApplicationContext"
+      responses:
+        "200":
+          description: 当前用户调用目标 API 的权限
+          headers:
+            Cache-Control:
+              description: 不缓存当前身份或授权结果
+              schema:
+                type: string
+                const: no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiCheckResult"
+              examples:
+                allowed:
+                  value:
+                    operationId: listAdminCourses
+                    allowed: true
+                denied:
+                  value:
+                    operationId: listAdminCourses
+                    allowed: false
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+      externalDocs:
+        description: 课程管理系统统一身份鉴权契约
+        url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/api-534180421e0
+      x-implementation-status: RBAC1 继承鉴权待实现
+  /.well-known/jwks.json:
+    get:
+      operationId: getSigningPublicKeys
+      tags:
+        - 签名公钥
+      summary: 获取 JWT 验签公钥
+      description: 公开 RSA 公钥。业务系统根据 JWT 头部 kid
+        选择公钥，并检查签名、签发者、时效及目标应用。只提供公钥，不返回私钥。验签不替代权限与退出失效检查。
+      security: []
+      responses:
+        "200":
+          description: JWT 签名公钥集合
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JwkSet"
+              example:
+                keys:
+                  - kty: RSA
+                    use: sig
+                    alg: RS256
+                    kid: rbac-example
+                    n: qsAzov1IxNIaSBr_V5bHmXgeDdNEWkHPpLqOLyfXEvnwWiNj-i4aeNthJ0ErtdzjdLQJc21R9yfZehCXJDTByodFW3tMM6771nvUHT-4qduupHL2ixRE9AMZ9ICEOS0Ma4WHlI4GKJAKfFpeByHnAWVAF39SVfJkmbCAjs9hLZ5Ox-H7LZFzklr5hDrov2fLpGPcDuNIgLafbBWIXQ6CmohZWqb3UqV2p9oxmzaRnQKCXFQu_Cs8-TjWoDRlvLVQkS3CWoJbqzFF8d5SJ4ppNRU3aeGPl0mLpHrdeUsy5ju0xbWLlw7BAJFLWyuqOwZMwqURjUFNU8JAifXgTlcSKQ
+                    e: AQAB
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+      x-implementation-status: RBAC1 结构化后端已实现
+  /api/v1/applications:
+    get:
+      operationId: listApplications
+      tags: [ 应用与权限 ]
+      summary: 查询应用列表
+      description: 总管理员查询应用。本系统 code 为 permission-center，课程系统为
+        course-project-management。数字 id 用于管理接口，code 用于统一登录 systems 和 JWT aud。
+      x-ui-operations: [ A01, R02, R03 ]
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        "200":
+          description: 已登记应用分页结果
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationPage"
+              example:
+                items:
+                  - id: 1
+                    name: 权限管理系统
+                    code: permission-center
+                  - id: 2
+                    name: 课程管理系统
+                    code: course-project-management
+                page: 1
+                pageSize: 20
+                total: 2
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+    post:
+      operationId: createApplication
+      tags: [ 应用与权限 ]
+      summary: 新增应用
+      description: 总管理员登记应用。name 必填；code 可填业务系统约定标识，省略时系统生成 app-{id}。code
+        全局唯一，创建后固定，不随显示名称变化。
+      x-ui-operations: [ A02 ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationCreate"
+            example:
+              name: 图书管理系统
+              code: library-management
+      responses:
+        "201":
+          description: 应用已创建
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+              example:
+                id: 3
+                name: 图书管理系统
+                code: library-management
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  "/api/v1/applications/{applicationId}":
+    parameters:
+      - $ref: '#/components/parameters/ApplicationId'
+    patch:
+      operationId: updateApplication
+      tags: [ 应用与权限 ]
+      summary: 修改应用名称
+      description: 总管理员修改显示名称，应用数字 ID 和对接 code 保持固定。
+      x-ui-operations: [ A03 ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationInput"
+            example:
+              name: 课程项目管理系统
+      responses:
+        "200":
+          description: 应用名称已更新
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+              example:
+                id: 2
+                name: 课程项目管理系统
+                code: course-project-management
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  "/api/v1/applications/{applicationId}/permissions":
+    parameters:
+      - $ref: '#/components/parameters/ApplicationId'
+    get:
+      operationId: getApplicationPermissionTree
+      tags: [ 应用与权限 ]
+      summary: 查看应用权限树
+      description: 总管理员查看应用的菜单和按钮，每项的 apiCount 表示关联接口数量。编辑时通过权限详情接口读取完整
+        API。应用目录与角色配置共用此树，角色仍按权限 ID 勾选。
+      x-ui-operations: [ A04, R02, R03 ]
+      responses:
+        '200':
+          description: 应用内的完整权限树
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApplicationPermissions' }
+              example:
+                applicationId: 2
+                applicationName: 课程管理系统
+                applicationCode: course-project-management
+                menus:
+                  - id: 101
+                    name: 所有课程
+                    code: course:viewAll
+                    apiCount: 1
+                    buttons:
+                      - id: 102
+                        name: 审核课程
+                        code: course:review
+                        apiCount: 1
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+      x-implementation-status: RBAC1 结构化后端已实现
+    post:
+      operationId: createPermission
+      tags: [ 应用与权限 ]
+      summary: 登记菜单或按钮权限
+      description: 仅总管理员。登记应用内唯一的资源:操作权限标识。菜单 parentId 省略或为 null；按钮必须指向同应用菜单。apiIds
+        为已登记 API 的完整关联 ID 列表，可为空；不存在或属于其他应用则 400。同一 API
+        可关联多项权限。权限、关联和成功记录在同一事务保存。需要新增 API 时先调用 API 登记接口，再将返回的 ID 提交本接口。
+      x-ui-operations:
+        - A05
+        - A08
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PermissionCreate"
+            examples:
+              menu:
+                value:
+                  name: 所有课程
+                  code: course:viewAll
+                  type: MENU
+                  apiIds:
+                    - 1000
+              button:
+                value:
+                  name: 审核课程
+                  code: course:review
+                  type: BUTTON
+                  parentId: 101
+                  apiIds:
+                    - 1001
+      responses:
+        "201":
+          description: 权限及 API 关联已保存，API 登记由独立接口维护
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Permission"
+              example:
+                id: 102
+                applicationId: 2
+                name: 审核课程
+                code: course:review
+                type: BUTTON
+                parentId: 101
+                apiCount: 1
+                apis:
+                  - id: 1001
+                    applicationId: 2
+                    operationId: reviewCourse
+                    httpMethod: POST
+                    path: /courses/{courseId}/review
+                    permissionIds:
+                      - 102
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  "/api/v1/applications/{applicationId}/permissions/{permissionId}":
+    parameters:
+      - $ref: '#/components/parameters/ApplicationId'
+      - $ref: '#/components/parameters/PermissionId'
+    patch:
+      operationId: updatePermission
+      tags: [ 应用与权限 ]
+      summary: 保存权限资料和关联接口
+      description: 仅总管理员。修改名称、标识和 apiIds；权限 ID、所属应用、类型和所属菜单固定，角色授权保留。apiIds
+        省略则保留，提供则完整替换，[] 只清空本权限的关联，不删除任何 API 登记或其他权限关联。未登记或跨应用 API 返回
+        400。资料、关联及成功记录一起保存，下次检查使用新配置；用户仍可通过其他关联权限获得接口权限。
+      x-ui-operations:
+        - A06
+        - A08
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PermissionUpdate"
+            examples:
+              edit:
+                value:
+                  name: 审核课程申请
+                  apiIds:
+                    - 1001
+              remove:
+                summary: 清空关联，保留权限与角色授权
+                value:
+                  apiIds: []
+      responses:
+        "200":
+          description: 权限资料和关联 API 已保存
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Permission"
+              example:
+                id: 102
+                applicationId: 2
+                name: 审核课程
+                code: course:review
+                type: BUTTON
+                parentId: 101
+                apiCount: 1
+                apis:
+                  - id: 1001
+                    applicationId: 2
+                    operationId: reviewCourse
+                    httpMethod: POST
+                    path: /courses/{courseId}/review
+                    permissionIds:
+                      - 102
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+    get:
+      operationId: getPermission
+      tags:
+        - 应用与权限
+      summary: 查看权限及关联接口
+      description: 总管理员打开权限编辑或关联接口配置时读取完整资料，只返回指定应用下的权限。
+      x-ui-operations:
+        - A06
+        - A07
+      responses:
+        "200":
+          description: 权限资料和完整关联接口
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Permission"
+              example:
+                id: 102
+                applicationId: 2
+                name: 审核课程
+                code: course:review
+                type: BUTTON
+                parentId: 101
+                apiCount: 1
+                apis:
+                  - id: 1001
+                    applicationId: 2
+                    operationId: reviewCourse
+                    httpMethod: POST
+                    path: /courses/{courseId}/review
+                    permissionIds:
+                      - 102
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  /api/v1/roles:
+    get:
+      operationId: listRoles
+      tags:
+        - 角色管理
+      summary: 查看或搜索角色
+      description: 总管理员默认查询全部角色（含只读的预置管理角色）；部门管理员只读查询 BUSINESS 角色。可用 roleType
+        筛选，部门管理员请求预置管理角色类型返回 403。列表返回角色类型、直接父角色 inheritedRoles、直接子角色
+        inheritedByRoles、直接及有效权限数量和应用统计，不需要逐条请求详情。选择父角色或为用户分配业务角色时使用
+        roleType=BUSINESS，并排除当前角色；循环继承仍由保存接口校验。读取不会修改继承关系。
+      x-ui-operations:
+        - R01
+        - G02
+        - G04
+        - G05
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+        - name: keyword
+          in: query
+          description: 按角色名称搜索
+          schema:
+            $ref: "#/components/schemas/Keyword"
+        - name: roleType
+          in: query
+          description: 省略时按调用者范围返回；父角色选择与用户授权固定传 BUSINESS。
+          schema:
+            $ref: "#/components/schemas/RoleType"
+      responses:
+        "200":
+          description: 按调用者范围与 roleType 筛选后的角色分页结果
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleConfigurationPage"
+              examples:
+                allRoles:
+                  summary: 总管理员角色管理列表，含只读预置角色
+                  value:
+                    items:
+                      - id: 1
+                        name: 总管理员
+                        description: 维护本系统全部管理功能
+                        roleType: TOTAL_ADMIN
+                        applications:
+                          - applicationId: 1
+                            applicationName: 权限管理系统
+                            permissionCount: 27
+                        inheritedRoles: []
+                        inheritedByRoles: []
+                        directPermissionCount: 27
+                        effectivePermissionCount: 27
+                      - id: 2
+                        name: 部门管理员
+                        description: 管理本部门及下级部门的用户并分配角色
+                        roleType: DEPARTMENT_ADMIN
+                        applications:
+                          - applicationId: 1
+                            applicationName: 权限管理系统
+                            permissionCount: 12
+                        inheritedRoles: []
+                        inheritedByRoles: []
+                        directPermissionCount: 12
+                        effectivePermissionCount: 12
+                      - id: 3
+                        name: 课程查看员
+                        description: 基础查看角色：查看自己的课程
+                        roleType: BUSINESS
+                        applications:
+                          - applicationId: 1
+                            applicationName: 权限管理系统
+                            permissionCount: 1
+                          - applicationId: 2
+                            applicationName: 课程管理系统
+                            permissionCount: 1
+                        inheritedRoles: []
+                        inheritedByRoles:
+                          - id: 4
+                            name: 课程教师
+                        directPermissionCount: 2
+                        effectivePermissionCount: 2
+                      - id: 4
+                        name: 课程教师
+                        description: 继承课程查看员，直接拥有课程申请权限
+                        roleType: BUSINESS
+                        applications:
+                          - applicationId: 1
+                            applicationName: 权限管理系统
+                            permissionCount: 1
+                          - applicationId: 2
+                            applicationName: 课程管理系统
+                            permissionCount: 2
+                        inheritedRoles:
+                          - id: 3
+                            name: 课程查看员
+                        inheritedByRoles:
+                          - id: 6
+                            name: 课程管理员
+                        directPermissionCount: 1
+                        effectivePermissionCount: 3
+                      - id: 5
+                        name: 学期管理员
+                        description: 独立维护学期，不参与课程查看继承链
+                        roleType: BUSINESS
+                        applications:
+                          - applicationId: 1
+                            applicationName: 权限管理系统
+                            permissionCount: 1
+                          - applicationId: 2
+                            applicationName: 课程管理系统
+                            permissionCount: 3
+                        inheritedRoles: []
+                        inheritedByRoles:
+                          - id: 6
+                            name: 课程管理员
+                        directPermissionCount: 4
+                        effectivePermissionCount: 4
+                      - id: 6
+                        name: 课程管理员
+                        description: 同时继承课程教师与学期管理员，形成多父、多层继承
+                        roleType: BUSINESS
+                        applications:
+                          - applicationId: 1
+                            applicationName: 权限管理系统
+                            permissionCount: 1
+                          - applicationId: 2
+                            applicationName: 课程管理系统
+                            permissionCount: 8
+                        inheritedRoles:
+                          - id: 4
+                            name: 课程教师
+                          - id: 5
+                            name: 学期管理员
+                        inheritedByRoles: []
+                        directPermissionCount: 4
+                        effectivePermissionCount: 9
+                      - id: 7
+                        name: 课程目录查看员
+                        description: 查看所有课程，为审核角色提供菜单
+                        roleType: BUSINESS
+                        applications:
+                          - applicationId: 2
+                            applicationName: 课程管理系统
+                            permissionCount: 1
+                        inheritedRoles: []
+                        inheritedByRoles:
+                          - id: 8
+                            name: 课程审核员
+                        directPermissionCount: 1
+                        effectivePermissionCount: 1
+                      - id: 8
+                        name: 课程审核员
+                        description: 继承所有课程菜单，直接配置审核按钮
+                        roleType: BUSINESS
+                        applications:
+                          - applicationId: 2
+                            applicationName: 课程管理系统
+                            permissionCount: 2
+                        inheritedRoles:
+                          - id: 7
+                            name: 课程目录查看员
+                        inheritedByRoles: []
+                        directPermissionCount: 1
+                        effectivePermissionCount: 2
+                      - id: 9
+                        name: 学期维护员
+                        description: 查看和新建学期
+                        roleType: BUSINESS
+                        applications:
+                          - applicationId: 2
+                            applicationName: 课程管理系统
+                            permissionCount: 2
+                        inheritedRoles: []
+                        inheritedByRoles: []
+                        directPermissionCount: 2
+                        effectivePermissionCount: 2
+                      - id: 10
+                        name: 课程列表查看员
+                        description: 另一课程菜单来源，可演示多个配置来源
+                        roleType: BUSINESS
+                        applications:
+                          - applicationId: 2
+                            applicationName: 课程管理系统
+                            permissionCount: 1
+                        inheritedRoles: []
+                        inheritedByRoles: []
+                        directPermissionCount: 1
+                        effectivePermissionCount: 1
+                    page: 1
+                    pageSize: 20
+                    total: 10
+                businessRoles:
+                  summary: roleType=BUSINESS，用于选择父角色或用户授权
+                  value:
+                    items:
+                      - id: 3
+                        name: 课程查看员
+                        description: 基础查看角色：查看自己的课程
+                        roleType: BUSINESS
+                        applications:
+                          - applicationId: 1
+                            applicationName: 权限管理系统
+                            permissionCount: 1
+                          - applicationId: 2
+                            applicationName: 课程管理系统
+                            permissionCount: 1
+                        inheritedRoles: []
+                        inheritedByRoles:
+                          - id: 4
+                            name: 课程教师
+                        directPermissionCount: 2
+                        effectivePermissionCount: 2
+                      - id: 4
+                        name: 课程教师
+                        description: 继承课程查看员，直接拥有课程申请权限
+                        roleType: BUSINESS
+                        applications:
+                          - applicationId: 1
+                            applicationName: 权限管理系统
+                            permissionCount: 1
+                          - applicationId: 2
+                            applicationName: 课程管理系统
+                            permissionCount: 2
+                        inheritedRoles:
+                          - id: 3
+                            name: 课程查看员
+                        inheritedByRoles:
+                          - id: 6
+                            name: 课程管理员
+                        directPermissionCount: 1
+                        effectivePermissionCount: 3
+                      - id: 5
+                        name: 学期管理员
+                        description: 独立维护学期，不参与课程查看继承链
+                        roleType: BUSINESS
+                        applications:
+                          - applicationId: 1
+                            applicationName: 权限管理系统
+                            permissionCount: 1
+                          - applicationId: 2
+                            applicationName: 课程管理系统
+                            permissionCount: 3
+                        inheritedRoles: []
+                        inheritedByRoles:
+                          - id: 6
+                            name: 课程管理员
+                        directPermissionCount: 4
+                        effectivePermissionCount: 4
+                      - id: 6
+                        name: 课程管理员
+                        description: 同时继承课程教师与学期管理员，形成多父、多层继承
+                        roleType: BUSINESS
+                        applications:
+                          - applicationId: 1
+                            applicationName: 权限管理系统
+                            permissionCount: 1
+                          - applicationId: 2
+                            applicationName: 课程管理系统
+                            permissionCount: 8
+                        inheritedRoles:
+                          - id: 4
+                            name: 课程教师
+                          - id: 5
+                            name: 学期管理员
+                        inheritedByRoles: []
+                        directPermissionCount: 4
+                        effectivePermissionCount: 9
+                      - id: 7
+                        name: 课程目录查看员
+                        description: 查看所有课程，为审核角色提供菜单
+                        roleType: BUSINESS
+                        applications:
+                          - applicationId: 2
+                            applicationName: 课程管理系统
+                            permissionCount: 1
+                        inheritedRoles: []
+                        inheritedByRoles:
+                          - id: 8
+                            name: 课程审核员
+                        directPermissionCount: 1
+                        effectivePermissionCount: 1
+                      - id: 8
+                        name: 课程审核员
+                        description: 继承所有课程菜单，直接配置审核按钮
+                        roleType: BUSINESS
+                        applications:
+                          - applicationId: 2
+                            applicationName: 课程管理系统
+                            permissionCount: 2
+                        inheritedRoles:
+                          - id: 7
+                            name: 课程目录查看员
+                        inheritedByRoles: []
+                        directPermissionCount: 1
+                        effectivePermissionCount: 2
+                      - id: 9
+                        name: 学期维护员
+                        description: 查看和新建学期
+                        roleType: BUSINESS
+                        applications:
+                          - applicationId: 2
+                            applicationName: 课程管理系统
+                            permissionCount: 2
+                        inheritedRoles: []
+                        inheritedByRoles: []
+                        directPermissionCount: 2
+                        effectivePermissionCount: 2
+                      - id: 10
+                        name: 课程列表查看员
+                        description: 另一课程菜单来源，可演示多个配置来源
+                        roleType: BUSINESS
+                        applications:
+                          - applicationId: 2
+                            applicationName: 课程管理系统
+                            permissionCount: 1
+                        inheritedRoles: []
+                        inheritedByRoles: []
+                        directPermissionCount: 1
+                        effectivePermissionCount: 1
+                    page: 1
+                    pageSize: 20
+                    total: 8
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+    post:
+      operationId: createRole
+      tags:
+        - 角色管理
+      summary: 新增业务角色及继承配置
+      description: 仅总管理员。permissionIds 为最终直接权限，inheritedRoleIds
+        为最终直接父角色，两者必须提交，可同时为空。创建前按全部父角色的有效权限合并、去重；禁止在创建时将已继承的权限重复配置为直接权限。按钮所属菜单可由最终直接或继承权限满足。校验父角色存在、均为
+        BUSINESS，且关系无自继承或循环；无效配置返回
+        400。角色、直接授权、继承关联和成功日志在一个事务内保存。返回有效权限与全部配置来源；不为用户自动分配角色。 返回的
+        roleType、父子关系、权限数量和 assignedUserCount 均为服务端计算字段，不接受客户端提交。
+      x-ui-operations:
+        - R02
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleConfigurationInput"
+            examples:
+              inheritMenu:
+                summary: 继承菜单，仅直接配置审核按钮
+                value:
+                  name: 课程审核员
+                  description: 继承课程菜单，直接配置审核按钮
+                  permissionIds:
+                    - 102
+                  inheritedRoleIds:
+                    - 7
+              empty:
+                summary: 创建无权限、无继承的业务角色
+                value:
+                  name: 待配置角色
+                  permissionIds: []
+                  inheritedRoleIds: []
+      responses:
+        "201":
+          description: 角色、直接权限与继承配置已提交
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleConfiguration"
+              examples:
+                saved:
+                  summary: 与原型课程审核员一致：继承角色7，直接审核权限102
+                  value:
+                    id: 8
+                    name: 课程审核员
+                    description: 继承所有课程菜单，直接配置审核按钮
+                    roleType: BUSINESS
+                    applications:
+                      - applicationId: 2
+                        applicationName: 课程管理系统
+                        permissionCount: 2
+                    inheritedRoles:
+                      - id: 7
+                        name: 课程目录查看员
+                    inheritedByRoles: []
+                    directPermissionCount: 1
+                    effectivePermissionCount: 2
+                    permissionIds:
+                      - 102
+                    effectivePermissions:
+                      - id: 101
+                        applicationId: 2
+                        name: 所有课程
+                        code: course:viewAll
+                        type: MENU
+                        parentId: null
+                        acquisition: INHERITED
+                        sourceRoles:
+                          - id: 7
+                            name: 课程目录查看员
+                      - id: 102
+                        applicationId: 2
+                        name: 审核课程
+                        code: course:review
+                        type: BUTTON
+                        parentId: 101
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 8
+                            name: 课程审核员
+                    assignedUserCount: 0
+                empty:
+                  summary: 两个空列表保存后的空业务角色
+                  value:
+                    id: 11
+                    name: 待配置角色
+                    description: ""
+                    roleType: BUSINESS
+                    applications: []
+                    inheritedRoles: []
+                    inheritedByRoles: []
+                    directPermissionCount: 0
+                    effectivePermissionCount: 0
+                    permissionIds: []
+                    effectivePermissions: []
+                    assignedUserCount: 0
+        "400":
+          description: 请求字段无效，父角色不存在或不是业务角色、自继承、循环、无效新增直接权限或最终缺少按钮所属菜单。均不保存任何修改。
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+              examples:
+                cycle:
+                  value:
+                    type: urn:rbac-admin:problem:invalid-request
+                    title: 请求不符合要求
+                    status: 400
+                    code: INVALID_REQUEST
+                    detail: 课程查看员 → 课程教师 → 课程查看员 会形成循环继承，请调整父角色后重新提交。
+                duplicateInherited:
+                  value:
+                    type: urn:rbac-admin:problem:invalid-request
+                    title: 请求不符合要求
+                    status: 400
+                    code: INVALID_REQUEST
+                    detail: 权限101已通过继承获得，不能新增为直接权限。
+                missingMenu:
+                  value:
+                    type: urn:rbac-admin:problem:invalid-request
+                    title: 请求不符合要求
+                    status: 400
+                    code: INVALID_REQUEST
+                    detail: 审核课程按钮的所属菜单未在最终有效权限中，请先配置或继承该菜单。
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  "/api/v1/roles/{roleId}":
+    parameters:
+      - $ref: "#/components/parameters/RoleId"
+    get:
+      operationId: getRole
+      tags:
+        - 角色管理
+      summary: 查看角色直接配置、继承关系及有效权限
+      description: 总管理员查询业务或预置管理角色；部门管理员只读查询业务角色，查询预置管理角色返回 403。roleType 为 TOTAL_ADMIN
+        或 DEPARTMENT_ADMIN 时界面只读，不允许作为父角色，也不能创建、修改或删除这类角色。permissionIds
+        仅含直接配置；inheritedRoles、inheritedByRoles
+        分别列直接父角色和直接子角色；effectivePermissions
+        返回去重的全部有效权限、获得方式和实际直接配置来源。中间传递角色不算来源，多条路径指向同一来源只返回一次。assignedUserCount
+        包含停用用户，用于删除前提示；DELETE 仍执行最终校验。
+      x-ui-operations:
+        - R03
+      responses:
+        "200":
+          description: 直接配置、继承关系及去重有效权限
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleConfiguration"
+              examples:
+                inheritMenu:
+                  summary: 角色8继承角色7的所有课程菜单，仅直接配置审核按钮
+                  value:
+                    id: 8
+                    name: 课程审核员
+                    description: 继承所有课程菜单，直接配置审核按钮
+                    roleType: BUSINESS
+                    applications:
+                      - applicationId: 2
+                        applicationName: 课程管理系统
+                        permissionCount: 2
+                    inheritedRoles:
+                      - id: 7
+                        name: 课程目录查看员
+                    inheritedByRoles: []
+                    directPermissionCount: 1
+                    effectivePermissionCount: 2
+                    permissionIds:
+                      - 102
+                    effectivePermissions:
+                      - id: 101
+                        applicationId: 2
+                        name: 所有课程
+                        code: course:viewAll
+                        type: MENU
+                        parentId: null
+                        acquisition: INHERITED
+                        sourceRoles:
+                          - id: 7
+                            name: 课程目录查看员
+                      - id: 102
+                        applicationId: 2
+                        name: 审核课程
+                        code: course:review
+                        type: BUTTON
+                        parentId: 101
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 8
+                            name: 课程审核员
+                    assignedUserCount: 0
+                overlapAndMultipleLevels:
+                  summary: 角色6多层继承；已有我的权限直接配置与继承重叠，来源保留
+                  value:
+                    id: 6
+                    name: 课程管理员
+                    description: 同时继承课程教师与学期管理员，形成多父、多层继承
+                    roleType: BUSINESS
+                    applications:
+                      - applicationId: 1
+                        applicationName: 权限管理系统
+                        permissionCount: 1
+                      - applicationId: 2
+                        applicationName: 课程管理系统
+                        permissionCount: 8
+                    inheritedRoles:
+                      - id: 4
+                        name: 课程教师
+                      - id: 5
+                        name: 学期管理员
+                    inheritedByRoles: []
+                    directPermissionCount: 4
+                    effectivePermissionCount: 9
+                    permissionIds:
+                      - 19
+                      - 101
+                      - 102
+                      - 108
+                    effectivePermissions:
+                      - id: 19
+                        applicationId: 1
+                        name: 我的权限
+                        code: permission:viewOwn
+                        type: MENU
+                        parentId: null
+                        acquisition: BOTH
+                        sourceRoles:
+                          - id: 3
+                            name: 课程查看员
+                          - id: 5
+                            name: 学期管理员
+                          - id: 6
+                            name: 课程管理员
+                      - id: 101
+                        applicationId: 2
+                        name: 所有课程
+                        code: course:viewAll
+                        type: MENU
+                        parentId: null
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 6
+                            name: 课程管理员
+                      - id: 102
+                        applicationId: 2
+                        name: 审核课程
+                        code: course:review
+                        type: BUTTON
+                        parentId: 101
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 6
+                            name: 课程管理员
+                      - id: 103
+                        applicationId: 2
+                        name: 我的课程
+                        code: course:viewOwn
+                        type: MENU
+                        parentId: null
+                        acquisition: INHERITED
+                        sourceRoles:
+                          - id: 3
+                            name: 课程查看员
+                      - id: 104
+                        applicationId: 2
+                        name: 申请新课程
+                        code: course:create
+                        type: BUTTON
+                        parentId: 103
+                        acquisition: INHERITED
+                        sourceRoles:
+                          - id: 4
+                            name: 课程教师
+                      - id: 105
+                        applicationId: 2
+                        name: 学期管理
+                        code: term:view
+                        type: MENU
+                        parentId: null
+                        acquisition: INHERITED
+                        sourceRoles:
+                          - id: 5
+                            name: 学期管理员
+                      - id: 106
+                        applicationId: 2
+                        name: 新建学期
+                        code: term:create
+                        type: BUTTON
+                        parentId: 105
+                        acquisition: INHERITED
+                        sourceRoles:
+                          - id: 5
+                            name: 学期管理员
+                      - id: 107
+                        applicationId: 2
+                        name: 删除学期
+                        code: term:delete
+                        type: BUTTON
+                        parentId: 105
+                        acquisition: INHERITED
+                        sourceRoles:
+                          - id: 5
+                            name: 学期管理员
+                      - id: 108
+                        applicationId: 2
+                        name: 删除课程
+                        code: course:delete
+                        type: BUTTON
+                        parentId: 101
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 6
+                            name: 课程管理员
+                    assignedUserCount: 1
+                multipleSources:
+                  summary: 将角色8调整为同时继承角色7和10后的结果，同一菜单列出两个配置来源
+                  value:
+                    id: 8
+                    name: 课程审核员
+                    description: 继承所有课程菜单，直接配置审核按钮
+                    roleType: BUSINESS
+                    applications:
+                      - applicationId: 2
+                        applicationName: 课程管理系统
+                        permissionCount: 2
+                    inheritedRoles:
+                      - id: 7
+                        name: 课程目录查看员
+                      - id: 10
+                        name: 课程列表查看员
+                    inheritedByRoles: []
+                    directPermissionCount: 1
+                    effectivePermissionCount: 2
+                    permissionIds:
+                      - 102
+                    effectivePermissions:
+                      - id: 101
+                        applicationId: 2
+                        name: 所有课程
+                        code: course:viewAll
+                        type: MENU
+                        parentId: null
+                        acquisition: INHERITED
+                        sourceRoles:
+                          - id: 7
+                            name: 课程目录查看员
+                          - id: 10
+                            name: 课程列表查看员
+                      - id: 102
+                        applicationId: 2
+                        name: 审核课程
+                        code: course:review
+                        type: BUTTON
+                        parentId: 101
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 8
+                            name: 课程审核员
+                    assignedUserCount: 0
+                predefined:
+                  summary: 总管理员预置权限只读，父子继承关系均为空
+                  value:
+                    id: 1
+                    name: 总管理员
+                    description: 维护本系统全部管理功能
+                    roleType: TOTAL_ADMIN
+                    applications:
+                      - applicationId: 1
+                        applicationName: 权限管理系统
+                        permissionCount: 27
+                    inheritedRoles: []
+                    inheritedByRoles: []
+                    directPermissionCount: 27
+                    effectivePermissionCount: 27
+                    permissionIds:
+                      - 1
+                      - 2
+                      - 3
+                      - 4
+                      - 5
+                      - 6
+                      - 7
+                      - 8
+                      - 9
+                      - 10
+                      - 11
+                      - 12
+                      - 13
+                      - 14
+                      - 15
+                      - 16
+                      - 17
+                      - 18
+                      - 19
+                      - 20
+                      - 21
+                      - 22
+                      - 23
+                      - 24
+                      - 25
+                      - 26
+                      - 27
+                    effectivePermissions:
+                      - id: 1
+                        applicationId: 1
+                        name: 应用与权限
+                        code: application:view
+                        type: MENU
+                        parentId: null
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 2
+                        applicationId: 1
+                        name: 新增应用
+                        code: application:create
+                        type: BUTTON
+                        parentId: 1
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 3
+                        applicationId: 1
+                        name: 修改应用
+                        code: application:edit
+                        type: BUTTON
+                        parentId: 1
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 4
+                        applicationId: 1
+                        name: 新增权限
+                        code: permission:create
+                        type: BUTTON
+                        parentId: 1
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 5
+                        applicationId: 1
+                        name: 修改权限
+                        code: permission:edit
+                        type: BUTTON
+                        parentId: 1
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 6
+                        applicationId: 1
+                        name: 配置关联接口
+                        code: api:manage
+                        type: BUTTON
+                        parentId: 1
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 7
+                        applicationId: 1
+                        name: 角色管理
+                        code: role:view
+                        type: MENU
+                        parentId: null
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 8
+                        applicationId: 1
+                        name: 新增角色
+                        code: role:create
+                        type: BUTTON
+                        parentId: 7
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 9
+                        applicationId: 1
+                        name: 配置角色权限
+                        code: role:edit
+                        type: BUTTON
+                        parentId: 7
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 10
+                        applicationId: 1
+                        name: 删除角色
+                        code: role:delete
+                        type: BUTTON
+                        parentId: 7
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 11
+                        applicationId: 1
+                        name: 用户与部门
+                        code: user:view
+                        type: MENU
+                        parentId: null
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 12
+                        applicationId: 1
+                        name: 新增用户
+                        code: user:create
+                        type: BUTTON
+                        parentId: 11
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 13
+                        applicationId: 1
+                        name: 修改用户
+                        code: user:edit
+                        type: BUTTON
+                        parentId: 11
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 14
+                        applicationId: 1
+                        name: 新增部门
+                        code: department:create
+                        type: BUTTON
+                        parentId: 11
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 15
+                        applicationId: 1
+                        name: 修改部门
+                        code: department:edit
+                        type: BUTTON
+                        parentId: 11
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 16
+                        applicationId: 1
+                        name: 用户授权
+                        code: assignment:view
+                        type: MENU
+                        parentId: null
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 17
+                        applicationId: 1
+                        name: 分配与撤销角色
+                        code: assignment:edit
+                        type: BUTTON
+                        parentId: 16
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 18
+                        applicationId: 1
+                        name: 批量授权
+                        code: assignment:batch
+                        type: BUTTON
+                        parentId: 16
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 19
+                        applicationId: 1
+                        name: 我的权限
+                        code: permission:viewOwn
+                        type: MENU
+                        parentId: null
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 20
+                        applicationId: 1
+                        name: 操作记录
+                        code: operationLog:view
+                        type: MENU
+                        parentId: null
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 21
+                        applicationId: 1
+                        name: 我的申请
+                        code: request:viewOwn
+                        type: MENU
+                        parentId: null
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 22
+                        applicationId: 1
+                        name: 申请权限
+                        code: request:create
+                        type: BUTTON
+                        parentId: 21
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 23
+                        applicationId: 1
+                        name: 撤回申请
+                        code: request:withdraw
+                        type: BUTTON
+                        parentId: 21
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 24
+                        applicationId: 1
+                        name: 权限申请审核
+                        code: request:review
+                        type: MENU
+                        parentId: null
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 25
+                        applicationId: 1
+                        name: 审核申请
+                        code: request:approve
+                        type: BUTTON
+                        parentId: 24
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 26
+                        applicationId: 1
+                        name: 角色创建申请
+                        code: roleRequest:view
+                        type: MENU
+                        parentId: null
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                      - id: 27
+                        applicationId: 1
+                        name: 申请创建角色
+                        code: roleRequest:create
+                        type: BUTTON
+                        parentId: 26
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 1
+                            name: 总管理员
+                    assignedUserCount: 1
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+    put:
+      operationId: updateRole
+      tags:
+        - 角色管理
+      summary: 保存角色直接权限与继承关系
+      description: 仅总管理员。提交名称、说明、最终直接权限 permissionIds 和最终直接父角色
+        inheritedRoleIds，一次替换该角色在所有应用中的配置；[] 清空相应关联，省略必需列表返回
+        400。新增直接权限按本次最终继承关系判断，不允许重复配置已继承权限。保存前已经存在的直接权限，即使本次与继承重叠，也允许保留；取消直接勾选只移除直接关联，其他来源仍在则权限继续有效。按钮所属菜单按本次最终有效权限判断，菜单已继承时不要求加入直接权限。校验全部业务父角色及自继承、循环继承，失败整次回滚。成功时同步保存直接授权、继承关系和日志；所有受影响角色、用户下次查询或检查反映结果，不保存继承权限副本。
+        返回的 roleType、父子关系、权限数量和 assignedUserCount 均为服务端计算字段，不接受客户端提交。
+        预置管理角色仅可查看，对其提交修改返回 403。
+        修改权限或继承关系时，按拟保存的配置检查当前角色及全部直接、间接子角色。若修改后某个角色仍拥有按钮，却不再拥有其所属菜单，返回
+        400，提示受影响角色、按钮和菜单，整次修改不保存。其他直接或继承来源仍提供菜单时，不因该菜单依赖拒绝修改。前端预览用于提示，后端保存时执行同一校验。
+        同一授权变更流程按受影响角色及其后代所关联用户的当前有效权限检查待审核申请，权限已满足则转 SATISFIED，已结束申请状态不变。
+      x-ui-operations:
+        - R04
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleConfigurationInput"
+            examples:
+              save:
+                summary: 继承菜单并保存直接按钮
+                value:
+                  name: 课程审核员
+                  description: 继承课程菜单，直接配置审核按钮
+                  permissionIds:
+                    - 102
+                  inheritedRoleIds:
+                    - 7
+              keepExistingOverlap:
+                summary: 101 在保存前已是直接权限，允许保留已有重叠
+                value:
+                  name: 课程审核员
+                  permissionIds:
+                    - 101
+                    - 102
+                  inheritedRoleIds:
+                    - 7
+              removeDirectKeepInherited:
+                summary: 取消对101的直接配置，仍从角色7继承
+                value:
+                  name: 课程审核员
+                  permissionIds:
+                    - 102
+                  inheritedRoleIds:
+                    - 7
+              removeInheritance:
+                summary: 解除全部继承，同时将菜单和按钮保留为直接权限
+                value:
+                  name: 课程审核员
+                  permissionIds:
+                    - 101
+                    - 102
+                  inheritedRoleIds: []
+              clearAll:
+                summary: 清空直接权限和继承关系
+                value:
+                  name: 课程审核员
+                  permissionIds: []
+                  inheritedRoleIds: []
+      responses:
+        "200":
+          description: 全部配置已保存并立即生效
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleConfiguration"
+              examples:
+                saved:
+                  summary: 与原型课程审核员一致：继承角色7，直接审核权限102
+                  value:
+                    id: 8
+                    name: 课程审核员
+                    description: 继承所有课程菜单，直接配置审核按钮
+                    roleType: BUSINESS
+                    applications:
+                      - applicationId: 2
+                        applicationName: 课程管理系统
+                        permissionCount: 2
+                    inheritedRoles:
+                      - id: 7
+                        name: 课程目录查看员
+                    inheritedByRoles: []
+                    directPermissionCount: 1
+                    effectivePermissionCount: 2
+                    permissionIds:
+                      - 102
+                    effectivePermissions:
+                      - id: 101
+                        applicationId: 2
+                        name: 所有课程
+                        code: course:viewAll
+                        type: MENU
+                        parentId: null
+                        acquisition: INHERITED
+                        sourceRoles:
+                          - id: 7
+                            name: 课程目录查看员
+                      - id: 102
+                        applicationId: 2
+                        name: 审核课程
+                        code: course:review
+                        type: BUTTON
+                        parentId: 101
+                        acquisition: DIRECT
+                        sourceRoles:
+                          - id: 8
+                            name: 课程审核员
+                    assignedUserCount: 0
+                empty:
+                  summary: 两个空列表保存后的空业务角色
+                  value:
+                    id: 8
+                    name: 课程审核员
+                    description: ""
+                    roleType: BUSINESS
+                    applications: []
+                    inheritedRoles: []
+                    inheritedByRoles: []
+                    directPermissionCount: 0
+                    effectivePermissionCount: 0
+                    permissionIds: []
+                    effectivePermissions: []
+                    assignedUserCount: 0
+        "400":
+          description: 请求字段、父角色或权限配置无效，或最终配置使当前角色、直接或间接子角色的按钮缺少所属菜单。整次修改不保存，原配置不变。
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+              examples:
+                cycle:
+                  value:
+                    type: urn:rbac-admin:problem:invalid-request
+                    title: 请求不符合要求
+                    status: 400
+                    code: INVALID_REQUEST
+                    detail: 课程查看员 → 课程教师 → 课程查看员 会形成循环继承，请调整父角色后重新提交。
+                duplicateInherited:
+                  value:
+                    type: urn:rbac-admin:problem:invalid-request
+                    title: 请求不符合要求
+                    status: 400
+                    code: INVALID_REQUEST
+                    detail: 权限101已通过继承获得，不能新增为直接权限。
+                missingMenu:
+                  value:
+                    type: urn:rbac-admin:problem:invalid-request
+                    title: 请求不符合要求
+                    status: 400
+                    code: INVALID_REQUEST
+                    detail: 审核课程按钮的所属菜单未在最终有效权限中，请先配置或继承该菜单。
+                descendantMissingMenu:
+                  summary: 移除父角色菜单会破坏子角色的按钮依赖
+                  value:
+                    type: urn:rbac-admin:problem:invalid-request
+                    title: 请求不符合要求
+                    status: 400
+                    code: INVALID_REQUEST
+                    detail: 不能保存：修改课程查看员后，角色「课程教师」的「申请新课程」将失去所属菜单「我的课程」。请先调整该角色的权限或菜单来源。
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+    delete:
+      operationId: deleteRole
+      tags:
+        - 角色管理
+      summary: 删除未关联用户的业务角色
+      x-ui-operations:
+        - R05
+      description: 仅总管理员删除 BUSINESS 角色，预置管理角色不可删除。沿用 RBAC0
+        用户关联检查，停用用户同样计入。增加两个方向的继承检查：当前角色仍继承其他角色，或仍被其他角色继承时返回
+        409，提示先解除对应关联；不得静默级联解除继承。全部关联解除后，角色、直接权限关联和成功日志在同一事务内处理，保留权限定义和历史日志。
+        前端可先读取角色详情展示关联人数和父子角色，无需单独的删除检查接口；即使详情显示可删除，也以本次删除时的关联状态为准。
+        角色创建申请中的父角色只保存历史快照，不作为阻止删除的正式继承关联。删除后申请仍可查看，审批创建时须调整已删除的父角色。
+      responses:
+        "204":
+          description: 角色已删除，无响应正文
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: 仍有关联用户、父角色或继承本角色的其他角色，拒绝删除。
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+              examples:
+                inheritsOthers:
+                  value:
+                    type: urn:rbac-admin:problem:conflict
+                    title: 当前状态不允许操作
+                    status: 409
+                    code: CONFLICT
+                    detail: 当前角色仍继承课程查看员，请先解除继承关系。
+                inheritedByOthers:
+                  value:
+                    type: urn:rbac-admin:problem:conflict
+                    title: 当前状态不允许操作
+                    status: 409
+                    code: CONFLICT
+                    detail: 课程负责人仍继承当前角色，请先解除继承关系。
+                users:
+                  summary: 停用用户也计入直接关联人数
+                  value:
+                    type: urn:rbac-admin:problem:conflict
+                    title: 当前状态不允许操作
+                    status: 409
+                    code: CONFLICT
+                    detail: 课程查看员仍关联2个用户（含停用用户），请先撤销用户角色关联。
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  /api/v1/departments:
+    get:
+      operationId: getDepartmentTree
+      tags: [ 用户与部门 ]
+      summary: 查看部门结构
+      description: 总管理员查看完整组织树。部门管理员以本部门为根查看可管理的组织树。
+      x-ui-operations: [ D01, D02, D03, D04, D05, D06, D07 ]
+      responses:
+        '200':
+          description: 管理范围内的部门树
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DepartmentTree' }
+              example:
+                departments:
+                  - id: 2
+                    name: 计算机学院
+                    parentId: 1
+                    children:
+                      - id: 3
+                        name: 软件工程系
+                        parentId: 2
+                        children: []
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/InternalError' }
+      x-implementation-status: RBAC1 结构化后端已实现
+    post:
+      operationId: createDepartment
+      tags: [ 用户与部门 ]
+      summary: 新增部门
+      description: 总管理员在组织树中新增公司、分公司或部门节点。parentId 为 null 时创建顶层节点。
+      x-ui-operations: [ D02 ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DepartmentInput' }
+            example:
+              name: 档案室
+              parentId: 2
+      responses:
+        '201':
+          description: 部门已创建
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Department' }
+              example:
+                id: 5
+                name: 档案室
+                parentId: 2
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+      x-implementation-status: RBAC1 结构化后端已实现
+  "/api/v1/departments/{departmentId}":
+    parameters:
+      - $ref: '#/components/parameters/DepartmentId'
+    patch:
+      operationId: updateDepartment
+      tags: [ 用户与部门 ]
+      summary: 修改部门信息
+      description: 总管理员可修改部门名称或上级。上级须为已有部门且不得形成组织循环，parentId 为 null 表示改为顶层节点。
+      x-ui-operations: [ D03 ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DepartmentUpdate' }
+            example:
+              name: 档案管理室
+      responses:
+        '200':
+          description: 部门已更新
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Department' }
+              example:
+                id: 5
+                name: 档案管理室
+                parentId: 2
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+      x-implementation-status: RBAC1 结构化后端已实现
+  /api/v1/users:
+    get:
+      operationId: listUsers
+      tags:
+        - 用户与部门
+        - 用户授权
+      summary: 按管理范围查看或搜索用户
+      description: |-
+        总管理员可查询组织树中的全部用户，部门管理员可查询本部门及下级部门的用户。
+        用户与部门页和用户授权页共用此列表。指定 departmentId 时，查询该部门及下级部门中的用户。
+      x-ui-operations:
+        - D04
+        - G01
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+        - name: keyword
+          in: query
+          description: 按姓名、用户名搜索，用户授权页可一并按所属部门名称搜索
+          schema:
+            $ref: "#/components/schemas/Keyword"
+        - name: includeDepartmentName
+          in: query
+          description: 为 true 时，keyword 也匹配所属部门名称
+          schema:
+            type: boolean
+            default: false
+        - name: departmentId
+          in: query
+          description: 所选部门 ID，必须位于调用者的管理范围
+          schema:
+            $ref: "#/components/schemas/Id"
+      responses:
+        "200":
+          description: 管理范围内的用户分页结果
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserPage"
+              example:
+                items:
+                  - id: 12
+                    username: lin.xiao
+                    name: 林晓
+                    department:
+                      id: 3
+                      name: 软件工程系
+                    status: ACTIVE
+                    departmentAdministrator: false
+                    businessRoles:
+                      - id: 4
+                        name: 课程教师
+                page: 1
+                pageSize: 20
+                total: 1
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+    post:
+      operationId: createUser
+      tags:
+        - 用户与部门
+      summary: 新增用户
+      description: 管理员在其管理范围内新增用户，用户名全局唯一，默认
+        ACTIVE。初始密码由管理员在新增用户表单填写，数据库只保存密码摘要；响应只返回用户，不回显密码。仅总管理员可以提交
+        departmentAdministrator。编辑用户不修改密码，密码不得写入日志。
+      x-ui-operations:
+        - D05
+        - D08
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreate"
+            example:
+              username: zhou.min
+              name: 周敏
+              departmentId: 3
+              initialPassword: demo1234
+      responses:
+        "201":
+          description: 用户已创建
+          headers:
+            Cache-Control:
+              description: 用户创建响应禁止缓存
+              schema:
+                type: string
+                const: no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserCreated"
+              example:
+                user:
+                  id: 24
+                  username: zhou.min
+                  name: 周敏
+                  department:
+                    id: 3
+                    name: 软件工程系
+                  status: ACTIVE
+                  departmentAdministrator: false
+                  businessRoles: []
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  "/api/v1/users/{userId}":
+    parameters:
+      - $ref: "#/components/parameters/UserId"
+    get:
+      operationId: getUser
+      tags:
+        - 用户与部门
+        - 用户授权
+      summary: 查看用户信息及已有角色
+      description: 管理员可查询管理范围内的用户信息。编辑用户和分配角色弹窗共用该结果。
+      x-ui-operations:
+        - D06
+        - D07
+        - D08
+        - G02
+      responses:
+        "200":
+          $ref: "#/components/responses/UserReturned"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+    patch:
+      operationId: updateUser
+      tags:
+        - 用户与部门
+      summary: 修改用户、账号状态或所属部门
+      description: |-
+        管理员可修改管理范围内用户的姓名、用户名和账号状态。
+        仅总管理员可提交 departmentId 办理跨部门调动，或提交 departmentAdministrator 任命、撤销部门管理员角色。
+        调动后保留用户已有的业务角色。新部门决定后续管理范围。
+        账号停用后撤销其会话，后续登录和受保护的权限检查均不通过。重要操作写入操作记录。
+      x-ui-operations:
+        - D06
+        - D07
+        - D08
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+            examples:
+              transfer:
+                summary: 调动至数学学院
+                value:
+                  departmentId: 4
+              disable:
+                summary: 停用账号
+                value:
+                  status: DISABLED
+              appoint:
+                summary: 指定部门管理员
+                value:
+                  departmentAdministrator: true
+      responses:
+        "200":
+          $ref: "#/components/responses/UserTransferred"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  "/api/v1/users/{userId}/roles":
+    parameters:
+      - $ref: "#/components/parameters/UserId"
+    put:
+      operationId: replaceUserBusinessRoles
+      tags:
+        - 用户授权
+      summary: 保存单个用户的业务角色
+      description: >-
+        管理员提交管理范围内该用户最终应拥有的业务角色 ID 列表。空列表表示撤销全部业务角色。
+
+        管理角色不在本接口的修改范围。保存成功后直接生效，记录发生的分配和撤销。
+         获得新权限后，将该用户同权限的待审核申请标记 SATISFIED；仅处理 PENDING，保留其他历史状态，不因撤销角色恢复已结束申请。授权、状态变更及成功记录一起保存。 RBAC1 用户关联只保存显式选择的业务角色，祖先权限由继承计算，不自动添加祖先用户角色关联。 申请是否已满足按受影响用户全部有效权限计算，包含角色继承来源；仅更新 PENDING，其他历史状态保持不变。
+      x-ui-operations:
+        - G03
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReplaceUserRoles"
+            example:
+              roleIds:
+                - 3
+                - 8
+      responses:
+        "200":
+          description: 已保存的业务角色
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserRoleResult"
+              example:
+                userId: 12
+                roleIds:
+                  - 3
+                  - 8
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  /api/v1/user-role-assignments:
+    patch:
+      operationId: changeUserRolesInBatch
+      tags:
+        - 用户授权
+      summary: 批量分配或撤销业务角色
+      description: >-
+        管理员提交所选用户、所选业务角色，以及分配或撤销动作。所有用户都必须位于管理范围。
+
+        先校验整批，成功后一起保存并立即生效。用户的其他角色保留。
+
+        同一角色已分配时重复分配、未分配时重复撤销，均保持该用户现状。
+         获得新权限后，将该用户同权限的待审核申请标记 SATISFIED；仅处理 PENDING，保留其他历史状态，不因撤销角色恢复已结束申请。授权、状态变更及成功记录一起保存。 RBAC1 用户关联只保存显式选择的业务角色，祖先权限由继承计算，不自动添加祖先用户角色关联。 申请是否已满足按受影响用户全部有效权限计算，包含角色继承来源；仅更新 PENDING，其他历史状态保持不变。
+      x-ui-operations:
+        - G04
+        - G05
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchRoleChange"
+            examples:
+              grant:
+                summary: 批量分配
+                value:
+                  action: GRANT
+                  userIds:
+                    - 12
+                    - 13
+                  roleIds:
+                    - 8
+              revoke:
+                summary: 批量撤销
+                value:
+                  action: REVOKE
+                  userIds:
+                    - 12
+                    - 13
+                  roleIds:
+                    - 8
+      responses:
+        "200":
+          description: 批量操作已保存
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BatchRoleResult"
+              example:
+                action: GRANT
+                affectedUsers: 2
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  /api/v1/me/permissions:
+    get:
+      operationId: getMyPermissions
+      tags:
+        - 我的权限
+      summary: 查看我的权限
+      description: 按全部已登记应用汇总当前用户已获菜单、按钮及实际配置来源，aud 必须包含
+        permission-center。businessRoles 只返回显式分配的业务角色，祖先角色不作为额外用户角色关联。每项菜单、按钮的
+        sourceRoles
+        列出实际直接配置该权限的角色；预置管理权限可列对应管理角色。相同权限和相同来源均去重，不返回继承路径；内置基础功能没有角色来源时返回
+        []。普通用户可直接读取本人来源，无需访问管理员的角色详情接口。无权限的应用返回空菜单。
+      x-ui-operations:
+        - M01
+      responses:
+        "200":
+          description: 当前用户的有效业务权限
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MyPermissions"
+              examples:
+                teacher:
+                  summary: 林晓仅分配课程教师；菜单配置来源是课程查看员，申请按钮来源是课程教师
+                  value:
+                    businessRoles:
+                      - id: 4
+                        name: 课程教师
+                    applications:
+                      - applicationId: 1
+                        applicationName: 权限管理系统
+                        applicationCode: permission-center
+                        menus:
+                          - id: 19
+                            name: 我的权限
+                            code: permission:viewOwn
+                            sourceRoles:
+                              - id: 3
+                                name: 课程查看员
+                            buttons: []
+                          - id: 21
+                            name: 我的申请
+                            code: request:viewOwn
+                            sourceRoles: []
+                            buttons:
+                              - id: 22
+                                name: 申请权限
+                                code: request:create
+                                sourceRoles: []
+                              - id: 23
+                                name: 撤回申请
+                                code: request:withdraw
+                                sourceRoles: []
+                      - applicationId: 2
+                        applicationName: 课程管理系统
+                        applicationCode: course-project-management
+                        menus:
+                          - id: 103
+                            name: 我的课程
+                            code: course:viewOwn
+                            sourceRoles:
+                              - id: 3
+                                name: 课程查看员
+                            buttons:
+                              - id: 104
+                                name: 申请新课程
+                                code: course:create
+                                sourceRoles:
+                                  - id: 4
+                                    name: 课程教师
+                administrator:
+                  summary: 总管理员的管理权限来源为预置管理角色
+                  value:
+                    businessRoles: []
+                    applications:
+                      - applicationId: 1
+                        applicationName: 权限管理系统
+                        applicationCode: permission-center
+                        menus:
+                          - id: 1
+                            name: 应用与权限
+                            code: application:view
+                            sourceRoles:
+                              - id: 1
+                                name: 总管理员
+                            buttons:
+                              - id: 2
+                                name: 新增应用
+                                code: application:create
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                              - id: 3
+                                name: 修改应用
+                                code: application:edit
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                              - id: 4
+                                name: 新增权限
+                                code: permission:create
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                              - id: 5
+                                name: 修改权限
+                                code: permission:edit
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                              - id: 6
+                                name: 配置关联接口
+                                code: api:manage
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                          - id: 7
+                            name: 角色管理
+                            code: role:view
+                            sourceRoles:
+                              - id: 1
+                                name: 总管理员
+                            buttons:
+                              - id: 8
+                                name: 新增角色
+                                code: role:create
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                              - id: 9
+                                name: 配置角色权限
+                                code: role:edit
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                              - id: 10
+                                name: 删除角色
+                                code: role:delete
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                          - id: 11
+                            name: 用户与部门
+                            code: user:view
+                            sourceRoles:
+                              - id: 1
+                                name: 总管理员
+                            buttons:
+                              - id: 12
+                                name: 新增用户
+                                code: user:create
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                              - id: 13
+                                name: 修改用户
+                                code: user:edit
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                              - id: 14
+                                name: 新增部门
+                                code: department:create
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                              - id: 15
+                                name: 修改部门
+                                code: department:edit
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                          - id: 16
+                            name: 用户授权
+                            code: assignment:view
+                            sourceRoles:
+                              - id: 1
+                                name: 总管理员
+                            buttons:
+                              - id: 17
+                                name: 分配与撤销角色
+                                code: assignment:edit
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                              - id: 18
+                                name: 批量授权
+                                code: assignment:batch
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                          - id: 19
+                            name: 我的权限
+                            code: permission:viewOwn
+                            sourceRoles:
+                              - id: 1
+                                name: 总管理员
+                            buttons: []
+                          - id: 20
+                            name: 操作记录
+                            code: operationLog:view
+                            sourceRoles:
+                              - id: 1
+                                name: 总管理员
+                            buttons: []
+                          - id: 21
+                            name: 我的申请
+                            code: request:viewOwn
+                            sourceRoles:
+                              - id: 1
+                                name: 总管理员
+                            buttons:
+                              - id: 22
+                                name: 申请权限
+                                code: request:create
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                              - id: 23
+                                name: 撤回申请
+                                code: request:withdraw
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                          - id: 24
+                            name: 权限申请审核
+                            code: request:review
+                            sourceRoles:
+                              - id: 1
+                                name: 总管理员
+                            buttons:
+                              - id: 25
+                                name: 审核申请
+                                code: request:approve
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                          - id: 26
+                            name: 角色创建申请
+                            code: roleRequest:view
+                            sourceRoles:
+                              - id: 1
+                                name: 总管理员
+                            buttons:
+                              - id: 27
+                                name: 申请创建角色
+                                code: roleRequest:create
+                                sourceRoles:
+                                  - id: 1
+                                    name: 总管理员
+                      - applicationId: 2
+                        applicationName: 课程管理系统
+                        applicationCode: course-project-management
+                        menus: []
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  /api/v1/operation-logs:
+    get:
+      operationId: listOperationLogs
+      tags: [ 操作记录 ]
+      summary: 查看或搜索操作记录
+      description: >-
+        总管理员查看全部记录。部门管理员查看本部门及下级部门用户的管理记录，
+
+        以操作发生时用户所属的部门判断。同一批次涉及多部门时，只返回管理范围内的对象，
+
+        搜索和分页同样基于筛选后的记录和对象。
+
+        应用登记、角色权限配置、部门结构维护、跨部门调动等全局记录仅总管理员可见。
+         包含 API 登记/编辑/移除、权限 API 关联变更、权限申请提交/撤回/审核，以及角色创建申请提交/通过/拒绝。申请和角色创建处理为 GLOBAL，只有总管理员查询；不记录读取、打开编辑或取消行为。密码与完整登录令牌不得写入 detail。 RBAC1 增加角色继承关系新增、解除和变更记录，属于 GLOBAL，仅总管理员查看。
+      x-ui-operations: [ O01 ]
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: keyword
+          in: query
+          description: 搜索操作人、可见对象或操作内容
+          schema: { $ref: '#/components/schemas/Keyword' }
+      responses:
+        '200':
+          description: 可查看的操作记录分页结果
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OperationLogPage' }
+              example:
+                items:
+                  - id: 130
+                    occurredAt: 2026-11-10T09:15:00+08:00
+                    actorName: 顾晨
+                    action: 批量分配角色
+                    targetNames:
+                      - 林晓
+                      - 何雨桐
+                    detail: 课程管理员
+                    result: SUCCESS
+                page: 1
+                pageSize: 20
+                total: 1
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/InternalError' }
+      x-implementation-status: RBAC1 结构化后端已实现
+  "/api/v1/applications/{applicationId}/apis":
+    parameters:
+      - $ref: "#/components/parameters/ApplicationId"
+    get:
+      operationId: listApis
+      tags:
+        - API 登记
+      summary: 查询应用 API 清单
+      description: 仅总管理员。返回独立 API 登记及全部关联权限 ID，包含尚未关联权限的 API；按 ID 升序分页。
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+        - in: query
+          name: keyword
+          schema:
+            $ref: "#/components/schemas/Keyword"
+          description: 按接口标识或请求路径搜索
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiPage"
+              example:
+                items:
+                  - id: 1001
+                    applicationId: 2
+                    operationId: reviewCourse
+                    httpMethod: POST
+                    path: /courses/{courseId}/review
+                    permissionIds:
+                      - 102
+                page: 1
+                pageSize: 20
+                total: 1
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+    post:
+      operationId: registerApi
+      tags:
+        - API 登记
+      summary: 登记 API
+      description: 仅总管理员。从业务系统 API 文档填写
+        operationId、httpMethod、path；不创建业务代码。接口标识及方法、路径组合各自在应用内唯一，区分大小写，方法使用大写。允许先登记而不关联权限；无关联时
+        API 检查拒绝。登记及成功操作记录在一个事务提交。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiInput"
+            example:
+              operationId: reviewCourse
+              httpMethod: POST
+              path: /courses/{courseId}/review
+      responses:
+        "201":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Api"
+              example:
+                id: 1001
+                applicationId: 2
+                operationId: reviewCourse
+                httpMethod: POST
+                path: /courses/{courseId}/review
+                permissionIds:
+                  - 102
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  "/api/v1/applications/{applicationId}/apis/{apiId}":
+    parameters:
+      - $ref: "#/components/parameters/ApplicationId"
+      - $ref: "#/components/parameters/ApiId"
+    patch:
+      operationId: updateApi
+      tags:
+        - API 登记
+      summary: 编辑 API 登记
+      description: 仅总管理员。按 API 数字 ID 修改接口标识、方法或路径，所属应用固定，所有权限关联保留并共同引用新资料。唯一约束冲突
+        409；不存在或不属于应用 404。operationId 变更须与业务系统实际标识一起调整；旧标识检查返回
+        404，不保留隐式别名。变更及成功记录同一事务保存。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiUpdate"
+            example:
+              path: /courses/{courseId}/review
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Api"
+              example:
+                id: 1001
+                applicationId: 2
+                operationId: reviewCourse
+                httpMethod: POST
+                path: /courses/{courseId}/review
+                permissionIds:
+                  - 102
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+    delete:
+      operationId: deleteApi
+      tags:
+        - API 登记
+      summary: 移除 API 登记
+      description: 仅总管理员。删除 API 及其全部权限关联，不删除权限、角色和历史操作记录。成功后对应 operationId 检查返回 404
+        并拒绝执行。与只解除某项权限的关联不同；删除和成功记录同一事务提交。
+      responses:
+        "204":
+          description: 操作成功，无响应正文
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  /api/v1/permission-catalog:
+    get:
+      operationId: getPermissionCatalog
+      tags:
+        - 角色管理
+      summary: 读取角色配置权限目录
+      description: 仅总管理员与部门管理员只读访问，用于创建角色、角色创建申请和查看角色全部权限。按应用返回菜单、按钮和 parentId，不返回 API
+        清单。读取不意味着有权配置角色或调用对应 API；部门管理员仍不能新增或修改角色。树形目录完整返回。 RBAC1
+        中该接口仍返回原始登记目录，不是某角色的有效授权；编辑时结合所选父角色详情预览继承权限，最终由角色保存接口校验。
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionCatalog"
+              example:
+                applications:
+                  - id: 1
+                    name: 权限管理系统
+                    code: permission-center
+                    permissions:
+                      - id: 1
+                        applicationId: 1
+                        name: 应用与权限
+                        code: application:view
+                        type: MENU
+                        parentId: null
+                      - id: 2
+                        applicationId: 1
+                        name: 新增应用
+                        code: application:create
+                        type: BUTTON
+                        parentId: 1
+                      - id: 3
+                        applicationId: 1
+                        name: 修改应用
+                        code: application:edit
+                        type: BUTTON
+                        parentId: 1
+                      - id: 4
+                        applicationId: 1
+                        name: 新增权限
+                        code: permission:create
+                        type: BUTTON
+                        parentId: 1
+                      - id: 5
+                        applicationId: 1
+                        name: 修改权限
+                        code: permission:edit
+                        type: BUTTON
+                        parentId: 1
+                      - id: 6
+                        applicationId: 1
+                        name: 配置关联接口
+                        code: api:manage
+                        type: BUTTON
+                        parentId: 1
+                      - id: 7
+                        applicationId: 1
+                        name: 角色管理
+                        code: role:view
+                        type: MENU
+                        parentId: null
+                      - id: 8
+                        applicationId: 1
+                        name: 新增角色
+                        code: role:create
+                        type: BUTTON
+                        parentId: 7
+                      - id: 9
+                        applicationId: 1
+                        name: 配置角色权限
+                        code: role:edit
+                        type: BUTTON
+                        parentId: 7
+                      - id: 10
+                        applicationId: 1
+                        name: 删除角色
+                        code: role:delete
+                        type: BUTTON
+                        parentId: 7
+                      - id: 11
+                        applicationId: 1
+                        name: 用户与部门
+                        code: user:view
+                        type: MENU
+                        parentId: null
+                      - id: 12
+                        applicationId: 1
+                        name: 新增用户
+                        code: user:create
+                        type: BUTTON
+                        parentId: 11
+                      - id: 13
+                        applicationId: 1
+                        name: 修改用户
+                        code: user:edit
+                        type: BUTTON
+                        parentId: 11
+                      - id: 14
+                        applicationId: 1
+                        name: 新增部门
+                        code: department:create
+                        type: BUTTON
+                        parentId: 11
+                      - id: 15
+                        applicationId: 1
+                        name: 修改部门
+                        code: department:edit
+                        type: BUTTON
+                        parentId: 11
+                      - id: 16
+                        applicationId: 1
+                        name: 用户授权
+                        code: assignment:view
+                        type: MENU
+                        parentId: null
+                      - id: 17
+                        applicationId: 1
+                        name: 分配与撤销角色
+                        code: assignment:edit
+                        type: BUTTON
+                        parentId: 16
+                      - id: 18
+                        applicationId: 1
+                        name: 批量授权
+                        code: assignment:batch
+                        type: BUTTON
+                        parentId: 16
+                      - id: 19
+                        applicationId: 1
+                        name: 我的权限
+                        code: permission:viewOwn
+                        type: MENU
+                        parentId: null
+                      - id: 20
+                        applicationId: 1
+                        name: 操作记录
+                        code: operationLog:view
+                        type: MENU
+                        parentId: null
+                      - id: 21
+                        applicationId: 1
+                        name: 我的申请
+                        code: request:viewOwn
+                        type: MENU
+                        parentId: null
+                      - id: 22
+                        applicationId: 1
+                        name: 申请权限
+                        code: request:create
+                        type: BUTTON
+                        parentId: 21
+                      - id: 23
+                        applicationId: 1
+                        name: 撤回申请
+                        code: request:withdraw
+                        type: BUTTON
+                        parentId: 21
+                      - id: 24
+                        applicationId: 1
+                        name: 权限申请审核
+                        code: request:review
+                        type: MENU
+                        parentId: null
+                      - id: 25
+                        applicationId: 1
+                        name: 审核申请
+                        code: request:approve
+                        type: BUTTON
+                        parentId: 24
+                      - id: 26
+                        applicationId: 1
+                        name: 角色创建申请
+                        code: roleRequest:view
+                        type: MENU
+                        parentId: null
+                      - id: 27
+                        applicationId: 1
+                        name: 申请创建角色
+                        code: roleRequest:create
+                        type: BUTTON
+                        parentId: 26
+                  - id: 2
+                    name: 课程管理系统
+                    code: course-project-management
+                    permissions:
+                      - id: 101
+                        applicationId: 2
+                        name: 所有课程
+                        code: course:viewAll
+                        type: MENU
+                        parentId: null
+                      - id: 102
+                        applicationId: 2
+                        name: 审核课程
+                        code: course:review
+                        type: BUTTON
+                        parentId: 101
+                      - id: 108
+                        applicationId: 2
+                        name: 删除课程
+                        code: course:delete
+                        type: BUTTON
+                        parentId: 101
+                      - id: 103
+                        applicationId: 2
+                        name: 我的课程
+                        code: course:viewOwn
+                        type: MENU
+                        parentId: null
+                      - id: 104
+                        applicationId: 2
+                        name: 申请新课程
+                        code: course:create
+                        type: BUTTON
+                        parentId: 103
+                      - id: 105
+                        applicationId: 2
+                        name: 学期管理
+                        code: term:view
+                        type: MENU
+                        parentId: null
+                      - id: 106
+                        applicationId: 2
+                        name: 新建学期
+                        code: term:create
+                        type: BUTTON
+                        parentId: 105
+                      - id: 107
+                        applicationId: 2
+                        name: 删除学期
+                        code: term:delete
+                        type: BUTTON
+                        parentId: 105
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  /api/v1/me/requestable-permissions:
+    get:
+      operationId: getRequestablePermissions
+      tags:
+        - 权限申请
+      summary: 查询本人可申请的权限
+      description: 正常登录账号使用，aud 包含 permission-center。不接收
+        userId。按应用和菜单分组：未获得菜单时只列菜单，已获得菜单后只列其下未获得按钮；已获权限不作为申请选项。menu
+        可作为按钮分组的上下文标题。明确返回
+        MENU/BUTTON，空目录合法。不开放通过业务角色申请总管理员专属职责，包括部门维护；普通授权不得绕过管理职责。历史申请不因目录过滤而隐藏。完整返回目录。
+        已拥有权限及菜单前提均按用户全部有效权限判断，包含直接及多层继承来源；继承获得菜单后可申请其下未获得按钮。
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestablePermissions"
+              examples:
+                menuMissing:
+                  summary: 林晓仅有课程教师时，未获得的所有课程、学期管理都只列菜单
+                  value:
+                    applications:
+                      - id: 1
+                        name: 权限管理系统
+                        code: permission-center
+                        groups: []
+                      - id: 2
+                        name: 课程管理系统
+                        code: course-project-management
+                        groups:
+                          - menu:
+                              id: 101
+                              applicationId: 2
+                              name: 所有课程
+                              code: course:viewAll
+                              type: MENU
+                              parentId: null
+                            permissions:
+                              - id: 101
+                                applicationId: 2
+                                name: 所有课程
+                                code: course:viewAll
+                                type: MENU
+                                parentId: null
+                          - menu:
+                              id: 105
+                              applicationId: 2
+                              name: 学期管理
+                              code: term:view
+                              type: MENU
+                              parentId: null
+                            permissions:
+                              - id: 105
+                                applicationId: 2
+                                name: 学期管理
+                                code: term:view
+                                type: MENU
+                                parentId: null
+                inheritedMenu:
+                  summary: 林晓获得课程审核员后，从继承菜单下申请尚未获得的删除按钮；学期菜单仍未获得
+                  value:
+                    applications:
+                      - id: 1
+                        name: 权限管理系统
+                        code: permission-center
+                        groups: []
+                      - id: 2
+                        name: 课程管理系统
+                        code: course-project-management
+                        groups:
+                          - menu:
+                              id: 101
+                              applicationId: 2
+                              name: 所有课程
+                              code: course:viewAll
+                              type: MENU
+                              parentId: null
+                            permissions:
+                              - id: 108
+                                applicationId: 2
+                                name: 删除课程
+                                code: course:delete
+                                type: BUTTON
+                                parentId: 101
+                          - menu:
+                              id: 105
+                              applicationId: 2
+                              name: 学期管理
+                              code: term:view
+                              type: MENU
+                              parentId: null
+                            permissions:
+                              - id: 105
+                                applicationId: 2
+                                name: 学期管理
+                                code: term:view
+                                type: MENU
+                                parentId: null
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  /api/v1/permission-requests:
+    get:
+      operationId: listPermissionRequests
+      tags:
+        - 权限申请
+      summary: 查询本人或待审核的权限申请
+      description: view=MINE 默认只看本人；view=REVIEW
+        仅管理员可用，总管理员看全部、部门管理员仅看本部门及下级部门员工。先按当前权限和部门范围过滤，再按状态筛选和分页，createdAt、id
+        降序。已获权限不删除或隐藏历史记录。 直接权限、继承关系或用户角色变化后，写入流程按受影响用户当前有效权限更新仍为 PENDING
+        的申请；已满足则转为 SATISFIED，其他历史状态不变。查询不删除历史记录。
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+        - in: query
+          name: view
+          schema:
+            type: string
+            enum:
+              - MINE
+              - REVIEW
+            default: MINE
+          description: 本人记录或管理员审核记录
+        - in: query
+          name: status
+          schema:
+            $ref: "#/components/schemas/PermissionRequestStatus"
+          description: 省略查询全部状态
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionRequestPage"
+              example:
+                items:
+                  - id: 31
+                    applicantUserId: 12
+                    applicantName: 林晓
+                    applicantDepartmentId: 3
+                    permission:
+                      id: 102
+                      applicationId: 2
+                      name: 审核课程
+                      code: course:review
+                      type: BUTTON
+                      parentId: 101
+                    reason: 负责本学期课程审核
+                    status: PENDING
+                    reviewerUserId: null
+                    approvedRoleId: null
+                    createdAt: 2026-11-15T09:00:00+08:00
+                    reviewedAt: null
+                page: 1
+                pageSize: 20
+                total: 1
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+    post:
+      operationId: createPermissionRequest
+      tags:
+        - 权限申请
+      summary: 提交本人权限申请
+      description: 从令牌取申请人，不允许提交他人
+        ID。必须为正常账号，理由去除首尾空格后非空；权限必须属于当前本人可申请目录。已拥有、同项已有待审核申请或按钮所属菜单尚未获得返回
+        409。固定管理员职责不能通过申请业务权限绕过。创建 PENDING 记录，记录操作；不授予权限。
+        已拥有权限及按钮菜单前提均包含继承来源；审批授予的仍是业务角色，不建立用户与单项权限的直接授权。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PermissionRequestInput"
+            example:
+              permissionId: 102
+              reason: 负责本学期课程审核
+      responses:
+        "201":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionRequest"
+              example:
+                id: 31
+                applicantUserId: 12
+                applicantName: 林晓
+                applicantDepartmentId: 3
+                permission:
+                  id: 102
+                  applicationId: 2
+                  name: 审核课程
+                  code: course:review
+                  type: BUTTON
+                  parentId: 101
+                reason: 负责本学期课程审核
+                status: PENDING
+                reviewerUserId: null
+                approvedRoleId: null
+                createdAt: 2026-11-15T09:00:00+08:00
+                reviewedAt: null
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  "/api/v1/permission-requests/{requestId}":
+    parameters:
+      - $ref: "#/components/parameters/RequestId"
+    get:
+      operationId: getPermissionRequest
+      tags:
+        - 权限申请
+      summary: 查看权限申请及审核角色
+      description: 本人可读自己的记录，管理员按审核范围只读；越界或不存在返回 404。有权审核者的 approvalRoles
+        列出有效权限包含目标权限的业务角色。role 返回直接权限、直接父角色及完整 effectivePermissions
+        和实际配置来源，覆盖所有应用。extraPermissionIds
+        按候选角色全部有效权限扣除申请人已有有效权限、申请权限及必要所属菜单计算；非空则
+        selectable=false。审批提交时按最新权限重新校验，无合适角色时返回空数组。
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionRequestDetails"
+              examples:
+                inheritanceCandidates:
+                  summary: 林晓先获得所有课程菜单后申请审核按钮；角色8有效权限恰好满足，角色6另含删除课程及学期权限不可选
+                  value:
+                    id: 31
+                    applicantUserId: 12
+                    applicantName: 林晓
+                    applicantDepartmentId: 3
+                    permission:
+                      id: 102
+                      applicationId: 2
+                      name: 审核课程
+                      code: course:review
+                      type: BUTTON
+                      parentId: 101
+                    reason: 负责本学期课程审核
+                    status: PENDING
+                    reviewerUserId: null
+                    approvedRoleId: null
+                    createdAt: 2026-11-15T09:00:00+08:00
+                    reviewedAt: null
+                    approvalRoles:
+                      - role:
+                          id: 8
+                          name: 课程审核员
+                          description: 继承所有课程菜单，直接配置审核按钮
+                          roleType: BUSINESS
+                          applications:
+                            - applicationId: 2
+                              applicationName: 课程管理系统
+                              permissionCount: 2
+                          inheritedRoles:
+                            - id: 7
+                              name: 课程目录查看员
+                          inheritedByRoles: []
+                          directPermissionCount: 1
+                          effectivePermissionCount: 2
+                          permissionIds:
+                            - 102
+                          effectivePermissions:
+                            - id: 101
+                              applicationId: 2
+                              name: 所有课程
+                              code: course:viewAll
+                              type: MENU
+                              parentId: null
+                              acquisition: INHERITED
+                              sourceRoles:
+                                - id: 7
+                                  name: 课程目录查看员
+                            - id: 102
+                              applicationId: 2
+                              name: 审核课程
+                              code: course:review
+                              type: BUTTON
+                              parentId: 101
+                              acquisition: DIRECT
+                              sourceRoles:
+                                - id: 8
+                                  name: 课程审核员
+                          assignedUserCount: 0
+                        selectable: true
+                        extraPermissionIds: []
+                      - role:
+                          id: 6
+                          name: 课程管理员
+                          description: 同时继承课程教师与学期管理员，形成多父、多层继承
+                          roleType: BUSINESS
+                          applications:
+                            - applicationId: 1
+                              applicationName: 权限管理系统
+                              permissionCount: 1
+                            - applicationId: 2
+                              applicationName: 课程管理系统
+                              permissionCount: 8
+                          inheritedRoles:
+                            - id: 4
+                              name: 课程教师
+                            - id: 5
+                              name: 学期管理员
+                          inheritedByRoles: []
+                          directPermissionCount: 4
+                          effectivePermissionCount: 9
+                          permissionIds:
+                            - 19
+                            - 101
+                            - 102
+                            - 108
+                          effectivePermissions:
+                            - id: 19
+                              applicationId: 1
+                              name: 我的权限
+                              code: permission:viewOwn
+                              type: MENU
+                              parentId: null
+                              acquisition: BOTH
+                              sourceRoles:
+                                - id: 3
+                                  name: 课程查看员
+                                - id: 5
+                                  name: 学期管理员
+                                - id: 6
+                                  name: 课程管理员
+                            - id: 101
+                              applicationId: 2
+                              name: 所有课程
+                              code: course:viewAll
+                              type: MENU
+                              parentId: null
+                              acquisition: DIRECT
+                              sourceRoles:
+                                - id: 6
+                                  name: 课程管理员
+                            - id: 102
+                              applicationId: 2
+                              name: 审核课程
+                              code: course:review
+                              type: BUTTON
+                              parentId: 101
+                              acquisition: DIRECT
+                              sourceRoles:
+                                - id: 6
+                                  name: 课程管理员
+                            - id: 103
+                              applicationId: 2
+                              name: 我的课程
+                              code: course:viewOwn
+                              type: MENU
+                              parentId: null
+                              acquisition: INHERITED
+                              sourceRoles:
+                                - id: 3
+                                  name: 课程查看员
+                            - id: 104
+                              applicationId: 2
+                              name: 申请新课程
+                              code: course:create
+                              type: BUTTON
+                              parentId: 103
+                              acquisition: INHERITED
+                              sourceRoles:
+                                - id: 4
+                                  name: 课程教师
+                            - id: 105
+                              applicationId: 2
+                              name: 学期管理
+                              code: term:view
+                              type: MENU
+                              parentId: null
+                              acquisition: INHERITED
+                              sourceRoles:
+                                - id: 5
+                                  name: 学期管理员
+                            - id: 106
+                              applicationId: 2
+                              name: 新建学期
+                              code: term:create
+                              type: BUTTON
+                              parentId: 105
+                              acquisition: INHERITED
+                              sourceRoles:
+                                - id: 5
+                                  name: 学期管理员
+                            - id: 107
+                              applicationId: 2
+                              name: 删除学期
+                              code: term:delete
+                              type: BUTTON
+                              parentId: 105
+                              acquisition: INHERITED
+                              sourceRoles:
+                                - id: 5
+                                  name: 学期管理员
+                            - id: 108
+                              applicationId: 2
+                              name: 删除课程
+                              code: course:delete
+                              type: BUTTON
+                              parentId: 101
+                              acquisition: DIRECT
+                              sourceRoles:
+                                - id: 6
+                                  name: 课程管理员
+                          assignedUserCount: 1
+                        selectable: false
+                        extraPermissionIds:
+                          - 105
+                          - 106
+                          - 107
+                          - 108
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  "/api/v1/permission-requests/{requestId}/withdrawals":
+    parameters:
+      - $ref: "#/components/parameters/RequestId"
+    post:
+      operationId: withdrawPermissionRequest
+      tags:
+        - 权限申请
+      summary: 撤回本人待审核申请
+      description: 仅申请人本人可以撤回 PENDING。其他状态返回 409，非本人或不存在返回 404。保留申请记录，状态改
+        WITHDRAWN；记录撤回，不解除任何角色关联。
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionRequest"
+              example:
+                id: 31
+                applicantUserId: 12
+                applicantName: 林晓
+                applicantDepartmentId: 3
+                permission:
+                  id: 102
+                  applicationId: 2
+                  name: 审核课程
+                  code: course:review
+                  type: BUTTON
+                  parentId: 101
+                reason: 负责本学期课程审核
+                status: WITHDRAWN
+                reviewerUserId: null
+                approvedRoleId: null
+                createdAt: 2026-11-15T09:00:00+08:00
+                reviewedAt: null
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  "/api/v1/permission-requests/{requestId}/reviews":
+    parameters:
+      - $ref: "#/components/parameters/RequestId"
+    post:
+      operationId: reviewPermissionRequest
+      tags:
+        - 权限申请
+      summary: 审核权限申请并分配业务角色
+      description: 仅管理范围内管理员审核 PENDING；越界返回 404，已处理返回 409。APPROVE 仅提交
+        roleId，服务端按申请人及候选角色当前全部有效权限重新校验，包含所有应用中的直接和继承权限；候选角色须包含申请权限，且不附带无关权限。通过时仅建立用户与选中角色的关联，祖先权限由继承计算，原有其他角色保留。用户角色关联、APPROVED
+        及审批人/时间/角色和成功日志在同一事务保存。REJECT 不分配角色。待审核期间若权限已由直接或继承来源满足，则转
+        SATISFIED，不重复审批或分配。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PermissionRequestReview"
+            example:
+              decision: APPROVE
+              roleId: 8
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionRequest"
+              examples:
+                approved:
+                  summary: 审批通过，分配包含继承权限的角色8
+                  value:
+                    id: 31
+                    applicantUserId: 12
+                    applicantName: 林晓
+                    applicantDepartmentId: 3
+                    permission:
+                      id: 102
+                      applicationId: 2
+                      name: 审核课程
+                      code: course:review
+                      type: BUTTON
+                      parentId: 101
+                    reason: 负责本学期课程审核
+                    status: APPROVED
+                    reviewerUserId: 2
+                    approvedRoleId: 8
+                    createdAt: 2026-11-15T09:00:00+08:00
+                    reviewedAt: 2026-11-15T09:10:00+08:00
+                satisfiedByInheritance:
+                  summary: 继承配置变更已满足申请，直接结束为已满足
+                  value:
+                    id: 31
+                    applicantUserId: 12
+                    applicantName: 林晓
+                    applicantDepartmentId: 3
+                    permission:
+                      id: 102
+                      applicationId: 2
+                      name: 审核课程
+                      code: course:review
+                      type: BUTTON
+                      parentId: 101
+                    reason: 负责本学期课程审核
+                    status: SATISFIED
+                    reviewerUserId: null
+                    approvedRoleId: null
+                    createdAt: 2026-11-15T09:00:00+08:00
+                    reviewedAt: null
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  /api/v1/role-creation-requests:
+    get:
+      operationId: listRoleCreationRequests
+      tags:
+        - 角色创建申请
+      summary: 查询角色创建申请
+      description: 仅部门管理员和总管理员。部门管理员只看本人提交的记录，总管理员看全部。支持状态筛选，先限定可见范围再分页，按 createdAt、id
+        降序。 返回申请保存的直接权限和父角色名称快照，exists 为父角色当前存在状态。已删除的父角色不删除历史申请；有效权限预览从详情接口读取。
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+        - in: query
+          name: status
+          schema:
+            $ref: "#/components/schemas/RoleCreationRequestStatus"
+          description: 省略返回全部状态
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleCreationRequestPage"
+              example:
+                items:
+                  - id: 41
+                    applicantUserId: 2
+                    applicantName: 顾晨
+                    name: 课程助理审核员
+                    description: 继承课程菜单，协助审核课程
+                    permissionIds:
+                      - 102
+                    inheritedRoles:
+                      - id: 7
+                        name: 课程目录查看员
+                        exists: true
+                    status: PENDING
+                    reviewerUserId: null
+                    createdRoleId: null
+                    createdAt: 2026-11-15T09:00:00+08:00
+                    reviewedAt: null
+                  - id: 42
+                    applicantUserId: 2
+                    applicantName: 顾晨
+                    name: 课程协助审核员
+                    description: 继承课程菜单，协助审核课程
+                    permissionIds:
+                      - 102
+                    inheritedRoles:
+                      - id: 90
+                        name: 旧课程查看员
+                        exists: false
+                    status: PENDING
+                    reviewerUserId: null
+                    createdRoleId: null
+                    createdAt: 2026-11-15T09:00:00+08:00
+                    reviewedAt: null
+                page: 1
+                pageSize: 20
+                total: 2
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+    post:
+      operationId: createRoleCreationRequest
+      tags:
+        - 角色创建申请
+      summary: 提交角色创建申请
+      description: 仅部门管理员提交，申请人由令牌确定。使用 RoleConfigurationInput：名称、说明、直接权限
+        permissionIds、父角色完整列表 inheritedRoleIds；两个列表均必填，可为空。父角色只能选择存在的 BUSINESS
+        角色。按新建角色规则计算全部有效权限，禁止新增直接权限与继承重复，按钮所属菜单可由继承满足。服务端查询并保存父角色
+        ID、名称快照，不接收客户端名称快照或申请人 ID。创建 PENDING
+        申请、直接权限关联、父角色快照及成功日志一起保存，不提前创建角色或改变用户权限。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleConfigurationInput"
+            examples:
+              inheritMenu:
+                summary: 父角色提供菜单，申请仅直接配置审核按钮
+                value:
+                  name: 课程助理审核员
+                  description: 继承课程菜单，协助审核课程
+                  permissionIds:
+                    - 102
+                  inheritedRoleIds:
+                    - 7
+              multipleParents:
+                summary: 申请只继承两个业务角色，直接权限为空；同一菜单去重
+                value:
+                  name: 课程联合查看员
+                  permissionIds: []
+                  inheritedRoleIds:
+                    - 7
+                    - 10
+              directOnly:
+                summary: 不选择父角色，菜单和按钮均直接配置
+                value:
+                  name: 课程独立审核员
+                  permissionIds:
+                    - 101
+                    - 102
+                  inheritedRoleIds: []
+      responses:
+        "201":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleCreationRequest"
+              examples:
+                submitted:
+                  summary: 父角色名称由后端查询形成快照
+                  value:
+                    id: 41
+                    applicantUserId: 2
+                    applicantName: 顾晨
+                    name: 课程助理审核员
+                    description: 继承课程菜单，协助审核课程
+                    permissionIds:
+                      - 102
+                    inheritedRoles:
+                      - id: 7
+                        name: 课程目录查看员
+                        exists: true
+                    status: PENDING
+                    reviewerUserId: null
+                    createdRoleId: null
+                    createdAt: 2026-11-15T09:00:00+08:00
+                    reviewedAt: null
+        "400":
+          description: 字段、父角色或权限配置不符合新建角色规则，不保存申请。
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+              examples:
+                missingParent:
+                  summary: 选择的父角色已删除
+                  value:
+                    type: urn:rbac-admin:problem:invalid-request
+                    title: 请求不符合要求
+                    status: 400
+                    code: INVALID_REQUEST
+                    detail: 父角色90不存在或已删除，请重新选择业务角色。
+                duplicateDirect:
+                  summary: 把继承菜单重复提交为直接权限
+                  value:
+                    type: urn:rbac-admin:problem:invalid-request
+                    title: 请求不符合要求
+                    status: 400
+                    code: INVALID_REQUEST
+                    detail: 权限101已通过父角色继承获得，不能新增为直接权限。
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  "/api/v1/role-creation-requests/{requestId}":
+    parameters:
+      - $ref: "#/components/parameters/RequestId"
+    get:
+      operationId: getRoleCreationRequest
+      tags:
+        - 角色创建申请
+      summary: 查看角色创建申请配置
+      description: 提交者或总管理员可查看，其他人及不存在返回 404。返回原申请直接权限、父角色 ID
+        和名称快照及父角色当前存在状态；按父角色当前配置计算 effectivePermissions
+        并去重，展示直接/继承获得方式和实际配置来源。拟创建角色尚无角色 ID，直接配置项的
+        sourceRoles=[]，界面显示“本次申请直接配置”；继承来源仅列实际直接配置该权限的已有角色。任一父角色已删除时仍返回 200
+        和快照，但 effectivePermissions=null，提示审核时重新选择。父角色后续增加权限导致原申请直接权限与继承重叠时，返回
+        BOTH 供调整；申请尚未创建角色，审批按新建规则拒绝重复直接配置。读取及打开受理表单不改变申请状态，取消编辑申请仍为
+        PENDING。审批调整不覆盖原申请，创建结果由 createdRoleId 查询。
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleCreationRequestDetails"
+              examples:
+                currentParents:
+                  summary: 菜单来自父角色7，审核按钮由本次申请直接配置
+                  value:
+                    id: 41
+                    applicantUserId: 2
+                    applicantName: 顾晨
+                    name: 课程助理审核员
+                    description: 继承课程菜单，协助审核课程
+                    permissionIds:
+                      - 102
+                    inheritedRoles:
+                      - id: 7
+                        name: 课程目录查看员
+                        exists: true
+                    status: PENDING
+                    reviewerUserId: null
+                    createdRoleId: null
+                    createdAt: 2026-11-15T09:00:00+08:00
+                    reviewedAt: null
+                    effectivePermissions:
+                      - id: 101
+                        applicationId: 2
+                        name: 所有课程
+                        code: course:viewAll
+                        type: MENU
+                        parentId: null
+                        acquisition: INHERITED
+                        sourceRoles:
+                          - id: 7
+                            name: 课程目录查看员
+                      - id: 102
+                        applicationId: 2
+                        name: 审核课程
+                        code: course:review
+                        type: BUTTON
+                        parentId: 101
+                        acquisition: DIRECT
+                        sourceRoles: []
+                deletedParent:
+                  summary: 父角色90已删除，申请快照仍可查看，审批前须改选
+                  value:
+                    id: 42
+                    applicantUserId: 2
+                    applicantName: 顾晨
+                    name: 课程协助审核员
+                    description: 继承课程菜单，协助审核课程
+                    permissionIds:
+                      - 102
+                    inheritedRoles:
+                      - id: 90
+                        name: 旧课程查看员
+                        exists: false
+                    status: PENDING
+                    reviewerUserId: null
+                    createdRoleId: null
+                    createdAt: 2026-11-15T09:00:00+08:00
+                    reviewedAt: null
+                    effectivePermissions: null
+                laterOverlap:
+                  summary: 待审核期间父角色新增了菜单101，原申请出现重复直接配置，创建前须取消该直接配置
+                  value:
+                    id: 43
+                    applicantUserId: 2
+                    applicantName: 顾晨
+                    name: 课程助理审核员
+                    description: 继承课程菜单，协助审核课程
+                    permissionIds:
+                      - 101
+                      - 102
+                    inheritedRoles:
+                      - id: 7
+                        name: 课程目录查看员
+                        exists: true
+                    status: PENDING
+                    reviewerUserId: null
+                    createdRoleId: null
+                    createdAt: 2026-11-15T08:50:00+08:00
+                    reviewedAt: null
+                    effectivePermissions:
+                      - id: 101
+                        applicationId: 2
+                        name: 所有课程
+                        code: course:viewAll
+                        type: MENU
+                        parentId: null
+                        acquisition: BOTH
+                        sourceRoles:
+                          - id: 7
+                            name: 课程目录查看员
+                      - id: 102
+                        applicationId: 2
+                        name: 审核课程
+                        code: course:review
+                        type: BUTTON
+                        parentId: 101
+                        acquisition: DIRECT
+                        sourceRoles: []
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+  "/api/v1/role-creation-requests/{requestId}/reviews":
+    parameters:
+      - $ref: "#/components/parameters/RequestId"
+    post:
+      operationId: reviewRoleCreationRequest
+      tags:
+        - 角色创建申请
+      summary: 创建角色并通过或拒绝申请
+      description: 仅总管理员处理 PENDING，已处理返回 409。APPROVE 在 role 中提交审核调整后的完整
+        RoleConfigurationInput，含直接权限和父角色完整列表；可以改选父角色。按父角色最新配置重新计算有效权限，执行正常新建角色的业务角色、重复直接权限、菜单依赖和继承规则校验。父角色已删除、配置失效等返回
+        400；重名等冲突返回 409，整次回滚，申请保持 PENDING。校验通过后，角色、直接授权、正式继承关系、申请 APPROVED
+        及审批人/时间/createdRoleId 和成功日志在同一事务保存。申请原直接权限和父角色快照保留，不被审批调整覆盖；通过
+        createdRoleId 读取实际创建配置。REJECT
+        只更新申请和成功日志，不创建角色。创建成功后按正常流程另行给员工分配角色。读取、打开或取消编辑均不改变申请状态，无独立受理状态。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleCreationReview"
+            examples:
+              approve:
+                summary: 按继承配置创建角色并通过申请
+                value:
+                  decision: APPROVE
+                  role:
+                    name: 课程助理审核员
+                    description: 继承课程菜单，协助审核课程
+                    permissionIds:
+                      - 102
+                    inheritedRoleIds:
+                      - 7
+              replaceDeletedParent:
+                summary: 原父角色90已删除，审核时改选现有角色10
+                value:
+                  decision: APPROVE
+                  role:
+                    name: 课程协助审核员
+                    description: 继承课程菜单，协助审核课程
+                    permissionIds:
+                      - 102
+                    inheritedRoleIds:
+                      - 10
+              reject:
+                summary: 拒绝申请，不提交角色配置
+                value:
+                  decision: REJECT
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleCreationRequest"
+              examples:
+                approved:
+                  summary: 申请41通过，新角色11不自动分配员工
+                  value:
+                    id: 41
+                    applicantUserId: 2
+                    applicantName: 顾晨
+                    name: 课程助理审核员
+                    description: 继承课程菜单，协助审核课程
+                    permissionIds:
+                      - 102
+                    inheritedRoles:
+                      - id: 7
+                        name: 课程目录查看员
+                        exists: true
+                    status: APPROVED
+                    reviewerUserId: 1
+                    createdRoleId: 11
+                    createdAt: 2026-11-15T09:00:00+08:00
+                    reviewedAt: 2026-11-15T09:10:00+08:00
+                approvedAfterParentReplacement:
+                  summary: 申请42的原父角色90快照保留，实际新角色12使用审批改选的父角色10
+                  value:
+                    id: 42
+                    applicantUserId: 2
+                    applicantName: 顾晨
+                    name: 课程协助审核员
+                    description: 继承课程菜单，协助审核课程
+                    permissionIds:
+                      - 102
+                    inheritedRoles:
+                      - id: 90
+                        name: 旧课程查看员
+                        exists: false
+                    status: APPROVED
+                    reviewerUserId: 1
+                    createdRoleId: 12
+                    createdAt: 2026-11-15T09:00:00+08:00
+                    reviewedAt: 2026-11-15T09:15:00+08:00
+                rejected:
+                  summary: 拒绝已失效父角色的申请，不创建角色
+                  value:
+                    id: 42
+                    applicantUserId: 2
+                    applicantName: 顾晨
+                    name: 课程协助审核员
+                    description: 继承课程菜单，协助审核课程
+                    permissionIds:
+                      - 102
+                    inheritedRoles:
+                      - id: 90
+                        name: 旧课程查看员
+                        exists: false
+                    status: REJECTED
+                    reviewerUserId: 1
+                    createdRoleId: null
+                    createdAt: 2026-11-15T09:00:00+08:00
+                    reviewedAt: 2026-11-15T09:15:00+08:00
+        "400":
+          description: 最终角色配置无效，申请保持待审核。
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+              examples:
+                deletedParent:
+                  summary: 尚未替换已删除的父角色
+                  value:
+                    type: urn:rbac-admin:problem:invalid-request
+                    title: 请求不符合要求
+                    status: 400
+                    code: INVALID_REQUEST
+                    detail: 父角色90不存在或已删除，请在角色配置中重新选择。
+                latestOverlap:
+                  summary: 父角色配置变化后产生重复直接权限
+                  value:
+                    type: urn:rbac-admin:problem:invalid-request
+                    title: 请求不符合要求
+                    status: 400
+                    code: INVALID_REQUEST
+                    detail: 权限101当前已由父角色继承获得，请取消重复的直接配置后再创建角色。
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      x-implementation-status: RBAC1 结构化后端已实现
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "Authorization: Bearer <accessToken>。统一登录签发的 RS256
+        JWT；中心验证签名、签发者、时效、目标应用及令牌和账号状态。当前用户由令牌确定，不读取请求方指定的 userId，不从 JWT
+        读取角色权限。"
+  parameters:
+    ApplicationId:
+      name: applicationId
+      in: path
+      required: true
+      description: 应用 ID
+      schema: { $ref: '#/components/schemas/Id' }
+      example: 1
+    PermissionId:
+      name: permissionId
+      in: path
+      required: true
+      description: 权限 ID
+      schema: { $ref: '#/components/schemas/Id' }
+      example: 102
+    RoleId:
+      name: roleId
+      in: path
+      required: true
+      description: 业务角色 ID
+      schema: { $ref: '#/components/schemas/Id' }
+      example: 8
+    DepartmentId:
+      name: departmentId
+      in: path
+      required: true
+      description: 部门 ID
+      schema: { $ref: '#/components/schemas/Id' }
+      example: 3
+    UserId:
+      name: userId
+      in: path
+      required: true
+      description: 用户 ID
+      schema: { $ref: '#/components/schemas/Id' }
+      example: 12
+    Page:
+      name: page
+      in: query
+      description: 页码，从 1 开始
+      schema: { type: integer, minimum: 1, default: 1 }
+    PageSize:
+      name: pageSize
+      in: query
+      description: 每页条数
+      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+    ApplicationContext:
+      name: X-Application-Code
+      in: header
+      required: false
+      description: JWT aud 仅含一个应用时可省略，多个应用时必须填本次目标 code。省略且目标不明确返回 400；指定 aud 外的应用返回
+        403。管理接口固定属于 permission-center，无需此头。
+      schema:
+        $ref: "#/components/schemas/ApplicationCode"
+      example: course-project-management
+    FrontendPermission:
+      name: permission
+      in: path
+      required: true
+      description: 当前应用内菜单或按钮的权限标识，与 operationId 不同。
+      schema:
+        $ref: "#/components/schemas/PermissionCode"
+      example: course:review
+    OperationId:
+      name: operationId
+      in: path
+      required: true
+      description: 业务系统 API 文档的接口标识，在目标应用内唯一。
+      schema:
+        $ref: "#/components/schemas/OperationId"
+      example: listAdminCourses
+    ApiId:
+      name: apiId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/Id"
+    RequestId:
+      name: requestId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/Id"
+  responses:
+    UserReturned:
+      description: 用户信息及其已有的业务角色
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/User' }
+          example:
+            id: 12
+            username: lin.xiao
+            name: 林晓
+            department:
+              id: 3
+              name: 软件工程系
+            status: ACTIVE
+            departmentAdministrator: false
+            businessRoles:
+              - id: 3
+                name: 课程教师
+    UserTransferred:
+      description: 保存后的用户信息
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/User' }
+          examples:
+            transfer:
+              summary: 调动后保留原角色
+              value:
+                id: 12
+                username: lin.xiao
+                name: 林晓
+                department:
+                  id: 4
+                  name: 数学学院
+                status: ACTIVE
+                departmentAdministrator: false
+                businessRoles:
+                  - id: 3
+                    name: 课程教师
+            disable:
+              summary: 停用后的账号状态
+              value:
+                id: 12
+                username: lin.xiao
+                name: 林晓
+                department:
+                  id: 3
+                  name: 软件工程系
+                status: DISABLED
+                departmentAdministrator: false
+                businessRoles:
+                  - id: 3
+                    name: 课程教师
+            appoint:
+              summary: 指定部门管理员后的身份
+              value:
+                id: 12
+                username: lin.xiao
+                name: 林晓
+                department:
+                  id: 3
+                  name: 软件工程系
+                status: ACTIVE
+                departmentAdministrator: true
+                businessRoles:
+                  - id: 3
+                    name: 课程教师
+    BadRequest:
+      description: 请求格式、字段或关联不符合要求
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          example:
+            type: urn:rbac-admin:problem:invalid-request
+            title: 请求不符合要求
+            status: 400
+            code: INVALID_REQUEST
+            detail: 请检查请求参数及必填字段。
+    Unauthorized:
+      description: 登录凭据无效，或访问凭据缺失、过期或已撤销
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          example:
+            type: urn:rbac-admin:problem:unauthenticated
+            title: 身份校验失败
+            status: 401
+            code: UNAUTHENTICATED
+            detail: 请检查登录信息或访问凭据。
+    Forbidden:
+      description: 角色无权操作、对象超出管理范围，或令牌不包含目标应用。
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          examples:
+            outsideScope:
+              value:
+                type: urn:rbac-admin:problem:outside-management-scope
+                title: 超出管理范围
+                status: 403
+                code: OUTSIDE_MANAGEMENT_SCOPE
+                detail: 请选择本部门或下级部门内的对象。
+            disabled:
+              value:
+                type: urn:rbac-admin:problem:account-disabled
+                title: 账号已停用
+                status: 403
+                code: ACCOUNT_DISABLED
+                detail: 请联系管理员确认账号状态。
+            forbidden:
+              value:
+                type: urn:rbac-admin:problem:forbidden
+                title: 操作不被允许
+                status: 403
+                code: FORBIDDEN
+                detail: 当前角色无权执行该操作。
+            applicationMismatch:
+              value:
+                type: urn:rbac-admin:problem:application-mismatch
+                title: 应用不匹配
+                status: 403
+                code: APPLICATION_MISMATCH
+                detail: 当前令牌不包含目标应用，请使用该应用的统一登录入口。
+    NotFound:
+      description: 目标资源或必需的关联资源不存在
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          example:
+            type: urn:rbac-admin:problem:not-found
+            title: 对象不存在
+            status: 404
+            code: NOT_FOUND
+            detail: 请检查目标 ID 后重试。
+    Conflict:
+      description: 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          example:
+            type: urn:rbac-admin:problem:conflict
+            title: 数据已存在
+            status: 409
+            code: CONFLICT
+            detail: 同一应用内已存在相同的权限标识，请检查后重试。
+    TooManyRequests:
+      description: 登录尝试过于频繁
+      headers:
+        Retry-After:
+          description: 可再次尝试前的等待秒数
+          schema: { type: integer, minimum: 1 }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          example:
+            type: urn:rbac-admin:problem:too-many-requests
+            title: 登录尝试过于频繁
+            status: 429
+            code: TOO_MANY_REQUESTS
+            detail: 请稍后再试。
+    InternalError:
+      description: 系统暂时无法完成操作
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          example:
+            type: urn:rbac-admin:problem:internal-error
+            title: 系统暂时不可用
+            status: 500
+            code: INTERNAL_ERROR
+            detail: 请稍后重试。
+    ServiceUnavailable:
+      description: 统一身份或权限检查暂不可用，调用方不能继续受保护操作
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+          example:
+            type: urn:rbac-admin:problem:service-unavailable
+            title: 身份或权限服务暂不可用
+            status: 503
+            code: SERVICE_UNAVAILABLE
+            detail: 请稍后重新登录或重试操作。
+  schemas:
+    Id:
+      type: integer
+      format: int64
+      minimum: 1
+      maximum: 9007199254740991
+      description: 数字 ID，取值范围可由浏览器安全表示。
+    NullableId:
+      oneOf:
+        - $ref: '#/components/schemas/Id'
+        - type: 'null'
+    IdList:
+      type: array
+      uniqueItems: true
+      items: { $ref: '#/components/schemas/Id' }
+    RequiredIdList:
+      allOf:
+        - $ref: '#/components/schemas/IdList'
+        - minItems: 1
+    Name:
+      type: string
+      minLength: 1
+      maxLength: 24
+    Username:
+      type: string
+      minLength: 1
+      maxLength: 32
+    Keyword:
+      type: string
+      maxLength: 100
+    Description:
+      type: string
+      maxLength: 48
+      default: ''
+    PermissionCode:
+      type: string
+      maxLength: 64
+      pattern: '^[^:\s]+:[^:\s]+$'
+      example: course:review
+    ManagementRole:
+      type: string
+      enum: [ TOTAL_ADMIN, DEPARTMENT_ADMIN, NONE ]
+    AccountStatus:
+      type: string
+      enum: [ ACTIVE, DISABLED ]
+    PermissionType:
+      type: string
+      enum: [ MENU, BUTTON ]
+    BatchAction:
+      type: string
+      enum: [ GRANT, REVOKE ]
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - username
+        - password
+        - systems
+      properties:
+        username:
+          $ref: "#/components/schemas/Username"
+        password:
+          type: string
+          minLength: 1
+          format: password
+          writeOnly: true
+        systems:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            $ref: "#/components/schemas/ApplicationCode"
+          description: 本次登录的目标应用。同一账号可登录所有已接入系统，各应用功能权限分别计算。
+    LoginResult:
+      type: object
+      required:
+        - accessToken
+        - tokenType
+        - expiresIn
+      properties:
+        accessToken:
+          type: string
+          minLength: 1
+          description: RS256 JWT，不包含角色和权限。
+        tokenType:
+          type: string
+          const: Bearer
+        expiresIn:
+          type: integer
+          minimum: 1
+          description: 有效时长，单位秒。
+    Application:
+      type: object
+      required:
+        - id
+        - name
+        - code
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        name:
+          $ref: "#/components/schemas/Name"
+        code:
+          $ref: "#/components/schemas/ApplicationCode"
+    ApplicationInput:
+      type: object
+      additionalProperties: false
+      required: [ name ]
+      properties:
+        name: { $ref: '#/components/schemas/Name' }
+    ApplicationPermissions:
+      type: object
+      required: [ applicationId, applicationName, menus ]
+      properties:
+        applicationId: { $ref: '#/components/schemas/Id' }
+        applicationName: { $ref: '#/components/schemas/Name' }
+        menus:
+          type: array
+          items: { $ref: '#/components/schemas/MenuNode' }
+        applicationCode:
+          $ref: "#/components/schemas/ApplicationCode"
+    MenuNode:
+      type: object
+      required: [ id, name, code, buttons ]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        name: { $ref: '#/components/schemas/Name' }
+        code: { $ref: '#/components/schemas/PermissionCode' }
+        buttons:
+          type: array
+          items: { $ref: '#/components/schemas/PermissionRef' }
+        apiCount:
+          type: integer
+          minimum: 0
+          readOnly: true
+          description: 应用权限管理中返回的关联 API 数量。
+    PermissionRef:
+      type: object
+      required: [ id, name, code ]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        name: { $ref: '#/components/schemas/Name' }
+        code: { $ref: '#/components/schemas/PermissionCode' }
+        apiCount:
+          type: integer
+          minimum: 0
+          readOnly: true
+          description: 应用权限管理中返回的关联 API 数量。
+    Permission:
+      allOf:
+        - $ref: '#/components/schemas/PermissionRef'
+        - type: object
+          required: [ applicationId, type, parentId, apis ]
+          properties:
+            applicationId: { $ref: '#/components/schemas/Id' }
+            type: { $ref: '#/components/schemas/PermissionType' }
+            parentId: { $ref: '#/components/schemas/NullableId' }
+            apis:
+              type: array
+              items:
+                $ref: "#/components/schemas/Api"
+    PermissionCreate:
+      oneOf:
+        - title: 新增菜单权限
+          type: object
+          additionalProperties: false
+          required:
+            - name
+            - code
+            - type
+          properties:
+            name:
+              $ref: "#/components/schemas/Name"
+            code:
+              $ref: "#/components/schemas/PermissionCode"
+            type:
+              type: string
+              const: MENU
+            parentId:
+              type: "null"
+            apiIds:
+              $ref: "#/components/schemas/IdList"
+              default: []
+              description: 已登记且属于同一应用的 API ID，可为空；可被其他权限同时引用。
+        - title: 新增按钮权限
+          type: object
+          additionalProperties: false
+          required:
+            - name
+            - code
+            - type
+            - parentId
+          properties:
+            name:
+              $ref: "#/components/schemas/Name"
+            code:
+              $ref: "#/components/schemas/PermissionCode"
+            type:
+              type: string
+              const: BUTTON
+            parentId:
+              $ref: "#/components/schemas/Id"
+            apiIds:
+              $ref: "#/components/schemas/IdList"
+              default: []
+              description: 已登记且属于同一应用的 API ID，可为空；可被其他权限同时引用。
+    PermissionUpdate:
+      type: object
+      minProperties: 1
+      additionalProperties: false
+      properties:
+        name: { $ref: '#/components/schemas/Name' }
+        code: { $ref: '#/components/schemas/PermissionCode' }
+        apiIds:
+          $ref: "#/components/schemas/IdList"
+          description: 省略保留关联，提供则完整替换，[] 只解除全部关联，保留 API 登记及其他权限关联。
+    RoleRef:
+      type: object
+      required: [ id, name ]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        name: { $ref: '#/components/schemas/Name' }
+    RoleApplicationSummary:
+      type: object
+      required: [ applicationId, applicationName, permissionCount ]
+      properties:
+        applicationId: { $ref: '#/components/schemas/Id' }
+        applicationName: { $ref: '#/components/schemas/Name' }
+        permissionCount: { type: integer, minimum: 1 }
+    DepartmentRef:
+      type: object
+      required: [ id, name ]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        name: { $ref: '#/components/schemas/Name' }
+    Department:
+      allOf:
+        - $ref: '#/components/schemas/DepartmentRef'
+        - type: object
+          required: [ parentId ]
+          properties:
+            parentId: { $ref: '#/components/schemas/NullableId' }
+    DepartmentNode:
+      allOf:
+        - $ref: '#/components/schemas/Department'
+        - type: object
+          required: [ children ]
+          properties:
+            children:
+              type: array
+              items: { $ref: '#/components/schemas/DepartmentNode' }
+    DepartmentTree:
+      type: object
+      required: [ departments ]
+      properties:
+        departments:
+          type: array
+          items: { $ref: '#/components/schemas/DepartmentNode' }
+    DepartmentInput:
+      type: object
+      additionalProperties: false
+      required: [ name, parentId ]
+      properties:
+        name: { $ref: '#/components/schemas/Name' }
+        parentId: { $ref: '#/components/schemas/NullableId' }
+    DepartmentUpdate:
+      type: object
+      minProperties: 1
+      additionalProperties: false
+      properties:
+        name: { $ref: '#/components/schemas/Name' }
+        parentId: { $ref: '#/components/schemas/NullableId' }
+    User:
+      type: object
+      required:
+        [
+          id,
+          username,
+          name,
+          department,
+          status,
+          departmentAdministrator,
+          businessRoles
+        ]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        username: { $ref: '#/components/schemas/Username' }
+        name: { $ref: '#/components/schemas/Name' }
+        department: { $ref: '#/components/schemas/DepartmentRef' }
+        status: { $ref: '#/components/schemas/AccountStatus' }
+        departmentAdministrator: { type: boolean }
+        businessRoles:
+          type: array
+          items: { $ref: '#/components/schemas/RoleRef' }
+    UserCreate:
+      type: object
+      additionalProperties: false
+      required:
+        - username
+        - name
+        - departmentId
+        - initialPassword
+      properties:
+        username: { $ref: '#/components/schemas/Username' }
+        name: { $ref: '#/components/schemas/Name' }
+        departmentId: { $ref: '#/components/schemas/Id' }
+        status:
+          $ref: '#/components/schemas/AccountStatus'
+          default: ACTIVE
+        departmentAdministrator:
+          type: boolean
+          description: 仅总管理员可提交，省略时创建为普通用户。
+        initialPassword:
+          type: string
+          minLength: 1
+          format: password
+          writeOnly: true
+          description: 新增用户表单填写的初始密码。仅传输和校验一次，数据库保存密码摘要，日志不得包含密码。
+    UserCreated:
+      type: object
+      required:
+        - user
+      properties:
+        user: { $ref: '#/components/schemas/User' }
+    UserUpdate:
+      type: object
+      minProperties: 1
+      additionalProperties: false
+      properties:
+        username: { $ref: '#/components/schemas/Username' }
+        name: { $ref: '#/components/schemas/Name' }
+        departmentId:
+          $ref: '#/components/schemas/Id'
+          description: 仅总管理员可提交。
+        status: { $ref: '#/components/schemas/AccountStatus' }
+        departmentAdministrator:
+          type: boolean
+          description: 仅总管理员可提交，true 分配部门管理员角色，false 撤销该角色。
+    ReplaceUserRoles:
+      type: object
+      additionalProperties: false
+      required: [ roleIds ]
+      properties:
+        roleIds: { $ref: '#/components/schemas/IdList' }
+    UserRoleResult:
+      type: object
+      required: [ userId, roleIds ]
+      properties:
+        userId: { $ref: '#/components/schemas/Id' }
+        roleIds: { $ref: '#/components/schemas/IdList' }
+    BatchRoleChange:
+      type: object
+      additionalProperties: false
+      required: [ action, userIds, roleIds ]
+      properties:
+        action: { $ref: '#/components/schemas/BatchAction' }
+        userIds: { $ref: '#/components/schemas/RequiredIdList' }
+        roleIds: { $ref: '#/components/schemas/RequiredIdList' }
+    BatchRoleResult:
+      type: object
+      required: [ action, affectedUsers ]
+      properties:
+        action: { $ref: '#/components/schemas/BatchAction' }
+        affectedUsers:
+          type: integer
+          minimum: 0
+          description: 业务角色实际发生变化的用户数。
+    MyPermissions:
+      type: object
+      required:
+        - businessRoles
+        - applications
+      properties:
+        businessRoles:
+          type: array
+          items:
+            $ref: "#/components/schemas/RoleRef"
+        applications:
+          type: array
+          items:
+            $ref: "#/components/schemas/MyApplicationPermissions"
+    OperationLog:
+      type: object
+      required:
+        [
+          id,
+          occurredAt,
+          actorName,
+          action,
+          targetNames,
+          detail,
+          result
+        ]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        occurredAt: { type: string, format: date-time }
+        actorName: { type: string }
+        action: { type: string }
+        targetNames:
+          type: array
+          items: { type: string }
+        detail: { type: string }
+        result: { type: string, enum: [ SUCCESS, FAILURE ] }
+    PermissionCheckResult:
+      type: object
+      required: [ allowed ]
+      properties:
+        allowed: { type: boolean }
+    PageMetadata:
+      type: object
+      required: [ page, pageSize, total ]
+      properties:
+        page: { type: integer, minimum: 1 }
+        pageSize: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0 }
+    ApplicationPage:
+      allOf:
+        - $ref: '#/components/schemas/PageMetadata'
+        - type: object
+          required: [ items ]
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/Application' }
+    UserPage:
+      allOf:
+        - $ref: '#/components/schemas/PageMetadata'
+        - type: object
+          required: [ items ]
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/User' }
+    OperationLogPage:
+      allOf:
+        - $ref: '#/components/schemas/PageMetadata'
+        - type: object
+          required: [ items ]
+          properties:
+            items:
+              type: array
+              items: { $ref: '#/components/schemas/OperationLog' }
+    Problem:
+      type: object
+      required: [ type, title, status, code, detail ]
+      properties:
+        type: { type: string, format: uri }
+        title: { type: string }
+        status: { type: integer, minimum: 400, maximum: 599 }
+        code:
+          type: string
+          enum:
+            - INVALID_REQUEST
+            - UNAUTHENTICATED
+            - FORBIDDEN
+            - ACCOUNT_DISABLED
+            - OUTSIDE_MANAGEMENT_SCOPE
+            - APPLICATION_MISMATCH
+            - NOT_FOUND
+            - CONFLICT
+            - TOO_MANY_REQUESTS
+            - INTERNAL_ERROR
+            - SERVICE_UNAVAILABLE
+        detail: { type: string }
+    ApplicationCode:
+      type: string
+      minLength: 1
+      maxLength: 64
+      pattern: ^[a-z][a-z0-9_-]*$
+      description: 稳定的系统接入标识，供 systems 和 aud 使用。
+      example: course-project-management
+    OperationId:
+      type: string
+      minLength: 1
+      maxLength: 128
+      pattern: ^\S+$
+      example: reviewCourse
+    HttpMethod:
+      type: string
+      enum:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - HEAD
+        - OPTIONS
+      example: POST
+    AuthUser:
+      type: object
+      required:
+        - subject
+        - roles
+        - permissions
+        - name
+        - no
+      properties:
+        subject:
+          type: string
+          minLength: 1
+          description: 用户数字 ID 的字符串形式，跨应用不变。
+        roles:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            minLength: 1
+          description: 直接分配且为目标应用提供有效权限的角色 ID 字符串，权限可由该角色继承获得；权限中心也包含预置管理角色。
+        permissions:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: "#/components/schemas/PermissionCode"
+          description: 当前应用内去重的有效菜单、按钮权限，包含直接与全部继承来源。
+        name:
+          $ref: "#/components/schemas/Name"
+        no:
+          $ref: "#/components/schemas/Username"
+          description: 统一账号用户名，可采用学号或工号。
+        id:
+          $ref: "#/components/schemas/Id"
+        departmentId:
+          $ref: "#/components/schemas/NullableId"
+        managementRole:
+          $ref: "#/components/schemas/ManagementRole"
+    ApplicationCreate:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+      properties:
+        name:
+          $ref: "#/components/schemas/Name"
+        code:
+          $ref: "#/components/schemas/ApplicationCode"
+    ApiInput:
+      type: object
+      additionalProperties: false
+      required:
+        - operationId
+        - httpMethod
+        - path
+      properties:
+        operationId:
+          $ref: "#/components/schemas/OperationId"
+        httpMethod:
+          $ref: "#/components/schemas/HttpMethod"
+        path:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: ^/[^?#\s]*$
+          description: 不含域名和查询参数的请求路径模板。
+          example: /courses/{courseId}/review
+    Api:
+      type: object
+      required:
+        - id
+        - applicationId
+        - operationId
+        - httpMethod
+        - path
+        - permissionIds
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        applicationId:
+          $ref: "#/components/schemas/Id"
+        operationId:
+          $ref: "#/components/schemas/OperationId"
+        httpMethod:
+          $ref: "#/components/schemas/HttpMethod"
+        path:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: ^/[^?#\s]*$
+          description: 不含域名和查询参数的请求路径模板。
+          example: /courses/{courseId}/review
+        permissionIds:
+          $ref: "#/components/schemas/IdList"
+          description: 全部关联权限 ID，可为空。权限必须与 API 属于同一应用。
+    ApiCheckResult:
+      type: object
+      required:
+        - operationId
+        - allowed
+      properties:
+        operationId:
+          $ref: "#/components/schemas/OperationId"
+        allowed:
+          type: boolean
+    JwkSet:
+      type: object
+      required:
+        - keys
+      properties:
+        keys:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/RsaPublicJwk"
+    RsaPublicJwk:
+      type: object
+      additionalProperties: false
+      required:
+        - kty
+        - use
+        - alg
+        - kid
+        - n
+        - e
+      properties:
+        kty:
+          type: string
+          const: RSA
+        use:
+          type: string
+          const: sig
+        alg:
+          type: string
+          const: RS256
+        kid:
+          type: string
+          minLength: 1
+        n:
+          type: string
+          minLength: 1
+          description: RSA 公钥模数，Base64URL 编码。
+        e:
+          type: string
+          minLength: 1
+          description: RSA 公钥指数，Base64URL 编码。
+    ApiUpdate:
+      type: object
+      additionalProperties: false
+      properties:
+        operationId:
+          $ref: "#/components/schemas/OperationId"
+        httpMethod:
+          $ref: "#/components/schemas/HttpMethod"
+        path:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: ^/[^?#\s]*$
+          description: 不含域名和查询参数的请求路径模板。
+          example: /courses/{courseId}/review
+      minProperties: 1
+    ApiPage:
+      allOf:
+        - $ref: "#/components/schemas/PageMetadata"
+        - type: object
+          required:
+            - items
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/Api"
+    PermissionSummary:
+      type: object
+      required:
+        - id
+        - applicationId
+        - name
+        - code
+        - type
+        - parentId
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        applicationId:
+          $ref: "#/components/schemas/Id"
+        name:
+          $ref: "#/components/schemas/Name"
+        code:
+          $ref: "#/components/schemas/PermissionCode"
+        type:
+          $ref: "#/components/schemas/PermissionType"
+        parentId:
+          $ref: "#/components/schemas/NullableId"
+    PermissionCatalogApplication:
+      type: object
+      required:
+        - id
+        - name
+        - code
+        - permissions
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        name:
+          $ref: "#/components/schemas/Name"
+        code:
+          $ref: "#/components/schemas/ApplicationCode"
+        permissions:
+          type: array
+          items:
+            $ref: "#/components/schemas/PermissionSummary"
+    PermissionCatalog:
+      type: object
+      required:
+        - applications
+      properties:
+        applications:
+          type: array
+          items:
+            $ref: "#/components/schemas/PermissionCatalogApplication"
+    RequestablePermissionGroup:
+      type: object
+      required:
+        - menu
+        - permissions
+      properties:
+        menu:
+          $ref: "#/components/schemas/PermissionSummary"
+        permissions:
+          type: array
+          items:
+            $ref: "#/components/schemas/PermissionSummary"
+    RequestableApplication:
+      type: object
+      required:
+        - id
+        - name
+        - code
+        - groups
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        name:
+          $ref: "#/components/schemas/Name"
+        code:
+          $ref: "#/components/schemas/ApplicationCode"
+        groups:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestablePermissionGroup"
+    RequestablePermissions:
+      type: object
+      required:
+        - applications
+      properties:
+        applications:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestableApplication"
+    PermissionRequestStatus:
+      type: string
+      enum:
+        - PENDING
+        - APPROVED
+        - REJECTED
+        - SATISFIED
+        - WITHDRAWN
+    PermissionRequestInput:
+      type: object
+      required:
+        - permissionId
+        - reason
+      properties:
+        permissionId:
+          $ref: "#/components/schemas/Id"
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+      additionalProperties: false
+    PermissionRequestReview:
+      oneOf:
+        - type: object
+          required:
+            - decision
+            - roleId
+          properties:
+            decision:
+              type: string
+              const: APPROVE
+            roleId:
+              $ref: "#/components/schemas/Id"
+          additionalProperties: false
+        - type: object
+          required:
+            - decision
+          properties:
+            decision:
+              type: string
+              const: REJECT
+          additionalProperties: false
+    PermissionRequest:
+      type: object
+      required:
+        - id
+        - applicantUserId
+        - applicantName
+        - applicantDepartmentId
+        - permission
+        - reason
+        - status
+        - reviewerUserId
+        - approvedRoleId
+        - createdAt
+        - reviewedAt
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        applicantUserId:
+          $ref: "#/components/schemas/Id"
+        applicantName:
+          $ref: "#/components/schemas/Name"
+        applicantDepartmentId:
+          $ref: "#/components/schemas/NullableId"
+        permission:
+          $ref: "#/components/schemas/PermissionSummary"
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+        status:
+          $ref: "#/components/schemas/PermissionRequestStatus"
+        reviewerUserId:
+          $ref: "#/components/schemas/NullableId"
+        approvedRoleId:
+          $ref: "#/components/schemas/NullableId"
+        createdAt:
+          type: string
+          format: date-time
+        reviewedAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+    RoleApprovalOption:
+      type: object
+      required:
+        - role
+        - selectable
+        - extraPermissionIds
+      properties:
+        role:
+          $ref: "#/components/schemas/RoleConfiguration"
+        selectable:
+          type: boolean
+          description: 候选业务角色的全部有效权限包含申请权限，且无无关权限时为 true；覆盖所有应用的直接与继承权限。审批时重新校验。
+        extraPermissionIds:
+          $ref: "#/components/schemas/IdList"
+          description: 候选角色全部有效权限扣除申请人已有有效权限、申请权限及必要所属菜单后剩余的权限 ID，按 ID 升序；非空时不可选择。
+    PermissionRequestDetails:
+      allOf:
+        - $ref: "#/components/schemas/PermissionRequest"
+        - type: object
+          required: []
+          properties:
+            approvalRoles:
+              type: array
+              items:
+                $ref: "#/components/schemas/RoleApprovalOption"
+    PermissionRequestPage:
+      allOf:
+        - $ref: "#/components/schemas/PageMetadata"
+        - type: object
+          required:
+            - items
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/PermissionRequest"
+    RoleCreationRequestStatus:
+      type: string
+      enum:
+        - PENDING
+        - APPROVED
+        - REJECTED
+    RoleCreationRequest:
+      type: object
+      required:
+        - id
+        - applicantUserId
+        - applicantName
+        - name
+        - description
+        - permissionIds
+        - status
+        - reviewerUserId
+        - createdRoleId
+        - createdAt
+        - reviewedAt
+        - inheritedRoles
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        applicantUserId:
+          $ref: "#/components/schemas/Id"
+        applicantName:
+          $ref: "#/components/schemas/Name"
+        name:
+          $ref: "#/components/schemas/Name"
+        description:
+          $ref: "#/components/schemas/Description"
+        permissionIds:
+          $ref: "#/components/schemas/IdList"
+          description: 申请提交时拟配置的直接权限 ID。
+        status:
+          $ref: "#/components/schemas/RoleCreationRequestStatus"
+        reviewerUserId:
+          $ref: "#/components/schemas/NullableId"
+        createdRoleId:
+          $ref: "#/components/schemas/NullableId"
+        createdAt:
+          type: string
+          format: date-time
+        reviewedAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+        inheritedRoles:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: "#/components/schemas/RequestInheritedRole"
+          description: 申请保存的父角色选择和名称快照，按 ID 排序。编辑时取 id 构成 inheritedRoleIds；没有父角色时返回 []。
+      description: 申请提交时的原始角色配置及审批结果。审批可调整实际创建配置，但不覆盖原申请的直接权限或父角色快照；通过后由 createdRoleId
+        查询实际创建角色。
+    RoleCreationReview:
+      oneOf:
+        - type: object
+          required:
+            - decision
+            - role
+          properties:
+            decision:
+              type: string
+              const: APPROVE
+            role:
+              $ref: "#/components/schemas/RoleConfigurationInput"
+          additionalProperties: false
+        - type: object
+          required:
+            - decision
+          properties:
+            decision:
+              type: string
+              const: REJECT
+          additionalProperties: false
+    RoleCreationRequestPage:
+      allOf:
+        - $ref: "#/components/schemas/PageMetadata"
+        - type: object
+          required:
+            - items
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/RoleCreationRequest"
+    RoleConfigurationInput:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - permissionIds
+        - inheritedRoleIds
+      properties:
+        name:
+          $ref: "#/components/schemas/Name"
+        description:
+          $ref: "#/components/schemas/Description"
+        permissionIds:
+          $ref: "#/components/schemas/IdList"
+          description: 最终直接权限 ID 列表；[] 表示无直接权限。按钮的所属菜单可以通过最终继承权限满足，不能将全部有效权限回填本字段。
+        inheritedRoleIds:
+          $ref: "#/components/schemas/IdList"
+          description: 最终直接父角色 ID 列表；[] 表示不继承父角色，编辑已有角色时解除全部继承。全部必须是存在的 BUSINESS
+            角色，不得含自身、重复项或造成循环。
+      description: RBAC1 角色创建、编辑、角色创建申请及审批创建共用的配置。permissionIds 为直接权限，inheritedRoleIds
+        为父角色完整列表；两个列表均必填，[] 表示无相应配置。申请人和父角色名称快照由服务端取得，不接受客户端提交。
+    PermissionAcquisition:
+      type: string
+      enum:
+        - DIRECT
+        - INHERITED
+        - BOTH
+      description: 相对于当前角色或拟创建角色的获得方式：直接配置、继承，或二者同时存在。
+    EffectiveRolePermission:
+      allOf:
+        - $ref: "#/components/schemas/PermissionSummary"
+        - type: object
+          required:
+            - acquisition
+            - sourceRoles
+          properties:
+            acquisition:
+              $ref: "#/components/schemas/PermissionAcquisition"
+            sourceRoles:
+              type: array
+              minItems: 1
+              uniqueItems: true
+              items:
+                $ref: "#/components/schemas/RoleRef"
+              description: 直接配置该权限的全部来源角色，按角色 ID 去重排序。DIRECT 包含当前角色；INHERITED 只含祖先配置角色；BOTH
+                同时包含当前角色和祖先。
+    RoleConfigurationSummary:
+      allOf:
+        - $ref: "#/components/schemas/RoleRef"
+        - type: object
+          required:
+            - description
+            - applications
+            - inheritedRoles
+            - roleType
+            - inheritedByRoles
+            - directPermissionCount
+            - effectivePermissionCount
+          properties:
+            description:
+              $ref: "#/components/schemas/Description"
+            applications:
+              type: array
+              description: 按全部有效权限汇总应用；同一权限只统计一次，包括继承带来的应用和权限。
+              items:
+                $ref: "#/components/schemas/RoleApplicationSummary"
+            inheritedRoles:
+              type: array
+              uniqueItems: true
+              items:
+                $ref: "#/components/schemas/RoleRef"
+              description: 当前角色直接继承的业务角色，按 ID 排序；不是全部祖先。预置管理角色返回空数组。
+            roleType:
+              $ref: "#/components/schemas/RoleType"
+            inheritedByRoles:
+              type: array
+              uniqueItems: true
+              items:
+                $ref: "#/components/schemas/RoleRef"
+              readOnly: true
+              description: 直接继承当前角色的业务角色，按 ID 排序；不是全部后代。预置管理角色返回空数组。
+            directPermissionCount:
+              type: integer
+              minimum: 0
+              readOnly: true
+              description: 直接配置的去重权限数，包括与继承重叠的已有直接配置。
+            effectivePermissionCount:
+              type: integer
+              minimum: 0
+              readOnly: true
+              description: 全部直接与继承权限去重后的数量。减去 directPermissionCount 即为仅继承的数量。
+    RoleConfiguration:
+      allOf:
+        - $ref: "#/components/schemas/RoleConfigurationSummary"
+        - type: object
+          required:
+            - permissionIds
+            - effectivePermissions
+            - assignedUserCount
+          properties:
+            permissionIds:
+              $ref: "#/components/schemas/IdList"
+              description: 当前直接配置权限 ID，与继承权限分开。
+            effectivePermissions:
+              type: array
+              items:
+                $ref: "#/components/schemas/EffectiveRolePermission"
+              description: 全部有效权限，按权限 ID 去重排序；来源按角色 ID 去重，不返回冗余继承路径。
+            assignedUserCount:
+              type: integer
+              minimum: 0
+              readOnly: true
+              description: 直接关联当前角色的用户数，停用用户也计入；供删除前展示提示。实际删除时仍重新校验。
+    RoleConfigurationPage:
+      allOf:
+        - $ref: "#/components/schemas/PageMetadata"
+        - type: object
+          required:
+            - items
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/RoleConfigurationSummary"
+    RoleType:
+      type: string
+      enum:
+        - BUSINESS
+        - TOTAL_ADMIN
+        - DEPARTMENT_ADMIN
+      description: 业务角色或预置管理角色；由服务端确定，不作为创建或编辑请求字段。
+    MyPermissionRef:
+      allOf:
+        - $ref: "#/components/schemas/PermissionRef"
+        - type: object
+          required:
+            - sourceRoles
+          properties:
+            sourceRoles:
+              type: array
+              uniqueItems: true
+              items:
+                $ref: "#/components/schemas/RoleRef"
+              readOnly: true
+              description: 直接配置此权限的全部来源角色，按角色 ID 去重排序；中间传递角色不列入。登录后即可使用且无角色配置来源的基础功能返回 []。
+    MyMenuNode:
+      allOf:
+        - $ref: "#/components/schemas/MyPermissionRef"
+        - type: object
+          required:
+            - buttons
+          properties:
+            buttons:
+              type: array
+              items:
+                $ref: "#/components/schemas/MyPermissionRef"
+    MyApplicationPermissions:
+      type: object
+      required:
+        - applicationId
+        - applicationName
+        - menus
+      properties:
+        applicationId:
+          $ref: "#/components/schemas/Id"
+        applicationName:
+          $ref: "#/components/schemas/Name"
+        menus:
+          type: array
+          items:
+            $ref: "#/components/schemas/MyMenuNode"
+        applicationCode:
+          $ref: "#/components/schemas/ApplicationCode"
+    RequestInheritedRole:
+      type: object
+      required:
+        - id
+        - name
+        - exists
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+          description: 申请保存的父角色 ID 快照。
+        name:
+          $ref: "#/components/schemas/Name"
+          description: 申请提交时的父角色名称快照；不随角色改名或删除而改变。
+        exists:
+          type: boolean
+          readOnly: true
+          description: 当前是否仍存在该父角色，由服务端查询计算；false 时保留原 ID 和名称供查看、调整。
+      description: 角色创建申请保存的父角色选择；父角色不设强制外键，历史申请不阻止角色删除。
+    RequestedRolePermission:
+      allOf:
+        - $ref: "#/components/schemas/PermissionSummary"
+        - type: object
+          required:
+            - acquisition
+            - sourceRoles
+          properties:
+            acquisition:
+              $ref: "#/components/schemas/PermissionAcquisition"
+              description: 相对于拟创建角色：DIRECT 为申请直接配置，INHERITED 为父角色提供。父角色配置变化导致申请直接权限与继承重叠时展示
+                BOTH，创建前须调整重复直接配置。
+            sourceRoles:
+              type: array
+              uniqueItems: true
+              items:
+                $ref: "#/components/schemas/RoleRef"
+              readOnly: true
+              description: 实际直接配置继承权限的已有角色，按 ID 去重排序，中间传递角色不列入。DIRECT 返回
+                []，界面显示“本次申请直接配置”；INHERITED/BOTH 列继承来源，不为尚未创建的角色伪造 ID。
+    RoleCreationRequestDetails:
+      allOf:
+        - $ref: "#/components/schemas/RoleCreationRequest"
+        - type: object
+          required:
+            - effectivePermissions
+          properties:
+            effectivePermissions:
+              type:
+                - array
+                - "null"
+              items:
+                $ref: "#/components/schemas/RequestedRolePermission"
+              readOnly: true
+              description: 按原申请直接权限及父角色当前配置计算的去重权限预览，不保存权限副本。任一父角色已删除时返回 null，不展示不完整结果；结合
+                inheritedRoles[].exists
+                提示重新选择。全部父角色存在时，即使因后续配置变化产生重复直接权限，也返回预览供调整，实际创建仍须通过新建角色校验。

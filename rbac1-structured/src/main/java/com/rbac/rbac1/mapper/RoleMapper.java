@@ -17,15 +17,15 @@ public interface RoleMapper extends JpaRepository<Role, Long> {
   Optional<Role> findByIdAndRoleType(long id, String roleType);
 
   @Lock(LockModeType.PESSIMISTIC_WRITE)
-  @Query("select role from Role role where role.id = :id and role.roleType = 'BUSINESS'")
-  Optional<Role> findBusinessRoleForUpdate(long id);
+  @Query("select role from Role role where role.id = :id")
+  Optional<Role> findRoleForUpdate(long id);
 
   @Query(
       """
-      select role from Role role
-      where (:roleType is null or role.roleType = :roleType) and (:keyword = '' or locate(:keyword, role.name) > 0)
-      order by role.id
-      """)
+select role from Role role
+where (:roleType is null or role.roleType = :roleType) and (:keyword = '' or locate(:keyword, role.name) > 0)
+order by role.id
+""")
   Page<Role> searchRoles(String keyword, String roleType, Pageable pageable);
 
   @Query(

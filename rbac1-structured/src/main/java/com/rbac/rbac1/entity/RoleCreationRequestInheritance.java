@@ -10,7 +10,8 @@ public class RoleCreationRequestInheritance {
   @Id public Long requestId;
   @Id public Long inheritedRoleId;
 
-  @Column(nullable = false, length = 24) public String inheritedRoleName;
+  @Column(nullable = false, length = 24)
+  public String inheritedRoleName;
 
   public record Key(Long requestId, Long inheritedRoleId) implements Serializable {}
 }
