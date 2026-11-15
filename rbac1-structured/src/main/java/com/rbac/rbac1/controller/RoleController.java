@@ -39,8 +39,9 @@ public class RoleController {
     public RolePage list(@RequestAttribute(ACTOR) SessionUser actor,
                          @RequestParam(defaultValue = "1") @Positive int page,
                          @RequestParam(defaultValue = "20") @Positive @Max(100) int pageSize,
-                         @RequestParam(defaultValue = "") @CodePointLength(max = 100) String keyword) {
-        return roles.list(actor, page, pageSize, keyword);
+                         @RequestParam(defaultValue = "") @CodePointLength(max = 100) String keyword,
+                         @RequestParam(required = false) @jakarta.validation.constraints.Pattern(regexp = "BUSINESS|TOTAL_ADMIN|DEPARTMENT_ADMIN") String roleType) {
+        return roles.list(actor, page, pageSize, keyword, roleType);
     }
 
     @PostMapping

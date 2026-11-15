@@ -23,10 +23,10 @@ public interface RoleMapper extends JpaRepository<Role, Long> {
   @Query(
       """
       select role from Role role
-      where role.roleType = 'BUSINESS' and (:keyword = '' or locate(:keyword, role.name) > 0)
+      where (:roleType is null or role.roleType = :roleType) and (:keyword = '' or locate(:keyword, role.name) > 0)
       order by role.id
       """)
-  Page<Role> searchBusinessRoles(String keyword, Pageable pageable);
+  Page<Role> searchRoles(String keyword, String roleType, Pageable pageable);
 
   @Query(
       """
