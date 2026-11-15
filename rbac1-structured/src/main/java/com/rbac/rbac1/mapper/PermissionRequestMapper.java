@@ -9,5 +9,5 @@ public interface PermissionRequestMapper
   boolean existsByApplicantUserIdAndPermissionIdAndStatus(
       long user, long permission, String status);
 
-  List<PermissionRequest> findByStatus(String status);
+  List<PermissionRequest> findByStatusAndApplicantUserIdIn(String status, java.util.Collection<Long> userIds);
 }

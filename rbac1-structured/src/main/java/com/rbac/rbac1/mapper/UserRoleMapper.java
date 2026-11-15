@@ -10,6 +10,16 @@ public interface UserRoleMapper extends JpaRepository<UserRole, UserRole.Key> {
 
     List<UserRole> findByUserIdIn(java.util.Collection<Long> userIds);
 
+    List<UserRole> findByRoleIdIn(java.util.Collection<Long> roleIds);
+
+    @Query("select a.roleId as roleId, count(a.userId) as userCount from UserRole a group by a.roleId")
+    List<RoleUserCount> countRoleUsers();
+
+    interface RoleUserCount {
+      long getRoleId();
+      long getUserCount();
+    }
+
     boolean existsByRoleId(Long roleId);
 
     long countByRoleId(long roleId);

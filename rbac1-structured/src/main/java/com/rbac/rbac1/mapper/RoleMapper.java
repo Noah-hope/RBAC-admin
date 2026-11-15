@@ -45,12 +45,6 @@ order by role.id
 """)
   List<UserRoleRow> findAssignedRoles(List<Long> userIds);
 
-  @Query(
-      "select distinct a.roleId from UserRole a,RolePermission g,Permission p where"
-          + " a.userId=:userId and a.roleId=g.roleId and g.permissionId=p.id and"
-          + " p.applicationId=:applicationId")
-  List<Long> findAssignedRoleIdsForApplication(long userId, long applicationId);
-
   interface UserRoleRow {
     long getUserId();
 

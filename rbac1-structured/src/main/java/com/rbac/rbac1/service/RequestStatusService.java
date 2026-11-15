@@ -1,33 +1,28 @@
 package com.rbac.rbac1.service;
 
-import com.rbac.rbac1.mapper.*;
+import com.rbac.rbac1.mapper.PermissionRequestMapper;
 import java.util.*;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RequestStatusService {
   private final PermissionRequestMapper requests;
-  private final PermissionMapper permissions;
+  private final RolePermissionService effective;
 
-  public RequestStatusService(PermissionRequestMapper requests, PermissionMapper permissions) {
-    this.requests = requests;
-    this.permissions = permissions;
+  public RequestStatusService(PermissionRequestMapper requests, RolePermissionService effective) {
+    this.requests=requests; this.effective=effective;
   }
 
   @Transactional
-  public void settle() {
-    var effective = new HashMap<Long, Set<Long>>();
-    for (var request : requests.findByStatus("PENDING")) {
-      var ids =
-          effective.computeIfAbsent(
-              request.applicantUserId,
-              id ->
-                  permissions.findEffectiveForUser(id).stream()
-                      .map(p -> p.id)
-                      .collect(Collectors.toSet()));
-      if (ids.contains(request.permissionId)) request.status = "SATISFIED";
-    }
+  public void settleUsers(Collection<Long> userIds) {
+    if (userIds.isEmpty()) return;
+    var pending=requests.findByStatusAndApplicantUserIdIn("PENDING",userIds);
+    if (pending.isEmpty()) return;
+    var applicants=pending.stream().map(r -> r.applicantUserId).distinct().toList();
+    var rights=effective.forUsers(effective.load(),applicants);
+    for (var request : pending)
+      if (rights.get(request.applicantUserId).sources().containsKey(request.permissionId))
+        request.status="SATISFIED";
   }
 }

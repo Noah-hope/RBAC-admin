@@ -69,7 +69,7 @@ public class UserAuthorizationService {
       operationLogs.recordUserChange(
           actor, "修改用户授权", String.join("，", detail), user, user.departmentId);
     }
-    statuses.settle();
+    statuses.settleUsers(List.of(userId));
     return new UserRoleResult(userId, roleIds.stream().sorted().toList());
   }
 
@@ -112,7 +112,7 @@ public class UserAuthorizationService {
               + String.join("、", businessRoles.stream().map(role -> role.name).sorted().toList());
       operationLogs.recordUserChanges(actor, action, detail, affected);
     }
-    statuses.settle();
+    statuses.settleUsers(affected.stream().map(user -> user.id).toList());
     return new BatchRoleResult(request.action(), affected.size());
   }
 

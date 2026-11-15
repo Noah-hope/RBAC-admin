@@ -98,7 +98,7 @@ public class RoleService {
     if (!previousParents.equals(parents)) changes.add("继承角色从 " + previousParents + " 改为 " + parents);
     role.name=input.name; role.description=input.description;
     if (!changes.isEmpty()) logs.recordGlobalChange(actor,"修改角色",String.join("，",changes),"ROLE",role.id,role.name);
-    statuses.settle();
+    statuses.settleUsers(assignments.findByRoleIdIn(affected).stream().map(a -> a.userId).distinct().toList());
     return details(role);
   }
 

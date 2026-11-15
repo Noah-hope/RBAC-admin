@@ -23,8 +23,7 @@ public class PermissionRequestService {
   private final ApplicationMapper apps;
   private final UserMapper users;
   private final UserRoleMapper assignments;
-  private final RoleMapper roles;
-  private final RoleService roleService;
+  private final RolePermissionService effective;
   private final DepartmentService departments;
   private final OperationLogService logs;
   private final RequestStatusService statuses;
@@ -35,8 +34,7 @@ public class PermissionRequestService {
       ApplicationMapper apps,
       UserMapper users,
       UserRoleMapper assignments,
-      RoleMapper roles,
-      RoleService roleService,
+      RolePermissionService effective,
       DepartmentService departments,
       OperationLogService logs,
       RequestStatusService statuses) {
@@ -45,8 +43,7 @@ public class PermissionRequestService {
     this.apps = apps;
     this.users = users;
     this.assignments = assignments;
-    this.roles = roles;
-    this.roleService = roleService;
+    this.effective = effective;
     this.departments = departments;
     this.logs = logs;
     this.statuses = statuses;
@@ -112,17 +109,20 @@ public class PermissionRequestService {
       SessionUser actor, String mode, String status, int page, int size) {
     boolean review = "REVIEW".equals(mode);
     if (review) requireAdministrator(actor);
-    var allowed =
-        review && !isTotalAdmin(actor)
-            ? users.findAll().stream().filter(u -> canReview(actor, u)).map(u -> u.id).toList()
-            : List.<Long>of();
+    var scope=review && !isTotalAdmin(actor)
+        ? departments.managedDepartments(actor,null).stream().map(d -> d.id).toList() : List.<Long>of();
     var found =
         requests.findAll(
             (root, query, cb) -> {
               var predicates = new ArrayList<Predicate>();
               if (!review) predicates.add(cb.equal(root.get("applicantUserId"), actor.id()));
               else if (!isTotalAdmin(actor))
-                predicates.add(root.get("applicantUserId").in(allowed));
+                {
+                var applicant=query.subquery(Long.class);
+                var account=applicant.from(UserAccount.class);
+                applicant.select(account.get("id")).where(account.get("departmentId").in(scope));
+                predicates.add(root.get("applicantUserId").in(applicant));
+              }
               if (status != null) predicates.add(cb.equal(root.get("status"), status));
               return cb.and(predicates.toArray(Predicate[]::new));
             },
@@ -177,25 +177,24 @@ public class PermissionRequestService {
     request.reviewerUserId = actor.id();
     request.reviewedAt = LocalDateTime.now(ZoneOffset.UTC);
     log(actor, request, "审核权限申请");
-    statuses.settle();
+    statuses.settleUsers(List.of(request.applicantUserId));
     return view(request, null);
   }
 
   private List<ApprovalOption> options(SessionUser actor, PermissionRequest request) {
-    var permission = permissions.findById(request.permissionId).orElseThrow();
-    var owned = owned(request.applicantUserId);
-    return roles.findAll().stream()
-        .filter(r -> "BUSINESS".equals(r.roleType))
-        .map(r -> roleService.get(actor, r.id))
-        .filter(r -> r.permissionIds().contains(request.permissionId))
-        .map(
-            r -> {
-              var extra =
-                  ApprovalRules.extraPermissions(
-                      Set.copyOf(r.permissionIds()), owned, permission.id, permission.parentId);
-              return new ApprovalOption(r, extra.isEmpty(), extra);
-            })
-        .toList();
+    var permission=permissions.findById(request.permissionId).orElseThrow();
+    var user=effective.forUser(request.applicantUserId); var graph=user.graph();
+    var counts=assignments.countRoleUsers().stream().collect(Collectors.toMap(
+        UserRoleMapper.RoleUserCount::getRoleId,UserRoleMapper.RoleUserCount::getUserCount));
+    var candidates=new ArrayList<ApprovalOption>();
+    for (var role : graph.roles().values().stream().sorted(Comparator.comparing(r -> r.id)).toList()) {
+      if (!"BUSINESS".equals(role.roleType)) continue;
+      var rights=effective.effectiveIds(graph,role.id);
+      if (!rights.contains(request.permissionId)) continue;
+      var extra=ApprovalRules.extraPermissions(rights,user.sources().keySet(),permission.id,permission.parentId);
+      candidates.add(new ApprovalOption(effective.details(graph,role,counts.getOrDefault(role.id,0L)),extra.isEmpty(),extra));
+    }
+    return candidates;
   }
 
   private PermissionRequest requireVisible(SessionUser actor, long id, boolean review) {
@@ -223,9 +222,7 @@ public class PermissionRequestService {
   }
 
   private Set<Long> owned(long user) {
-    return permissions.findEffectiveForUser(user).stream()
-        .map(p -> p.id)
-        .collect(Collectors.toSet());
+    return effective.forUser(user).sources().keySet();
   }
 
   private void requirePending(PermissionRequest request) {
