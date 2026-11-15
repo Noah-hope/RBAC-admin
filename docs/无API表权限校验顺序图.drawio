@@ -1,0 +1,586 @@
+<mxfile host="app.diagrams.net" compressed="false">
+  <diagram id="api-permission-without-api-table" name="目标方案顺序图（未实现）">
+    <mxGraphModel dx="1600" dy="1000" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1000" background="#FFFFFF" math="0" shadow="0" adaptiveColors="none">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="top-note" value="关键变化：operationId → permissionCode 的对应写在业务代码的注解或静态配置中，不建 API 表；权限中心只按 permissionCode 判断用户是否有权。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#FFF2CC;strokeColor=#D6B656;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=FangSong;fontStyle=1;fontSize=15;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="180" y="52" width="1540" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p1-box" value="client: 客户端" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=16;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="130" width="200" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="p2-box" value="api: 业务接口" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=16;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="300" y="130" width="200" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-box" value="mapping: 权限映射配置" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=16;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="570" y="130" width="200" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-box" value="authClient: 鉴权客户端" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=16;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="840" y="130" width="200" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-box" value="auth: 统一鉴权接口" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=16;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="130" width="200" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="p6-box" value="service: 权限检查服务" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=16;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1380" y="130" width="200" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="p7-box" value="dao: PermissionDao" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=16;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1650" y="130" width="200" height="56" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p1-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="186" as="sourcePoint" />
+            <mxPoint x="130" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p2-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="186" as="sourcePoint" />
+            <mxPoint x="400" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p3-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="670" y="186" as="sourcePoint" />
+            <mxPoint x="670" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p4-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="940" y="186" as="sourcePoint" />
+            <mxPoint x="940" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p5-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1210" y="186" as="sourcePoint" />
+            <mxPoint x="1210" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p6-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1480" y="186" as="sourcePoint" />
+            <mxPoint x="1480" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p7-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1750" y="186" as="sourcePoint" />
+            <mxPoint x="1750" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="p2-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="395" y="220" width="10" height="610" as="geometry" />
+        </mxCell>
+        <mxCell id="p3-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="665" y="268" width="10" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="p4-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="935" y="360" width="10" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="p5-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1205" y="410" width="10" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="p6-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1475" y="460" width="10" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="p7-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1745" y="510" width="10" height="90" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m1" value="1: 提交受保护请求&lt;br&gt;（Bearer 令牌）" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="230" as="sourcePoint" />
+            <mxPoint x="400" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2" value="2: permissionCode =&lt;br&gt;resolve(operationId)" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="280" as="sourcePoint" />
+            <mxPoint x="670" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3" value="3: permissionCode" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="670" y="330" as="sourcePoint" />
+            <mxPoint x="400" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4" value="4: check(token, permissionCode)" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="380" as="sourcePoint" />
+            <mxPoint x="940" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5" value="5: GET /auth/permissions/&lt;br&gt;{permissionCode}" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="940" y="430" as="sourcePoint" />
+            <mxPoint x="1210" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m6" value="6: hasEffectivePermission&lt;br&gt;(userId, appId, permissionCode)" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1210" y="480" as="sourcePoint" />
+            <mxPoint x="1480" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m7" value="7: exists(userId, appId, code)" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1480" y="530" as="sourcePoint" />
+            <mxPoint x="1750" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m8" value="8: true / false" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1750" y="580" as="sourcePoint" />
+            <mxPoint x="1480" y="580" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m9" value="9: allowed" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1480" y="630" as="sourcePoint" />
+            <mxPoint x="1210" y="630" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m10" value="10: { allowed }" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1210" y="680" as="sourcePoint" />
+            <mxPoint x="940" y="680" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m11" value="11: allowed" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="940" y="730" as="sourcePoint" />
+            <mxPoint x="400" y="730" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="m12" value="12: allowed=true：执行业务" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="405" y="780" as="sourcePoint" />
+            <mxPoint x="405" y="820" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="510" y="780" />
+              <mxPoint x="510" y="820" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m13" value="13: 成功响应 / allowed=false 返回 403" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="860" as="sourcePoint" />
+            <mxPoint x="130" y="860" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="mapping-note" value="读取注解/静态配置&lt;br&gt;不查询数据库" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#FFF2CC;strokeColor=#D6B656;align=left;verticalAlign=middle;spacingLeft=8;fontFamily=FangSong;fontStyle=1;fontSize=13;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="700" y="268" width="200" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="auth-note" value="校验 JWT 签名、aud、账号状态&lt;br&gt;userId = sub" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#F4F8FC;strokeColor=#91A8BB;align=left;verticalAlign=middle;spacingLeft=8;fontFamily=FangSong;fontStyle=1;fontSize=13;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="430" width="240" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="summary-note" value="权限中心只查 sys_permission、sys_role_permission、sys_user_role；不查 API 表，也不接收 operationId。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#F4F8FC;strokeColor=#91A8BB;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=FangSong;fontStyle=1;fontSize=13;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="30" y="896" width="900" height="38" as="geometry" />
+        </mxCell>
+
+        <mxCell id="title" value="无 API 表时按权限标识校验接口的顺序图" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontFamily=SimHei;fontStyle=1;fontSize=32;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="550" y="938" width="800" height="46" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="self-management-no-api-flow" name="管理自身权限顺序图（当前代码）">
+    <mxGraphModel dx="2300" dy="1260" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2300" pageHeight="1260" background="#FFFFFF" math="0" shadow="0" adaptiveColors="none">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="s-title" value="权限中心管理自身权限的顺序图（当前代码）" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontFamily=SimHei;fontStyle=1;fontSize=36;fontColor=#14283D;" vertex="1" parent="1">
+          <mxGeometry x="500" y="20" width="1300" height="48" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s-example-note" value="示例：部门管理员张三在权限中心新增本部门用户。当前代码只校验登录身份、管理角色和部门范围，不校验按钮权限码 user:create。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#FFF2CC;strokeColor=#D6B656;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=FangSong;fontStyle=1;fontSize=15;fontColor=#14283D;" vertex="1" parent="1">
+          <mxGeometry x="600" y="78" width="1600" height="42" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s-legend-note" value="当前代码：不查 API 表、不查 API 权限码；只校验会话、管理角色和部门范围。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#F4F8FC;strokeColor=#91A8BB;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#14283D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="78" width="520" height="42" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s-p1-box" value="client: 浏览器" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=16;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="30" y="130" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="s-p2-box" value="session: SessionInterceptor" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=15;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="310" y="130" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="s-p3-box" value="controller: UserController" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=15;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="650" y="130" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="s-p4-box" value="service: UserService" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=15;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="990" y="130" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="s-p5-box" value="dept: DepartmentService" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=15;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="130" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="s-p6-box" value="mapper: UserMapper / UserRoleMapper" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1670" y="130" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="s-p7-box" value="log: OperationLogService" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=15;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="2010" y="130" width="220" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s-p1-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="140" y="190" as="sourcePoint" />
+            <mxPoint x="140" y="1160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-p2-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="420" y="190" as="sourcePoint" />
+            <mxPoint x="420" y="1160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-p3-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="190" as="sourcePoint" />
+            <mxPoint x="760" y="1160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-p4-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1100" y="190" as="sourcePoint" />
+            <mxPoint x="1100" y="1160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-p5-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1440" y="190" as="sourcePoint" />
+            <mxPoint x="1440" y="1160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-p6-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1780" y="190" as="sourcePoint" />
+            <mxPoint x="1780" y="1160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-p7-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2120" y="190" as="sourcePoint" />
+            <mxPoint x="2120" y="1160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="s-p2-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="415" y="220" width="10" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="s-p3-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="755" y="390" width="10" height="690" as="geometry" />
+        </mxCell>
+        <mxCell id="s-p4-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1095" y="460" width="10" height="610" as="geometry" />
+        </mxCell>
+        <mxCell id="s-p5-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1435" y="550" width="10" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="s-p6-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1775" y="810" width="10" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="s-p7-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="2115" y="890" width="10" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s-m1" value="1: POST /api/v1/users&lt;br&gt;Authorization: Bearer &lt;sessionToken&gt;" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="140" y="230" as="sourcePoint" />
+            <mxPoint x="420" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-m2" value="2: currentUser(token)" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="425" y="300" as="sourcePoint" />
+            <mxPoint x="425" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="530" y="300" />
+              <mxPoint x="530" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-m3" value="3: request.setAttribute(ACTOR, actor)" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="420" y="400" as="sourcePoint" />
+            <mxPoint x="760" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-m4" value="4: create(actor, request)" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="480" as="sourcePoint" />
+            <mxPoint x="1100" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-m5" value="5: requireManagedDepartment(&lt;br&gt;actor, request.departmentId)" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1100" y="560" as="sourcePoint" />
+            <mxPoint x="1440" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-m6" value="6: department" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1440" y="640" as="sourcePoint" />
+            <mxPoint x="1100" y="640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-m7" value="7: requireManagementAuthority(...)" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1105" y="720" as="sourcePoint" />
+            <mxPoint x="1105" y="770" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1210" y="720" />
+              <mxPoint x="1210" y="770" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-m8" value="8: save(UserAccount)" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1100" y="820" as="sourcePoint" />
+            <mxPoint x="1780" y="820" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-m9" value="9: recordUserChange(...)" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1100" y="900" as="sourcePoint" />
+            <mxPoint x="2120" y="900" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-m10" value="10: setDepartmentAdministrator(...) （条件）" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1105" y="980" as="sourcePoint" />
+            <mxPoint x="1105" y="1030" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1220" y="980" />
+              <mxPoint x="1220" y="1030" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-m11" value="11: UserCreated" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1100" y="1060" as="sourcePoint" />
+            <mxPoint x="760" y="1060" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s-m12" value="12: 201 UserCreated" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="760" y="1130" as="sourcePoint" />
+            <mxPoint x="140" y="1130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="s-note-session" value="currentUser：TokenHash.sha256 → sys_session → sys_user；status=ACTIVE。失败 → AuthenticationFailure → 401。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#F4F8FC;strokeColor=#91A8BB;align=left;verticalAlign=middle;spacingLeft=8;fontFamily=FangSong;fontStyle=1;fontSize=13;fontColor=#14283D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="300" width="330" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s-note-dept" value="requireManagedDepartment 内部先 requireAdministrator，再判断本部门及下级范围；越界 → 403 OUTSIDE_MANAGEMENT_SCOPE。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#F4F8FC;strokeColor=#91A8BB;align=left;verticalAlign=middle;spacingLeft=8;fontFamily=FangSong;fontStyle=1;fontSize=13;fontColor=#14283D;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="550" width="380" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s-note-current" value="当前代码没有读取 user:create，也没有调用 PermissionMapper.hasEffectivePermission。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#FFF2CC;strokeColor=#D6B656;align=left;verticalAlign=middle;spacingLeft=8;fontFamily=FangSong;fontStyle=1;fontSize=13;fontColor=#14283D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="720" width="330" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s-note-mapper" value="生成初始密码 → PasswordEncoder.encode → UserMapper.save(UserAccount)。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#F4F8FC;strokeColor=#91A8BB;align=left;verticalAlign=middle;spacingLeft=8;fontFamily=FangSong;fontStyle=1;fontSize=13;fontColor=#14283D;" vertex="1" parent="1">
+          <mxGeometry x="1840" y="810" width="420" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="s-note-log" value="recordUserChange；若 departmentAdministrator=true，还会调用 setDepartmentAdministrator。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#F4F8FC;strokeColor=#91A8BB;align=left;verticalAlign=middle;spacingLeft=8;fontFamily=FangSong;fontStyle=1;fontSize=13;fontColor=#14283D;" vertex="1" parent="1">
+          <mxGeometry x="1840" y="960" width="420" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="s-note-check" value="该流程不调用 POST /permission-checks，也不使用 X-Application-Token。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#FFF2CC;strokeColor=#D6B656;align=left;verticalAlign=middle;spacingLeft=8;fontFamily=FangSong;fontStyle=1;fontSize=13;fontColor=#14283D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="980" width="330" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s-bottom-title" value="权限中心管理自身权限（新增用户）" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontFamily=SimHei;fontStyle=1;fontSize=28;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="750" y="1180" width="800" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="current-code-permission-check" name="当前代码实际顺序图">
+    <mxGraphModel dx="1800" dy="1120" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1120" background="#FFFFFF" math="0" shadow="0" adaptiveColors="none">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="c-top-note" value="当前代码：没有 sys_api 表，也没有 operationId 映射；调用方直接提交 permissionCode，权限中心按用户有效角色判断。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#FFF2CC;strokeColor=#D6B656;align=left;verticalAlign=middle;spacingLeft=10;fontFamily=FangSong;fontStyle=1;fontSize=15;fontColor=#14283D;" vertex="1" parent="1">
+          <mxGeometry x="180" y="52" width="1440" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="c-p1-box" value="caller: 调用方" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=16;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="20" y="130" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="c-p2-box" value="auth: AuthorizationController" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=15;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="290" y="130" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="c-p3-box" value="service: PermissionCheckService" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=15;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="590" y="130" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="c-p4-box" value="appDao: ApplicationMapper" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=15;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="890" y="130" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="c-p5-box" value="permissionDao: PermissionMapper" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=15;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="130" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="c-p6-box" value="db: 权限相关表" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=2;fontFamily=FangSong;fontStyle=1;fontSize=16;fontColor=#000000;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1490" y="130" width="220" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="c-p1-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="190" as="sourcePoint" />
+            <mxPoint x="130" y="1040" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-p2-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="190" as="sourcePoint" />
+            <mxPoint x="400" y="1040" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-p3-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="190" as="sourcePoint" />
+            <mxPoint x="700" y="1040" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-p4-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1000" y="190" as="sourcePoint" />
+            <mxPoint x="1000" y="1040" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-p5-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1300" y="190" as="sourcePoint" />
+            <mxPoint x="1300" y="1040" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-p6-life" style="endArrow=none;dashed=1;dashPattern=8 4;html=1;strokeColor=#000000;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1600" y="190" as="sourcePoint" />
+            <mxPoint x="1600" y="1040" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="c-p2-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="395" y="220" width="10" height="780" as="geometry" />
+        </mxCell>
+        <mxCell id="c-p3-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="695" y="290" width="10" height="640" as="geometry" />
+        </mxCell>
+        <mxCell id="c-p4-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="995" y="360" width="10" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="c-p5-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1295" y="620" width="10" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="c-p6-act" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1595" y="690" width="10" height="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="c-m1" value="1: POST /api/v1/applications/&lt;br&gt;{applicationId}/permission-checks&lt;br&gt;X-Application-Token + {userId, permissionCode}" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="230" as="sourcePoint" />
+            <mxPoint x="400" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-m2" value="2: check(applicationId, token, request)" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="300" as="sourcePoint" />
+            <mxPoint x="700" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-m3" value="3: findIdByTokenHash(TokenHash.sha256(token))" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="370" as="sourcePoint" />
+            <mxPoint x="1000" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-m4" value="4: authenticatedApplicationId" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1000" y="440" as="sourcePoint" />
+            <mxPoint x="700" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-m5" value="5: 应用 ID 一致？否 → 403" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="705" y="510" as="sourcePoint" />
+            <mxPoint x="705" y="560" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="830" y="510" />
+              <mxPoint x="830" y="560" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-m6" value="6: hasEffectivePermission(&lt;br&gt;userId, applicationId, permissionCode)" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="640" as="sourcePoint" />
+            <mxPoint x="1300" y="640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-m7" value="7: 查询有效角色权限" style="endArrow=block;endFill=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1300" y="710" as="sourcePoint" />
+            <mxPoint x="1600" y="710" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-m8" value="8: true / false" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1600" y="780" as="sourcePoint" />
+            <mxPoint x="1300" y="780" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-m9" value="9: allowed" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1300" y="850" as="sourcePoint" />
+            <mxPoint x="700" y="850" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-m10" value="10: PermissionCheckResult" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="920" as="sourcePoint" />
+            <mxPoint x="400" y="920" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-m11" value="11: 200 { allowed }" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;strokeWidth=1.5;fontFamily=FangSong;fontStyle=1;fontSize=14;fontColor=#000000;labelBackgroundColor=#FFFFFF;align=center;verticalAlign=middle;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="990" as="sourcePoint" />
+            <mxPoint x="130" y="990" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="c-note-caller" value="应用令牌只证明调用方是哪个应用，&lt;br&gt;不证明当前用户身份。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#F4F8FC;strokeColor=#91A8BB;align=left;verticalAlign=middle;spacingLeft=8;fontFamily=FangSong;fontStyle=1;fontSize=13;fontColor=#14283D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="190" width="300" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="c-note-app" value="auth 用 TokenHash.sha256(token)&lt;br&gt;找应用；路径 appId 必须与令牌对应。&lt;br&gt;不一致抛 APPLICATION_MISMATCH → 403。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#F4F8FC;strokeColor=#91A8BB;align=left;verticalAlign=middle;spacingLeft=8;fontFamily=FangSong;fontStyle=1;fontSize=13;fontColor=#14283D;" vertex="1" parent="1">
+          <mxGeometry x="860" y="470" width="360" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="c-note-db" value="查询链：sys_user_role → sys_role(BUSINESS)&lt;br&gt;→ sys_role_permission → sys_permission；&lt;br&gt;并要求 sys_user.status = ACTIVE。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#F4F8FC;strokeColor=#91A8BB;align=left;verticalAlign=middle;spacingLeft=8;fontFamily=FangSong;fontStyle=1;fontSize=13;fontColor=#14283D;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="620" width="400" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="c-note-result" value="用户停用/不存在/无权限 → 200 allowed=false；&lt;br&gt;只有令牌无效返回 401，应用不匹配返回 403。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#F4F8FC;strokeColor=#91A8BB;align=left;verticalAlign=middle;spacingLeft=8;fontFamily=FangSong;fontStyle=1;fontSize=13;fontColor=#14283D;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="840" width="400" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="c-note-session" value="该接口在 WebConfig 中被排除出 SessionInterceptor，&lt;br&gt;不使用 Bearer 会话；userId 由调用方提交。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#FFF2CC;strokeColor=#D6B656;align=left;verticalAlign=middle;spacingLeft=8;fontFamily=FangSong;fontStyle=1;fontSize=13;fontColor=#14283D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="890" width="360" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="c-note-self" value="权限中心自身管理接口（如 POST /api/v1/users）&lt;br&gt;当前不调用本接口，而是 SessionInterceptor&lt;br&gt;+ requireAdministrator + 部门范围。" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#FFF2CC;strokeColor=#D6B656;align=left;verticalAlign=middle;spacingLeft=8;fontFamily=FangSong;fontStyle=1;fontSize=13;fontColor=#14283D;" vertex="1" parent="1">
+          <mxGeometry x="40" y="990" width="360" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="c-title" value="当前后端实际权限检查顺序图（按权限标识，无 API 表）" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontFamily=SimHei;fontStyle=1;fontSize=30;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="450" y="1060" width="900" height="46" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

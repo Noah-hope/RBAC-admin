@@ -1,9 +1,22 @@
+# 本地 IDE 和编程助手配置、缓存
 .codeartsdoer/
+.workbuddy/
 .idea/
+*.iml
 
-# Maven 构建产物与本地环境
+# Maven 构建产物
 **/target/
-.DS_Store
+
+# 本地环境配置
 .env
 .env.*
 !.env.example
+
+# draw.io 自动备份和临时文件
+*.drawio.bkp
+*.drawio.dtmp
+
+# 操作系统生成的文件
+.DS_Store
+Thumbs.db
+Desktop.ini

@@ -2,7 +2,7 @@
 
 独立的 Spring Boot / Spring Data JPA 模块，使用 Java 21、Maven 和 MySQL。接口以 [OpenAPI](../docs/03-api/openapi.yaml) 为准。
 
-代码结构见[代码阅读指南](../docs/04-development/代码阅读指南.md)，文档总入口见[文档索引](../docs/README.md)。目录已从 `rbac-structured/` 调整为 `backend/`；Maven artifactId、Java 包名和数据库名保持原值。
+代码结构见[代码阅读指南](../docs/04-development/代码阅读指南.md)，文档总入口见[文档索引](../docs/README.md)。RBAC0 后端位于 `rbac-structured/`，Maven artifactId 为 `rbac-structured`。
 
 ## 本地运行
 
@@ -15,7 +15,7 @@ export RBAC_DB_URL='jdbc:mysql://127.0.0.1:3306/rbac_structured'
 export RBAC_DB_USERNAME='<MySQL 用户名>'
 # 在本地设置 RBAC_DB_PASSWORD 和 RBAC_ADMIN_PASSWORD。
 # 避免把真实密码提交到仓库。
-mvn -f backend/pom.xml spring-boot:run
+mvn -f rbac-structured/pom.xml spring-boot:run
 ```
 
 启动前按下面说明创建数据库并设置密码。
@@ -28,7 +28,7 @@ $env:RBAC_DB_URL = 'jdbc:mysql://127.0.0.1:3306/rbac_structured'
 $env:RBAC_DB_USERNAME = '<MySQL 用户名>'
 $env:RBAC_DB_PASSWORD = Read-Host 'MySQL 密码' -MaskInput
 $env:RBAC_ADMIN_PASSWORD = Read-Host '初始总管理员密码' -MaskInput
-mvn -f backend/pom.xml spring-boot:run
+mvn -f rbac-structured/pom.xml spring-boot:run
 ```
 
 Flyway 创建 10 张业务表并登记两个预置管理角色。首次启动创建总管理员，用户名默认为 `admin`，可通过 `RBAC_ADMIN_USERNAME` 设置。数据库已有总管理员时，启动时保留其密码。
@@ -60,4 +60,4 @@ UPDATE sys_application SET token_hash = UNHEX('<SHA-256 十六进制摘要>') WH
 
 ## 测试
 
-为测试单独建一个空 MySQL 库，例如 `rbac_structured_test`。设置 `RBAC_TEST_DB_URL`、`RBAC_TEST_DB_USERNAME` 和 `RBAC_TEST_DB_PASSWORD` 后运行 `mvn -f backend/pom.xml verify`。测试会在该库写入用户和会话。
+为测试单独建一个空 MySQL 库，例如 `rbac_structured_test`。设置 `RBAC_TEST_DB_URL`、`RBAC_TEST_DB_USERNAME` 和 `RBAC_TEST_DB_PASSWORD` 后运行 `mvn -f rbac-structured/pom.xml verify`。测试会在该库写入用户和会话。

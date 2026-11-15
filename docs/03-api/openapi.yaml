@@ -1,189 +1,433 @@
 openapi: 3.1.0
 info:
   title: RBAC 权限中心 API
-  version: 1.0.0
-  description: |
-    首版接口契约，依据已确认的界面操作清单。x-ui-operations 记录对应的界面操作编号。
+  version: 2.1.0
+  description: >-
+    新版设计契约，依据已确认需求、界面操作清单和课程系统的统一身份接口。后端尚未按本版改造。
 
-    权限中心用户通过会话令牌访问。总管理员全局管理，部门管理员管理本人所属部门及下级部门。
-    业务系统使用独立的应用令牌查询本应用的功能权限。应用和角色使用系统生成的数字 ID。
 
-    列表统一使用 page 和 pageSize 分页，先按权限范围和查询条件过滤，再计算 total 和分页。
-    部门树和应用权限树以完整层级返回。应用、角色和用户列表按 ID 升序，操作记录按时间和 ID 降序。
+    本系统及所有接入应用使用统一账号、登录、退出和权限检查。统一身份接口使用 /auth 路径，权限中心管理接口保留 /api/v1 路径。成功响应直接返回业务数据，错误使用 application/problem+json。
 
-    角色权限配置、角色分配和撤销的变更与成功记录一起保存。保存失败时保留原授权结果。
-    首版路径为 /api/v1。兼容的新增字段和接口沿用该路径，破坏兼容的变更使用新版本路径。
+
+    登录返回 RS256 签名 JWT。sub 为用户数字 ID 的字符串，aud 为本次登录的应用 code 列表；还包含 iss、iat、exp、jti。JWT 不包含角色和权限。业务系统用公钥验签，受保护操作仍须向权限中心检查令牌、账号状态和权限。退出撤销当前令牌，使用它的所有接入系统均不可继续操作。
+
+
+    /auth/me 及两个单项权限检查接口按当前应用返回结果。aud 只有一个应用时自动选定；aud 有多个应用时，通过 X-Application-Code 指定本次应用，该值必须属于 aud。权限中心管理接口固定属于 permission-center，aud 必须包含它。
+
+
+    本系统管理菜单、按钮和 API 同样登记在 permission-center 应用下。管理接口检查已登记的权限关联，同时保留总管理员、部门管理员的职责和部门范围。统一身份和公钥接口不依赖业务菜单权限。
+
+
+    角色按菜单和按钮权限授权，不直接勾选 API。API 通过关联权限判断。operationId 与前端权限码是不同标识；本版用已确认的 API 关联关系衔接后端功能权限，课程组长、任课教师等对象范围由业务系统判断。
+
+
+    旧契约迁移：POST /api/v1/sessions 改为 POST /auth/login；DELETE /api/v1/sessions/current 改为 POST /auth/logout；GET /api/v1/me 改为 GET /auth/me。原 /api/v1/applications/{applicationId}/permission-checks 由当前令牌下的两个 /auth 检查接口替代，调用方不再指定 userId。旧随机会话令牌和 X-Application-Token 不用于新版接入，切换后重新登录。
+
+
+    列表保留 page、pageSize，部门树和权限树完整返回。权限、API 关联和成功记录一起保存，失败则整次回滚；下一次检查反映成功的变更。x-ui-operations 对应界面操作编号。
+
+
+    2.1 设计修订：权限与 API 为多对多；API 独立登记，解除权限关联不会删除 API。补齐权限申请、角色创建申请及审核。本文是待实现契约，不代表现有后端已完成。
+
+    权限中心的新增、编辑部门仅总管理员使用，部门管理员页面不显示这两个按钮；直接调用仍返回 403。权限授予不能绕过固定管理员职责。我的权限、我的申请和提交本人申请属于登录后的基础能力。
+
+    权限目录和角色配置变化后，也须同步处理因此已满足的 PENDING 申请；已结束的历史申请不恢复。身份令牌不保存权限快照，权限检查读取当前有效授权。
 servers:
-  - url: /api/v1
-    description: 权限中心 API 基础路径
+  - url: /
+    description: 系统部署域名；身份接口 /auth，管理接口 /api/v1
 security:
-  - SessionToken: []
+  - BearerAuth: []
 tags:
-  - name: 登录与退出
-    description: 创建、结束会话及恢复当前用户身份。
+  - name: 统一身份鉴权
+    description: 所有接入系统共用的登录、退出和当前用户权限检查。
+  - name: 签名公钥
+    description: 业务系统验证 JWT 的公开密钥。
   - name: 应用与权限
-    description: 登记业务应用、菜单和按钮权限。
+    description: 登记应用、菜单按钮及其关联 API。
   - name: 角色管理
-    description: 查询业务角色，保存角色在各应用中的权限。
+    description: 配置业务角色并删除未关联用户的角色。
   - name: 用户与部门
-    description: 维护用户账号、所属部门及组织结构。
+    description: 维护用户、所属部门和组织结构。
   - name: 用户授权
-    description: 查看用户已有角色，进行单人或批量授权。
+    description: 单人和批量分配、撤销角色。
   - name: 我的权限
-    description: 查询当前用户在各应用中的有效业务权限。
+    description: 权限中心按应用汇总当前用户权限。
   - name: 操作记录
-    description: 按管理员范围查看和搜索重要操作。
-  - name: 业务系统接入
-    description: 业务系统按应用和权限标识检查用户权限。
+    description: 按管理范围查看重要操作。
+  - name: API 登记
+    description: 总管理员维护独立的 API 清单和权限关联。
+  - name: 权限申请
+    description: 本人申请与撤回，管理员按范围审核。
+  - name: 角色创建申请
+    description: 部门管理员提出配置，总管理员保存角色后完成审批。
 paths:
-  /sessions:
+  /auth/login:
     post:
-      operationId: createSession
-      tags: [登录与退出]
-      summary: 用户登录
-      description: |
-        使用权限中心用户名和密码登录。凭据无效返回 401，凭据正确但账号停用返回 403。
-        成功后返回会话令牌和当前用户，前端按管理角色显示可用页面。连续失败的登录尝试应限流。
-      x-ui-operations: [L01]
+      operationId: login
+      tags:
+        - 统一身份鉴权
+      summary: 统一登录
+      description: 使用统一用户名和密码登录。systems 填目标应用 code：课程系统为
+        course-project-management，本系统为 permission-center。所有 code 必须已登记，返回 JWT 的
+        aud 与此列表一致。aud 表示目标应用，不代表自动拥有该应用权限。凭据错误或账号停用均返回 401。
+      x-ui-operations:
+        - L01
       security: []
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/LoginRequest' }
-            example: { username: lin.xiao, password: DemoPassword2026 }
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+            example:
+              username: "20220101"
+              password: DemoPassword2026
+              systems:
+                - course-project-management
       responses:
-        '201':
-          description: 已创建登录会话
+        "200":
+          description: 登录成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResult"
+              example:
+                accessToken: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InJiYWMtZXhhbXBsZSJ9.eyJpc3MiOiJodHRwczovL2lkZW50aXR5LmV4YW1wbGUuZWR1Iiwic3ViIjoiMTIiLCJhdWQiOlsiY291cnNlLXByb2plY3QtbWFuYWdlbWVudCJdLCJpYXQiOjE3OTQ0MTI4MDAsImV4cCI6MTc5NDQyMDAwMCwianRpIjoiZXhhbXBsZS1sb2dpbi0xMiJ9.mQzs-2wRjx0sc4SREwTe4T2Ed7Ai3sz69naXUEGmatXdkAh1NX4TNOvRXjzQYvCoR1knJEfi7Ryv8tXZ8Z_FDZW8JJ5Uda7rSENcs8Z_tySIc1LlSvBvg9dHbVmIvtgC1IZLyCMeAOYKBvevDIlBqVTi8WORm2vC84oAjY8NyRfYG9nerWe5DEJcYholoOjazBM9Id__jJY5WA3UVKWoRbbmKqHX0igeZ8aNQVavTjXkH1xJJDwKcdvCKqa8vYnszPFb-n86xVA67GouJISM3tvQwKFk2vIIwCWQR_jfcgcLQ2cQANclu6GQQAu9GQe1Pl8-3Mjf0ltS764oU-4a2A
+                tokenType: Bearer
+                expiresIn: 7200
           headers:
             Cache-Control:
-              description: 会话令牌响应禁止缓存
-              schema: { type: string, const: no-store }
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/LoginResult' }
-              example:
-                accessToken: example-session-token
-                expiresAt: '2026-11-10T12:00:00+08:00'
-                user: { id: 12, username: lin.xiao, name: 林晓, departmentId: 3, managementRole: NONE }
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '403': { $ref: '#/components/responses/Forbidden' }
-        '429': { $ref: '#/components/responses/TooManyRequests' }
-        '500': { $ref: '#/components/responses/InternalError' }
-  /sessions/current:
-    delete:
-      operationId: deleteCurrentSession
-      tags: [登录与退出]
-      summary: 退出登录
-      description: 已登录用户可以退出。服务端撤销当前会话，令牌随即失效。
-      x-ui-operations: [L02]
+              description: 不缓存当前身份或授权结果
+              schema:
+                type: string
+                const: no-store
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+      externalDocs:
+        description: 课程管理系统统一身份鉴权契约
+        url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/api-523792399e0
+      x-implementation-status: 待后端实现
+  /auth/logout:
+    post:
+      operationId: logout
+      tags:
+        - 统一身份鉴权
+      summary: 统一退出登录
+      description: 使用当前 Bearer 令牌退出，不提交用户 ID。中心使当前令牌失效，所有使用它的接入系统后续检查均返回 401。
+      x-ui-operations:
+        - L02
       responses:
-        '204': { description: 已退出登录 }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '500': { $ref: '#/components/responses/InternalError' }
-  /me:
+        "204":
+          description: 当前令牌已失效，无响应正文
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+      externalDocs:
+        description: 课程管理系统统一身份鉴权契约
+        url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/api-523792400e0
+      x-implementation-status: 待后端实现
+  /auth/me:
     get:
-      operationId: getCurrentUser
-      tags: [登录与退出]
-      summary: 获取当前登录用户
-      description: 已登录用户可以查询自身身份。页面刷新后可用该结果恢复当前用户和可用导航。
-      x-ui-operations: [L01]
+      operationId: getCurrentUserAndPermissions
+      tags:
+        - 统一身份鉴权
+      summary: 当前用户、角色与权限
+      description: 从令牌识别当前用户与目标应用，返回该应用的角色和前端菜单、按钮权限。roles 用已有角色数字 ID
+        的字符串表示，不新增角色标识字段；subject 为用户 ID 字符串，no
+        为统一账号用户名。id、departmentId、managementRole
+        是供权限中心页面使用的补充字段。权限结果用于页面显示，业务后端仍须检查。
+      x-ui-operations:
+        - L03
+      parameters:
+        - $ref: "#/components/parameters/ApplicationContext"
       responses:
-        '200':
-          description: 当前用户身份
+        "200":
+          description: 当前用户在目标应用中的身份、角色和权限
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/SessionUser' }
-              example: { id: 12, username: lin.xiao, name: 林晓, departmentId: 3, managementRole: NONE }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '500': { $ref: '#/components/responses/InternalError' }
-  /applications:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+              example:
+                subject: "12"
+                roles:
+                  - "3"
+                permissions:
+                  - course:viewOwn
+                  - course:create
+                name: 林晓
+                no: "20220101"
+                id: 12
+                departmentId: 3
+                managementRole: NONE
+          headers:
+            Cache-Control:
+              description: 不缓存当前身份或授权结果
+              schema:
+                type: string
+                const: no-store
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+      externalDocs:
+        description: 课程管理系统统一身份鉴权契约
+        url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/api-523792401e0
+      x-implementation-status: 待后端实现
+  "/auth/permissions/{permission}":
+    get:
+      operationId: checkCurrentFrontendPermission
+      tags:
+        - 统一身份鉴权
+      summary: 校验当前用户是否具备指定前端权限
+      description: 检查当前用户在目标应用中的一项菜单或按钮权限，只返回 allowed。不接受 userId。权限未登记或未获授权返回
+        200、allowed=false；令牌无效或账号停用返回 401。
+      x-requirement: 核心需求 7 权限检查
+      parameters:
+        - $ref: "#/components/parameters/FrontendPermission"
+        - $ref: "#/components/parameters/ApplicationContext"
+      responses:
+        "200":
+          description: 单项前端权限检查结果
+          headers:
+            Cache-Control:
+              description: 不缓存当前身份或授权结果
+              schema:
+                type: string
+                const: no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionCheckResult"
+              examples:
+                allowed:
+                  value:
+                    allowed: true
+                denied:
+                  value:
+                    allowed: false
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+      externalDocs:
+        description: 课程管理系统统一身份鉴权契约
+        url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/api-534170404e0
+      x-implementation-status: 待后端实现
+  "/auth/api-permissions/{operationId}":
+    get:
+      operationId: checkCurrentApiPermission
+      tags:
+        - 统一身份鉴权
+      summary: 判断当前用户能否调用指定 API 接口
+      description: 业务后端转交当前用户的 Bearer 令牌，并从实际请求确定 operationId，不信任前端自行声明的目标接口。按目标应用查找
+        API，读取其全部关联权限；当前有效角色拥有其中任意一项即 allowed=true（OR），没有关联权限则 allowed=false。API
+        未登记返回 404；未获授权返回 200、allowed=false；无效令牌、退出或停用账号返回 401；检查不可用返回
+        503，均不得执行操作。只检查功能权限，固定管理员职责、部门范围及业务对象范围仍由目标后端落实。
+      x-requirement: 核心需求 7 权限检查
+      parameters:
+        - $ref: "#/components/parameters/OperationId"
+        - $ref: "#/components/parameters/ApplicationContext"
+      responses:
+        "200":
+          description: 当前用户调用目标 API 的权限
+          headers:
+            Cache-Control:
+              description: 不缓存当前身份或授权结果
+              schema:
+                type: string
+                const: no-store
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiCheckResult"
+              examples:
+                allowed:
+                  value:
+                    operationId: listAdminCourses
+                    allowed: true
+                denied:
+                  value:
+                    operationId: listAdminCourses
+                    allowed: false
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+      externalDocs:
+        description: 课程管理系统统一身份鉴权契约
+        url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/api-534180421e0
+      x-implementation-status: 待后端实现
+  /.well-known/jwks.json:
+    get:
+      operationId: getSigningPublicKeys
+      tags:
+        - 签名公钥
+      summary: 获取 JWT 验签公钥
+      description: 公开 RSA 公钥。业务系统根据 JWT 头部 kid
+        选择公钥，并检查签名、签发者、时效及目标应用。只提供公钥，不返回私钥。验签不替代权限与退出失效检查。
+      security: []
+      responses:
+        "200":
+          description: JWT 签名公钥集合
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JwkSet"
+              example:
+                keys:
+                  - kty: RSA
+                    use: sig
+                    alg: RS256
+                    kid: rbac-example
+                    n: qsAzov1IxNIaSBr_V5bHmXgeDdNEWkHPpLqOLyfXEvnwWiNj-i4aeNthJ0ErtdzjdLQJc21R9yfZehCXJDTByodFW3tMM6771nvUHT-4qduupHL2ixRE9AMZ9ICEOS0Ma4WHlI4GKJAKfFpeByHnAWVAF39SVfJkmbCAjs9hLZ5Ox-H7LZFzklr5hDrov2fLpGPcDuNIgLafbBWIXQ6CmohZWqb3UqV2p9oxmzaRnQKCXFQu_Cs8-TjWoDRlvLVQkS3CWoJbqzFF8d5SJ4ppNRU3aeGPl0mLpHrdeUsy5ju0xbWLlw7BAJFLWyuqOwZMwqURjUFNU8JAifXgTlcSKQ
+                    e: AQAB
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/applications:
     get:
       operationId: listApplications
-      tags: [应用与权限]
+      tags: [ 应用与权限 ]
       summary: 查询应用列表
-      description: 总管理员可查看应用，并在配置角色时使用同一列表选择应用。
-      x-ui-operations: [A01, R02, R03]
+      description: 总管理员查询应用。本系统 code 为 permission-center，课程系统为
+        course-project-management。数字 id 用于管理接口，code 用于统一登录 systems 和 JWT aud。
+      x-ui-operations: [ A01, R02, R03 ]
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PageSize'
       responses:
-        '200':
-          description: 已登记应用的分页结果
+        "200":
+          description: 已登记应用分页结果
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/ApplicationPage' }
+              schema:
+                $ref: "#/components/schemas/ApplicationPage"
               example:
-                items: [{ id: 1, name: OA 协同办公 }]
+                items:
+                  - id: 1
+                    name: 权限管理系统
+                    code: permission-center
+                  - id: 2
+                    name: 课程管理系统
+                    code: course-project-management
                 page: 1
                 pageSize: 20
-                total: 1
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '403': { $ref: '#/components/responses/Forbidden' }
-        '500': { $ref: '#/components/responses/InternalError' }
+                total: 2
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
     post:
       operationId: createApplication
-      tags: [应用与权限]
+      tags: [ 应用与权限 ]
       summary: 新增应用
-      description: 总管理员填写应用名称。系统生成应用 ID，该 ID 供业务系统接入时使用。
-      x-ui-operations: [A02]
+      description: 总管理员登记应用。name 必填；code 可填业务系统约定标识，省略时系统生成 app-{id}。code
+        全局唯一，创建后固定，不随显示名称变化。
+      x-ui-operations: [ A02 ]
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/ApplicationInput' }
-            example: { name: 工单系统 }
+            schema:
+              $ref: "#/components/schemas/ApplicationCreate"
+            example:
+              name: 图书管理系统
+              code: library-management
       responses:
-        '201':
+        "201":
           description: 应用已创建
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Application' }
-              example: { id: 4, name: 工单系统 }
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '403': { $ref: '#/components/responses/Forbidden' }
-        '409': { $ref: '#/components/responses/Conflict' }
-        '500': { $ref: '#/components/responses/InternalError' }
-  /applications/{applicationId}:
+              schema:
+                $ref: "#/components/schemas/Application"
+              example:
+                id: 3
+                name: 图书管理系统
+                code: library-management
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  "/api/v1/applications/{applicationId}":
     parameters:
       - $ref: '#/components/parameters/ApplicationId'
     patch:
       operationId: updateApplication
-      tags: [应用与权限]
+      tags: [ 应用与权限 ]
       summary: 修改应用名称
-      description: 总管理员可修改应用名称。应用 ID 保持固定。
-      x-ui-operations: [A03]
+      description: 总管理员修改显示名称，应用数字 ID 和对接 code 保持固定。
+      x-ui-operations: [ A03 ]
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/ApplicationInput' }
-            example: { name: 服务工单 }
+            schema:
+              $ref: "#/components/schemas/ApplicationInput"
+            example:
+              name: 课程项目管理系统
       responses:
-        '200':
-          description: 应用已更新
+        "200":
+          description: 应用名称已更新
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Application' }
-              example: { id: 4, name: 服务工单 }
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '403': { $ref: '#/components/responses/Forbidden' }
-        '404': { $ref: '#/components/responses/NotFound' }
-        '409': { $ref: '#/components/responses/Conflict' }
-        '500': { $ref: '#/components/responses/InternalError' }
-  /applications/{applicationId}/permissions:
+              schema:
+                $ref: "#/components/schemas/Application"
+              example:
+                id: 2
+                name: 课程项目管理系统
+                code: course-project-management
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  "/api/v1/applications/{applicationId}/permissions":
     parameters:
       - $ref: '#/components/parameters/ApplicationId'
     get:
       operationId: getApplicationPermissionTree
-      tags: [应用与权限]
+      tags: [ 应用与权限 ]
       summary: 查看应用权限树
-      description: 总管理员可查询应用内的菜单和按钮。应用目录和角色配置共用该权限树。
-      x-ui-operations: [A04, R02, R03]
+      description: 总管理员查看应用的菜单和按钮，每项的 apiCount 表示关联接口数量。编辑时通过权限详情接口读取完整
+        API。应用目录与角色配置共用此树，角色仍按权限 ID 勾选。
+      x-ui-operations: [ A04, R02, R03 ]
       responses:
         '200':
           description: 应用内的完整权限树
@@ -191,13 +435,19 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/ApplicationPermissions' }
               example:
-                applicationId: 1
-                applicationName: OA 协同办公
+                applicationId: 2
+                applicationName: 课程管理系统
+                applicationCode: course-project-management
                 menus:
                   - id: 101
-                    name: 公文管理
-                    code: 'document:view'
-                    buttons: [{ id: 102, name: 审批公文, code: 'document:approve' }]
+                    name: 所有课程
+                    code: course:viewAll
+                    apiCount: 1
+                    buttons:
+                      - id: 102
+                        name: 审核课程
+                        code: course:review
+                        apiCount: 1
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '403': { $ref: '#/components/responses/Forbidden' }
@@ -205,76 +455,186 @@ paths:
         '500': { $ref: '#/components/responses/InternalError' }
     post:
       operationId: createPermission
-      tags: [应用与权限]
+      tags: [ 应用与权限 ]
       summary: 登记菜单或按钮权限
-      description: |
-        总管理员可登记权限。标识格式为 资源:操作，同一应用内唯一。
-        新增按钮时，parentId 必须指向同一应用内的菜单。新增菜单时 parentId 可省略或填 null。
-        保存后，新权限出现在该应用的权限树，并可授予业务角色。
-      x-ui-operations: [A05]
+      description: 仅总管理员。登记应用内唯一的资源:操作权限标识。菜单 parentId 省略或为 null；按钮必须指向同应用菜单。apiIds
+        为已登记 API 的完整关联 ID 列表，可为空；不存在或属于其他应用则 400。同一 API
+        可关联多项权限。权限、关联和成功记录在同一事务保存。需要新增 API 时先调用 API 登记接口，再将返回的 ID 提交本接口。
+      x-ui-operations:
+        - A05
+        - A08
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/PermissionCreate' }
+            schema:
+              $ref: "#/components/schemas/PermissionCreate"
             examples:
               menu:
-                value: { name: 公文管理, code: 'document:view', type: MENU }
+                value:
+                  name: 所有课程
+                  code: course:viewAll
+                  type: MENU
+                  apiIds:
+                    - 1000
               button:
-                value: { name: 审批公文, code: 'document:approve', type: BUTTON, parentId: 101 }
+                value:
+                  name: 审核课程
+                  code: course:review
+                  type: BUTTON
+                  parentId: 101
+                  apiIds:
+                    - 1001
       responses:
-        '201':
-          description: 权限已登记
+        "201":
+          description: 权限及 API 关联已保存，API 登记由独立接口维护
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Permission' }
-              example: { id: 102, applicationId: 1, name: 审批公文, code: 'document:approve', type: BUTTON, parentId: 101 }
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '403': { $ref: '#/components/responses/Forbidden' }
-        '404': { $ref: '#/components/responses/NotFound' }
-        '409': { $ref: '#/components/responses/Conflict' }
-        '500': { $ref: '#/components/responses/InternalError' }
-  /applications/{applicationId}/permissions/{permissionId}:
+              schema:
+                $ref: "#/components/schemas/Permission"
+              example:
+                id: 102
+                applicationId: 2
+                name: 审核课程
+                code: course:review
+                type: BUTTON
+                parentId: 101
+                apiCount: 1
+                apis:
+                  - id: 1001
+                    applicationId: 2
+                    operationId: reviewCourse
+                    httpMethod: POST
+                    path: /courses/{courseId}/review
+                    permissionIds:
+                      - 102
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  "/api/v1/applications/{applicationId}/permissions/{permissionId}":
     parameters:
       - $ref: '#/components/parameters/ApplicationId'
       - $ref: '#/components/parameters/PermissionId'
     patch:
       operationId: updatePermission
-      tags: [应用与权限]
-      summary: 修改权限名称或标识
-      description: |
-        总管理员可修改权限名称或标识。权限 ID、所属应用、类型和所属菜单保持固定，已有角色关联继续有效。
-        修改标识后，业务系统的下一次权限检查按新标识匹配。
-      x-ui-operations: [A06]
+      tags: [ 应用与权限 ]
+      summary: 保存权限资料和关联接口
+      description: 仅总管理员。修改名称、标识和 apiIds；权限 ID、所属应用、类型和所属菜单固定，角色授权保留。apiIds
+        省略则保留，提供则完整替换，[] 只清空本权限的关联，不删除任何 API 登记或其他权限关联。未登记或跨应用 API 返回
+        400。资料、关联及成功记录一起保存，下次检查使用新配置；用户仍可通过其他关联权限获得接口权限。
+      x-ui-operations:
+        - A06
+        - A08
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/PermissionUpdate' }
-            example: { name: 审批公文申请 }
+            schema:
+              $ref: "#/components/schemas/PermissionUpdate"
+            examples:
+              edit:
+                value:
+                  name: 审核课程申请
+                  apiIds:
+                    - 1001
+              remove:
+                summary: 清空关联，保留权限与角色授权
+                value:
+                  apiIds: []
       responses:
-        '200':
-          description: 权限已更新
+        "200":
+          description: 权限资料和关联 API 已保存
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Permission' }
-              example: { id: 102, applicationId: 1, name: 审批公文申请, code: 'document:approve', type: BUTTON, parentId: 101 }
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '403': { $ref: '#/components/responses/Forbidden' }
-        '404': { $ref: '#/components/responses/NotFound' }
-        '409': { $ref: '#/components/responses/Conflict' }
-        '500': { $ref: '#/components/responses/InternalError' }
-  /roles:
+              schema:
+                $ref: "#/components/schemas/Permission"
+              example:
+                id: 102
+                applicationId: 2
+                name: 审核课程
+                code: course:review
+                type: BUTTON
+                parentId: 101
+                apiCount: 1
+                apis:
+                  - id: 1001
+                    applicationId: 2
+                    operationId: reviewCourse
+                    httpMethod: POST
+                    path: /courses/{courseId}/review
+                    permissionIds:
+                      - 102
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    get:
+      operationId: getPermission
+      tags:
+        - 应用与权限
+      summary: 查看权限及关联接口
+      description: 总管理员打开权限编辑或关联接口配置时读取完整资料，只返回指定应用下的权限。
+      x-ui-operations:
+        - A06
+        - A07
+      responses:
+        "200":
+          description: 权限资料和完整关联接口
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Permission"
+              example:
+                id: 102
+                applicationId: 2
+                name: 审核课程
+                code: course:review
+                type: BUTTON
+                parentId: 101
+                apiCount: 1
+                apis:
+                  - id: 1001
+                    applicationId: 2
+                    operationId: reviewCourse
+                    httpMethod: POST
+                    path: /courses/{courseId}/review
+                    permissionIds:
+                      - 102
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/roles:
     get:
       operationId: listRoles
-      tags: [角色管理]
+      tags: [ 角色管理 ]
       summary: 查看或搜索业务角色
-      description: |
-        总管理员可查看角色列表。部门管理员可调用同一接口取得业务角色选项。
-        返回角色概要和已授权应用统计。角色的具体权限由总管理员查询。
-      x-ui-operations: [R01, G02, G04, G05]
+      description: 总管理员或部门管理员查询业务角色概要，按 ID
+        升序分页。部门管理员可为范围内用户选择已有角色，也可读取角色详情确认全部权限，但不能创建或修改角色。
+      x-ui-operations: [ R01, G02, G04, G05 ]
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PageSize'
@@ -291,9 +651,12 @@ paths:
               example:
                 items:
                   - id: 8
-                    name: 公文审批员
-                    description: 处理 OA 公文审批
-                    applications: [{ applicationId: 1, applicationName: OA 协同办公, permissionCount: 2 }]
+                    name: 课程管理员
+                    description: 处理课程审核
+                    applications:
+                      - applicationId: 2
+                        applicationName: 课程管理系统
+                        permissionCount: 2
                 page: 1
                 pageSize: 20
                 total: 1
@@ -303,19 +666,24 @@ paths:
         '500': { $ref: '#/components/responses/InternalError' }
     post:
       operationId: createRole
-      tags: [角色管理]
+      tags: [ 角色管理 ]
       summary: 新增业务角色
       description: |
         总管理员可创建业务角色。系统生成角色 ID。一次保存可包含多个应用的权限。
         选中的按钮和所属菜单一并提交，允许以空权限列表创建角色。
         引用不存在的权限或缺少所属菜单时返回 400。
-      x-ui-operations: [R02]
+      x-ui-operations: [ R02 ]
       requestBody:
         required: true
         content:
           application/json:
             schema: { $ref: '#/components/schemas/RoleInput' }
-            example: { name: 公文审批员, description: 处理 OA 公文审批, permissionIds: [101, 102] }
+            example:
+              name: 课程管理员
+              description: 处理课程审核
+              permissionIds:
+                - 101
+                - 102
       responses:
         '201': { $ref: '#/components/responses/RoleCreated' }
         '400': { $ref: '#/components/responses/BadRequest' }
@@ -323,15 +691,16 @@ paths:
         '403': { $ref: '#/components/responses/Forbidden' }
         '409': { $ref: '#/components/responses/Conflict' }
         '500': { $ref: '#/components/responses/InternalError' }
-  /roles/{roleId}:
+  "/api/v1/roles/{roleId}":
     parameters:
       - $ref: '#/components/parameters/RoleId'
     get:
       operationId: getRole
-      tags: [角色管理]
+      tags: [ 角色管理 ]
       summary: 查看角色信息和已选权限
-      description: 总管理员可查看角色信息和全部已选权限 ID。页面配合各应用的权限树恢复勾选。
-      x-ui-operations: [R03]
+      description: 总管理员或部门管理员可只读查看业务角色的全部直接权限，供角色配置、分配角色和权限申请审核使用。返回 permissionIds
+        及权限摘要，按应用标识区分；部门管理员不能使用更新接口。无角色继承。
+      x-ui-operations: [ R03 ]
       responses:
         '200': { $ref: '#/components/responses/RoleReturned' }
         '400': { $ref: '#/components/responses/BadRequest' }
@@ -341,19 +710,25 @@ paths:
         '500': { $ref: '#/components/responses/InternalError' }
     put:
       operationId: updateRole
-      tags: [角色管理]
+      tags: [ 角色管理 ]
       summary: 保存角色信息和全部权限
       description: |
         总管理员提交角色名称、说明和完整的权限 ID 列表。角色 ID 保持固定。
         同一次保存替换该角色在所有应用中的权限配置。先校验全部权限，成功后整体生效并记录操作。
         引用不存在的权限或缺少所属菜单时返回 400。
-      x-ui-operations: [R04]
+      x-ui-operations: [ R04 ]
       requestBody:
         required: true
         content:
           application/json:
             schema: { $ref: '#/components/schemas/RoleInput' }
-            example: { name: 公文审批员, description: 审批公文并查看员工档案, permissionIds: [101, 102, 201] }
+            example:
+              name: 课程管理员
+              description: 审核课程并查看用户目录
+              permissionIds:
+                - 101
+                - 102
+                - 201
       responses:
         '200': { $ref: '#/components/responses/RoleReturned' }
         '400': { $ref: '#/components/responses/BadRequest' }
@@ -364,9 +739,9 @@ paths:
         '500': { $ref: '#/components/responses/InternalError' }
     delete:
       operationId: deleteRole
-      tags: [角色管理]
+      tags: [ 角色管理 ]
       summary: 删除未关联用户的业务角色
-      x-ui-operations: [R05]
+      x-ui-operations: [ R05 ]
       description: |
         仅总管理员可删除业务角色。预置管理角色不能通过本接口删除，返回 404。
         角色仍关联任何用户（包括停用账号）时返回 409，提示关联人数，须先撤销用户关联。
@@ -380,13 +755,13 @@ paths:
         '404': { $ref: '#/components/responses/NotFound' }
         '409': { $ref: '#/components/responses/Conflict' }
         '500': { $ref: '#/components/responses/InternalError' }
-  /departments:
+  /api/v1/departments:
     get:
       operationId: getDepartmentTree
-      tags: [用户与部门]
+      tags: [ 用户与部门 ]
       summary: 查看部门结构
       description: 总管理员查看完整组织树。部门管理员以本部门为根查看可管理的组织树。
-      x-ui-operations: [D01, D02, D03, D04, D05, D06, D07]
+      x-ui-operations: [ D01, D02, D03, D04, D05, D06, D07 ]
       responses:
         '200':
           description: 管理范围内的部门树
@@ -396,72 +771,85 @@ paths:
               example:
                 departments:
                   - id: 2
-                    name: 行政部
+                    name: 计算机学院
                     parentId: 1
-                    children: [{ id: 3, name: 综合办公室, parentId: 2, children: [] }]
+                    children:
+                      - id: 3
+                        name: 软件工程系
+                        parentId: 2
+                        children: []
         '401': { $ref: '#/components/responses/Unauthorized' }
         '403': { $ref: '#/components/responses/Forbidden' }
         '500': { $ref: '#/components/responses/InternalError' }
     post:
       operationId: createDepartment
-      tags: [用户与部门]
+      tags: [ 用户与部门 ]
       summary: 新增部门
       description: 总管理员在组织树中新增公司、分公司或部门节点。parentId 为 null 时创建顶层节点。
-      x-ui-operations: [D02]
+      x-ui-operations: [ D02 ]
       requestBody:
         required: true
         content:
           application/json:
             schema: { $ref: '#/components/schemas/DepartmentInput' }
-            example: { name: 档案室, parentId: 2 }
+            example:
+              name: 档案室
+              parentId: 2
       responses:
         '201':
           description: 部门已创建
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Department' }
-              example: { id: 5, name: 档案室, parentId: 2 }
+              example:
+                id: 5
+                name: 档案室
+                parentId: 2
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '403': { $ref: '#/components/responses/Forbidden' }
         '404': { $ref: '#/components/responses/NotFound' }
         '500': { $ref: '#/components/responses/InternalError' }
-  /departments/{departmentId}:
+  "/api/v1/departments/{departmentId}":
     parameters:
       - $ref: '#/components/parameters/DepartmentId'
     patch:
       operationId: updateDepartment
-      tags: [用户与部门]
+      tags: [ 用户与部门 ]
       summary: 修改部门信息
       description: 总管理员可修改部门名称或上级。上级须为已有部门且不得形成组织循环，parentId 为 null 表示改为顶层节点。
-      x-ui-operations: [D03]
+      x-ui-operations: [ D03 ]
       requestBody:
         required: true
         content:
           application/json:
             schema: { $ref: '#/components/schemas/DepartmentUpdate' }
-            example: { name: 档案管理室 }
+            example:
+              name: 档案管理室
       responses:
         '200':
           description: 部门已更新
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Department' }
-              example: { id: 5, name: 档案管理室, parentId: 2 }
+              example:
+                id: 5
+                name: 档案管理室
+                parentId: 2
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '403': { $ref: '#/components/responses/Forbidden' }
         '404': { $ref: '#/components/responses/NotFound' }
         '500': { $ref: '#/components/responses/InternalError' }
-  /users:
+  /api/v1/users:
     get:
       operationId: listUsers
-      tags: [用户与部门, 用户授权]
+      tags: [ 用户与部门, 用户授权 ]
       summary: 按管理范围查看或搜索用户
       description: |
         总管理员可查询组织树中的全部用户，部门管理员可查询本部门及下级部门的用户。
         用户与部门页和用户授权页共用此列表。指定 departmentId 时，查询该部门及下级部门中的用户。
-      x-ui-operations: [D04, G01]
+      x-ui-operations: [ D04, G01 ]
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PageSize'
@@ -488,10 +876,14 @@ paths:
                   - id: 12
                     username: lin.xiao
                     name: 林晓
-                    department: { id: 3, name: 综合办公室 }
+                    department:
+                      id: 3
+                      name: 软件工程系
                     status: ACTIVE
                     departmentAdministrator: false
-                    businessRoles: [{ id: 2, name: 普通员工 }]
+                    businessRoles:
+                      - id: 3
+                        name: 课程教师
                 page: 1
                 pageSize: 20
                 total: 1
@@ -502,25 +894,28 @@ paths:
         '500': { $ref: '#/components/responses/InternalError' }
     post:
       operationId: createUser
-      tags: [用户与部门]
+      tags: [ 用户与部门 ]
       summary: 新增用户
-      description: |
-        管理员在其管理范围内新增用户。用户名全局唯一，默认账号状态为 ACTIVE。
-        总管理员可在创建时一并指定部门管理员。仅总管理员可以提交 departmentAdministrator。
-        系统生成初始密码，仅在本次创建响应中返回，供管理员安全交付给用户。
-      x-ui-operations: [D05, D08]
+      description: 管理员在其管理范围内新增用户，用户名全局唯一，默认
+        ACTIVE。初始密码由管理员在新增用户表单填写，数据库只保存密码摘要；响应只返回用户，不回显密码。仅总管理员可以提交
+        departmentAdministrator。编辑用户不修改密码，密码不得写入日志。
+      x-ui-operations: [ D05, D08 ]
       requestBody:
         required: true
         content:
           application/json:
             schema: { $ref: '#/components/schemas/UserCreate' }
-            example: { username: zhou.min, name: 周敏, departmentId: 3 }
+            example:
+              username: zhou.min
+              name: 周敏
+              departmentId: 3
+              initialPassword: demo1234
       responses:
         '201':
           description: 用户已创建
           headers:
             Cache-Control:
-              description: 初始密码响应禁止缓存
+              description: 用户创建响应禁止缓存
               schema: { type: string, const: no-store }
           content:
             application/json:
@@ -530,26 +925,27 @@ paths:
                   id: 24
                   username: zhou.min
                   name: 周敏
-                  department: { id: 3, name: 综合办公室 }
+                  department:
+                    id: 3
+                    name: 软件工程系
                   status: ACTIVE
                   departmentAdministrator: false
                   businessRoles: []
-                initialPassword: Example-Initial-Password-24
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '403': { $ref: '#/components/responses/Forbidden' }
         '404': { $ref: '#/components/responses/NotFound' }
         '409': { $ref: '#/components/responses/Conflict' }
         '500': { $ref: '#/components/responses/InternalError' }
-  /users/{userId}:
+  "/api/v1/users/{userId}":
     parameters:
       - $ref: '#/components/parameters/UserId'
     get:
       operationId: getUser
-      tags: [用户与部门, 用户授权]
+      tags: [ 用户与部门, 用户授权 ]
       summary: 查看用户信息及已有角色
       description: 管理员可查询管理范围内的用户信息。编辑用户和分配角色弹窗共用该结果。
-      x-ui-operations: [D06, D07, D08, G02]
+      x-ui-operations: [ D06, D07, D08, G02 ]
       responses:
         '200': { $ref: '#/components/responses/UserReturned' }
         '400': { $ref: '#/components/responses/BadRequest' }
@@ -559,14 +955,14 @@ paths:
         '500': { $ref: '#/components/responses/InternalError' }
     patch:
       operationId: updateUser
-      tags: [用户与部门]
+      tags: [ 用户与部门 ]
       summary: 修改用户、账号状态或所属部门
       description: |
         管理员可修改管理范围内用户的姓名、用户名和账号状态。
         仅总管理员可提交 departmentId 办理跨部门调动，或提交 departmentAdministrator 任命、撤销部门管理员角色。
         调动后保留用户已有的业务角色。新部门决定后续管理范围。
         账号停用后撤销其会话，后续登录和受保护的权限检查均不通过。重要操作写入操作记录。
-      x-ui-operations: [D06, D07, D08]
+      x-ui-operations: [ D06, D07, D08 ]
       requestBody:
         required: true
         content:
@@ -574,14 +970,17 @@ paths:
             schema: { $ref: '#/components/schemas/UserUpdate' }
             examples:
               transfer:
-                summary: 调动至财务部
-                value: { departmentId: 4 }
+                summary: 调动至数学学院
+                value:
+                  departmentId: 4
               disable:
                 summary: 停用账号
-                value: { status: DISABLED }
+                value:
+                  status: DISABLED
               appoint:
                 summary: 指定部门管理员
-                value: { departmentAdministrator: true }
+                value:
+                  departmentAdministrator: true
       responses:
         '200': { $ref: '#/components/responses/UserTransferred' }
         '400': { $ref: '#/components/responses/BadRequest' }
@@ -590,45 +989,57 @@ paths:
         '404': { $ref: '#/components/responses/NotFound' }
         '409': { $ref: '#/components/responses/Conflict' }
         '500': { $ref: '#/components/responses/InternalError' }
-  /users/{userId}/roles:
+  "/api/v1/users/{userId}/roles":
     parameters:
       - $ref: '#/components/parameters/UserId'
     put:
       operationId: replaceUserBusinessRoles
-      tags: [用户授权]
+      tags: [ 用户授权 ]
       summary: 保存单个用户的业务角色
-      description: |
+      description: >-
         管理员提交管理范围内该用户最终应拥有的业务角色 ID 列表。空列表表示撤销全部业务角色。
+
         管理角色不在本接口的修改范围。保存成功后直接生效，记录发生的分配和撤销。
-      x-ui-operations: [G03]
+         获得新权限后，将该用户同权限的待审核申请标记 SATISFIED；仅处理 PENDING，保留其他历史状态，不因撤销角色恢复已结束申请。授权、状态变更及成功记录一起保存。
+      x-ui-operations: [ G03 ]
       requestBody:
         required: true
         content:
           application/json:
             schema: { $ref: '#/components/schemas/ReplaceUserRoles' }
-            example: { roleIds: [2, 8] }
+            example:
+              roleIds:
+                - 3
+                - 8
       responses:
         '200':
           description: 已保存的业务角色
           content:
             application/json:
               schema: { $ref: '#/components/schemas/UserRoleResult' }
-              example: { userId: 12, roleIds: [2, 8] }
+              example:
+                userId: 12
+                roleIds:
+                  - 3
+                  - 8
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '403': { $ref: '#/components/responses/Forbidden' }
         '404': { $ref: '#/components/responses/NotFound' }
         '500': { $ref: '#/components/responses/InternalError' }
-  /user-role-assignments:
+  /api/v1/user-role-assignments:
     patch:
       operationId: changeUserRolesInBatch
-      tags: [用户授权]
+      tags: [ 用户授权 ]
       summary: 批量分配或撤销业务角色
-      description: |
+      description: >-
         管理员提交所选用户、所选业务角色，以及分配或撤销动作。所有用户都必须位于管理范围。
+
         先校验整批，成功后一起保存并立即生效。用户的其他角色保留。
+
         同一角色已分配时重复分配、未分配时重复撤销，均保持该用户现状。
-      x-ui-operations: [G04, G05]
+         获得新权限后，将该用户同权限的待审核申请标记 SATISFIED；仅处理 PENDING，保留其他历史状态，不因撤销角色恢复已结束申请。授权、状态变更及成功记录一起保存。
+      x-ui-operations: [ G04, G05 ]
       requestBody:
         required: true
         content:
@@ -637,31 +1048,44 @@ paths:
             examples:
               grant:
                 summary: 批量分配
-                value: { action: GRANT, userIds: [12, 13], roleIds: [8] }
+                value:
+                  action: GRANT
+                  userIds:
+                    - 12
+                    - 13
+                  roleIds:
+                    - 8
               revoke:
                 summary: 批量撤销
-                value: { action: REVOKE, userIds: [12, 13], roleIds: [8] }
+                value:
+                  action: REVOKE
+                  userIds:
+                    - 12
+                    - 13
+                  roleIds:
+                    - 8
       responses:
         '200':
           description: 批量操作已保存
           content:
             application/json:
               schema: { $ref: '#/components/schemas/BatchRoleResult' }
-              example: { action: GRANT, affectedUsers: 2 }
+              example:
+                action: GRANT
+                affectedUsers: 2
         '400': { $ref: '#/components/responses/BadRequest' }
         '401': { $ref: '#/components/responses/Unauthorized' }
         '403': { $ref: '#/components/responses/Forbidden' }
         '404': { $ref: '#/components/responses/NotFound' }
         '500': { $ref: '#/components/responses/InternalError' }
-  /me/permissions:
+  /api/v1/me/permissions:
     get:
       operationId: getMyPermissions
-      tags: [我的权限]
+      tags: [ 我的权限 ]
       summary: 查看我的权限
-      description: |
-        查询当前登录用户的业务角色，以及按应用归类的可见菜单和可用按钮。
-        同一权限经多个角色授予时只返回一次。尚未获得权限的应用返回空菜单列表。
-      x-ui-operations: [M01]
+      description: 权限中心按全部已登记应用汇总当前用户角色、可见菜单和按钮，aud 必须包含 permission-center。与 /auth/me
+        按当前应用返回权限的用途不同。同一权限只返回一次，无权限的应用返回空菜单。
+      x-ui-operations: [ M01 ]
       responses:
         '200':
           description: 当前用户的有效业务权限
@@ -669,28 +1093,40 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/MyPermissions' }
               example:
-                businessRoles: [{ id: 2, name: 普通员工 }, { id: 8, name: 公文审批员 }]
+                businessRoles:
+                  - id: 3
+                    name: 课程教师
+                  - id: 8
+                    name: 课程管理员
                 applications:
-                  - applicationId: 1
-                    applicationName: OA 协同办公
+                  - applicationId: 2
+                    applicationName: 课程管理系统
                     menus:
                       - id: 101
-                        name: 公文管理
-                        code: 'document:view'
-                        buttons: [{ id: 102, name: 审批公文, code: 'document:approve' }]
+                        name: 所有课程
+                        code: course:viewAll
+                        buttons:
+                          - id: 102
+                            name: 审核课程
+                            code: course:review
+                    applicationCode: course-project-management
         '401': { $ref: '#/components/responses/Unauthorized' }
         '500': { $ref: '#/components/responses/InternalError' }
-  /operation-logs:
+  /api/v1/operation-logs:
     get:
       operationId: listOperationLogs
-      tags: [操作记录]
+      tags: [ 操作记录 ]
       summary: 查看或搜索操作记录
-      description: |
+      description: >-
         总管理员查看全部记录。部门管理员查看本部门及下级部门用户的管理记录，
+
         以操作发生时用户所属的部门判断。同一批次涉及多部门时，只返回管理范围内的对象，
+
         搜索和分页同样基于筛选后的记录和对象。
+
         应用登记、角色权限配置、部门结构维护、跨部门调动等全局记录仅总管理员可见。
-      x-ui-operations: [O01]
+         包含 API 登记/编辑/移除、权限 API 关联变更、权限申请提交/撤回/审核，以及角色创建申请提交/通过/拒绝。申请和角色创建处理为 GLOBAL，只有总管理员查询；不记录读取、打开编辑或取消行为。密码与完整登录令牌不得写入 detail。
+      x-ui-operations: [ O01 ]
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PageSize'
@@ -707,11 +1143,13 @@ paths:
               example:
                 items:
                   - id: 130
-                    occurredAt: '2026-11-10T09:15:00+08:00'
+                    occurredAt: 2026-11-10T09:15:00+08:00
                     actorName: 顾晨
                     action: 批量分配角色
-                    targetNames: [林晓, 何雨桐]
-                    detail: 公文审批员
+                    targetNames:
+                      - 林晓
+                      - 何雨桐
+                    detail: 课程管理员
                     result: SUCCESS
                 page: 1
                 pageSize: 20
@@ -720,55 +1158,755 @@ paths:
         '401': { $ref: '#/components/responses/Unauthorized' }
         '403': { $ref: '#/components/responses/Forbidden' }
         '500': { $ref: '#/components/responses/InternalError' }
-  /applications/{applicationId}/permission-checks:
+  "/api/v1/applications/{applicationId}/apis":
     parameters:
-      - $ref: '#/components/parameters/ApplicationId'
+      - $ref: "#/components/parameters/ApplicationId"
+    get:
+      operationId: listApis
+      tags:
+        - API 登记
+      summary: 查询应用 API 清单
+      description: 仅总管理员。返回独立 API 登记及全部关联权限 ID，包含尚未关联权限的 API；按 ID 升序分页。
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+        - in: query
+          name: keyword
+          schema:
+            $ref: "#/components/schemas/Keyword"
+          description: 按接口标识或请求路径搜索
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiPage"
+              example:
+                items:
+                  - id: 1001
+                    applicationId: 2
+                    operationId: reviewCourse
+                    httpMethod: POST
+                    path: /courses/{courseId}/review
+                    permissionIds:
+                      - 102
+                      - 105
+                page: 1
+                pageSize: 20
+                total: 1
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
     post:
-      operationId: checkBusinessPermission
-      tags: [业务系统接入]
-      summary: 检查指定应用中的用户权限
-      description: |
-        业务系统用接入时配置的应用令牌调用。令牌绑定应用，路径中的应用 ID 必须与令牌对应。
-        业务系统先确认当前业务用户身份，再提交对应的权限中心用户 ID 和权限标识。
-        权限中心根据当前有效业务角色检查用户在该应用中是否拥有这项权限。
-        用户停用、用户或权限不存在、未获授权时，返回 allowed 为 false。业务系统据此拒绝操作。
-      x-requirement: 核心需求 7 权限检查
-      security:
-        - ApplicationToken: []
+      operationId: registerApi
+      tags:
+        - API 登记
+      summary: 登记 API
+      description: 仅总管理员。从业务系统 API 文档填写
+        operationId、httpMethod、path；不创建业务代码。接口标识及方法、路径组合各自在应用内唯一，区分大小写，方法使用大写。允许先登记而不关联权限；无关联时
+        API 检查拒绝。登记及成功操作记录在一个事务提交。
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/PermissionCheck' }
-            example: { userId: 12, permissionCode: 'document:approve' }
+            schema:
+              $ref: "#/components/schemas/ApiInput"
+            example:
+              operationId: reviewCourse
+              httpMethod: POST
+              path: /courses/{courseId}/review
       responses:
-        '200':
-          description: 本次权限检查结果
+        "201":
+          description: 操作成功
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/PermissionCheckResult' }
-              examples:
-                granted:
-                  value: { allowed: true }
-                denied:
-                  value: { allowed: false }
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '403': { $ref: '#/components/responses/Forbidden' }
-        '500': { $ref: '#/components/responses/InternalError' }
+              schema:
+                $ref: "#/components/schemas/Api"
+              example:
+                id: 1001
+                applicationId: 2
+                operationId: reviewCourse
+                httpMethod: POST
+                path: /courses/{courseId}/review
+                permissionIds: []
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  "/api/v1/applications/{applicationId}/apis/{apiId}":
+    parameters:
+      - $ref: "#/components/parameters/ApplicationId"
+      - $ref: "#/components/parameters/ApiId"
+    patch:
+      operationId: updateApi
+      tags:
+        - API 登记
+      summary: 编辑 API 登记
+      description: 仅总管理员。按 API 数字 ID 修改接口标识、方法或路径，所属应用固定，所有权限关联保留并共同引用新资料。唯一约束冲突
+        409；不存在或不属于应用 404。operationId 变更须与业务系统实际标识一起调整；旧标识检查返回
+        404，不保留隐式别名。变更及成功记录同一事务保存。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiUpdate"
+            example:
+              path: /courses/{courseId}/review
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Api"
+              example:
+                id: 1001
+                applicationId: 2
+                operationId: reviewCourse
+                httpMethod: POST
+                path: /courses/{courseId}/review
+                permissionIds:
+                  - 102
+                  - 105
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    delete:
+      operationId: deleteApi
+      tags:
+        - API 登记
+      summary: 移除 API 登记
+      description: 仅总管理员。删除 API 及其全部权限关联，不删除权限、角色和历史操作记录。成功后对应 operationId 检查返回 404
+        并拒绝执行。与只解除某项权限的关联不同；删除和成功记录同一事务提交。
+      responses:
+        "204":
+          description: 操作成功，无响应正文
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/permission-catalog:
+    get:
+      operationId: getPermissionCatalog
+      tags:
+        - 角色管理
+      summary: 读取角色配置权限目录
+      description: 仅总管理员与部门管理员只读访问，用于创建角色、角色创建申请和查看角色全部权限。按应用返回菜单、按钮和 parentId，不返回 API
+        清单。读取不意味着有权配置角色或调用对应 API；部门管理员仍不能新增或修改角色。树形目录完整返回。
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionCatalog"
+              example:
+                applications:
+                  - id: 2
+                    name: 课程管理系统
+                    code: course-project-management
+                    permissions:
+                      - id: 101
+                        applicationId: 2
+                        name: 所有课程
+                        code: course:viewAll
+                        type: MENU
+                        parentId: null
+                      - id: 102
+                        applicationId: 2
+                        name: 审核课程
+                        code: course:review
+                        type: BUTTON
+                        parentId: 101
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/me/requestable-permissions:
+    get:
+      operationId: getRequestablePermissions
+      tags:
+        - 权限申请
+      summary: 查询本人可申请的权限
+      description: 正常登录账号使用，aud 包含 permission-center。不接收
+        userId。按应用和菜单分组：未获得菜单时只列菜单，已获得菜单后只列其下未获得按钮；已获权限不作为申请选项。menu
+        可作为按钮分组的上下文标题。明确返回
+        MENU/BUTTON，空目录合法。不开放通过业务角色申请总管理员专属职责，包括部门维护；普通授权不得绕过管理职责。历史申请不因目录过滤而隐藏。完整返回目录。
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestablePermissions"
+              example:
+                applications:
+                  - id: 2
+                    name: 课程管理系统
+                    code: course-project-management
+                    groups:
+                      - menu:
+                          id: 101
+                          applicationId: 2
+                          name: 所有课程
+                          code: course:viewAll
+                          type: MENU
+                          parentId: null
+                        permissions:
+                          - id: 101
+                            applicationId: 2
+                            name: 所有课程
+                            code: course:viewAll
+                            type: MENU
+                            parentId: null
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/permission-requests:
+    get:
+      operationId: listPermissionRequests
+      tags:
+        - 权限申请
+      summary: 查询本人或待审核的权限申请
+      description: view=MINE 默认只看本人；view=REVIEW
+        仅管理员可用，总管理员看全部、部门管理员仅看本部门及下级部门员工。先按当前权限和部门范围过滤，再按状态筛选和分页，createdAt、id
+        降序。已获权限不删除或隐藏历史记录。
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+        - in: query
+          name: view
+          schema:
+            type: string
+            enum:
+              - MINE
+              - REVIEW
+            default: MINE
+          description: 本人记录或管理员审核记录
+        - in: query
+          name: status
+          schema:
+            $ref: "#/components/schemas/PermissionRequestStatus"
+          description: 省略查询全部状态
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionRequestPage"
+              example:
+                items:
+                  - id: 31
+                    applicantUserId: 12
+                    applicantName: 林晓
+                    applicantDepartmentId: 3
+                    permission:
+                      id: 102
+                      applicationId: 2
+                      name: 审核课程
+                      code: course:review
+                      type: BUTTON
+                      parentId: 101
+                    reason: 负责本学期课程审核
+                    status: PENDING
+                    reviewerUserId: null
+                    approvedRoleId: null
+                    createdAt: 2026-11-15T09:00:00+08:00
+                    reviewedAt: null
+                page: 1
+                pageSize: 20
+                total: 1
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      operationId: createPermissionRequest
+      tags:
+        - 权限申请
+      summary: 提交本人权限申请
+      description: 从令牌取申请人，不允许提交他人
+        ID。必须为正常账号，理由去除首尾空格后非空；权限必须属于当前本人可申请目录。已拥有、同项已有待审核申请或按钮所属菜单尚未获得返回
+        409。固定管理员职责不能通过申请业务权限绕过。创建 PENDING 记录，记录操作；不授予权限。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PermissionRequestInput"
+            example:
+              permissionId: 102
+              reason: 负责本学期课程审核
+      responses:
+        "201":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionRequest"
+              example:
+                id: 31
+                applicantUserId: 12
+                applicantName: 林晓
+                applicantDepartmentId: 3
+                permission:
+                  id: 102
+                  applicationId: 2
+                  name: 审核课程
+                  code: course:review
+                  type: BUTTON
+                  parentId: 101
+                reason: 负责本学期课程审核
+                status: PENDING
+                reviewerUserId: null
+                approvedRoleId: null
+                createdAt: 2026-11-15T09:00:00+08:00
+                reviewedAt: null
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  "/api/v1/permission-requests/{requestId}":
+    parameters:
+      - $ref: "#/components/parameters/RequestId"
+    get:
+      operationId: getPermissionRequest
+      tags:
+        - 权限申请
+      summary: 查看权限申请及审核角色
+      description: 本人可读自己的记录，管理员按审核范围只读。越界或不存在返回 404。只有有权审核者返回
+        approvalRoles：列出包含目标权限的现有业务角色和全部权限，selectable
+        表示可用于此次审核；extraPermissionIds
+        是超出申请人已有权限、申请权限及必要所属菜单的无关权限，非空则不可选择。无合适角色时返回空数组，先拆分或申请创建最小角色。
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionRequestDetails"
+              example:
+                id: 31
+                applicantUserId: 12
+                applicantName: 林晓
+                applicantDepartmentId: 3
+                permission:
+                  id: 102
+                  applicationId: 2
+                  name: 审核课程
+                  code: course:review
+                  type: BUTTON
+                  parentId: 101
+                reason: 负责本学期课程审核
+                status: PENDING
+                reviewerUserId: null
+                approvedRoleId: null
+                createdAt: 2026-11-15T09:00:00+08:00
+                reviewedAt: null
+                approvalRoles:
+                  - role:
+                      id: 8
+                      name: 课程审核员
+                      description: 审核课程申请
+                      applications:
+                        - applicationId: 2
+                          applicationName: 课程管理系统
+                          permissionCount: 2
+                      permissionIds:
+                        - 101
+                        - 102
+                      permissions:
+                        - id: 101
+                          applicationId: 2
+                          name: 所有课程
+                          code: course:viewAll
+                          type: MENU
+                          parentId: null
+                        - id: 102
+                          applicationId: 2
+                          name: 审核课程
+                          code: course:review
+                          type: BUTTON
+                          parentId: 101
+                    selectable: true
+                    extraPermissionIds: []
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  "/api/v1/permission-requests/{requestId}/withdrawals":
+    parameters:
+      - $ref: "#/components/parameters/RequestId"
+    post:
+      operationId: withdrawPermissionRequest
+      tags:
+        - 权限申请
+      summary: 撤回本人待审核申请
+      description: 仅申请人本人可以撤回 PENDING。其他状态返回 409，非本人或不存在返回 404。保留申请记录，状态改
+        WITHDRAWN；记录撤回，不解除任何角色关联。
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionRequest"
+              example:
+                id: 31
+                applicantUserId: 12
+                applicantName: 林晓
+                applicantDepartmentId: 3
+                permission:
+                  id: 102
+                  applicationId: 2
+                  name: 审核课程
+                  code: course:review
+                  type: BUTTON
+                  parentId: 101
+                reason: 负责本学期课程审核
+                status: WITHDRAWN
+                reviewerUserId: null
+                approvedRoleId: null
+                createdAt: 2026-11-15T09:00:00+08:00
+                reviewedAt: null
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  "/api/v1/permission-requests/{requestId}/reviews":
+    parameters:
+      - $ref: "#/components/parameters/RequestId"
+    post:
+      operationId: reviewPermissionRequest
+      tags:
+        - 权限申请
+      summary: 审核权限申请并分配业务角色
+      description: 仅管理范围内的管理员审核 PENDING；越界 404，已处理 409。APPROVE
+        必须选择包含所申请权限的现有业务角色，不接受单独
+        permissionIds；角色不得附带超出申请人已有权限、此次申请及必要所属菜单的无关权限。服务端重新验证，不依赖前端
+        selectable。通过时在一个事务中新增用户角色关联、更新 APPROVED 和审批人/时间/角色并记录日志，不覆盖其他角色。REJECT
+        不分配角色。期间权限已由其他角色满足则转 SATISFIED，不再重复审批或分配。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PermissionRequestReview"
+            example:
+              decision: APPROVE
+              roleId: 8
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PermissionRequest"
+              example:
+                id: 31
+                applicantUserId: 12
+                applicantName: 林晓
+                applicantDepartmentId: 3
+                permission:
+                  id: 102
+                  applicationId: 2
+                  name: 审核课程
+                  code: course:review
+                  type: BUTTON
+                  parentId: 101
+                reason: 负责本学期课程审核
+                status: APPROVED
+                reviewerUserId: 2
+                approvedRoleId: 8
+                createdAt: 2026-11-15T09:00:00+08:00
+                reviewedAt: 2026-11-15T09:10:00+08:00
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/v1/role-creation-requests:
+    get:
+      operationId: listRoleCreationRequests
+      tags:
+        - 角色创建申请
+      summary: 查询角色创建申请
+      description: 仅部门管理员和总管理员。部门管理员只看本人提交的记录，总管理员看全部。支持状态筛选，先限定可见范围再分页，按 createdAt、id 降序。
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+        - in: query
+          name: status
+          schema:
+            $ref: "#/components/schemas/RoleCreationRequestStatus"
+          description: 省略返回全部状态
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleCreationRequestPage"
+              example:
+                items:
+                  - id: 41
+                    applicantUserId: 2
+                    applicantName: 顾晨
+                    name: 课程审核员
+                    description: 审核课程申请
+                    permissionIds:
+                      - 101
+                      - 102
+                    status: PENDING
+                    reviewerUserId: null
+                    createdRoleId: null
+                    createdAt: 2026-11-15T09:00:00+08:00
+                    reviewedAt: null
+                page: 1
+                pageSize: 20
+                total: 1
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      operationId: createRoleCreationRequest
+      tags:
+        - 角色创建申请
+      summary: 提交角色创建申请
+      description: 仅部门管理员，申请人由令牌确定。使用与创建角色相同表单：名称、可空说明、直接权限 ID。按钮及所属菜单一起提交；不接受角色继承。创建
+        PENDING 申请及权限关联，不提前创建角色，不改变任何用户权限。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleInput"
+            example:
+              name: 课程审核员
+              description: 审核课程申请
+              permissionIds:
+                - 101
+                - 102
+      responses:
+        "201":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleCreationRequest"
+              example:
+                id: 41
+                applicantUserId: 2
+                applicantName: 顾晨
+                name: 课程审核员
+                description: 审核课程申请
+                permissionIds:
+                  - 101
+                  - 102
+                status: PENDING
+                reviewerUserId: null
+                createdRoleId: null
+                createdAt: 2026-11-15T09:00:00+08:00
+                reviewedAt: null
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  "/api/v1/role-creation-requests/{requestId}":
+    parameters:
+      - $ref: "#/components/parameters/RequestId"
+    get:
+      operationId: getRoleCreationRequest
+      tags:
+        - 角色创建申请
+      summary: 查看角色创建申请配置
+      description: 提交者或总管理员可查看，其他人及不存在返回 404。总管理员点击受理时只调用此读取接口并打开角色编辑表单；不修改状态。取消编辑无需提交
+        API，申请保持 PENDING。
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleCreationRequest"
+              example:
+                id: 41
+                applicantUserId: 2
+                applicantName: 顾晨
+                name: 课程审核员
+                description: 审核课程申请
+                permissionIds:
+                  - 101
+                  - 102
+                status: PENDING
+                reviewerUserId: null
+                createdRoleId: null
+                createdAt: 2026-11-15T09:00:00+08:00
+                reviewedAt: null
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  "/api/v1/role-creation-requests/{requestId}/reviews":
+    parameters:
+      - $ref: "#/components/parameters/RequestId"
+    post:
+      operationId: reviewRoleCreationRequest
+      tags:
+        - 角色创建申请
+      summary: 创建角色并通过或拒绝申请
+      description: 仅总管理员处理 PENDING；已处理返回 409。APPROVE 提交在编辑表单调整后的完整
+        role，在一个事务中创建业务角色及直接权限关联、将申请更新 APPROVED
+        并保存审批人/时间/createdRoleId、写成功记录。角色重名等失败整次回滚，申请保持 PENDING。REJECT 只更新为
+        REJECTED，不创建角色。成功创建也不自动分配给员工，按正常授权流程另行分配。没有独立的受理状态或只改状态的通过接口。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleCreationReview"
+            example:
+              decision: APPROVE
+              role:
+                name: 课程审核员
+                description: 审核课程申请
+                permissionIds:
+                  - 101
+                  - 102
+      responses:
+        "200":
+          description: 操作成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleCreationRequest"
+              example:
+                id: 41
+                applicantUserId: 2
+                applicantName: 顾晨
+                name: 课程审核员
+                description: 审核课程申请
+                permissionIds:
+                  - 101
+                  - 102
+                status: APPROVED
+                reviewerUserId: 1
+                createdRoleId: 8
+                createdAt: 2026-11-15T09:00:00+08:00
+                reviewedAt: 2026-11-15T09:10:00+08:00
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
 components:
   securitySchemes:
-    SessionToken:
+    BearerAuth:
       type: http
       scheme: bearer
-      description: |
-        登录返回的会话令牌。通过 Authorization 请求头传递 Bearer 令牌。
-        服务端在受保护接口验证会话、账号状态和当前管理权限。退出、过期或账号停用后会话无效。
-    ApplicationToken:
-      type: apiKey
-      in: header
-      name: X-Application-Token
-      description: 接入时为单个应用配置的服务端令牌。仅用于该应用的权限检查，由业务系统后端保管。
+      bearerFormat: JWT
+      description: "Authorization: Bearer <accessToken>。统一登录签发的 RS256
+        JWT；中心验证签名、签发者、时效、目标应用及令牌和账号状态。当前用户由令牌确定，不读取请求方指定的 userId，不从 JWT
+        读取角色权限。"
   parameters:
     ApplicationId:
       name: applicationId
@@ -815,6 +1953,43 @@ components:
       in: query
       description: 每页条数
       schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+    ApplicationContext:
+      name: X-Application-Code
+      in: header
+      required: false
+      description: JWT aud 仅含一个应用时可省略，多个应用时必须填本次目标 code。省略且目标不明确返回 400；指定 aud 外的应用返回
+        403。管理接口固定属于 permission-center，无需此头。
+      schema:
+        $ref: "#/components/schemas/ApplicationCode"
+      example: course-project-management
+    FrontendPermission:
+      name: permission
+      in: path
+      required: true
+      description: 当前应用内菜单或按钮的权限标识，与 operationId 不同。
+      schema:
+        $ref: "#/components/schemas/PermissionCode"
+      example: course:review
+    OperationId:
+      name: operationId
+      in: path
+      required: true
+      description: 业务系统 API 文档的接口标识，在目标应用内唯一。
+      schema:
+        $ref: "#/components/schemas/OperationId"
+      example: listAdminCourses
+    ApiId:
+      name: apiId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/Id"
+    RequestId:
+      name: requestId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/Id"
   responses:
     RoleCreated:
       description: 角色及其权限已保存
@@ -823,10 +1998,28 @@ components:
           schema: { $ref: '#/components/schemas/RoleDetails' }
           example:
             id: 8
-            name: 公文审批员
-            description: 处理 OA 公文审批
-            applications: [{ applicationId: 1, applicationName: OA 协同办公, permissionCount: 2 }]
-            permissionIds: [101, 102]
+            name: 课程管理员
+            description: 处理课程审核
+            applications:
+              - applicationId: 2
+                applicationName: 课程管理系统
+                permissionCount: 2
+            permissionIds:
+              - 101
+              - 102
+            permissions:
+              - id: 101
+                applicationId: 2
+                name: 所有课程
+                code: course:viewAll
+                type: MENU
+                parentId: null
+              - id: 102
+                applicationId: 2
+                name: 审核课程
+                code: course:review
+                type: BUTTON
+                parentId: 101
     RoleReturned:
       description: 角色信息及完整权限配置
       content:
@@ -834,12 +2027,38 @@ components:
           schema: { $ref: '#/components/schemas/RoleDetails' }
           example:
             id: 8
-            name: 公文审批员
-            description: 审批公文并查看员工档案
+            name: 课程管理员
+            description: 审核课程并查看用户目录
             applications:
-              - { applicationId: 1, applicationName: OA 协同办公, permissionCount: 2 }
-              - { applicationId: 2, applicationName: 人事系统, permissionCount: 1 }
-            permissionIds: [101, 102, 201]
+              - applicationId: 2
+                applicationName: 课程管理系统
+                permissionCount: 2
+              - applicationId: 1
+                applicationName: 权限管理系统
+                permissionCount: 1
+            permissionIds:
+              - 101
+              - 102
+              - 201
+            permissions:
+              - id: 101
+                applicationId: 2
+                name: 所有课程
+                code: course:viewAll
+                type: MENU
+                parentId: null
+              - id: 102
+                applicationId: 2
+                name: 审核课程
+                code: course:review
+                type: BUTTON
+                parentId: 101
+              - id: 201
+                applicationId: 1
+                name: 用户与部门
+                code: user:view
+                type: MENU
+                parentId: null
     UserReturned:
       description: 用户信息及其已有的业务角色
       content:
@@ -849,10 +2068,14 @@ components:
             id: 12
             username: lin.xiao
             name: 林晓
-            department: { id: 3, name: 综合办公室 }
+            department:
+              id: 3
+              name: 软件工程系
             status: ACTIVE
             departmentAdministrator: false
-            businessRoles: [{ id: 2, name: 普通员工 }]
+            businessRoles:
+              - id: 3
+                name: 课程教师
     UserTransferred:
       description: 保存后的用户信息
       content:
@@ -865,30 +2088,42 @@ components:
                 id: 12
                 username: lin.xiao
                 name: 林晓
-                department: { id: 4, name: 财务部 }
+                department:
+                  id: 4
+                  name: 数学学院
                 status: ACTIVE
                 departmentAdministrator: false
-                businessRoles: [{ id: 2, name: 普通员工 }]
+                businessRoles:
+                  - id: 3
+                    name: 课程教师
             disable:
               summary: 停用后的账号状态
               value:
                 id: 12
                 username: lin.xiao
                 name: 林晓
-                department: { id: 3, name: 综合办公室 }
+                department:
+                  id: 3
+                  name: 软件工程系
                 status: DISABLED
                 departmentAdministrator: false
-                businessRoles: [{ id: 2, name: 普通员工 }]
+                businessRoles:
+                  - id: 3
+                    name: 课程教师
             appoint:
               summary: 指定部门管理员后的身份
               value:
                 id: 12
                 username: lin.xiao
                 name: 林晓
-                department: { id: 3, name: 综合办公室 }
+                department:
+                  id: 3
+                  name: 软件工程系
                 status: ACTIVE
                 departmentAdministrator: true
-                businessRoles: [{ id: 2, name: 普通员工 }]
+                businessRoles:
+                  - id: 3
+                    name: 课程教师
     BadRequest:
       description: 请求格式、字段或关联不符合要求
       content:
@@ -912,7 +2147,7 @@ components:
             code: UNAUTHENTICATED
             detail: 请检查登录信息或访问凭据。
     Forbidden:
-      description: 角色或账号状态不允许操作，目标超出管理范围，或应用令牌与应用不匹配
+      description: 角色无权操作、对象超出管理范围，或令牌不包含目标应用。
       content:
         application/problem+json:
           schema: { $ref: '#/components/schemas/Problem' }
@@ -944,7 +2179,7 @@ components:
                 title: 应用不匹配
                 status: 403
                 code: APPLICATION_MISMATCH
-                detail: 应用 ID 必须与应用令牌对应。
+                detail: 当前令牌不包含目标应用，请使用该应用的统一登录入口。
     NotFound:
       description: 目标资源或必需的关联资源不存在
       content:
@@ -957,7 +2192,7 @@ components:
             code: NOT_FOUND
             detail: 请检查目标 ID 后重试。
     Conflict:
-      description: 名称、用户名或应用内权限标识与已有数据重复，或待删除角色仍关联用户
+      description: 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。
       content:
         application/problem+json:
           schema: { $ref: '#/components/schemas/Problem' }
@@ -993,6 +2228,18 @@ components:
             status: 500
             code: INTERNAL_ERROR
             detail: 请稍后重试。
+    ServiceUnavailable:
+      description: 统一身份或权限检查暂不可用，调用方不能继续受保护操作
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+          example:
+            type: urn:rbac-admin:problem:service-unavailable
+            title: 身份或权限服务暂不可用
+            status: 503
+            code: SERVICE_UNAVAILABLE
+            detail: 请稍后重新登录或重试操作。
   schemas:
     Id:
       type: integer
@@ -1031,66 +2278,92 @@ components:
       type: string
       maxLength: 64
       pattern: '^[^:\s]+:[^:\s]+$'
-      example: 'ticket:close'
+      example: course:review
     ManagementRole:
       type: string
-      enum: [TOTAL_ADMIN, DEPARTMENT_ADMIN, NONE]
+      enum: [ TOTAL_ADMIN, DEPARTMENT_ADMIN, NONE ]
     AccountStatus:
       type: string
-      enum: [ACTIVE, DISABLED]
+      enum: [ ACTIVE, DISABLED ]
     PermissionType:
       type: string
-      enum: [MENU, BUTTON]
+      enum: [ MENU, BUTTON ]
     BatchAction:
       type: string
-      enum: [GRANT, REVOKE]
+      enum: [ GRANT, REVOKE ]
     LoginRequest:
       type: object
       additionalProperties: false
-      required: [username, password]
+      required:
+        - username
+        - password
+        - systems
       properties:
-        username: { $ref: '#/components/schemas/Username' }
-        password: { type: string, minLength: 1, format: password }
+        username:
+          $ref: "#/components/schemas/Username"
+        password:
+          type: string
+          minLength: 1
+          format: password
+          writeOnly: true
+        systems:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            $ref: "#/components/schemas/ApplicationCode"
+          description: 本次登录的目标应用。同一账号可登录所有已接入系统，各应用功能权限分别计算。
     LoginResult:
       type: object
-      required: [accessToken, expiresAt, user]
+      required:
+        - accessToken
+        - tokenType
+        - expiresIn
       properties:
-        accessToken: { type: string, minLength: 1 }
-        expiresAt: { type: string, format: date-time }
-        user: { $ref: '#/components/schemas/SessionUser' }
-    SessionUser:
-      type: object
-      required: [id, username, name, departmentId, managementRole]
-      properties:
-        id: { $ref: '#/components/schemas/Id' }
-        username: { $ref: '#/components/schemas/Username' }
-        name: { $ref: '#/components/schemas/Name' }
-        departmentId: { $ref: '#/components/schemas/NullableId' }
-        managementRole: { $ref: '#/components/schemas/ManagementRole' }
+        accessToken:
+          type: string
+          minLength: 1
+          description: RS256 JWT，不包含角色和权限。
+        tokenType:
+          type: string
+          const: Bearer
+        expiresIn:
+          type: integer
+          minimum: 1
+          description: 有效时长，单位秒。
     Application:
       type: object
-      required: [id, name]
+      required:
+        - id
+        - name
+        - code
       properties:
-        id: { $ref: '#/components/schemas/Id' }
-        name: { $ref: '#/components/schemas/Name' }
+        id:
+          $ref: "#/components/schemas/Id"
+        name:
+          $ref: "#/components/schemas/Name"
+        code:
+          $ref: "#/components/schemas/ApplicationCode"
     ApplicationInput:
       type: object
       additionalProperties: false
-      required: [name]
+      required: [ name ]
       properties:
         name: { $ref: '#/components/schemas/Name' }
     ApplicationPermissions:
       type: object
-      required: [applicationId, applicationName, menus]
+      required: [ applicationId, applicationName, menus ]
       properties:
         applicationId: { $ref: '#/components/schemas/Id' }
         applicationName: { $ref: '#/components/schemas/Name' }
         menus:
           type: array
           items: { $ref: '#/components/schemas/MenuNode' }
+        applicationCode:
+          $ref: "#/components/schemas/ApplicationCode"
     MenuNode:
       type: object
-      required: [id, name, code, buttons]
+      required: [ id, name, code, buttons ]
       properties:
         id: { $ref: '#/components/schemas/Id' }
         name: { $ref: '#/components/schemas/Name' }
@@ -1098,42 +2371,81 @@ components:
         buttons:
           type: array
           items: { $ref: '#/components/schemas/PermissionRef' }
+        apiCount:
+          type: integer
+          minimum: 0
+          readOnly: true
+          description: 应用权限管理中返回的关联 API 数量。
     PermissionRef:
       type: object
-      required: [id, name, code]
+      required: [ id, name, code ]
       properties:
         id: { $ref: '#/components/schemas/Id' }
         name: { $ref: '#/components/schemas/Name' }
         code: { $ref: '#/components/schemas/PermissionCode' }
+        apiCount:
+          type: integer
+          minimum: 0
+          readOnly: true
+          description: 应用权限管理中返回的关联 API 数量。
     Permission:
       allOf:
         - $ref: '#/components/schemas/PermissionRef'
         - type: object
-          required: [applicationId, type, parentId]
+          required: [ applicationId, type, parentId, apis ]
           properties:
             applicationId: { $ref: '#/components/schemas/Id' }
             type: { $ref: '#/components/schemas/PermissionType' }
             parentId: { $ref: '#/components/schemas/NullableId' }
+            apis:
+              type: array
+              items:
+                $ref: "#/components/schemas/Api"
     PermissionCreate:
       oneOf:
         - title: 新增菜单权限
           type: object
           additionalProperties: false
-          required: [name, code, type]
+          required:
+            - name
+            - code
+            - type
           properties:
-            name: { $ref: '#/components/schemas/Name' }
-            code: { $ref: '#/components/schemas/PermissionCode' }
-            type: { type: string, const: MENU }
-            parentId: { type: 'null' }
+            name:
+              $ref: "#/components/schemas/Name"
+            code:
+              $ref: "#/components/schemas/PermissionCode"
+            type:
+              type: string
+              const: MENU
+            parentId:
+              type: "null"
+            apiIds:
+              $ref: "#/components/schemas/IdList"
+              default: []
+              description: 已登记且属于同一应用的 API ID，可为空；可被其他权限同时引用。
         - title: 新增按钮权限
           type: object
           additionalProperties: false
-          required: [name, code, type, parentId]
+          required:
+            - name
+            - code
+            - type
+            - parentId
           properties:
-            name: { $ref: '#/components/schemas/Name' }
-            code: { $ref: '#/components/schemas/PermissionCode' }
-            type: { type: string, const: BUTTON }
-            parentId: { $ref: '#/components/schemas/Id' }
+            name:
+              $ref: "#/components/schemas/Name"
+            code:
+              $ref: "#/components/schemas/PermissionCode"
+            type:
+              type: string
+              const: BUTTON
+            parentId:
+              $ref: "#/components/schemas/Id"
+            apiIds:
+              $ref: "#/components/schemas/IdList"
+              default: []
+              description: 已登记且属于同一应用的 API ID，可为空；可被其他权限同时引用。
     PermissionUpdate:
       type: object
       minProperties: 1
@@ -1141,15 +2453,18 @@ components:
       properties:
         name: { $ref: '#/components/schemas/Name' }
         code: { $ref: '#/components/schemas/PermissionCode' }
+        apiIds:
+          $ref: "#/components/schemas/IdList"
+          description: 省略保留关联，提供则完整替换，[] 只解除全部关联，保留 API 登记及其他权限关联。
     RoleRef:
       type: object
-      required: [id, name]
+      required: [ id, name ]
       properties:
         id: { $ref: '#/components/schemas/Id' }
         name: { $ref: '#/components/schemas/Name' }
     RoleApplicationSummary:
       type: object
-      required: [applicationId, applicationName, permissionCount]
+      required: [ applicationId, applicationName, permissionCount ]
       properties:
         applicationId: { $ref: '#/components/schemas/Id' }
         applicationName: { $ref: '#/components/schemas/Name' }
@@ -1158,7 +2473,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/RoleRef'
         - type: object
-          required: [description, applications]
+          required: [ description, applications ]
           properties:
             description: { $ref: '#/components/schemas/Description' }
             applications:
@@ -1167,22 +2482,29 @@ components:
               items: { $ref: '#/components/schemas/RoleApplicationSummary' }
     RoleDetails:
       allOf:
-        - $ref: '#/components/schemas/RoleSummary'
+        - $ref: "#/components/schemas/RoleSummary"
         - type: object
-          required: [permissionIds]
+          required:
+            - permissionIds
+            - permissions
           properties:
-            permissionIds: { $ref: '#/components/schemas/IdList' }
+            permissionIds:
+              $ref: "#/components/schemas/IdList"
+            permissions:
+              type: array
+              items:
+                $ref: "#/components/schemas/PermissionSummary"
     RoleInput:
       type: object
       additionalProperties: false
-      required: [name, permissionIds]
+      required: [ name, permissionIds ]
       properties:
         name: { $ref: '#/components/schemas/Name' }
         description: { $ref: '#/components/schemas/Description' }
         permissionIds: { $ref: '#/components/schemas/IdList' }
     DepartmentRef:
       type: object
-      required: [id, name]
+      required: [ id, name ]
       properties:
         id: { $ref: '#/components/schemas/Id' }
         name: { $ref: '#/components/schemas/Name' }
@@ -1190,21 +2512,21 @@ components:
       allOf:
         - $ref: '#/components/schemas/DepartmentRef'
         - type: object
-          required: [parentId]
+          required: [ parentId ]
           properties:
             parentId: { $ref: '#/components/schemas/NullableId' }
     DepartmentNode:
       allOf:
         - $ref: '#/components/schemas/Department'
         - type: object
-          required: [children]
+          required: [ children ]
           properties:
             children:
               type: array
               items: { $ref: '#/components/schemas/DepartmentNode' }
     DepartmentTree:
       type: object
-      required: [departments]
+      required: [ departments ]
       properties:
         departments:
           type: array
@@ -1212,7 +2534,7 @@ components:
     DepartmentInput:
       type: object
       additionalProperties: false
-      required: [name, parentId]
+      required: [ name, parentId ]
       properties:
         name: { $ref: '#/components/schemas/Name' }
         parentId: { $ref: '#/components/schemas/NullableId' }
@@ -1225,7 +2547,16 @@ components:
         parentId: { $ref: '#/components/schemas/NullableId' }
     User:
       type: object
-      required: [id, username, name, department, status, departmentAdministrator, businessRoles]
+      required:
+        [
+          id,
+          username,
+          name,
+          department,
+          status,
+          departmentAdministrator,
+          businessRoles
+        ]
       properties:
         id: { $ref: '#/components/schemas/Id' }
         username: { $ref: '#/components/schemas/Username' }
@@ -1239,7 +2570,11 @@ components:
     UserCreate:
       type: object
       additionalProperties: false
-      required: [username, name, departmentId]
+      required:
+        - username
+        - name
+        - departmentId
+        - initialPassword
       properties:
         username: { $ref: '#/components/schemas/Username' }
         name: { $ref: '#/components/schemas/Name' }
@@ -1250,15 +2585,18 @@ components:
         departmentAdministrator:
           type: boolean
           description: 仅总管理员可提交，省略时创建为普通用户。
-    UserCreated:
-      type: object
-      required: [user, initialPassword]
-      properties:
-        user: { $ref: '#/components/schemas/User' }
         initialPassword:
           type: string
           minLength: 1
-          description: 系统生成，仅创建成功时返回。查询和操作记录中不返回。
+          format: password
+          writeOnly: true
+          description: 新增用户表单填写的初始密码。仅传输和校验一次，数据库保存密码摘要，日志不得包含密码。
+    UserCreated:
+      type: object
+      required:
+        - user
+      properties:
+        user: { $ref: '#/components/schemas/User' }
     UserUpdate:
       type: object
       minProperties: 1
@@ -1276,26 +2614,26 @@ components:
     ReplaceUserRoles:
       type: object
       additionalProperties: false
-      required: [roleIds]
+      required: [ roleIds ]
       properties:
         roleIds: { $ref: '#/components/schemas/IdList' }
     UserRoleResult:
       type: object
-      required: [userId, roleIds]
+      required: [ userId, roleIds ]
       properties:
         userId: { $ref: '#/components/schemas/Id' }
         roleIds: { $ref: '#/components/schemas/IdList' }
     BatchRoleChange:
       type: object
       additionalProperties: false
-      required: [action, userIds, roleIds]
+      required: [ action, userIds, roleIds ]
       properties:
         action: { $ref: '#/components/schemas/BatchAction' }
         userIds: { $ref: '#/components/schemas/RequiredIdList' }
         roleIds: { $ref: '#/components/schemas/RequiredIdList' }
     BatchRoleResult:
       type: object
-      required: [action, affectedUsers]
+      required: [ action, affectedUsers ]
       properties:
         action: { $ref: '#/components/schemas/BatchAction' }
         affectedUsers:
@@ -1304,7 +2642,7 @@ components:
           description: 业务角色实际发生变化的用户数。
     MyPermissions:
       type: object
-      required: [businessRoles, applications]
+      required: [ businessRoles, applications ]
       properties:
         businessRoles:
           type: array
@@ -1314,7 +2652,16 @@ components:
           items: { $ref: '#/components/schemas/ApplicationPermissions' }
     OperationLog:
       type: object
-      required: [id, occurredAt, actorName, action, targetNames, detail, result]
+      required:
+        [
+          id,
+          occurredAt,
+          actorName,
+          action,
+          targetNames,
+          detail,
+          result
+        ]
       properties:
         id: { $ref: '#/components/schemas/Id' }
         occurredAt: { type: string, format: date-time }
@@ -1324,22 +2671,15 @@ components:
           type: array
           items: { type: string }
         detail: { type: string }
-        result: { type: string, enum: [SUCCESS, FAILURE] }
-    PermissionCheck:
-      type: object
-      additionalProperties: false
-      required: [userId, permissionCode]
-      properties:
-        userId: { $ref: '#/components/schemas/Id' }
-        permissionCode: { $ref: '#/components/schemas/PermissionCode' }
+        result: { type: string, enum: [ SUCCESS, FAILURE ] }
     PermissionCheckResult:
       type: object
-      required: [allowed]
+      required: [ allowed ]
       properties:
         allowed: { type: boolean }
     PageMetadata:
       type: object
-      required: [page, pageSize, total]
+      required: [ page, pageSize, total ]
       properties:
         page: { type: integer, minimum: 1 }
         pageSize: { type: integer, minimum: 1, maximum: 100 }
@@ -1348,7 +2688,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PageMetadata'
         - type: object
-          required: [items]
+          required: [ items ]
           properties:
             items:
               type: array
@@ -1357,7 +2697,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PageMetadata'
         - type: object
-          required: [items]
+          required: [ items ]
           properties:
             items:
               type: array
@@ -1366,7 +2706,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/PageMetadata'
         - type: object
-          required: [items]
+          required: [ items ]
           properties:
             items:
               type: array
@@ -1375,14 +2715,14 @@ components:
       allOf:
         - $ref: '#/components/schemas/PageMetadata'
         - type: object
-          required: [items]
+          required: [ items ]
           properties:
             items:
               type: array
               items: { $ref: '#/components/schemas/OperationLog' }
     Problem:
       type: object
-      required: [type, title, status, code, detail]
+      required: [ type, title, status, code, detail ]
       properties:
         type: { type: string, format: uri }
         title: { type: string }
@@ -1400,4 +2740,487 @@ components:
             - CONFLICT
             - TOO_MANY_REQUESTS
             - INTERNAL_ERROR
+            - SERVICE_UNAVAILABLE
         detail: { type: string }
+    ApplicationCode:
+      type: string
+      minLength: 1
+      maxLength: 64
+      pattern: ^[a-z][a-z0-9_-]*$
+      description: 稳定的系统接入标识，供 systems 和 aud 使用。
+      example: course-project-management
+    OperationId:
+      type: string
+      minLength: 1
+      maxLength: 128
+      pattern: ^\S+$
+      example: reviewCourse
+    HttpMethod:
+      type: string
+      enum:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - HEAD
+        - OPTIONS
+      example: POST
+    AuthUser:
+      type: object
+      required:
+        - subject
+        - roles
+        - permissions
+        - name
+        - no
+      properties:
+        subject:
+          type: string
+          minLength: 1
+          description: 用户数字 ID 的字符串形式，跨应用不变。
+        roles:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            minLength: 1
+          description: 为当前应用提供权限的角色 ID 字符串；本系统也包含内置管理角色。
+        permissions:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: "#/components/schemas/PermissionCode"
+          description: 当前应用内有效菜单和按钮权限标识。
+        name:
+          $ref: "#/components/schemas/Name"
+        no:
+          $ref: "#/components/schemas/Username"
+          description: 统一账号用户名，可采用学号或工号。
+        id:
+          $ref: "#/components/schemas/Id"
+        departmentId:
+          $ref: "#/components/schemas/NullableId"
+        managementRole:
+          $ref: "#/components/schemas/ManagementRole"
+    ApplicationCreate:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+      properties:
+        name:
+          $ref: "#/components/schemas/Name"
+        code:
+          $ref: "#/components/schemas/ApplicationCode"
+    ApiInput:
+      type: object
+      additionalProperties: false
+      required:
+        - operationId
+        - httpMethod
+        - path
+      properties:
+        operationId:
+          $ref: "#/components/schemas/OperationId"
+        httpMethod:
+          $ref: "#/components/schemas/HttpMethod"
+        path:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: ^/[^?#\s]*$
+          description: 不含域名和查询参数的请求路径模板。
+          example: /courses/{courseId}/review
+    Api:
+      type: object
+      required:
+        - id
+        - applicationId
+        - operationId
+        - httpMethod
+        - path
+        - permissionIds
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        applicationId:
+          $ref: "#/components/schemas/Id"
+        operationId:
+          $ref: "#/components/schemas/OperationId"
+        httpMethod:
+          $ref: "#/components/schemas/HttpMethod"
+        path:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: ^/[^?#\s]*$
+          description: 不含域名和查询参数的请求路径模板。
+          example: /courses/{courseId}/review
+        permissionIds:
+          $ref: "#/components/schemas/IdList"
+          description: 全部关联权限 ID，可为空。权限必须与 API 属于同一应用。
+    ApiCheckResult:
+      type: object
+      required:
+        - operationId
+        - allowed
+      properties:
+        operationId:
+          $ref: "#/components/schemas/OperationId"
+        allowed:
+          type: boolean
+    JwkSet:
+      type: object
+      required:
+        - keys
+      properties:
+        keys:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/RsaPublicJwk"
+    RsaPublicJwk:
+      type: object
+      additionalProperties: false
+      required:
+        - kty
+        - use
+        - alg
+        - kid
+        - n
+        - e
+      properties:
+        kty:
+          type: string
+          const: RSA
+        use:
+          type: string
+          const: sig
+        alg:
+          type: string
+          const: RS256
+        kid:
+          type: string
+          minLength: 1
+        n:
+          type: string
+          minLength: 1
+          description: RSA 公钥模数，Base64URL 编码。
+        e:
+          type: string
+          minLength: 1
+          description: RSA 公钥指数，Base64URL 编码。
+    ApiUpdate:
+      type: object
+      additionalProperties: false
+      properties:
+        operationId:
+          $ref: "#/components/schemas/OperationId"
+        httpMethod:
+          $ref: "#/components/schemas/HttpMethod"
+        path:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: ^/[^?#\s]*$
+          description: 不含域名和查询参数的请求路径模板。
+          example: /courses/{courseId}/review
+      minProperties: 1
+    ApiPage:
+      allOf:
+        - $ref: "#/components/schemas/PageMetadata"
+        - type: object
+          required:
+            - items
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/Api"
+    PermissionSummary:
+      type: object
+      required:
+        - id
+        - applicationId
+        - name
+        - code
+        - type
+        - parentId
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        applicationId:
+          $ref: "#/components/schemas/Id"
+        name:
+          $ref: "#/components/schemas/Name"
+        code:
+          $ref: "#/components/schemas/PermissionCode"
+        type:
+          $ref: "#/components/schemas/PermissionType"
+        parentId:
+          $ref: "#/components/schemas/NullableId"
+    PermissionCatalogApplication:
+      type: object
+      required:
+        - id
+        - name
+        - code
+        - permissions
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        name:
+          $ref: "#/components/schemas/Name"
+        code:
+          $ref: "#/components/schemas/ApplicationCode"
+        permissions:
+          type: array
+          items:
+            $ref: "#/components/schemas/PermissionSummary"
+    PermissionCatalog:
+      type: object
+      required:
+        - applications
+      properties:
+        applications:
+          type: array
+          items:
+            $ref: "#/components/schemas/PermissionCatalogApplication"
+    RequestablePermissionGroup:
+      type: object
+      required:
+        - menu
+        - permissions
+      properties:
+        menu:
+          $ref: "#/components/schemas/PermissionSummary"
+        permissions:
+          type: array
+          items:
+            $ref: "#/components/schemas/PermissionSummary"
+    RequestableApplication:
+      type: object
+      required:
+        - id
+        - name
+        - code
+        - groups
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        name:
+          $ref: "#/components/schemas/Name"
+        code:
+          $ref: "#/components/schemas/ApplicationCode"
+        groups:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestablePermissionGroup"
+    RequestablePermissions:
+      type: object
+      required:
+        - applications
+      properties:
+        applications:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestableApplication"
+    PermissionRequestStatus:
+      type: string
+      enum:
+        - PENDING
+        - APPROVED
+        - REJECTED
+        - SATISFIED
+        - WITHDRAWN
+    PermissionRequestInput:
+      type: object
+      required:
+        - permissionId
+        - reason
+      properties:
+        permissionId:
+          $ref: "#/components/schemas/Id"
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+      additionalProperties: false
+    PermissionRequestReview:
+      oneOf:
+        - type: object
+          required:
+            - decision
+            - roleId
+          properties:
+            decision:
+              type: string
+              const: APPROVE
+            roleId:
+              $ref: "#/components/schemas/Id"
+          additionalProperties: false
+        - type: object
+          required:
+            - decision
+          properties:
+            decision:
+              type: string
+              const: REJECT
+          additionalProperties: false
+    PermissionRequest:
+      type: object
+      required:
+        - id
+        - applicantUserId
+        - applicantName
+        - applicantDepartmentId
+        - permission
+        - reason
+        - status
+        - reviewerUserId
+        - approvedRoleId
+        - createdAt
+        - reviewedAt
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        applicantUserId:
+          $ref: "#/components/schemas/Id"
+        applicantName:
+          $ref: "#/components/schemas/Name"
+        applicantDepartmentId:
+          $ref: "#/components/schemas/NullableId"
+        permission:
+          $ref: "#/components/schemas/PermissionSummary"
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+        status:
+          $ref: "#/components/schemas/PermissionRequestStatus"
+        reviewerUserId:
+          $ref: "#/components/schemas/NullableId"
+        approvedRoleId:
+          $ref: "#/components/schemas/NullableId"
+        createdAt:
+          type: string
+          format: date-time
+        reviewedAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+    RoleApprovalOption:
+      type: object
+      required:
+        - role
+        - selectable
+        - extraPermissionIds
+      properties:
+        role:
+          $ref: "#/components/schemas/RoleDetails"
+        selectable:
+          type: boolean
+        extraPermissionIds:
+          $ref: "#/components/schemas/IdList"
+    PermissionRequestDetails:
+      allOf:
+        - $ref: "#/components/schemas/PermissionRequest"
+        - type: object
+          required: []
+          properties:
+            approvalRoles:
+              type: array
+              items:
+                $ref: "#/components/schemas/RoleApprovalOption"
+    PermissionRequestPage:
+      allOf:
+        - $ref: "#/components/schemas/PageMetadata"
+        - type: object
+          required:
+            - items
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/PermissionRequest"
+    RoleCreationRequestStatus:
+      type: string
+      enum:
+        - PENDING
+        - APPROVED
+        - REJECTED
+    RoleCreationRequest:
+      type: object
+      required:
+        - id
+        - applicantUserId
+        - applicantName
+        - name
+        - description
+        - permissionIds
+        - status
+        - reviewerUserId
+        - createdRoleId
+        - createdAt
+        - reviewedAt
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        applicantUserId:
+          $ref: "#/components/schemas/Id"
+        applicantName:
+          $ref: "#/components/schemas/Name"
+        name:
+          $ref: "#/components/schemas/Name"
+        description:
+          $ref: "#/components/schemas/Description"
+        permissionIds:
+          $ref: "#/components/schemas/IdList"
+        status:
+          $ref: "#/components/schemas/RoleCreationRequestStatus"
+        reviewerUserId:
+          $ref: "#/components/schemas/NullableId"
+        createdRoleId:
+          $ref: "#/components/schemas/NullableId"
+        createdAt:
+          type: string
+          format: date-time
+        reviewedAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+    RoleCreationReview:
+      oneOf:
+        - type: object
+          required:
+            - decision
+            - role
+          properties:
+            decision:
+              type: string
+              const: APPROVE
+            role:
+              $ref: "#/components/schemas/RoleInput"
+          additionalProperties: false
+        - type: object
+          required:
+            - decision
+          properties:
+            decision:
+              type: string
+              const: REJECT
+          additionalProperties: false
+    RoleCreationRequestPage:
+      allOf:
+        - $ref: "#/components/schemas/PageMetadata"
+        - type: object
+          required:
+            - items
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/RoleCreationRequest"
