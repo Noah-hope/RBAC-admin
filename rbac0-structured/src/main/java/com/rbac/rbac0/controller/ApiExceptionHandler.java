@@ -20,10 +20,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-@RestControllerAdvice(assignableTypes = {
-        SessionController.class, DepartmentController.class, UserController.class, ApplicationController.class,
-        RoleController.class, AuthorizationController.class, OperationLogController.class
-})
+@RestControllerAdvice(basePackages = "com.rbac.rbac0.controller")
 class ApiExceptionHandler {
 
     private static final Map<String, String> DUPLICATE_DETAILS = Map.of(
@@ -38,7 +35,7 @@ class ApiExceptionHandler {
         var body = switch (failure.reason) {
             case UNAUTHENTICATED -> problem(HttpStatus.UNAUTHORIZED,
                     "unauthenticated", "UNAUTHENTICATED", "身份校验失败", "请检查登录信息或访问凭据。");
-            case ACCOUNT_DISABLED -> problem(HttpStatus.FORBIDDEN,
+            case ACCOUNT_DISABLED -> problem(HttpStatus.UNAUTHORIZED,
                     "account-disabled", "ACCOUNT_DISABLED", "账号已停用", "请联系管理员确认账号状态。");
             case TOO_MANY_REQUESTS -> problem(HttpStatus.TOO_MANY_REQUESTS,
                     "too-many-requests", "TOO_MANY_REQUESTS", "登录尝试过于频繁", "请稍后再试。");
@@ -73,6 +70,9 @@ class ApiExceptionHandler {
                     return problem(HttpStatus.CONFLICT, "conflict", "CONFLICT", "数据已存在", duplicate.getValue());
                 }
             }
+        }
+        if (error.getMostSpecificCause() instanceof SQLException sql && sql.getErrorCode() == 1062) {
+            return problem(HttpStatus.CONFLICT, "conflict", "CONFLICT", "数据已存在", "应用标识、接口标识或路由已存在。");
         }
         return internalError(error);
     }

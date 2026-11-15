@@ -1,6 +1,7 @@
 package com.rbac.rbac0.controller;
 
 import com.rbac.rbac0.dto.ApplicationDtos.ApplicationInput;
+import com.rbac.rbac0.dto.ApplicationDtos.ApplicationCreate;
 import com.rbac.rbac0.dto.ApplicationDtos.ApplicationPage;
 import com.rbac.rbac0.dto.ApplicationDtos.ApplicationPermissions;
 import com.rbac.rbac0.dto.ApplicationDtos.ApplicationView;
@@ -46,7 +47,7 @@ public class ApplicationController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApplicationView create(@RequestAttribute(ACTOR) SessionUser actor, @Valid @RequestBody ApplicationInput request) {
+    public ApplicationView create(@RequestAttribute(ACTOR) SessionUser actor, @Valid @RequestBody ApplicationCreate request) {
         return applications.create(actor, request);
     }
 
@@ -77,5 +78,9 @@ public class ApplicationController {
                                            @PathVariable @Positive @Max(MAX_ID) long permissionId,
                                            @Valid @RequestBody PermissionUpdate request) {
         return applications.updatePermission(actor, applicationId, permissionId, request);
+    }
+    @GetMapping("/{applicationId}/permissions/{permissionId}")
+    public PermissionView getPermission(@RequestAttribute(ACTOR) SessionUser actor,@PathVariable @Positive long applicationId,@PathVariable @Positive long permissionId) {
+        return applications.getPermission(actor,applicationId,permissionId);
     }
 }

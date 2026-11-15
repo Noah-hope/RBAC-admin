@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.rbac.rbac0.dto.ApplicationDtos.ApplicationInput;
+import com.rbac.rbac0.dto.ApplicationDtos.ApplicationCreate;
 import com.rbac.rbac0.dto.ApplicationDtos.ApplicationPage;
 import com.rbac.rbac0.dto.ApplicationDtos.ApplicationPermissions;
 import com.rbac.rbac0.dto.ApplicationDtos.ApplicationView;
@@ -33,12 +34,14 @@ public class ApplicationService {
 
     private static final String MENU = "MENU";
 
+    private final ApiService apis;
     private final ApplicationMapper applications;
     private final PermissionMapper permissions;
     private final OperationLogService operationLogs;
 
     public ApplicationService(ApplicationMapper applications, PermissionMapper permissions,
-                              OperationLogService operationLogs) {
+                              OperationLogService operationLogs, ApiService apis) {
+        this.apis = apis;
         this.applications = applications;
         this.permissions = permissions;
         this.operationLogs = operationLogs;
@@ -48,20 +51,20 @@ public class ApplicationService {
     public ApplicationPage list(SessionUser actor, int page, int pageSize) {
         requireTotalAdmin(actor);
         var result = applications.findAll(PageRequest.of(page - 1, pageSize, Sort.by("id")));
-        var items = result.stream().map(app -> new ApplicationView(app.id, app.name)).toList();
+        var items = result.stream().map(app -> new ApplicationView(app.id, app.name, app.code)).toList();
         return new ApplicationPage(items, page, pageSize, result.getTotalElements());
     }
 
     @Transactional
-    public ApplicationView create(SessionUser actor, ApplicationInput request) {
+    public ApplicationView create(SessionUser actor, ApplicationCreate request) {
         requireTotalAdmin(actor);
         var app = new BusinessApplication();
         app.name = request.name();
-        app.code = "app-" + java.util.UUID.randomUUID();
+        app.code = request.code() == null ? "app-" + java.util.UUID.randomUUID() : request.code();
         applications.save(app);
         operationLogs.recordGlobalChange(actor, "新增应用", "登记应用「" + app.name + "」",
                 "APPLICATION", app.id, app.name);
-        return new ApplicationView(app.id, app.name);
+        return new ApplicationView(app.id, app.name, app.code);
     }
 
     @Transactional
@@ -73,7 +76,7 @@ public class ApplicationService {
             app.name = request.name();
             operationLogs.recordGlobalChange(actor, "修改应用", detail, "APPLICATION", app.id, app.name);
         }
-        return new ApplicationView(app.id, app.name);
+        return new ApplicationView(app.id, app.name, app.code);
     }
 
     @Transactional(readOnly = true)
@@ -117,6 +120,7 @@ public class ApplicationService {
         permission.code = request.code();
         permission.type = request.type();
         permissions.save(permission);
+        apis.replaceLinks(applicationId, permission.id, request.apiIds() == null ? List.of() : request.apiIds());
         operationLogs.recordGlobalChange(actor, "新增权限", "应用「" + app.name + "」，权限标识 " + permission.code,
                 "PERMISSION", permission.id, permission.name);
         return view(permission);
@@ -129,11 +133,12 @@ public class ApplicationService {
         var app = requireApplication(applicationId);
         var permission = permissions.findByIdAndApplicationId(permissionId, applicationId)
                 .orElseThrow(() -> new ManagementFailure(NOT_FOUND, "该应用下不存在此权限。"));
-        if (request.name == null && request.code == null) {
+        if (request.name == null && request.code == null && request.apiIds == null) {
             throw new ManagementFailure(INVALID_REQUEST, "请填写要修改的权限名称或标识。");
         }
 
         var changes = new ArrayList<String>();
+        if (request.apiIds != null) { apis.replaceLinks(applicationId, permissionId, request.apiIds); changes.add("更新API关联"); }
         if (request.name != null && !request.name.equals(permission.name)) {
             changes.add("名称从「" + permission.name + "」改为「" + request.name + "」");
             permission.name = request.name;
@@ -149,13 +154,19 @@ public class ApplicationService {
         return view(permission);
     }
 
+    @Transactional(readOnly = true)
+    public PermissionView getPermission(SessionUser actor,long app,long id) {
+        requireTotalAdmin(actor);
+        return view(permissions.findByIdAndApplicationId(id,app).orElseThrow(()->new ManagementFailure(NOT_FOUND,"权限不存在。")));
+    }
+
     private BusinessApplication requireApplication(long id) {
         return applications.findById(id)
                 .orElseThrow(() -> new ManagementFailure(NOT_FOUND, "应用不存在。"));
     }
 
-    private static PermissionView view(Permission permission) {
+    private PermissionView view(Permission permission) {
         return new PermissionView(permission.id, permission.applicationId, permission.name, permission.code,
-                permission.type, permission.parentId);
+                permission.type, permission.parentId, apis.forPermission(permission.id));
     }
 }
