@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: ${RBAC_DB_URL}
+    username: ${RBAC_DB_USERNAME}
+    password: ${RBAC_DB_PASSWORD:}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+
+rbac:
+  jwt:
+    issuer: ${RBAC_JWT_ISSUER:http://localhost:8080}
+    private-key: ${RBAC_JWT_PRIVATE_KEY:file:./jwt-private.pem}
+    public-key: ${RBAC_JWT_PUBLIC_KEY:file:./jwt-public.pem}
+  bootstrap:
+    username: ${RBAC_ADMIN_USERNAME:admin}
+    password: ${RBAC_ADMIN_PASSWORD:}

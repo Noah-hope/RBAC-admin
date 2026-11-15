@@ -1,0 +1,2079 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RBAC1 权限管理系统 · 界面原型</title>
+<style>
+  :root {
+    color-scheme: light;
+    --ink: #172a3d; --muted: #536679; --nav: #172c43; --line: #dce5ee;
+    --canvas: #f3f6fa; --paper: #fff; --accent: #096a5a; --soft: #e6f4ef;
+    background: var(--canvas); color: var(--ink);
+    font: 14px/1.55 "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body, h1, h2, h3, p { margin: 0; }
+  body:has(dialog[open]) { overflow: hidden; }
+  [hidden] { display: none !important; }
+  button, input, select { font: inherit; }
+  button { cursor: pointer; }
+  button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #429d89; outline-offset: 3px; }
+  .icon { width: 19px; height: 19px; flex: none; vertical-align: middle; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .shell { display: grid; grid-template-columns: 224px minmax(0, 1fr); min-height: 100vh; }
+  .sidebar {
+    display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh;
+    padding: 28px 16px 19px; background: var(--nav); color: #edf4fc;
+  }
+  .brand, .identity, .crumb, .person { display: flex; align-items: center; gap: 10px; }
+  .brand { padding-inline: 7px; }
+  .brand strong { display: block; font-size: 16px; letter-spacing: .015em; white-space: nowrap; }
+  .brand small, .nav-label, .sidebar-foot { color: #b9c9da; font-size: 12px; }
+  .brand-mark, .avatar, .app-mark {
+    display: inline-grid; place-items: center; flex: none; font-weight: 700;
+    color: var(--accent); background: var(--soft);
+  }
+  .brand-mark { width: 40px; height: 40px; border-radius: 11px; background: #bde8dd; }
+  .brand-mark .icon { width: 23px; height: 23px; }
+  .nav { display: grid; gap: 5px; margin-top: 35px; }
+  .nav-label { margin: 0 10px 5px; }
+  .nav button {
+    display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 7px 10px;
+    text-align: left; color: #dbe7f2; background: transparent; border: 1px solid transparent; border-radius: 8px;
+  }
+  .nav button:hover { background: #213c54; }
+  .nav button[aria-current="page"] { color: #f3fffa; background: #24455a; border-color: #3c5a6c; font-weight: 700; }
+  .nav button[aria-current="page"] .icon { color: #a8e6d7; }
+  .sidebar-foot { margin-top: auto; padding: 14px 7px 0; border-top: 1px solid #3c5269; }
+  .workspace { min-width: 0; }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 64px;
+    padding: 8px clamp(16px, 3.4vw, 48px); background: var(--paper); border-bottom: 1px solid var(--line);
+  }
+  .crumb, .identity { font-size: 13px; white-space: nowrap; }
+  .crumb { color: var(--muted); }
+  .crumb strong { color: var(--ink); }
+  .crumb .icon { width: 12px; height: 12px; }
+  .top-actions { display: flex; align-items: center; gap: 12px; }
+  .top-actions .button { min-height: 34px; padding-inline: 9px; font-size: 12px; }
+  .avatar { width: 33px; height: 33px; border-radius: 50%; }
+  .content { max-width: 1430px; margin: auto; padding: 32px clamp(16px, 3.4vw, 48px) 48px; }
+  .page-head { display: flex; justify-content: space-between; align-items: end; gap: 12px; margin-bottom: 23px; }
+  h1 { font-size: clamp(27px, 3vw, 37px); line-height: 1.2; letter-spacing: -.04em; }
+  h2 { font-size: 18px; line-height: 1.4; }
+  h3 { font-size: 15px; }
+  .page-head p { margin-top: 8px; color: var(--muted); }
+  .button {
+    display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 39px;
+    padding: 6px 13px; border: 1px solid var(--line); border-radius: 8px;
+    background: var(--paper); color: var(--ink); font-weight: 700; white-space: nowrap;
+  }
+  .button:hover { background: #f4f7fb; border-color: #abbdd0; }
+  .button.primary { color: #fff; border-color: var(--accent); background: var(--accent); }
+  .button.primary:hover { background: #075648; }
+  .button:disabled { cursor: default; opacity: .55; }
+  .button.requires-permission, .link-button.requires-permission { position: relative; }
+  .button.requires-permission::after, .link-button.requires-permission::after { content: ' · 需申请'; color: #8a5a1f; font-size: 11px; font-weight: 700; }
+  .nav button.requires-permission::after { content: ' · 需申请'; color: #f0c98b; font-size: 11px; font-weight: 700; }
+  .nav button.permission-pending::after, .button.permission-pending::after, .link-button.permission-pending::after { content: ' · 审核中'; color: #f0c98b; font-size: 11px; font-weight: 700; }
+  .permission-lock { display: inline-block; margin-left: 5px; color: #8a5a1f; font-size: 12px; font-weight: 700; }
+  .button.requires-permission, .link-button.requires-permission { position: relative; }
+  .button.requires-permission::after, .link-button.requires-permission::after { content: ' · 需申请'; color: #8a5a1f; font-size: 11px; font-weight: 700; }
+  .nav button.requires-permission::after { content: ' · 需申请'; color: #f0c98b; font-size: 11px; font-weight: 700; }
+  .permission-lock { display: inline-block; margin-left: 5px; color: #8a5a1f; font-size: 12px; font-weight: 700; }
+  .button .icon { width: 16px; height: 16px; }
+  .button.icon-only { width: 36px; min-height: 36px; padding: 0; }
+  .link-button { min-height: 35px; padding: 4px 6px; border: 0; border-radius: 6px; background: transparent; color: var(--accent); font-weight: 700; white-space: nowrap; }
+  .link-button:hover { background: var(--soft); }
+  .link-button.danger { color: #9b3e3e; }
+  .button.danger { color: #fff; background: #a53e3e; border-color: #a53e3e; }
+  .button.danger:hover { background: #8c3030; }
+  .board { display: grid; grid-template-columns: minmax(0, 1fr) 282px; align-items: start; gap: 17px; }
+  .catalog-board { display: grid; grid-template-columns: 218px minmax(0, 1fr); align-items: start; gap: 17px; }
+  .catalog-apps .app-list { padding: 0 10px 10px; }
+  .catalog-head { flex-wrap: wrap; }
+  .catalog-head h2, .app-card .panel-head h2 { white-space: normal; overflow-wrap: anywhere; }
+  .catalog-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+  .catalog-menu td { background: #f9fbfd; }
+  .catalog-child td:first-child { padding-left: 46px; }
+  .catalog-child td:first-child::before { content: '↳'; margin-right: 6px; color: var(--muted); }
+  .catalog-label { overflow-wrap: anywhere; }
+  .menu-heading { display: flex; align-items: center; gap: 5px; }
+  .menu-toggle, .menu-toggle-spacer { display: inline-grid; place-items: center; flex: none; width: 28px; height: 28px; }
+  .menu-toggle { padding: 0; border: 1px solid transparent; border-radius: 6px; background: transparent; color: var(--muted); }
+  .menu-toggle:hover { border-color: var(--line); background: var(--soft); color: var(--accent); }
+  .menu-toggle .icon { width: 15px; height: 15px; }
+  .menu-toggle[aria-expanded="true"] .icon { transform: rotate(90deg); }
+  .permission-code { color: #344e66; overflow-wrap: anywhere; font-size: 12px; }
+  .panel { min-width: 0; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; }
+  .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 15px 17px; }
+  .panel-head h2 { white-space: nowrap; }
+  .filter-panel { margin-bottom: 14px; }
+  .filter-fields { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding: 14px 17px 8px; }
+  .filter-fields label { display: grid; gap: 4px; min-width: 0; color: var(--muted); font-size: 12px; font-weight: 700; }
+  .filter-fields input, .filter-fields select { width: 100%; min-width: 0; min-height: 36px; padding: 5px 8px; color: var(--ink); background: var(--paper); border: 1px solid #bdcbd9; border-radius: 7px; font-weight: 400; }
+  .filter-actions { display: flex; justify-content: flex-end; gap: 7px; padding: 0 17px 13px; }
+  .filter-actions .button { min-height: 35px; font-size: 13px; }
+  .attribute-line { display: flex; flex-wrap: wrap; gap: 5px 12px; margin-top: 3px; color: var(--muted); font-size: 12px; }
+  .attribute-line code { color: #344e66; }
+  .tag.warning { background: #fff0dc; color: #8a5a1f; }
+  .quiet { color: var(--muted); font-size: 12px; }
+  .search { display: flex; align-items: center; gap: 7px; width: min(235px, 60%); padding: 0 8px; background: #f6f8fb; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); }
+  .search input { width: 100%; min-width: 0; min-height: 36px; padding: 5px 0; border: 0; outline-offset: 0; background: transparent; color: var(--ink); }
+  .scroll-table { overflow-x: auto; }
+  .batch-tools {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 7px;
+    padding: 9px 17px; border-top: 1px solid var(--line);
+  }
+  .batch-tools .quiet { margin-right: auto; }
+  th.select-user, td.select-user { width: 42px; padding-right: 0; }
+  .select-user input { vertical-align: middle; }
+  table { width: 100%; border-collapse: collapse; text-align: left; }
+  th, td { padding: 9px 13px; border-top: 1px solid var(--line); }
+  th:first-child, td:first-child { padding-left: 17px; }
+  th:last-child, td:last-child { padding-right: 17px; text-align: right; white-space: nowrap; }
+  th { color: var(--muted); background: #f6f8fb; font-size: 12px; }
+  td { height: 67px; }
+  tr:hover td { background: #f9fbfd; }
+  .person { min-width: 110px; }
+  .person .avatar { border-radius: 8px; }
+  .person strong { display: block; overflow-wrap: anywhere; }
+  .person small, .choice small { display: block; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag { display: inline-block; padding: 2px 7px; border-radius: 5px; background: #edf2f7; color: #344e66; font-size: 12px; white-space: nowrap; }
+  .tag.positive { background: var(--soft); color: var(--accent); }
+  .panel-foot { padding: 10px 17px; border-top: 1px solid var(--line); }
+  .empty { padding: 21px 14px; color: var(--muted); text-align: center !important; }
+  .overview { overflow: hidden; }
+  .overview-head { padding: 17px; background: #e8f3f0; border-bottom: 1px solid #d6e7e3; }
+  .overview-head .quiet { display: block; margin-bottom: 7px; }
+  .overview-head p { margin-top: 4px; color: var(--muted); overflow-wrap: anywhere; }
+  .overview-body { padding: 3px 13px; }
+  .overview-item { display: flex; align-items: center; gap: 8px; min-height: 54px; }
+  .overview-item + .overview-item { border-top: 1px solid var(--line); }
+  .overview-item .quiet, .app-card .quiet.count { margin-left: auto; white-space: nowrap; }
+  .app-mark { width: 31px; height: 31px; border-radius: 8px; }
+  .app-mark.hr { background: #eaf0ff; color: #385988; }
+  .app-mark.project { background: #f7efdf; color: #785a2d; }
+  .scope { display: flex; gap: 8px; align-items: center; margin-bottom: 15px; padding: 11px 13px; border: 1px solid #cfe2dc; border-radius: 9px; background: var(--soft); color: #225e50; }
+  .scope strong { margin-right: 7px; }
+  .org-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 15px; }
+  .org-toolbar .scope { margin: 0; }
+  .view-switch { display: flex; align-items: center; gap: 7px; color: var(--muted); }
+  .view-switch select { padding: 6px 8px; color: var(--ink); background: var(--paper); border: 1px solid #bdcbd9; border-radius: 7px; }
+  .org-tree, .org-subtree { display: grid; gap: 3px; }
+  .org-tree { padding: 0 10px 10px; }
+  .org-subtree { padding-left: 13px; }
+  .org-tree .app-picker { justify-content: start; }
+  .org-tree .menu-heading .app-picker { flex: 1; width: auto; min-width: 0; }
+  .org-dept-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+  .org-dept-actions .button { font-size: 12px; }
+  .fields .check-field { display: flex; align-items: center; gap: 8px; min-height: 34px; }
+  .fields .check-field input { width: 17px; min-height: 0; }
+  .tag.inactive { background: #f6ebeb; color: #8a3b3b; }
+  .org-status { white-space: nowrap; }
+  .profile { display: flex; align-items: center; gap: 11px; margin-bottom: 16px; padding: 14px 16px; }
+  .profile .tags { margin-left: auto; }
+  .app-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 14px; }
+  .app-card .panel-head { justify-content: start; }
+  .owned-menu { padding: 12px 15px; border-top: 1px solid var(--line); }
+  .owned-menu h3 { margin-bottom: 5px; }
+  .owned-menu > .tags, .owned-menu > .quiet { margin-left: 33px; }
+  dialog {
+    max-width: none; width: min(710px, calc(100% - 24px)); max-height: calc(100dvh - 24px);
+    padding: 0; overflow: hidden; color: var(--ink); background: var(--paper);
+    border: 1px solid #cbd8e2; border-radius: 15px; box-shadow: 0 18px 65px #1020343b;
+  }
+  dialog::backdrop { background: #13273e83; }
+  dialog form { display: flex; flex-direction: column; max-height: calc(100dvh - 26px); }
+  .dialog-head, .dialog-foot { display: flex; align-items: center; justify-content: space-between; flex: none; gap: 10px; padding: 14px 18px; }
+  .dialog-head { border-bottom: 1px solid var(--line); }
+  .dialog-head p { margin-top: 3px; }
+  .dialog-body { min-height: 0; padding: 14px 18px 17px; overflow-y: auto; }
+  .dialog-foot { border-top: 1px solid var(--line); }
+  .dialog-actions { display: flex; gap: 7px; margin-left: auto; }
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-bottom: 15px; }
+  .fields label { display: grid; align-content: start; gap: 4px; min-width: 0; font-weight: 700; }
+  .fields .span-2 { grid-column: 1 / -1; }
+  .fields input, .fields select, .fields textarea { width: 100%; min-width: 0; min-height: 37px; padding: 5px 8px; color: var(--ink); background: var(--paper); border: 1px solid #bdcbd9; border-radius: 7px; font: inherit; font-weight: 400; }
+  .fields.stacked { grid-template-columns: minmax(0, 1fr); margin-bottom: 0; }
+  .field-help { margin-top: 5px; }
+  .config-layout { display: grid; grid-template-columns: 155px minmax(0, 1fr); gap: 11px; margin-top: 8px; }
+  .app-list { display: grid; align-content: start; gap: 4px; }
+  .app-picker { display: flex; align-items: center; gap: 7px; width: 100%; min-height: 40px; padding: 3px 6px; text-align: left; color: var(--ink); background: transparent; border: 1px solid transparent; border-radius: 7px; }
+  .app-picker:hover { background: #f1f5f9; }
+  .app-picker[aria-pressed="true"] { color: var(--accent); background: var(--soft); border-color: #c9e1d8; font-weight: 700; }
+  .app-picker .app-mark { width: 25px; height: 25px; }
+  .app-name { min-width: 0; overflow-wrap: anywhere; }
+  .permission-tree, .choices { min-width: 0; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
+  .tree-help { padding: 7px 9px; border-bottom: 1px solid var(--line); background: #f6f8fb; }
+  .tree-group + .tree-group, .choice + .choice { border-top: 1px solid var(--line); }
+  .tree-row, .choice { display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 5px 10px; cursor: pointer; }
+  .tree-row:hover, .choice:hover { background: #f6f9fc; }
+  .tree-row.menu { font-weight: 700; }
+  .tree-menu-heading { padding-left: 6px; }
+  .tree-menu-heading .tree-row { flex: 1; padding-left: 0; }
+  .tree-row.child { padding-left: 53px; }
+  .tree-row .tag { margin-left: auto; }
+  input[type="checkbox"] { width: 17px; height: 17px; flex: none; margin: 0; accent-color: var(--accent); cursor: pointer; }
+  .assign-dialog { width: min(490px, calc(100% - 24px)); }
+  .choice { padding: 9px 11px; }
+  .toast { position: fixed; right: 14px; bottom: 14px; z-index: 2; max-width: calc(100% - 28px); padding: 10px 13px; border: 1px solid #bddbd0; border-radius: 8px; background: var(--soft); color: #144f43; box-shadow: 0 5px 18px #1635471a; }
+  .restricted-page { max-width: 720px; margin: 10vh auto 0; text-align: center; }
+  .restricted-page .panel { padding: 42px 32px; }
+  .restricted-mark { display: inline-grid; place-items: center; width: 58px; height: 58px; margin-bottom: 17px; border-radius: 50%; background: #fff0dc; color: #8a5a1f; font-size: 28px; }
+  .restricted-page h1 { font-size: 28px; letter-spacing: -.02em; }
+  .restricted-page p { max-width: 470px; margin: 11px auto 21px; color: var(--muted); }
+  .permission-request-note { margin-top: 12px; color: var(--muted); font-size: 12px; }
+  .permission-status { padding: 10px 12px; border: 1px solid #d7e2ee; border-radius: 8px; background: #f6f8fb; color: var(--muted); }
+  .restricted-page { max-width: 720px; margin: 10vh auto 0; text-align: center; }
+  .restricted-page .panel { padding: 42px 32px; }
+  .restricted-mark { display: inline-grid; place-items: center; width: 58px; height: 58px; margin-bottom: 17px; border-radius: 50%; background: #fff0dc; color: #8a5a1f; font-size: 28px; }
+  .restricted-page h1 { font-size: 28px; letter-spacing: -.02em; }
+  .restricted-page p { max-width: 470px; margin: 11px auto 21px; color: var(--muted); }
+  .permission-request-note { margin-top: 12px; color: var(--muted); font-size: 12px; }
+  .permission-status { padding: 10px 12px; border: 1px solid #d7e2ee; border-radius: 8px; background: #f6f8fb; color: var(--muted); }
+  .login-page { display: grid; place-items: center; min-height: 100dvh; padding: 22px 14px; }
+  .login-card { display: grid; grid-template-columns: 250px minmax(0, 1fr); width: min(690px, 100%); overflow: hidden; }
+  .login-brand { padding: 27px 22px; background: var(--nav); color: #eef7fc; }
+  .login-brand h2 { margin-top: 12px; }
+  .login-brand p { margin: 7px 0 17px; color: #b9c9da; }
+  .login-samples { display: grid; gap: 7px; }
+  .login-samples button { text-align: left; color: #e9f3f9; background: #244258; border: 1px solid #3b566c; border-radius: 7px; padding: 6px 8px; }
+  .login-samples button:hover { background: #2c5265; }
+  .login-samples strong, .login-samples small { display: block; }
+  .login-samples small { color: #bdceda; }
+  .login-form { display: grid; align-content: center; gap: 14px; padding: 26px 24px; }
+  .login-form h1 { font-size: 26px; }
+  .login-form .fields { margin: 0; }
+  .login-error { color: #893636; font-size: 13px; }
+  .audit-table { min-width: 580px; }
+  .audit-table th:last-child, .audit-table td:last-child { text-align: left; }
+  .audit-table td:first-child { white-space: nowrap; }
+  .audit-table td { overflow-wrap: anywhere; }
+  .audit-detail { display: block; color: var(--muted); font-size: 12px; }
+  .board { grid-template-columns: minmax(0, 1fr); }
+  .filter-fields { grid-template-columns: minmax(0, 320px); }
+  .app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .app-mark.course { background: #eaf0ff; color: #385988; }
+  .permission-dialog { width: min(800px, calc(100% - 24px)); }
+  .role-dialog { width: min(960px, calc(100% - 24px)); }
+  .role-section { padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--line); }
+  .section-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 5px; }
+  .section-head > .quiet { margin-left: auto; }
+  .inheritance-choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+  .inheritance-choice { display: flex; align-items: flex-start; gap: 9px; min-width: 0; padding: 11px 12px; border: 1px solid var(--line); border-radius: 9px; cursor: pointer; }
+  .inheritance-choice:hover { background: #f6f9fc; border-color: #b8cbc9; }
+  .inheritance-choice:has(input:checked) { background: var(--soft); border-color: #9dc8bb; }
+  .inheritance-choice input { margin-top: 2px; }
+  .inheritance-choice span { min-width: 0; }
+  .inheritance-choice strong, .inheritance-choice small { display: block; overflow-wrap: anywhere; }
+  .inheritance-choice small { margin-top: 3px; color: var(--muted); font-size: 12px; }
+  .inheritance-summary { margin-top: 11px; padding: 10px 12px; border: 1px solid #d7e2ee; border-radius: 9px; background: #f6f8fb; color: var(--muted); font-size: 12px; }
+  .inheritance-summary strong { color: var(--ink); }
+  .inheritance-error { margin-top: 10px; padding: 10px 12px; border: 1px solid #e4bcbc; border-radius: 9px; background: #fceded; color: #893636; font-size: 13px; }
+  .permission-legend { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; color: var(--muted); font-size: 12px; }
+  .tag.direct { background: var(--soft); color: var(--accent); }
+  .tag.inherited { background: #eaf0ff; color: #385988; }
+  .tree-row.inherited-only { background: #f7f9fd; }
+  .tree-row .permission-origin { flex: 1 1 100%; margin: -2px 0 3px 25px; color: #536679; font-size: 11px; font-weight: 400; }
+  .tree-row { flex-wrap: wrap; }
+  .tree-row .tag { margin-left: 0; }
+  .tree-row .tag:first-of-type { margin-left: auto; }
+  .role-relations { display: grid; gap: 5px; min-width: 150px; }
+  .role-relation-line { display: flex; align-items: flex-start; flex-wrap: wrap; gap: 5px; }
+  .role-relation-line > small { padding-top: 3px; color: var(--muted); }
+  .delete-consequences { margin-top: 12px; padding: 11px 12px; border: 1px solid #ead5b5; border-radius: 9px; background: #fff7e9; color: #785328; }
+  .delete-consequences strong { display: block; margin-bottom: 4px; }
+  .api-config { padding-top: 14px; border-top: 1px solid var(--line); }
+  .api-config-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 5px; }
+  .api-row { display: grid; grid-template-columns: minmax(0, 1fr) 100px minmax(0, 1.3fr) auto; gap: 8px; align-items: end; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .api-row label { display: grid; gap: 4px; min-width: 0; font-size: 12px; color: var(--muted); }
+  .api-row input, .api-row select { min-width: 0; width: 100%; min-height: 37px; padding: 5px 8px; border: 1px solid #bdcbd9; border-radius: 7px; background: var(--paper); color: var(--ink); }
+  .api-row .link-button { color: #9b3e3e; }
+  @media (max-width: 590px) {
+    .api-row { grid-template-columns: minmax(0, 1fr) 100px; }
+    .api-row .api-path { grid-column: 1; }
+  }
+  @media (max-width: 1050px) {
+    .shell { grid-template-columns: 190px minmax(0, 1fr); }
+    .board { grid-template-columns: minmax(0, 1fr); }
+    .overview { max-width: 430px; }
+    .app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .filter-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 690px) {
+    .shell { display: block; }
+    .sidebar { position: static; height: auto; padding: 11px 11px 8px; }
+    .brand-mark { width: 34px; height: 34px; }
+    .brand small, .nav-label, .sidebar-foot, .identity .avatar, .identity small { display: none; }
+    .nav { display: flex; margin-top: 9px; }
+    .nav button { flex: 1; justify-content: center; min-height: 36px; padding: 4px; gap: 4px; font-size: 12px; white-space: nowrap; }
+    .nav button .icon { width: 15px; height: 15px; }
+    .topbar { min-height: 46px; padding-inline: 12px; }
+    .content { padding: 19px 12px 25px; }
+    .page-head { gap: 7px; margin-bottom: 14px; }
+    .page-head p { font-size: 12px; }
+    .catalog-board { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .catalog-child td:first-child { padding-left: 34px; }
+    .panel-head, .panel-foot, .batch-tools { padding-inline: 11px; }
+    .filter-fields { grid-template-columns: minmax(0, 1fr); padding-inline: 11px; }
+    .filter-actions { padding-inline: 11px; }
+    th, td, th:first-child, td:first-child, th:last-child, td:last-child { padding-inline: 8px; }
+    .person { min-width: 85px; }
+    .person .avatar { display: none; }
+    .app-grid { grid-template-columns: 1fr; gap: 9px; }
+    .profile { flex-wrap: wrap; }
+    .profile .tags { margin-left: 0; }
+    .dialog-head, .dialog-body, .dialog-foot { padding-inline: 11px; }
+    .config-layout { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+    .inheritance-choices { grid-template-columns: minmax(0, 1fr); }
+    .app-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .app-picker { justify-content: center; gap: 3px; padding-inline: 3px; font-size: 12px; }
+    .app-picker .app-mark { display: none; }
+  }
+  @media (max-width: 450px) {
+    .mobile-hide, .nav button .icon { display: none; }
+    .nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .top-actions { gap: 6px; }
+    .crumb { gap: 4px; font-size: 12px; }
+  }
+  @media (max-width: 590px) {
+    .login-card { grid-template-columns: minmax(0, 1fr); }
+    .login-brand, .login-form { padding: 17px; }
+    .login-brand h2 { display: inline-block; margin: 0 0 0 7px; vertical-align: middle; }
+    .login-samples { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .login-samples button { padding: 5px 4px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+  <svg aria-hidden="true" style="display:none" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 21 7v5c0 4.8-4.4 8.2-9 9.5C7.4 20.2 3 16.8 3 12V7l9-4Z"/><path d="m8 12 2.5 2.5L16 9"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 16l9 5 9-5"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2M16 5a3 3 0 0 1 0 6m2 3a4 4 0 0 1 3 4v2"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="10" r="4"/><path d="m11 13 7 7 3-3-2-2-2 2-2-2 2-2"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="5.5"/><path d="m15 15 4.5 4.5"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  </svg>
+
+  <div class="shell" id="workspace-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg></span>
+        <div><strong>RBAC1 权限管理</strong><small>角色继承与统一授权</small></div>
+      </div>
+      <nav class="nav" aria-label="系统导航">
+        <button type="button" data-page="catalog" data-permission="rbac.applications"><svg class="icon" aria-hidden="true"><use href="#i-grid"></use></svg>应用与权限</button>
+        <button type="button" data-page="roles" data-permission="rbac.roles" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-layers"></use></svg>角色管理</button>
+        <button type="button" data-page="org" data-permission="rbac.organization"><svg class="icon" aria-hidden="true"><use href="#i-users"></use></svg>用户与部门</button>
+        <button type="button" data-page="users" data-permission="rbac.assignments"><svg class="icon" aria-hidden="true"><use href="#i-users"></use></svg>用户授权</button>
+        <button type="button" data-page="mine" data-permission="rbac.mine"><svg class="icon" aria-hidden="true"><use href="#i-key"></use></svg>我的权限</button>
+        <button type="button" data-page="audit" data-permission="rbac.audit"><svg class="icon" aria-hidden="true"><use href="#i-layers"></use></svg>操作记录</button>
+      </nav>
+      <p class="sidebar-foot">RBAC1 界面原型 · 刷新后重置</p>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div class="crumb">RBAC1 权限管理 <svg class="icon" aria-hidden="true"><use href="#i-chevron"></use></svg><strong id="crumb">角色管理</strong></div>
+        <div class="top-actions">
+          <div class="identity"><small class="quiet" id="identity-context">原型预览</small><span class="avatar" id="identity-mark" aria-hidden="true">总</span><strong id="identity-name">总管理员</strong></div>
+          <button type="button" class="button" id="login-entry">切换账号</button>
+        </div>
+      </header>
+      <main class="content">
+        <section id="catalog-page" aria-labelledby="catalog-title" hidden>
+          <div class="page-head">
+            <div><h1 id="catalog-title">应用与权限</h1><p>统一配置本系统和课程系统的菜单、按钮及关联接口。</p></div>
+            <button class="button primary" id="add-app" data-permission="rbac.applications.create" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>新增应用</button>
+          </div>
+          <div class="catalog-board">
+            <section class="panel catalog-apps" aria-labelledby="catalog-apps-title">
+              <div class="panel-head"><h2 id="catalog-apps-title">应用列表</h2></div>
+              <div id="catalog-app-list" class="app-list" role="group" aria-label="选择应用"></div>
+            </section>
+            <section class="panel" aria-labelledby="catalog-app-title">
+              <div class="panel-head catalog-head">
+                <div><h2 id="catalog-app-title"></h2><div class="attribute-line" id="catalog-app-meta"></div></div>
+                <div class="catalog-actions">
+                  <button type="button" class="button" id="edit-app" data-permission="rbac.applications.edit">编辑应用</button>
+                  <button type="button" class="button primary" id="add-permission" data-permission="rbac.permissions.create"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>新增权限</button>
+                </div>
+              </div>
+              <div class="scroll-table">
+                <table aria-label="菜单和按钮权限">
+                  <thead><tr><th scope="col">权限名称</th><th scope="col">类型</th><th scope="col" class="mobile-hide">权限标识</th><th scope="col">关联接口</th><th scope="col">操作</th></tr></thead>
+                  <tbody id="catalog-rows"></tbody>
+                </table>
+              </div>
+              <p class="panel-foot quiet" id="catalog-count"></p>
+            </section>
+          </div>
+        </section>
+
+        <section id="roles-page" aria-labelledby="roles-title">
+          <div class="page-head">
+            <div><h1 id="roles-title">角色管理</h1><p>配置直接权限与多父角色继承，查看合并后的有效权限及全部来源。</p></div>
+            <button class="button primary" id="add-role" data-permission="rbac.roles.create" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>新增角色</button>
+          </div>
+          <section class="panel filter-panel" aria-label="角色查询条件">
+            <div class="filter-fields">
+              <label for="role-search">角色名称<input id="role-search" type="search" placeholder="请输入角色名称"></label>
+            </div>
+            <div class="filter-actions"><button class="button" type="button" id="role-filter-reset">重置</button><button class="button primary" type="button" id="role-filter-submit"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>搜索</button></div>
+          </section>
+          <div class="board">
+            <section class="panel" aria-labelledby="role-list-title">
+              <div class="panel-head">
+                <h2 id="role-list-title">角色列表</h2>
+              </div>
+              <div class="scroll-table">
+                <table aria-label="角色列表">
+                  <thead><tr><th scope="col">角色名称</th><th scope="col">继承关系</th><th scope="col">有效权限应用</th><th scope="col">操作</th></tr></thead>
+                  <tbody id="role-rows"></tbody>
+                </table>
+              </div>
+              <p class="panel-foot quiet" id="role-count"></p>
+            </section>
+          </div>
+        </section>
+
+        <section id="org-page" aria-labelledby="org-title" hidden>
+          <div class="page-head">
+            <div><h1 id="org-title">用户与部门</h1><p>维护部门、用户和账号状态。</p></div>
+            <button class="button primary" id="add-user" data-permission="rbac.users.create" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>新增用户</button>
+          </div>
+          <div class="org-toolbar">
+            <div class="scope"><strong>管理范围</strong><span id="org-scope"></span></div>
+          </div>
+          <div class="catalog-board">
+            <section class="panel" aria-labelledby="department-list-title">
+              <div class="panel-head catalog-head">
+                <h2 id="department-list-title">部门结构</h2>
+                <div class="org-dept-actions" id="org-dept-actions">
+                  <button type="button" class="button" id="add-department" data-permission="rbac.departments.create">新增部门</button>
+                  <button type="button" class="button" id="edit-department" data-permission="rbac.departments.edit" hidden>编辑部门</button>
+                </div>
+              </div>
+              <div class="org-tree" id="org-department-list" role="group" aria-label="部门筛选"></div>
+            </section>
+            <section class="panel" aria-labelledby="org-users-title">
+              <div class="panel-head">
+                <h2 id="org-users-title">用户列表</h2>
+                <label class="search"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg><input id="org-search" type="search" aria-label="搜索用户" placeholder="搜索姓名或用户名"></label>
+              </div>
+              <div class="scroll-table">
+                <table aria-label="用户与部门名单">
+                  <thead><tr><th scope="col">用户</th><th scope="col" class="mobile-hide">所属部门</th><th scope="col">角色</th><th scope="col">账号状态</th><th scope="col">操作</th></tr></thead>
+                  <tbody id="org-user-rows"></tbody>
+                </table>
+              </div>
+              <p class="panel-foot quiet" id="org-count"></p>
+            </section>
+          </div>
+        </section>
+
+        <section id="users-page" aria-labelledby="users-title" hidden>
+          <div class="page-head"><div><h1 id="users-title">用户授权</h1><p>为管理范围内的用户分配或撤销已有角色。</p></div></div>
+          <div class="scope"><svg class="icon" aria-hidden="true"><use href="#i-users"></use></svg><span><strong>管理范围</strong><span id="user-scope"></span></span></div>
+          <section class="panel" aria-labelledby="user-list-title">
+            <div class="panel-head">
+              <h2 id="user-list-title">用户列表</h2>
+              <label class="search"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg><input id="user-search" type="search" aria-label="搜索用户" placeholder="搜索姓名或部门"></label>
+            </div>
+            <div class="batch-tools" id="batch-tools" role="group" aria-label="批量授权">
+              <span class="quiet" id="selected-user-count" aria-live="polite">已选 0 人</span>
+              <button class="button" type="button" data-batch="grant" data-permission="rbac.assignments.batch" disabled>批量分配</button>
+              <button class="button" type="button" data-batch="revoke" data-permission="rbac.assignments.batch" disabled>批量撤销</button>
+            </div>
+            <div class="scroll-table">
+              <table aria-label="用户列表">
+                <thead><tr><th scope="col" class="select-user" aria-label="选择用户"></th><th scope="col">用户</th><th scope="col" class="mobile-hide">所属部门</th><th scope="col">已有角色</th><th scope="col">操作</th></tr></thead>
+                <tbody id="user-rows"></tbody>
+              </table>
+            </div>
+            <p class="panel-foot quiet" id="user-count"></p>
+          </section>
+        </section>
+
+        <section id="mine-page" aria-labelledby="mine-title" hidden>
+          <div class="page-head"><div><h1 id="mine-title">我的权限</h1><p>合并所有业务角色的直接与继承权限，重复权限只显示一次。</p></div></div>
+          <div class="panel profile" id="profile"></div>
+          <p class="scope" id="inactive-user-note" hidden>账号已停用，业务权限暂不可用。</p>
+          <div class="app-grid" id="my-apps"></div>
+        </section>
+        <section id="audit-page" aria-labelledby="audit-title" hidden>
+          <div class="page-head"><div><h1 id="audit-title">操作记录</h1><p>查看管理操作的时间、对象和结果。</p></div></div>
+          <div class="scope"><strong>查看范围</strong><span id="audit-scope"></span></div>
+          <section class="panel" aria-labelledby="audit-list-title">
+            <div class="panel-head">
+              <h2 id="audit-list-title">记录列表</h2>
+              <label class="search"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg><input id="audit-search" type="search" aria-label="搜索操作记录" placeholder="搜索操作人、对象或内容"></label>
+            </div>
+            <div class="scroll-table">
+              <table class="audit-table" aria-label="操作记录">
+                <thead><tr><th scope="col">时间</th><th scope="col">操作人</th><th scope="col">操作</th><th scope="col">操作对象</th><th scope="col">结果</th></tr></thead>
+                <tbody id="audit-rows"></tbody>
+              </table>
+            </div>
+            <p class="panel-foot quiet" id="audit-count"></p>
+          </section>
+        </section>
+        <section id="restricted-page" class="restricted-page" aria-labelledby="restricted-title" hidden>
+          <div class="panel">
+            <span class="restricted-mark" aria-hidden="true">🔒</span>
+            <h1 id="restricted-title">暂时无法访问此页面</h1>
+            <p id="restricted-message"></p>
+            <button type="button" class="button primary" id="request-menu-permission">申请访问</button>
+            <p class="permission-request-note" id="restricted-request-status" aria-live="polite"></p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <main class="login-page" id="login-page" aria-labelledby="login-title" hidden>
+    <section class="panel login-card">
+      <aside class="login-brand">
+        <span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg></span>
+        <h2>RBAC1 权限管理</h2>
+        <p>选择演示账号体验角色继承。演示密码为 <code>demo1234</code>。</p>
+        <div class="login-samples" id="login-samples" role="group" aria-label="演示账号"></div>
+      </aside>
+      <form class="login-form" id="login-form">
+        <div><h1 id="login-title">登录 RBAC1 权限管理</h1><p class="quiet">统一账号登录，有效权限包含所有继承来源。</p></div>
+        <div class="fields stacked">
+          <label for="login-account">用户名<input id="login-account" required autocomplete="username"></label>
+          <label for="login-password">密码<input id="login-password" type="password" required autocomplete="current-password"></label>
+        </div>
+        <p class="login-error" id="login-error" role="alert" hidden></p>
+        <button type="submit" class="button primary">登录</button>
+        <button type="button" class="link-button" id="return-demo">返回原型</button>
+      </form>
+    </section>
+  </main>
+
+  <dialog id="role-dialog" class="role-dialog" aria-labelledby="role-dialog-title">
+    <form id="role-form">
+      <header class="dialog-head">
+        <div><h2 id="role-dialog-title"></h2><p class="quiet">直接权限与继承角色一起校验、一起保存，切换应用不会丢失修改。</p></div>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body">
+        <div class="fields">
+          <label for="role-name">角色名称<input id="role-name" required maxlength="24" autocomplete="off" placeholder="例如 课程教师"></label>
+          <label for="role-description">角色说明<input id="role-description" maxlength="48" autocomplete="off" placeholder="简要说明角色用途"></label>
+        </div>
+        <section class="role-section" aria-labelledby="inheritance-title">
+          <div class="section-head"><h3 id="inheritance-title">继承角色</h3><span class="quiet">支持多父角色、多层继承</span></div>
+          <p class="quiet">选择当前角色的父角色。子角色获得全部可达父角色的权限；预置管理角色不参与业务继承。</p>
+          <div id="inheritance-choices" class="inheritance-choices"></div>
+          <p id="inheritance-error" class="inheritance-error" role="alert" hidden></p>
+          <div id="inheritance-summary" class="inheritance-summary" aria-live="polite"></div>
+        </section>
+        <section class="role-section" aria-labelledby="application-permissions-title">
+          <div class="section-head">
+            <h3 id="application-permissions-title">应用权限</h3>
+            <div class="permission-legend"><span class="tag direct">直接</span>可编辑<span class="tag inherited">继承</span>自动带入</div>
+          </div>
+          <div class="config-layout">
+            <div id="app-list" class="app-list" role="group" aria-label="业务应用"></div>
+            <div class="permission-tree">
+              <p class="tree-help quiet">勾选按钮时同时勾选所属菜单；继承权限只读，并列出所有直接来源角色。</p>
+              <div id="permissions" role="group" aria-label="直接权限与继承权限"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <footer class="dialog-foot">
+        <span id="permission-count" class="quiet" aria-live="polite"></span>
+        <div class="dialog-actions">
+          <button type="button" class="button" data-close>取消</button>
+          <button type="submit" class="button primary" id="role-save">保存角色</button>
+        </div>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog id="delete-role-dialog" class="assign-dialog" aria-labelledby="delete-role-title" aria-describedby="delete-role-message">
+    <form id="delete-role-form">
+      <header class="dialog-head">
+        <h2 id="delete-role-title">删除角色</h2>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body">
+        <p id="delete-role-name"></p>
+        <p id="delete-role-message" class="quiet field-help"></p>
+      </div>
+      <footer class="dialog-foot"><div class="dialog-actions">
+        <button type="button" class="button" id="delete-role-cancel" data-close>取消</button>
+        <button type="submit" class="button danger" id="delete-role-confirm">删除角色</button>
+      </div></footer>
+    </form>
+  </dialog>
+
+  <dialog id="assign-dialog" class="assign-dialog" aria-labelledby="assign-dialog-title">
+    <form id="assign-form">
+      <header class="dialog-head">
+        <div><h2 id="assign-dialog-title">分配角色</h2><p id="assign-person" class="quiet"></p></div>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body"><div id="role-choices" class="choices"></div></div>
+      <footer class="dialog-foot">
+        <span class="quiet">保存后直接生效</span>
+        <div class="dialog-actions">
+          <button type="button" class="button" data-close>取消</button>
+          <button type="submit" class="button primary" id="assign-save">保存分配</button>
+        </div>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog id="app-dialog" class="assign-dialog" aria-labelledby="app-dialog-title">
+    <form id="app-form">
+      <header class="dialog-head">
+        <h2 id="app-dialog-title"></h2>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body fields">
+        <label for="app-name">应用名称<input id="app-name" required maxlength="24" autocomplete="off" placeholder="例如 课程管理系统" autofocus></label>
+      </div>
+      <footer class="dialog-foot"><div class="dialog-actions">
+        <button type="button" class="button" data-close>取消</button>
+        <button type="submit" class="button primary">保存应用</button>
+      </div></footer>
+    </form>
+  </dialog>
+
+  <dialog id="permission-dialog" class="permission-dialog" aria-labelledby="permission-dialog-title">
+    <form id="permission-form">
+      <header class="dialog-head">
+        <div><h2 id="permission-dialog-title"></h2><p class="quiet" id="permission-context"></p></div>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body">
+        <div class="fields">
+        <label for="permission-type" id="permission-type-field">权限类型
+          <select id="permission-type"><option value="menu">菜单</option><option value="button">按钮</option></select>
+        </label>
+        <label for="permission-name">权限名称<input id="permission-name" required maxlength="24" autocomplete="off" placeholder="例如 课程管理"></label>
+        <label for="permission-parent" id="permission-parent-field" hidden>所属菜单
+          <select id="permission-parent"></select>
+        </label>
+        <div>
+          <label for="permission-code">权限标识
+            <input id="permission-code" required maxlength="64" autocomplete="off" spellcheck="false" autocapitalize="none" placeholder="例如 course:delete" aria-describedby="permission-code-help">
+          </label>
+          <p id="permission-code-help" class="quiet field-help">格式为 <code>资源:操作</code>，例如 <code>course:delete</code>。</p>
+        </div>
+        </div>
+        <section class="api-config" aria-labelledby="api-config-title">
+          <div class="api-config-head"><h3 id="api-config-title">关联接口</h3><button type="button" class="button" id="add-api" data-permission="rbac.apis.manage">添加接口</button></div>
+          <p class="quiet">从业务系统的 API 文档填写接口标识、请求方法和路径。</p>
+          <div id="api-rows"></div>
+          <p class="empty" id="api-empty">暂未关联接口</p>
+        </section>
+      </div>
+      <footer class="dialog-foot"><div class="dialog-actions">
+        <button type="button" class="button" data-close>取消</button>
+        <button type="submit" class="button primary">保存权限</button>
+      </div></footer>
+    </form>
+  </dialog>
+
+  <dialog id="department-dialog" class="assign-dialog" aria-labelledby="department-dialog-title">
+    <form id="department-form">
+      <header class="dialog-head">
+        <h2 id="department-dialog-title"></h2>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body fields">
+        <label for="department-name">部门名称<input id="department-name" required maxlength="24" autocomplete="off"></label>
+        <label for="department-parent">上级部门<select id="department-parent"></select></label>
+      </div>
+      <footer class="dialog-foot"><div class="dialog-actions">
+        <button type="button" class="button" data-close>取消</button>
+        <button type="submit" class="button primary">保存部门</button>
+      </div></footer>
+    </form>
+  </dialog>
+
+  <dialog id="user-dialog" class="assign-dialog" aria-labelledby="user-dialog-title">
+    <form id="user-form">
+      <header class="dialog-head">
+        <div><h2 id="user-dialog-title"></h2><p class="quiet" id="user-dialog-context"></p></div>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body fields stacked">
+        <label for="user-name">姓名<input id="user-name" required maxlength="24" autocomplete="off"></label>
+        <label for="user-account">用户名<input id="user-account" required maxlength="32" autocomplete="off"></label>
+        <label for="user-department">所属部门<select id="user-department" required></select></label>
+        <label for="user-status">账号状态<select id="user-status"><option value="active">正常</option><option value="disabled">停用</option></select></label>
+        <label for="user-admin" id="user-admin-field" class="check-field"><input id="user-admin" type="checkbox">设为部门管理员</label>
+      </div>
+      <footer class="dialog-foot"><div class="dialog-actions">
+        <button type="button" class="button" data-close>取消</button>
+        <button type="submit" class="button primary">保存用户</button>
+      </div></footer>
+    </form>
+  </dialog>
+
+  <dialog id="delete-user-dialog" class="assign-dialog" aria-labelledby="delete-user-title" aria-describedby="delete-user-message">
+    <form id="delete-user-form">
+      <header class="dialog-head">
+        <div><h2 id="delete-user-title">删除用户</h2><p class="quiet">RBAC1 物理删除演示</p></div>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body">
+        <p id="delete-user-name"></p>
+        <p id="delete-user-message" class="quiet field-help"></p>
+        <div class="delete-consequences"><strong>此操作不可撤销</strong>用户记录及其全部角色关联将被永久删除；权限、角色和历史操作记录保留。</div>
+      </div>
+      <footer class="dialog-foot"><div class="dialog-actions">
+        <button type="button" class="button" id="delete-user-cancel" data-close>取消</button>
+        <button type="submit" class="button danger" id="delete-user-confirm">永久删除用户</button>
+      </div></footer>
+    </form>
+  </dialog>
+
+  <dialog id="permission-request-dialog" class="assign-dialog" aria-labelledby="permission-request-title">
+    <form id="permission-request-form">
+      <header class="dialog-head">
+        <div><h2 id="permission-request-title">申请权限</h2><p class="quiet" id="permission-request-context"></p></div>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body fields stacked">
+        <p id="permission-request-description" class="span-2"></p>
+        <p id="permission-request-existing" class="permission-status span-2" hidden></p>
+        <label for="permission-request-reason" id="permission-request-reason-label">申请理由
+          <textarea id="permission-request-reason" rows="3" maxlength="240" placeholder="请说明使用此功能的原因" required></textarea>
+        </label>
+      </div>
+      <footer class="dialog-foot"><div class="dialog-actions">
+        <button type="button" class="button" data-close>取消</button>
+        <button type="submit" class="button primary" id="permission-request-submit">提交申请</button>
+      </div></footer>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+  <script>
+    const applications = [
+      { id: 'rbac', name: '权限管理系统', short: '权限管理', symbol: '权', groups: [
+        { key: 'rbac.applications', name: '应用与权限', code: 'application:view', apis: [
+          { operationId: 'listApplications', method: 'GET', path: '/api/v1/applications' },
+          { operationId: 'getApplicationPermissionTree', method: 'GET', path: '/api/v1/applications/{applicationId}/permissions' }
+        ], actions: [
+          { key: 'rbac.applications.create', name: '新增应用', code: 'application:create', apis: [{ operationId: 'createApplication', method: 'POST', path: '/api/v1/applications' }] },
+          { key: 'rbac.applications.edit', name: '修改应用', code: 'application:edit', apis: [{ operationId: 'updateApplication', method: 'PATCH', path: '/api/v1/applications/{applicationId}' }] },
+          { key: 'rbac.permissions.create', name: '新增权限', code: 'permission:create', apis: [{ operationId: 'createPermission', method: 'POST', path: '/api/v1/applications/{applicationId}/permissions' }] },
+          { key: 'rbac.permissions.edit', name: '修改权限', code: 'permission:edit', apis: [{ operationId: 'updatePermission', method: 'PATCH', path: '/api/v1/applications/{applicationId}/permissions/{permissionId}' }] },
+          { key: 'rbac.apis.manage', name: '配置关联接口', code: 'api:manage', apis: [] }
+        ] },
+        { key: 'rbac.roles', name: '角色管理', code: 'role:view', apis: [
+          { operationId: 'listRoles', method: 'GET', path: '/api/v1/roles' },
+          { operationId: 'getRole', method: 'GET', path: '/api/v1/roles/{roleId}' }
+        ], actions: [
+          { key: 'rbac.roles.create', name: '新增角色', code: 'role:create', apis: [{ operationId: 'createRole', method: 'POST', path: '/api/v1/roles' }] },
+          { key: 'rbac.roles.edit', name: '配置角色权限', code: 'role:edit', apis: [{ operationId: 'updateRole', method: 'PUT', path: '/api/v1/roles/{roleId}' }] },
+          { key: 'rbac.roles.delete', name: '删除角色', code: 'role:delete', apis: [{ operationId: 'deleteRole', method: 'DELETE', path: '/api/v1/roles/{roleId}' }] }
+        ] },
+        { key: 'rbac.organization', name: '用户与部门', code: 'user:view', apis: [
+          { operationId: 'getDepartmentTree', method: 'GET', path: '/api/v1/departments' },
+          { operationId: 'listUsers', method: 'GET', path: '/api/v1/users' },
+          { operationId: 'getUser', method: 'GET', path: '/api/v1/users/{userId}' }
+        ], actions: [
+          { key: 'rbac.users.create', name: '新增用户', code: 'user:create', apis: [{ operationId: 'createUser', method: 'POST', path: '/api/v1/users' }] },
+          { key: 'rbac.users.edit', name: '修改用户', code: 'user:edit', apis: [{ operationId: 'updateUser', method: 'PATCH', path: '/api/v1/users/{userId}' }] },
+          { key: 'rbac.users.delete', name: '删除用户', code: 'user:delete', apis: [{ operationId: 'deleteUser', method: 'DELETE', path: '/api/v1/users/{userId}' }] },
+          { key: 'rbac.departments.create', name: '新增部门', code: 'department:create', apis: [{ operationId: 'createDepartment', method: 'POST', path: '/api/v1/departments' }] },
+          { key: 'rbac.departments.edit', name: '修改部门', code: 'department:edit', apis: [{ operationId: 'updateDepartment', method: 'PATCH', path: '/api/v1/departments/{departmentId}' }] }
+        ] },
+        { key: 'rbac.assignments', name: '用户授权', code: 'assignment:view', apis: [], actions: [
+          { key: 'rbac.assignments.edit', name: '分配与撤销角色', code: 'assignment:edit', apis: [{ operationId: 'replaceUserBusinessRoles', method: 'PUT', path: '/api/v1/users/{userId}/roles' }] },
+          { key: 'rbac.assignments.batch', name: '批量授权', code: 'assignment:batch', apis: [{ operationId: 'changeUserRolesInBatch', method: 'PATCH', path: '/api/v1/user-role-assignments' }] }
+        ] },
+        { key: 'rbac.mine', name: '我的权限', code: 'permission:viewOwn', apis: [{ operationId: 'getMyPermissions', method: 'GET', path: '/api/v1/me/permissions' }], actions: [] },
+        { key: 'rbac.audit', name: '操作记录', code: 'operationLog:view', apis: [{ operationId: 'listOperationLogs', method: 'GET', path: '/api/v1/operation-logs' }], actions: [] }
+      ] },
+      { id: 'course', name: '课程管理系统', short: '课程管理', symbol: '课', groups: [
+        { key: 'course.all', name: '所有课程', code: 'course:viewAll', apis: [{ operationId: 'listAdminCourses', method: 'GET', path: '/admin/courses' }], actions: [
+          { key: 'course.all.review', name: '审核课程', code: 'course:review', apis: [{ operationId: 'reviewCourse', method: 'POST', path: '/courses/{courseId}/review' }] },
+          { key: 'course.all.delete', name: '删除课程', code: 'course:delete', apis: [{ operationId: 'deleteCourse', method: 'DELETE', path: '/courses/{courseId}' }] }
+        ] },
+        { key: 'course.mine', name: '我的课程', code: 'course:viewOwn', apis: [{ operationId: 'listTeacherCourses', method: 'GET', path: '/teacher/courses' }], actions: [
+          { key: 'course.mine.create', name: '申请新课程', code: 'course:create', apis: [{ operationId: 'createCourse', method: 'POST', path: '/terms/{termId}/courses' }] }
+        ] },
+        { key: 'course.terms', name: '学期管理', code: 'term:view', apis: [{ operationId: 'listTerms', method: 'GET', path: '/terms' }], actions: [
+          { key: 'course.terms.create', name: '新建学期', code: 'term:create', apis: [{ operationId: 'createTerm', method: 'POST', path: '/terms' }] },
+          { key: 'course.terms.delete', name: '删除学期', code: 'term:delete', apis: [{ operationId: 'deleteTerm', method: 'DELETE', path: '/terms/{termId}' }] }
+        ] }
+      ] }
+    ];
+
+    const rootAdminRole = 'root-admin';
+    const departmentAdminRole = 'department-admin';
+    const roles = new Map([
+      ['reader', { name: '课程查看员', description: '基础查看角色：查看自己的课程', granted: new Set(['rbac.mine', 'course.mine']), inherits: new Set() }],
+      ['teacher', { name: '课程教师', description: '继承课程查看员，直接拥有课程申请权限', granted: new Set(['course.mine.create']), inherits: new Set(['reader']) }],
+      ['term-manager', { name: '学期管理员', description: '独立维护学期，不参与课程查看继承链', granted: new Set(['rbac.mine', 'course.terms', 'course.terms.create', 'course.terms.delete']), inherits: new Set() }],
+      ['course-admin', { name: '课程管理员', description: '同时继承课程教师与学期管理员，形成多父、多层继承', granted: new Set(['rbac.mine', 'course.all', 'course.all.review', 'course.all.delete']), inherits: new Set(['teacher', 'term-manager']) }],
+      [departmentAdminRole, { name: '部门管理员', description: '管理本部门及下级部门的用户并分配角色', management: true, granted: new Set(['rbac.organization', 'rbac.users.create', 'rbac.users.edit', 'rbac.users.delete', 'rbac.assignments', 'rbac.assignments.edit', 'rbac.assignments.batch', 'rbac.mine', 'rbac.audit']), inherits: new Set() }],
+      [rootAdminRole, { name: '总管理员', description: '维护本系统全部管理功能', management: true, granted: new Set(applications[0].groups.flatMap(group => [group.key, ...group.actions.map(action => action.key)])), inherits: new Set() }]
+    ]);
+
+    const departments = new Map([
+      ['company', { name: '某大学', parent: null, sortOrder: 1, status: 'active' }],
+      ['admin', { name: '计算机学院', parent: 'company', sortOrder: 1, status: 'active' }],
+      ['office', { name: '软件工程系', parent: 'admin', sortOrder: 1, status: 'active' }],
+      ['finance', { name: '数学学院', parent: 'company', sortOrder: 2, status: 'active' }]
+    ]);
+    const users = [
+      { id: 'lin', name: '林晓', account: 'lin.xiao', department: 'office', active: true, roles: new Set(['teacher']) },
+      { id: 'gu', name: '顾晨', account: 'gu.chen', department: 'admin', active: true, roles: new Set(['teacher', departmentAdminRole]) },
+      { id: 'he', name: '何雨桐', account: 'he.yutong', department: 'office', active: true, roles: new Set(['course-admin']) },
+      { id: 'ye', name: '叶宁', account: 'ye.ning', department: 'finance', active: true, roles: new Set(['reader']) }
+    ];
+    const demoEmployee = users[0];
+    const demoManager = users[1];
+    const demoRoot = { name: '总管理员', account: 'admin', active: true, roles: new Set([rootAdminRole]) };
+    const demoAccounts = [[demoRoot, '总管理员'], [demoManager, '部门管理员'], [demoEmployee, '普通用户']];
+    const demoPassword = 'demo1234';
+    const operationLogs = [];
+    const logTime = new Intl.DateTimeFormat('zh-CN', {
+      timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+    });
+    const views = {
+      catalog: { title: '应用与权限', identity: '总管理员', mark: '总', permission: 'rbac.applications' },
+      roles: { title: '角色管理', identity: '总管理员', mark: '总', permission: 'rbac.roles' },
+      org: { title: '用户与部门', identity: '总管理员', mark: '总', permission: 'rbac.organization' },
+      users: { title: '用户授权', identity: '部门管理员', mark: '部', permission: 'rbac.assignments' },
+      mine: { title: '我的权限', permission: 'rbac.mine' },
+      audit: { title: '操作记录', identity: '总管理员', mark: '总', permission: 'rbac.audit' }
+    };
+
+    const $ = id => document.getElementById(id);
+    const nav = document.querySelector('.nav');
+    const loginAccount = $('login-account');
+    const loginPassword = $('login-password');
+    const roleDialog = $('role-dialog');
+    const assignDialog = $('assign-dialog');
+    const assignSave = $('assign-save');
+    const roleChoices = $('role-choices');
+    const appDialog = $('app-dialog');
+    const permissionDialog = $('permission-dialog');
+    const departmentDialog = $('department-dialog');
+    const userDialog = $('user-dialog');
+    const permissionRequestDialog = $('permission-request-dialog');
+    const orgDepartmentList = $('org-department-list');
+    const orgUserRows = $('org-user-rows');
+    const userName = $('user-name');
+    const userAccount = $('user-account');
+    const userDepartment = $('user-department');
+    const appName = $('app-name');
+    const permissionName = $('permission-name');
+    const permissionType = $('permission-type');
+    const permissionParent = $('permission-parent');
+    const permissionCode = $('permission-code');
+    const catalogAppList = $('catalog-app-list');
+    const catalogRows = $('catalog-rows');
+    const roleName = $('role-name');
+    const roleDescription = $('role-description');
+    const inheritanceChoices = $('inheritance-choices');
+    const inheritanceError = $('inheritance-error');
+    const appList = $('app-list');
+    const permissions = $('permissions');
+    const roleRows = $('role-rows');
+    const userRows = $('user-rows');
+    const batchTools = $('batch-tools');
+    const selectedUsers = new Set();
+    const collapsedBranches = new Set(applications.flatMap(app => app.groups.map(group => 'catalog-' + group.key)));
+    const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+    let sessionUser = null;
+    let requestedPermission = null;
+    const permissionRequests = new Map();
+    let roleEditor;
+    let deletingRole;
+    let assignment;
+    let nextRoleId = 1;
+    let nextAppId = 1;
+    let nextPermissionId = 1;
+    let nextDepartmentId = 1;
+    let nextUserId = 1;
+    let departmentFilter = '';
+    let editingDepartment;
+    let editingUser;
+    let deletingUser;
+    let catalogApp = applications[0];
+    let editedApp;
+    let editedPermission;
+    let toastTimer;
+    let nextApiRow = 1;
+
+    function escapeText(value) {
+      return value.replace(/[&<>"']/g, character => entities[character]);
+    }
+
+    function appMark(app) {
+      return `<span class="app-mark ${app.id}" aria-hidden="true">${escapeText(app.symbol)}</span>`;
+    }
+
+    function renderAppChoices(container, selectedApp) {
+      container.innerHTML = applications.map(app => `<button type="button" class="app-picker"
+        data-app="${app.id}" aria-pressed="${app === selectedApp}">${appMark(app)}
+        <span class="app-name">${escapeText(app.name)}</span></button>`).join('');
+    }
+
+    function treeDisclosure(id, name, targets = [id]) {
+      if (!targets.length) return '<span class="menu-toggle-spacer" aria-hidden="true"></span>';
+      const expanded = !collapsedBranches.has(id);
+      return `<button type="button" class="menu-toggle" data-branch-toggle="${id}" data-branch-name="${escapeText(name)}"
+        aria-label="${expanded ? '收起' : '展开'}${escapeText(name)}" aria-expanded="${expanded}" aria-controls="${targets.join(' ')}">
+        <svg class="icon" aria-hidden="true"><use href="#i-chevron"></use></svg></button>`;
+    }
+
+    function catalogRow(permission, isMenu, hidden = false) {
+      const label = `<span class="catalog-label">${escapeText(permission.name)}</span>`;
+      const title = isMenu ? `<div class="menu-heading">${treeDisclosure('catalog-' + permission.key, permission.name,
+        permission.actions.map(action => 'catalog-row-' + action.key))}${label}</div>` : label;
+      const grants = userGrants();
+      return `<tr id="catalog-row-${permission.key}" class="${isMenu ? 'catalog-menu' : 'catalog-child'}" ${hidden ? 'hidden' : ''}>
+        <td>${title}</td><td><span class="tag">${isMenu ? '菜单' : '按钮'}</span></td>
+        <td class="mobile-hide"><code class="permission-code">${escapeText(permission.code)}</code></td>
+        <td><button type="button" class="link-button" data-edit-permission="${permission.key}" data-focus-apis data-permission="rbac.apis.manage">${permission.apis?.length ?? 0} 个接口</button></td>
+        <td><button class="link-button" type="button" data-edit-permission="${permission.key}" data-permission="rbac.permissions.edit">编辑</button></td></tr>`;
+    }
+
+    function renderCatalog() {
+      renderAppChoices(catalogAppList, catalogApp);
+      $('catalog-app-title').textContent = catalogApp.name;
+      $('catalog-app-meta').textContent = catalogApp.id === 'rbac' ? '本系统的管理功能也在这里配置权限。' : '已登记课程、课程申请和学期管理权限。';
+      const groups = catalogApp.groups;
+      catalogRows.innerHTML = groups.map(group => catalogRow(group, true) + group.actions.map(action =>
+        catalogRow(action, false, collapsedBranches.has('catalog-' + group.key))).join('')).join('') ||
+        '<tr><td class="empty" colspan="5">这个应用还没有权限。先添加一个菜单。</td></tr>';
+      const entries = groups.flatMap(group => [group, ...group.actions]);
+      $('catalog-count').textContent = `${groups.length} 个菜单，${entries.length - groups.length} 个按钮，${entries.reduce((sum, item) => sum + (item.apis?.length ?? 0), 0)} 个接口`;
+    }
+
+    function openAppEditor(app) {
+      editedApp = app;
+      $('app-dialog-title').textContent = app ? '编辑应用' : '新增应用';
+      appName.value = app?.name ?? '';
+      appName.setCustomValidity('');
+      appDialog.showModal();
+      appName.focus();
+    }
+
+    function updatePermissionParent() {
+      const showParent = !editedPermission && permissionType.value === 'button';
+      $('permission-parent-field').hidden = !showParent;
+      permissionParent.disabled = !showParent;
+      permissionParent.required = showParent;
+      permissionName.placeholder = showParent ? '例如 删除课程' : '例如 课程管理';
+    }
+
+    function openPermissionEditor(permission, menu) {
+      editedPermission = permission;
+      $('permission-dialog-title').textContent = permission ? '编辑权限' : '新增权限';
+      $('permission-context').textContent = [catalogApp.name, menu?.name].filter(Boolean).join(' / ');
+      $('permission-type-field').hidden = Boolean(permission);
+      permissionType.value = 'menu';
+      permissionType.options[1].disabled = catalogApp.groups.length === 0;
+      permissionName.value = permission?.name ?? '';
+      permissionName.setCustomValidity('');
+      permissionCode.value = permission?.code ?? '';
+      permissionCode.setCustomValidity('');
+      permissionParent.innerHTML = '<option value="">请选择菜单</option>' + catalogApp.groups.map(group =>
+        `<option value="${group.key}">${escapeText(group.name)}</option>`).join('');
+      updatePermissionParent();
+      $('api-rows').innerHTML = (permission?.apis ?? []).map(apiRow).join('');
+      $('api-empty').hidden = $('api-rows').children.length > 0;
+      const grants = userGrants();
+      permissionName.readOnly = Boolean(permission) && !grants.has('rbac.permissions.edit');
+      permissionCode.readOnly = Boolean(permission) && !grants.has('rbac.permissions.edit');
+      for (const field of $('api-rows').querySelectorAll('input, select')) field.disabled = !grants.has('rbac.apis.manage');
+      for (const button of $('api-rows').querySelectorAll('[data-remove-api]')) button.dataset.permission = 'rbac.apis.manage';
+      permissionDialog.showModal();
+      (permission ? permissionName : permissionType).focus();
+    }
+
+    function apiRow(api = {}) {
+      const id = nextApiRow++;
+      return `<div class="api-row">
+        <label for="api-operation-${id}">接口标识（operationId）<input id="api-operation-${id}" data-api-operation required maxlength="128" value="${escapeText(api.operationId ?? '')}" placeholder="例如 createCourse" autocomplete="off" spellcheck="false"></label>
+        <label for="api-method-${id}">请求方法<select id="api-method-${id}" data-api-method>${['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].map(method => `<option ${method === (api.method ?? 'GET') ? 'selected' : ''}>${method}</option>`).join('')}</select></label>
+        <label for="api-path-${id}" class="api-path">请求路径<input id="api-path-${id}" data-api-path required maxlength="255" value="${escapeText(api.path ?? '')}" placeholder="例如 /courses/{courseId}" autocomplete="off" spellcheck="false"></label>
+        <button type="button" class="link-button" data-remove-api data-permission="rbac.apis.manage" aria-label="移除此接口">移除</button>
+      </div>`;
+    }
+
+    function collectPermissionSources(roleId, sources, visited) {
+      if (visited.has(roleId) || !roles.has(roleId)) return;
+      visited.add(roleId);
+      const role = roles.get(roleId);
+      for (const permission of role.granted) {
+        if (!sources.has(permission)) sources.set(permission, new Set());
+        sources.get(permission).add(roleId);
+      }
+      for (const parent of role.inherits ?? []) collectPermissionSources(parent, sources, visited);
+    }
+
+    function permissionSourcesFor(roleIds) {
+      const sources = new Map();
+      const visited = new Set();
+      for (const id of roleIds) collectPermissionSources(id, sources, visited);
+      return sources;
+    }
+
+    function effectiveRoleGrants(id) {
+      return new Set(permissionSourcesFor([id]).keys());
+    }
+
+    function sourceNames(sourceIds) {
+      return [...sourceIds].map(id => roles.get(id)?.name).filter(Boolean);
+    }
+
+    function findInheritancePath(start, target, editorId, draftParents, trail = []) {
+      if (start === target) return [...trail, start];
+      if (trail.includes(start) || !roles.has(start)) return null;
+      const parents = start === editorId ? draftParents : (roles.get(start).inherits ?? new Set());
+      for (const parent of parents) {
+        const path = findInheritancePath(parent, target, editorId, draftParents, [...trail, start]);
+        if (path) return path;
+      }
+      return null;
+    }
+
+    function validateInheritance() {
+      const currentId = roleEditor.id;
+      const currentRole = currentId ? roles.get(currentId) : null;
+      if (currentRole?.management) return '';
+      for (const parentId of roleEditor.inherits) {
+        const parent = roles.get(parentId);
+        if (!parent || parent.management) return '业务角色不能继承预置管理角色。';
+        if (currentId && parentId === currentId) return '角色不能继承自身，请取消该选择。';
+        if (currentId) {
+          const path = findInheritancePath(parentId, currentId, currentId, roleEditor.inherits);
+          if (path) {
+            const cycle = [currentId, ...path].map(id => roles.get(id).name).join(' → ');
+            return `不能保存：${cycle} 会形成循环继承。请先解除其中一条继承关系。`;
+          }
+        }
+      }
+      return '';
+    }
+
+    function updateInheritanceState() {
+      const error = validateInheritance();
+      inheritanceError.textContent = error;
+      inheritanceError.hidden = !error;
+      $('role-save').disabled = roleEditor.readOnly || Boolean(error);
+      const inherited = permissionSourcesFor(roleEditor.inherits);
+      const inheritedOnly = [...inherited.keys()].filter(key => !roleEditor.grants.has(key)).length;
+      const effective = new Set([...roleEditor.grants, ...inherited.keys()]);
+      const parentNames = sourceNames(roleEditor.inherits);
+      $('inheritance-summary').innerHTML = roles.get(roleEditor.id)?.management
+        ? '预置管理角色不参与业务角色继承。'
+        : `<strong>已选 ${roleEditor.inherits.size} 个父角色</strong>${parentNames.length ? `：${escapeText(parentNames.join('、'))}` : '，当前仅使用直接权限'}<br>
+          继承带来 ${inherited.size} 项权限，其中 ${inheritedOnly} 项不与直接权限重复；合并后共 <strong>${effective.size} 项有效权限</strong>。`;
+      updatePermissionCount();
+    }
+
+    function userGrants(user = sessionUser ?? demoRoot) {
+      const grants = new Set([...user.roles].flatMap(id => [...effectiveRoleGrants(id)]));
+      if (user.roles.has(rootAdminRole)) {
+        for (const group of applications[0].groups) {
+          grants.add(group.key);
+          for (const action of group.actions) grants.add(action.key);
+        }
+      }
+      grants.add('rbac.mine');
+      return grants;
+    }
+
+    function appPermissionCount(app, grants) {
+      return app.groups.flatMap(group => [group, ...group.actions]).filter(item => grants.has(item.key)).length;
+    }
+
+    function tags(labels, positive = false) {
+      const style = positive ? 'tag positive' : 'tag';
+      return labels.length
+        ? labels.map(label => `<span class="${style}">${escapeText(label)}</span>`).join('')
+        : '<span class="quiet">暂无</span>';
+    }
+
+    function roleLabels(user) {
+      return [...user.roles].map(id => roles.get(id).name);
+    }
+
+    function person(name, detail) {
+      return `<div class="person"><span class="avatar" aria-hidden="true">${escapeText(name.charAt(0))}</span>
+        <div><strong>${escapeText(name)}</strong><small>${escapeText(detail)}</small></div></div>`;
+    }
+
+    function renderRoles() {
+      const search = $('role-search').value.trim().toLowerCase();
+      const found = [...roles].filter(([, role]) => role.name.toLowerCase().includes(search));
+      roleRows.innerHTML = found.map(([id, role]) => {
+        const effective = effectiveRoleGrants(id);
+        const inheritedCount = [...effective].filter(key => !role.granted.has(key)).length;
+        const names = applications.filter(app => appPermissionCount(app, effective)).map(app => app.short);
+        const parents = sourceNames(role.inherits ?? []);
+        const children = [...roles].filter(([, candidate]) => candidate.inherits?.has(id)).map(([, candidate]) => candidate.name);
+        const relations = role.management
+          ? '<span class="quiet">预置管理角色，不参与业务继承</span>'
+          : `<div class="role-relation-line"><small>父角色</small>${parents.length ? tags(parents) : '<span class="quiet">无</span>'}</div>
+            <div class="role-relation-line"><small>子角色</small>${children.length ? tags(children) : '<span class="quiet">无</span>'}</div>`;
+        return `<tr><td>${person(role.name, `${role.description} · ${role.granted.size} 项直接 / ${inheritedCount} 项继承`)}</td>
+          <td><div class="role-relations">${relations}</div></td><td><div class="tags">${tags(names)}</div></td>
+          <td><button class="link-button" type="button" data-edit-role="${id}" data-permission="rbac.roles.edit">${id === rootAdminRole ? '查看权限' : '配置权限'}</button>
+          ${!role.management ? `<button class="link-button danger" type="button" data-delete-role="${id}" data-permission="rbac.roles.delete">删除</button>` : ''}</td></tr>`;
+      }).join('') || '<tr><td class="empty" colspan="4">没有匹配的角色。</td></tr>';
+      $('role-count').textContent = `共 ${found.length} 个角色 · 有效权限为直接权限与全部可达父角色权限的并集`;
+    }
+
+    function roleInheritanceRelations(id) {
+      const role = roles.get(id);
+      return {
+        parents: sourceNames(role?.inherits ?? []),
+        children: [...roles].filter(([, candidate]) => candidate.inherits?.has(id)).map(([, candidate]) => candidate.name)
+      };
+    }
+
+    function withinDepartment(department, ancestor) {
+      while (department) {
+        if (department === ancestor) return true;
+        department = departments.get(department)?.parent;
+      }
+      return false;
+    }
+
+    function hasDepartmentScope() {
+      const manager = sessionUser ?? demoManager;
+      return manager.active && manager.roles.has(departmentAdminRole);
+    }
+
+    function isRootSession() {
+      return (sessionUser ?? demoRoot).roles.has(rootAdminRole);
+    }
+
+    function inManagementScope(user) {
+      return isRootSession() || (hasDepartmentScope() && withinDepartment(user.department, (sessionUser ?? demoManager).department));
+    }
+
+    function departmentScopeText() {
+      if (isRootSession()) return '全部部门';
+      return hasDepartmentScope()
+        ? `${departments.get((sessionUser ?? demoManager).department).name}及下级部门`
+        : '当前演示账号暂无部门管理权限';
+    }
+
+    function isGlobalView() {
+      return isRootSession();
+    }
+
+    function canMaintainDepartment(department) {
+      return isGlobalView() || inManagementScope({ department });
+    }
+
+    function departmentTree(parent = null, depth = 0) {
+      return [...departments].filter(([, department]) => department.parent === parent)
+        .sort(([, a], [, b]) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0) || a.name.localeCompare(b.name, 'zh-CN'))
+        .flatMap(([id, department]) => [{ id, name: department.name, depth }, ...departmentTree(id, depth + 1)]);
+    }
+
+    function departmentOptions(entries) {
+      return entries.map(({ id, name, depth }) =>
+        `<option value="${id}">${'　'.repeat(depth)}${escapeText(name)}</option>`).join('');
+    }
+
+    function departmentFilterButton(id, name) {
+      return `<button class="app-picker" type="button" data-department="${id}" aria-pressed="${id === departmentFilter}">
+        <span class="app-name">${escapeText(name)}</span></button>`;
+    }
+
+    function renderDepartmentBranches(parent) {
+      return [...departments].filter(([id, department]) => department.parent === parent && canMaintainDepartment(id))
+        .sort(([, a], [, b]) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0) || a.name.localeCompare(b.name, 'zh-CN'))
+        .map(([id, department]) => {
+          const branch = 'org-children-' + id;
+          const children = renderDepartmentBranches(id);
+          return `<div class="menu-heading">${treeDisclosure(branch, department.name, children ? [branch] : [])}
+            ${departmentFilterButton(id, department.name)}</div>
+            ${children ? `<div class="org-subtree" id="${branch}" ${collapsedBranches.has(branch) ? 'hidden' : ''}>${children}</div>` : ''}`;
+        }).join('');
+    }
+
+    function renderOrganization() {
+      const global = isGlobalView();
+      if (!sessionUser) {
+        $('identity-name').textContent = global ? '总管理员' : '部门管理员';
+        $('identity-mark').textContent = global ? '总' : '部';
+      }
+      $('org-scope').textContent = global ? '全部部门' : departmentScopeText();
+      $('org-dept-actions').hidden = !global;
+      $('edit-department').hidden = !departmentFilter;
+      $('add-user').disabled = !global && !hasDepartmentScope();
+
+      const rootParent = global ? null : departments.get((sessionUser ?? demoManager).department).parent;
+      orgDepartmentList.innerHTML = departmentFilterButton('', global ? '全部部门' : '全部可管理部门') +
+        renderDepartmentBranches(rootParent);
+
+      const search = $('org-search').value.trim().toLowerCase();
+      const found = users.filter(user => canMaintainDepartment(user.department) &&
+        (!departmentFilter || withinDepartment(user.department, departmentFilter)) &&
+        [user.name, user.account].some(value => value.toLowerCase().includes(search)));
+      orgUserRows.innerHTML = found.map(user => `<tr><td>${person(user.name, user.account)}</td>
+        <td class="mobile-hide">${escapeText(departments.get(user.department).name)}</td>
+        <td><div class="tags">${tags(roleLabels(user), true)}</div></td>
+        <td class="org-status"><span class="tag ${user.active ? 'positive' : 'inactive'}">${user.active ? '正常' : '已停用'}</span></td>
+        <td><button class="link-button" type="button" data-edit-user="${user.id}" data-permission="rbac.users.edit">编辑用户</button>
+          <button class="link-button danger" type="button" data-delete-user="${user.id}" data-permission="rbac.users.delete">删除</button></td></tr>`).join('') ||
+        '<tr><td class="empty" colspan="5">这个范围内没有匹配的用户。</td></tr>';
+      $('org-count').textContent = `共 ${found.length} 名用户`;
+    }
+
+    function openDepartmentEditor(id) {
+      if (!isGlobalView()) return;
+      editingDepartment = id;
+      const department = departments.get(id);
+      $('department-dialog-title').textContent = department ? '编辑部门' : '新增部门';
+      $('department-name').value = department?.name ?? '';
+      $('department-name').setCustomValidity('');
+      const availableParents = departmentTree().filter(entry => !id || !withinDepartment(entry.id, id));
+      const parent = $('department-parent');
+      parent.innerHTML = '<option value="">无上级部门</option>' + departmentOptions(availableParents);
+      parent.value = department ? (department.parent ?? '') : (departmentFilter || 'company');
+      departmentDialog.showModal();
+      $('department-name').focus();
+    }
+
+    function openUserEditor(user) {
+      if ((user && !canMaintainDepartment(user.department)) || (!isGlobalView() && !hasDepartmentScope())) return;
+      editingUser = user;
+      $('user-dialog-title').textContent = user ? '编辑用户' : '新增用户';
+      $('user-dialog-context').textContent = user && isGlobalView() ? '修改所属部门后，用户保留原有的业务角色。' : '';
+      userName.value = user?.name ?? '';
+      userName.setCustomValidity('');
+      userAccount.value = user?.account ?? '';
+      userAccount.setCustomValidity('');
+      const allowed = departmentTree().filter(entry => canMaintainDepartment(entry.id));
+      userDepartment.innerHTML = '<option value="">请选择部门</option>' + departmentOptions(allowed);
+      userDepartment.value = user?.department ?? (departmentFilter || (isGlobalView() ? '' : (sessionUser ?? demoManager).department));
+      userDepartment.disabled = Boolean(user && !isGlobalView());
+      $('user-status').value = user && !user.active ? 'disabled' : 'active';
+      $('user-admin-field').hidden = !isGlobalView();
+      $('user-admin').checked = Boolean(user?.roles.has(departmentAdminRole));
+      userDialog.showModal();
+      userName.focus();
+    }
+
+    function openUserDeletion(user) {
+      if (!user || !canMaintainDepartment(user.department) || !userGrants().has('rbac.users.delete')) return;
+      deletingUser = user;
+      $('delete-user-name').textContent = `确定永久删除用户「${user.name}（${user.account}）」吗？`;
+      $('delete-user-message').textContent = `所属部门：${departments.get(user.department).name}；将同时清理 ${user.roles.size} 条角色关联：${roleLabels(user).join('、') || '无'}。`;
+      $('delete-user-dialog').showModal();
+      $('delete-user-cancel').focus();
+    }
+
+    function renderBatchSelection() {
+      $('selected-user-count').textContent = `已选 ${selectedUsers.size} 人`;
+      for (const button of batchTools.querySelectorAll('button')) {
+        button.disabled = userGrants().has(button.dataset.permission) && selectedUsers.size === 0;
+      }
+    }
+
+    function renderUsers() {
+      $('user-scope').textContent = departmentScopeText();
+      const search = $('user-search').value.trim().toLowerCase();
+      const found = users.filter(user => {
+        const department = departments.get(user.department).name;
+        return inManagementScope(user) && [user.name, user.account, department].some(value => value.toLowerCase().includes(search));
+      });
+      for (const id of selectedUsers) {
+        if (!found.some(user => user.id === id)) selectedUsers.delete(id);
+      }
+      userRows.innerHTML = found.map(user => `<tr><td class="select-user">
+        <input type="checkbox" data-select-user="${user.id}" aria-label="选择${escapeText(user.name)}" ${selectedUsers.has(user.id) ? 'checked' : ''}></td>
+        <td>${person(user.name, user.account)}</td>
+        <td class="mobile-hide">${escapeText(departments.get(user.department).name)}</td>
+        <td><div class="tags">${tags(roleLabels(user), true)}</div></td>
+        <td><button class="link-button" type="button" data-assign="${user.id}" data-permission="rbac.assignments.edit">分配角色</button></td></tr>`).join('') ||
+        '<tr><td class="empty" colspan="5">未找到用户，可以换个姓名或部门搜索。</td></tr>';
+      $('user-count').textContent = `共 ${found.length} 名用户`;
+      renderBatchSelection();
+    }
+
+    function renderMyPermissions() {
+      const signedInUser = sessionUser ?? demoRoot;
+      const departmentName = departments.get(signedInUser.department)?.name ?? '权限管理系统';
+      $('profile').innerHTML = `<span class="avatar" aria-hidden="true">${escapeText(signedInUser.name.charAt(0))}</span><div><h2>${escapeText(signedInUser.name)}</h2>
+        <p class="quiet">${escapeText(departmentName)}</p></div>
+        <div class="tags">${tags(roleLabels(signedInUser), true)}</div>`;
+      $('inactive-user-note').hidden = signedInUser.active;
+      $('my-apps').hidden = !signedInUser.active;
+      if (!signedInUser.active) {
+        $('my-apps').replaceChildren();
+        return;
+      }
+      const grants = userGrants(signedInUser);
+      $('my-apps').innerHTML = applications.map(app => {
+        const menus = app.groups.map(group => {
+          const hasMenu = grants.has(group.key);
+          const actions = group.actions.map(action => {
+            const hasAction = grants.has(action.key);
+            return hasAction
+              ? `<span class="tag positive">${escapeText(action.name)}</span>`
+              : `<button type="button" class="link-button permission-lock" data-permission="${action.key}">${escapeText(action.name)} · 未获得，申请权限</button>`;
+          });
+          const id = 'my-menu-' + group.key;
+          return `<section class="owned-menu ${hasMenu ? '' : 'permission-missing'}"><div class="menu-heading">
+            ${treeDisclosure(id, group.name, actions.length ? [id] : [])}
+            <h3 class="catalog-label">${escapeText(group.name)}${hasMenu ? '' : ' <span class="permission-lock">🔒 未获得</span>'}</h3>
+            ${hasMenu ? '<span class="tag positive">可访问</span>' : `<button type="button" class="link-button" data-permission="${group.key}">申请访问</button>`}</div>
+            ${actions.length ? `<div class="tags" id="${id}" ${collapsedBranches.has(id) ? 'hidden' : ''}>${actions.join('')}</div>`
+              : '<p class="quiet">此菜单没有功能按钮。</p>'}</section>`;
+        });
+        const id = 'my-app-' + app.id;
+        return `<article class="panel app-card"><div class="panel-head">${treeDisclosure(id, app.name, menus.length ? [id] : [])}
+          ${appMark(app)}<h2>${escapeText(app.name)}</h2>
+          <span class="quiet count">${appPermissionCount(app, grants)} 项权限</span></div>
+          <div id="${id}" ${collapsedBranches.has(id) ? 'hidden' : ''}>${menus.join('')}</div></article>`;
+      }).join('');
+      refreshPermissionAffordances();
+    }
+
+    function recordOperation(action, target, detail, demoActor = demoRoot.name, result = '成功') {
+      const targets = Array.isArray(target) ? target.map(({ name, department }) => ({ name, department })) : null;
+      operationLogs.unshift({
+        time: logTime.format(new Date()), actor: sessionUser?.name ?? demoActor, action,
+        target: targets ? targets.map(user => user.name).join('、') : target,
+        targets, detail, result
+      });
+    }
+
+    function renderAudit() {
+      const fullAccess = !sessionUser || isRootSession();
+      $('audit-scope').textContent = fullAccess ? '全部记录' : departmentScopeText();
+      const visible = fullAccess ? operationLogs : operationLogs.flatMap(entry => {
+        const targets = entry.targets?.filter(inManagementScope) ?? [];
+        return targets.length ? [{ ...entry, target: targets.map(user => user.name).join('、') }] : [];
+      });
+      const search = $('audit-search').value.trim().toLowerCase();
+      const found = visible.filter(entry => [entry.actor, entry.action, entry.target, entry.detail, entry.result]
+        .some(value => value.toLowerCase().includes(search)));
+      $('audit-rows').innerHTML = found.map(entry => `<tr>
+        <td>${entry.time}</td><td>${escapeText(entry.actor)}</td>
+        <td><strong>${escapeText(entry.action)}</strong><span class="audit-detail">${escapeText(entry.detail)}</span></td>
+        <td>${escapeText(entry.target)}</td><td><span class="tag ${entry.result === '成功' ? 'positive' : 'inactive'}">${entry.result}</span></td>
+      </tr>`).join('') || '<tr><td class="empty" colspan="5">没有匹配的操作记录。</td></tr>';
+      $('audit-count').textContent = `共 ${found.length} 条记录`;
+    }
+
+    function permissionInfo(key) {
+      for (const app of applications) {
+        for (const menu of app.groups) {
+          if (menu.key === key) return { key, name: menu.name, app, type: '菜单' };
+          for (const action of menu.actions) {
+            if (action.key === key) return { key, name: action.name, app, menu, type: '功能按钮' };
+          }
+        }
+      }
+      return { key, name: key, app: applications[0], type: '功能' };
+    }
+
+    function showView(page) {
+      if (!views[page]) page = 'mine';
+      const viewPermission = views[page].permission;
+      const denied = !userGrants().has(viewPermission);
+      for (const button of nav.querySelectorAll('button')) {
+        const active = button.dataset.page === page;
+        button.hidden = false;
+        if (active) button.setAttribute('aria-current', 'page');
+        else button.removeAttribute('aria-current');
+        $(button.dataset.page + '-page').hidden = !active;
+        button.classList.toggle('requires-permission', !userGrants().has(views[button.dataset.page].permission));
+      }
+      $('restricted-page').hidden = !denied;
+      if (denied) {
+        const info = permissionInfo(viewPermission);
+        $('restricted-message').textContent = `你的账号没有「${info.name}」菜单权限，页面内容暂不可见。你可以提交申请，由管理员审核。`;
+        $('request-menu-permission').dataset.requestPermission = viewPermission;
+        const request = permissionRequests.get(requestKey(viewPermission));
+        $('restricted-request-status').textContent = request ? `申请状态：${request.status}。${request.status === '审核中' ? '管理员处理后会更新结果。' : ''}` : '';
+      }
+      $('crumb').textContent = views[page].title;
+      const identity = (sessionUser ?? demoRoot).name;
+      $('identity-mark').textContent = identity.charAt(0);
+      $('identity-name').textContent = identity;
+      if (!denied && page === 'catalog') renderCatalog();
+      if (!denied && page === 'roles') renderRoles();
+      if (!denied && page === 'org') renderOrganization();
+      if (!denied && page === 'users') renderUsers();
+      if (!denied && page === 'mine') renderMyPermissions();
+      if (!denied && page === 'audit') renderAudit();
+      refreshPermissionAffordances();
+    }
+
+    function requestKey(permission) {
+      return `${sessionUser?.id ?? 'demo-root'}:${permission}`;
+    }
+
+    function refreshPermissionAffordances() {
+      const grants = userGrants();
+      for (const element of document.querySelectorAll('[data-permission]')) {
+        const denied = !grants.has(element.dataset.permission);
+        const pending = permissionRequests.get(requestKey(element.dataset.permission))?.status === '审核中';
+        element.classList.toggle('requires-permission', denied);
+        element.classList.toggle('permission-pending', denied && pending);
+        if (element.dataset.permission === 'rbac.departments.edit' && !departmentFilter) element.hidden = true;
+        if (element.dataset.permission) element.title = denied ? '当前账号没有此权限；点击可查看说明并申请' : '';
+      }
+      for (const button of nav.querySelectorAll('[data-page]')) button.hidden = false;
+    }
+
+    function openPermissionRequest(permission, source = 'button') {
+      const info = permissionInfo(permission);
+      const request = permissionRequests.get(requestKey(permission));
+      requestedPermission = { ...info, source };
+      $('permission-request-context').textContent = `${info.app.name} · ${info.type}`;
+      $('permission-request-description').textContent = `申请「${info.name}」权限${info.menu ? `（${info.menu.name}页面中的功能）` : ''}。审核通过后，管理员会为你配置相应角色。`;
+      $('permission-request-existing').hidden = !request;
+      $('permission-request-existing').textContent = request ? `当前状态：${request.status}${request.reason ? `；申请理由：${request.reason}` : ''}` : '';
+      $('permission-request-reason-label').hidden = Boolean(request);
+      $('permission-request-reason').value = '';
+      $('permission-request-reason').required = !request;
+      $('permission-request-submit').hidden = Boolean(request);
+      $('permission-request-submit').textContent = '提交申请';
+      permissionRequestDialog.showModal();
+      (request ? $('permission-request-submit') : $('permission-request-reason')).focus();
+    }
+
+    function setLoginError(message = '') {
+      const error = $('login-error');
+      error.textContent = message;
+      error.hidden = !message;
+    }
+
+    function openLogin(message = '') {
+      sessionUser = null;
+      $('workspace-shell').hidden = true;
+      $('login-page').hidden = false;
+      $('login-form').reset();
+      setLoginError(message);
+      $('login-samples').innerHTML = demoAccounts.map(([user, label], index) => `<button type="button" data-example="${index}">
+        <strong>${label}</strong><small>${escapeText(user.account)}</small></button>`).join('');
+      loginAccount.focus();
+    }
+
+    function enterWorkspace(page) {
+      $('login-page').hidden = true;
+      $('workspace-shell').hidden = false;
+      $('login-entry').textContent = sessionUser ? '退出登录' : '切换账号';
+      $('identity-context').textContent = sessionUser ? '当前账号' : '原型预览';
+      selectedUsers.clear();
+      collapsedBranches.clear();
+      departmentFilter = '';
+      for (const id of ['org-search', 'user-search', 'role-search', 'audit-search']) $(id).value = '';
+      showView(page);
+      nav.querySelector('[aria-current="page"]').focus();
+    }
+
+    function permissionRow(permission, menu, parent, inheritedSources) {
+      const direct = roleEditor.grants.has(permission.key);
+      const sources = inheritedSources.get(permission.key);
+      const inherited = Boolean(sources?.size);
+      const inheritedOnly = inherited && !direct;
+      const origin = inherited
+        ? `<span class="permission-origin">继承来源：${escapeText(sourceNames(sources).join('、'))}</span>` : '';
+      return `<label class="tree-row ${menu ? 'menu' : 'child'} ${inheritedOnly ? 'inherited-only' : ''}"><input type="checkbox" value="${permission.key}"
+        data-parent="${parent}" aria-label="${escapeText(permission.name)}" ${direct || inherited ? 'checked' : ''} ${roleEditor.readOnly || inheritedOnly ? 'disabled' : ''}>
+        <span class="catalog-label">${escapeText(permission.name)}</span><span class="tag">${menu ? '菜单' : '按钮'}</span>
+        ${direct ? '<span class="tag direct">直接</span>' : ''}${inherited ? '<span class="tag inherited">继承</span>' : ''}${origin}</label>`;
+    }
+
+    function updatePermissionCount() {
+      const inherited = permissionSourcesFor(roleEditor.inherits);
+      const effective = new Set([...roleEditor.grants, ...inherited.keys()]);
+      $('permission-count').textContent = `直接 ${roleEditor.grants.size} 项 · 继承 ${inherited.size} 项 · 有效 ${effective.size} 项（重复只计一次）`;
+    }
+
+    function renderPermissionTree() {
+      const app = roleEditor.app;
+      const inheritedSources = permissionSourcesFor(roleEditor.inherits);
+      for (const button of appList.querySelectorAll('button')) {
+        button.setAttribute('aria-pressed', String(button.dataset.app === app.id));
+      }
+      permissions.innerHTML = app.groups.map(group => {
+        const id = 'role-menu-' + group.key;
+        return `<div class="tree-group"><div class="menu-heading tree-menu-heading">
+          ${treeDisclosure(id, group.name, group.actions.length ? [id] : [])}
+          ${permissionRow(group, true, group.key, inheritedSources)}</div>
+          <div id="${id}" ${collapsedBranches.has(id) ? 'hidden' : ''}>
+            ${group.actions.map(action => permissionRow(action, false, group.key, inheritedSources)).join('')}</div></div>`;
+      }).join('') ||
+        '<p class="empty">此应用暂时没有可选权限。</p>';
+      updateInheritanceState();
+    }
+
+    function renderInheritanceChoices() {
+      const currentRole = roleEditor.id ? roles.get(roleEditor.id) : null;
+      if (currentRole?.management) {
+        inheritanceChoices.innerHTML = '<p class="empty">预置管理角色不参与业务角色继承，只能维护其直接权限。</p>';
+        return;
+      }
+      inheritanceChoices.innerHTML = [...roles].filter(([id, role]) => id !== roleEditor.id && !role.management).map(([id, role]) => {
+        const parents = sourceNames(role.inherits ?? []);
+        return `<label class="inheritance-choice"><input type="checkbox" value="${id}" data-parent-role
+          aria-label="继承${escapeText(role.name)}" ${roleEditor.inherits.has(id) ? 'checked' : ''} ${roleEditor.readOnly ? 'disabled' : ''}>
+          <span><strong>${escapeText(role.name)}</strong><small>${escapeText(role.description)}${parents.length ? `；自身继承：${escapeText(parents.join('、'))}` : ''}</small></span></label>`;
+      }).join('') || '<p class="empty">暂无可继承的业务角色。</p>';
+    }
+
+    function openRole(id) {
+      const role = roles.get(id);
+      roleEditor = { id, app: applications[0], grants: new Set(role?.granted), inherits: new Set(role?.inherits), readOnly: id === rootAdminRole };
+      if (roleEditor.readOnly) roleEditor.grants = new Set(applications[0].groups.flatMap(group => [group.key, ...group.actions.map(action => action.key)]));
+      $('role-dialog-title').textContent = roleEditor.readOnly ? '总管理员权限' : role ? '配置角色与继承' : '新增角色';
+      roleName.value = role?.name ?? '';
+      roleDescription.value = role?.description ?? '';
+      roleName.disabled = Boolean(role?.management);
+      roleDescription.disabled = roleEditor.readOnly;
+      $('role-save').disabled = roleEditor.readOnly;
+      roleName.setCustomValidity('');
+      renderAppChoices(appList, roleEditor.app);
+      renderInheritanceChoices();
+      renderPermissionTree();
+      roleDialog.showModal();
+      (roleName.disabled ? appList.querySelector('button') : roleName).focus();
+    }
+
+    function openAssignment(targets, mode = 'single') {
+      if (!targets.length || !targets.every(inManagementScope)) return;
+      assignment = { targets, mode };
+      const batch = mode !== 'single';
+      const action = mode === 'revoke' ? '撤销' : '分配';
+      const first = targets[0];
+      $('assign-dialog-title').textContent = `${batch ? '批量' : ''}${action}角色`;
+      $('assign-person').textContent = batch
+        ? targets.map(user => user.name).join('、')
+        : `${first.name} / ${departments.get(first.department).name}`;
+      assignSave.textContent = `保存${action}`;
+      assignSave.disabled = batch;
+      roleChoices.innerHTML = [...roles].filter(([, role]) => !role.management).map(([id, role]) => `<label class="choice">
+        <input type="checkbox" value="${id}" aria-label="${escapeText(role.name)}" ${!batch && first.roles.has(id) ? 'checked' : ''}>
+        <span><strong>${escapeText(role.name)}</strong><small>${escapeText(role.description)}${role.inherits?.size ? `；继承 ${escapeText(sourceNames(role.inherits).join('、'))}` : ''}</small></span></label>`).join('') || '<p class="empty">暂无可分配的角色。</p>';
+      assignDialog.showModal();
+    }
+
+    function notify(message) {
+      const toast = $('toast');
+      clearTimeout(toastTimer);
+      toast.textContent = message;
+      toast.hidden = false;
+      toastTimer = setTimeout(() => { toast.hidden = true; }, 3500);
+    }
+
+    $('login-entry').addEventListener('click', () => openLogin());
+    $('return-demo').addEventListener('click', () => enterWorkspace('roles'));
+    $('login-samples').addEventListener('click', event => {
+      const button = event.target.closest('[data-example]');
+      if (!button) return;
+      loginAccount.value = demoAccounts[Number(button.dataset.example)][0].account;
+      loginPassword.value = demoPassword;
+      setLoginError();
+    });
+    $('login-form').addEventListener('input', () => setLoginError());
+    $('login-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const name = loginAccount.value.trim().toLowerCase();
+      const user = [demoRoot, ...users].find(candidate => candidate.account.toLowerCase() === name);
+      if (!user || loginPassword.value !== demoPassword) {
+        setLoginError('用户名或密码错误。');
+        return;
+      }
+      if (!user.active) {
+        setLoginError('该账号已停用。');
+        return;
+      }
+      sessionUser = user;
+      loginPassword.value = '';
+      const landing = isRootSession() ? 'catalog' : hasDepartmentScope() ? 'users' : 'mine';
+      enterWorkspace(landing);
+    });
+    $('audit-search').addEventListener('input', renderAudit);
+    document.addEventListener('click', event => {
+      const control = event.target.closest('[data-permission]');
+      if (!control || userGrants().has(control.dataset.permission)) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (control.matches('[data-page]')) showView(control.dataset.page);
+      else openPermissionRequest(control.dataset.permission);
+    }, true);
+    nav.addEventListener('click', event => {
+      const button = event.target.closest('button[data-page]');
+      if (button) showView(button.dataset.page);
+    });
+    $('request-menu-permission').addEventListener('click', event => {
+      openPermissionRequest(event.currentTarget.dataset.requestPermission, 'menu');
+    });
+    $('permission-request-form').addEventListener('submit', event => {
+      event.preventDefault();
+      if (!requestedPermission) return;
+      const key = requestKey(requestedPermission.key);
+      if (permissionRequests.get(key)?.status === '审核中') {
+        permissionRequestDialog.close();
+        return;
+      }
+      const reason = $('permission-request-reason').value.trim();
+      if (!reason) {
+        $('permission-request-reason').setCustomValidity('请填写申请理由。');
+        $('permission-request-reason').reportValidity();
+        return;
+      }
+      $('permission-request-reason').setCustomValidity('');
+      permissionRequests.set(key, { status: '审核中', reason });
+      recordOperation('申请权限', sessionUser ? [sessionUser] : '总管理员',
+        `${requestedPermission.app.name} · ${requestedPermission.name}；申请理由：${reason}`);
+      const source = requestedPermission.source;
+      const permission = requestedPermission.key;
+      permissionRequestDialog.close();
+      requestedPermission = null;
+      if (source === 'menu') {
+        $('restricted-request-status').textContent = '申请状态：审核中。管理员处理后会更新结果。';
+      }
+      if ($('mine-page').hidden === false) renderMyPermissions();
+      refreshPermissionAffordances();
+      notify('申请已提交，等待管理员审核');
+      if (source === 'menu') $('request-menu-permission').focus();
+      else document.querySelector(`[data-permission="${CSS.escape(permission)}"]`)?.focus();
+    });
+    $('permission-request-reason').addEventListener('input', event => event.target.setCustomValidity(''));
+    document.addEventListener('click', event => {
+      const button = event.target.closest('[data-branch-toggle]');
+      if (!button) return;
+      const branch = button.dataset.branchToggle;
+      const collapse = button.getAttribute('aria-expanded') === 'true';
+      if (collapse) collapsedBranches.add(branch);
+      else collapsedBranches.delete(branch);
+      for (const id of button.getAttribute('aria-controls').split(' ')) $(id).hidden = collapse;
+      button.setAttribute('aria-expanded', String(!collapse));
+      button.setAttribute('aria-label', (collapse ? '展开' : '收起') + button.dataset.branchName);
+    });
+    orgDepartmentList.addEventListener('click', event => {
+      const button = event.target.closest('[data-department]');
+      if (!button) return;
+      departmentFilter = button.dataset.department;
+      renderOrganization();
+      orgDepartmentList.querySelector('[aria-pressed="true"]').focus();
+    });
+    $('org-search').addEventListener('input', renderOrganization);
+    $('add-department').addEventListener('click', () => openDepartmentEditor(null));
+    $('edit-department').addEventListener('click', () => openDepartmentEditor(departmentFilter));
+    $('add-user').addEventListener('click', () => openUserEditor(null));
+    orgUserRows.addEventListener('click', event => {
+      const edit = event.target.closest('[data-edit-user]');
+      if (edit) openUserEditor(users.find(user => user.id === edit.dataset.editUser));
+      const remove = event.target.closest('[data-delete-user]');
+      if (remove) openUserDeletion(users.find(user => user.id === remove.dataset.deleteUser));
+    });
+    $('department-name').addEventListener('input', event => event.target.setCustomValidity(''));
+    $('department-form').addEventListener('submit', event => {
+      event.preventDefault();
+      if (!isGlobalView()) return;
+      const field = $('department-name');
+      const name = field.value.trim();
+      if (!name) {
+        field.setCustomValidity('请输入部门名称。');
+        field.reportValidity();
+        return;
+      }
+      const parent = $('department-parent').value || null;
+      if (parent && withinDepartment(parent, editingDepartment)) return;
+      const id = editingDepartment ?? 'dept-' + nextDepartmentId++;
+      departments.set(id, { name, parent });
+      recordOperation(editingDepartment ? '修改部门' : '新增部门', name, parent ? `上级部门 ${departments.get(parent).name}` : '设为顶层部门');
+      departmentFilter = id;
+      departmentDialog.close();
+      renderOrganization();
+      $('edit-department').focus();
+      notify('部门已保存');
+    });
+    userName.addEventListener('input', () => userName.setCustomValidity(''));
+    userAccount.addEventListener('input', () => userAccount.setCustomValidity(''));
+    $('user-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const name = userName.value.trim();
+      const account = userAccount.value.trim();
+      if (!name) {
+        userName.setCustomValidity('请输入姓名。');
+        userName.reportValidity();
+        return;
+      }
+      const duplicate = [demoRoot, ...users].some(user => user !== editingUser && user.account.toLowerCase() === account.toLowerCase());
+      if (!account || duplicate) {
+        userAccount.setCustomValidity(account ? '这个用户名已存在。' : '请输入用户名。');
+        userAccount.reportValidity();
+        return;
+      }
+      const department = userDepartment.disabled ? editingUser.department : userDepartment.value;
+      if (!canMaintainDepartment(department) || (editingUser && !canMaintainDepartment(editingUser.department))) return;
+      const previousDepartment = editingUser?.department;
+      const previouslyActive = editingUser?.active;
+      const previouslyManager = Boolean(editingUser?.roles.has(departmentAdminRole));
+      const user = editingUser ?? { id: 'user-' + nextUserId++, roles: new Set() };
+      Object.assign(user, { name, account, department, active: $('user-status').value === 'active' });
+      if (isGlobalView()) {
+        if ($('user-admin').checked) user.roles.add(departmentAdminRole);
+        else user.roles.delete(departmentAdminRole);
+      }
+      if (!editingUser) users.push(user);
+      const actor = isGlobalView() ? demoRoot.name : demoManager.name;
+      const departmentName = departments.get(department).name;
+      if (previousDepartment && previousDepartment !== department) {
+        recordOperation('跨部门调动', user.name, `${departments.get(previousDepartment).name} → ${departmentName}`, actor);
+      }
+      if (!editingUser) {
+        recordOperation('新增用户', [user], departmentName, actor);
+      } else if (previouslyActive !== user.active) {
+        recordOperation(user.active ? '启用账号' : '停用账号', [user], departmentName, actor);
+      }
+      if (previouslyManager !== user.roles.has(departmentAdminRole)) {
+        recordOperation(previouslyManager ? '撤销部门管理员' : '指定部门管理员', [user], departmentName, actor);
+      }
+      if (departmentFilter && !withinDepartment(department, departmentFilter)) departmentFilter = department;
+      $('org-search').value = '';
+      userDialog.close();
+      if (sessionUser === user && !user.active) {
+        openLogin('该账号已停用。');
+        return;
+      }
+      renderOrganization();
+      (orgUserRows.querySelector(`[data-edit-user="${user.id}"]`) ?? $('org-search')).focus();
+      notify('用户已保存');
+    });
+    $('delete-user-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const index = users.indexOf(deletingUser);
+      if (index < 0 || !canMaintainDepartment(deletingUser.department) || !userGrants().has('rbac.users.delete')) return;
+      const user = deletingUser;
+      const roleNames = roleLabels(user).join('、') || '无角色';
+      recordOperation('删除用户', [user], `物理删除用户及其角色关联（${roleNames}）`, isGlobalView() ? demoRoot.name : demoManager.name);
+      users.splice(index, 1);
+      selectedUsers.delete(user.id);
+      $('delete-user-dialog').close();
+      if (sessionUser === user) {
+        openLogin('当前账号已被删除，请使用其他演示账号。');
+        return;
+      }
+      renderOrganization();
+      $('org-search').focus();
+      notify('用户及其角色关联已永久删除');
+    });
+    catalogAppList.addEventListener('click', event => {
+      const button = event.target.closest('[data-app]');
+      if (!button) return;
+      catalogApp = applications.find(app => app.id === button.dataset.app);
+      renderCatalog();
+      catalogAppList.querySelector('[aria-pressed="true"]').focus();
+    });
+    $('add-app').addEventListener('click', () => openAppEditor(null));
+    $('edit-app').addEventListener('click', () => openAppEditor(catalogApp));
+    $('add-permission').addEventListener('click', () => openPermissionEditor(null));
+    catalogRows.addEventListener('click', event => {
+      const button = event.target.closest('[data-edit-permission]');
+      if (!button) return;
+      const key = button.dataset.editPermission;
+      const menu = catalogApp.groups.find(group => group.key === key || group.actions.some(action => action.key === key));
+      if (menu.key === key) openPermissionEditor(menu);
+      else openPermissionEditor(menu.actions.find(action => action.key === key), menu);
+      if (button.hasAttribute('data-focus-apis')) $('api-config-title').scrollIntoView({ block: 'start' });
+    });
+    permissionType.addEventListener('change', updatePermissionParent);
+    appName.addEventListener('input', () => appName.setCustomValidity(''));
+    permissionName.addEventListener('input', () => permissionName.setCustomValidity(''));
+    permissionCode.addEventListener('input', () => permissionCode.setCustomValidity(''));
+    $('app-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const name = appName.value.trim();
+      if (!name || applications.some(app => app !== editedApp && app.name === name)) {
+        appName.setCustomValidity(name ? '这个应用名称已存在。' : '请输入应用名称。');
+        appName.reportValidity();
+        return;
+      }
+      if (editedApp) {
+        editedApp.name = name;
+        editedApp.short = name;
+      } else {
+        catalogApp = { id: 'app-' + nextAppId++, name, short: name, symbol: '应', groups: [] };
+        applications.push(catalogApp);
+      }
+      recordOperation(editedApp ? '修改应用' : '登记应用', name, '维护应用');
+      appDialog.close();
+      renderCatalog();
+      notify('应用已保存');
+    });
+    $('add-api').addEventListener('click', () => {
+      $('api-rows').insertAdjacentHTML('beforeend', apiRow());
+      $('api-empty').hidden = true;
+      $('api-rows').lastElementChild.querySelector('input').focus();
+    });
+    $('api-rows').addEventListener('click', event => {
+      const button = event.target.closest('[data-remove-api]');
+      if (!button) return;
+      button.closest('.api-row').remove();
+      for (const field of $('api-rows').querySelectorAll('input')) field.setCustomValidity('');
+      $('api-empty').hidden = $('api-rows').children.length > 0;
+    });
+    $('api-rows').addEventListener('input', event => {
+      for (const field of event.target.closest('.api-row').querySelectorAll('input')) field.setCustomValidity('');
+    });
+    $('permission-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const name = permissionName.value.trim();
+      if (!name) {
+        permissionName.setCustomValidity('请输入权限名称。');
+        permissionName.reportValidity();
+        return;
+      }
+      const code = permissionCode.value.trim();
+      if (!/^[^:\s]+:[^:\s]+$/.test(code)) {
+        permissionCode.setCustomValidity('请按 资源:操作 的格式填写，例如 course:delete。');
+        permissionCode.reportValidity();
+        return;
+      }
+      const duplicate = catalogApp.groups.flatMap(group => [group, ...group.actions])
+        .some(permission => permission !== editedPermission && permission.code === code);
+      if (duplicate) {
+        permissionCode.setCustomValidity('这个应用内已存在相同的权限标识。');
+        permissionCode.reportValidity();
+        return;
+      }
+      const apiEntries = [];
+      const otherApis = catalogApp.groups.flatMap(group => [group, ...group.actions])
+        .filter(permission => permission !== editedPermission).flatMap(permission => permission.apis ?? []);
+      for (const row of $('api-rows').children) {
+        const operation = row.querySelector('[data-api-operation]');
+        const method = row.querySelector('[data-api-method]').value;
+        const path = row.querySelector('[data-api-path]');
+        const operationId = operation.value.trim();
+        const requestPath = path.value.trim();
+        const registered = [...otherApis, ...apiEntries];
+        if (!operationId || registered.some(api => api.operationId === operationId)) {
+          operation.setCustomValidity(operationId ? '这个应用内已存在相同的接口标识。' : '请输入接口标识。');
+          operation.reportValidity();
+          return;
+        }
+        if (!requestPath.startsWith('/') || registered.some(api => api.method === method && api.path === requestPath)) {
+          path.setCustomValidity(requestPath.startsWith('/') ? '这个应用内已登记相同方法和路径的接口。' : '请求路径应以 / 开头。');
+          path.reportValidity();
+          return;
+        }
+        apiEntries.push({ operationId, method, path: requestPath });
+      }
+      const attributes = { name, code, apis: apiEntries };
+      if (editedPermission) {
+        Object.assign(editedPermission, attributes);
+      } else {
+        const permission = { key: 'permission-' + nextPermissionId++, ...attributes };
+        if (permissionType.value === 'menu') {
+          catalogApp.groups.push({ ...permission, actions: [] });
+        } else {
+          const menu = catalogApp.groups.find(group => group.key === permissionParent.value);
+          menu.actions.push(permission);
+        }
+      }
+      recordOperation(editedPermission ? '修改权限' : '登记权限', name, `${catalogApp.name} · ${code}，关联 ${apiEntries.length} 个接口`);
+      permissionDialog.close();
+      renderCatalog();
+      $('add-permission').focus();
+      notify('权限已保存');
+    });
+    $('role-search').addEventListener('input', renderRoles);
+    $('role-filter-submit').addEventListener('click', renderRoles);
+    $('role-filter-reset').addEventListener('click', () => {
+      $('role-search').value = '';
+      renderRoles();
+      $('role-search').focus();
+    });
+    $('user-search').addEventListener('input', () => {
+      selectedUsers.clear();
+      renderUsers();
+    });
+    userRows.addEventListener('change', event => {
+      const { checked, dataset: { selectUser } } = event.target;
+      if (!selectUser) return;
+      if (checked) selectedUsers.add(selectUser);
+      else selectedUsers.delete(selectUser);
+      renderBatchSelection();
+    });
+    batchTools.addEventListener('click', event => {
+      const button = event.target.closest('[data-batch]');
+      if (button) openAssignment(users.filter(user => selectedUsers.has(user.id)), button.dataset.batch);
+    });
+    roleChoices.addEventListener('change', () => {
+      if (assignment.mode !== 'single') assignSave.disabled = !roleChoices.querySelector('input:checked');
+    });
+    $('add-role').addEventListener('click', () => openRole(null));
+    roleRows.addEventListener('click', event => {
+      const button = event.target.closest('[data-edit-role]');
+      if (button) openRole(button.dataset.editRole);
+      const remove = event.target.closest('[data-delete-role]');
+      if (!remove) return;
+      deletingRole = remove.dataset.deleteRole;
+      const role = roles.get(deletingRole);
+      const assignedUsers = users.filter(user => user.roles.has(deletingRole)).length;
+      const relations = roleInheritanceRelations(deletingRole);
+      const blocked = assignedUsers > 0 || relations.parents.length > 0 || relations.children.length > 0;
+      const reasons = [];
+      if (assignedUsers) reasons.push(`仍关联 ${assignedUsers} 个用户（停用账号也计入）`);
+      if (relations.parents.length) reasons.push(`仍继承父角色：${relations.parents.join('、')}`);
+      if (relations.children.length) reasons.push(`仍被子角色继承：${relations.children.join('、')}`);
+      $('delete-role-title').textContent = blocked ? '暂不能删除' : '删除角色';
+      $('delete-role-name').textContent = blocked ? `角色「${role.name}」仍存在关联` : `确定删除角色「${role.name}」吗？`;
+      $('delete-role-message').textContent = blocked
+        ? `${reasons.join('；')}。请先解除全部用户关联和继承关系。`
+        : '将删除角色及其直接权限配置，保留权限定义和历史操作记录。';
+      $('delete-role-confirm').hidden = blocked;
+      $('delete-role-cancel').textContent = blocked ? '知道了' : '取消';
+      $('delete-role-dialog').showModal();
+      $('delete-role-cancel').focus();
+    });
+    $('delete-role-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const role = roles.get(deletingRole);
+      if (!isRootSession() || role.management) return;
+      const assignedUsers = users.filter(user => user.roles.has(deletingRole)).length;
+      const relations = roleInheritanceRelations(deletingRole);
+      if (assignedUsers || relations.parents.length || relations.children.length) {
+        $('delete-role-message').textContent = '角色仍存在用户或继承关联，请先解除全部关联后再删除。';
+        $('delete-role-confirm').hidden = true;
+        return;
+      }
+      roles.delete(deletingRole);
+      recordOperation('删除角色', role.name, '删除无用户、无继承关联的业务角色及其直接权限配置');
+      $('delete-role-dialog').close();
+      renderRoles();
+      $('role-search').focus();
+      notify('角色已删除');
+    });
+    userRows.addEventListener('click', event => {
+      const button = event.target.closest('[data-assign]');
+      if (!button) return;
+      const user = users.find(item => item.id === button.dataset.assign);
+      if (user) openAssignment([user]);
+    });
+    appList.addEventListener('click', event => {
+      const button = event.target.closest('[data-app]');
+      if (!button) return;
+      roleEditor.app = applications.find(app => app.id === button.dataset.app);
+      renderPermissionTree();
+    });
+    inheritanceChoices.addEventListener('change', event => {
+      const { value, checked, dataset: { parentRole } } = event.target;
+      if (parentRole === undefined || roleEditor.readOnly) return;
+      if (checked) roleEditor.inherits.add(value);
+      else roleEditor.inherits.delete(value);
+      renderPermissionTree();
+    });
+    permissions.addEventListener('change', event => {
+      const { value: key, checked, dataset: { parent } } = event.target;
+      if (event.target.disabled || roleEditor.readOnly) return;
+      if (checked) {
+        roleEditor.grants.add(key);
+        roleEditor.grants.add(parent);
+      } else {
+        roleEditor.grants.delete(key);
+        if (key === parent) {
+          const menu = roleEditor.app.groups.find(group => group.key === key);
+          for (const action of menu.actions) roleEditor.grants.delete(action.key);
+        }
+      }
+      renderPermissionTree();
+    });
+    roleName.addEventListener('input', () => roleName.setCustomValidity(''));
+    $('role-form').addEventListener('submit', event => {
+      event.preventDefault();
+      if (roleEditor.readOnly) return;
+      const name = roleName.value.trim();
+      if (!name || [...roles].some(([id, role]) => id !== roleEditor.id && role.name === name)) {
+        roleName.setCustomValidity(name ? '这个角色名称已存在。' : '请输入角色名称。');
+        roleName.reportValidity();
+        return;
+      }
+      const inheritanceError = validateInheritance();
+      if (inheritanceError) {
+        updateInheritanceState();
+        inheritanceChoices.querySelector('input')?.focus();
+        return;
+      }
+      const id = roleEditor.id ?? 'custom-' + nextRoleId++;
+      const previous = roles.get(id);
+      const inherited = permissionSourcesFor(roleEditor.inherits);
+      const effective = new Set([...roleEditor.grants, ...inherited.keys()]);
+      roles.set(id, { name, description: roleDescription.value.trim(), granted: new Set(roleEditor.grants),
+        inherits: previous?.management ? new Set() : new Set(roleEditor.inherits),
+        ...(previous?.management ? { management: true } : {}) });
+      recordOperation('配置角色权限与继承', name,
+        `保存 ${roleEditor.grants.size} 项直接权限、${roleEditor.inherits.size} 个父角色，共 ${effective.size} 项有效权限`);
+      roleDialog.close();
+      if (!roleEditor.id) $('role-search').value = '';
+      showView('roles');
+      notify('角色已保存');
+    });
+    $('assign-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const { targets, mode } = assignment;
+      if (!targets.every(inManagementScope)) {
+        recordOperation('更新角色分配', targets, '目标用户已超出管理范围', demoManager.name, '失败');
+        assignDialog.close();
+        selectedUsers.clear();
+        renderUsers();
+        notify('请重新选择管理范围内的用户。');
+        return;
+      }
+      const chosen = [...roleChoices.querySelectorAll('input:checked')].map(input => input.value);
+      const first = targets[0];
+      let message = `${first.name}的角色已更新`;
+      if (mode === 'single') {
+        const management = [...first.roles].filter(id => roles.get(id).management);
+        const added = chosen.filter(id => !first.roles.has(id));
+        const removed = [...first.roles].filter(id => !roles.get(id).management && !chosen.includes(id));
+        first.roles = new Set([...management, ...chosen]);
+        if (added.length) recordOperation('分配角色', [first], added.map(id => roles.get(id).name).join('、'), demoManager.name);
+        if (removed.length) recordOperation('撤销角色', [first], removed.map(id => roles.get(id).name).join('、'), demoManager.name);
+      } else {
+        if (!chosen.length) return;
+        for (const user of targets) {
+          for (const id of chosen) {
+            if (mode === 'grant') user.roles.add(id);
+            else user.roles.delete(id);
+          }
+        }
+        selectedUsers.clear();
+        message = mode === 'grant' ? `已为 ${targets.length} 人分配角色` : `已撤销 ${targets.length} 人的所选角色`;
+        recordOperation(mode === 'grant' ? '批量分配角色' : '批量撤销角色', targets,
+          chosen.map(id => roles.get(id).name).join('、'), demoManager.name);
+      }
+      assignDialog.close();
+      renderUsers();
+      const focusAttribute = mode === 'single' ? 'data-assign' : 'data-select-user';
+      (userRows.querySelector(`[${focusAttribute}="${first.id}"]`) ?? $('user-search')).focus();
+      notify(message);
+    });
+    for (const button of document.querySelectorAll('[data-close]')) {
+      button.addEventListener('click', () => button.closest('dialog').close());
+    }
+    recordOperation('登记接口', '审核课程', '课程管理系统 · reviewCourse');
+    recordOperation('指定部门管理员', [demoManager], '计算机学院及下级部门');
+    showView('roles');
+  </script>
+</body>
+</html>

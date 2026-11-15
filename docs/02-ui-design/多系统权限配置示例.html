@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>权限中心 · 交互草稿</title>
+<title>RBAC0 权限管理中心 · 交互原型</title>
 <style>
   :root {
     color-scheme: light;
@@ -76,6 +76,9 @@
   .button.icon-only { width: 36px; min-height: 36px; padding: 0; }
   .link-button { min-height: 35px; padding: 4px 6px; border: 0; border-radius: 6px; background: transparent; color: var(--accent); font-weight: 700; white-space: nowrap; }
   .link-button:hover { background: var(--soft); }
+  .link-button.danger { color: #9b3e3e; }
+  .button.danger { color: #fff; background: #a53e3e; border-color: #a53e3e; }
+  .button.danger:hover { background: #8c3030; }
   .board { display: grid; grid-template-columns: minmax(0, 1fr) 282px; align-items: start; gap: 17px; }
   .catalog-board { display: grid; grid-template-columns: 218px minmax(0, 1fr); align-items: start; gap: 17px; }
   .catalog-apps .app-list { padding: 0 10px 10px; }
@@ -96,6 +99,15 @@
   .panel { min-width: 0; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; }
   .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 15px 17px; }
   .panel-head h2 { white-space: nowrap; }
+  .filter-panel { margin-bottom: 14px; }
+  .filter-fields { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding: 14px 17px 8px; }
+  .filter-fields label { display: grid; gap: 4px; min-width: 0; color: var(--muted); font-size: 12px; font-weight: 700; }
+  .filter-fields input, .filter-fields select { width: 100%; min-width: 0; min-height: 36px; padding: 5px 8px; color: var(--ink); background: var(--paper); border: 1px solid #bdcbd9; border-radius: 7px; font-weight: 400; }
+  .filter-actions { display: flex; justify-content: flex-end; gap: 7px; padding: 0 17px 13px; }
+  .filter-actions .button { min-height: 35px; font-size: 13px; }
+  .attribute-line { display: flex; flex-wrap: wrap; gap: 5px 12px; margin-top: 3px; color: var(--muted); font-size: 12px; }
+  .attribute-line code { color: #344e66; }
+  .tag.warning { background: #fff0dc; color: #8a5a1f; }
   .quiet { color: var(--muted); font-size: 12px; }
   .search { display: flex; align-items: center; gap: 7px; width: min(235px, 60%); padding: 0 8px; background: #f6f8fb; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); }
   .search input { width: 100%; min-width: 0; min-height: 36px; padding: 5px 0; border: 0; outline-offset: 0; background: transparent; color: var(--ink); }
@@ -172,7 +184,8 @@
   .dialog-foot { border-top: 1px solid var(--line); }
   .dialog-actions { display: flex; gap: 7px; margin-left: auto; }
   .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-bottom: 15px; }
-  .fields label { display: grid; gap: 4px; min-width: 0; font-weight: 700; }
+  .fields label { display: grid; align-content: start; gap: 4px; min-width: 0; font-weight: 700; }
+  .fields .span-2 { grid-column: 1 / -1; }
   .fields input, .fields select { width: 100%; min-width: 0; min-height: 37px; padding: 5px 8px; color: var(--ink); background: var(--paper); border: 1px solid #bdcbd9; border-radius: 7px; font-weight: 400; }
   .fields.stacked { grid-template-columns: minmax(0, 1fr); margin-bottom: 0; }
   .field-help { margin-top: 5px; }
@@ -216,11 +229,27 @@
   .audit-table td:first-child { white-space: nowrap; }
   .audit-table td { overflow-wrap: anywhere; }
   .audit-detail { display: block; color: var(--muted); font-size: 12px; }
+  .board { grid-template-columns: minmax(0, 1fr); }
+  .filter-fields { grid-template-columns: minmax(0, 320px); }
+  .app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .app-mark.course { background: #eaf0ff; color: #385988; }
+  .permission-dialog { width: min(800px, calc(100% - 24px)); }
+  .api-config { padding-top: 14px; border-top: 1px solid var(--line); }
+  .api-config-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 5px; }
+  .api-row { display: grid; grid-template-columns: minmax(0, 1fr) 100px minmax(0, 1.3fr) auto; gap: 8px; align-items: end; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .api-row label { display: grid; gap: 4px; min-width: 0; font-size: 12px; color: var(--muted); }
+  .api-row input, .api-row select { min-width: 0; width: 100%; min-height: 37px; padding: 5px 8px; border: 1px solid #bdcbd9; border-radius: 7px; background: var(--paper); color: var(--ink); }
+  .api-row .link-button { color: #9b3e3e; }
+  @media (max-width: 590px) {
+    .api-row { grid-template-columns: minmax(0, 1fr) 100px; }
+    .api-row .api-path { grid-column: 1; }
+  }
   @media (max-width: 1050px) {
     .shell { grid-template-columns: 190px minmax(0, 1fr); }
     .board { grid-template-columns: minmax(0, 1fr); }
     .overview { max-width: 430px; }
     .app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .filter-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 690px) {
     .shell { display: block; }
@@ -237,6 +266,8 @@
     .catalog-board { grid-template-columns: minmax(0, 1fr); gap: 10px; }
     .catalog-child td:first-child { padding-left: 34px; }
     .panel-head, .panel-foot, .batch-tools { padding-inline: 11px; }
+    .filter-fields { grid-template-columns: minmax(0, 1fr); padding-inline: 11px; }
+    .filter-actions { padding-inline: 11px; }
     th, td, th:first-child, td:first-child, th:last-child, td:last-child { padding-inline: 8px; }
     .person { min-width: 85px; }
     .person .avatar { display: none; }
@@ -245,7 +276,7 @@
     .profile .tags { margin-left: 0; }
     .dialog-head, .dialog-body, .dialog-foot { padding-inline: 11px; }
     .config-layout { grid-template-columns: minmax(0, 1fr); gap: 6px; }
-    .app-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .app-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .app-picker { justify-content: center; gap: 3px; padding-inline: 3px; font-size: 12px; }
     .app-picker .app-mark { display: none; }
   }
@@ -262,6 +293,94 @@
     .login-samples { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .login-samples button { padding: 5px 4px; font-size: 12px; }
   }
+
+  /* RBAC0 interaction prototype */
+  textarea { font:inherit; width:100%; padding:10px 12px; border:1px solid #bdcbd9; border-radius:8px; resize:vertical; color:var(--ink); }
+  textarea:focus-visible { outline:3px solid #429d89; outline-offset:2px; }
+  .login-page { background:#edf3f4; padding:36px; }
+  .login-card { background:white; width:min(1120px,100%); min-height:640px; grid-template-columns:1.08fr 1fr; border:0; border-radius:20px; box-shadow:0 20px 70px #172c4314; }
+  .login-brand { padding:42px; display:flex; flex-direction:column; background:#16354a; position:relative; }
+  .login-brand .brand { padding:0; }
+  .login-brand h2 { margin:60px 0 18px; font-size:38px; line-height:1.5; font-weight:600; letter-spacing:.02em; }
+  .login-brand p { max-width:360px; font-size:15px; line-height:1.9; color:#c1d3de; }
+  .login-network { margin:24px 0 40px; padding:22px; border:1px solid #4a6675; border-radius:12px; }
+  .login-network-head { display:flex; gap:12px; align-items:center; padding-bottom:18px; margin-bottom:18px; border-bottom:1px solid #4a6675; font-size:16px; }
+  .login-network-apps { display:flex; gap:10px; flex-wrap:wrap; }
+  .login-network-apps span { border:1px solid #4a6675; border-radius:6px; padding:8px 12px; color:#d8e8ee; font-size:12px; }
+  .login-brand-foot { margin-top:auto; color:#a9c5d2; font-size:12px; }
+  .login-form { padding:46px; gap:22px; }
+  .login-form h1 { font-size:29px; letter-spacing:0; }
+  .login-form .quiet { font-size:13px; line-height:1.8; margin-top:8px; }
+  .login-form input { min-height:48px; padding-inline:13px; }
+  .password-wrap { display:flex; position:relative; }
+  .password-wrap input { padding-right:58px; width:100%; }
+  .password-wrap button { position:absolute; right:9px; top:7px; min-height:34px; font-size:12px; }
+  .login-form .primary { min-height:48px; font-size:15px; }
+  .login-demo { border-top:1px solid var(--line); padding-top:18px; }
+  .login-samples { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; margin-top:10px; }
+  .login-samples button { color:var(--ink); background:#f5f8fa; border-color:var(--line); padding:9px 6px; text-align:center; font-size:12px; }
+  .login-samples button:hover { background:var(--soft); border-color:#8abfae; }
+  .login-samples small { color:var(--muted); font-size:10px; }
+  .login-error { border-left:3px solid #bc5151; background:#fff2f1; padding:10px 12px; }
+  .nav .nav-locked { margin-left:auto; color:#99afbd; font-size:11px; }
+  .nav { gap:3px; margin-top:26px; }
+  .nav button { min-height:40px; }
+  .nav-divider { margin:10px 10px 3px; padding-top:12px; border-top:1px solid #3c5269; font-size:11px; color:#b9c9da; }
+  .sidebar { overflow:auto; }
+  .sidebar-foot { margin-top:24px; }
+  .toolbar-tabs { display:flex; gap:6px; padding:0 0 15px; flex-wrap:wrap; }
+  .toolbar-tabs button[aria-pressed=true] { background:var(--soft); color:var(--accent); border-color:#9dcdbf; }
+  .table-wrap { overflow:auto; }
+  .table-wrap table { min-width:680px; width:100%; }
+  .request-filters { display:flex; flex-wrap:wrap; align-items:center; gap:12px; padding:16px 18px; border-bottom:1px solid var(--line); }
+  .request-filters select { border:1px solid var(--line); border-radius:7px; padding:7px 10px; background:white; font:inherit; }
+  .request-filters .quiet { margin-left:auto; }
+  .request-state { display:inline-flex; padding:3px 9px; border-radius:5px; font-size:12px; white-space:nowrap; background:#edf2f6; }
+  .state-pending { background:#fff0d8; color:#8a5b12; }
+  .state-approved,.state-satisfied { background:#e6f4ef; color:#096a5a; }
+  .state-rejected { background:#fceceb; color:#9a3b3b; }
+  .request-actions { display:flex; flex-wrap:wrap; gap:4px; }
+  .request-copy { display:grid; gap:5px; padding:16px; border:1px solid var(--line); background:#f6f9fb; border-radius:8px; }
+  .review-role { display:grid; gap:8px; margin-top:10px; }
+  .review-role label { display:flex; align-items:flex-start; gap:9px; padding:12px; border:1px solid var(--line); border-radius:8px; }
+  .review-role small { display:block; color:var(--muted); margin-top:5px; line-height:1.7; }
+  .review-role input { margin-top:5px; }
+  .denied { text-align:center; max-width:620px; padding:65px 28px; margin:50px auto; }
+  .denied-mark { display:grid; place-items:center; width:70px; height:70px; margin:0 auto 20px; border-radius:50%; background:#edf3f6; color:#36566c; }
+  .denied h1 { font-size:28px; margin-bottom:14px; }
+  .denied p { color:var(--muted); margin-bottom:24px; }
+  .permission-directory { padding:0 18px 18px; }
+  .permission-directory details { border-top:1px solid var(--line); padding:13px 0; }
+  .permission-directory summary { cursor:pointer; font-weight:700; }
+  .directory-action { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 0 10px 24px; }
+  .directory-action small { display:block; color:var(--muted); font-size:12px; }
+  .api-existing { display:flex; gap:8px; margin:12px 0; }
+  .api-existing select { flex:1; min-width:0; border:1px solid #bdcbd9; border-radius:7px; padding:8px; }
+  .api-shared-note { margin-bottom:8px; }
+  .course-banner { background:#e9f3f0; border:1px solid #c9e2d9; border-radius:10px; padding:18px 22px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; gap:15px; }
+  .course-menu-list { display:grid; gap:18px; }
+  .course-panel-body { padding:20px; }
+  .course-buttons { display:flex; gap:9px; flex-wrap:wrap; margin-top:18px; }
+  .button.locked { background:#f5f7f9; color:#6f8190; border-style:dashed; }
+  .sample-course { display:flex; align-items:center; gap:16px; padding:15px 0; border-bottom:1px solid var(--line); }
+  .sample-course:last-child { border:0; }
+  .course-symbol { display:grid; place-items:center; width:42px; height:42px; background:var(--soft); color:var(--accent); border-radius:7px; font-size:20px; }
+  .sample-course .quiet { margin-top:3px; }
+  @media (max-width:1000px) { .login-brand,.login-form { padding:30px; } .login-brand h2 { font-size:30px; } }
+  @media (max-width:690px) { .nav { overflow-x:auto; display:flex; flex-wrap:wrap; } .nav button { flex:0 0 auto; padding:6px 9px; } .nav-divider { display:none; } .nav .nav-locked { display:none; } .login-page { padding:16px; } .login-card { grid-template-columns:1fr; min-height:0; } .login-brand { padding:23px; } .login-brand h2 { display:block; font-size:25px; margin:20px 0 6px; } .login-brand p { font-size:13px; margin:0; } .login-network,.login-brand-foot { display:none; } .login-form { padding:26px; } .login-samples { grid-template-columns:repeat(3,1fr); } .api-existing { flex-wrap:wrap; } .request-filters .quiet { margin-left:0; } }
+  @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; } }
+
+
+  /* Centered single-column login. */
+  .login-page { padding:24px 16px; }
+  .login-page .login-card { display:block; background:white; width:min(480px,100%); min-height:0; border:1px solid var(--line); border-radius:16px; box-shadow:0 12px 40px #172c4310; }
+  .login-page .login-form { padding:34px 36px; gap:20px; }
+  .login-heading { display:grid; justify-items:center; text-align:center; gap:10px; margin-bottom:6px; }
+  .login-heading .brand-mark { width:44px; height:44px; }
+  .login-page .login-heading h1 { font-size:26px; }
+  .login-page .login-heading .quiet { margin-top:0; }
+  @media(max-width:480px) { .login-page .login-form { padding:26px 22px; gap:18px; } }
+
 </style>
 </head>
 <body>
@@ -277,94 +396,100 @@
     <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
   </svg>
 
-  <div class="shell" id="workspace-shell">
+  <div class="shell" id="workspace-shell" hidden>
     <aside class="sidebar">
       <div class="brand">
         <span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg></span>
-        <div><strong>权限中心</strong><small>多应用权限管理</small></div>
+        <div><strong>权限管理系统</strong><small>统一管理应用与权限</small></div>
       </div>
-      <nav class="nav" aria-label="演示流程">
-        <p class="nav-label">演示流程</p>
-        <button type="button" data-page="catalog"><svg class="icon" aria-hidden="true"><use href="#i-grid"></use></svg>应用与权限</button>
+      <nav class="nav" aria-label="系统导航">
+                <button type="button" data-page="catalog"><svg class="icon" aria-hidden="true"><use href="#i-grid"></use></svg>应用与权限</button>
         <button type="button" data-page="roles" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-layers"></use></svg>角色管理</button>
         <button type="button" data-page="org"><svg class="icon" aria-hidden="true"><use href="#i-users"></use></svg>用户与部门</button>
         <button type="button" data-page="users"><svg class="icon" aria-hidden="true"><use href="#i-users"></use></svg>用户授权</button>
         <button type="button" data-page="mine"><svg class="icon" aria-hidden="true"><use href="#i-key"></use></svg>我的权限</button>
+        <button type="button" data-page="requests"><svg class="icon" aria-hidden="true"><use href="#i-key"></use></svg>我的申请</button>
+        <button type="button" data-page="review"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg>权限申请审核</button>
+        <button type="button" data-page="roleRequests"><svg class="icon" aria-hidden="true"><use href="#i-layers"></use></svg>角色创建申请</button>
         <button type="button" data-page="audit"><svg class="icon" aria-hidden="true"><use href="#i-layers"></use></svg>操作记录</button>
+        <div class="nav-divider">接入系统演示</div><button type="button" data-page="course"><svg class="icon" aria-hidden="true"><use href="#i-grid"></use></svg>课程管理系统</button>
       </nav>
-      <p class="sidebar-foot">界面草稿 · 演示数据</p>
+      <p class="sidebar-foot">界面原型 · 刷新后重置</p>
     </aside>
 
     <div class="workspace">
       <header class="topbar">
-        <div class="crumb">权限中心 <svg class="icon" aria-hidden="true"><use href="#i-chevron"></use></svg><strong id="crumb">角色管理</strong></div>
+        <div class="crumb">权限管理系统 <svg class="icon" aria-hidden="true"><use href="#i-chevron"></use></svg><strong id="crumb">角色管理</strong></div>
         <div class="top-actions">
-          <div class="identity"><small class="quiet" id="identity-context">演示视角</small><span class="avatar" id="identity-mark" aria-hidden="true">总</span><strong id="identity-name">总管理员</strong></div>
-          <button type="button" class="button" id="login-entry">体验登录</button>
+          <div class="identity"><small class="quiet" id="identity-context">原型预览</small><span class="avatar" id="identity-mark" aria-hidden="true">总</span><strong id="identity-name">总管理员</strong></div>
+          <button type="button" class="button" id="login-entry">切换账号</button>
         </div>
       </header>
       <main class="content">
         <section id="catalog-page" aria-labelledby="catalog-title" hidden>
           <div class="page-head">
-            <div><h1 id="catalog-title">应用与权限</h1><p>登记业务应用，维护角色可选的菜单和按钮。</p></div>
-            <button class="button primary" id="add-app" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>新增应用</button>
+            <div><h1 id="catalog-title">应用与权限</h1><p>统一配置本系统和课程系统的菜单、按钮及关联接口。</p></div>
+            <button class="button primary" id="add-app" data-requires="rbac.applications.create" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>新增应用</button>
           </div>
+          <div class="toolbar-tabs"><button type="button" class="button" data-catalog-tab="permissions" aria-pressed="true">权限目录</button><button type="button" class="button" data-catalog-tab="apis" aria-pressed="false">API 接口清单</button></div>
           <div class="catalog-board">
             <section class="panel catalog-apps" aria-labelledby="catalog-apps-title">
-              <div class="panel-head"><h2 id="catalog-apps-title">业务应用</h2></div>
+              <div class="panel-head"><h2 id="catalog-apps-title">应用列表</h2></div>
               <div id="catalog-app-list" class="app-list" role="group" aria-label="选择应用"></div>
             </section>
             <section class="panel" aria-labelledby="catalog-app-title">
               <div class="panel-head catalog-head">
-                <h2 id="catalog-app-title"></h2>
+                <div><h2 id="catalog-app-title"></h2><div class="attribute-line" id="catalog-app-meta"></div></div>
                 <div class="catalog-actions">
-                  <button type="button" class="button" id="edit-app">编辑应用</button>
-                  <button type="button" class="button primary" id="add-permission"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>新增权限</button>
+                  <button type="button" class="button" id="edit-app" data-requires="rbac.applications.edit">编辑应用</button>
+                  <button type="button" class="button primary" id="add-permission" data-requires="rbac.permissions.create"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>新增权限</button>
                 </div>
               </div>
               <div class="scroll-table">
                 <table aria-label="菜单和按钮权限">
-                  <thead><tr><th scope="col">权限名称</th><th scope="col">类型</th><th scope="col" class="mobile-hide">权限标识</th><th scope="col">操作</th></tr></thead>
+                  <thead><tr><th scope="col">权限名称</th><th scope="col">类型</th><th scope="col" class="mobile-hide">权限标识</th><th scope="col">关联接口</th><th scope="col">操作</th></tr></thead>
                   <tbody id="catalog-rows"></tbody>
                 </table>
               </div>
               <p class="panel-foot quiet" id="catalog-count"></p>
+              <div id="api-registry" hidden><div class="panel-head"><h3>已登记接口</h3><button type="button" class="button primary" id="register-api">登记接口</button></div><div class="table-wrap"><table><thead><tr><th>接口标识</th><th>方法与路径</th><th>关联权限</th><th>操作</th></tr></thead><tbody id="api-registry-rows"></tbody></table></div></div>
             </section>
           </div>
         </section>
 
         <section id="roles-page" aria-labelledby="roles-title">
           <div class="page-head">
-            <div><h1 id="roles-title">角色管理</h1><p>为角色选择各个业务应用的菜单和按钮。</p></div>
-            <button class="button primary" id="add-role" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>新增角色</button>
+            <div><h1 id="roles-title">角色管理</h1><p>选择角色在各应用中可以使用的菜单和按钮。</p></div>
+            <button class="button primary" id="add-role" data-requires="rbac.roles.create" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>新增角色</button>
           </div>
+          <section class="panel filter-panel" aria-label="角色查询条件">
+            <div class="filter-fields">
+              <label for="role-search">角色名称<input id="role-search" type="search" placeholder="请输入角色名称"></label>
+            </div>
+            <div class="filter-actions"><button class="button" type="button" id="role-filter-reset">重置</button><button class="button primary" type="button" id="role-filter-submit"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>搜索</button></div>
+          </section>
           <div class="board">
             <section class="panel" aria-labelledby="role-list-title">
               <div class="panel-head">
-                <h2 id="role-list-title">业务角色</h2>
-                <label class="search"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg><input id="role-search" type="search" aria-label="搜索角色" placeholder="搜索角色"></label>
+                <h2 id="role-list-title">角色列表</h2>
               </div>
               <div class="scroll-table">
-                <table aria-label="业务角色">
-                  <thead><tr><th scope="col">角色名称</th><th scope="col" class="mobile-hide">已授权应用</th><th scope="col">操作</th></tr></thead>
+                <table aria-label="角色列表">
+                  <thead><tr><th scope="col">角色名称</th><th scope="col">已授权应用</th><th scope="col">操作</th></tr></thead>
                   <tbody id="role-rows"></tbody>
                 </table>
               </div>
               <p class="panel-foot quiet" id="role-count"></p>
             </section>
-            <aside class="panel overview" aria-label="角色概览" id="role-overview"></aside>
           </div>
         </section>
 
         <section id="org-page" aria-labelledby="org-title" hidden>
           <div class="page-head">
             <div><h1 id="org-title">用户与部门</h1><p>维护部门、用户和账号状态。</p></div>
-            <button class="button primary" id="add-user" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>新增用户</button>
+            <button class="button primary" id="add-user" data-requires="rbac.users.create" type="button"><svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>新增用户</button>
           </div>
           <div class="org-toolbar">
-            <label class="view-switch" id="org-view-switch" for="org-view">管理视角
-              <select id="org-view"><option value="global">总管理员</option><option value="department">部门管理员</option></select>
-            </label>
             <div class="scope"><strong>管理范围</strong><span id="org-scope"></span></div>
           </div>
           <div class="catalog-board">
@@ -372,8 +497,8 @@
               <div class="panel-head catalog-head">
                 <h2 id="department-list-title">部门结构</h2>
                 <div class="org-dept-actions" id="org-dept-actions">
-                  <button type="button" class="button" id="add-department">新增部门</button>
-                  <button type="button" class="button" id="edit-department" hidden>编辑部门</button>
+                  <button type="button" class="button" id="add-department" data-requires="rbac.departments.create">新增部门</button>
+                  <button type="button" class="button" id="edit-department" data-requires="rbac.departments.edit" hidden>编辑部门</button>
                 </div>
               </div>
               <div class="org-tree" id="org-department-list" role="group" aria-label="部门筛选"></div>
@@ -404,8 +529,8 @@
             </div>
             <div class="batch-tools" id="batch-tools" role="group" aria-label="批量授权">
               <span class="quiet" id="selected-user-count" aria-live="polite">已选 0 人</span>
-              <button class="button" type="button" data-batch="grant" disabled>批量分配</button>
-              <button class="button" type="button" data-batch="revoke" disabled>批量撤销</button>
+              <button class="button" type="button" data-batch="grant" data-requires="rbac.assignments.batch" disabled>批量分配</button>
+              <button class="button" type="button" data-batch="revoke" data-requires="rbac.assignments.batch" disabled>批量撤销</button>
             </div>
             <div class="scroll-table">
               <table aria-label="用户列表">
@@ -422,7 +547,28 @@
           <div class="panel profile" id="profile"></div>
           <p class="scope" id="inactive-user-note" hidden>账号已停用，业务权限暂不可用。</p>
           <div class="app-grid" id="my-apps"></div>
+          <details class="panel" style="margin-top:20px;padding:18px"><summary style="cursor:pointer;font-weight:700">查看当前账号的接口调用权限</summary><p class="quiet" style="margin:10px 0">选择应用和接口，查看当前角色授权的检查结果。</p><div class="api-existing"><select id="check-application" aria-label="检查权限的应用"></select><select id="check-operation" aria-label="检查权限的接口"></select><button type="button" class="button" id="check-api-permission">检查权限</button></div><p id="check-api-result" role="status" class="quiet"></p></details>
         </section>
+
+        <section id="requests-page" hidden>
+          <div class="page-head"><div><h1>我的申请</h1><p>申请需要的菜单或按钮，查看处理结果。</p></div><button class="button primary" id="new-permission-request">申请权限</button></div>
+          <div class="toolbar-tabs"><button class="button" data-request-tab="history" aria-pressed="true">申请记录</button><button class="button" data-request-tab="directory" aria-pressed="false">可申请权限</button></div>
+          <div class="panel" id="request-history"><div class="request-filters"><label>申请状态 <select id="my-request-status"><option value="">全部状态</option><option value="pending">待审核</option><option value="approved">已通过</option><option value="rejected">已拒绝</option><option value="satisfied">已满足</option><option value="withdrawn">已撤回</option></select></label><span id="request-total" class="quiet"></span></div><div class="table-wrap"><table><thead><tr><th>申请权限</th><th>申请理由</th><th>状态</th><th>处理结果</th><th>操作</th></tr></thead><tbody id="request-rows"></tbody></table></div></div>
+          <div class="panel permission-directory" id="request-directory" hidden></div>
+        </section>
+        <section id="review-page" hidden>
+          <div class="page-head"><div><h1>权限申请审核</h1><p>通过分配已有业务角色满足申请，不直接授予单项权限。</p></div></div>
+          <div class="scope"><strong>审核范围</strong><span id="review-scope"></span></div>
+          <div class="panel"><div class="request-filters"><label>申请状态 <select id="review-status"><option value="pending">待审核</option><option value="">全部状态</option><option value="approved">已通过</option><option value="rejected">已拒绝</option><option value="satisfied">已满足</option><option value="withdrawn">已撤回</option></select></label><span id="review-total" class="quiet"></span></div><div class="table-wrap"><table><thead><tr><th>申请人</th><th>申请权限</th><th>理由</th><th>状态</th><th>操作</th></tr></thead><tbody id="review-rows"></tbody></table></div></div>
+        </section>
+        <section id="roleRequests-page" hidden>
+          <div class="page-head"><div><h1>角色创建申请</h1><p>现有角色不能满足需求时，申请创建合适的业务角色。</p></div><button class="button primary" id="new-role-request">提交角色创建申请</button></div>
+          <div class="scope" id="role-request-help"></div>
+          <div class="panel"><div class="request-filters"><label>申请状态 <select id="role-request-status"><option value="">全部状态</option><option value="pending">待审核</option><option value="approved">已通过</option><option value="rejected">已拒绝</option></select></label><span class="quiet" id="role-request-total"></span></div><div class="table-wrap"><table><thead><tr><th>拟建角色</th><th>申请人</th><th>申请权限</th><th>状态</th><th>操作</th></tr></thead><tbody id="role-request-rows"></tbody></table></div></div>
+        </section>
+        <section id="course-page" hidden><div class="page-head"><div><h1>课程管理系统</h1><p>使用当前账号，演示接入系统的菜单和按钮权限。</p></div></div><div class="course-banner"><div><strong id="course-identity"></strong><p class="quiet">无权限的入口仍显示，点击后可以提出申请。</p></div><span class="tag">接入应用演示</span></div><div class="course-menu-list" id="course-panels"></div></section>
+        <section id="denied-page" class="panel denied" hidden><div class="denied-mark"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg></div><h1>暂时无法访问</h1><p id="denied-message"></p><button class="button primary" id="denied-apply">申请此权限</button><button class="button" id="denied-back">返回我的权限</button></section>
+
         <section id="audit-page" aria-labelledby="audit-title" hidden>
           <div class="page-head"><div><h1 id="audit-title">操作记录</h1><p>查看管理操作的时间、对象和结果。</p></div></div>
           <div class="scope"><strong>查看范围</strong><span id="audit-scope"></span></div>
@@ -444,26 +590,37 @@
     </div>
   </div>
 
-  <main class="login-page" id="login-page" aria-labelledby="login-title" hidden>
-    <section class="panel login-card">
-      <aside class="login-brand">
-        <span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg></span>
-        <h2>权限中心</h2>
-        <p>选择演示账号。演示密码为 <code>demo1234</code>。</p>
-        <div class="login-samples" id="login-samples" role="group" aria-label="演示账号"></div>
-      </aside>
-      <form class="login-form" id="login-form">
-        <div><h1 id="login-title">登录权限中心</h1><p class="quiet">输入用户名和密码。</p></div>
-        <div class="fields stacked">
-          <label for="login-account">用户名<input id="login-account" required autocomplete="username"></label>
-          <label for="login-password">密码<input id="login-password" type="password" required autocomplete="current-password"></label>
-        </div>
-        <p class="login-error" id="login-error" role="alert" hidden></p>
-        <button type="submit" class="button primary">登录</button>
-        <button type="button" class="link-button" id="return-demo">返回原型</button>
-      </form>
-    </section>
-  </main>
+  <main class="login-page" id="login-page" aria-labelledby="login-title">
+      <section class="login-card">
+        <form class="login-form" id="login-form">
+          <div class="login-heading">
+            <span class="brand-mark" aria-hidden="true"><svg class="icon"><use href="#i-shield"></use></svg></span>
+            <h1 id="login-title">权限管理中心</h1>
+            <p class="quiet">使用统一账号登录</p>
+          </div>
+          <div class="fields stacked">
+            <label for="login-account">用户名<input id="login-account" required autocomplete="username" placeholder="请输入用户名">
+            </label>
+            <label for="login-password">密码<span class="password-wrap">
+                <input id="login-password" type="password" required autocomplete="current-password" placeholder="请输入密码">
+                <button type="button" class="link-button" id="toggle-password" aria-pressed="false">显示</button>
+              </span>
+            </label>
+          </div>
+          <p class="login-error" id="login-error" role="alert" hidden>
+          </p>
+          <button type="submit" class="button primary">登录</button>
+          <div class="login-demo">
+            <strong class="quiet">选择演示身份，自动填入账号</strong>
+            <div class="login-samples" id="login-samples" role="group" aria-label="演示账号">
+            </div>
+            <p class="quiet">演示密码 <code>demo1234</code>。刷新后数据重置。</p>
+            <button type="button" class="link-button" id="return-demo">填入总管理员账号</button>
+            <button type="button" class="link-button" data-reset-demo>重置演示数据</button>
+          </div>
+        </form>
+      </section>
+    </main>
 
   <dialog id="role-dialog" aria-labelledby="role-dialog-title">
     <form id="role-form">
@@ -473,7 +630,7 @@
       </header>
       <div class="dialog-body">
         <div class="fields">
-          <label for="role-name">角色名称<input id="role-name" required maxlength="24" autocomplete="off" placeholder="例如 公文审批员"></label>
+          <label for="role-name">角色名称<input id="role-name" required maxlength="24" autocomplete="off" placeholder="例如 课程教师"></label>
           <label for="role-description">角色说明<input id="role-description" maxlength="48" autocomplete="off" placeholder="简要说明角色用途"></label>
         </div>
         <h3>应用权限</h3>
@@ -489,9 +646,26 @@
         <span id="permission-count" class="quiet" aria-live="polite"></span>
         <div class="dialog-actions">
           <button type="button" class="button" data-close>取消</button>
-          <button type="submit" class="button primary">保存角色</button>
+          <button type="submit" class="button primary" id="role-save">保存角色</button>
         </div>
       </footer>
+    </form>
+  </dialog>
+
+  <dialog id="delete-role-dialog" class="assign-dialog" aria-labelledby="delete-role-title" aria-describedby="delete-role-message">
+    <form id="delete-role-form">
+      <header class="dialog-head">
+        <h2 id="delete-role-title">删除角色</h2>
+        <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
+      </header>
+      <div class="dialog-body">
+        <p id="delete-role-name"></p>
+        <p id="delete-role-message" class="quiet field-help"></p>
+      </div>
+      <footer class="dialog-foot"><div class="dialog-actions">
+        <button type="button" class="button" id="delete-role-cancel" data-close>取消</button>
+        <button type="submit" class="button danger" id="delete-role-confirm">删除角色</button>
+      </div></footer>
     </form>
   </dialog>
 
@@ -518,8 +692,8 @@
         <h2 id="app-dialog-title"></h2>
         <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
       </header>
-      <div class="dialog-body fields stacked">
-        <label for="app-name">应用名称<input id="app-name" required maxlength="24" autocomplete="off" placeholder="例如 工单系统" autofocus></label>
+      <div class="dialog-body fields">
+        <label for="app-code">接入标识<input id="app-code" maxlength="64" pattern="[a-z][a-z0-9-]*" placeholder="留空自动生成，例如 library-management"><small class="quiet">登录服务用它识别目标应用，保存后固定。</small></label><label for="app-name">应用名称<input id="app-name" required maxlength="24" autocomplete="off" placeholder="例如 课程管理系统" autofocus></label>
       </div>
       <footer class="dialog-foot"><div class="dialog-actions">
         <button type="button" class="button" data-close>取消</button>
@@ -528,26 +702,34 @@
     </form>
   </dialog>
 
-  <dialog id="permission-dialog" class="assign-dialog" aria-labelledby="permission-dialog-title">
+  <dialog id="permission-dialog" class="permission-dialog" aria-labelledby="permission-dialog-title">
     <form id="permission-form">
       <header class="dialog-head">
         <div><h2 id="permission-dialog-title"></h2><p class="quiet" id="permission-context"></p></div>
         <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
       </header>
-      <div class="dialog-body fields stacked">
+      <div class="dialog-body">
+        <div class="fields">
         <label for="permission-type" id="permission-type-field">权限类型
           <select id="permission-type"><option value="menu">菜单</option><option value="button">按钮</option></select>
         </label>
-        <label for="permission-name">权限名称<input id="permission-name" required maxlength="24" autocomplete="off" placeholder="例如 工单管理"></label>
+        <label for="permission-name">权限名称<input id="permission-name" required maxlength="24" autocomplete="off" placeholder="例如 课程管理"></label>
         <label for="permission-parent" id="permission-parent-field" hidden>所属菜单
           <select id="permission-parent"></select>
         </label>
         <div>
           <label for="permission-code">权限标识
-            <input id="permission-code" required maxlength="64" autocomplete="off" spellcheck="false" autocapitalize="none" placeholder="例如 ticket:close" aria-describedby="permission-code-help">
+            <input id="permission-code" required maxlength="64" autocomplete="off" spellcheck="false" autocapitalize="none" placeholder="例如 course:delete" aria-describedby="permission-code-help">
           </label>
-          <p id="permission-code-help" class="quiet field-help">按 <code>资源:操作</code> 填写业务系统约定的标识。例如，关闭工单接口使用 <code>ticket:close</code> 检查权限。</p>
+          <p id="permission-code-help" class="quiet field-help">格式为 <code>资源:操作</code>，例如 <code>course:delete</code>。</p>
         </div>
+        </div>
+        <section class="api-config" aria-labelledby="api-config-title">
+          <div class="api-config-head"><h3 id="api-config-title">关联接口</h3><button type="button" class="button" id="add-api">添加接口</button></div>
+          <p class="quiet">从业务系统的 API 文档填写接口标识、请求方法和路径。</p>
+          <div class="api-existing"><select id="existing-api" aria-label="选择已有接口"></select><button type="button" class="button" id="link-existing-api">关联已有接口</button></div><p class="quiet api-shared-note">同一个接口可以关联多项权限。移除仅解除当前关联；修改接口资料会同步影响其他关联权限。</p><div id="api-rows"></div>
+          <p class="empty" id="api-empty">暂未关联接口</p>
+        </section>
       </div>
       <footer class="dialog-foot"><div class="dialog-actions">
         <button type="button" class="button" data-close>取消</button>
@@ -562,7 +744,7 @@
         <h2 id="department-dialog-title"></h2>
         <button type="button" class="button icon-only" data-close aria-label="关闭"><svg class="icon" aria-hidden="true"><use href="#i-close"></use></svg></button>
       </header>
-      <div class="dialog-body fields stacked">
+      <div class="dialog-body fields">
         <label for="department-name">部门名称<input id="department-name" required maxlength="24" autocomplete="off"></label>
         <label for="department-parent">上级部门<select id="department-parent"></select></label>
       </div>
@@ -583,7 +765,7 @@
         <label for="user-name">姓名<input id="user-name" required maxlength="24" autocomplete="off"></label>
         <label for="user-account">用户名<input id="user-account" required maxlength="32" autocomplete="off"></label>
         <label for="user-department">所属部门<select id="user-department" required></select></label>
-        <label for="user-status">账号状态<select id="user-status"><option value="active">正常</option><option value="disabled">停用</option></select></label>
+        <label id="initial-password-field">初始密码<input id="initial-password" type="text" value="demo1234" required autocomplete="off"></label><label for="user-status">账号状态<select id="user-status"><option value="active">正常</option><option value="disabled">停用</option></select></label>
         <label for="user-admin" id="user-admin-field" class="check-field"><input id="user-admin" type="checkbox">设为部门管理员</label>
       </div>
       <footer class="dialog-foot"><div class="dialog-actions">
@@ -593,28 +775,62 @@
     </form>
   </dialog>
 
+
+  <dialog id="request-dialog" class="assign-dialog" aria-labelledby="request-dialog-title"><form id="request-form"><div class="dialog-head"><div><h2 id="request-dialog-title">申请权限</h2><p class="quiet">管理员将通过分配业务角色处理申请。</p></div><button type="button" class="button icon-only" data-close aria-label="关闭">×</button></div><div class="dialog-body"><div class="fields stacked"><label>业务应用<select id="request-app" required></select></label><label>申请权限<select id="request-permission" required aria-describedby="request-options-help"></select></label><p class="quiet" id="request-options-help"></p><label>申请理由<textarea id="request-reason" required maxlength="500" rows="4" placeholder="请说明工作中为什么需要这项权限"></textarea></label></div></div><div class="dialog-foot"><span class="quiet">申请本身不会改变当前权限。</span><div><button type="button" class="button" data-close>取消</button><button type="submit" class="button primary">提交申请</button></div></div></form></dialog>
+  <dialog id="review-dialog" class="permission-dialog" aria-labelledby="review-dialog-title"><form id="review-form"><div class="dialog-head"><h2 id="review-dialog-title">审核权限申请</h2><button type="button" class="button icon-only" data-close aria-label="关闭">×</button></div><div class="dialog-body"><div class="request-copy" id="review-request-summary"></div><div id="review-role-area"><h3 style="margin-top:18px">选择要分配的业务角色</h3><p class="quiet">请核对角色的全部权限。包含额外功能的角色不应直接用于本次申请。</p><div class="review-role" id="review-role-options"></div><p id="review-role-note" class="quiet" style="margin-top:14px"></p></div></div><div class="dialog-foot"><button type="button" class="button" data-close>取消</button><button type="submit" class="button primary" id="review-confirm">批准并分配角色</button></div></form></dialog>
+  <dialog id="api-dialog" class="assign-dialog" aria-labelledby="api-dialog-title"><form id="api-form"><div class="dialog-head"><h2 id="api-dialog-title">登记接口</h2><button type="button" class="button icon-only" data-close aria-label="关闭">×</button></div><div class="dialog-body"><div class="fields stacked"><label>接口标识（operationId）<input id="registry-operation" required maxlength="128" autocomplete="off"></label><label>请求方法<select id="registry-method"><option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option></select></label><label>请求路径<input id="registry-path" required pattern="/[^?#\s]*" maxlength="255" placeholder="例如 /courses/{courseId}"></label><p class="quiet" id="registry-impact"></p></div></div><div class="dialog-foot"><button type="button" class="button" data-close>取消</button><button type="submit" class="button primary">保存接口</button></div></form></dialog>
+  <dialog id="remove-api-dialog" class="assign-dialog" aria-labelledby="remove-api-title"><form id="remove-api-form"><div class="dialog-head"><h2 id="remove-api-title">删除接口登记</h2><button type="button" class="button icon-only" data-close aria-label="关闭">×</button></div><div class="dialog-body"><p id="remove-api-message"></p><p class="quiet" style="margin-top:12px">同时解除所有关联权限。后续针对该接口的权限检查将返回拒绝。</p></div><div class="dialog-foot"><button type="button" class="button" data-close>取消</button><button type="submit" class="button danger">删除登记</button></div></form></dialog>
+
   <div id="toast" class="toast" role="status" hidden></div>
   <script>
     const applications = [
-      { id: 'oa', name: 'OA 协同办公', short: 'OA', symbol: '办', groups: [
-        { key: 'oa.documents', name: '公文管理', code: 'document:view', actions: [
-          { key: 'oa.documents.create', name: '新建公文', code: 'document:create' },
-          { key: 'oa.documents.approve', name: '审批公文', code: 'document:approve' }
+      { id: 'rbac', code: 'permission-center', name: '权限管理系统', short: '权限管理', symbol: '权', groups: [
+        { key: 'rbac.applications', name: '应用与权限', code: 'application:view', apis: [
+          { operationId: 'listApplications', method: 'GET', path: '/api/v1/applications' },
+          { operationId: 'getApplicationPermissionTree', method: 'GET', path: '/api/v1/applications/{applicationId}/permissions' }
+        ], actions: [
+          { key: 'rbac.applications.create', name: '新增应用', code: 'application:create', apis: [{ operationId: 'createApplication', method: 'POST', path: '/api/v1/applications' }] },
+          { key: 'rbac.applications.edit', name: '修改应用', code: 'application:edit', apis: [{ operationId: 'updateApplication', method: 'PATCH', path: '/api/v1/applications/{applicationId}' }] },
+          { key: 'rbac.permissions.create', name: '新增权限', code: 'permission:create', apis: [{ operationId: 'createPermission', method: 'POST', path: '/api/v1/applications/{applicationId}/permissions' }] },
+          { key: 'rbac.permissions.edit', name: '修改权限', code: 'permission:edit', apis: [{ operationId: 'updatePermission', method: 'PATCH', path: '/api/v1/applications/{applicationId}/permissions/{permissionId}' }] },
+          { key: 'rbac.apis.manage', name: '配置关联接口', code: 'api:manage', apis: [] }
         ] },
-        { key: 'oa.notices', name: '公告管理', code: 'notice:view', actions: [
-          { key: 'oa.notices.publish', name: '发布公告', code: 'notice:publish' }
-        ] }
+        { key: 'rbac.roles', name: '角色管理', code: 'role:view', apis: [
+          { operationId: 'listRoles', method: 'GET', path: '/api/v1/roles' },
+          { operationId: 'getRole', method: 'GET', path: '/api/v1/roles/{roleId}' }
+        ], actions: [
+          { key: 'rbac.roles.create', name: '新增角色', code: 'role:create', apis: [{ operationId: 'createRole', method: 'POST', path: '/api/v1/roles' }] },
+          { key: 'rbac.roles.edit', name: '配置角色权限', code: 'role:edit', apis: [{ operationId: 'updateRole', method: 'PUT', path: '/api/v1/roles/{roleId}' }] },
+          { key: 'rbac.roles.delete', name: '删除角色', code: 'role:delete', apis: [{ operationId: 'deleteRole', method: 'DELETE', path: '/api/v1/roles/{roleId}' }] }
+        ] },
+        { key: 'rbac.organization', name: '用户与部门', code: 'user:view', apis: [
+          { operationId: 'getDepartmentTree', method: 'GET', path: '/api/v1/departments' },
+          { operationId: 'listUsers', method: 'GET', path: '/api/v1/users' },
+          { operationId: 'getUser', method: 'GET', path: '/api/v1/users/{userId}' }
+        ], actions: [
+          { key: 'rbac.users.create', name: '新增用户', code: 'user:create', apis: [{ operationId: 'createUser', method: 'POST', path: '/api/v1/users' }] },
+          { key: 'rbac.users.edit', name: '修改用户', code: 'user:edit', apis: [{ operationId: 'updateUser', method: 'PATCH', path: '/api/v1/users/{userId}' }] },
+          { key: 'rbac.departments.create', name: '新增部门', code: 'department:create', apis: [{ operationId: 'createDepartment', method: 'POST', path: '/api/v1/departments' }] },
+          { key: 'rbac.departments.edit', name: '修改部门', code: 'department:edit', apis: [{ operationId: 'updateDepartment', method: 'PATCH', path: '/api/v1/departments/{departmentId}' }] }
+        ] },
+        { key: 'rbac.assignments', name: '用户授权', code: 'assignment:view', apis: [], actions: [
+          { key: 'rbac.assignments.edit', name: '分配与撤销角色', code: 'assignment:edit', apis: [{ operationId: 'replaceUserBusinessRoles', method: 'PUT', path: '/api/v1/users/{userId}/roles' }] },
+          { key: 'rbac.assignments.batch', name: '批量授权', code: 'assignment:batch', apis: [{ operationId: 'changeUserRolesInBatch', method: 'PATCH', path: '/api/v1/user-role-assignments' }] }
+        ] },
+        { key: 'rbac.mine', name: '我的权限', code: 'permission:viewOwn', apis: [{ operationId: 'getMyPermissions', method: 'GET', path: '/api/v1/me/permissions' }], actions: [] },
+        { key: 'rbac.audit', name: '操作记录', code: 'operationLog:view', apis: [{ operationId: 'listOperationLogs', method: 'GET', path: '/api/v1/operation-logs' }], actions: [] }
       ] },
-      { id: 'hr', name: '人事系统', short: '人事', symbol: '人', groups: [
-        { key: 'hr.employees', name: '员工档案', code: 'employee:view', actions: [
-          { key: 'hr.employees.edit', name: '编辑档案', code: 'employee:edit' },
-          { key: 'hr.employees.export', name: '导出档案', code: 'employee:export' }
-        ] }
-      ] },
-      { id: 'project', name: '项目管理', short: '项目', symbol: '项', groups: [
-        { key: 'project.records', name: '项目台账', code: 'project:view', actions: [
-          { key: 'project.records.create', name: '新建项目', code: 'project:create' },
-          { key: 'project.records.edit', name: '修改项目', code: 'project:edit' }
+      { id: 'course', code: 'course-project-management', name: '课程管理系统', short: '课程管理', symbol: '课', groups: [
+        { key: 'course.all', name: '所有课程', code: 'course:viewAll', apis: [{ operationId: 'listAdminCourses', method: 'GET', path: '/admin/courses' }], actions: [
+          { key: 'course.all.review', name: '审核课程', code: 'course:review', apis: [{ operationId: 'reviewCourse', method: 'POST', path: '/courses/{courseId}/review' }] },
+          { key: 'course.all.delete', name: '删除课程', code: 'course:delete', apis: [{ operationId: 'deleteCourse', method: 'DELETE', path: '/courses/{courseId}' }] }
+        ] },
+        { key: 'course.mine', name: '我的课程', code: 'course:viewOwn', apis: [{ operationId: 'listTeacherCourses', method: 'GET', path: '/teacher/courses' }], actions: [
+          { key: 'course.mine.create', name: '申请新课程', code: 'course:create', apis: [{ operationId: 'createCourse', method: 'POST', path: '/terms/{termId}/courses' }] }
+        ] },
+        { key: 'course.terms', name: '学期管理', code: 'term:view', apis: [{ operationId: 'listTerms', method: 'GET', path: '/terms' }], actions: [
+          { key: 'course.terms.create', name: '新建学期', code: 'term:create', apis: [{ operationId: 'createTerm', method: 'POST', path: '/terms' }] },
+          { key: 'course.terms.delete', name: '删除学期', code: 'term:delete', apis: [{ operationId: 'deleteTerm', method: 'DELETE', path: '/terms/{termId}' }] }
         ] }
       ] }
     ];
@@ -622,25 +838,24 @@
     const rootAdminRole = 'root-admin';
     const departmentAdminRole = 'department-admin';
     const roles = new Map([
-      ['approver', { name: '公文审批员', description: '查看和审批 OA 公文', granted: new Set(['oa.documents', 'oa.documents.approve']) }],
-      ['staff', { name: '普通员工', description: '查看日常工作页面', granted: new Set(['oa.documents', 'oa.notices', 'hr.employees', 'project.records']) }],
-      ['lead', { name: '部门主管', description: '处理公文并新建项目', granted: new Set(['oa.documents', 'oa.documents.create', 'oa.documents.approve', 'project.records', 'project.records.create']) }],
-      ['records', { name: '档案维护员', description: '查看和编辑员工档案', granted: new Set(['hr.employees', 'hr.employees.edit']) }],
-      [departmentAdminRole, { name: '部门管理员', description: '管理本部门及下级部门的用户', granted: new Set(), management: true }],
-      [rootAdminRole, { name: '总管理员', description: '负责全局管理', granted: new Set(), management: true }]
+      ['teacher', { name: '课程教师', description: '查看自己的课程，申请新课程', granted: new Set(['rbac.mine', 'course.mine', 'course.mine.create']) }],
+      ['course-admin', { name: '课程管理员', description: '管理课程、审核申请和维护学期', granted: new Set(['rbac.mine', ...applications[1].groups.flatMap(group => [group.key, ...group.actions.map(action => action.key)])]) }],
+      ['reader', { name: '课程查看员', description: '查看自己的课程', granted: new Set(['rbac.mine', 'course.mine']) }],
+      [departmentAdminRole, { name: '部门管理员', description: '管理本部门及下级部门的用户并分配角色', management: true, granted: new Set(['rbac.organization', 'rbac.users.create', 'rbac.users.edit', 'rbac.assignments', 'rbac.assignments.edit', 'rbac.assignments.batch', 'rbac.mine', 'rbac.audit']) }],
+      [rootAdminRole, { name: '总管理员', description: '维护本系统全部管理功能', management: true, granted: new Set(applications[0].groups.flatMap(group => [group.key, ...group.actions.map(action => action.key)])) }]
     ]);
 
     const departments = new Map([
-      ['company', { name: '远川科技', parent: null }],
-      ['admin', { name: '行政部', parent: 'company' }],
-      ['office', { name: '综合办公室', parent: 'admin' }],
-      ['finance', { name: '财务部', parent: 'company' }]
+      ['company', { name: '某大学', parent: null, sortOrder: 1, status: 'active' }],
+      ['admin', { name: '计算机学院', parent: 'company', sortOrder: 1, status: 'active' }],
+      ['office', { name: '软件工程系', parent: 'admin', sortOrder: 1, status: 'active' }],
+      ['finance', { name: '数学学院', parent: 'company', sortOrder: 2, status: 'active' }]
     ]);
     const users = [
-      { id: 'lin', name: '林晓', account: 'lin.xiao', department: 'office', active: true, roles: new Set(['staff']) },
-      { id: 'gu', name: '顾晨', account: 'gu.chen', department: 'admin', active: true, roles: new Set(['lead', 'staff', departmentAdminRole]) },
-      { id: 'he', name: '何雨桐', account: 'he.yutong', department: 'office', active: true, roles: new Set(['staff', 'records']) },
-      { id: 'ye', name: '叶宁', account: 'ye.ning', department: 'finance', active: true, roles: new Set(['staff']) }
+      { id: 'lin', name: '林晓', account: 'lin.xiao', department: 'office', active: true, roles: new Set(['teacher']) },
+      { id: 'gu', name: '顾晨', account: 'gu.chen', department: 'admin', active: true, roles: new Set(['teacher', departmentAdminRole]) },
+      { id: 'he', name: '何雨桐', account: 'he.yutong', department: 'office', active: true, roles: new Set(['course-admin']) },
+      { id: 'ye', name: '叶宁', account: 'ye.ning', department: 'finance', active: true, roles: new Set(['reader']) }
     ];
     const demoEmployee = users[0];
     const demoManager = users[1];
@@ -673,7 +888,6 @@
     const permissionDialog = $('permission-dialog');
     const departmentDialog = $('department-dialog');
     const userDialog = $('user-dialog');
-    const orgView = $('org-view');
     const orgDepartmentList = $('org-department-list');
     const orgUserRows = $('org-user-rows');
     const userName = $('user-name');
@@ -694,11 +908,11 @@
     const userRows = $('user-rows');
     const batchTools = $('batch-tools');
     const selectedUsers = new Set();
-    const collapsedBranches = new Set();
+    const collapsedBranches = new Set(applications.flatMap(app => app.groups.map(group => 'catalog-' + group.key)));
     const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
-    let selectedRole = 'approver';
     let sessionUser = null;
     let roleEditor;
+    let deletingRole;
     let assignment;
     let nextRoleId = 1;
     let nextAppId = 1;
@@ -712,6 +926,7 @@
     let editedApp;
     let editedPermission;
     let toastTimer;
+    let nextApiRow = 1;
 
     function escapeText(value) {
       return value.replace(/[&<>"']/g, character => entities[character]);
@@ -739,28 +954,32 @@
       const label = `<span class="catalog-label">${escapeText(permission.name)}</span>`;
       const title = isMenu ? `<div class="menu-heading">${treeDisclosure('catalog-' + permission.key, permission.name,
         permission.actions.map(action => 'catalog-row-' + action.key))}${label}</div>` : label;
+      const grants = userGrants();
       return `<tr id="catalog-row-${permission.key}" class="${isMenu ? 'catalog-menu' : 'catalog-child'}" ${hidden ? 'hidden' : ''}>
-        <td>${title}</td>
-        <td><span class="tag">${isMenu ? '菜单' : '按钮'}</span></td>
+        <td>${title}</td><td><span class="tag">${isMenu ? '菜单' : '按钮'}</span></td>
         <td class="mobile-hide"><code class="permission-code">${escapeText(permission.code)}</code></td>
-        <td><button class="link-button" type="button" data-edit-permission="${permission.key}">编辑</button></td></tr>`;
+        <td><button type="button" class="link-button" data-edit-permission="${permission.key}" data-focus-apis ${grants.has('rbac.apis.manage') ? '' : 'disabled'}>${permission.apis?.length ?? 0} 个接口</button></td>
+        <td><button class="link-button" type="button" data-edit-permission="${permission.key}" ${grants.has('rbac.permissions.edit') ? '' : 'hidden'}>编辑</button></td></tr>`;
     }
 
-    function renderCatalog() {
+    function renderCatalogBase() {
       renderAppChoices(catalogAppList, catalogApp);
       $('catalog-app-title').textContent = catalogApp.name;
+      $('catalog-app-meta').textContent = catalogApp.id === 'rbac' ? '本系统的管理功能也在这里配置权限。' : '已登记课程、课程申请和学期管理权限。';
       const groups = catalogApp.groups;
-      catalogRows.innerHTML = groups.map(group => catalogRow(group, true) +
-        group.actions.map(action => catalogRow(action, false, collapsedBranches.has('catalog-' + group.key))).join('')).join('') ||
-        '<tr><td class="empty" colspan="4">这个应用还没有权限。先添加一个菜单。</td></tr>';
-      const buttons = groups.reduce((total, group) => total + group.actions.length, 0);
-      $('catalog-count').textContent = `${groups.length} 个菜单，${buttons} 个按钮`;
+      catalogRows.innerHTML = groups.map(group => catalogRow(group, true) + group.actions.map(action =>
+        catalogRow(action, false, collapsedBranches.has('catalog-' + group.key))).join('')).join('') ||
+        '<tr><td class="empty" colspan="5">这个应用还没有权限。先添加一个菜单。</td></tr>';
+      const entries = groups.flatMap(group => [group, ...group.actions]);
+      $('catalog-count').textContent = `${groups.length} 个菜单，${entries.length - groups.length} 个按钮，${entries.reduce((sum, item) => sum + (item.apis?.length ?? 0), 0)} 个接口`;
     }
 
     function openAppEditor(app) {
       editedApp = app;
       $('app-dialog-title').textContent = app ? '编辑应用' : '新增应用';
       appName.value = app?.name ?? '';
+      $('app-code').value = app?.code ?? '';
+      $('app-code').readOnly = Boolean(app);
       appName.setCustomValidity('');
       appDialog.showModal();
       appName.focus();
@@ -771,7 +990,7 @@
       $('permission-parent-field').hidden = !showParent;
       permissionParent.disabled = !showParent;
       permissionParent.required = showParent;
-      permissionName.placeholder = showParent ? '例如 关闭工单' : '例如 工单管理';
+      permissionName.placeholder = showParent ? '例如 删除课程' : '例如 课程管理';
     }
 
     function openPermissionEditor(permission, menu) {
@@ -788,8 +1007,27 @@
       permissionParent.innerHTML = '<option value="">请选择菜单</option>' + catalogApp.groups.map(group =>
         `<option value="${group.key}">${escapeText(group.name)}</option>`).join('');
       updatePermissionParent();
+      $('api-rows').innerHTML = (permission?.apis ?? []).map(apiRow).join('');
+      $('api-empty').hidden = $('api-rows').children.length > 0;
+      renderExistingApiChoices();
+      const grants = userGrants();
+      permissionName.readOnly = Boolean(permission) && !grants.has('rbac.permissions.edit');
+      permissionCode.readOnly = Boolean(permission) && !grants.has('rbac.permissions.edit');
+      $('add-api').hidden = !grants.has('rbac.apis.manage');
+      for (const field of $('api-rows').querySelectorAll('input, select')) field.disabled = !grants.has('rbac.apis.manage');
+      for (const button of $('api-rows').querySelectorAll('[data-remove-api]')) button.hidden = !grants.has('rbac.apis.manage');
       permissionDialog.showModal();
       (permission ? permissionName : permissionType).focus();
+    }
+
+    function apiRow(api = {}) {
+      const id = nextApiRow++;
+      return `<div class="api-row" data-original-operation="${escapeText(api.operationId ?? '')}">
+        <label for="api-operation-${id}">接口标识（operationId）<input id="api-operation-${id}" data-api-operation required ${api.operationId ? 'readonly' : ''} maxlength="128" value="${escapeText(api.operationId ?? '')}" placeholder="例如 createCourse" autocomplete="off" spellcheck="false"></label>
+        <label for="api-method-${id}">请求方法<select id="api-method-${id}" data-api-method>${['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].map(method => `<option ${method === (api.method ?? 'GET') ? 'selected' : ''}>${method}</option>`).join('')}</select></label>
+        <label for="api-path-${id}" class="api-path">请求路径<input id="api-path-${id}" data-api-path required maxlength="255" value="${escapeText(api.path ?? '')}" placeholder="例如 /courses/{courseId}" autocomplete="off" spellcheck="false"></label>
+        <button type="button" class="link-button" data-remove-api aria-label="移除此接口">移除</button>
+      </div>`;
     }
 
     function appPermissionCount(app, grants) {
@@ -812,27 +1050,16 @@
         <div><strong>${escapeText(name)}</strong><small>${escapeText(detail)}</small></div></div>`;
     }
 
-    function renderOverview() {
-      const role = roles.get(selectedRole);
-      const summary = applications.map(app => `<div class="overview-item">${appMark(app)}<strong class="app-name">${escapeText(app.name)}</strong>
-        <span class="quiet">${appPermissionCount(app, role.granted)} 项权限</span></div>`).join('');
-      $('role-overview').innerHTML = `<div class="overview-head"><span class="quiet">角色概览</span>
-        <h2>${escapeText(role.name)}</h2><p>${escapeText(role.description)}</p></div>
-        <div class="overview-body">${summary}</div>`;
-    }
-
     function renderRoles() {
       const search = $('role-search').value.trim().toLowerCase();
-      const found = [...roles].filter(([, role]) => !role.management && role.name.toLowerCase().includes(search));
+      const found = [...roles].filter(([, role]) => role.name.toLowerCase().includes(search));
       roleRows.innerHTML = found.map(([id, role]) => {
         const names = applications.filter(app => appPermissionCount(app, role.granted)).map(app => app.short);
-        return `<tr><td>${person(role.name, role.description)}</td><td class="mobile-hide"><div class="tags">${tags(names)}</div></td>
-          <td><button class="link-button" type="button" data-edit-role="${id}">配置权限</button></td></tr>`;
-      }).join('') || '<tr><td class="empty" colspan="3">未找到角色，可以换个名称搜索。</td></tr>';
+        return `<tr><td>${person(role.name, role.description)}</td><td><div class="tags">${tags(names)}</div></td>
+          <td><button class="link-button" type="button" data-edit-role="${id}" ${userGrants().has('rbac.roles.edit') ? '' : 'hidden'}>${id === rootAdminRole ? '查看权限' : '配置权限'}</button>
+          ${!role.management && isRootSession() ? `<button class="link-button danger" type="button" data-delete-role="${id}">删除</button>` : ''}</td></tr>`;
+      }).join('') || '<tr><td class="empty" colspan="3">没有匹配的角色。</td></tr>';
       $('role-count').textContent = `共 ${found.length} 个角色`;
-      if (found.length && !found.some(([id]) => id === selectedRole)) selectedRole = found[0][0];
-      $('role-overview').hidden = found.length === 0;
-      renderOverview();
     }
 
     function withinDepartment(department, ancestor) {
@@ -849,7 +1076,7 @@
     }
 
     function isRootSession() {
-      return Boolean(sessionUser?.roles.has(rootAdminRole));
+      return (sessionUser ?? demoRoot).roles.has(rootAdminRole);
     }
 
     function inManagementScope(user) {
@@ -864,7 +1091,7 @@
     }
 
     function isGlobalView() {
-      return sessionUser ? isRootSession() : orgView.value === 'global';
+      return isRootSession();
     }
 
     function canMaintainDepartment(department) {
@@ -873,6 +1100,7 @@
 
     function departmentTree(parent = null, depth = 0) {
       return [...departments].filter(([, department]) => department.parent === parent)
+        .sort(([, a], [, b]) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0) || a.name.localeCompare(b.name, 'zh-CN'))
         .flatMap(([id, department]) => [{ id, name: department.name, depth }, ...departmentTree(id, depth + 1)]);
     }
 
@@ -888,6 +1116,7 @@
 
     function renderDepartmentBranches(parent) {
       return [...departments].filter(([id, department]) => department.parent === parent && canMaintainDepartment(id))
+        .sort(([, a], [, b]) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0) || a.name.localeCompare(b.name, 'zh-CN'))
         .map(([id, department]) => {
           const branch = 'org-children-' + id;
           const children = renderDepartmentBranches(id);
@@ -903,10 +1132,10 @@
         $('identity-name').textContent = global ? '总管理员' : '部门管理员';
         $('identity-mark').textContent = global ? '总' : '部';
       }
-      $('org-view-switch').hidden = Boolean(sessionUser);
       $('org-scope').textContent = global ? '全部部门' : departmentScopeText();
       $('org-dept-actions').hidden = !global;
-      $('edit-department').hidden = !departmentFilter;
+      $('edit-department').disabled = !departmentFilter;
+      $('edit-department').title = !departmentFilter ? '请先选择一个部门' : '';
       $('add-user').disabled = !global && !hasDepartmentScope();
 
       const rootParent = global ? null : departments.get((sessionUser ?? demoManager).department).parent;
@@ -921,7 +1150,7 @@
         <td class="mobile-hide">${escapeText(departments.get(user.department).name)}</td>
         <td><div class="tags">${tags(roleLabels(user), true)}</div></td>
         <td class="org-status"><span class="tag ${user.active ? 'positive' : 'inactive'}">${user.active ? '正常' : '已停用'}</span></td>
-        <td><button class="link-button" type="button" data-edit-user="${user.id}">编辑用户</button></td></tr>`).join('') ||
+        <td><button class="link-button" type="button" data-edit-user="${user.id}" ${userGrants().has('rbac.users.edit') ? '' : 'hidden'}>编辑用户</button></td></tr>`).join('') ||
         '<tr><td class="empty" colspan="5">这个范围内没有匹配的用户。</td></tr>';
       $('org-count').textContent = `共 ${found.length} 名用户`;
     }
@@ -941,7 +1170,7 @@
       $('department-name').focus();
     }
 
-    function openUserEditor(user) {
+    function openUserEditorBase(user) {
       if ((user && !canMaintainDepartment(user.department)) || (!isGlobalView() && !hasDepartmentScope())) return;
       editingUser = user;
       $('user-dialog-title').textContent = user ? '编辑用户' : '新增用户';
@@ -983,15 +1212,15 @@
         <td>${person(user.name, user.account)}</td>
         <td class="mobile-hide">${escapeText(departments.get(user.department).name)}</td>
         <td><div class="tags">${tags(roleLabels(user), true)}</div></td>
-        <td><button class="link-button" type="button" data-assign="${user.id}">分配角色</button></td></tr>`).join('') ||
+        <td><button class="link-button" type="button" data-assign="${user.id}" ${userGrants().has('rbac.assignments.edit') ? '' : 'hidden'}>分配角色</button></td></tr>`).join('') ||
         '<tr><td class="empty" colspan="5">未找到用户，可以换个姓名或部门搜索。</td></tr>';
       $('user-count').textContent = `共 ${found.length} 名用户`;
       renderBatchSelection();
     }
 
-    function renderMyPermissions() {
-      const signedInUser = sessionUser ?? demoEmployee;
-      const departmentName = departments.get(signedInUser.department)?.name ?? '权限中心';
+    function renderMyPermissionsBase() {
+      const signedInUser = sessionUser ?? demoRoot;
+      const departmentName = departments.get(signedInUser.department)?.name ?? '权限管理系统';
       $('profile').innerHTML = `<span class="avatar" aria-hidden="true">${escapeText(signedInUser.name.charAt(0))}</span><div><h2>${escapeText(signedInUser.name)}</h2>
         <p class="quiet">${escapeText(departmentName)}</p></div>
         <div class="tags">${tags(roleLabels(signedInUser), true)}</div>`;
@@ -1001,7 +1230,7 @@
         $('my-apps').replaceChildren();
         return;
       }
-      const grants = new Set([...signedInUser.roles].flatMap(id => [...roles.get(id).granted]));
+      const grants = userGrants(signedInUser);
       $('my-apps').innerHTML = applications.map(app => {
         const menus = app.groups.filter(group => grants.has(group.key)).map(group => {
           const actions = group.actions.filter(action => grants.has(action.key)).map(action => action.name);
@@ -1048,32 +1277,6 @@
       $('audit-count').textContent = `共 ${found.length} 条记录`;
     }
 
-    function canOpenView(page) {
-      return !sessionUser || isRootSession() || page === 'mine' ||
-        (hasDepartmentScope() && ['org', 'users', 'audit'].includes(page));
-    }
-
-    function showView(page) {
-      if (!canOpenView(page)) return;
-      for (const button of nav.querySelectorAll('button')) {
-        const active = button.dataset.page === page;
-        button.hidden = !canOpenView(button.dataset.page);
-        if (active) button.setAttribute('aria-current', 'page');
-        else button.removeAttribute('aria-current');
-        $(button.dataset.page + '-page').hidden = !active;
-      }
-      $('crumb').textContent = views[page].title;
-      const identity = sessionUser?.name ?? (page === 'mine' ? demoEmployee.name : views[page].identity);
-      $('identity-mark').textContent = sessionUser || page === 'mine' ? identity.charAt(0) : views[page].mark;
-      $('identity-name').textContent = identity;
-      if (page === 'catalog') renderCatalog();
-      if (page === 'roles') renderRoles();
-      if (page === 'org') renderOrganization();
-      if (page === 'users') renderUsers();
-      if (page === 'mine') renderMyPermissions();
-      if (page === 'audit') renderAudit();
-    }
-
     function setLoginError(message = '') {
       const error = $('login-error');
       error.textContent = message;
@@ -1082,6 +1285,9 @@
 
     function openLogin(message = '') {
       sessionUser = null;
+      clearTimeout(toastTimer); $('toast').hidden = true;
+      loginPassword.type = 'password'; $('toggle-password').textContent = '显示'; $('toggle-password').setAttribute('aria-pressed', 'false');
+      for (const dialog of document.querySelectorAll('dialog[open]')) dialog.close();
       $('workspace-shell').hidden = true;
       $('login-page').hidden = false;
       $('login-form').reset();
@@ -1094,12 +1300,11 @@
     function enterWorkspace(page) {
       $('login-page').hidden = true;
       $('workspace-shell').hidden = false;
-      $('login-entry').textContent = sessionUser ? '退出登录' : '体验登录';
-      $('identity-context').textContent = sessionUser ? '当前账号' : '演示视角';
+      $('login-entry').textContent = sessionUser ? '退出登录' : '切换账号';
+      $('identity-context').textContent = sessionUser ? '当前账号' : '原型预览';
       selectedUsers.clear();
       collapsedBranches.clear();
       departmentFilter = '';
-      orgView.value = 'global';
       for (const id of ['org-search', 'user-search', 'role-search', 'audit-search']) $(id).value = '';
       showView(page);
       nav.querySelector('[aria-current="page"]').focus();
@@ -1107,7 +1312,7 @@
 
     function permissionRow(permission, menu, parent) {
       return `<label class="tree-row ${menu ? 'menu' : 'child'}"><input type="checkbox" value="${permission.key}"
-        data-parent="${parent}" aria-label="${escapeText(permission.name)}" ${roleEditor.grants.has(permission.key) ? 'checked' : ''}>
+        data-parent="${parent}" aria-label="${escapeText(permission.name)}" ${roleEditor.grants.has(permission.key) ? 'checked' : ''} ${roleEditor.readOnly ? 'disabled' : ''}>
         <span class="catalog-label">${escapeText(permission.name)}</span><span class="tag">${menu ? '菜单' : '按钮'}</span></label>`;
     }
 
@@ -1132,21 +1337,21 @@
       updatePermissionCount();
     }
 
-    function openRole(id) {
+    function openRoleBase(id) {
       const role = roles.get(id);
-      roleEditor = { id, app: applications[0], grants: new Set(role?.granted) };
-      if (role) {
-        selectedRole = id;
-        renderOverview();
-      }
-      $('role-dialog-title').textContent = role ? '配置角色' : '新增角色';
+      roleEditor = { id, app: applications[0], grants: new Set(role?.granted), readOnly: id === rootAdminRole };
+      if (roleEditor.readOnly) roleEditor.grants = new Set(applications[0].groups.flatMap(group => [group.key, ...group.actions.map(action => action.key)]));
+      $('role-dialog-title').textContent = roleEditor.readOnly ? '总管理员权限' : role ? '配置角色' : '新增角色';
       roleName.value = role?.name ?? '';
       roleDescription.value = role?.description ?? '';
+      roleName.disabled = Boolean(role?.management);
+      roleDescription.disabled = roleEditor.readOnly;
+      $('role-save').disabled = roleEditor.readOnly;
       roleName.setCustomValidity('');
       renderAppChoices(appList, roleEditor.app);
       renderPermissionTree();
       roleDialog.showModal();
-      roleName.focus();
+      (roleName.disabled ? appList.querySelector('button') : roleName).focus();
     }
 
     function openAssignment(targets, mode = 'single') {
@@ -1163,7 +1368,7 @@
       assignSave.disabled = batch;
       roleChoices.innerHTML = [...roles].filter(([, role]) => !role.management).map(([id, role]) => `<label class="choice">
         <input type="checkbox" value="${id}" aria-label="${escapeText(role.name)}" ${!batch && first.roles.has(id) ? 'checked' : ''}>
-        <span><strong>${escapeText(role.name)}</strong><small>${escapeText(role.description)}</small></span></label>`).join('');
+        <span><strong>${escapeText(role.name)}</strong><small>${escapeText(role.description)}</small></span></label>`).join('') || '<p class="empty">暂无可分配的角色。</p>';
       assignDialog.showModal();
     }
 
@@ -1176,7 +1381,7 @@
     }
 
     $('login-entry').addEventListener('click', () => openLogin());
-    $('return-demo').addEventListener('click', () => enterWorkspace('roles'));
+    $('return-demo').addEventListener('click', () => { loginAccount.value = 'admin'; loginPassword.value = demoPassword; loginAccount.focus(); });
     $('login-samples').addEventListener('click', event => {
       const button = event.target.closest('[data-example]');
       if (!button) return;
@@ -1189,7 +1394,7 @@
       event.preventDefault();
       const name = loginAccount.value.trim().toLowerCase();
       const user = [demoRoot, ...users].find(candidate => candidate.account.toLowerCase() === name);
-      if (!user || loginPassword.value !== demoPassword) {
+      if (!user || loginPassword.value !== (user?.password ?? demoPassword)) {
         setLoginError('用户名或密码错误。');
         return;
       }
@@ -1199,7 +1404,7 @@
       }
       sessionUser = user;
       loginPassword.value = '';
-      const landing = isRootSession() ? 'roles' : hasDepartmentScope() ? 'users' : 'mine';
+      const landing = isRootSession() ? 'catalog' : hasDepartmentScope() ? 'users' : 'mine';
       enterWorkspace(landing);
     });
     $('audit-search').addEventListener('input', renderAudit);
@@ -1217,11 +1422,6 @@
       for (const id of button.getAttribute('aria-controls').split(' ')) $(id).hidden = collapse;
       button.setAttribute('aria-expanded', String(!collapse));
       button.setAttribute('aria-label', (collapse ? '展开' : '收起') + button.dataset.branchName);
-    });
-    orgView.addEventListener('change', () => {
-      departmentFilter = '';
-      $('org-search').value = '';
-      renderOrganization();
     });
     orgDepartmentList.addEventListener('click', event => {
       const button = event.target.closest('[data-department]');
@@ -1288,7 +1488,7 @@
         if ($('user-admin').checked) user.roles.add(departmentAdminRole);
         else user.roles.delete(departmentAdminRole);
       }
-      if (!editingUser) users.push(user);
+      if (!editingUser) { user.password = $('initial-password').value; users.push(user); }
       const actor = isGlobalView() ? demoRoot.name : demoManager.name;
       const departmentName = departments.get(department).name;
       if (previousDepartment && previousDepartment !== department) {
@@ -1299,6 +1499,7 @@
       } else if (previouslyActive !== user.active) {
         recordOperation(user.active ? '启用账号' : '停用账号', [user], departmentName, actor);
       }
+      if (editingUser && previouslyActive === user.active && previousDepartment === department) recordOperation('修改用户', [user], '更新用户基本信息', actor);
       if (previouslyManager !== user.roles.has(departmentAdminRole)) {
         recordOperation(previouslyManager ? '撤销部门管理员' : '指定部门管理员', [user], departmentName, actor);
       }
@@ -1330,6 +1531,7 @@
       const menu = catalogApp.groups.find(group => group.key === key || group.actions.some(action => action.key === key));
       if (menu.key === key) openPermissionEditor(menu);
       else openPermissionEditor(menu.actions.find(action => action.key === key), menu);
+      if (button.hasAttribute('data-focus-apis')) $('api-config-title').scrollIntoView({ block: 'start' });
     });
     permissionType.addEventListener('change', updatePermissionParent);
     appName.addEventListener('input', () => appName.setCustomValidity(''));
@@ -1338,24 +1540,39 @@
     $('app-form').addEventListener('submit', event => {
       event.preventDefault();
       const name = appName.value.trim();
-      const duplicate = applications.some(app => app !== editedApp && app.name.toLowerCase() === name.toLowerCase());
-      if (!name || duplicate) {
+      if (!name || applications.some(app => app !== editedApp && app.name === name)) {
         appName.setCustomValidity(name ? '这个应用名称已存在。' : '请输入应用名称。');
         appName.reportValidity();
         return;
       }
+      const applicationCode = $('app-code').value.trim() || (editedApp?.code ?? 'app-' + nextAppId);
+      if (applications.some(app => app !== editedApp && app.code === applicationCode)) { $('app-code').setCustomValidity('这个接入标识已存在。'); $('app-code').reportValidity(); return; }
       if (editedApp) {
-        if (editedApp.name !== name) editedApp.short = name;
         editedApp.name = name;
+        editedApp.short = name;
       } else {
-        catalogApp = { id: 'app-' + nextAppId++, name, short: name, symbol: '应', groups: [] };
+        catalogApp = { id: 'app-' + nextAppId++, code: applicationCode, name, short: name, symbol: '应', groups: [] };
         applications.push(catalogApp);
       }
-      recordOperation(editedApp ? '修改应用' : '登记应用', name, '维护业务应用');
+      recordOperation(editedApp ? '修改应用' : '登记应用', name, '维护应用');
       appDialog.close();
       renderCatalog();
-      $('edit-app').focus();
       notify('应用已保存');
+    });
+    $('add-api').addEventListener('click', () => {
+      $('api-rows').insertAdjacentHTML('beforeend', apiRow());
+      $('api-empty').hidden = true;
+      $('api-rows').lastElementChild.querySelector('input').focus();
+    });
+    $('api-rows').addEventListener('click', event => {
+      const button = event.target.closest('[data-remove-api]');
+      if (!button) return;
+      button.closest('.api-row').remove();
+      for (const field of $('api-rows').querySelectorAll('input')) field.setCustomValidity('');
+      $('api-empty').hidden = $('api-rows').children.length > 0;
+    });
+    $('api-rows').addEventListener('input', event => {
+      for (const field of event.target.closest('.api-row').querySelectorAll('input')) field.setCustomValidity('');
     });
     $('permission-form').addEventListener('submit', event => {
       event.preventDefault();
@@ -1367,7 +1584,7 @@
       }
       const code = permissionCode.value.trim();
       if (!/^[^:\s]+:[^:\s]+$/.test(code)) {
-        permissionCode.setCustomValidity('请按 资源:操作 的格式填写，例如 ticket:close。');
+        permissionCode.setCustomValidity('请按 资源:操作 的格式填写，例如 course:delete。');
         permissionCode.reportValidity();
         return;
       }
@@ -1378,10 +1595,36 @@
         permissionCode.reportValidity();
         return;
       }
+      const apiEntries = [];
+      const otherApis = catalogApp.groups.flatMap(group => [group, ...group.actions])
+        .filter(permission => permission !== editedPermission).flatMap(permission => permission.apis ?? []);
+      for (const row of $('api-rows').children) {
+        const operation = row.querySelector('[data-api-operation]');
+        const method = row.querySelector('[data-api-method]').value;
+        const path = row.querySelector('[data-api-path]');
+        const operationId = operation.value.trim();
+        const requestPath = path.value.trim();
+        const registered = [...new Map([...otherApis, ...registryFor(catalogApp).values()].map(api => [api.operationId, api])).values()];
+        if (!operationId || apiEntries.some(api => api.operationId === operationId)) {
+          operation.setCustomValidity(operationId ? '这个应用内已存在相同的接口标识。' : '请输入接口标识。');
+          operation.reportValidity();
+          return;
+        }
+        if (!requestPath.startsWith('/') || [...registered, ...apiEntries].some(api => api.operationId !== operationId && api.method === method && api.path === requestPath)) {
+          path.setCustomValidity(requestPath.startsWith('/') ? '这个应用内已登记相同方法和路径的接口。' : '请求路径应以 / 开头。');
+          path.reportValidity();
+          return;
+        }
+        const existing = registered.find(api => api.operationId === operationId);
+        if (existing && row.dataset.originalOperation !== operationId && (existing.method !== method || existing.path !== requestPath)) { operation.setCustomValidity('该接口已登记，请选择已有接口或使用新的标识。'); operation.reportValidity(); return; }
+        apiEntries.push({ operationId, method, path: requestPath });
+      }
+      const canonicalApis = apiEntries.map(api => saveRegisteredApi(catalogApp, api));
+      const attributes = { name, code, apis: canonicalApis };
       if (editedPermission) {
-        Object.assign(editedPermission, { name, code });
+        Object.assign(editedPermission, attributes);
       } else {
-        const permission = { key: 'permission-' + nextPermissionId++, name, code };
+        const permission = { key: 'permission-' + nextPermissionId++, ...attributes };
         if (permissionType.value === 'menu') {
           catalogApp.groups.push({ ...permission, actions: [] });
         } else {
@@ -1389,13 +1632,19 @@
           menu.actions.push(permission);
         }
       }
-      recordOperation(editedPermission ? '修改权限' : '登记权限', name, `${catalogApp.name} · ${code}`);
+      recordOperation(editedPermission ? '修改权限' : '登记权限', name, `${catalogApp.name} · ${code}，关联 ${apiEntries.length} 个接口`);
       permissionDialog.close();
       renderCatalog();
       $('add-permission').focus();
       notify('权限已保存');
     });
     $('role-search').addEventListener('input', renderRoles);
+    $('role-filter-submit').addEventListener('click', renderRoles);
+    $('role-filter-reset').addEventListener('click', () => {
+      $('role-search').value = '';
+      renderRoles();
+      $('role-search').focus();
+    });
     $('user-search').addEventListener('input', () => {
       selectedUsers.clear();
       renderUsers();
@@ -1418,6 +1667,37 @@
     roleRows.addEventListener('click', event => {
       const button = event.target.closest('[data-edit-role]');
       if (button) openRole(button.dataset.editRole);
+      const remove = event.target.closest('[data-delete-role]');
+      if (!remove) return;
+      deletingRole = remove.dataset.deleteRole;
+      const role = roles.get(deletingRole);
+      const assignedUsers = users.filter(user => user.roles.has(deletingRole)).length;
+      $('delete-role-title').textContent = assignedUsers ? '暂不能删除' : '删除角色';
+      $('delete-role-name').textContent = assignedUsers ? `角色「${role.name}」` : `确定删除角色「${role.name}」吗？`;
+      $('delete-role-message').textContent = assignedUsers
+        ? `该角色仍关联 ${assignedUsers} 个用户，请先撤销用户关联。停用账号也计入。`
+        : '将删除角色及其权限配置，保留权限定义和历史操作记录。';
+      $('delete-role-confirm').hidden = assignedUsers > 0;
+      $('delete-role-cancel').textContent = assignedUsers ? '知道了' : '取消';
+      $('delete-role-dialog').showModal();
+      $('delete-role-cancel').focus();
+    });
+    $('delete-role-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const role = roles.get(deletingRole);
+      if (!isRootSession() || role.management) return;
+      const assignedUsers = users.filter(user => user.roles.has(deletingRole)).length;
+      if (assignedUsers) {
+        $('delete-role-message').textContent = `该角色仍关联 ${assignedUsers} 个用户，请先撤销用户关联。停用账号也计入。`;
+        $('delete-role-confirm').hidden = true;
+        return;
+      }
+      roles.delete(deletingRole);
+      recordOperation('删除角色', role.name, '删除未关联用户的业务角色及其权限配置');
+      $('delete-role-dialog').close();
+      renderRoles();
+      $('role-search').focus();
+      notify('角色已删除');
     });
     userRows.addEventListener('click', event => {
       const button = event.target.closest('[data-assign]');
@@ -1449,22 +1729,27 @@
     roleName.addEventListener('input', () => roleName.setCustomValidity(''));
     $('role-form').addEventListener('submit', event => {
       event.preventDefault();
+      if (roleEditor.readOnly) return;
       const name = roleName.value.trim();
-      const duplicate = [...roles].some(([id, role]) => id !== roleEditor.id && role.name === name);
-      if (!name || duplicate) {
+      if (!name || [...roles].some(([id, role]) => id !== roleEditor.id && role.name === name)) {
         roleName.setCustomValidity(name ? '这个角色名称已存在。' : '请输入角色名称。');
         roleName.reportValidity();
         return;
       }
+      if (roleEditor.mode === 'request') {
+        roleCreationRequests.unshift({ id: 'rr-' + nextRequestId++, userId: sessionUser.id, name, description: roleDescription.value.trim(), granted: new Set(roleEditor.grants), status: 'pending', created: displayNow() });
+        recordOperation('提交角色创建申请', name, '等待总管理员审核'); roleDialog.close(); showView('roleRequests'); notify('角色创建申请已提交，尚未创建角色'); return;
+      }
       const id = roleEditor.id ?? 'custom-' + nextRoleId++;
-      roles.set(id, { name, description: roleDescription.value.trim(), granted: roleEditor.grants });
-      recordOperation('配置角色权限', name, `保存 ${roleEditor.grants.size} 项权限`);
-      selectedRole = id;
+      const previous = roles.get(id);
+      roles.set(id, { name, description: roleDescription.value.trim(), granted: roleEditor.grants,
+        ...(previous?.management ? { management: true } : {}) });
+      if (roleEditor.request) { Object.assign(roleEditor.request, { status: 'approved', reviewer: sessionUser.name, roleId: id, reviewed: displayNow() }); }
+      recordOperation(roleEditor.request ? '通过角色创建申请' : '配置角色权限', name, `保存 ${roleEditor.grants.size} 项权限`);
       roleDialog.close();
       if (!roleEditor.id) $('role-search').value = '';
-      renderRoles();
-      (roleRows.querySelector(`[data-edit-role="${id}"]`) ?? $('role-search')).focus();
-      notify('角色已保存');
+      showView(roleEditor.request ? 'roleRequests' : 'roles');
+      notify(roleEditor.request ? '角色已创建，申请已通过；尚未分配给员工' : '角色已保存');
     });
     $('assign-form').addEventListener('submit', event => {
       event.preventDefault();
@@ -1509,9 +1794,351 @@
     for (const button of document.querySelectorAll('[data-close]')) {
       button.addEventListener('click', () => button.closest('dialog').close());
     }
-    recordOperation('登记权限', '审批公文', 'OA 协同办公 · document:approve');
-    recordOperation('指定部门管理员', [demoManager], '行政部及下级部门');
-    showView('roles');
+    // All state is local to this single-file prototype.
+    demoRoot.id = 'root';
+    applications[0].code = 'permission-center';
+    applications[1].code = 'course-project-management';
+    const requestGroup = (key, name, code, operationId, path, actions = []) => ({ key, name, code, apis: [{ operationId, method: 'GET', path }], actions });
+    applications[0].groups.push(
+      requestGroup('rbac.requests', '我的申请', 'request:viewOwn', 'listMyPermissionRequests', '/api/v1/me/permission-requests', [
+        { key: 'rbac.requests.create', name: '申请权限', code: 'request:create', apis: [{ operationId: 'createPermissionRequest', method: 'POST', path: '/api/v1/me/permission-requests' }] },
+        { key: 'rbac.requests.withdraw', name: '撤回申请', code: 'request:withdraw', apis: [{ operationId: 'withdrawPermissionRequest', method: 'POST', path: '/api/v1/me/permission-requests/{requestId}/withdraw' }] }
+      ]),
+      requestGroup('rbac.review', '权限申请审核', 'request:review', 'listPermissionRequests', '/api/v1/permission-requests', [
+        { key: 'rbac.review.submit', name: '审核申请', code: 'request:approve', apis: [{ operationId: 'reviewPermissionRequest', method: 'POST', path: '/api/v1/permission-requests/{requestId}/review' }] }
+      ]),
+      requestGroup('rbac.roleRequests', '角色创建申请', 'roleRequest:view', 'listRoleCreationRequests', '/api/v1/role-creation-requests', [
+        { key: 'rbac.roleRequests.create', name: '申请创建角色', code: 'roleRequest:create', apis: [{ operationId: 'createRoleCreationRequest', method: 'POST', path: '/api/v1/role-creation-requests' }] }
+      ])
+    );
+    applications[0].groups[0].actions.find(action => action.key === 'rbac.apis.manage').apis = [
+      { operationId: 'registerApi', method: 'POST', path: '/api/v1/applications/{applicationId}/apis' },
+      { operationId: 'updateApi', method: 'PATCH', path: '/api/v1/applications/{applicationId}/apis/{apiId}' },
+      { operationId: 'deleteApi', method: 'DELETE', path: '/api/v1/applications/{applicationId}/apis/{apiId}' }
+    ];
+    for (const key of ['rbac.review', 'rbac.review.submit', 'rbac.roleRequests', 'rbac.roleRequests.create']) roles.get(departmentAdminRole).granted.add(key);
+    roles.set('course-reviewer', { name: '课程审核员', description: '仅查看所有课程并审核课程', granted: new Set(['course.all', 'course.all.review']) });
+    roles.set('term-creator', { name: '学期维护员', description: '查看和新建学期', granted: new Set(['course.terms', 'course.terms.create']) });
+    users.push({ id: 'zhou', name: '周宁', account: 'zhou.ning', department: 'office', active: false, roles: new Set(['reader']) });
+    Object.assign(views, { requests: { title: '我的申请' }, review: { title: '权限申请审核' }, roleRequests: { title: '角色创建申请' }, course: { title: '课程管理系统' } });
+    const pagePermissions = { catalog: 'rbac.applications', roles: 'rbac.roles', org: 'rbac.organization', users: 'rbac.assignments', mine: 'rbac.mine', audit: 'rbac.audit', requests: 'rbac.requests', review: 'rbac.review', roleRequests: 'rbac.roleRequests' };
+    const requestStates = { pending: '待审核', approved: '已通过', rejected: '已拒绝', satisfied: '已满足', withdrawn: '已撤回' };
+    let currentPage = 'catalog', deniedKey = null, requestReview = null, registryEditing = null, registryRemoving = null, catalogMode = 'permissions', nextRequestId = 20;
+    const displayNow = () => logTime.format(new Date());
+    const permissionRequests = [
+      { id: 'pr-1', userId: 'lin', permissionKey: 'course.all.review', reason: '本学期协助教师审核课程申请。', status: 'pending', created: '2026/11/14 09:30:00' },
+      { id: 'pr-2', userId: 'ye', permissionKey: 'course.mine.create', reason: '需要申请下学期的新课程。', status: 'pending', created: '2026/11/14 10:15:00' },
+      { id: 'pr-3', userId: 'lin', permissionKey: 'course.terms.create', reason: '协助整理下学期安排。', status: 'rejected', reviewer: '总管理员', reviewed: '2026/11/13 15:10:00', created: '2026/11/13 10:00:00' },
+      { id: 'pr-4', userId: 'lin', permissionKey: 'course.all.delete', reason: '课程维护工作调整，暂不需要。', status: 'withdrawn', created: '2026/11/12 10:00:00' },
+      { id: 'pr-5', userId: 'lin', permissionKey: 'course.mine', reason: '查看自己的课程安排。', status: 'approved', roleId: 'teacher', reviewer: '顾晨', reviewed: '2026/11/12 09:20:00', created: '2026/11/12 09:00:00' },
+      { id: 'pr-6', userId: 'lin', permissionKey: 'course.mine.create', reason: '提交新课程。', status: 'satisfied', created: '2026/11/11 14:00:00' }
+    ];
+    const roleCreationRequests = [
+      { id: 'rr-1', userId: 'gu', name: '课程助教', description: '协助教师审核课程申请', granted: new Set(['course.all', 'course.all.review']), status: 'pending', created: '2026/11/14 11:00:00' },
+      { id: 'rr-2', userId: 'gu', name: '课程资料查看员', description: '只查看自己的课程', granted: new Set(['course.mine']), status: 'rejected', reviewer: '总管理员', created: '2026/11/13 11:00:00', reviewed: '2026/11/13 14:00:00' }
+    ];
+    const apiStores = new Map();
+    for (const app of applications) {
+      const store = new Map();
+      for (const item of app.groups.flatMap(group => [group, ...group.actions])) item.apis = (item.apis ?? []).map(api => { if (!store.has(api.operationId)) store.set(api.operationId, { ...api }); return store.get(api.operationId); });
+      apiStores.set(app.id, store);
+    }
+    // Shared reads belong to both entry points, without exposing the other menu.
+    const assignmentMenu = applications[0].groups.find(group => group.key === 'rbac.assignments');
+    assignmentMenu.apis = ['listUsers', 'listRoles', 'getDepartmentTree'].map(code => apiStores.get('rbac').get(code));
+    function permissionEntries() { return applications.flatMap(app => app.groups.flatMap(menu => [{ ...menu, app, parent: null }, ...menu.actions.map(action => ({ ...action, app, parent: menu.key }))])); }
+    function findPermission(key) { return permissionEntries().find(item => item.key === key); }
+    function stateTag(state) { return `<span class="request-state state-${state}">${requestStates[state]}</span>`; }
+    function registryFor(app) { if (!apiStores.has(app.id)) apiStores.set(app.id, new Map()); return apiStores.get(app.id); }
+    function saveRegisteredApi(app, api, original = api.operationId) {
+      const store = registryFor(app), shared = store.get(original) ?? { ...api };
+      store.delete(original); Object.assign(shared, api); store.set(api.operationId, shared); return shared;
+    }
+    function renderExistingApiChoices() {
+      $('existing-api').innerHTML = '<option value="">选择本应用已登记的接口</option>' + [...registryFor(catalogApp).values()].map(api => `<option value="${escapeText(api.operationId)}">${escapeText(api.operationId)} — ${api.method} ${escapeText(api.path)}</option>`).join('');
+    }
+    function renderCatalog() {
+      renderCatalogBase();
+      $('catalog-app-meta').textContent = `${catalogApp.name} · 接入标识 ${catalogApp.code}`;
+      const list = catalogApp.groups.flatMap(group => [group, ...group.actions]);
+      $('catalog-count').textContent = `${catalogApp.groups.length} 个菜单，${list.length - catalogApp.groups.length} 个按钮，${registryFor(catalogApp).size} 个已登记接口`;
+      catalogRows.closest('.scroll-table').hidden = catalogMode === 'apis';
+      $('api-registry').hidden = catalogMode !== 'apis';
+      $('catalog-count').hidden = catalogMode === 'apis';
+      $('add-permission').hidden = catalogMode === 'apis';
+      $('api-registry-rows').innerHTML = [...registryFor(catalogApp).values()].map(api => {
+        const names = list.filter(item => item.apis?.some(a => a.operationId === api.operationId)).map(item => item.name);
+        return `<tr><td><strong>${escapeText(api.operationId)}</strong></td><td><span class="tag">${api.method}</span> <code>${escapeText(api.path)}</code></td><td><div class="tags">${tags(names)}</div></td><td><button type="button" class="link-button" data-registry-edit="${escapeText(api.operationId)}">编辑</button><button type="button" class="link-button danger" data-registry-remove="${escapeText(api.operationId)}">删除登记</button></td></tr>`;
+      }).join('') || '<tr><td colspan="4" class="empty">暂无接口，点击「登记接口」添加。</td></tr>';
+    }
+    function userGrants(user = sessionUser ?? demoRoot) {
+      if (!user.active) return new Set();
+      const grants = new Set([...user.roles].flatMap(id => [...roles.get(id).granted]));
+      if (user.roles.has(rootAdminRole)) for (const group of applications[0].groups) for (const item of [group, ...group.actions]) grants.add(item.key);
+      for (const key of ['rbac.mine', 'rbac.requests', 'rbac.requests.create', 'rbac.requests.withdraw']) grants.add(key);
+      return grants;
+    }
+    function settleRequests() {
+      for (const request of permissionRequests) if (request.status === 'pending' && userGrants([demoRoot, ...users].find(user => user.id === request.userId)).has(request.permissionKey)) request.status = 'satisfied';
+    }
+    function canOpenView(page) {
+      if (!sessionUser) return false;
+      if (['mine', 'requests', 'course'].includes(page)) return true;
+      if (['review', 'roleRequests'].includes(page)) return isRootSession() || hasDepartmentScope();
+      if (['catalog', 'roles'].includes(page)) return isRootSession();
+      return (isRootSession() || hasDepartmentScope()) && userGrants().has(pagePermissions[page]);
+    }
+    function showView(page) {
+      if (!sessionUser) { openLogin(); return; }
+      settleRequests(); currentPage = page;
+      for (const [key] of Object.entries(views)) $(key + '-page').hidden = true;
+      $('denied-page').hidden = true;
+      for (const button of nav.querySelectorAll('button[data-page]')) {
+        const active = button.dataset.page === page;
+        button.hidden = false;
+        button.toggleAttribute('data-locked', !canOpenView(button.dataset.page));
+        if (active) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
+        button.querySelector('.nav-locked')?.remove();
+        if (!canOpenView(button.dataset.page)) button.insertAdjacentHTML('beforeend', '<span class="nav-locked">无权限</span>');
+      }
+      $('crumb').textContent = views[page].title;
+      $('identity-name').textContent = sessionUser.name; $('identity-mark').textContent = sessionUser.name.charAt(0);
+      if (!canOpenView(page)) {
+        deniedKey = pagePermissions[page]; $('denied-page').hidden = false;
+        $('denied-message').textContent = `当前账号暂时无法使用「${views[page].title}」。管理员功能还需具备相应的管理员身份和管理范围。`;
+        $('denied-apply').hidden = !deniedKey; return;
+      }
+      $(page + '-page').hidden = false;
+      ({ catalog: renderCatalog, roles: renderRoles, org: renderOrganization, users: renderUsers, mine: renderMyPermissions, audit: renderAudit, requests: renderRequests, review: renderReview, roleRequests: renderRoleRequests, course: renderCourse })[page]();
+      for (const element of document.querySelectorAll('[data-requires]')) { element.hidden = element.id === 'add-permission' && catalogMode === 'apis'; element.classList.toggle('locked', !userGrants().has(element.dataset.requires)); }
+    }
+    function renderRequests() {
+      const rows = permissionRequests.filter(request => request.userId === sessionUser.id && (!$('my-request-status').value || request.status === $('my-request-status').value));
+      $('request-total').textContent = `共 ${rows.length} 条申请`;
+      $('request-rows').innerHTML = rows.map(request => {
+        const permission = findPermission(request.permissionKey);
+        return `<tr><td><strong>${escapeText(permission.name)}</strong><span class="audit-detail">${escapeText(permission.app.name)}<br>${request.created}</span></td><td>${escapeText(request.reason)}</td><td>${stateTag(request.status)}</td><td>${request.reviewer ? escapeText(request.reviewer) + '<span class="audit-detail">' + escapeText(roles.get(request.roleId)?.name ?? (request.status === 'rejected' ? '申请未通过' : '')) + '</span>' : request.status === 'satisfied' ? '已通过其他角色获得权限' : '—'}</td><td>${request.status === 'pending' ? `<button class="link-button" type="button" data-withdraw="${request.id}">撤回</button>` : '<span class="quiet">—</span>'}</td></tr>`;
+      }).join('') || '<tr><td colspan="5" class="empty">暂无申请记录，可点击「申请权限」。</td></tr>';
+      $('request-directory').innerHTML = applications.map(app => {
+        const groups = requestableGroups(app);
+        return `<details open><summary>${escapeText(app.name)}</summary>${groups.map(({ menu, owned, items }) => `<div class="request-directory-group">${owned ? `<p class="quiet" style="padding:12px 0 0 24px">所属菜单：${escapeText(menu.name)}</p>` : ''}${items.map(permission => `<div class="directory-action"><div><strong>${escapeText(permission.name)}</strong> <span class="tag">${owned ? '按钮' : '菜单'}</span><small>${escapeText(permission.code)}</small></div><button type="button" class="link-button" data-apply="${permission.key}">申请${owned ? '按钮' : '菜单'}权限</button></div>`).join('')}</div>`).join('') || '<p class="quiet" style="padding:14px 0">暂无可申请权限，已获得的权限可到「我的权限」查看。</p>'}</details>`;
+      }).join('');
+    }
+    function requestableGroups(app) {
+      const grants = userGrants();
+      return app.groups.map(menu => {
+        const owned = grants.has(menu.key);
+        return { menu, owned, items: owned ? menu.actions.filter(action => !grants.has(action.key)) : [menu] };
+      }).filter(group => group.items.length);
+    }
+    function renderRequestPermissions(selected = '') {
+      const app = applications.find(app => app.id === $('request-app').value), groups = requestableGroups(app);
+      const menus = groups.filter(group => !group.owned);
+      const buttons = groups.filter(group => group.owned);
+      $('request-permission').innerHTML = '<option value="">请选择权限</option>'
+        + (menus.length ? `<optgroup label="菜单权限">${menus.map(({ menu }) => `<option value="${menu.key}">【菜单】${escapeText(menu.name)}</option>`).join('')}</optgroup>` : '')
+        + buttons.map(({ menu, items }) => `<optgroup label="${escapeText(menu.name)} · 按钮权限">${items.map(action => `<option value="${action.key}">【按钮】${escapeText(action.name)}</option>`).join('')}</optgroup>`).join('');
+      $('request-permission').value = selected;
+      $('request-permission').disabled = groups.length === 0;
+      $('request-form').querySelector('button[type="submit"]').disabled = groups.length === 0;
+      $('request-options-help').textContent = groups.length ? '仅列出尚未获得的权限。先申请菜单，获得后再申请其下按钮。' : '该应用没有可申请的权限。已获得的权限可到「我的权限」查看。';
+    }
+    function openRequest(key = '') {
+      const grants = userGrants();
+      if (key && grants.has(key)) { notify('已经拥有这项权限，可在「我的权限」查看'); return; }
+      let permission = key ? findPermission(key) : null;
+      let parentFirst = false;
+      if (permission?.parent && !grants.has(permission.parent)) { permission = findPermission(permission.parent); key = permission.key; parentFirst = true; }
+      $('request-form').reset();
+      $('request-app').innerHTML = applications.map(app => `<option value="${app.id}">${escapeText(app.name)}</option>`).join('');
+      $('request-app').value = permission?.app.id ?? applications[1].id;
+      renderRequestPermissions(key);
+      if (parentFirst) $('request-options-help').textContent = `请先申请「${permission.name}」菜单，获得后才能申请其下按钮权限。`;
+      $('request-dialog').showModal();
+      (key ? $('request-reason') : $('request-permission')).focus();
+    }
+    function renderReview() {
+      $('review-scope').textContent = departmentScopeText();
+      const rows = permissionRequests.filter(request => inManagementScope([demoRoot, ...users].find(user => user.id === request.userId)) && (!$('review-status').value || request.status === $('review-status').value));
+      $('review-total').textContent = `共 ${rows.length} 条申请`;
+      $('review-rows').innerHTML = rows.map(request => {
+        const user = [demoRoot, ...users].find(user => user.id === request.userId), permission = findPermission(request.permissionKey);
+        const departmentName = user.department ? departments.get(user.department).name : '系统预置账号（无所属部门）';
+        return `<tr><td>${person(user.name, departmentName)}</td><td><strong>${escapeText(permission.name)}</strong><span class="audit-detail">${escapeText(permission.app.name)}</span></td><td>${escapeText(request.reason)}</td><td>${stateTag(request.status)}</td><td>${request.status === 'pending' ? `<div class="request-actions"><button type="button" class="link-button" data-review-request="${request.id}">审核</button><button type="button" class="link-button danger" data-reject-request="${request.id}">拒绝</button></div>` : '<span class="quiet">已处理</span>'}</td></tr>`;
+      }).join('') || '<tr><td colspan="5" class="empty">当前范围内没有匹配的申请。</td></tr>';
+    }
+    function openReview(id, reject = false, roleRequest = false) {
+      const request = (roleRequest ? roleCreationRequests : permissionRequests).find(item => item.id === id);
+      if (request.status !== 'pending' || (roleRequest ? !isRootSession() : !inManagementScope([demoRoot, ...users].find(user => user.id === request.userId)))) return;
+      requestReview = { request, reject, roleRequest };
+      const user = [demoRoot, ...users].find(user => user.id === request.userId), permission = roleRequest ? null : findPermission(request.permissionKey);
+      $('review-dialog-title').textContent = reject ? '拒绝申请' : '审核权限申请';
+      $('review-confirm').textContent = reject ? '确认拒绝' : '批准并分配角色';
+      $('review-request-summary').innerHTML = `<strong>${escapeText(user.name)} · ${escapeText(roleRequest ? request.name : permission.name)}</strong><span>${escapeText(roleRequest ? request.description : request.reason)}</span><span class="quiet">${request.created}</span>`;
+      $('review-role-area').hidden = reject;
+      if (!reject) {
+        const allowed = new Set([request.permissionKey, permission.parent].filter(Boolean));
+        const candidateRoles = [...roles].filter(([,role]) => !role.management && role.granted.has(request.permissionKey));
+        $('review-role-options').innerHTML = candidateRoles.map(([id,role]) => {
+          const extras = [...role.granted].filter(key => !allowed.has(key) && !['rbac.mine', 'rbac.requests'].includes(key));
+          return `<label><input type="radio" name="review-role" value="${id}" ${extras.length ? 'disabled' : ''}><span><strong>${escapeText(role.name)}</strong><small>全部权限：${escapeText([...role.granted].map(key => findPermission(key)?.name ?? key).join('、'))}</small>${extras.length ? '<small style="color:#9a3b3b">包含其他功能，请先拆分或新建最小权限角色。</small>' : ''}</span></label>`;
+        }).join('') || '<p class="empty">没有包含此权限的现有业务角色。</p>';
+        $('review-role-note').textContent = '无合适角色时，可先提交角色创建申请。此申请保持待审核。';
+      }
+      $('review-confirm').disabled = !reject; $('review-dialog').showModal();
+    }
+    function renderRoleRequests() {
+      const root = isRootSession();
+      $('new-role-request').hidden = root;
+      $('role-request-help').textContent = root ? '总管理员审核全部申请。受理后进入角色编辑界面，保存成功才通过申请；取消时仍为待审核。' : '你可以提交申请并查看自己的记录。角色创建后，仍需另外分配给员工。';
+      const rows = roleCreationRequests.filter(request => (root || request.userId === sessionUser.id) && (!$('role-request-status').value || request.status === $('role-request-status').value));
+      $('role-request-total').textContent = `共 ${rows.length} 条申请`;
+      $('role-request-rows').innerHTML = rows.map(request => `<tr><td><strong>${escapeText(request.name)}</strong><span class="audit-detail">${escapeText(request.description)}</span></td><td>${escapeText([demoRoot, ...users].find(user => user.id === request.userId).name)}</td><td><div class="tags">${tags([...request.granted].map(key => findPermission(key)?.name ?? key))}</div></td><td>${stateTag(request.status)}</td><td>${root && request.status === 'pending' ? `<div class="request-actions"><button type="button" class="link-button" data-accept-role-request="${request.id}">受理并创建</button><button type="button" class="link-button danger" data-reject-role-request="${request.id}">拒绝</button></div>` : '<span class="quiet">' + (request.roleId ? '已创建：' + escapeText(roles.get(request.roleId)?.name ?? '角色已删除') : '—') + '</span>'}</td></tr>`).join('') || '<tr><td colspan="5" class="empty">暂无角色创建申请。</td></tr>';
+    }
+    function openRole(id, mode = 'edit', request = null) {
+      openRoleBase(id);
+      roleEditor.mode = mode; roleEditor.request = request;
+      if (request) { roleName.value = request.name; roleDescription.value = request.description; roleEditor.grants = new Set(request.granted); renderPermissionTree(); }
+      if (mode === 'request') { $('role-dialog-title').textContent = '申请创建角色'; $('role-save').textContent = '提交申请'; }
+      else if (request) { $('role-dialog-title').textContent = '受理角色创建申请'; $('role-save').textContent = '创建角色并通过'; }
+      else $('role-save').textContent = '保存角色';
+      if (roles.get(id)?.management) {
+        roleEditor.readOnly = true; roleName.disabled = true; roleDescription.disabled = true; $('role-save').disabled = true; renderPermissionTree();
+      }
+    }
+    function openUserEditor(user) {
+      openUserEditorBase(user);
+      $('initial-password-field').hidden = Boolean(user); $('initial-password').disabled = Boolean(user); $('initial-password').value = demoPassword;
+    }
+    function renderCourse() {
+      $('course-identity').textContent = `${sessionUser.name} · ${applications[1].name}`;
+      const grants = userGrants();
+      $('course-panels').innerHTML = applications[1].groups.map(menu => `<section class="panel"><div class="panel-head"><h2>${escapeText(menu.name)}</h2><button type="button" class="button ${grants.has(menu.key) ? '' : 'locked'}" data-open-course-menu="${menu.key}">${grants.has(menu.key) ? '打开页面' : '无权限，申请访问'}</button></div><div class="course-panel-body" id="course-body-${menu.key}" hidden><p class="quiet">${menu.name === '学期管理' ? '2026—2027 学年第一学期' : '课程示例数据'}</p><div class="sample-course"><span class="course-symbol">${menu.name === '学期管理' ? '期' : '课'}</span><div><strong>${menu.name === '学期管理' ? '2026 秋季学期' : '面向对象分析与设计'}</strong><p class="quiet">${menu.name === '学期管理' ? '2026/09/01 — 2027/01/15' : 'CS301 · 计算机学院 · 演示数据'}</p></div></div><div class="course-buttons">${menu.actions.map(action => `<button type="button" class="button ${grants.has(action.key) ? 'primary' : 'locked'}" data-course-action="${action.key}">${escapeText(action.name)}${grants.has(action.key) ? '' : ' · 无权限'}</button>`).join('')}</div></div></section>`).join('');
+    }
+    function openRegistryEditor(operation = '') {
+      registryEditing = operation;
+      const api = registryFor(catalogApp).get(operation);
+      $('api-dialog-title').textContent = api ? '编辑接口' : '登记接口';
+      $('registry-operation').value = api?.operationId ?? ''; $('registry-method').value = api?.method ?? 'GET'; $('registry-path').value = api?.path ?? '';
+      const count = catalogApp.groups.flatMap(group => [group, ...group.actions]).filter(item => item.apis?.some(a => a.operationId === operation)).length;
+      $('registry-impact').textContent = api ? `当前关联 ${count} 项权限，保存后接口资料同步更新。` : '登记后，可在权限编辑中选择并关联此接口。';
+      $('api-dialog').showModal(); $('registry-operation').focus();
+    }
+    function refreshWorkspace() { settleRequests(); showView(currentPage); }
+    $('toggle-password').addEventListener('click', () => { const show = loginPassword.type === 'password'; loginPassword.type = show ? 'text' : 'password'; $('toggle-password').textContent = show ? '隐藏' : '显示'; $('toggle-password').setAttribute('aria-pressed', String(show)); });
+    $('app-code').addEventListener('input', event => event.target.setCustomValidity(''));
+    $('new-permission-request').addEventListener('click', () => openRequest());
+    $('request-app').addEventListener('change', () => renderRequestPermissions());
+    $('request-form').addEventListener('submit', event => {
+      event.preventDefault(); const key = $('request-permission').value, reason = $('request-reason').value.trim();
+      if (!reason) { $('request-reason').setCustomValidity('请填写申请理由。'); $('request-reason').reportValidity(); return; }
+      if (permissionRequests.some(request => request.userId === sessionUser.id && request.permissionKey === key && request.status === 'pending')) { notify('这项权限已有待审核申请，请勿重复提交'); return; }
+      permissionRequests.unshift({ id: 'pr-' + nextRequestId++, userId: sessionUser.id, permissionKey: key, reason, status: 'pending', created: displayNow() });
+      recordOperation('提交权限申请', findPermission(key).name, reason);
+      $('my-request-status').value = '';
+      document.querySelector('[data-request-tab="history"]').click();
+      $('request-dialog').close(); showView('requests'); notify('申请已提交，等待管理员审核');
+    });
+    $('request-reason').addEventListener('input', event => event.target.setCustomValidity(''));
+    $('my-request-status').addEventListener('change', renderRequests); $('review-status').addEventListener('change', renderReview); $('role-request-status').addEventListener('change', renderRoleRequests);
+    $('new-role-request').addEventListener('click', () => openRole(null, 'request'));
+    $('denied-apply').addEventListener('click', () => openRequest(deniedKey)); $('denied-back').addEventListener('click', () => showView('mine'));
+    $('review-role-options').addEventListener('change', () => { $('review-confirm').disabled = false; });
+    $('review-form').addEventListener('submit', event => {
+      event.preventDefault(); const { request, reject, roleRequest } = requestReview;
+      if (request.status !== 'pending') { $('review-dialog').close(); refreshWorkspace(); return; }
+      if (!roleRequest && !inManagementScope([demoRoot, ...users].find(user => user.id === request.userId))) return;
+      if (reject) { request.status = 'rejected'; recordOperation(roleRequest ? '拒绝角色创建申请' : '拒绝权限申请', roleRequest ? request.name : findPermission(request.permissionKey).name, '申请未通过'); }
+      else {
+        const roleId = $('review-role-options').querySelector('input:checked')?.value;
+        if (!roleId) return;
+        [demoRoot, ...users].find(user => user.id === request.userId).roles.add(roleId);
+        Object.assign(request, { status: 'approved', roleId });
+        recordOperation('通过权限申请', findPermission(request.permissionKey).name, `分配角色「${roles.get(roleId).name}」`);
+      }
+      Object.assign(request, { reviewer: sessionUser.name, reviewed: displayNow() });
+      $('review-dialog').close(); refreshWorkspace(); notify(reject ? '申请已拒绝' : '已批准并分配角色，权限立即生效');
+    });
+    document.addEventListener('click', event => {
+      const apply = event.target.closest('[data-apply]'); if (apply) openRequest(apply.dataset.apply);
+      const withdraw = event.target.closest('[data-withdraw]');
+      if (withdraw) { const request = permissionRequests.find(item => item.id === withdraw.dataset.withdraw); if (request.userId === sessionUser.id && request.status === 'pending') { request.status = 'withdrawn'; recordOperation('撤回权限申请', findPermission(request.permissionKey).name, '用户主动撤回待审核申请'); renderRequests(); notify('申请已撤回'); } }
+      const review = event.target.closest('[data-review-request]'); if (review) openReview(review.dataset.reviewRequest);
+      const reject = event.target.closest('[data-reject-request]'); if (reject) openReview(reject.dataset.rejectRequest, true);
+      const rejectRole = event.target.closest('[data-reject-role-request]'); if (rejectRole) openReview(rejectRole.dataset.rejectRoleRequest, true, true);
+      const acceptRole = event.target.closest('[data-accept-role-request]'); if (acceptRole) openRole(null, 'approve', roleCreationRequests.find(request => request.id === acceptRole.dataset.acceptRoleRequest));
+      const tab = event.target.closest('[data-request-tab]');
+      if (tab) { const history = tab.dataset.requestTab === 'history'; $('request-history').hidden = !history; $('request-directory').hidden = history; for (const b of document.querySelectorAll('[data-request-tab]')) b.setAttribute('aria-pressed', String(b === tab)); }
+      const catalogTab = event.target.closest('[data-catalog-tab]');
+      if (catalogTab) { catalogMode = catalogTab.dataset.catalogTab; for (const b of document.querySelectorAll('[data-catalog-tab]')) b.setAttribute('aria-pressed', String(b === catalogTab)); renderCatalog(); }
+      const courseMenu = event.target.closest('[data-open-course-menu]');
+      if (courseMenu) { const key = courseMenu.dataset.openCourseMenu; if (userGrants().has(key)) { const body = $('course-body-' + key); body.hidden = !body.hidden; courseMenu.textContent = body.hidden ? '打开页面' : '收起页面'; } else openRequest(key); }
+      const action = event.target.closest('[data-course-action]');
+      if (action) {
+        const key = action.dataset.courseAction;
+        if (!userGrants().has(key)) openRequest(key);
+        else { const p = findPermission(key); recordOperation('课程系统演示', p.name, '模拟接口权限检查通过；不修改真实课程数据'); notify('权限检查通过，已模拟执行「' + p.name + '」'); }
+      }
+    });
+    // Missing action permissions retain their buttons and lead to a request.
+    document.addEventListener('click', event => {
+      const button = event.target.closest('[data-requires]');
+      if (button && !userGrants().has(button.dataset.requires)) { event.preventDefault(); event.stopImmediatePropagation(); openRequest(button.dataset.requires); }
+    }, true);
+    $('link-existing-api').addEventListener('click', () => {
+      const api = registryFor(catalogApp).get($('existing-api').value);
+      if (!api) { notify('请先选择一个已登记接口'); return; }
+      if ([...$('api-rows').querySelectorAll('[data-api-operation]')].some(field => field.value === api.operationId)) { notify('已关联这个接口'); return; }
+      $('api-rows').insertAdjacentHTML('beforeend', apiRow(api)); $('api-empty').hidden = true;
+    });
+    $('register-api').addEventListener('click', () => openRegistryEditor());
+    $('api-registry-rows').addEventListener('click', event => {
+      const edit = event.target.closest('[data-registry-edit]'); if (edit) openRegistryEditor(edit.dataset.registryEdit);
+      const remove = event.target.closest('[data-registry-remove]'); if (remove) { registryRemoving = remove.dataset.registryRemove; $('remove-api-message').textContent = `确认删除「${registryRemoving}」的接口登记？`; $('remove-api-dialog').showModal(); }
+    });
+    $('api-form').addEventListener('submit', event => {
+      event.preventDefault(); const api = { operationId: $('registry-operation').value.trim(), method: $('registry-method').value, path: $('registry-path').value.trim() }, store = registryFor(catalogApp);
+      if ((api.operationId !== registryEditing && store.has(api.operationId)) || [...store.values()].some(item => item.operationId !== registryEditing && item.method === api.method && item.path === api.path)) { notify('接口标识或请求方法与路径重复，请检查'); return; }
+      saveRegisteredApi(catalogApp, api, registryEditing || api.operationId); recordOperation(registryEditing ? '修改接口' : '登记接口', api.operationId, api.method + ' ' + api.path); $('api-dialog').close(); renderCatalog(); notify('接口已保存');
+    });
+    $('remove-api-form').addEventListener('submit', event => {
+      event.preventDefault(); for (const permission of catalogApp.groups.flatMap(group => [group, ...group.actions])) permission.apis = permission.apis.filter(api => api.operationId !== registryRemoving);
+      registryFor(catalogApp).delete(registryRemoving); recordOperation('删除接口登记', registryRemoving, '解除全部关联，后续检查拒绝调用'); $('remove-api-dialog').close(); renderCatalog(); notify('接口登记已删除');
+    });
+    // Seed log targets contain the department at the time of each event.
+    operationLogs.push(
+      { time: '2026/11/15 10:20:00', actor: '总管理员', action: '配置角色权限', target: '课程教师', targets: null, detail: '增加「查看我的课程」权限', result: '成功' },
+      { time: '2026/11/15 10:15:00', actor: '总管理员', action: '关联接口', target: '用户授权', targets: null, detail: '关联 listUsers；该接口同时供用户与部门页面使用', result: '成功' },
+      { time: '2026/11/15 10:05:00', actor: '总管理员', action: '批量分配角色', target: '何雨桐、叶宁', targets: [{ name: '何雨桐', department: 'office' }, { name: '叶宁', department: 'finance' }], detail: '分配「课程查看员」角色', result: '成功' },
+      { time: '2026/11/15 10:00:00', actor: '顾晨', action: '停用账号', target: '周宁', targets: [{ name: '周宁', department: 'office' }], detail: '账号由正常改为停用', result: '成功' },
+      { time: '2026/11/14 16:20:00', actor: '总管理员', action: '删除角色', target: '课程教师', targets: null, detail: '角色仍有关联用户，未执行删除', result: '失败' },
+      { time: '2026/11/14 14:10:00', actor: '总管理员', action: '跨部门调动', target: '林晓', targets: null, detail: '计算机学院 → 软件工程系，保留原业务角色', result: '成功' }
+    );
+
+    function renderCheckOperations() {
+      const app = applications.find(item => item.id === $('check-application').value);
+      $('check-operation').innerHTML = [...registryFor(app).values()].map(api => `<option value="${escapeText(api.operationId)}">${escapeText(api.operationId)} · ${api.method}</option>`).join('');
+      $('check-api-result').textContent = '';
+    }
+    function renderMyPermissions() {
+      renderMyPermissionsBase();
+      $('check-application').innerHTML = applications.map(app => `<option value="${app.id}">${escapeText(app.name)}</option>`).join('');
+      renderCheckOperations();
+    }
+    function canCallApi(app, operationId) {
+      return Boolean(registryFor(app).has(operationId) && app.groups.flatMap(menu => [menu, ...menu.actions]).some(permission => permission.apis.some(api => api.operationId === operationId) && userGrants().has(permission.key)));
+    }
+    $('check-application').addEventListener('change', renderCheckOperations);
+    $('check-api-permission').addEventListener('click', () => {
+      const app = applications.find(item => item.id === $('check-application').value), operationId = $('check-operation').value, allowed = canCallApi(app, operationId);
+      $('check-api-result').className = allowed ? 'tag positive' : 'tag warning';
+      $('check-api-result').textContent = operationId ? (allowed ? '允许调用：已拥有至少一项关联权限。实际操作仍需满足管理范围和业务规则。' : '拒绝调用：当前角色未授予该接口关联的权限。') : '该应用尚未登记接口。';
+    });
+    document.addEventListener('click', event => {
+      if (event.target.closest('[data-reset-demo]')) location.reload();
+    });
+    openLogin();
+
   </script>
 </body>
 </html>
