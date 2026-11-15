@@ -14,7 +14,7 @@ public interface PermissionMapper extends JpaRepository<Permission, Long> {
             where exists (
                 select 1 from RolePermission grantLink, UserRole assignment, Role role, UserAccount account
                 where grantLink.permissionId = permission.id and grantLink.roleId = assignment.roleId
-                  and assignment.roleId = role.id and role.roleType = 'BUSINESS'
+                  and assignment.roleId = role.id
                   and assignment.userId = account.id and account.id = :userId and account.status = 'ACTIVE'
             )
             """;

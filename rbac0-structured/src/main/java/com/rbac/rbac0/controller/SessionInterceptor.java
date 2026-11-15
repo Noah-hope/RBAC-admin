@@ -15,9 +15,11 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     public static final String ACTOR = "rbac.sessionUser";
 
+    private final com.rbac.rbac0.service.PermissionCheckService permissions;
     private final SessionService sessions;
 
-    public SessionInterceptor(SessionService sessions) {
+    public SessionInterceptor(SessionService sessions, com.rbac.rbac0.service.PermissionCheckService permissions) {
+        this.permissions = permissions;
         this.sessions = sessions;
     }
 
@@ -25,7 +27,12 @@ public class SessionInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         var token = bearerToken(request.getHeader(HttpHeaders.AUTHORIZATION));
         request.setAttribute(ACTOR, sessions.currentUser(token));
-        if (request.getRequestURI().startsWith("/api/v1/")) sessions.applicationContext(token, "permission-center");
+        if (request.getRequestURI().startsWith("/api/v1/")) {
+            sessions.applicationContext(token, "permission-center");
+            var actor = (com.rbac.rbac0.dto.SessionDtos.SessionUser) request.getAttribute(ACTOR);
+            permissions.requireManagementApi(actor.id(), request.getMethod(),
+                    request.getAttribute(org.springframework.web.servlet.HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE).toString());
+        }
         response.setHeader("Cache-Control", "no-store");
         return true;
     }
