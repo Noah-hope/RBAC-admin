@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Import;
 @DataJpaTest(
     properties = {"spring.flyway.enabled=false", "spring.jpa.hibernate.ddl-auto=create-drop"})
 @Import({
-  RoleService.class,
+  RoleService.class, RolePermissionService.class,
   RequestStatusService.class,
   PermissionRequestService.class,
   RoleCreationRequestService.class,
@@ -134,6 +134,7 @@ class RequestWorkflowTest {
     var r = new RoleInput();
     r.name = name;
     r.permissionIds = ids;
+    r.inheritedRoleIds = List.of();
     return r;
   }
 }

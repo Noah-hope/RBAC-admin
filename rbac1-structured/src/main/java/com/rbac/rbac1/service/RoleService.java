@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class RoleService {
 
+  private final RolePermissionService effective;
   private final RequestStatusService statuses;
   private final RoleMapper roles;
   private final PermissionMapper permissions;
@@ -45,7 +46,8 @@ public class RoleService {
       RolePermissionMapper rolePermissions,
       OperationLogService operationLogs,
       UserRoleMapper assignments,
-      RequestStatusService statuses) {
+      RequestStatusService statuses, RolePermissionService effective) {
+    this.effective = effective;
     this.statuses = statuses;
     this.roles = roles;
     this.permissions = permissions;
@@ -58,25 +60,8 @@ public class RoleService {
   public RolePage list(SessionUser actor, int page, int pageSize, String keyword) {
     requireAdministrator(actor);
     var matches = roles.searchBusinessRoles(keyword, PageRequest.of(page - 1, pageSize));
-    var ids = matches.stream().map(role -> role.id).toList();
-    var summaries =
-        ids.isEmpty()
-            ? Map.<Long, List<RoleApplicationSummary>>of()
-            : rolePermissions.summarizeApplications(ids).stream()
-                .collect(
-                    Collectors.groupingBy(
-                        RoleApplicationRow::getRoleId,
-                        Collectors.mapping(RoleService::applicationSummary, Collectors.toList())));
-    var items =
-        matches.stream()
-            .map(
-                role ->
-                    new RoleSummary(
-                        role.id,
-                        role.name,
-                        role.description,
-                        summaries.getOrDefault(role.id, List.of())))
-            .toList();
+    var graph=effective.load();
+    var items=matches.stream().map(role -> effective.summary(graph,role)).toList();
     return new RolePage(items, page, pageSize, matches.getTotalElements());
   }
 
@@ -191,27 +176,6 @@ public class RoleService {
   }
 
   private RoleDetails details(Role role) {
-    var permissionIds =
-        rolePermissions.findByRoleIdOrderByPermissionIdAsc(role.id).stream()
-            .map(link -> link.permissionId)
-            .toList();
-    var applications =
-        rolePermissions.summarizeApplications(List.of(role.id)).stream()
-            .map(RoleService::applicationSummary)
-            .toList();
-    return new RoleDetails(
-        role.id,
-        role.name,
-        role.description,
-        applications,
-        permissionIds,
-        permissions.findAllById(permissionIds).stream()
-            .map(ApiDtos.PermissionSummary::of)
-            .toList());
-  }
-
-  private static RoleApplicationSummary applicationSummary(RoleApplicationRow row) {
-    return new RoleApplicationSummary(
-        row.getApplicationId(), row.getApplicationName(), row.getPermissionCount());
+    return effective.details(effective.load(),role,assignments.countByRoleId(role.id));
   }
 }

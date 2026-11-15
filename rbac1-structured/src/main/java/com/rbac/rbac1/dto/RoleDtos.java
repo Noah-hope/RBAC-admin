@@ -26,21 +26,26 @@ public final class RoleDtos {
     public String description = "";
 
     @NotNull @UniqueElements public List<@NotNull @Positive @Max(MAX_ID) Long> permissionIds;
+
+    @NotNull @UniqueElements public List<@NotNull @Positive @Max(MAX_ID) Long> inheritedRoleIds;
   }
 
   public record RoleApplicationSummary(
       long applicationId, String applicationName, long permissionCount) {}
 
-  public record RoleSummary(
-      long id, String name, String description, List<RoleApplicationSummary> applications) {}
+  public record EffectivePermission(long id, long applicationId, String name, String code,
+      String type, Long parentId, String acquisition, List<UserDtos.RoleRef> sourceRoles) {}
 
-  public record RoleDetails(
-      long id,
-      String name,
-      String description,
-      List<RoleApplicationSummary> applications,
-      List<Long> permissionIds,
-      List<ApiDtos.PermissionSummary> permissions) {}
+  public record RoleSummary(long id, String name, String description,
+      List<RoleApplicationSummary> applications, String roleType,
+      List<UserDtos.RoleRef> inheritedRoles, List<UserDtos.RoleRef> inheritedByRoles,
+      int directPermissionCount, int effectivePermissionCount) {}
+
+  public record RoleDetails(long id, String name, String description,
+      List<RoleApplicationSummary> applications, String roleType,
+      List<UserDtos.RoleRef> inheritedRoles, List<UserDtos.RoleRef> inheritedByRoles,
+      int directPermissionCount, int effectivePermissionCount, List<Long> permissionIds,
+      List<EffectivePermission> effectivePermissions, long assignedUserCount) {}
 
   public record RolePage(List<RoleSummary> items, int page, int pageSize, long total) {}
 }
