@@ -1,5 +1,10 @@
-INSERT INTO sys_role(name,description,role_type) VALUES('总管理员','','TOTAL_ADMIN'),('部门管理员','','DEPARTMENT_ADMIN');
-INSERT INTO sys_application(code,name) VALUES('permission-center','权限管理中心');
+-- 测试专用初始化数据；表由 JPA 创建，与完整初始化脚本保持相同的基础授权。
+INSERT INTO sys_role (name, description, role_type) VALUES
+    ('总管理员', '', 'TOTAL_ADMIN'),
+    ('部门管理员', '', 'DEPARTMENT_ADMIN');
+
+INSERT INTO sys_application (code, name) VALUES ('permission-center', '权限管理中心');
+
 SET @app=(SELECT id FROM sys_application WHERE code='permission-center');
 INSERT INTO sys_permission(application_id,name,code,type) VALUES(@app,'应用与权限','application:view','MENU');
 INSERT INTO sys_permission(application_id,name,code,type) VALUES(@app,'角色管理','role:view','MENU');
@@ -68,6 +73,9 @@ SET @parent=(SELECT id FROM sys_permission WHERE application_id=@app AND code='u
 INSERT INTO sys_permission(application_id,parent_id,name,code,type) VALUES(@app,@parent,'修改用户、账号状态或所属部门','user:update','BUTTON');
 INSERT INTO sys_api(application_id,operation_id,http_method,path) VALUES(@app,'updateUser','PATCH','/api/v1/users/{userId}');
 INSERT INTO sys_api_permission(permission_id,api_id) SELECT id,LAST_INSERT_ID() FROM sys_permission WHERE application_id=@app AND code='user:update';
+SET @parent=(SELECT id FROM sys_permission WHERE application_id=@app AND code='assignment:view');
+INSERT INTO sys_permission(application_id,parent_id,name,code,type)
+VALUES(@app,@parent,'分配与撤销业务角色','assignment:manage','BUTTON');
 INSERT INTO sys_api(application_id,operation_id,http_method,path) VALUES(@app,'replaceUserBusinessRoles','PUT','/api/v1/users/{userId}/roles');
 INSERT INTO sys_api_permission(permission_id,api_id) SELECT id,LAST_INSERT_ID() FROM sys_permission WHERE application_id=@app AND code='assignment:manage';
 SET @parent=(SELECT id FROM sys_permission WHERE application_id=@app AND code='assignment:view');
@@ -112,16 +120,3 @@ INSERT INTO sys_api(application_id,operation_id,http_method,path) VALUES(@app,'r
 INSERT INTO sys_api_permission(permission_id,api_id) SELECT id,LAST_INSERT_ID() FROM sys_permission WHERE application_id=@app AND code='roleRequest:review';
 INSERT INTO sys_role_permission(role_id,permission_id) SELECT r.id,p.id FROM sys_role r,sys_permission p WHERE r.role_type='TOTAL_ADMIN' AND p.application_id=@app;
 INSERT INTO sys_role_permission(role_id,permission_id) SELECT r.id,p.id FROM sys_role r,sys_permission p WHERE r.role_type='DEPARTMENT_ADMIN' AND p.application_id=@app AND p.code IN ('user:view','user:create','user:update','assignment:view','assignment:manage','assignment:batch','role:view','audit:view','request:view','request:review','roleRequest:view','roleRequest:create');
-
-SET @app=(SELECT id FROM sys_application WHERE code='permission-center');
-INSERT INTO sys_permission(application_id,parent_id,name,code,type)
-SELECT application_id,id,'分配与撤销业务角色','assignment:manage','BUTTON'
-FROM sys_permission WHERE application_id=@app AND code='assignment:view';
-INSERT INTO sys_api_permission(permission_id,api_id)
-SELECT p.id,a.id FROM sys_permission p,sys_api a
-WHERE p.application_id=@app AND p.code='assignment:manage'
-  AND a.application_id=@app AND a.operation_id='replaceUserBusinessRoles';
-INSERT INTO sys_role_permission(role_id,permission_id)
-SELECT r.id,p.id FROM sys_role r,sys_permission p
-WHERE r.role_type IN ('TOTAL_ADMIN','DEPARTMENT_ADMIN')
-  AND p.application_id=@app AND p.code='assignment:manage';

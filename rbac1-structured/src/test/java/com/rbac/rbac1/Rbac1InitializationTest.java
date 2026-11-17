@@ -1,0 +1,152 @@
+package com.rbac.rbac1;
+
+import static org.assertj.core.api.Assertions.*;
+
+import java.nio.charset.StandardCharsets;
+import java.sql.*;
+import java.util.*;
+import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+
+class Rbac1InitializationTest {
+  @Test
+  void initializesFinalSchemaAndRequiredSystemDataInAnEmptyDatabase() throws Exception {
+    try (var connection =
+        DriverManager.getConnection("jdbc:h2:mem:rbac1-init;MODE=MySQL", "sa", "")) {
+      initialize(connection);
+      assertThat(
+              number(
+                  connection,
+                  "select count(*) from information_schema.tables where table_schema='PUBLIC'"))
+          .isEqualTo(17);
+      assertThat(number(connection, "select count(*) from sys_role")).isEqualTo(2);
+      assertThat(number(connection, "select count(*) from sys_user")).isZero();
+      assertThat(strings(connection, "select code from sys_application"))
+          .containsExactly("permission-center");
+      assertThat(
+              strings(
+                  connection,
+                  "select column_name from information_schema.columns where"
+                      + " table_name='SYS_APPLICATION'"))
+          .contains("CODE")
+          .doesNotContain("TOKEN_HASH");
+      assertThat(number(connection, "select count(*) from sys_api")).isEqualTo(38);
+      assertThat(
+              number(
+                  connection,
+                  "select count(*) from sys_role_permission g join sys_role r on r.id=g.role_id"
+                      + " where r.role_type='TOTAL_ADMIN'"))
+          .isEqualTo(number(connection, "select count(*) from sys_permission"));
+    }
+  }
+
+  @Test
+  void initializesApiProtectionAndAssignmentRightsForBothAdministrators() throws Exception {
+    try (var connection =
+        DriverManager.getConnection("jdbc:h2:mem:rbac1-protection;MODE=MySQL", "sa", "")) {
+      initialize(connection);
+      assertThat(
+              strings(
+                  connection,
+                  "select a.operation_id from sys_api a left join sys_api_permission p on"
+                      + " p.api_id=a.id where p.api_id is null"))
+          .containsExactlyInAnyOrder(
+              "getMyPermissions",
+              "getRequestablePermissions",
+              "listPermissionRequests",
+              "createPermissionRequest",
+              "getPermissionRequest",
+              "withdrawPermissionRequest");
+      assertThat(
+              strings(
+                  connection,
+                  "select p.code from sys_permission p join sys_api_permission l on"
+                      + " l.permission_id=p.id join sys_api a on a.id=l.api_id where"
+                      + " a.operation_id='replaceUserBusinessRoles'"))
+          .containsExactly("assignment:manage");
+      assertThat(
+              strings(
+                  connection,
+                  "select r.role_type from sys_role r join sys_role_permission g on r.id=g.role_id"
+                      + " join sys_permission p on p.id=g.permission_id where"
+                      + " p.code='assignment:manage'"))
+          .containsExactlyInAnyOrder("TOTAL_ADMIN", "DEPARTMENT_ADMIN");
+      assertThat(
+              number(
+                  connection,
+                  "select count(*) from sys_role_permission g join sys_role r on r.id=g.role_id"
+                      + " join sys_permission p on p.id=g.permission_id where"
+                      + " r.role_type='DEPARTMENT_ADMIN' and p.code in"
+                      + " ('department:create','department:update')"))
+          .isZero();
+    }
+  }
+
+  @Test
+  void restrictsLiveInheritanceButRetainsApplicationParentSnapshots() throws Exception {
+    try (var connection =
+        DriverManager.getConnection("jdbc:h2:mem:rbac1-constraints;MODE=MySQL", "sa", "")) {
+      initialize(connection);
+      var sql = connection.createStatement();
+      sql.execute(
+          "insert into sys_role(id,name,role_type)"
+              + " values(100,'父角色','BUSINESS'),(101,'子角色','BUSINESS')");
+      sql.execute(
+          "insert into sys_user(id,username,name,password_hash) values(1,'manager','管理员','hash')");
+      sql.execute(
+          "insert into sys_role_create_request(id,applicant_user_id,role_name,status,created_at)"
+              + " values(10,1,'申请角色','PENDING',CURRENT_TIMESTAMP)");
+      sql.execute("insert into sys_role_inheritance values(101,100)");
+      sql.execute("insert into sys_role_create_request_inheritance values(10,100,'父角色')");
+      assertThatThrownBy(() -> sql.execute("delete from sys_role where id=100"))
+          .isInstanceOf(SQLException.class);
+      assertThatThrownBy(() -> sql.execute("insert into sys_role_inheritance values(101,100)"))
+          .isInstanceOf(SQLException.class);
+      sql.execute("delete from sys_role_inheritance");
+      sql.execute("delete from sys_role where id=100");
+      assertThat(
+              strings(
+                  connection,
+                  "select inherited_role_name from sys_role_create_request_inheritance where"
+                      + " request_id=10"))
+          .containsExactly("父角色");
+      assertThatThrownBy(
+              () ->
+                  sql.execute(
+                      "insert into sys_role_create_request_inheritance values(99,101,'无申请')"))
+          .isInstanceOf(SQLException.class);
+    }
+  }
+
+  private void initialize(Connection connection) throws Exception {
+    var resource = new ClassPathResource("db/migration/V1__init_rbac1.sql");
+    assertThat(resource.exists()).as("完整初始化迁移必须可执行").isTrue();
+    var script = resource.getContentAsString(StandardCharsets.UTF_8);
+    // H2 不支持 MySQL 的列级字符集和排序规则，仅在测试执行前移除这两种声明。
+    script =
+        script
+            .replace(" CHARACTER SET ascii COLLATE ascii_bin", "")
+            .replace(" COLLATE utf8mb4_0900_bin", "");
+    new ResourceDatabasePopulator(new ByteArrayResource(script.getBytes(StandardCharsets.UTF_8)))
+        .populate(connection);
+  }
+
+  private long number(Connection connection, String query) throws SQLException {
+    try (var statement = connection.createStatement();
+        var result = statement.executeQuery(query)) {
+      result.next();
+      return result.getLong(1);
+    }
+  }
+
+  private List<String> strings(Connection connection, String query) throws SQLException {
+    try (var statement = connection.createStatement();
+        var result = statement.executeQuery(query)) {
+      var values = new ArrayList<String>();
+      while (result.next()) values.add(result.getString(1));
+      return values;
+    }
+  }
+}

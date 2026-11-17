@@ -6,7 +6,7 @@
 
 | 想了解什么 | 阅读入口 |
 | --- | --- |
-| 项目范围和业务规则 | [核心需求](docs/01-requirements/需求文档.md) |
+| 项目范围和业务规则 | [核心需求](docs/01-requirements/RBAC0需求说明.md) |
 | 全部设计资料 | [文档索引](docs/README.md) |
 | 代码结构和阅读顺序 | [代码阅读指南](docs/04-development/代码阅读指南.md) |
 | 启动、测试和业务系统接入 | [后端说明](rbac0-structured/README.md) |

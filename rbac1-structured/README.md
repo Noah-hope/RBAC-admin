@@ -24,7 +24,9 @@ mvn -f rbac1-structured/pom.xml spring-boot:run
 
 默认端口为 `8081`，可通过 `RBAC1_PORT` 修改。RBAC0 与 RBAC1 使用各自数据库和配置变量。
 
-Flyway 按 V1→V6 增量迁移为 17 张表。V2 为已有应用生成 `app-数字ID` 接入标识；新应用通过登记时的 code 接入。V3 移除旧应用令牌并清理旧会话，所有用户需重新登录。V4 登记权限中心自身的管理 API、菜单按钮及预置管理员权限。V5 增加正式角色继承和申请父角色快照两张表；V6 补齐 `assignment:manage` 权限、API 关联及预置管理员授权。不要修改已经执行的迁移文件。
+Flyway 启动时执行唯一的完整初始化脚本 [V1__init_rbac1.sql](src/main/resources/db/migration/V1__init_rbac1.sql)，创建 17 张业务表，并初始化预置管理角色、权限中心应用、菜单按钮、API 关联及管理员权限。总管理员账号仍按启动配置创建，SQL 不保存账号密码。无需在 Navicat 中手动执行建表 SQL。
+
+该脚本用于空数据库，本地开发与后续 Docker MySQL 使用同一份文件。Flyway 在 `flyway_schema_history` 中记录执行结果，后续启动不会重复初始化。将来有结构变化时再增加增量迁移，不修改已经执行过的版本。
 
 首次启动创建总管理员，默认用户名 `admin`，可由 `RBAC1_ADMIN_USERNAME` 设置；已存在管理员时保留原密码。
 
@@ -63,4 +65,4 @@ API 登记与权限关联分开维护，解绑保留 API。权限申请通过时
 mvn -f rbac1-structured/pom.xml verify
 ```
 
-JWT 测试、JPA 行为测试和完整 Spring MVC 测试使用临时密钥与测试专用 H2，不需要本地 MySQL。测试覆盖共享 API 解绑、实时授权、退出失效、多层及菱形继承、来源去重、循环拒绝、后代菜单依赖、两类申请、审批回滚和日志快照。控制器映射与 RBAC1 OpenAPI 的 44 个接口核对。V5 新表的外键及快照行为另在 H2 MySQL 模式执行原始 SQL 验证。内存数据库测试不代替 MySQL Flyway 迁移验证；真实数据库及课程系统联调仍须在配置好环境后执行。
+JWT 测试、JPA 行为测试和完整 Spring MVC 测试使用临时密钥与测试专用 H2，不需要本地 MySQL。测试覆盖共享 API 解绑、实时授权、退出失效、多层及菱形继承、来源去重、循环拒绝、后代菜单依赖、两类申请、审批回滚和日志快照。控制器映射与 RBAC1 OpenAPI 的 44 个接口核对。完整初始化测试在 H2 MySQL 模式验证 17 张表、基础权限、API 关联、继承外键及申请快照；仅测试时去掉 H2 不支持的 MySQL 列级字符集和排序规则声明。内存数据库测试不代替 MySQL Flyway 迁移验证；真实数据库及课程系统联调仍须在配置好环境后执行。
