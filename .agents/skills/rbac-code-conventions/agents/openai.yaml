@@ -1,0 +1,3 @@
+interface:
+  display_name: "RBAC 权限系统 · 代码规范"
+  short_description: "分层、DTO/VO、CloneFactory、Lombok、AOP 日志、DDD 仓储边界与测试规范"

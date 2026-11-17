@@ -1,0 +1,39 @@
+# 与 rbac1-structured 共用同一个数据库和同一份 Flyway 迁移（构建时从结构化模块引用到 classpath:db/migration），
+# 因此本模块也能对空库独立启动；JPA 只校验实体映射。
+server:
+  port: ${RBAC1_DDD_PORT:8082}
+
+spring:
+  application:
+    name: rbac1-ddd
+  datasource:
+    url: ${RBAC1_DB_URL}
+    username: ${RBAC1_DB_USERNAME}
+    password: ${RBAC1_DB_PASSWORD:}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+
+# 配置项名称和环境变量与 rbac1-structured 相同：两个后端使用同一对 RSA 密钥签发和校验令牌，
+# 首次启动（还没有总管理员）时用 RBAC1_ADMIN_USERNAME / RBAC1_ADMIN_PASSWORD 创建总管理员。
+rbac:
+  jwt:
+    issuer: ${RBAC1_JWT_ISSUER:http://localhost:8081}
+    private-key: ${RBAC1_JWT_PRIVATE_KEY:file:./jwt-private.pem}
+    public-key: ${RBAC1_JWT_PUBLIC_KEY:file:./jwt-public.pem}
+  bootstrap:
+    username: ${RBAC1_ADMIN_USERNAME:admin}
+    password: ${RBAC1_ADMIN_PASSWORD:}
+
+# 分层日志级别。三个业务包为 DEBUG，由 LayerLoggingAspect 输出；
+# Docker Swarm 部署时用 LOGGING_LEVEL_COM_RBAC_RBAC1DDD_INTERFACES 等环境变量覆盖。
+logging:
+  level:
+    root: INFO
+    com.rbac.rbac1ddd.interfaces: DEBUG
+    com.rbac.rbac1ddd.application: DEBUG
+    com.rbac.rbac1ddd.infrastructure: DEBUG
