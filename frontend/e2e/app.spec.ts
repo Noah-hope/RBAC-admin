@@ -249,7 +249,7 @@ async function login(page: Page) {
 test('login, restore and server-confirmed logout', async ({ page }) => {
   const writes = await backend(page)
   await login(page)
-  await expect(page.getByRole('tab', { name: /课程系统/ })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '课程系统', exact: true })).toBeVisible()
   await page.reload()
   await expect(page.getByRole('heading', { name: '我的权限', exact: true })).toBeVisible()
   await page.getByRole('button', { name: '退出登录' }).click()
@@ -302,9 +302,9 @@ test('editing users omits creation passwords and preserves typed department IDs'
 test('applications and APIs use independent registry operations', async ({ page }) => {
   const writes = await backend(page)
   await login(page)
-  await page.getByRole('link', { name: '应用与权限' }).click()
+  await page.getByRole('link', { name: '应用与权限', exact: true }).click()
   await expect(page.getByRole('cell', { name: 'course:create', exact: true })).toBeVisible()
-  await page.getByRole('tab', { name: 'API 登记' }).click()
+  await page.getByRole('tab', { name: 'API 接口清单' }).click()
   await page.getByRole('button', { name: '登记接口', exact: true }).click()
   const dialog = page.getByRole('dialog')
   await dialog.getByLabel('接口标识', { exact: true }).fill('createCourse')
@@ -525,4 +525,53 @@ test('deleted parent snapshots remain visible without showing an incomplete effe
   await expect(
     dialog.getByText('父角色已删除，无法计算完整有效权限。', { exact: true }),
   ).toBeVisible()
+})
+
+test('prototype login uses a single account form with an accessible password toggle', async ({
+  page,
+}) => {
+  await backend(page)
+  await page.goto('/login')
+  await expect(page.getByRole('heading', { name: '权限管理中心', exact: true })).toBeVisible()
+  await page.getByLabel('密码', { exact: true }).fill('password')
+  await page.getByRole('button', { name: '显示密码', exact: true }).click()
+  await expect(page.getByLabel('密码', { exact: true })).toHaveAttribute('type', 'text')
+  await page.getByRole('button', { name: '隐藏密码', exact: true }).click()
+  await expect(page.getByLabel('密码', { exact: true })).toHaveAttribute('type', 'password')
+})
+
+test('role list shows both inheritance directions and can reset its search', async ({ page }) => {
+  await backend(page)
+  await page.route(/\/api\/v1\/roles(\?.*)?$/, (route) =>
+    route.fulfill({
+      json: list([
+        {
+          ...role,
+          inheritedRoles: [{ id: 2, name: '课程教师' }],
+          inheritedByRoles: [{ id: 6, name: '课程助理' }],
+        },
+      ]),
+    }),
+  )
+  await login(page)
+  await page.goto('/roles')
+  await expect(page.locator('th').filter({ hasText: '继承关系' })).toBeVisible()
+  await expect(page.getByRole('cell', { name: /父角色.*课程教师.*子角色.*课程助理/ })).toBeVisible()
+  await page.getByLabel('角色名称', { exact: true }).fill('教师')
+  await page.getByRole('button', { name: '重置', exact: true }).click()
+  await expect(page.getByLabel('角色名称', { exact: true })).toHaveValue('')
+})
+
+test('permission directory collapses menu buttons and keeps API totals visible', async ({
+  page,
+}) => {
+  await backend(page)
+  await login(page)
+  await page.goto('/applications')
+  await expect(page.getByRole('cell', { name: /新增课程/ })).toBeVisible()
+  await page.getByRole('button', { name: '收起课程管理', exact: true }).click()
+  await expect(page.getByRole('cell', { name: /新增课程/ })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: '1 个接口', exact: true })).toBeVisible()
+  await page.getByRole('button', { name: '展开课程管理', exact: true }).click()
+  await expect(page.getByRole('cell', { name: /新增课程/ })).toBeVisible()
 })

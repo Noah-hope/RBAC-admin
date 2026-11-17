@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Lock, Connection, Key } from '@element-plus/icons-vue'
+import BrandMark from '../components/BrandMark.vue'
 import { useSession } from '../stores/session'
 import { useTask } from '../composables/useTask'
 import TaskError from '../components/TaskError.vue'
@@ -9,7 +9,8 @@ const session = useSession(),
   route = useRoute(),
   router = useRouter()
 const username = ref(''),
-  password = ref('')
+  password = ref(''),
+  showPassword = ref(false)
 const { busy, error, run } = useTask()
 function destination() {
   const value = route.query.redirect
@@ -35,53 +36,13 @@ async function retry() {
 }
 </script>
 <template>
-  <main class="login-page">
+  <main class="login-page" aria-labelledby="login-title">
     <div class="login-card">
-      <section class="login-story">
-        <div class="brand">
-          <span class="brand-mark">
-            <el-icon><Lock /></el-icon>
-          </span>
-          <div>
-            <strong>权限管理中心</strong>
-            <small>统一身份 · 统一授权</small>
-          </div>
-        </div>
-        <div class="login-copy">
-          <h2>
-            让每一项权限
-            <br />
-            都有清晰的归属。
-          </h2>
-          <p>
-            连接业务应用、角色与用户，
-            <br />
-            在同一处维护准确、可追溯的访问权限。
-          </p>
-        </div>
-        <div class="access-model">
-          <div class="access-hub">
-            <el-icon><Key /></el-icon>
-            <span>角色与权限</span>
-          </div>
-          <div class="access-links">
-            <span>应用</span>
-            <el-icon><Connection /></el-icon>
-            <span>业务角色</span>
-            <el-icon><Connection /></el-icon>
-            <span>用户</span>
-          </div>
-          <p>权限按应用配置，通过角色授予用户。</p>
-        </div>
-        <p class="login-foot">支持角色继承与权限来源追溯</p>
-      </section>
       <section class="login-form-area">
         <div class="login-heading">
-          <span class="login-symbol">
-            <el-icon><Key /></el-icon>
-          </span>
-          <h1>登录权限中心</h1>
-          <p>使用统一账号继续</p>
+          <BrandMark />
+          <h1 id="login-title">权限管理中心</h1>
+          <p>使用统一账号登录</p>
         </div>
         <TaskError :message="error || session.restoreError" />
         <el-button v-if="session.restoreError" @click="retry" :loading="busy">
@@ -103,12 +64,23 @@ async function retry() {
             id="login-password"
             v-model="password"
             autocomplete="current-password"
-            type="password"
-            show-password
+            :type="showPassword ? 'text' : 'password'"
             placeholder="请输入密码"
             size="large"
             required
-          />
+          >
+            <template #suffix>
+              <button
+                type="button"
+                class="password-toggle"
+                :aria-label="showPassword ? '隐藏密码' : '显示密码'"
+                :aria-pressed="showPassword"
+                @click="showPassword = !showPassword"
+              >
+                {{ showPassword ? '隐藏' : '显示' }}
+              </button>
+            </template>
+          </el-input>
           <el-button
             type="primary"
             size="large"

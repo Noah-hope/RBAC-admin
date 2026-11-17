@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { Plus, Search, Refresh } from '@element-plus/icons-vue'
+import { Plus, Search } from '@element-plus/icons-vue'
 import { api } from '../api'
 import type { Page, RoleDetails, RoleInput, RoleSummary } from '../api/types'
 import { useSession } from '../stores/session'
@@ -13,7 +13,7 @@ const session = useSession(),
 const rows = ref<Page<RoleSummary>>({ items: [], page: 1, pageSize: 20, total: 0 }),
   page = ref(1),
   keyword = ref(''),
-  roleType = ref('BUSINESS')
+  roleType = ref(session.totalAdmin ? '' : 'BUSINESS')
 const editor = ref(false),
   seed = ref<RoleDetails>(),
   readonly = ref(false)
@@ -29,6 +29,11 @@ async function load() {
 function search() {
   page.value = 1
   void load()
+}
+function resetSearch() {
+  keyword.value = ''
+  roleType.value = session.totalAdmin ? '' : 'BUSINESS'
+  search()
 }
 async function open(role?: RoleSummary) {
   await run(async () => {
@@ -70,7 +75,7 @@ onMounted(load)
   <div class="page-head">
     <div>
       <h1>角色管理</h1>
-      <p>配置直接权限与角色继承，查看每项权限的实际来源。</p>
+      <p>配置直接权限与继承角色，查看有效权限和配置来源。</p>
     </div>
     <ActionButton v-if="session.totalAdmin" permission="role:create" type="primary" @click="open()">
       <el-icon><Plus /></el-icon>
@@ -78,57 +83,90 @@ onMounted(load)
     </ActionButton>
   </div>
   <TaskError :message="error" />
-  <section class="panel" v-loading="busy">
-    <form class="toolbar" @submit.prevent="search">
-      <div class="toolbar-main">
+  <form class="panel filter-panel" @submit.prevent="search">
+    <div class="filter-fields">
+      <label for="role-search-name">
+        角色名称
         <el-input
+          id="role-search-name"
           v-model="keyword"
           maxlength="100"
-          placeholder="搜索角色名称或说明"
-          aria-label="搜索角色"
+          placeholder="请输入角色名称"
           clearable
-        >
-          <template #prefix>
-            <el-icon><Search /></el-icon>
-          </template>
-        </el-input>
-        <select v-if="session.totalAdmin" v-model="roleType" aria-label="角色类型" @change="search">
-          <option value="BUSINESS">业务角色</option>
+        />
+      </label>
+      <label v-if="session.totalAdmin" for="role-search-type">
+        角色类型
+        <select id="role-search-type" v-model="roleType" @change="search">
           <option value="">全部角色</option>
+          <option value="BUSINESS">业务角色</option>
           <option value="TOTAL_ADMIN">总管理员</option>
           <option value="DEPARTMENT_ADMIN">部门管理员</option>
         </select>
-        <el-button native-type="submit">搜索</el-button>
-      </div>
-      <el-button text aria-label="刷新角色" @click="load">
-        <el-icon><Refresh /></el-icon>
+      </label>
+    </div>
+    <div class="filter-actions">
+      <el-button @click="resetSearch">重置</el-button>
+      <el-button type="primary" native-type="submit">
+        <el-icon><Search /></el-icon>
+        搜索
       </el-button>
-    </form>
+    </div>
+  </form>
+  <section class="panel" v-loading="busy">
+    <div class="panel-heading"><h2>角色列表</h2></div>
     <el-table :data="rows.items" empty-text="没有匹配的角色，请调整搜索条件或新增角色。">
-      <el-table-column label="角色" min-width="180">
+      <el-table-column label="角色名称" min-width="310">
         <template #default="{ row }">
-          <strong class="cell-title">{{ row.name }}</strong>
-          <span class="cell-subtitle">{{ row.description || '未填写说明' }}</span>
+          <div class="person-cell">
+            <span class="avatar square" aria-hidden="true">{{ row.name.slice(0, 1) }}</span>
+            <div>
+              <strong class="cell-title">{{ row.name }}</strong>
+              <span class="cell-subtitle">
+                {{ row.description ? row.description + ' · ' : ''
+                }}{{ row.directPermissionCount }} 项直接 /
+                {{ row.effectivePermissionCount - row.directPermissionCount }} 项仅继承
+              </span>
+            </div>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column label="已授权应用" min-width="150">
+      <el-table-column label="继承关系" min-width="200">
+        <template #default="{ row }">
+          <span v-if="row.roleType !== 'BUSINESS'" class="muted">预置管理角色，不参与业务继承</span>
+          <div v-else class="role-relations">
+            <div>
+              <span class="muted">父角色</span>
+              <div class="tag-list">
+                <el-tag v-for="parent in row.inheritedRoles" :key="parent.id" type="info">
+                  {{ parent.name }}
+                </el-tag>
+                <span v-if="!row.inheritedRoles.length" class="muted">无</span>
+              </div>
+            </div>
+            <div>
+              <span class="muted">子角色</span>
+              <div class="tag-list">
+                <el-tag v-for="child in row.inheritedByRoles" :key="child.id" type="info">
+                  {{ child.name }}
+                </el-tag>
+                <span v-if="!row.inheritedByRoles.length" class="muted">无</span>
+              </div>
+            </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="有效权限应用" min-width="170">
         <template #default="{ row }">
           <div class="tag-list">
-            <el-tag v-for="a in row.applications" :key="a.applicationId" type="info" effect="plain">
+            <el-tag v-for="a in row.applications" :key="a.applicationId" type="info">
               {{ a.applicationName }}
             </el-tag>
             <span v-if="!row.applications.length" class="muted">尚未授权</span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="继承角色" min-width="140">
-        <template #default="{ row }">
-          {{ row.inheritedRoles.map((r: { name: string }) => r.name).join('、') || '无' }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="directPermissionCount" label="直接权限" width="100" />
-      <el-table-column prop="effectivePermissionCount" label="有效权限" width="100" />
-      <el-table-column label="操作" width="175" fixed="right">
+      <el-table-column label="操作" width="170" align="right" fixed="right">
         <template #default="{ row }">
           <ActionButton
             text

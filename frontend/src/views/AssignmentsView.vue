@@ -99,28 +99,18 @@ onMounted(load)
       <h1>用户授权</h1>
       <p>角色分配保存后直接生效；批量操作保留用户的其他角色。</p>
     </div>
-    <div class="inline-actions">
-      <ActionButton
-        permission="assignment:batch"
-        :disabled="!selectedUsers.length"
-        @click="open('REVOKE')"
-      >
-        批量撤销
-      </ActionButton>
-      <ActionButton
-        permission="assignment:batch"
-        type="primary"
-        :disabled="!selectedUsers.length"
-        @click="open('GRANT')"
-      >
-        批量分配
-      </ActionButton>
-    </div>
   </div>
   <TaskError :message="error" />
+  <div class="scope">
+    <strong>管理范围</strong>
+    <span>
+      {{ session.totalAdmin ? '全部部门' : `${departments[0]?.name ?? '本部门'}及下级部门` }}
+    </span>
+  </div>
   <section class="panel" v-loading="busy">
-    <form class="toolbar" @submit.prevent="search">
-      <div class="toolbar-main">
+    <div class="panel-heading">
+      <h2>用户列表</h2>
+      <form class="table-search assignment-search" @submit.prevent="search">
         <el-input
           v-model="keyword"
           placeholder="搜索姓名、用户名或部门"
@@ -139,9 +129,28 @@ onMounted(load)
           </option>
         </select>
         <el-button native-type="submit">搜索</el-button>
+      </form>
+    </div>
+    <div class="batch-tools" role="group" aria-label="批量授权">
+      <span class="muted" aria-live="polite">已选 {{ selectedUsers.length }} 人</span>
+      <div class="inline-actions">
+        <ActionButton
+          permission="assignment:batch"
+          :disabled="!selectedUsers.length"
+          @click="open('REVOKE')"
+        >
+          批量撤销
+        </ActionButton>
+        <ActionButton
+          permission="assignment:batch"
+          type="primary"
+          :disabled="!selectedUsers.length"
+          @click="open('GRANT')"
+        >
+          批量分配
+        </ActionButton>
       </div>
-      <span class="muted">已选择 {{ selectedUsers.length }} 人</span>
-    </form>
+    </div>
     <el-table
       ref="table"
       :data="rows.items"
@@ -152,8 +161,13 @@ onMounted(load)
       <el-table-column type="selection" width="48" reserve-selection />
       <el-table-column label="用户" min-width="160">
         <template #default="{ row }">
-          <strong class="cell-title">{{ row.name }}</strong>
-          <span class="cell-subtitle">{{ row.username }}</span>
+          <div class="person-cell">
+            <span class="avatar square" aria-hidden="true">{{ row.name.slice(0, 1) }}</span>
+            <div>
+              <strong class="cell-title">{{ row.name }}</strong>
+              <span class="cell-subtitle">{{ row.username }}</span>
+            </div>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="部门" min-width="125">
@@ -162,7 +176,7 @@ onMounted(load)
       <el-table-column label="业务角色" min-width="230">
         <template #default="{ row }">
           <div class="tag-list">
-            <el-tag v-for="role in row.businessRoles" :key="role.id" type="info" effect="plain">
+            <el-tag v-for="role in row.businessRoles" :key="role.id" type="success">
               {{ role.name }}
             </el-tag>
             <span v-if="!row.businessRoles.length" class="muted">未分配</span>

@@ -106,7 +106,7 @@ onMounted(load)
   <el-dialog
     :model-value="true"
     :title="title"
-    width="1040px"
+    width="960px"
     class="role-editor"
     :close-on-click-modal="false"
     :close-on-press-escape="!busy"

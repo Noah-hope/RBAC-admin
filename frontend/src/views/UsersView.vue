@@ -47,6 +47,9 @@ const departmentChoices = computed(() => {
     excluded = new Set(node ? flatten([node]).map((n) => n.id) : [])
   return choices.value.filter((n) => !excluded.has(n.id))
 })
+const managementScope = computed(() =>
+  session.totalAdmin ? '全部部门' : `${departments.value[0]?.name ?? '本部门'}及下级部门`,
+)
 async function loadRows() {
   rows.value = await api.users({
     page: page.value,
@@ -123,7 +126,7 @@ onMounted(load)
   <div class="page-head">
     <div>
       <h1>用户与部门</h1>
-      <p>维护组织结构、用户资料与账号状态。</p>
+      <p>维护部门、用户和账号状态。</p>
     </div>
     <ActionButton type="primary" permission="user:create" @click="openUser()">
       新增用户
@@ -131,19 +134,13 @@ onMounted(load)
   </div>
   <TaskError :message="error" />
   <el-button v-if="error" @click="load">重新加载</el-button>
+  <div class="scope">
+    <strong>管理范围</strong>
+    <span>{{ managementScope }}</span>
+  </div>
   <div class="organization-layout" v-loading="busy">
     <section class="panel department-panel">
-      <div class="panel-heading"><h2>组织结构</h2></div>
-      <el-button text class="all-departments" @click="filterDepartment()">全部管理范围</el-button>
-      <el-tree
-        :data="departments"
-        node-key="id"
-        default-expand-all
-        :props="{ label: 'name', children: 'children' }"
-        highlight-current
-        :expand-on-click-node="false"
-        @node-click="filterDepartment"
-      />
+      <div class="panel-heading"><h2>部门结构</h2></div>
       <div v-if="session.totalAdmin" class="department-actions">
         <ActionButton permission="department:create" @click="openDepartment()">
           新增部门
@@ -156,13 +153,27 @@ onMounted(load)
           编辑部门
         </ActionButton>
       </div>
+
+      <el-button text class="all-departments" @click="filterDepartment()">
+        {{ session.totalAdmin ? '全部部门' : '全部可管理部门' }}
+      </el-button>
+      <el-tree
+        :data="departments"
+        node-key="id"
+        default-expand-all
+        :props="{ label: 'name', children: 'children' }"
+        highlight-current
+        :expand-on-click-node="false"
+        @node-click="filterDepartment"
+      />
       <p class="muted scope-note">
         {{ session.totalAdmin ? '总管理员可维护全部组织结构。' : '仅展示本部门及下级部门。' }}
       </p>
     </section>
     <section class="panel">
-      <form class="toolbar" @submit.prevent="search">
-        <div class="toolbar-main">
+      <div class="panel-heading">
+        <h2>用户列表</h2>
+        <form class="table-search" @submit.prevent="search">
           <el-input
             v-model="keyword"
             placeholder="搜索姓名或用户名"
@@ -171,30 +182,45 @@ onMounted(load)
             clearable
           />
           <el-button native-type="submit">搜索</el-button>
-        </div>
+        </form>
+      </div>
+      <div class="list-options">
         <label class="inline-check">
           <input type="checkbox" v-model="includeDepartmentName" @change="search" />
           同时搜索部门名
         </label>
-      </form>
+      </div>
       <el-table :data="rows.items" empty-text="当前范围内没有匹配的用户。">
         <el-table-column label="用户" min-width="145">
           <template #default="{ row }">
-            <strong class="cell-title">{{ row.name }}</strong>
-            <span class="cell-subtitle">{{ row.username }}</span>
+            <div class="person-cell">
+              <span class="avatar square" aria-hidden="true">{{ row.name.slice(0, 1) }}</span>
+              <div>
+                <strong class="cell-title">{{ row.name }}</strong>
+                <span class="cell-subtitle">{{ row.username }}</span>
+              </div>
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="所属部门" min-width="120">
           <template #default="{ row }">{{ row.department?.name ?? '—' }}</template>
         </el-table-column>
-        <el-table-column label="管理身份" min-width="115">
+        <el-table-column label="角色" min-width="170">
           <template #default="{ row }">
-            {{ row.departmentAdministrator ? '部门管理员' : '普通用户' }}
+            <div class="tag-list">
+              <el-tag v-for="role in row.businessRoles" :key="role.id" type="success">
+                {{ role.name }}
+              </el-tag>
+              <el-tag v-if="row.departmentAdministrator" type="success">部门管理员</el-tag>
+              <span v-if="!row.businessRoles.length && !row.departmentAdministrator" class="muted">
+                未分配角色
+              </span>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column label="状态" width="95">
+        <el-table-column label="账号状态" width="95">
           <template #default="{ row }">
-            <el-tag :type="row.status === 'ACTIVE' ? 'success' : 'danger'" effect="plain">
+            <el-tag :type="row.status === 'ACTIVE' ? 'success' : 'danger'" effect="light">
               {{ row.status === 'ACTIVE' ? '正常' : '已停用' }}
             </el-tag>
           </template>

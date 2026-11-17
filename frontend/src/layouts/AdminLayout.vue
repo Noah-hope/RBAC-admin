@@ -20,6 +20,7 @@ import { useSession } from '../stores/session'
 import { useUi } from '../stores/ui'
 import { useTask } from '../composables/useTask'
 import TaskError from '../components/TaskError.vue'
+import BrandMark from '../components/BrandMark.vue'
 const route = useRoute(),
   router = useRouter(),
   session = useSession(),
@@ -67,15 +68,12 @@ async function logout() {
   <div class="admin-shell">
     <aside class="sidebar" :class="{ 'is-open': mobileNav }">
       <RouterLink to="/me" class="brand">
-        <span class="brand-mark">
-          <el-icon><icons.Lock /></el-icon>
-        </span>
+        <BrandMark />
         <div>
-          <strong>权限管理中心</strong>
-          <small>统一身份与访问管理</small>
+          <strong>权限管理系统</strong>
+          <small>统一管理应用与权限</small>
         </div>
       </RouterLink>
-      <div class="nav-label">工作空间</div>
       <nav aria-label="主导航">
         <RouterLink
           v-for="item in navigation"
@@ -92,11 +90,7 @@ async function logout() {
           </el-icon>
         </RouterLink>
       </nav>
-      <div class="sidebar-foot">
-        <span class="status-dot" />
-        RBAC1 权限中心
-        <p>权限清晰，操作可追溯</p>
-      </div>
+      <div class="sidebar-foot">RBAC1 权限管理系统</div>
     </aside>
     <button v-if="mobileNav" class="nav-scrim" aria-label="关闭导航" @click="mobileNav = false" />
     <div class="workspace">
@@ -110,17 +104,15 @@ async function logout() {
           >
             <el-icon><icons.Menu /></el-icon>
           </el-button>
-          <span>工作空间</span>
+          <span>权限管理系统</span>
           <el-icon><icons.ArrowRight /></el-icon>
           <strong>{{ current?.title ?? '权限中心' }}</strong>
         </div>
         <div class="top-identity">
-          <span class="avatar">{{ session.user?.name.slice(0, 1) }}</span>
-          <div>
-            <strong>{{ session.user?.name }}</strong>
-            <small>{{ identity }}</small>
-          </div>
-          <el-button text :loading="busy" @click="logout">退出登录</el-button>
+          <span class="account-context">当前账号</span>
+          <span class="avatar" aria-hidden="true">{{ session.user?.name.slice(0, 1) }}</span>
+          <strong :title="identity">{{ session.user?.name }}</strong>
+          <el-button :loading="busy" @click="logout">退出登录</el-button>
         </div>
       </header>
       <main class="content" id="main-content">

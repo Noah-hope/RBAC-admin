@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
-import { Grid, Plus } from '@element-plus/icons-vue'
+import { Plus, ArrowRight } from '@element-plus/icons-vue'
 import { api } from '../api'
 import type { Application, ApiRecord, PermissionTree } from '../api/types'
 import { useTask, confirmAction } from '../composables/useTask'
@@ -25,6 +25,20 @@ const permissions = computed(() =>
     ...menu.buttons.map((p) => ({ ...p, type: 'BUTTON', parentId: menu.id })),
   ]),
 )
+const collapsedMenus = ref(new Set<number>())
+const visiblePermissions = computed(() =>
+  permissions.value.filter((p) => p.parentId === null || !collapsedMenus.value.has(p.parentId)),
+)
+function toggleMenu(id: number) {
+  if (collapsedMenus.value.has(id)) collapsedMenus.value.delete(id)
+  else collapsedMenus.value.add(id)
+}
+function hasButtons(id: number) {
+  return tree.value?.menus.some((menu) => menu.id === id && menu.buttons.length > 0)
+}
+function permissionRowClass({ row }: { row: { type: string } }) {
+  return row.type === 'MENU' ? 'catalog-menu' : 'catalog-button'
+}
 const filteredApis = computed(() =>
   registry.value.filter((a) =>
     `${a.operationId} ${a.httpMethod} ${a.path}`
@@ -67,6 +81,7 @@ async function load() {
 }
 async function selectApp(id: number) {
   appId.value = id
+  collapsedMenus.value.clear()
   await run(selectedData)
 }
 function openApp(edit = false) {
@@ -158,7 +173,7 @@ onMounted(load)
   <div class="page-head">
     <div>
       <h1>应用与权限</h1>
-      <p>按应用维护菜单、按钮及关联接口。</p>
+      <p>统一配置各应用的菜单、按钮及关联接口。</p>
     </div>
     <ActionButton permission="application:create" type="primary" @click="openApp()">
       <el-icon><Plus /></el-icon>
@@ -167,10 +182,30 @@ onMounted(load)
   </div>
   <TaskError :message="error" />
   <el-button v-if="error" @click="load">重新加载</el-button>
+  <div class="toolbar-tabs" role="tablist" aria-label="应用配置">
+    <button
+      type="button"
+      role="tab"
+      :aria-selected="tab === 'permissions'"
+      :class="{ active: tab === 'permissions' }"
+      @click="selectTab('permissions')"
+    >
+      权限目录
+    </button>
+    <button
+      type="button"
+      role="tab"
+      :aria-selected="tab === 'apis'"
+      :class="{ active: tab === 'apis' }"
+      @click="selectTab('apis')"
+    >
+      API 接口清单
+    </button>
+  </div>
   <div class="catalog-layout" v-loading="busy">
     <section class="panel app-list">
       <div class="panel-heading">
-        <h2>业务应用</h2>
+        <h2>应用列表</h2>
         <span class="muted">{{ apps.length }}</span>
       </div>
       <button
@@ -180,12 +215,15 @@ onMounted(load)
         :class="{ selected: app.id === appId }"
         @click="selectApp(app.id)"
       >
-        <span class="app-mark">
-          <el-icon><Grid /></el-icon>
+        <span
+          class="app-mark"
+          :class="{ 'is-external': app.code !== 'permission-center' }"
+          aria-hidden="true"
+        >
+          {{ app.name.slice(0, 1) }}
         </span>
         <span>
           <strong>{{ app.name }}</strong>
-          <small>{{ app.code }}</small>
         </span>
       </button>
       <p v-if="!apps.length && !busy" class="empty-note">尚未登记应用，请新增应用。</p>
@@ -196,55 +234,66 @@ onMounted(load)
           <h2>{{ activeApp.name }}</h2>
           <p class="muted">接入标识 {{ activeApp.code }}</p>
         </div>
-        <ActionButton permission="application:update" @click="openApp(true)">编辑应用</ActionButton>
-      </div>
-      <div class="permission-app-tabs" role="tablist" aria-label="应用配置">
-        <button
-          type="button"
-          role="tab"
-          :aria-selected="tab === 'permissions'"
-          :class="{ active: tab === 'permissions' }"
-          @click="selectTab('permissions')"
-        >
-          菜单与按钮
-        </button>
-        <button
-          type="button"
-          role="tab"
-          :aria-selected="tab === 'apis'"
-          :class="{ active: tab === 'apis' }"
-          @click="selectTab('apis')"
-        >
-          API 登记
-        </button>
-      </div>
-      <template v-if="tab === 'permissions'">
-        <div class="toolbar">
-          <p class="muted">按钮归属菜单，角色按菜单和按钮授权。</p>
-          <ActionButton permission="permission:create" @click="openPermission()">
+        <div class="catalog-actions">
+          <ActionButton permission="application:update" @click="openApp(true)">
+            编辑应用
+          </ActionButton>
+          <ActionButton
+            v-if="tab === 'permissions'"
+            permission="permission:create"
+            type="primary"
+            @click="openPermission()"
+          >
+            <el-icon><Plus /></el-icon>
             新增权限
           </ActionButton>
         </div>
-        <el-table :data="permissions" empty-text="此应用尚无权限，请先登记菜单。">
+      </div>
+      <template v-if="tab === 'permissions'">
+        <el-table
+          :data="visiblePermissions"
+          :row-class-name="permissionRowClass"
+          empty-text="此应用尚无权限，请先登记菜单。"
+        >
           <el-table-column label="权限名称" min-width="160">
             <template #default="{ row }">
-              <span :class="{ 'child-name': row.type === 'BUTTON' }">{{ row.name }}</span>
+              <div v-if="row.type === 'MENU'" class="menu-heading">
+                <button
+                  v-if="hasButtons(row.id)"
+                  type="button"
+                  class="menu-toggle"
+                  :aria-expanded="!collapsedMenus.has(row.id)"
+                  :aria-label="`${collapsedMenus.has(row.id) ? '展开' : '收起'}${row.name}`"
+                  @click="toggleMenu(row.id)"
+                >
+                  <el-icon :class="{ expanded: !collapsedMenus.has(row.id) }">
+                    <ArrowRight />
+                  </el-icon>
+                </button>
+                <span v-else class="menu-toggle-spacer" />
+                <span>{{ row.name }}</span>
+              </div>
+              <span v-else class="child-name">{{ row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column label="类型" width="85">
             <template #default="{ row }">
-              <el-tag :type="row.type === 'MENU' ? 'info' : 'success'" effect="plain">
+              <el-tag type="info">
                 {{ row.type === 'MENU' ? '菜单' : '按钮' }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="code" label="权限标识" min-width="160" />
+          <el-table-column label="权限标识" min-width="160">
+            <template #default="{ row }">
+              <code class="permission-code">{{ row.code }}</code>
+            </template>
+          </el-table-column>
           <el-table-column label="关联接口" width="110">
             <template #default="{ row }">
               <el-button text type="primary" @click="openPermission(row.id)">
                 {{
                   session.has('api:manage')
-                    ? registry.filter((a) => a.permissionIds.includes(row.id)).length
+                    ? registry.filter((a) => a.permissionIds.includes(row.id)).length + ' 个接口'
                     : '查看关联'
                 }}
               </el-button>
@@ -263,6 +312,11 @@ onMounted(load)
             </template>
           </el-table-column>
         </el-table>
+        <div class="panel-foot muted">
+          {{ tree?.menus.length ?? 0 }} 个菜单，{{ permissions.length - (tree?.menus.length ?? 0) }}
+          个按钮
+          <span v-if="session.has('api:manage')">，{{ registry.length }} 个已登记接口</span>
+        </div>
       </template>
       <template v-else>
         <div class="toolbar">

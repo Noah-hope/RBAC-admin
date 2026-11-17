@@ -1,4 +1,4 @@
-<mxfile host="Electron" compressed="false" pages="4">
+<mxfile host="Electron" compressed="false" pages="6">
   <diagram id="rbac-conceptual-er" name="RBAC0-ER图">
     <mxGraphModel grid="0" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1540" pageHeight="710" background="#FFFFFF" math="0" shadow="0" adaptiveColors="none">
       <root>
@@ -5827,6 +5827,199 @@
         <mxGeometry relative="1" x="0" y="0" as="geometry">
           <mxPoint x="0" y="-12" as="offset" />
         </mxGeometry>
+      </mxCell>
+    </root>
+  </mxGraphModel>
+</diagram>
+  <diagram id="integration-authorization-expected" name="接入方案对比-01-期望方案">
+  <mxGraphModel dx="1980" dy="1990" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1980" pageHeight="1990" background="#FFFFFF" math="0" shadow="0" adaptiveColors="none">
+    <root>
+      <mxCell id="0" />
+      <mxCell id="1" parent="0" />
+      <mxCell id="frontend" value="课程系统前端" style="swimlane;html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#F4F7FB;horizontal=1;startSize=66;swimlaneFillColor=#FFFFFF;collapsible=0;container=1;fontSize=32;fontFamily=FangSong;fontStyle=0;" vertex="1" parent="1">
+        <mxGeometry x="50" y="300" width="500" height="1580" as="geometry" />
+      </mxCell>
+      <mxCell id="backend" value="课程系统后端" style="swimlane;html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#F4F7FB;horizontal=1;startSize=66;swimlaneFillColor=#FFFFFF;collapsible=0;container=1;fontSize=32;fontFamily=FangSong;fontStyle=0;" vertex="1" parent="1">
+        <mxGeometry x="550" y="300" width="680" height="1580" as="geometry" />
+      </mxCell>
+      <mxCell id="center" value="权限中心" style="swimlane;html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#F4F7FB;horizontal=1;startSize=66;swimlaneFillColor=#FFFFFF;collapsible=0;container=1;fontSize=32;fontFamily=FangSong;fontStyle=0;" vertex="1" parent="1">
+        <mxGeometry x="1230" y="300" width="700" height="1580" as="geometry" />
+      </mxCell>
+      <mxCell id="title" value="方案一：权限中心按 API 判断授权" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=SimHei;fontSize=46;fontStyle=1;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;text;strokeColor=none;fillColor=none;align=left;spacing=0;" vertex="1" parent="1">
+        <mxGeometry x="50" y="38" width="1880" height="68" as="geometry" />
+      </mxCell>
+      <mxCell id="subtitle" value="同一示例：用户在课程系统中新增一个学期。" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;text;strokeColor=none;fillColor=none;align=left;spacing=0;" vertex="1" parent="1">
+        <mxGeometry x="50" y="118" width="1880" height="44" as="geometry" />
+      </mxCell>
+      <mxCell id="difference" value="API 与权限的关联维护在权限中心；课程后端查询本次 API 是否允许调用。" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#FFF2CC;" vertex="1" parent="1">
+        <mxGeometry x="50" y="182" width="1880" height="80" as="geometry" />
+      </mxCell>
+      <mxCell id="click" value="点击“新建学期”&lt;br&gt;前端检查 term:create" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#D9E6F2;" vertex="1" parent="frontend">
+        <mxGeometry x="40" y="90" width="420" height="140" as="geometry" />
+      </mxCell>
+      <mxCell id="receive" value="接收 POST /terms&lt;br&gt;携带当前用户令牌" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#D9E6F2;" vertex="1" parent="backend">
+        <mxGeometry x="60" y="90" width="560" height="140" as="geometry" />
+      </mxCell>
+      <mxCell id="request" value="按实际方法和路由确定 API&lt;br&gt;operationId = createTerm" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#D9E6F2;" vertex="1" parent="backend">
+        <mxGeometry x="60" y="360" width="560" height="150" as="geometry" />
+      </mxCell>
+      <mxCell id="remote" value="查询本次 API 权限&lt;br&gt;GET /auth/api-permissions/&lt;br&gt;createTerm" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#D9E6F2;" vertex="1" parent="center">
+        <mxGeometry x="60" y="360" width="580" height="150" as="geometry" />
+      </mxCell>
+      <mxCell id="rules" value="读取 API 与权限关联&lt;br&gt;createTerm → term:create&lt;br&gt;结合用户角色计算是否有权调用" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#FFF2CC;" vertex="1" parent="center">
+        <mxGeometry x="60" y="630" width="580" height="200" as="geometry" />
+      </mxCell>
+      <mxCell id="response" value="返回 allowed&lt;br&gt;true：允许　false：拒绝" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#D9E6F2;" vertex="1" parent="center">
+        <mxGeometry x="60" y="940" width="580" height="120" as="geometry" />
+      </mxCell>
+      <mxCell id="remote-rules" value="" edge="1" parent="center" source="remote" target="rules" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="rules-response" value="" edge="1" parent="center" source="rules" target="response" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="decision" value="允许调用？" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#FFF2CC;rhombus;" vertex="1" parent="backend">
+        <mxGeometry x="210" y="900" width="260" height="200" as="geometry" />
+      </mxCell>
+      <mxCell id="denied" value="提示没有权限&lt;br&gt;提供申请入口" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#F8D7DA;" vertex="1" parent="frontend">
+        <mxGeometry x="40" y="930" width="420" height="140" as="geometry" />
+      </mxCell>
+      <mxCell id="business" value="校验学期业务规则&lt;br&gt;例如：起止日期是否合法" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#D9E6F2;" vertex="1" parent="backend">
+        <mxGeometry x="60" y="1210" width="560" height="120" as="geometry" />
+      </mxCell>
+      <mxCell id="save" value="保存学期，返回成功" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#DDEEDD;" vertex="1" parent="backend">
+        <mxGeometry x="60" y="1440" width="560" height="100" as="geometry" />
+      </mxCell>
+      <mxCell id="success" value="显示新增成功" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#DDEEDD;" vertex="1" parent="frontend">
+        <mxGeometry x="40" y="1440" width="420" height="100" as="geometry" />
+      </mxCell>
+      <mxCell id="submit" value="提交" edge="1" parent="1" source="click" target="receive" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="receive-request" value="" edge="1" parent="backend" source="receive" target="request" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="request-remote" value="查询" edge="1" parent="1" source="request" target="remote" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="response-decision" value="结果" edge="1" parent="1" source="response" target="decision" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="decision-denied" value="否" edge="1" parent="1" source="decision" target="denied" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#A13D49;fontFamily=FangSong;fontSize=28;fontColor=#A13D49;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="decision-business" value="是" edge="1" parent="backend" source="decision" target="business" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="business-save" value="" edge="1" parent="backend" source="business" target="save" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="save-success" value="返回" edge="1" parent="1" source="save" target="success" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="scope" value="共同点：业务规则及课程、班级等数据范围，仍由课程系统校验。" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=28;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;text;strokeColor=none;fillColor=none;align=left;spacing=0;" vertex="1" parent="1">
+        <mxGeometry x="50" y="1902" width="1880" height="45" as="geometry" />
+      </mxCell>
+      <mxCell id="omitted" value="图中省略登录及前端获取权限的过程，重点对比后端 API 授权方式。" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=24;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;text;strokeColor=none;fillColor=none;align=left;spacing=0;" vertex="1" parent="1">
+        <mxGeometry x="50" y="1950" width="1880" height="30" as="geometry" />
+      </mxCell>
+    </root>
+  </mxGraphModel>
+</diagram>
+  <diagram id="integration-authorization-current" name="接入方案对比-02-课程系统当前方案">
+  <mxGraphModel dx="1980" dy="1990" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1980" pageHeight="1990" background="#FFFFFF" math="0" shadow="0" adaptiveColors="none">
+    <root>
+      <mxCell id="0" />
+      <mxCell id="1" parent="0" />
+      <mxCell id="frontend" value="课程系统前端" style="swimlane;html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#F4F7FB;horizontal=1;startSize=66;swimlaneFillColor=#FFFFFF;collapsible=0;container=1;fontSize=32;fontFamily=FangSong;fontStyle=0;" vertex="1" parent="1">
+        <mxGeometry x="50" y="300" width="500" height="1580" as="geometry" />
+      </mxCell>
+      <mxCell id="backend" value="课程系统后端" style="swimlane;html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#F4F7FB;horizontal=1;startSize=66;swimlaneFillColor=#FFFFFF;collapsible=0;container=1;fontSize=32;fontFamily=FangSong;fontStyle=0;" vertex="1" parent="1">
+        <mxGeometry x="550" y="300" width="680" height="1580" as="geometry" />
+      </mxCell>
+      <mxCell id="center" value="权限中心" style="swimlane;html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#F4F7FB;horizontal=1;startSize=66;swimlaneFillColor=#FFFFFF;collapsible=0;container=1;fontSize=32;fontFamily=FangSong;fontStyle=0;" vertex="1" parent="1">
+        <mxGeometry x="1230" y="300" width="700" height="1580" as="geometry" />
+      </mxCell>
+      <mxCell id="title" value="方案二：课程系统按固定权限码判断" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=SimHei;fontSize=46;fontStyle=1;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;text;strokeColor=none;fillColor=none;align=left;spacing=0;" vertex="1" parent="1">
+        <mxGeometry x="50" y="38" width="1880" height="68" as="geometry" />
+      </mxCell>
+      <mxCell id="subtitle" value="同一示例：用户在课程系统中新增一个学期。" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;text;strokeColor=none;fillColor=none;align=left;spacing=0;" vertex="1" parent="1">
+        <mxGeometry x="50" y="118" width="1880" height="44" as="geometry" />
+      </mxCell>
+      <mxCell id="difference" value="接口需要的权限码写在课程后端；权限中心只返回用户权限集合。" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#FFF2CC;" vertex="1" parent="1">
+        <mxGeometry x="50" y="182" width="1880" height="80" as="geometry" />
+      </mxCell>
+      <mxCell id="click" value="点击“新建学期”&lt;br&gt;前端检查 MTRC" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#D9E6F2;" vertex="1" parent="frontend">
+        <mxGeometry x="40" y="90" width="420" height="140" as="geometry" />
+      </mxCell>
+      <mxCell id="receive" value="接收 POST /terms&lt;br&gt;携带当前用户令牌" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#D9E6F2;" vertex="1" parent="backend">
+        <mxGeometry x="60" y="90" width="560" height="140" as="geometry" />
+      </mxCell>
+      <mxCell id="request" value="请求当前用户及权限&lt;br&gt;GET /auth/me" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#D9E6F2;" vertex="1" parent="backend">
+        <mxGeometry x="60" y="360" width="560" height="150" as="geometry" />
+      </mxCell>
+      <mxCell id="remote" value="根据当前用户令牌&lt;br&gt;读取身份及有效权限" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#D9E6F2;" vertex="1" parent="center">
+        <mxGeometry x="60" y="360" width="580" height="150" as="geometry" />
+      </mxCell>
+      <mxCell id="response" value="返回用户权限集合&lt;br&gt;例如：MTR、MTRC、TC" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#D9E6F2;" vertex="1" parent="center">
+        <mxGeometry x="60" y="630" width="580" height="200" as="geometry" />
+      </mxCell>
+      <mxCell id="rules" value="读取后端代码中的固定规则&lt;br&gt;新建学期必须包含 TC" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#FFF2CC;" vertex="1" parent="backend">
+        <mxGeometry x="60" y="630" width="560" height="200" as="geometry" />
+      </mxCell>
+      <mxCell id="no-api-check" value="此处没有查询目标 API&lt;br&gt;权限中心未参与判断&lt;br&gt;POST /terms 是否允许调用" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#FFF2CC;" vertex="1" parent="center">
+        <mxGeometry x="60" y="930" width="580" height="190" as="geometry" />
+      </mxCell>
+      <mxCell id="remote-response" value="" edge="1" parent="center" source="remote" target="response" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="response-rules" value="权限" edge="1" parent="1" source="response" target="rules" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="decision" value="包含 TC？" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#FFF2CC;rhombus;" vertex="1" parent="backend">
+        <mxGeometry x="210" y="900" width="260" height="200" as="geometry" />
+      </mxCell>
+      <mxCell id="denied" value="后端返回 403&lt;br&gt;页面显示无权限错误" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#F8D7DA;" vertex="1" parent="frontend">
+        <mxGeometry x="40" y="930" width="420" height="140" as="geometry" />
+      </mxCell>
+      <mxCell id="business" value="校验学期业务规则&lt;br&gt;例如：起止日期是否合法" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#D9E6F2;" vertex="1" parent="backend">
+        <mxGeometry x="60" y="1210" width="560" height="120" as="geometry" />
+      </mxCell>
+      <mxCell id="save" value="保存学期，返回成功" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#DDEEDD;" vertex="1" parent="backend">
+        <mxGeometry x="60" y="1440" width="560" height="100" as="geometry" />
+      </mxCell>
+      <mxCell id="success" value="显示新增成功" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=32;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;strokeWidth=2;strokeColor=#5D7894;fillColor=#DDEEDD;" vertex="1" parent="frontend">
+        <mxGeometry x="40" y="1440" width="420" height="100" as="geometry" />
+      </mxCell>
+      <mxCell id="submit" value="提交" edge="1" parent="1" source="click" target="receive" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="receive-request" value="" edge="1" parent="backend" source="receive" target="request" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="request-remote" value="查询" edge="1" parent="1" source="request" target="remote" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="rules-decision" value="" edge="1" parent="backend" source="rules" target="decision" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="decision-denied" value="否" edge="1" parent="1" source="decision" target="denied" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#A13D49;fontFamily=FangSong;fontSize=28;fontColor=#A13D49;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="decision-business" value="是" edge="1" parent="backend" source="decision" target="business" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="business-save" value="" edge="1" parent="backend" source="business" target="save" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="save-success" value="返回" edge="1" parent="1" source="save" target="success" style="html=1;noEdgeStyle=1;rounded=0;endArrow=block;endFill=1;strokeWidth=3;strokeColor=#17365D;fontFamily=FangSong;fontSize=28;fontColor=#17365D;labelBackgroundColor=#FFFFFF;spacing=8;">
+        <mxGeometry relative="1" as="geometry" />
+      </mxCell>
+      <mxCell id="scope" value="共同点：业务规则及课程、班级等数据范围，仍由课程系统校验。" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=28;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;text;strokeColor=none;fillColor=none;align=left;spacing=0;" vertex="1" parent="1">
+        <mxGeometry x="50" y="1902" width="1880" height="45" as="geometry" />
+      </mxCell>
+      <mxCell id="omitted" value="图中省略登录及前端获取权限的过程，重点对比后端 API 授权方式。" style="html=1;whiteSpace=wrap;rounded=0;fontFamily=FangSong;fontSize=24;fontStyle=0;fontColor=#17365D;align=center;verticalAlign=middle;spacing=14;text;strokeColor=none;fillColor=none;align=left;spacing=0;" vertex="1" parent="1">
+        <mxGeometry x="50" y="1950" width="1880" height="30" as="geometry" />
       </mxCell>
     </root>
   </mxGraphModel>
