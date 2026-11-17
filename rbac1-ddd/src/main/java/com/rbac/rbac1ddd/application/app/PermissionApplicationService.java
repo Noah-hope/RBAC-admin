@@ -74,6 +74,9 @@ public class PermissionApplicationService {
    * 登记菜单或按钮权限及其接口关联，写入全局操作记录。
    *
    * <p>权限中心的新权限同时授予总管理员角色，与权限在同一事务保存。
+   *
+   * <p>校验顺序与结构化后端一致：上下级规则 → 标识唯一（保存权限时由数据库约束发现，409）→ 接口关联（400）。
+   * 关联不合法时整个事务回滚，已插入的权限行不会保留。
    */
   @Transactional
   public PermissionResult create(
@@ -90,6 +93,7 @@ public class PermissionApplicationService {
             command.type(),
             command.parentId(),
             parent);
+    permissions.save(permission);
     permission.linkApis(command.apiIds(), apis.findAllById(command.apiIds()));
     permissions.save(permission);
     if (application.isPermissionCenter()) {

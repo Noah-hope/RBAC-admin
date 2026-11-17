@@ -331,6 +331,37 @@ class ApplicationApiTest extends ManagementApiTestSupport {
     assertThat(failureCount("POST " + PERMISSIONS + "，CONFLICT")).isGreaterThanOrEqualTo(1);
   }
 
+  /**
+   * 一次请求同时有两个错误时，报告哪一个与结构化后端一致。
+   *
+   * <p>结构化后端登记权限时先插入权限行再校验接口关联，所以先报标识重复（409）；
+   * 修改权限时先替换接口关联再改标识，所以先报关联不合法（400）。
+   */
+  @Test
+  @DisplayName("RBAC0：标识重复且关联非法 API 时，登记先报 409、修改先报 400，与结构化后端一致")
+  void 同时出现标识重复和非法关联时的错误优先级() throws Exception {
+    long app = application(uniq("课程"));
+    long other = application(uniq("图书"));
+    long foreignApi = api(other, "listBooks", "GET", "/books");
+    send(post(PERMISSIONS, app), menuBody("课程", "course:view")).andExpect(status().isCreated());
+    long second =
+        read(send(post(PERMISSIONS, app), menuBody("课程二", "course:edit"))).get("id").asLong();
+
+    Map<String, Object> create = menuBody("课程三", "course:view");
+    create.put("apiIds", List.of(foreignApi));
+    expectDuplicate(send(post(PERMISSIONS, app), create), "该应用内已存在相同的权限标识。");
+    assertThat(count("select count(*) from sys_permission where application_id=?", app))
+        .isEqualTo(2);
+
+    expectProblem(
+        send(
+            patch(PERMISSION, app, second),
+            Map.of("code", "course:view", "apiIds", List.of(foreignApi))),
+        400,
+        "INVALID_REQUEST",
+        "请选择同一应用下已登记的API。");
+  }
+
   @Test
   @DisplayName("RBAC0：权限只能关联同一应用下已登记的 API，失败时不保存权限")
   void 权限只能关联同一应用下已登记的API() throws Exception {
