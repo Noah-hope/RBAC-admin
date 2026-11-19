@@ -4,21 +4,21 @@ import com.fasterxml.jackson.databind.cfg.CoercionAction;
 import com.fasterxml.jackson.databind.cfg.CoercionInputShape;
 import com.fasterxml.jackson.databind.type.LogicalType;
 import com.rbac.rbac1.controller.SessionInterceptor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/** Web 层配置：注册会话拦截器，并让 JSON 标量严格匹配类型。 */
 @Configuration(proxyBeanMethods = false)
+@RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
   private final SessionInterceptor sessionInterceptor;
 
-  public WebConfig(SessionInterceptor sessionInterceptor) {
-    this.sessionInterceptor = sessionInterceptor;
-  }
-
+  /** 除登录外，管理接口和 /auth 接口都要求有效会话。 */
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
     registry
@@ -27,6 +27,11 @@ public class WebConfig implements WebMvcConfigurer {
         .excludePathPatterns("/auth/login");
   }
 
+  /**
+   * 关闭 Jackson 的标量自动转换：数字不能当字符串、字符串不能当数字或布尔值，类型不符按请求不合法返回 400。
+   *
+   * @return ObjectMapper 定制器
+   */
   @Bean
   Jackson2ObjectMapperBuilderCustomizer strictJsonScalars() {
     return builder ->

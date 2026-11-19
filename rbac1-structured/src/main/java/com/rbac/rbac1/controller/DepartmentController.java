@@ -1,14 +1,18 @@
 package com.rbac.rbac1.controller;
 
-import com.rbac.rbac1.dto.DepartmentDtos.DepartmentInput;
-import com.rbac.rbac1.dto.DepartmentDtos.DepartmentTree;
-import com.rbac.rbac1.dto.DepartmentDtos.DepartmentUpdate;
-import com.rbac.rbac1.dto.DepartmentDtos.DepartmentView;
-import com.rbac.rbac1.dto.SessionDtos.SessionUser;
+import static com.rbac.rbac1.controller.SessionInterceptor.ACTOR;
+import static com.rbac.rbac1.dto.Formats.MAX_ID;
+
+import com.rbac.rbac1.dto.DepartmentDTO;
+import com.rbac.rbac1.dto.DepartmentUpdateDTO;
 import com.rbac.rbac1.service.DepartmentService;
+import com.rbac.rbac1.service.SessionUser;
+import com.rbac.rbac1.vo.DepartmentTreeVO;
+import com.rbac.rbac1.vo.DepartmentVO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,34 +24,46 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.rbac.rbac1.controller.SessionInterceptor.ACTOR;
-import static com.rbac.rbac1.dto.DepartmentDtos.MAX_ID;
-
+/** 部门接口：部门树查询、新增和修改部门。 */
 @RestController
 @RequestMapping("/api/v1/departments")
+@RequiredArgsConstructor
 public class DepartmentController {
 
-    private final DepartmentService departments;
+  private final DepartmentService departments;
 
-    public DepartmentController(DepartmentService departments) {
-        this.departments = departments;
-    }
+  /** 按操作者的管理范围返回部门树。 */
+  @GetMapping
+  public DepartmentTreeVO list(
+      @RequestAttribute(ACTOR)
+      SessionUser actor) {
+    return departments.listTree(actor);
+  }
 
-    @GetMapping
-    public DepartmentTree list(@RequestAttribute(ACTOR) SessionUser actor) {
-        return departments.listTree(actor);
-    }
+  /** 新增部门，成功返回 201。 */
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  public DepartmentVO create(
+      @RequestAttribute(ACTOR)
+      SessionUser actor,
+      @Valid
+      @RequestBody
+      DepartmentDTO request) {
+    return departments.create(actor, request);
+  }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public DepartmentView create(@RequestAttribute(ACTOR) SessionUser actor, @Valid @RequestBody DepartmentInput request) {
-        return departments.create(actor, request);
-    }
-
-    @PatchMapping("/{departmentId}")
-    public DepartmentView update(@RequestAttribute(ACTOR) SessionUser actor,
-                                 @PathVariable @Positive @Max(MAX_ID) long departmentId,
-                                 @Valid @RequestBody DepartmentUpdate request) {
-        return departments.update(actor, departmentId, request);
-    }
+  /** 修改部门名称或上级部门，只修改请求中出现的字段。 */
+  @PatchMapping("/{departmentId}")
+  public DepartmentVO update(
+      @RequestAttribute(ACTOR)
+      SessionUser actor,
+      @PathVariable
+      @Positive
+      @Max(MAX_ID)
+      long departmentId,
+      @Valid
+      @RequestBody
+      DepartmentUpdateDTO request) {
+    return departments.update(actor, departmentId, request);
+  }
 }

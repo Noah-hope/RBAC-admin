@@ -1,33 +1,64 @@
 package com.rbac.rbac1.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+/** sys_permission_request 表的一行：用户对单个权限的申请及审核结果。 */
 @Entity
 @Table(name = "sys_permission_request")
+@Getter
+@Setter
+@NoArgsConstructor
 public class PermissionRequest {
+
+  /** 状态：待审核。 */
+  public static final String PENDING = "PENDING";
+
+  /** 状态：已通过，并为申请人分配了所选角色。 */
+  public static final String APPROVED = "APPROVED";
+
+  /** 状态：已拒绝。 */
+  public static final String REJECTED = "REJECTED";
+
+  /** 状态：申请人已通过其他途径获得该权限，申请自动结束。 */
+  public static final String SATISFIED = "SATISFIED";
+
+  /** 状态：申请人已撤回。 */
+  public static final String WITHDRAWN = "WITHDRAWN";
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  public Long id;
+  private Long id;
 
   @Column(nullable = false)
-  public Long applicantUserId;
+  private Long applicantUserId;
 
   @Column(nullable = false)
-  public Long permissionId;
+  private Long permissionId;
 
   @Column(nullable = false, length = 500)
-  public String reason;
+  private String reason;
 
   @Column(nullable = false, length = 12)
-  public String status;
+  private String status;
 
-  @Column() public Long reviewerUserId;
+  @Column()
+  private Long reviewerUserId;
 
-  @Column() public Long approvedRoleId;
+  @Column()
+  private Long approvedRoleId;
 
   @Column(nullable = false)
-  public LocalDateTime createdAt;
+  private LocalDateTime createdAt;
 
-  @Column() public LocalDateTime reviewedAt;
+  @Column()
+  private LocalDateTime reviewedAt;
 }

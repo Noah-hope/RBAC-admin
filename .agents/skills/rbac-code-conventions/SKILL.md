@@ -22,10 +22,10 @@ metadata:
 
 | 职责 | 结构化包 | DDD 包 |
 | --- | --- | --- |
-| HTTP 适配、参数校验 | `controller`、`dto` | `interfaces.rest`、`interfaces.rest.dto`、`interfaces.rest.vo` |
+| HTTP 适配、参数校验 | `controller`、`dto`、`vo` | `interfaces.rest`、`interfaces.rest.dto`、`interfaces.rest.vo` |
 | 用例编排、事务、权限守卫 | `service` | `application.*` |
 | 业务规则 | `service` | `domain.*`（聚合根、值对象、领域服务、仓储接口） |
-| 持久化、外部系统、日志切面 | `entity`、`mapper`、`config` | `infrastructure.*` |
+| 持久化、外部系统、日志切面 | `entity`、`mapper`、`config`（含 `LayerLoggingAspect`、JWT） | `infrastructure.*` |
 
 组内已确定保持两个独立模块（不采用老师式的单工程）。两个后端都部署、共用同一套前端和同一个数据库，各自完整实现全部 44 个接口。
 
@@ -36,7 +36,7 @@ metadata:
 3. **业务规则的位置**：
    - 结构化：权限、状态、跨对象一致性放在 Service。
    - DDD：只依赖聚合自身数据的规则放在聚合根方法里（信息专家）；需要整张图或多个聚合的规则放领域服务；应用服务只做编排。
-4. **DTO 与 VO 分离**：请求放 `dto` 包并以 `DTO` 结尾；响应放 `vo` 包并以 `VO` 结尾。Controller 负责 DTO → Command、Result → VO 映射，不把实体、持久化对象或领域对象直接返回给前端。
+4. **DTO 与 VO 分离**：请求放 `dto` 包并以 `DTO` 结尾；响应放 `vo` 包并以 `VO` 结尾，不把实体、持久化对象或领域对象直接返回给前端。DDD 中 Controller 负责 DTO → Command、Result → VO 映射；结构化实现刻意简化，Service 直接接收 DTO、返回 VO，不另设 Command/Result 层，以保持面向功能的写法并与 DDD 形成对比。
 5. **优先 CloneFactory**：同名同类型字段优先 `CloneFactory.copy(...)`，PATCH 更新优先 `copyNotNull(...)`。派生值、多来源字段、类型转换、集合元素类型变化才显式赋值。细节见下文。
 6. **Lombok 去样板代码**：优先 `@Getter`、`@Setter`、`@RequiredArgsConstructor`、`@NoArgsConstructor`，不手写无意义的 getter、setter 和构造器。例外：聚合根暴露集合时手写 getter，返回只读视图，防止外部绕过业务方法修改。
 7. **禁止 `var`**：Java 局部变量写明确类型，包括 lambda 外的循环变量。
@@ -51,15 +51,15 @@ metadata:
 16. **外部系统调用使用 `@HttpExchange`**：调用其他系统（例如课程管理系统调用本系统的权限检查接口）时，用 Spring HTTP Interface 声明客户端，放在 `infrastructure.<system>.client`，应用层只依赖端口接口。
 17. **统一 AOP 日志**：接口层、应用层、基础设施层的日志统一由 `infrastructure.logging.LayerLoggingAspect` 输出；业务类不写 `@Slf4j`、Logger 或 `log.*`。日志级别写在 `application.yml` 的 `logging.level`，`logback-spring.xml` 只负责 appender 和格式。
 18. **DDD 应用服务只依赖端口**：`application.**` 只能依赖 `domain.**` 和 `application` 内定义的端口接口（如 `TokenVerifier`、`OperationRecorder`），禁止引用 `JpaRepository`、JPA 实体、持久化对象或 `infrastructure.**`。
-19. **状态与类型值归口领域层**：角色类型、账号状态、申请状态、权限类型等取值定义为领域层枚举，或对应领域对象中的 `public static final` 常量；应用层和领域层不出现重复的状态字符串和魔法数字。
+19. **状态与类型值归口领域层**：角色类型、账号状态、申请状态、权限类型等取值定义为领域层枚举，或对应领域对象中的 `public static final` 常量；应用层和领域层不出现重复的状态字符串和魔法数字。结构化实现没有领域层，取值定义为对应实体上的 `public static final` 常量。
 
 ## 日志规范
 
-- 唯一的业务日志入口是 `infrastructure.logging.LayerLoggingAspect`，覆盖接口层、应用层、基础设施层的 Spring Bean，记录方法开始、完成、耗时和异常类型。日志器使用目标类自身的名称，因此可以按包调整级别。
+- 唯一的业务日志入口是 `LayerLoggingAspect`（DDD 在 `infrastructure.logging`，覆盖接口层、应用层、基础设施层；结构化在 `config`，覆盖 controller、service、mapper 三层）的 Spring Bean，记录方法开始、完成、耗时和异常类型。日志器使用目标类自身的名称，因此可以按包调整级别。
 - 领域对象不是 Spring Bean，不被切面拦截；领域规则拒绝时由应用层的「异常」日志体现。
 - 日志不打印参数值、DTO/VO、异常堆栈或完整响应体，只打印层名、类名、方法名、耗时和异常类型。
 - 严禁记录密码、JWT、Bearer Token、Authorization 头和数据库密码。
-- `application.yml` 中三个业务包为 `DEBUG`，根日志为 `INFO`。Docker Swarm 部署通过环境变量覆盖，例如 `LOGGING_LEVEL_COM_RBAC_RBAC1DDD_INTERFACES=INFO`。
+- `application.yml` 中三个业务包为 `DEBUG`，根日志为 `INFO`。Docker Swarm 部署通过环境变量覆盖，例如 `LOGGING_LEVEL_COM_RBAC_RBAC1DDD_INTERFACES=INFO`、`LOGGING_LEVEL_COM_RBAC_RBAC1_SERVICE=INFO`。
 
 ## CloneFactory 细节
 
@@ -94,6 +94,7 @@ metadata:
 - 领域规则用不启动 Spring 的单元测试；接口行为用 MockMvc 集成测试。
 - 目前集成测试使用 H2 的 MySQL 模式；MySQL 环境就绪后补充真实 MySQL 集成测试，H2 不能代替 Flyway 迁移验证。
 - 两种实现共用同一份验收用例和测试数据（`test-bootstrap.sql`），保证「两种实现通过相同的验收条件」。
+- 现场检查时在终端执行 `mvn -f <模块>/pom.xml clean test`，结束后用浏览器打开 `<模块>/target/site/jacoco/index.html` 查看覆盖率；两个模块都已配置 Jacoco。
 
 ## 代码格式硬约束
 

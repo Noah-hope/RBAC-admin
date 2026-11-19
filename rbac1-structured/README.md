@@ -65,4 +65,8 @@ API 登记与权限关联分开维护，解绑保留 API。权限申请通过时
 mvn -f rbac1-structured/pom.xml verify
 ```
 
+运行测试的同时生成 Jacoco 覆盖率报告，用浏览器打开 `rbac1-structured/target/site/jacoco/index.html` 查看。
+
+日志统一由 `config/LayerLoggingAspect` 按层输出（接口层 controller、业务层 service、数据访问层 mapper），写到控制台和 `logs/rbac1-structured.log`；各层级别在 `application.yml` 的 `logging.level` 设置，部署时可用 `LOGGING_LEVEL_COM_RBAC_RBAC1_CONTROLLER` 等环境变量覆盖。代码按 [RBAC 代码规范](../.agents/skills/rbac-code-conventions/SKILL.md) 编写：请求放 `dto`（以 DTO 结尾），响应放 `vo`（以 VO 结尾），实体使用 Lombok，同名字段拷贝使用课程提供的 CloneFactory（首次构建前在课程代码 `clonefactory` 目录执行 `mvn install -Dmaven.test.skip=true`）。
+
 JWT 测试、JPA 行为测试和完整 Spring MVC 测试使用临时密钥与测试专用 H2，不需要本地 MySQL。测试覆盖共享 API 解绑、实时授权、退出失效、多层及菱形继承、来源去重、循环拒绝、后代菜单依赖、两类申请、审批回滚和日志快照。控制器映射与 RBAC1 OpenAPI 的 44 个接口核对。完整初始化测试在 H2 MySQL 模式验证 17 张表、基础权限、API 关联、继承外键及申请快照；仅测试时去掉 H2 不支持的 MySQL 列级字符集和排序规则声明。内存数据库测试不代替 MySQL Flyway 迁移验证；真实数据库及课程系统联调仍须在配置好环境后执行。

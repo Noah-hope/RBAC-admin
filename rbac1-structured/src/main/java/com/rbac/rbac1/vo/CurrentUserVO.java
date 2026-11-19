@@ -1,0 +1,25 @@
+package com.rbac.rbac1.vo;
+
+import java.util.List;
+
+/**
+ * 当前登录用户在目标应用中的身份、角色和权限。
+ *
+ * @param subject 用户 ID 的字符串形式
+ * @param roles 在目标应用中有权限的角色 ID
+ * @param permissions 在目标应用中拥有的权限标识
+ * @param name 姓名
+ * @param no 登录账号
+ * @param id 用户 ID
+ * @param departmentId 所属部门 ID
+ * @param managementRole 管理身份：TOTAL_ADMIN、DEPARTMENT_ADMIN 或 NONE
+ */
+public record CurrentUserVO(
+    String subject,
+    List<String> roles,
+    List<String> permissions,
+    String name,
+    String no,
+    long id,
+    Long departmentId,
+    String managementRole) {}

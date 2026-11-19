@@ -1,29 +1,42 @@
 package com.rbac.rbac1.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+/** sys_api 表的一行：业务应用登记的一个接口，按应用内的操作标识和路由唯一。 */
 @Entity
 @Table(
     name = "sys_api",
     uniqueConstraints = {
-      @UniqueConstraint(columnNames = {"application_id", "operation_id"}),
-      @UniqueConstraint(columnNames = {"application_id", "http_method", "path"})
+      @UniqueConstraint(name = "uq_api_operation", columnNames = {"application_id", "operation_id"}),
+      @UniqueConstraint(name = "uq_api_route", columnNames = {"application_id", "http_method", "path"})
     })
+@Getter
+@Setter
+@NoArgsConstructor
 public class Api {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  public Long id;
+  private Long id;
 
   @Column(nullable = false)
-  public Long applicationId;
+  private Long applicationId;
 
   @Column(nullable = false, length = 128)
-  public String operationId;
+  private String operationId;
 
   @Column(nullable = false, length = 10)
-  public String httpMethod;
+  private String httpMethod;
 
   @Column(nullable = false, length = 255)
-  public String path;
+  private String path;
 }

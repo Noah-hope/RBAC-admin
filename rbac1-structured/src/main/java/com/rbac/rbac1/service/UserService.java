@@ -1,16 +1,15 @@
 package com.rbac.rbac1.service;
 
-import static com.rbac.rbac1.service.ManagementFailure.Reason.*;
+import static com.rbac.rbac1.service.ManagementFailure.Reason.FORBIDDEN;
+import static com.rbac.rbac1.service.ManagementFailure.Reason.INVALID_REQUEST;
+import static com.rbac.rbac1.service.ManagementFailure.Reason.NOT_FOUND;
 
-import com.rbac.rbac1.dto.SessionDtos.SessionUser;
-import com.rbac.rbac1.dto.UserDtos.DepartmentRef;
-import com.rbac.rbac1.dto.UserDtos.RoleRef;
-import com.rbac.rbac1.dto.UserDtos.UserCreate;
-import com.rbac.rbac1.dto.UserDtos.UserCreated;
-import com.rbac.rbac1.dto.UserDtos.UserPage;
-import com.rbac.rbac1.dto.UserDtos.UserUpdate;
-import com.rbac.rbac1.dto.UserDtos.UserView;
+import cn.edu.xmu.clonefactory.util.CloneFactory;
+import com.rbac.rbac1.dto.UserCreateDTO;
+import com.rbac.rbac1.dto.UserUpdateDTO;
 import com.rbac.rbac1.entity.Department;
+import com.rbac.rbac1.entity.OperationLogTarget;
+import com.rbac.rbac1.entity.Role;
 import com.rbac.rbac1.entity.UserAccount;
 import com.rbac.rbac1.entity.UserRole;
 import com.rbac.rbac1.mapper.RoleMapper;
@@ -18,217 +17,266 @@ import com.rbac.rbac1.mapper.RoleMapper.UserRoleRow;
 import com.rbac.rbac1.mapper.SessionMapper;
 import com.rbac.rbac1.mapper.UserMapper;
 import com.rbac.rbac1.mapper.UserRoleMapper;
+import com.rbac.rbac1.vo.DepartmentRefVO;
+import com.rbac.rbac1.vo.PageVO;
+import com.rbac.rbac1.vo.RoleRefVO;
+import com.rbac.rbac1.vo.UserCreatedVO;
+import com.rbac.rbac1.vo.UserVO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 用户管理：管理员在管理范围内新增、查询和修改用户；调动部门和任免部门管理员只限总管理员。
+ *
+ * <p>停用账号时立即撤销该用户的全部会话。
+ */
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-  private static final String DEPARTMENT_ADMIN = "DEPARTMENT_ADMIN";
+  private static final String USERNAME_UNIQUE = "uq_user_username";
+
+  private static final String USERNAME_TAKEN = "该用户名已存在。";
 
   private final UserMapper users;
+
   private final DepartmentService departments;
+
   private final RoleMapper roles;
+
   private final UserRoleMapper userRoles;
+
   private final SessionMapper sessions;
+
   private final PasswordEncoder passwords;
+
   private final OperationLogService operationLogs;
 
-  public UserService(
-      UserMapper users,
-      DepartmentService departments,
-      RoleMapper roles,
-      UserRoleMapper userRoles,
-      SessionMapper sessions,
-      PasswordEncoder passwords,
-      OperationLogService operationLogs) {
-    this.users = users;
-    this.departments = departments;
-    this.roles = roles;
-    this.userRoles = userRoles;
-    this.sessions = sessions;
-    this.passwords = passwords;
-    this.operationLogs = operationLogs;
-  }
-
+  /**
+   * 分页查询管理范围内的用户。
+   *
+   * @param actor 当前操作人，必须是管理员
+   * @param departmentId 只查该部门及其下级部门，可为 {@code null}
+   * @param keyword 匹配姓名或用户名，空串表示不过滤
+   * @param includeDepartmentName 关键字是否也匹配部门名称
+   * @param page 页码，从 1 开始
+   * @param pageSize 每页条数
+   * @return 按 ID 排序的一页用户
+   * @throws ManagementFailure 部门不存在或超出管理范围
+   */
   @Transactional(readOnly = true)
-  public UserPage list(
+  public PageVO<UserVO> list(
       SessionUser actor,
       Long departmentId,
       String keyword,
       boolean includeDepartmentName,
       int page,
       int pageSize) {
-    var scope =
+    Map<Long, Department> scope =
         departments.managedDepartments(actor, departmentId).stream()
-            .collect(Collectors.toMap(department -> department.id, Function.identity()));
+            .collect(Collectors.toMap(department -> department.getId(), Function.identity()));
     if (scope.isEmpty()) {
-      return new UserPage(List.of(), page, pageSize, 0);
+      return new PageVO<>(List.of(), page, pageSize, 0);
     }
 
-    var matches =
+    Page<UserAccount> matches =
         users.search(
             scope.keySet(), keyword, includeDepartmentName, PageRequest.of(page - 1, pageSize));
-    var ids = matches.stream().map(user -> user.id).toList();
-    var assigned =
+    List<Long> ids = matches.stream().map(user -> user.getId()).toList();
+    Map<Long, List<UserRoleRow>> assigned =
         ids.isEmpty()
             ? Map.<Long, List<UserRoleRow>>of()
             : roles.findAssignedRoles(ids).stream()
                 .collect(Collectors.groupingBy(UserRoleRow::getUserId));
-    var items =
+    List<UserVO> items =
         matches.stream()
             .map(
                 user ->
                     view(
                         user,
-                        scope.get(user.departmentId),
-                        assigned.getOrDefault(user.id, List.of())))
+                        scope.get(user.getDepartmentId()),
+                        assigned.getOrDefault(user.getId(), List.of())))
             .toList();
-    return new UserPage(items, page, pageSize, matches.getTotalElements());
+    return new PageVO<>(items, page, pageSize, matches.getTotalElements());
   }
 
+  /**
+   * 查询管理范围内的用户详情。
+   *
+   * @param actor 当前操作人，必须是管理员
+   * @param id 用户 ID
+   * @return 用户详情
+   * @throws ManagementFailure 用户不存在为 NOT_FOUND，超出管理范围为 OUTSIDE_MANAGEMENT_SCOPE
+   */
   @Transactional(readOnly = true)
-  public UserView get(SessionUser actor, long id) {
-    var user = requireUser(actor, id);
-    var department = departments.requireManagedDepartment(actor, user.departmentId);
+  public UserVO get(SessionUser actor, long id) {
+    UserAccount user = requireUser(actor, id);
+    Department department = departments.requireManagedDepartment(actor, user.getDepartmentId());
     return view(user, department, roles.findAssignedRoles(List.of(id)));
   }
 
+  /**
+   * 在管理范围内的部门中新增用户，密码保存为摘要。
+   *
+   * @param actor 当前操作人，必须是管理员；同时任免部门管理员时必须是总管理员
+   * @param request 用户资料和初始密码
+   * @return 新增的用户
+   * @throws ManagementFailure 部门超出管理范围、无权任免部门管理员或用户名重复
+   */
   @Transactional
-  public UserCreated create(SessionUser actor, UserCreate request) {
-    var department = departments.requireManagedDepartment(actor, request.departmentId);
-    requireManagementAuthority(actor, request.departmentAdministrator != null);
+  public UserCreatedVO create(SessionUser actor, UserCreateDTO request) {
+    Department department = departments.requireManagedDepartment(actor, request.getDepartmentId());
+    requireManagementAuthority(actor, request.getDepartmentAdministrator() != null);
 
-    var user = new UserAccount();
-    user.username = request.username;
-    user.name = request.name;
-    user.departmentId = department.id;
-    user.status = request.status;
-    user.passwordHash = passwords.encode(request.initialPassword);
-    users.save(user);
+    UserAccount user = CloneFactory.copy(new UserAccount(), request);
+    user.setPasswordHash(passwords.encode(request.getInitialPassword()));
+    DuplicateKeys.saveAndFlush(users, user, USERNAME_UNIQUE, USERNAME_TAKEN);
 
-    operationLogs.recordUserChange(actor, "新增用户", "初始状态为" + user.status, user, department.id);
-    if (Boolean.TRUE.equals(request.departmentAdministrator)) {
+    operationLogs.recordUserChange(
+        actor, "新增用户", "初始状态为" + user.getStatus(), user, department.getId());
+    if (Boolean.TRUE.equals(request.getDepartmentAdministrator())) {
       setDepartmentAdministrator(actor, user, true);
     }
-    return new UserCreated(view(user, department, roles.findAssignedRoles(List.of(user.id))));
+    return new UserCreatedVO(
+        view(user, department, roles.findAssignedRoles(List.of(user.getId()))));
   }
 
+  /**
+   * 部分修改用户资料、状态、所属部门和部门管理员身份。
+   *
+   * <p>先锁定用户行再修改，避免并发修改互相覆盖。普通资料和状态变更按原部门写入用户范围的记录，
+   * 让原部门管理员能看到；跨部门调动写入全局记录。
+   *
+   * @param actor 当前操作人，必须是管理员；调动部门或任免部门管理员时必须是总管理员
+   * @param id 用户 ID
+   * @param request 要修改的字段，至少一项
+   * @return 修改后的用户
+   * @throws ManagementFailure 用户不存在、超出管理范围、无权调动、没有任何字段或用户名重复
+   */
   @Transactional
-  public UserView update(SessionUser actor, long id, UserUpdate request) {
+  public UserVO update(SessionUser actor, long id, UserUpdateDTO request) {
     DepartmentService.requireAdministrator(actor);
-    var user =
+    UserAccount user =
         users.findOrganizationUsersForUpdate(List.of(id)).stream()
             .findFirst()
             .orElseThrow(() -> new ManagementFailure(NOT_FOUND, "用户不存在。"));
-    var originalDepartment = departments.requireManagedDepartment(actor, user.departmentId);
+    Department originalDepartment = departments.requireManagedDepartment(actor, user.getDepartmentId());
     requireManagementAuthority(
-        actor, request.departmentId != null || request.departmentAdministrator != null);
-    if (request.username == null
-        && request.name == null
-        && request.status == null
-        && request.departmentId == null
-        && request.departmentAdministrator == null) {
+        actor, request.getDepartmentId() != null || request.getDepartmentAdministrator() != null);
+    if (request.getUsername() == null
+        && request.getName() == null
+        && request.getStatus() == null
+        && request.getDepartmentId() == null
+        && request.getDepartmentAdministrator() == null) {
       throw new ManagementFailure(INVALID_REQUEST, "请填写要修改的用户信息。");
     }
 
-    var department =
-        request.departmentId == null || request.departmentId.equals(originalDepartment.id)
+    Department department =
+        request.getDepartmentId() == null
+                || request.getDepartmentId().equals(originalDepartment.getId())
             ? originalDepartment
-            : departments.requireManagedDepartment(actor, request.departmentId);
-    var changes = new ArrayList<String>();
-    if (request.username != null && !request.username.equals(user.username)) {
-      changes.add("用户名从「" + user.username + "」改为「" + request.username + "」");
-      user.username = request.username;
+            : departments.requireManagedDepartment(actor, request.getDepartmentId());
+    List<String> changes = new ArrayList<>();
+    if (request.getUsername() != null && !request.getUsername().equals(user.getUsername())) {
+      changes.add("用户名从「" + user.getUsername() + "」改为「" + request.getUsername() + "」");
+      user.setUsername(request.getUsername());
+      DuplicateKeys.saveAndFlush(users, user, USERNAME_UNIQUE, USERNAME_TAKEN);
     }
-    if (request.name != null && !request.name.equals(user.name)) {
-      changes.add("姓名从「" + user.name + "」改为「" + request.name + "」");
-      user.name = request.name;
+    if (request.getName() != null && !request.getName().equals(user.getName())) {
+      changes.add("姓名从「" + user.getName() + "」改为「" + request.getName() + "」");
+      user.setName(request.getName());
     }
     if (!changes.isEmpty()) {
       operationLogs.recordUserChange(
-          actor, "修改用户", String.join("，", changes), user, originalDepartment.id);
+          actor, "修改用户", String.join("，", changes), user, originalDepartment.getId());
     }
-    if (request.status != null && !request.status.equals(user.status)) {
-      boolean disabled = "DISABLED".equals(request.status);
-      var detail = "状态从 " + user.status + " 改为 " + request.status;
-      user.status = request.status;
+    if (request.getStatus() != null && !request.getStatus().equals(user.getStatus())) {
+      boolean disabled = UserAccount.DISABLED.equals(request.getStatus());
+      String detail = "状态从 " + user.getStatus() + " 改为 " + request.getStatus();
+      user.setStatus(request.getStatus());
       if (disabled) {
         sessions.revokeAllForUser(id);
       }
       operationLogs.recordUserChange(
-          actor, disabled ? "停用账号" : "启用账号", detail, user, originalDepartment.id);
+          actor, disabled ? "停用账号" : "启用账号", detail, user, originalDepartment.getId());
     }
-    if (!department.id.equals(originalDepartment.id)) {
-      user.departmentId = department.id;
+    if (!department.getId().equals(originalDepartment.getId())) {
+      user.setDepartmentId(department.getId());
       operationLogs.recordGlobalChange(
           actor,
           "跨部门调动",
-          "从「" + originalDepartment.name + "」调至「" + department.name + "」",
-          "USER",
+          "从「" + originalDepartment.getName() + "」调至「" + department.getName() + "」",
+          OperationLogTarget.USER,
           id,
-          user.name);
+          user.getName());
     }
-    if (request.departmentAdministrator != null) {
-      setDepartmentAdministrator(actor, user, request.departmentAdministrator);
+    if (request.getDepartmentAdministrator() != null) {
+      setDepartmentAdministrator(actor, user, request.getDepartmentAdministrator());
     }
     return view(user, department, roles.findAssignedRoles(List.of(id)));
   }
 
+  /** 查找属于某个部门的用户；不属于任何部门的账号（如总管理员）视为不存在。 */
   private UserAccount requireUser(SessionUser actor, long id) {
     DepartmentService.requireAdministrator(actor);
     return users
         .findById(id)
-        .filter(user -> user.departmentId != null)
+        .filter(user -> user.getDepartmentId() != null)
         .orElseThrow(() -> new ManagementFailure(NOT_FOUND, "用户不存在。"));
   }
 
+  /** 调动部门或任免部门管理员时要求操作人是总管理员。 */
   private static void requireManagementAuthority(SessionUser actor, boolean changingManagement) {
     if (changingManagement && !DepartmentService.isTotalAdmin(actor)) {
       throw new ManagementFailure(FORBIDDEN, "只有总管理员可以调动用户或任免部门管理员。");
     }
   }
 
+  /** 任命或撤销部门管理员；身份未变化时不做任何事，也不写操作记录。 */
   private void setDepartmentAdministrator(SessionUser actor, UserAccount user, boolean enabled) {
-    var role = roles.findByRoleType(DEPARTMENT_ADMIN);
-    var key = new UserRole.Key(user.id, role.id);
+    Role role = roles.findByRoleType(Role.DEPARTMENT_ADMIN);
+    UserRole.Key key = new UserRole.Key(user.getId(), role.getId());
     if (userRoles.existsById(key) == enabled) {
       return;
     }
     if (enabled) {
-      var assignment = new UserRole();
-      assignment.userId = user.id;
-      assignment.roleId = role.id;
+      UserRole assignment = new UserRole();
+      assignment.setUserId(user.getId());
+      assignment.setRoleId(role.getId());
       userRoles.save(assignment);
     } else {
       userRoles.deleteById(key);
     }
-    var action = enabled ? "任命部门管理员" : "撤销部门管理员";
-    operationLogs.recordGlobalChange(actor, action, action, "USER", user.id, user.name);
+    String action = enabled ? "任命部门管理员" : "撤销部门管理员";
+    operationLogs.recordGlobalChange(
+        actor, action, action, OperationLogTarget.USER, user.getId(), user.getName());
   }
 
-  private static UserView view(
+  /** 组装用户响应：只列出业务角色，部门管理员身份单独标出。 */
+  private static UserVO view(
       UserAccount user, Department department, List<UserRoleRow> assigned) {
-    var businessRoles =
+    List<RoleRefVO> businessRoles =
         assigned.stream()
-            .filter(role -> "BUSINESS".equals(role.getRoleType()))
-            .map(role -> new RoleRef(role.getId(), role.getName()))
+            .filter(role -> Role.BUSINESS.equals(role.getRoleType()))
+            .map(role -> new RoleRefVO(role.getId(), role.getName()))
             .toList();
-    var departmentAdmin =
-        assigned.stream().anyMatch(role -> DEPARTMENT_ADMIN.equals(role.getRoleType()));
-    return new UserView(
-        user.id,
-        user.username,
-        user.name,
-        new DepartmentRef(department.id, department.name),
-        user.status,
+    boolean departmentAdmin =
+        assigned.stream().anyMatch(role -> Role.DEPARTMENT_ADMIN.equals(role.getRoleType()));
+    return new UserVO(
+        user.getId(),
+        user.getUsername(),
+        user.getName(),
+        new DepartmentRefVO(department.getId(), department.getName()),
+        user.getStatus(),
         departmentAdmin,
         businessRoles);
   }

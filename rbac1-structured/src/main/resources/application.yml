@@ -22,3 +22,12 @@ rbac:
   bootstrap:
     username: ${RBAC1_ADMIN_USERNAME:admin}
     password: ${RBAC1_ADMIN_PASSWORD:}
+
+# 分层日志级别。三个业务包为 DEBUG，由 config/LayerLoggingAspect 输出；
+# Docker Swarm 部署时用 LOGGING_LEVEL_COM_RBAC_RBAC1_CONTROLLER 等环境变量覆盖。
+logging:
+  level:
+    root: INFO
+    com.rbac.rbac1.controller: DEBUG
+    com.rbac.rbac1.service: DEBUG
+    com.rbac.rbac1.mapper: DEBUG

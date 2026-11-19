@@ -1,14 +1,13 @@
 package com.rbac.rbac1.controller;
 
-import com.rbac.rbac1.dto.SessionDtos;
 import com.rbac.rbac1.service.AuthenticationFailure;
 import com.rbac.rbac1.service.ManagementFailure;
 import com.rbac.rbac1.service.OperationLogService;
+import com.rbac.rbac1.service.SessionUser;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.sql.SQLException;
-import java.util.Map;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -25,35 +24,40 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.HandlerMapping;
 
+/**
+ * 统一异常处理：把认证失败、业务失败、参数错误和基础设施故障转换为 application/problem+json，code 和中文 detail 与接口契约一致。
+ */
 @RestControllerAdvice(basePackages = "com.rbac.rbac1.controller")
+@RequiredArgsConstructor
 class ApiExceptionHandler {
 
   private final OperationLogService logs;
 
-  ApiExceptionHandler(OperationLogService logs) {
-    this.logs = logs;
-  }
-
+  /**
+   * 记录失败操作：只记录已登录用户在管理接口上的写操作，查询失败不记日志；失败记录由日志服务用独立事务保存。
+   *
+   * @param request 当前请求
+   * @param reason 失败原因代码
+   */
   private void recordFailure(HttpServletRequest request, String reason) {
-    var actor = (SessionDtos.SessionUser) request.getAttribute(SessionInterceptor.ACTOR);
+    SessionUser actor = (SessionUser) request.getAttribute(SessionInterceptor.ACTOR);
     if (actor != null
         && request.getRequestURI().startsWith("/api/v1/")
         && !"GET".equals(request.getMethod())) {
-      var route = request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
+      Object route = request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
       logs.recordFailure(actor, request.getMethod(), route.toString(), reason);
     }
   }
 
-  private static final Map<String, String> DUPLICATE_DETAILS =
-      Map.of(
-          "uq_user_username", "该用户名已存在。",
-          "uq_application_name", "该应用名称已存在。",
-          "uq_permission_application_code", "该应用内已存在相同的权限标识。",
-          "uq_role_name", "该角色名称已存在。");
-
+  /**
+   * 认证失败返回 401 或 429；登录过于频繁时带 Retry-After 头。认证失败不记操作日志。
+   *
+   * @param failure 认证失败
+   * @return 问题详情响应
+   */
   @ExceptionHandler(AuthenticationFailure.class)
   ResponseEntity<ProblemDetail> authenticationFailure(AuthenticationFailure failure) {
-    var body =
+    ProblemDetail body =
         switch (failure.reason) {
           case UNAUTHENTICATED ->
               problem(
@@ -77,7 +81,7 @@ class ApiExceptionHandler {
                   "登录尝试过于频繁",
                   "请稍后再试。");
         };
-    var response =
+    ResponseEntity.BodyBuilder response =
         ResponseEntity.status(body.getStatus()).contentType(MediaType.APPLICATION_PROBLEM_JSON);
     if (failure.retryAfterSeconds > 0) {
       response.header(HttpHeaders.RETRY_AFTER, Long.toString(failure.retryAfterSeconds));
@@ -85,12 +89,21 @@ class ApiExceptionHandler {
     return response.body(body);
   }
 
+  /**
+   * 业务规则拒绝：按失败原因映射状态码和 code，detail 使用业务层给出的中文提示，并记录失败操作。
+   *
+   * @param failure 业务失败
+   * @param request 当前请求
+   * @return 问题详情
+   */
   @ExceptionHandler(ManagementFailure.class)
   ProblemDetail managementFailure(ManagementFailure failure, HttpServletRequest request) {
-    recordFailure(request, failure.reason().name());
+    recordFailure(request, failure.reason().code());
     return switch (failure.reason()) {
       case CONFLICT ->
           problem(HttpStatus.CONFLICT, "conflict", "CONFLICT", "当前状态不允许操作", failure.getMessage());
+      case DUPLICATE ->
+          problem(HttpStatus.CONFLICT, "conflict", "CONFLICT", "数据已存在", failure.getMessage());
       case FORBIDDEN ->
           problem(HttpStatus.FORBIDDEN, "forbidden", "FORBIDDEN", "操作不被允许", failure.getMessage());
       case NOT_FOUND ->
@@ -119,19 +132,19 @@ class ApiExceptionHandler {
     };
   }
 
+  /**
+   * 数据完整性冲突兜底：唯一约束冲突（MySQL 1062、H2 23505）返回 409，其余完整性错误按内部错误处理。
+   *
+   * @param error 数据完整性异常
+   * @param request 当前请求
+   * @return 问题详情
+   */
   @ExceptionHandler(DataIntegrityViolationException.class)
   ProblemDetail integrityViolation(
-      DataIntegrityViolationException error, HttpServletRequest request) {
+      DataIntegrityViolationException error,
+      HttpServletRequest request) {
     recordFailure(request, "CONFLICT");
-    if (error.getMostSpecificCause() instanceof SQLException sql
-        && (sql.getErrorCode() == 1062 || "23505".equals(sql.getSQLState()))) {
-      for (var duplicate : DUPLICATE_DETAILS.entrySet()) {
-        if (sql.getMessage().contains(duplicate.getKey())) {
-          return problem(
-              HttpStatus.CONFLICT, "conflict", "CONFLICT", "数据已存在", duplicate.getValue());
-        }
-      }
-    }
+    // 已知唯一索引在触发保存的 Service 中翻译；这里只兜底其余唯一约束冲突。
     if (error.getMostSpecificCause() instanceof SQLException sql
         && (sql.getErrorCode() == 1062 || "23505".equals(sql.getSQLState()))) {
       return problem(HttpStatus.CONFLICT, "conflict", "CONFLICT", "数据已存在", "名称、应用标识、接口标识或路由已存在。");
@@ -139,6 +152,11 @@ class ApiExceptionHandler {
     return internalError(error);
   }
 
+  /**
+   * 请求体、路径变量或查询参数不合法时统一返回 400，不暴露具体字段的校验信息。
+   *
+   * @return 问题详情
+   */
   @ExceptionHandler({
     MethodArgumentNotValidException.class,
     HttpMessageNotReadableException.class,
@@ -150,6 +168,11 @@ class ApiExceptionHandler {
         HttpStatus.BAD_REQUEST, "invalid-request", "INVALID_REQUEST", "请求不符合要求", "请检查请求参数及必填字段。");
   }
 
+  /**
+   * 数据库不可用或无法开启事务时返回 503。
+   *
+   * @return 问题详情
+   */
   @ExceptionHandler({
     DataAccessResourceFailureException.class,
     CannotCreateTransactionException.class
@@ -163,16 +186,35 @@ class ApiExceptionHandler {
         "暂时无法完成身份或权限检查。");
   }
 
+  /**
+   * 其余未预期的异常返回 500，不向客户端暴露异常信息。
+   *
+   * @param error 未预期的异常
+   * @return 问题详情
+   */
   @ExceptionHandler(RuntimeException.class)
   ProblemDetail internalError(RuntimeException error) {
-    LoggerFactory.getLogger(ApiExceptionHandler.class).error("API request failed", error);
     return problem(
         HttpStatus.INTERNAL_SERVER_ERROR, "internal-error", "INTERNAL_ERROR", "系统暂时不可用", "请稍后重试。");
   }
 
+  /**
+   * 构造问题详情：type 使用 urn:rbac-admin:problem: 前缀，扩展属性 code 是前端识别错误的稳定代码。
+   *
+   * @param status HTTP 状态
+   * @param type 问题类型后缀
+   * @param code 稳定错误代码
+   * @param title 简短标题
+   * @param detail 可直接展示的中文说明
+   * @return 问题详情
+   */
   private static ProblemDetail problem(
-      HttpStatus status, String type, String code, String title, String detail) {
-    var body = ProblemDetail.forStatusAndDetail(status, detail);
+      HttpStatus status,
+      String type,
+      String code,
+      String title,
+      String detail) {
+    ProblemDetail body = ProblemDetail.forStatusAndDetail(status, detail);
     body.setType(URI.create("urn:rbac-admin:problem:" + type));
     body.setTitle(title);
     body.setProperty("code", code);
