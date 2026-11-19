@@ -1,0 +1,3 @@
+interface:
+  display_name: "UML 类图与顺序图"
+  short_description: "以 Service 为中心生成并审查严格的类图和顺序图"
