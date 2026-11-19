@@ -18,32 +18,36 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 /**
- * 完整初始化脚本 V1__init_rbac1.sql 的测试：在空的 H2（MySQL 模式）库中执行脚本，
- * 检查表结构、系统预置数据和继承相关的数据库约束。
+ * 在 H2 的 MySQL 模式执行 RBAC1 迁移，验证基础数据和新增表的约束。
  */
 class Rbac1InitializationTest {
 
   @Test
-  @DisplayName("RBAC0：初始化脚本在空库中建出全部 17 张表和必需的系统数据，总管理员拥有全部权限")
+  @DisplayName("RBAC1：执行初始化和 V2 迁移后包含 18 张表，已有应用默认沿用角色 ID")
   void initializesFinalSchemaAndRequiredSystemDataInAnEmptyDatabase() throws Exception {
     try (Connection connection =
         DriverManager.getConnection("jdbc:h2:mem:rbac1-init;MODE=MySQL", "sa", "")) {
       initialize(connection);
+      new ResourceDatabasePopulator(
+              new ClassPathResource("db/migration/V2__application_role_codes.sql"))
+          .populate(connection);
       assertThat(
               number(
                   connection,
                   "select count(*) from information_schema.tables where table_schema='PUBLIC'"))
-          .isEqualTo(17);
+          .isEqualTo(18);
       assertThat(number(connection, "select count(*) from sys_role")).isEqualTo(2);
       assertThat(number(connection, "select count(*) from sys_user")).isZero();
       assertThat(strings(connection, "select code from sys_application"))
           .containsExactly("permission-center");
+      assertThat(number(connection, "select count(*) from sys_application where role_codes_enabled"))
+          .isZero();
       assertThat(
               strings(
                   connection,
                   "select column_name from information_schema.columns where"
                       + " table_name='SYS_APPLICATION'"))
-          .contains("CODE")
+          .contains("CODE", "ROLE_CODES_ENABLED")
           .doesNotContain("TOKEN_HASH");
       assertThat(number(connection, "select count(*) from sys_api")).isEqualTo(38);
       assertThat(
@@ -52,6 +56,14 @@ class Rbac1InitializationTest {
                   "select count(*) from sys_role_permission g join sys_role r on r.id=g.role_id"
                       + " where r.role_type='TOTAL_ADMIN'"))
           .isEqualTo(number(connection, "select count(*) from sys_permission"));
+      try (Statement sql = connection.createStatement()) {
+        sql.execute("insert into sys_role(id,name,role_type) values(100,'课程教师','BUSINESS')");
+        sql.execute("insert into sys_application_role_code values(1,100,'teacher')");
+        assertThatThrownBy(() -> sql.execute("insert into sys_application_role_code values(1,100,' ')"))
+            .isInstanceOf(SQLException.class);
+        sql.execute("delete from sys_role where id=100");
+        assertThat(number(connection, "select count(*) from sys_application_role_code")).isZero();
+      }
     }
   }
 

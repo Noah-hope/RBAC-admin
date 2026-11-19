@@ -174,10 +174,11 @@ abstract class ManagementApiTestSupport {
     return encoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue();
   }
 
-  /** 向指定表插入一行并返回自增主键。 */
+  /** 插入指定列并返回自增主键，未指定的列沿用数据库默认值。 */
   protected long insert(String table, Map<String, ?> values) {
     return new SimpleJdbcInsert(jdbc)
         .withTableName(table)
+        .usingColumns(values.keySet().toArray(String[]::new))
         .usingGeneratedKeyColumns("id")
         .executeAndReturnKey(new HashMap<>(values))
         .longValue();

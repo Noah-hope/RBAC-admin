@@ -6,7 +6,7 @@ import java.util.List;
  * 当前登录用户在目标应用中的身份、角色和权限。
  *
  * @param subject 用户 ID 的字符串形式
- * @param roles 在目标应用中有权限的角色 ID
+ * @param roles 目标应用的映射角色码，未启用映射时为有有效权限的直接角色 ID 字符串
  * @param permissions 在目标应用中拥有的权限标识
  * @param name 姓名
  * @param no 登录账号

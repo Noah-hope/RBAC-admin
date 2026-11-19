@@ -24,7 +24,7 @@ mvn -f rbac1-structured/pom.xml spring-boot:run
 
 默认端口为 `8081`，可通过 `RBAC1_PORT` 修改。RBAC0 与 RBAC1 使用各自数据库和配置变量。
 
-Flyway 启动时执行唯一的完整初始化脚本 [V1__init_rbac1.sql](src/main/resources/db/migration/V1__init_rbac1.sql)，创建 17 张业务表，并初始化预置管理角色、权限中心应用、菜单按钮、API 关联及管理员权限。总管理员账号仍按启动配置创建，SQL 不保存账号密码。无需在 Navicat 中手动执行建表 SQL。
+Flyway 启动时按版本应用迁移。[V1__init_rbac1.sql](src/main/resources/db/migration/V1__init_rbac1.sql) 建立 17 张基础表并初始化预置授权，[V2__application_role_codes.sql](src/main/resources/db/migration/V2__application_role_codes.sql) 增加应用角色码配置。总管理员账号按启动配置创建，SQL 不保存账号密码。
 
 该脚本用于空数据库，本地开发与后续 Docker MySQL 使用同一份文件。Flyway 在 `flyway_schema_history` 中记录执行结果，后续启动不会重复初始化。将来有结构变化时再增加增量迁移，不修改已经执行过的版本。
 
@@ -61,6 +61,33 @@ API 登记与权限关联分开维护，解绑保留 API。权限申请通过时
 
 ## 课程系统统一身份接入
 
+### 配置应用角色码
+
+两套 RBAC1 后端共用角色码配置。应用启用映射后，`GET /auth/me` 从直接分配的业务角色及全部父角色中找出该应用的角色码。角色无需配置应用权限即可映射。已有应用默认沿用数字角色 ID。角色码只表示应用身份，具体操作仍按应用权限码校验。
+
+在权限中心登记 `course-project-management`，创建业务角色「课程教师」「课程学生」「课程管理员」。在 Flyway 迁移完成后，由部署方在 RBAC1 数据库执行以下配置。若角色已按其他名称创建，将查询条件替换为现有角色名称。确认应用和三个业务角色都存在后再执行，执行失败时回滚事务。
+
+```sql
+START TRANSACTION;
+
+SET @course_app = (SELECT id FROM sys_application WHERE code = 'course-project-management');
+SET @teacher_role = (SELECT id FROM sys_role WHERE name = '课程教师' AND role_type = 'BUSINESS');
+SET @student_role = (SELECT id FROM sys_role WHERE name = '课程学生' AND role_type = 'BUSINESS');
+SET @admin_role = (SELECT id FROM sys_role WHERE name = '课程管理员' AND role_type = 'BUSINESS');
+
+INSERT INTO sys_application_role_code (application_id, role_id, role_code)
+VALUES (@course_app, @teacher_role, 'teacher'),
+       (@course_app, @student_role, 'student'),
+       (@course_app, @admin_role, 'admin');
+
+UPDATE sys_application SET role_codes_enabled = TRUE WHERE id = @course_app;
+COMMIT;
+```
+
+给学生分配「课程学生」，给教师分配「课程教师」或继承它的业务角色。需要使用管理功能的教师可同时分配「课程管理员」，再在该角色上配置课程系统使用的权限码，例如添加教师的 `TEC`。测试账号的工号或学号须在课程系统对应名单中。其他应用以自己的应用 ID 配置角色码，可以复用 `admin` 等值。映射使用角色 ID，角色改名后继续有效。
+
+### 配置目录授权和跨域来源
+
 在课程应用 `course-project-management` 下按下表登记 GET 接口，将这些 API 关联到课程系统用于选部门、选人的权限，再把权限授予需要使用目录的业务角色。调用人登录时将课程应用加入 `systems`，之后使用同一个 Bearer 令牌调用；多个受众时继续使用 `X-Application-Code`。没有目录授权时返回 403。
 
 | 路径 | operationId | 返回数据 |
@@ -89,4 +116,4 @@ mvn -f rbac1-structured/pom.xml verify
 
 日志统一由 `config/LayerLoggingAspect` 按层输出（接口层 controller、业务层 service、数据访问层 mapper），写到控制台和 `logs/rbac1-structured.log`；各层级别在 `application.yml` 的 `logging.level` 设置，部署时可用 `LOGGING_LEVEL_COM_RBAC_RBAC1_CONTROLLER` 等环境变量覆盖。代码按 [RBAC 代码规范](../.agents/skills/rbac-code-conventions/SKILL.md) 编写：请求放 `dto`（以 DTO 结尾），响应放 `vo`（以 VO 结尾），实体使用 Lombok，同名字段拷贝使用课程提供的 CloneFactory（首次构建前在课程代码 `clonefactory` 目录执行 `mvn install -Dmaven.test.skip=true`）。
 
-JWT 测试、JPA 行为测试和完整 Spring MVC 测试使用临时密钥与测试专用 H2，不需要本地 MySQL。测试覆盖共享 API 解绑、实时授权、退出失效、多层及菱形继承、来源去重、循环拒绝、后代菜单依赖、两类申请、审批回滚和日志快照。控制器映射与 RBAC1 OpenAPI 的 47 个接口核对。完整初始化测试在 H2 MySQL 模式验证 17 张表、基础权限、API 关联、继承外键及申请快照；仅测试时去掉 H2 不支持的 MySQL 列级字符集和排序规则声明。内存数据库测试不代替 MySQL Flyway 迁移验证；真实数据库及课程系统联调仍须在配置好环境后执行。
+JWT 测试、JPA 行为测试和完整 Spring MVC 测试使用临时密钥与测试专用 H2，不需要本地 MySQL。测试覆盖共享 API 解绑、实时授权、退出失效、多层及菱形继承、来源去重、循环拒绝、后代菜单依赖、两类申请、审批回滚和日志快照。控制器映射与 RBAC1 OpenAPI 的 47 个接口核对。迁移测试在 H2 MySQL 模式验证 V1、V2 的 18 张表、基础数据和外键约束，仅测试时去掉 H2 不支持的列级声明。角色码验收测试覆盖多层继承、零权限身份、跨应用隔离和旧契约兼容。部署后需在 MySQL 上验证 Flyway 迁移，再执行课程系统联调。

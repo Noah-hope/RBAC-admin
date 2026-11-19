@@ -1,6 +1,6 @@
 # RBAC1 面向对象（DDD）实现
 
-与 `rbac1-structured` 实现同一份 [RBAC1 需求](../docs/01-requirements/RBAC1需求说明.md)，用 DDD 分层和充血模型组织代码。两者共用同一个数据库，表结构由 `rbac1-structured` 的 Flyway 迁移 `V1__init_rbac1.sql` 维护；本模块构建时把该目录引用到 `classpath:db/migration`，因此也能对空库独立启动。
+与 `rbac1-structured` 实现同一份 [RBAC1 需求](../docs/01-requirements/RBAC1需求说明.md)，用 DDD 分层和充血模型组织代码。两者共用同一个数据库，表结构由 `rbac1-structured` 的 Flyway 迁移维护；本模块构建时把该目录引用到 `classpath:db/migration`，因此也能对空库独立启动。
 
 ## 分层
 
@@ -114,4 +114,4 @@ com.rbac.rbac1ddd
 
 3. 启动前设置与结构化模块相同的环境变量 `RBAC1_DB_URL`、`RBAC1_DB_USERNAME`、`RBAC1_DB_PASSWORD`、`RBAC1_JWT_ISSUER`、`RBAC1_JWT_PRIVATE_KEY`、`RBAC1_JWT_PUBLIC_KEY`；空库首次启动还要设置 `RBAC1_ADMIN_PASSWORD`（账号默认 `admin`，可用 `RBAC1_ADMIN_USERNAME` 修改）。端口用 `RBAC1_DDD_PORT` 设置，默认 8082。日志输出到控制台和 `logs/rbac1-ddd.log`，各层级别在 `application.yml` 的 `logging.level` 中设置，部署时可用 `LOGGING_LEVEL_COM_RBAC_RBAC1DDD_INTERFACES` 等环境变量覆盖。
 
-课程系统的 API 登记、目录授权和 `RBAC1_CORS_ALLOWED_ORIGINS` 配置与结构化版相同，见[课程系统统一身份接入](../rbac1-structured/README.md#课程系统统一身份接入)。
+课程系统的角色码映射、API 登记、目录授权和 `RBAC1_CORS_ALLOWED_ORIGINS` 配置与结构化版共用，见[课程系统统一身份接入](../rbac1-structured/README.md#课程系统统一身份接入)。

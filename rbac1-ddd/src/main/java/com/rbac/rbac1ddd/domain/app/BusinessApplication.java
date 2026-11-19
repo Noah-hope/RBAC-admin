@@ -23,6 +23,7 @@ public class BusinessApplication {
   private Long id;
   private String code;
   private String name;
+  private boolean roleCodesEnabled;
 
   /**
    * 由仓储重建应用，或由工厂方法创建新应用。
@@ -32,9 +33,22 @@ public class BusinessApplication {
    * @param name 应用名称
    */
   public BusinessApplication(Long id, String code, String name) {
+    this(id, code, name, false);
+  }
+
+  /**
+   * 从仓储重建应用，包含接入方选择的角色码映射模式。
+   *
+   * @param id 应用 ID
+   * @param code 应用编码
+   * @param name 应用名称
+   * @param roleCodesEnabled 接入方是否按应用接收映射后的角色码
+   */
+  public BusinessApplication(Long id, String code, String name, boolean roleCodesEnabled) {
     this.id = id;
     this.code = code;
     this.name = name;
+    this.roleCodesEnabled = roleCodesEnabled;
   }
 
   /**

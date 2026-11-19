@@ -152,6 +152,16 @@ public class User {
   }
 
   /**
+   * 查询启用用户可用于应用角色码映射的业务角色，包含所有可达父角色。
+   *
+   * @param hierarchy 当前角色继承图
+   * @return 去重后的直接和继承业务角色 ID，按 ID 排序
+   */
+  public Set<Long> effectiveBusinessRoleIds(RoleHierarchy hierarchy) {
+    return isActive() ? hierarchy.ancestorsIncluding(businessRoleIds(hierarchy)) : Set.of();
+  }
+
+  /**
    * 根据持有的预置管理员角色判断管理身份；同时持有时总管理员优先。
    *
    * @param hierarchy 当前角色继承图

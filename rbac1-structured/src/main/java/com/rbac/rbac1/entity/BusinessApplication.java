@@ -10,6 +10,7 @@ import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 /** sys_application 表的一行：接入权限中心的业务应用，名称和应用标识各自唯一。 */
 @Entity
@@ -36,4 +37,9 @@ public class BusinessApplication {
 
   @Column(nullable = false, length = 64)
   private String code;
+
+  /** 运维配置的角色码模式，常规应用资料更新不修改此开关。 */
+  @Column(name = "role_codes_enabled", nullable = false, insertable = false, updatable = false)
+  @ColumnDefault("false")
+  private boolean roleCodesEnabled;
 }

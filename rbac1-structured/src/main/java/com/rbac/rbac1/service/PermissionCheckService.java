@@ -102,7 +102,7 @@ public class PermissionCheckService {
   }
 
   /**
-   * 业务系统登录后查询的当前用户信息：只返回与该应用有关的角色和权限编码。
+   * 返回当前用户在目标应用中的角色和有效权限。启用映射时，角色码独立于权限计算。
    *
    * @param actor 当前操作人
    * @param code 应用编码
@@ -119,25 +119,39 @@ public class PermissionCheckService {
             .map(graph.permissions()::get)
             .filter(p -> p.getApplicationId().equals(app.getId()))
             .toList();
-    List<String> assigned =
-        user.roleIds().stream()
-            .filter(
-                id ->
-                    effective.effectiveIds(graph, id).stream()
-                        .anyMatch(
-                            permission ->
-                                graph.permissions().get(permission).getApplicationId().equals(app.getId())))
-            .map(Object::toString)
-            .toList();
     return new CurrentUserVO(
         Long.toString(actor.id()),
-        assigned,
+        currentRoles(app, user),
         granted.stream().map(p -> p.getCode()).distinct().toList(),
         actor.name(),
         actor.username(),
         actor.id(),
         actor.departmentId(),
         actor.managementRole());
+  }
+
+  /** 映射模式识别直接及继承业务角色；原模式按目标应用的有效权限筛选直接角色。 */
+  private List<String> currentRoles(
+      BusinessApplication app, RolePermissionService.UserPermissions user) {
+    RolePermissionService.Graph graph = user.graph();
+    if (app.isRoleCodesEnabled()) {
+      List<Long> businessRoles =
+          effective.ancestors(graph, user.roleIds()).stream()
+              .filter(id -> Role.BUSINESS.equals(graph.roles().get(id).getRoleType()))
+              .toList();
+      return businessRoles.isEmpty()
+          ? List.of()
+          : applications.findRoleCodes(app.getId(), businessRoles);
+    }
+    return user.roleIds().stream()
+        .filter(
+            id ->
+                effective.effectiveIds(graph, id).stream()
+                    .anyMatch(
+                        permission ->
+                            graph.permissions().get(permission).getApplicationId().equals(app.getId())))
+        .map(Object::toString)
+        .toList();
   }
 
   /**

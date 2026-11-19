@@ -7,7 +7,7 @@ import java.util.List;
  * 当前用户信息（AuthUser），字段及顺序与 rbac1-structured 相同。
  *
  * @param subject 用户 ID 的字符串形式
- * @param roles 为目标应用提供有效权限的直接角色 ID 字符串
+ * @param roles 目标应用的映射角色码，未启用映射时为有有效权限的直接角色 ID 字符串
  * @param permissions 目标应用内去重的有效权限编码
  * @param name 姓名
  * @param no 登录账号

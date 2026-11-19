@@ -37,6 +37,7 @@ public class AccessApplicationService {
   private final PermissionRepository permissions;
   private final BusinessApplicationRepository applications;
   private final ManagementApiRepository apis;
+  private final ApplicationRoleCodeReader roleCodes;
 
   /**
    * 认证令牌，得到当前操作者和令牌适用的应用。
@@ -87,7 +88,7 @@ public class AccessApplicationService {
   }
 
   /**
-   * 当前用户在目标应用中的身份、角色和有效权限编码。
+   * 当前用户在目标应用中的身份、角色和有效权限编码。应用角色码独立于权限计算。
    *
    * @param session 认证通过的登录会话
    * @param requestedCode 请求指定的目标应用编码，可以为 null
@@ -101,11 +102,15 @@ public class AccessApplicationService {
     RoleHierarchy hierarchy = roles.loadHierarchy();
     PermissionCatalog catalog = permissions.loadCatalog();
     Operator operator = session.operator();
+    List<String> currentRoles =
+        application.isRoleCodesEnabled()
+            ? roleCodes.findCodes(application.getId(), user.effectiveBusinessRoleIds(hierarchy))
+            : user.rolesGrantingPermissionsIn(application.getId(), hierarchy, catalog).stream()
+                .map(String::valueOf)
+                .toList();
     return new CurrentUserResult(
         Long.toString(operator.id()),
-        user.rolesGrantingPermissionsIn(application.getId(), hierarchy, catalog).stream()
-            .map(String::valueOf)
-            .toList(),
+        currentRoles,
         catalog.codesIn(application.getId(), user.effectivePermissionIds(hierarchy)),
         operator.name(),
         operator.username(),

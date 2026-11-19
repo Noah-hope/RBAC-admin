@@ -146,11 +146,11 @@ paths:
       tags:
         - 统一身份鉴权
       summary: 当前用户、角色与权限
-      description: 从令牌识别当前用户与目标应用，返回该应用的角色和前端菜单、按钮权限。roles 用已有角色数字 ID
-        的字符串表示，不新增角色标识字段；subject 为用户 ID 字符串，no
-        为统一账号用户名。id、departmentId、managementRole
-        是供权限中心页面使用的补充字段。权限结果用于页面显示，业务后端仍须检查。 RBAC1 中 permissions
-        包含当前应用的直接与全部继承权限并去重；roles 返回直接分配且为当前应用提供有效权限的角色 ID，不把祖先角色伪装为额外直接分配。
+      description: >-
+        从令牌识别当前用户与目标应用。启用角色码映射的应用，从用户直接分配的业务角色及其所有父角色中查找该应用配置的角色码，
+        去重后返回，不要求角色拥有该应用权限。没有匹配的映射时返回空数组。其他应用沿用数字角色 ID 字符串，
+        只列出直接分配且为目标应用提供有效权限的角色。permissions 始终返回目标应用内去重的直接和继承权限。
+        subject 为用户 ID 字符串，no 为统一账号用户名。id、departmentId、managementRole 供权限中心页面使用。
       x-ui-operations:
         - L03
       parameters:
@@ -4965,7 +4965,9 @@ components:
           items:
             type: string
             minLength: 1
-          description: 直接分配且为目标应用提供有效权限的角色 ID 字符串，权限可由该角色继承获得；权限中心也包含预置管理角色。
+          description: >-
+            启用映射时返回直接和继承业务角色对应的应用角色码，按码去重并排序。其他应用返回直接分配且提供有效权限的角色 ID 字符串，
+            可包含权限中心预置管理角色。
         permissions:
           type: array
           uniqueItems: true

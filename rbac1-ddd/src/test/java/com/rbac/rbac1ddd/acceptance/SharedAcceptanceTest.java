@@ -29,8 +29,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -146,6 +148,9 @@ class SharedAcceptanceTest {
 
   @Autowired
   ObjectMapper json;
+
+  @Autowired
+  JdbcTemplate jdbc;
 
   @Autowired
   RequestMappingHandlerMapping mappings;
@@ -592,6 +597,101 @@ class SharedAcceptanceTest {
         .isFalse();
     send(post(LOGIN), null,
         Map.of("username", true, "password", "demo1234", "systems", List.of("compact-course")), 400);
+  }
+
+  @Test
+  @DisplayName("验收17：按应用映射直接与继承角色，角色码和权限分别计算")
+  // H2 由 JPA 初始化，先还原 V2 前的结构，再执行两套后端共用的迁移。
+  @Sql(statements = "ALTER TABLE sys_application DROP COLUMN IF EXISTS role_codes_enabled")
+  @Sql("/db/migration/V2__application_role_codes.sql")
+  void mapsBusinessRoleCodesForTheTargetApplication() throws Exception {
+    String admin = login("admin");
+    long course =
+        send(post(APPLICATIONS), admin, Map.of("name", "角色映射课程", "code", "mapping-course"), 201)
+            .path("id").asLong();
+    long library =
+        send(post(APPLICATIONS), admin, Map.of("name", "角色映射图书", "code", "mapping-library"), 201)
+            .path("id").asLong();
+    long legacy =
+        send(post(APPLICATIONS), admin, Map.of("name", "角色映射旧应用", "code", "mapping-legacy"), 201)
+            .path("id").asLong();
+    long coursePermission =
+        send(post(PERMISSIONS, course), admin,
+                Map.of("name", "添加教师", "code", "TEC", "type", "MENU"), 201)
+            .path("id").asLong();
+    long legacyPermission =
+        send(post(PERMISSIONS, legacy), admin,
+                Map.of("name", "旧应用菜单", "code", "legacy:view", "type", "MENU"), 201)
+            .path("id").asLong();
+    long student = createMappingRole(admin, "课程学生", List.of(), List.of());
+    long teacher = createMappingRole(admin, "课程教师", List.of(), List.of());
+    long assistant = createMappingRole(admin, "课程助教", List.of(), List.of(teacher));
+    long leader = createMappingRole(admin, "课程组长", List.of(), List.of(assistant));
+    long courseAdmin = createMappingRole(admin, "课程管理员", List.of(coursePermission), List.of());
+    long libraryAdmin = createMappingRole(admin, "图书管理员", List.of(legacyPermission), List.of());
+    jdbc.update("UPDATE sys_application SET role_codes_enabled = TRUE WHERE id IN (?, ?)",
+        course, library);
+    insertRoleCode(course, student, "student");
+    insertRoleCode(course, teacher, "teacher");
+    insertRoleCode(course, assistant, "teacher");
+    insertRoleCode(course, courseAdmin, "admin");
+    insertRoleCode(library, libraryAdmin, "admin");
+
+    long department =
+        send(post(DEPARTMENTS), admin, json.createObjectNode().put("name", "角色映射部门").putNull("parentId"), 201)
+            .path("id").asLong();
+    long pupil = createDirectoryUser(admin, "mapping-student", "映射学生", department);
+    long operator = createDirectoryUser(admin, "mapping-teacher", "映射教师", department);
+    send(put(USER_ROLES, pupil), admin, Map.of("roleIds", List.of(student)), 200);
+    send(put(USER_ROLES, operator), admin, Map.of("roleIds", List.of(leader, libraryAdmin)), 200);
+
+    JsonNode pupilIdentity = send(get(ME), login("mapping-student", "mapping-course"), null, 200);
+    assertThat(pupilIdentity.path("roles")).isEqualTo(json.valueToTree(List.of("student")));
+    assertThat(pupilIdentity.path("permissions")).isEmpty();
+
+    String token = send(post(LOGIN), null, Map.of("username", "mapping-teacher", "password", "demo1234",
+        "systems", List.of("mapping-course", "mapping-library", "mapping-legacy")), 200)
+        .path("accessToken").asText();
+    JsonNode courseIdentity =
+        send(get(ME).header("X-Application-Code", "mapping-course"), token, null, 200);
+    assertThat(courseIdentity.path("roles")).isEqualTo(json.valueToTree(List.of("teacher")));
+    assertThat(courseIdentity.path("permissions")).isEmpty();
+    JsonNode libraryIdentity =
+        send(get(ME).header("X-Application-Code", "mapping-library"), token, null, 200);
+    assertThat(libraryIdentity.path("roles")).isEqualTo(json.valueToTree(List.of("admin")));
+    assertThat(libraryIdentity.path("permissions")).isEmpty();
+    JsonNode legacyIdentity =
+        send(get(ME).header("X-Application-Code", "mapping-legacy"), token, null, 200);
+    assertThat(legacyIdentity.path("roles"))
+        .isEqualTo(json.valueToTree(List.of(Long.toString(libraryAdmin))));
+    assertThat(legacyIdentity.path("permissions"))
+        .isEqualTo(json.valueToTree(List.of("legacy:view")));
+
+    send(put(ROLE, teacher), admin, configuration("课程教师改名", List.of(), List.of()), 200);
+    send(put(USER_ROLES, operator), admin, Map.of("roleIds", List.of(leader, courseAdmin, libraryAdmin)), 200);
+    courseIdentity = send(get(ME).header("X-Application-Code", "mapping-course"), token, null, 200);
+    assertThat(courseIdentity.path("roles")).isEqualTo(json.valueToTree(List.of("admin", "teacher")));
+    assertThat(courseIdentity.path("permissions")).isEqualTo(json.valueToTree(List.of("TEC")));
+    assertThat(send(get(PERMISSION, "TEC").header("X-Application-Code", "mapping-library"),
+        token, null, 200).path("allowed").asBoolean()).isFalse();
+
+    jdbc.update("DELETE FROM sys_application_role_code WHERE application_id = ?", course);
+    courseIdentity = send(get(ME).header("X-Application-Code", "mapping-course"), token, null, 200);
+    assertThat(courseIdentity.path("roles")).isEmpty();
+    assertThat(courseIdentity.path("permissions")).isEqualTo(json.valueToTree(List.of("TEC")));
+  }
+
+  /** 通过角色管理接口创建用于映射的业务角色。 */
+  private long createMappingRole(String admin, String name, List<Long> permissions, List<Long> parents)
+      throws Exception {
+    return send(post(ROLES), admin, configuration(name, permissions, parents), 201)
+        .path("id").asLong();
+  }
+
+  /** 模拟运维按应用和业务角色 ID 配置外部角色码。 */
+  private void insertRoleCode(long application, long role, String code) {
+    jdbc.update("INSERT INTO sys_application_role_code (application_id, role_id, role_code) VALUES (?, ?, ?)",
+        application, role, code);
   }
 
   /** 创建一个有部门的统一身份用户。 */

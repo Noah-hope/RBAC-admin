@@ -90,6 +90,6 @@ class JpaBusinessApplicationRepository implements BusinessApplicationRepository 
 
   /** 持久化对象 → 应用聚合。 */
   private static BusinessApplication toDomain(ApplicationPo po) {
-    return new BusinessApplication(po.getId(), po.getCode(), po.getName());
+    return new BusinessApplication(po.getId(), po.getCode(), po.getName(), po.isRoleCodesEnabled());
   }
 }
