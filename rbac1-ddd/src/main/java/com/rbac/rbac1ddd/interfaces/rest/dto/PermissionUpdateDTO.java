@@ -2,6 +2,7 @@ package com.rbac.rbac1ddd.interfaces.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
+import com.rbac.rbac1ddd.interfaces.rest.Formats;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
@@ -32,9 +33,9 @@ public class PermissionUpdateDTO {
   @CodePointLength(min = 1, max = 24)
   private String name;
 
-  /** 新权限标识，格式为「资源:操作」。 */
+  /** 新权限标识，支持「资源:操作」及课程短码。 */
   @JsonSetter(nulls = Nulls.FAIL)
   @CodePointLength(max = 64)
-  @Pattern(regexp = PermissionCreateDTO.PERMISSION_CODE)
+  @Pattern(regexp = Formats.PERMISSION_CODE)
   private String code;
 }

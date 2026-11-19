@@ -26,7 +26,7 @@ info:
     登录返回 RS256 JWT（sub、aud、iss、iat、exp、jti），不包含角色或权限。Bearer 认证、签名公钥、统一退出、账号停用及 X-Application-Code 的规则沿用 RBAC0；单应用 aud 自动选定，多应用需明确目标，管理接口要求 aud 包含 permission-center。权限中心查询当前有效授权；业务系统保留对象范围检查。
 
 
-    成功响应直接返回数据，错误使用 application/problem+json。列表沿用 page/pageSize；部门树和权限目录完整返回。接口路径和 operationId 沿用 RBAC0，角色字段扩展只适用于独立 RBAC1 服务，不在 RBAC0 项目中覆盖导入。
+    成功响应直接返回数据，错误使用 application/problem+json。列表沿用 page/pageSize；管理端部门树和权限目录完整返回。RBAC1 增加统一身份目录接口，供接入系统按层级和部门分页查询；不在 RBAC0 项目中覆盖导入。
 
 
     权限申请按用户及候选角色的全部有效权限判断，包含所有应用中的继承权限。角色创建申请保存直接权限及父角色 ID、名称快照；详情按当前父角色计算有效权限预览。审批按最新配置校验，创建角色、直接授权、继承关系、审批结果和成功日志一起保存；不自动给员工分配角色。
@@ -46,7 +46,7 @@ security:
   - BearerAuth: []
 tags:
   - name: 统一身份鉴权
-    description: 所有接入系统共用的登录、退出和当前用户权限检查。
+    description: 所有接入系统共用的登录、退出、权限检查和统一身份目录。
   - name: 签名公钥
     description: 业务系统验证 JWT 的公开密钥。
   - name: 应用与权限
@@ -288,6 +288,106 @@ paths:
         description: 课程管理系统统一身份鉴权契约
         url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/api-534180421e0
       x-implementation-status: RBAC1 继承鉴权待实现
+  /auth/departments:
+    get:
+      operationId: listIdentityDepartments
+      tags: [统一身份鉴权]
+      summary: 分页查询统一身份部门
+      description: 不传 parentId 查询根部门，传入时只查询该部门的直接子部门。keyword 匹配本层部门名称或代码，hasChildren 表示是否有直接子部门。目标应用须登记此 API 并为调用人授权。
+      parameters:
+        - $ref: '#/components/parameters/ApplicationContext'
+        - $ref: '#/components/parameters/DirectoryKeyword'
+        - name: parentId
+          in: query
+          description: 上级部门 ID，省略时查询根部门
+          schema: { $ref: '#/components/schemas/Id' }
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: 部门分页列表
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/IdentityDirectoryPage'
+                  - properties:
+                      items:
+                        type: array
+                        items: { $ref: '#/components/schemas/IdentityDepartment' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+      externalDocs:
+        url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/538430452e0
+      x-implementation-status: RBAC1 结构化后端已实现
+  /auth/departments/{departmentId}/users:
+    get:
+      operationId: listIdentityDepartmentUsers
+      tags: [统一身份鉴权]
+      summary: 分页查询部门内的统一身份用户
+      description: 按姓名或账号查询指定部门的启用用户。目标应用须登记此 API 并为调用人授权。
+      parameters:
+        - $ref: '#/components/parameters/ApplicationContext'
+        - $ref: '#/components/parameters/DepartmentId'
+        - $ref: '#/components/parameters/DirectoryKeyword'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: 部门用户分页列表
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/IdentityDirectoryPage'
+                  - properties:
+                      items:
+                        type: array
+                        items:
+                          allOf:
+                            - $ref: '#/components/schemas/IdentityUser'
+                            - required: [departmentId, departmentName]
+                              properties:
+                                departmentId: { $ref: '#/components/schemas/Id' }
+                                departmentName: { type: string }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+      externalDocs:
+        url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/538430453e0
+      x-implementation-status: RBAC1 结构化后端已实现
+  /auth/users/{userId}:
+    get:
+      operationId: lookupIdentityUser
+      tags: [统一身份鉴权]
+      summary: 按统一身份标识查询用户
+      description: 用目录返回的 userId 查询启用的组织用户，返回姓名和账号。目标应用须登记此 API 并为调用人授权。
+      parameters:
+        - $ref: '#/components/parameters/ApplicationContext'
+        - name: userId
+          in: path
+          required: true
+          description: 统一身份标识，与 JWT sub 一致，使用用户 ID 的十进制字符串
+          schema: { $ref: '#/components/schemas/IdentitySubject' }
+      responses:
+        '200':
+          description: 统一身份用户
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/IdentityUser' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+      externalDocs:
+        url: https://s.apifox.cn/775094d6-9f5f-4b75-9600-2332c43948d3/538437663e0
+      x-implementation-status: RBAC1 结构化后端已实现
   /.well-known/jwks.json:
     get:
       operationId: getSigningPublicKeys
@@ -4103,13 +4203,20 @@ components:
       schema:
         $ref: "#/components/schemas/ApplicationCode"
       example: course-project-management
+    DirectoryKeyword:
+      name: keyword
+      in: query
+      description: 可选的搜索关键词
+      schema: { $ref: '#/components/schemas/Keyword' }
     FrontendPermission:
       name: permission
       in: path
       required: true
-      description: 当前应用内菜单或按钮的权限标识，与 operationId 不同。
+      description: 当前应用内菜单或按钮的权限标识，与 operationId 不同。编码格式由接入系统决定（如 course:review、CV、course.view），未登记的编码返回 allowed=false。
       schema:
-        $ref: "#/components/schemas/PermissionCode"
+        type: string
+        minLength: 1
+        maxLength: 64
       example: course:review
     OperationId:
       name: operationId
@@ -4350,7 +4457,7 @@ components:
     PermissionCode:
       type: string
       maxLength: 64
-      pattern: '^[^:\s]+:[^:\s]+$'
+      pattern: '^(?:[^:\s]+:[^:\s]+|[A-Z][A-Z0-9]*)$'
       example: course:review
     ManagementRole:
       type: string
@@ -4364,6 +4471,41 @@ components:
     BatchAction:
       type: string
       enum: [ GRANT, REVOKE ]
+    IdentityDirectoryPage:
+      type: object
+      required: [items, page, pageSize, total]
+      properties:
+        items: { type: array }
+        page: { type: integer, minimum: 1 }
+        pageSize: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0 }
+    IdentityDepartment:
+      type: object
+      required: [id, code, name, parentId, hasChildren]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        code:
+          type: string
+          description: 部门 ID 的十进制字符串
+        name: { type: string }
+        parentId:
+          anyOf:
+            - $ref: '#/components/schemas/Id'
+            - type: 'null'
+        hasChildren: { type: boolean }
+    IdentitySubject:
+      type: string
+      pattern: '^[1-9][0-9]{0,15}$'
+      description: 与 JWT sub 一致的用户 ID 字符串，数值不超过 9007199254740991
+    IdentityUser:
+      type: object
+      required: [userId, no, name]
+      properties:
+        userId: { $ref: '#/components/schemas/IdentitySubject' }
+        no:
+          type: string
+          description: 统一账号，作为工号或学号
+        name: { type: string }
     LoginRequest:
       type: object
       additionalProperties: false
@@ -4373,7 +4515,10 @@ components:
         - systems
       properties:
         username:
-          $ref: "#/components/schemas/Username"
+          description: 统一账号。兼容 JSON 整数形式的学号，带前导零时使用字符串。
+          oneOf:
+            - $ref: '#/components/schemas/Username'
+            - type: integer
         password:
           type: string
           minLength: 1

@@ -3,10 +3,16 @@ package com.rbac.rbac1ddd.interfaces.rest;
 import com.fasterxml.jackson.databind.cfg.CoercionAction;
 import com.fasterxml.jackson.databind.cfg.CoercionInputShape;
 import com.fasterxml.jackson.databind.type.LogicalType;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -16,6 +22,24 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
   private final SessionInterceptor sessionInterceptor;
+
+  /** 按部署来源配置跨域。过滤器直接处理浏览器预检，实际请求继续经过会话拦截器。 */
+  @Bean
+  CorsFilter rbacCorsFilter(
+      @Value("${rbac.cors.allowed-origins}")
+      String[] origins) {
+    CorsConfiguration cors = new CorsConfiguration();
+    cors.setAllowedOrigins(List.of(origins));
+    cors.setAllowedMethods(List.of("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+    cors.setAllowedHeaders(List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE,
+        "X-Application-Code"));
+    cors.setExposedHeaders(List.of(HttpHeaders.RETRY_AFTER));
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/auth/**", cors);
+    source.registerCorsConfiguration("/api/v1/**", cors);
+    source.registerCorsConfiguration("/.well-known/jwks.json", cors);
+    return new CorsFilter(source);
+  }
 
   /**
    * 与 rbac1-structured 相同：管理接口 {@code /api/v1/**} 和除登录外的身份接口 {@code /auth/**}

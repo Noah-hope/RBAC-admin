@@ -403,8 +403,8 @@ onMounted(load)
             v-model="permissionForm.code"
             required
             maxlength="64"
-            pattern="[^:\s]+:[^:\s]+"
-            placeholder="例如 course:create"
+            pattern="(?:[^:\s]+:[^:\s]+|[A-Z][A-Z0-9]*)"
+            placeholder="例如 course:create 或 CV"
           />
           <div class="form-grid">
             <div>

@@ -81,7 +81,7 @@ public class AccessApplicationService {
     ManagementApi api =
         apis.findByRoute(center.getCode(), method, route)
             .orElseThrow(() -> new DomainException(FORBIDDEN, "管理API未登记。"));
-    if (!api.allows(userOf(session).effectivePermissionIds(roles.loadHierarchy()))) {
+    if (!allowsApi(session, api)) {
       throw new DomainException(FORBIDDEN, "没有该接口的调用权限。");
     }
   }
@@ -154,7 +154,27 @@ public class AccessApplicationService {
             .orElseThrow(() -> new DomainException(NOT_FOUND, "API未登记。"));
     return new ApiCheckResult(
         operationId,
-        api.allows(userOf(session).effectivePermissionIds(roles.loadHierarchy())));
+        allowsApi(session, api));
+  }
+
+  /** 身份目录仅开放给目标应用中持有对应 API 有效权限的调用人。 */
+  @Transactional(readOnly = true)
+  public void requireIdentityDirectoryApi(
+      AuthenticatedSession session, String requestedCode, String operationId) {
+    BusinessApplication application =
+        requireApplication(session.applicationContext(requestedCode));
+    boolean allowed =
+        apis.findByOperationId(application.getCode(), operationId)
+            .filter(api -> allowsApi(session, api))
+            .isPresent();
+    if (!allowed) {
+      throw new DomainException(FORBIDDEN, "没有该接口的调用权限。");
+    }
+  }
+
+  /** 使用包含角色继承的有效权限执行 API 授权规则。 */
+  private boolean allowsApi(AuthenticatedSession session, ManagementApi api) {
+    return api.allows(userOf(session).effectivePermissionIds(roles.loadHierarchy()));
   }
 
   /** 按编码取已登记的应用，不存在时为 NOT_FOUND。 */

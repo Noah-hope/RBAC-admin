@@ -57,4 +57,15 @@ public interface UserMapper extends JpaRepository<UserAccount, Long> {
       String keyword,
       boolean includeDepartmentName,
       Pageable pageable);
+
+  /** 分页查找当前部门下的启用账号，按姓名或登录账号匹配。 */
+  @Query(
+      """
+      select account from UserAccount account
+      where account.departmentId = :departmentId and account.status = :activeStatus
+        and (:keyword = '' or locate(:keyword, account.name) > 0 or locate(:keyword, account.username) > 0)
+      order by account.id
+      """)
+  Page<UserAccount> findDirectoryUsers(
+      long departmentId, String activeStatus, String keyword, Pageable pageable);
 }

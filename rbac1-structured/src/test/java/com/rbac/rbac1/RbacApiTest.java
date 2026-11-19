@@ -3,9 +3,11 @@ package com.rbac.rbac1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -22,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
+import org.springframework.http.HttpHeaders;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -54,10 +57,18 @@ import org.yaml.snakeyaml.Yaml;
       "spring.sql.init.mode=always",
       "spring.sql.init.data-locations=classpath:test-bootstrap.sql",
       "rbac.bootstrap.username=admin",
-      "rbac.bootstrap.password=demo1234"
+      "rbac.bootstrap.password=demo1234",
+      "rbac.cors.allowed-origins=https://course.test.example"
     })
 @AutoConfigureMockMvc
 class RbacApiTest {
+
+  /** 课程系统使用的统一身份目录接口。 */
+  private static final String DIRECTORY_DEPARTMENTS = "/auth/departments";
+  private static final String DIRECTORY_DEPARTMENT_USERS = "/auth/departments/{departmentId}/users";
+  private static final String DIRECTORY_USER = "/auth/users/{userId}";
+  private static final String COURSE_APPLICATION = "course-project-management";
+  private static final String COURSE_ORIGIN = "https://course.test.example";
 
   /** 统一登录。 */
   private static final String LOGIN = "/auth/login";
@@ -448,8 +459,153 @@ class RbacApiTest {
   }
 
   @Test
-  @DisplayName("验收13：接口契约中的全部 44 个操作都有对应的接口映射")
-  void allFortyFourDocumentedOperationsHaveControllerMappings() throws Exception {
+  @DisplayName("验收14：课程系统凭应用授权逐层查部门、分页选人并按统一身份 ID 查询")
+  void queriesIdentityDirectoryWithinTheTargetApplication() throws Exception {
+    String admin = login("admin");
+    long root = send(post(DEPARTMENTS), admin, json.createObjectNode().put("name", "目录学院").putNull("parentId"), 201).path("id").asLong();
+    long child =
+        send(post(DEPARTMENTS), admin, Map.of("name", "目录教研室", "parentId", root), 201)
+            .path("id").asLong();
+    long grandchild =
+        send(post(DEPARTMENTS), admin, Map.of("name", "目录教学组", "parentId", child), 201)
+            .path("id").asLong();
+    long user = createDirectoryUser(admin, "T1008", "目录教师", child);
+    long disabled = createDirectoryUser(admin, "T1009", "停用教师", child);
+    send(patch(USER, disabled), admin, Map.of("status", "DISABLED"), 200);
+    createDirectoryUser(admin, "T1010", "下级教师", grandchild);
+    long operator = createDirectoryUser(admin, "directory-operator", "目录操作人", root);
+    long application =
+        send(post(APPLICATIONS), admin, Map.of("name", "课程管理", "code", COURSE_APPLICATION), 201)
+            .path("id").asLong();
+    List<Long> apiIds = List.of(
+        registerDirectoryApi(admin, application, "listIdentityDepartments", DIRECTORY_DEPARTMENTS),
+        registerDirectoryApi(admin, application, "listIdentityDepartmentUsers", DIRECTORY_DEPARTMENT_USERS),
+        registerDirectoryApi(admin, application, "lookupIdentityUser", DIRECTORY_USER));
+    long permission =
+        send(post(PERMISSIONS, application), admin,
+                Map.of("name", "课程选人", "code", "directory:read", "type", "MENU", "apiIds", apiIds),
+                201).path("id").asLong();
+    long role = send(post(ROLES), admin, configuration("课程选人", List.of(permission), List.of()), 201)
+        .path("id").asLong();
+
+    String courseToken = login("directory-operator", COURSE_APPLICATION);
+    send(get(DIRECTORY_DEPARTMENTS), courseToken, null, 403);
+    send(get(DIRECTORY_DEPARTMENTS), null, null, 401);
+    send(put(USER_ROLES, operator), admin, Map.of("roleIds", List.of(role)), 200);
+
+    JsonNode roots = send(get(DIRECTORY_DEPARTMENTS).param("keyword", "目录"), courseToken, null, 200);
+    assertThat(roots.path("page").asInt()).isEqualTo(1);
+    assertThat(roots.path("pageSize").asInt()).isEqualTo(20);
+    assertThat(roots.path("total").asLong()).isEqualTo(1);
+    JsonNode rootItem = roots.path("items").get(0);
+    assertThat(rootItem.path("id").asLong()).isEqualTo(root);
+    assertThat(rootItem.path("code").asText()).isEqualTo(Long.toString(root));
+    assertThat(rootItem.path("parentId").isNull()).isTrue();
+    assertThat(rootItem.path("hasChildren").asBoolean()).isTrue();
+    JsonNode children = send(
+        get(DIRECTORY_DEPARTMENTS).param("parentId", Long.toString(root)).param("pageSize", "1"),
+        courseToken, null, 200);
+    assertThat(children.path("items").findValuesAsText("id")).containsExactly(Long.toString(child));
+    assertThat(children.path("total").asLong()).isEqualTo(1);
+    JsonNode leaf = send(get(DIRECTORY_DEPARTMENTS).param("parentId", Long.toString(child)),
+        courseToken, null, 200).path("items").get(0);
+    assertThat(leaf.path("hasChildren").asBoolean()).isFalse();
+
+    JsonNode users = send(get(DIRECTORY_DEPARTMENT_USERS, child), courseToken, null, 200);
+    assertThat(users.path("total").asLong()).isEqualTo(1);
+    JsonNode filtered = send(get(DIRECTORY_DEPARTMENT_USERS, child).param("keyword", "T1008"),
+        courseToken, null, 200);
+    JsonNode selected = filtered.path("items").get(0);
+    assertThat(selected.path("departmentId").asLong()).isEqualTo(child);
+    assertThat(selected.path("departmentName").asText()).isEqualTo("目录教研室");
+    assertThat(selected.path("userId").asText()).isEqualTo(Long.toString(user));
+    assertThat(selected.path("no").asText()).isEqualTo("T1008");
+    assertThat(send(get(DIRECTORY_USER, user), courseToken, null, 200))
+        .isEqualTo(json.valueToTree(Map.of("userId", Long.toString(user), "no", "T1008", "name", "目录教师")));
+
+    send(get(DIRECTORY_DEPARTMENTS).param("pageSize", "101"), courseToken, null, 400);
+    send(get(DIRECTORY_DEPARTMENTS).param("parentId", "999999"), courseToken, null, 404);
+    send(get(DIRECTORY_DEPARTMENT_USERS, 999999), courseToken, null, 404);
+    send(get(DIRECTORY_USER, 999999), courseToken, null, 404);
+    send(get(DIRECTORY_USER, disabled), courseToken, null, 404);
+    send(get(DIRECTORY_USER, user).header("X-Application-Code", "permission-center"),
+        courseToken, null, 403);
+    send(get(DIRECTORY_USER, user), login("directory-operator"), null, 403);
+  }
+
+  @Test
+  @DisplayName("验收15：放行已配置来源的浏览器预检，实际请求仍校验会话")
+  void allowsConfiguredCorsWithoutBypassingAuthentication() throws Exception {
+    mvc.perform(options(DIRECTORY_DEPARTMENTS)
+            .header(HttpHeaders.ORIGIN, COURSE_ORIGIN)
+            .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET")
+            .header(HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS, "authorization,x-application-code"))
+        .andExpect(status().isOk())
+        .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, COURSE_ORIGIN));
+    mvc.perform(options(LOGIN)
+            .header(HttpHeaders.ORIGIN, COURSE_ORIGIN)
+            .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST")
+            .header(HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS, "content-type"))
+        .andExpect(status().isOk())
+        .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, COURSE_ORIGIN));
+    mvc.perform(get(DIRECTORY_DEPARTMENTS).header(HttpHeaders.ORIGIN, COURSE_ORIGIN))
+        .andExpect(status().isUnauthorized())
+        .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, COURSE_ORIGIN));
+    mvc.perform(options(ME)
+            .header(HttpHeaders.ORIGIN, "https://other.test.example")
+            .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET"))
+        .andExpect(status().isForbidden())
+        .andExpect(header().doesNotExist(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN));
+  }
+
+  @Test
+  @DisplayName("验收16：登录兼容数值学号，前端权限检查兼容课程短码")
+  void acceptsNumericLoginAndCompactCoursePermissionCodes() throws Exception {
+    String admin = login("admin");
+    long department =
+        send(post(DEPARTMENTS), admin, json.createObjectNode().put("name", "兼容性测试部门").putNull("parentId"), 201).path("id").asLong();
+    long user = createDirectoryUser(admin, "20220101", "兼容性测试用户", department);
+    long application =
+        send(post(APPLICATIONS), admin, Map.of("name", "短码兼容测试", "code", "compact-course"), 201)
+            .path("id").asLong();
+    long permission =
+        send(post(PERMISSIONS, application), admin, Map.of("name", "课程查看", "code", "CV", "type", "MENU"),
+                201).path("id").asLong();
+    long role =
+        send(post(ROLES), admin, configuration("短码兼容角色", List.of(permission), List.of()), 201)
+            .path("id").asLong();
+    send(put(USER_ROLES, user), admin, Map.of("roleIds", List.of(role)), 200);
+
+    String token = login(20220101, "compact-course");
+    assertThat(send(get(ME), token, null, 200).path("no").asText()).isEqualTo("20220101");
+    JsonNode check = send(get(PERMISSION, "CV"), token, null, 200);
+    assertThat(check).isEqualTo(json.valueToTree(Map.of("allowed", true)));
+    // 接入系统自定义格式的权限码只做存在性判断，未登记时返回 false 而不是 400。
+    assertThat(send(get(PERMISSION, "course.view"), token, null, 200).path("allowed").asBoolean())
+        .isFalse();
+    send(post(LOGIN), null,
+        Map.of("username", true, "password", "demo1234", "systems", List.of("compact-course")), 400);
+  }
+
+  /** 创建一个有部门的统一身份用户。 */
+  private long createDirectoryUser(String admin, String username, String name, long department)
+      throws Exception {
+    return send(post(USERS), admin, Map.of("username", username, "name", name,
+            "departmentId", department, "initialPassword", "demo1234"), 201)
+        .path("user").path("id").asLong();
+  }
+
+  /** 按真实路由模板登记课程应用的目录 API。 */
+  private long registerDirectoryApi(String admin, long application, String operationId, String path)
+      throws Exception {
+    return send(post(APIS, application), admin,
+            Map.of("operationId", operationId, "httpMethod", "GET", "path", path), 201)
+        .path("id").asLong();
+  }
+
+  @Test
+  @DisplayName("验收13：接口契约中的全部 47 个操作都有对应的接口映射")
+  void allFortySevenDocumentedOperationsHaveControllerMappings() throws Exception {
     Path document = Path.of(API_DOCUMENT);
     if (!Files.exists(document)) {
       document = Path.of(API_DOCUMENT_FROM_ROOT);
@@ -478,7 +634,7 @@ class RbacApiTest {
                 }
               }
             });
-    assertThat(expected).hasSize(44);
+    assertThat(expected).hasSize(47);
     assertThat(actual).containsAll(expected);
   }
 
@@ -490,6 +646,11 @@ class RbacApiTest {
 
   /** 用密码 demo1234 登录权限中心，返回访问令牌。 */
   private String login(String username) throws Exception {
+    return login(username, "permission-center");
+  }
+
+  /** 按目标应用登录，保留请求体中账号的原始 JSON 类型。 */
+  private String login(Object username, String application) throws Exception {
     return send(
             post(LOGIN),
             null,
@@ -499,7 +660,7 @@ class RbacApiTest {
                 "password",
                 "demo1234",
                 "systems",
-                List.of("permission-center")),
+                List.of(application)),
             200)
         .path("accessToken")
         .asText();

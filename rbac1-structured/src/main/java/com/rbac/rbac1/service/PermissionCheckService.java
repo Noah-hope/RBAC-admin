@@ -176,13 +176,31 @@ public class PermissionCheckService {
         apis.findByApplicationIdAndOperationId(requireApplication(app).getId(), operation)
             .orElseThrow(
                 () -> new ManagementFailure(ManagementFailure.Reason.NOT_FOUND, "API未登记。"));
-    if (BusinessApplication.PERMISSION_CENTER.equals(app) && SELF_SERVICE.contains(operation)) {
-      return new ApiCheckVO(operation, true);
+    return new ApiCheckVO(operation, allowsApi(user, app, api));
+  }
+
+  /** 身份目录仅开放给目标应用中持有对应 API 有效权限的调用人。 */
+  @Transactional(readOnly = true)
+  public void requireIdentityDirectoryApi(long user, String app, String operationId) {
+    BusinessApplication application = requireApplication(app);
+    boolean allowed =
+        apis.findByApplicationIdAndOperationId(application.getId(), operationId)
+            .filter(api -> allowsApi(user, app, api))
+            .isPresent();
+    if (!allowed) {
+      throw new ManagementFailure(ManagementFailure.Reason.FORBIDDEN, "没有该接口的调用权限。");
+    }
+  }
+
+  /** 根据接口的关联权限判断授权，权限中心的自助接口沿用登录即用规则。 */
+  private boolean allowsApi(long user, String app, Api api) {
+    if (BusinessApplication.PERMISSION_CENTER.equals(app)
+        && SELF_SERVICE.contains(api.getOperationId())) {
+      return true;
     }
     Set<Long> permissionIds = effective.forUser(user).sources().keySet();
-    return new ApiCheckVO(
-        operation,
-        links.findByApiId(api.getId()).stream().anyMatch(l -> permissionIds.contains(l.getPermissionId())));
+    return links.findByApiId(api.getId()).stream()
+        .anyMatch(link -> permissionIds.contains(link.getPermissionId()));
   }
 
   /**

@@ -53,6 +53,9 @@ com.rbac.rbac1ddd
 | GET | `/auth/me` | 当前用户在目标应用中的角色和有效权限（含继承） |
 | GET | `/auth/permissions/{permission}` | 菜单或按钮权限检查 |
 | GET | `/auth/api-permissions/{operationId}` | 接口权限检查，权限中心自助接口对已登录用户开放 |
+| GET | `/auth/departments` | 按层级分页查询统一身份部门 |
+| GET | `/auth/departments/{departmentId}/users` | 分页查询指定部门内的启用用户 |
+| GET | `/auth/users/{userId}` | 按统一身份 ID 查询用户姓名和账号 |
 | GET | `/.well-known/jwks.json` | 签名公钥，无需登录 |
 | GET | `/api/v1/roles` | 角色分页查询，部门管理员只看业务角色 |
 | POST | `/api/v1/roles` | 创建角色，同时配置直接权限和继承角色 |
@@ -93,7 +96,7 @@ com.rbac.rbac1ddd
 | GET | `/api/v1/role-creation-requests/{requestId}` | 申请详情，按父角色当前配置预览有效权限；父角色已删除时预览为 null |
 | POST | `/api/v1/role-creation-requests/{requestId}/reviews` | 总管理员审核：通过时按父角色最新配置实际创建角色，失败时申请保持待审核，不自动分配角色 |
 
-以上 44 个接口即 `RBAC1-api.yaml` 的全部操作（`SharedAcceptanceTest` 检查全部有映射），路径、请求和响应字段与 `rbac1-structured` 相同，契约见 [rbac1-ddd-api.yaml](../docs/03-api/rbac1-ddd-api.yaml)。两个后端使用同一对 RSA 密钥和相同参数的 Argon2 密码摘要，能互相校验对方签发的令牌和保存的密码。
+以上 47 个接口即 `RBAC1-api.yaml` 的全部操作（`SharedAcceptanceTest` 检查全部有映射），路径、请求和响应字段与 `rbac1-structured` 相同，契约见 [rbac1-ddd-api.yaml](../docs/03-api/rbac1-ddd-api.yaml)。两个后端使用同一对 RSA 密钥和相同参数的 Argon2 密码摘要，能互相校验对方签发的令牌和保存的密码。
 
 ## 运行
 
@@ -110,3 +113,5 @@ com.rbac.rbac1ddd
    ```
 
 3. 启动前设置与结构化模块相同的环境变量 `RBAC1_DB_URL`、`RBAC1_DB_USERNAME`、`RBAC1_DB_PASSWORD`、`RBAC1_JWT_ISSUER`、`RBAC1_JWT_PRIVATE_KEY`、`RBAC1_JWT_PUBLIC_KEY`；空库首次启动还要设置 `RBAC1_ADMIN_PASSWORD`（账号默认 `admin`，可用 `RBAC1_ADMIN_USERNAME` 修改）。端口用 `RBAC1_DDD_PORT` 设置，默认 8082。日志输出到控制台和 `logs/rbac1-ddd.log`，各层级别在 `application.yml` 的 `logging.level` 中设置，部署时可用 `LOGGING_LEVEL_COM_RBAC_RBAC1DDD_INTERFACES` 等环境变量覆盖。
+
+课程系统的 API 登记、目录授权和 `RBAC1_CORS_ALLOWED_ORIGINS` 配置与结构化版相同，见[课程系统统一身份接入](../rbac1-structured/README.md#课程系统统一身份接入)。

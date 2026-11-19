@@ -273,7 +273,11 @@ class SessionApiTest {
         .andExpect(jsonPath("$.allowed").value(true));
     call(get(PERMISSION_CHECK, "course:missing"), token)
         .andExpect(jsonPath("$.allowed").value(false));
-    call(get(PERMISSION_CHECK, "no-colon"), token).andExpect(status().isBadRequest());
+    // 编码格式由接入系统决定：不含冒号的编码同样按是否拥有判断，只限制长度。
+    call(get(PERMISSION_CHECK, "no-colon"), token)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.allowed").value(false));
+    call(get(PERMISSION_CHECK, "x".repeat(65)), token).andExpect(status().isBadRequest());
   }
 
   @Test

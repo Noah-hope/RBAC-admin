@@ -59,6 +59,26 @@ Flyway 启动时执行唯一的完整初始化脚本 [V1__init_rbac1.sql](src/ma
 
 API 登记与权限关联分开维护，解绑保留 API。权限申请通过时分配现有最小业务角色；角色创建申请在角色成功创建后才通过，不自动分配。业务写入、成功日志和申请状态由事务一起保存；失败写操作的结果单独记录为全局审计，不记录密码和令牌。
 
+## 课程系统统一身份接入
+
+在课程应用 `course-project-management` 下按下表登记 GET 接口，将这些 API 关联到课程系统用于选部门、选人的权限，再把权限授予需要使用目录的业务角色。调用人登录时将课程应用加入 `systems`，之后使用同一个 Bearer 令牌调用；多个受众时继续使用 `X-Application-Code`。没有目录授权时返回 403。
+
+| 路径 | operationId | 返回数据 |
+| --- | --- | --- |
+| `/auth/departments` | `listIdentityDepartments` | 根部门或指定父部门的直接下级，含 `hasChildren` |
+| `/auth/departments/{departmentId}/users` | `listIdentityDepartmentUsers` | 该部门下的启用用户，支持按姓名或账号分页查询 |
+| `/auth/users/{userId}` | `lookupIdentityUser` | 按选人返回的 `userId` 读取姓名和工号或学号 |
+
+目录的 `userId` 与 JWT 的 `sub` 使用同一个用户 ID 字符串，`no` 使用登录账号。部门 `code` 使用部门 ID 字符串。登录接受字符串账号和 JSON 整数学号，带前导零的账号继续传字符串。课程系统原有的大写字母数字权限短码可直接登记，例如 `CV`。
+
+两套后端都使用 `RBAC1_CORS_ALLOWED_ORIGINS` 配置浏览器来源。默认允许 `http://localhost:5173` 和 `http://127.0.0.1:5173`。前端独立部署时填写实际浏览器地址的协议、域名和端口，多个来源用逗号分隔。例如：
+
+```sh
+export RBAC1_CORS_ALLOWED_ORIGINS='https://course.example.edu,https://rbac.example.edu'
+```
+
+把变量传给后端进程或 Swarm 服务并重启。浏览器可对 `/auth/**`、`/api/v1/**` 和签名公钥发起跨域请求。预检由 CORS 过滤器处理，正式请求照常校验会话及权限。
+
 ## 测试
 
 ```powershell
@@ -69,4 +89,4 @@ mvn -f rbac1-structured/pom.xml verify
 
 日志统一由 `config/LayerLoggingAspect` 按层输出（接口层 controller、业务层 service、数据访问层 mapper），写到控制台和 `logs/rbac1-structured.log`；各层级别在 `application.yml` 的 `logging.level` 设置，部署时可用 `LOGGING_LEVEL_COM_RBAC_RBAC1_CONTROLLER` 等环境变量覆盖。代码按 [RBAC 代码规范](../.agents/skills/rbac-code-conventions/SKILL.md) 编写：请求放 `dto`（以 DTO 结尾），响应放 `vo`（以 VO 结尾），实体使用 Lombok，同名字段拷贝使用课程提供的 CloneFactory（首次构建前在课程代码 `clonefactory` 目录执行 `mvn install -Dmaven.test.skip=true`）。
 
-JWT 测试、JPA 行为测试和完整 Spring MVC 测试使用临时密钥与测试专用 H2，不需要本地 MySQL。测试覆盖共享 API 解绑、实时授权、退出失效、多层及菱形继承、来源去重、循环拒绝、后代菜单依赖、两类申请、审批回滚和日志快照。控制器映射与 RBAC1 OpenAPI 的 44 个接口核对。完整初始化测试在 H2 MySQL 模式验证 17 张表、基础权限、API 关联、继承外键及申请快照；仅测试时去掉 H2 不支持的 MySQL 列级字符集和排序规则声明。内存数据库测试不代替 MySQL Flyway 迁移验证；真实数据库及课程系统联调仍须在配置好环境后执行。
+JWT 测试、JPA 行为测试和完整 Spring MVC 测试使用临时密钥与测试专用 H2，不需要本地 MySQL。测试覆盖共享 API 解绑、实时授权、退出失效、多层及菱形继承、来源去重、循环拒绝、后代菜单依赖、两类申请、审批回滚和日志快照。控制器映射与 RBAC1 OpenAPI 的 47 个接口核对。完整初始化测试在 H2 MySQL 模式验证 17 张表、基础权限、API 关联、继承外键及申请快照；仅测试时去掉 H2 不支持的 MySQL 列级字符集和排序规则声明。内存数据库测试不代替 MySQL Flyway 迁移验证；真实数据库及课程系统联调仍须在配置好环境后执行。

@@ -2,7 +2,6 @@ package com.rbac.rbac1.controller;
 
 import static com.rbac.rbac1.controller.SessionInterceptor.bearerToken;
 
-import com.rbac.rbac1.dto.Formats;
 import com.rbac.rbac1.dto.LoginDTO;
 import com.rbac.rbac1.service.PermissionCheckService;
 import com.rbac.rbac1.service.SessionService;
@@ -13,7 +12,6 @@ import com.rbac.rbac1.vo.LoginVO;
 import com.rbac.rbac1.vo.PermissionCheckVO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +37,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SessionController {
 
+  /** 指定目标应用编码的请求头。 */
+  static final String APPLICATION_HEADER = "X-Application-Code";
+
   private final PermissionCheckService permissions;
   private final SessionService sessions;
 
@@ -61,22 +62,22 @@ public class SessionController {
       SessionUser actor,
       @RequestAttribute(SessionInterceptor.AUDIENCE)
       List<String> audience,
-      @RequestHeader(value = "X-Application-Code", required = false)
+      @RequestHeader(value = APPLICATION_HEADER, required = false)
       String app) {
     return permissions.current(actor, sessions.applicationContext(audience, app));
   }
 
-  /** 检查当前用户在目标应用中是否拥有某个前端权限编码。 */
+  /** 检查当前用户在目标应用中是否拥有某个前端权限编码；编码格式由接入系统决定，未登记的编码返回 false。 */
   @GetMapping("/permissions/{permission}")
   public PermissionCheckVO frontend(
       @RequestAttribute(SessionInterceptor.ACTOR)
       SessionUser actor,
       @PathVariable
-      @Pattern(regexp = Formats.PERMISSION_CODE)
+      @Size(max = 64)
       String permission,
       @RequestAttribute(SessionInterceptor.AUDIENCE)
       List<String> audience,
-      @RequestHeader(value = "X-Application-Code", required = false)
+      @RequestHeader(value = APPLICATION_HEADER, required = false)
       String app) {
     return permissions.checkPermission(
         actor.id(), sessions.applicationContext(audience, app), permission);
@@ -92,7 +93,7 @@ public class SessionController {
       String operationId,
       @RequestAttribute(SessionInterceptor.AUDIENCE)
       List<String> audience,
-      @RequestHeader(value = "X-Application-Code", required = false)
+      @RequestHeader(value = APPLICATION_HEADER, required = false)
       String app) {
     return permissions.checkApi(
         actor.id(), sessions.applicationContext(audience, app), operationId);

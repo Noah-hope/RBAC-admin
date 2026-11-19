@@ -13,7 +13,6 @@ import com.rbac.rbac1ddd.interfaces.rest.vo.LoginVO;
 import com.rbac.rbac1ddd.interfaces.rest.vo.PermissionCheckVO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.CacheControl;
@@ -40,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SessionController {
 
   /** 指定目标应用编码的请求头。 */
-  private static final String APPLICATION_HEADER = "X-Application-Code";
+  static final String APPLICATION_HEADER = "X-Application-Code";
 
   private final SessionApplicationService sessions;
   private final AccessApplicationService access;
@@ -69,13 +68,13 @@ public class SessionController {
     return CurrentUserVO.from(access.currentUser(session, application));
   }
 
-  /** 检查当前用户在目标应用中是否拥有指定的菜单或按钮权限。 */
+  /** 检查当前用户在目标应用中是否拥有指定的菜单或按钮权限；编码格式由接入系统决定，未登记的编码返回 false。 */
   @GetMapping("/permissions/{permission}")
   public PermissionCheckVO permission(
       @RequestAttribute(SESSION)
       AuthenticatedSession session,
       @PathVariable
-      @Pattern(regexp = Formats.PERMISSION_CODE)
+      @Size(max = 64)
       String permission,
       @RequestHeader(value = APPLICATION_HEADER, required = false)
       String application) {

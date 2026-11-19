@@ -15,6 +15,8 @@ spring:
       fail-on-unknown-properties: true
 
 rbac:
+  cors:
+    allowed-origins: ${RBAC1_CORS_ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}
   jwt:
     issuer: ${RBAC1_JWT_ISSUER:http://localhost:8081}
     private-key: ${RBAC1_JWT_PRIVATE_KEY:file:./jwt-private.pem}

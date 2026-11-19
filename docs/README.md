@@ -11,7 +11,7 @@
 | 3 | [RBAC1 界面原型](02-ui-design/RBAC1界面原型.html) | 演示角色多继承、继承来源和删除约束 |
 | 4 | [OpenAPI](03-api/openapi.yaml) | 查看请求、响应和接口约束 |
 | 4 | [RBAC1 OpenAPI](03-api/RBAC1-api.yaml) | RBAC1 结构化后端的完整接口契约 |
-| 4 | [RBAC1 DDD OpenAPI](03-api/rbac1-ddd-api.yaml) | 由 RBAC1 OpenAPI 生成的 DDD 后端契约（同样 44 个接口，服务地址 8082），在 Apifox 中单独建模块导入 |
+| 4 | [RBAC1 DDD OpenAPI](03-api/rbac1-ddd-api.yaml) | 由 RBAC1 OpenAPI 生成的 DDD 后端契约（同样 47 个接口，服务地址 8082），在 Apifox 中单独建模块导入 |
 | 5 | [代码阅读指南](04-development/代码阅读指南.md) | 对照业务找到实现位置 |
 | 6 | [后端说明](../rbac0-structured/README.md) | 配置数据库、启动和测试 |
 

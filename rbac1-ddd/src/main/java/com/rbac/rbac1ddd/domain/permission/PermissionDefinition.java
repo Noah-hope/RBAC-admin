@@ -50,7 +50,7 @@ public class PermissionDefinition {
    * @param applicationId 所属应用 ID
    * @param parentId 按钮所属菜单 ID，菜单为 null
    * @param name 权限名称
-   * @param code 权限标识，格式为「资源:操作」
+   * @param code 权限标识
    * @param type 菜单或按钮
    * @param apiIds 关联的接口 ID
    */

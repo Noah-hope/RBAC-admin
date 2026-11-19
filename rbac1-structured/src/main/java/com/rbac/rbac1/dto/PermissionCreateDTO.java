@@ -28,7 +28,7 @@ public class PermissionCreateDTO {
   @CodePointLength(max = 24)
   private String name;
 
-  /** 权限标识，格式为「资源:动作」。 */
+  /** 权限标识，支持「资源:动作」及课程短码。 */
   @NotNull
   @CodePointLength(max = 64)
   @Pattern(regexp = Formats.PERMISSION_CODE)
