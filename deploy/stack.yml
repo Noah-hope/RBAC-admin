@@ -1,0 +1,140 @@
+version: "3.8"
+
+x-backend-environment: &backend-environment
+  SERVER_PORT: "8080"
+  SERVER_SHUTDOWN: graceful
+  SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE: 30s
+  SPRING_CONFIG_IMPORT: configtree:/run/secrets/
+  RBAC1_DB_URL: ${RBAC1_DB_URL:?Set RBAC1_DB_URL}
+  RBAC1_DB_USERNAME: ${RBAC1_DB_USERNAME:?Set RBAC1_DB_USERNAME}
+  RBAC1_ADMIN_USERNAME: ${RBAC1_ADMIN_USERNAME:-admin}
+  RBAC1_JWT_ISSUER: ${RBAC1_JWT_ISSUER:?Set RBAC1_JWT_ISSUER}
+  RBAC1_JWT_PRIVATE_KEY: file:/run/secrets/jwt_private.pem
+  RBAC1_JWT_PUBLIC_KEY: file:/run/secrets/jwt_public.pem
+  RBAC1_CORS_ALLOWED_ORIGINS: ${RBAC1_CORS_ALLOWED_ORIGINS:?Set RBAC1_CORS_ALLOWED_ORIGINS}
+  JAVA_TOOL_OPTIONS: ${JAVA_TOOL_OPTIONS:--XX:MaxRAMPercentage=70}
+
+x-backend-secrets: &backend-secrets
+  - source: db_password
+    target: RBAC1_DB_PASSWORD
+    uid: "10001"
+    gid: "10001"
+    mode: 0400
+  - source: admin_password
+    target: RBAC1_ADMIN_PASSWORD
+    uid: "10001"
+    gid: "10001"
+    mode: 0400
+  - source: jwt_private
+    target: jwt_private.pem
+    uid: "10001"
+    gid: "10001"
+    mode: 0400
+  - source: jwt_public
+    target: jwt_public.pem
+    uid: "10001"
+    gid: "10001"
+    mode: 0400
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-backend-deploy: &backend-deploy
+  replicas: 1
+  update_config:
+    order: stop-first
+    parallelism: 1
+    failure_action: rollback
+  rollback_config:
+    order: stop-first
+    parallelism: 1
+  resources:
+    limits:
+      memory: ${BACKEND_MEMORY_LIMIT:-1024M}
+    reservations:
+      memory: ${BACKEND_MEMORY_RESERVATION:-512M}
+
+services:
+  structured:
+    image: ${STRUCTURED_IMAGE:?Set STRUCTURED_IMAGE}
+    environment:
+      <<: *backend-environment
+      LOGGING_LEVEL_COM_RBAC_RBAC1_CONTROLLER: ${BACKEND_LOG_LEVEL:-INFO}
+      LOGGING_LEVEL_COM_RBAC_RBAC1_SERVICE: ${BACKEND_LOG_LEVEL:-INFO}
+      LOGGING_LEVEL_COM_RBAC_RBAC1_MAPPER: ${BACKEND_LOG_LEVEL:-INFO}
+    secrets: *backend-secrets
+    networks: [rbac]
+    stop_grace_period: 40s
+    logging: *logging
+    deploy:
+      <<: *backend-deploy
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.rbac.role == structured
+
+  ddd:
+    image: ${DDD_IMAGE:?Set DDD_IMAGE}
+    environment:
+      <<: *backend-environment
+      LOGGING_LEVEL_COM_RBAC_RBAC1DDD_INTERFACES: ${BACKEND_LOG_LEVEL:-INFO}
+      LOGGING_LEVEL_COM_RBAC_RBAC1DDD_APPLICATION: ${BACKEND_LOG_LEVEL:-INFO}
+      LOGGING_LEVEL_COM_RBAC_RBAC1DDD_INFRASTRUCTURE: ${BACKEND_LOG_LEVEL:-INFO}
+    secrets: *backend-secrets
+    networks: [rbac]
+    stop_grace_period: 40s
+    logging: *logging
+    deploy:
+      <<: *backend-deploy
+      # 首次部署保持为 0，等结构化后端完成迁移和管理员初始化后再设为 1。
+      replicas: ${DDD_REPLICAS:-0}
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.rbac.role == ddd
+
+  frontend:
+    image: ${FRONTEND_IMAGE:?Set FRONTEND_IMAGE}
+    environment:
+      RBAC_API_UPSTREAM: ${RBAC_API_UPSTREAM:?Use deploy.sh to select backend}
+    ports:
+      - target: 80
+        published: ${FRONTEND_PORT:-8088}
+        protocol: tcp
+        mode: ingress
+    networks: [rbac]
+    logging: *logging
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.rbac.role == frontend
+      update_config:
+        order: stop-first
+        failure_action: rollback
+      resources:
+        limits:
+          memory: ${FRONTEND_MEMORY_LIMIT:-128M}
+
+networks:
+  rbac:
+    external: true
+    name: ${RBAC_NETWORK:-javaee-proxy}
+
+secrets:
+  db_password:
+    external: true
+    name: ${DB_PASSWORD_SECRET:-rbac_db_password_v1}
+  admin_password:
+    external: true
+    name: ${ADMIN_PASSWORD_SECRET:-rbac_admin_password_v1}
+  jwt_private:
+    external: true
+    name: ${JWT_PRIVATE_SECRET:-rbac_jwt_private_v1}
+  jwt_public:
+    external: true
+    name: ${JWT_PUBLIC_SECRET:-rbac_jwt_public_v1}

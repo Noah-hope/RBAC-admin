@@ -13,6 +13,7 @@
 | 代码结构和阅读顺序 | [RBAC0 代码阅读指南](docs/04-development/代码阅读指南.md) · [RBAC1 结构化后端说明](rbac1-structured/README.md) · [RBAC1 DDD 分层](rbac1-ddd/README.md#分层) |
 | 后端配置、启动和测试 | [RBAC0 结构化后端](rbac0-structured/README.md#启动) · [RBAC1 结构化后端](rbac1-structured/README.md#启动) · [RBAC1 DDD 后端](rbac1-ddd/README.md#运行) |
 | 管理前端启动和构建 | [前端说明](frontend/README.md) |
+| Docker 镜像构建和 Swarm 部署 | [RBAC1 部署说明](deploy/README.md) |
 | HTTP 接口契约 | [RBAC0 OpenAPI](docs/03-api/openapi.yaml) · [RBAC1 结构化 OpenAPI](docs/03-api/RBAC1-api.yaml) · [RBAC1 DDD OpenAPI](docs/03-api/rbac1-ddd-api.yaml) |
 | 课程系统统一身份接入 | [应用登记、角色码映射和目录授权](rbac1-structured/README.md#课程系统统一身份接入) |
 
@@ -63,7 +64,7 @@ RBAC-admin/
 
 正式管理界面位于 `frontend/`，开发代理默认连接 RBAC1 结构化后端。改为连接 DDD 后端（默认端口 8082）时，参照 [`frontend/.env.example`](frontend/.env.example) 在 `frontend/.env.local` 中设置 `RBAC_API_TARGET=http://127.0.0.1:8082`，再重启前端开发服务。
 
-后端集成测试使用 H2。当前版本的 MySQL Flyway 迁移、Docker Swarm 部署和课程系统联调仍待验收。
+后端集成测试使用 H2。仓库已提供前后端 Dockerfile、MySQL 数据库 Stack 和双后端应用 Stack，所有正式服务均运行在服务器上的 Docker Swarm 中；当前版本的真实镜像运行、MySQL Flyway 迁移、Docker Swarm 部署和课程系统联调仍待验收。
 
 ## 已实现的功能
 

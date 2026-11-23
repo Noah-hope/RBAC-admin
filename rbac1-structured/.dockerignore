@@ -1,0 +1,4 @@
+**
+!Dockerfile
+!target/
+!target/rbac1-structured-*.jar
