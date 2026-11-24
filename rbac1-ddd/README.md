@@ -106,10 +106,10 @@ com.rbac.rbac1ddd
    mvn install -Dmaven.test.skip=true
    ```
 
-2. 在仓库根目录运行测试，Jacoco 报告生成在 `rbac1-ddd/target/site/jacoco/index.html`：
+2. 在仓库根目录运行测试并自动打开最新 JaCoCo HTML 报告（`rbac1-ddd/target/site/jacoco/index.html`），完整现场操作见 [JaCoCo 覆盖率测试操作指南](../docs/04-development/JaCoCo覆盖率测试指南.md)：
 
    ```bash
-   mvn -f rbac1-ddd/pom.xml test
+   mvn -f rbac1-ddd/pom.xml clean test && open rbac1-ddd/target/site/jacoco/index.html
    ```
 
 3. 启动前设置与结构化模块相同的环境变量 `RBAC1_DB_URL`、`RBAC1_DB_USERNAME`、`RBAC1_DB_PASSWORD`、`RBAC1_JWT_ISSUER`、`RBAC1_JWT_PRIVATE_KEY`、`RBAC1_JWT_PUBLIC_KEY`；空库首次启动还要设置 `RBAC1_ADMIN_PASSWORD`（账号默认 `admin`，可用 `RBAC1_ADMIN_USERNAME` 修改）。端口用 `RBAC1_DDD_PORT` 设置，默认 8082。日志输出到控制台和 `logs/rbac1-ddd.log`，各层级别在 `application.yml` 的 `logging.level` 中设置，部署时可用 `LOGGING_LEVEL_COM_RBAC_RBAC1DDD_INTERFACES` 等环境变量覆盖。

@@ -12,6 +12,7 @@
 | 设计资料和界面原型 | [文档索引](docs/README.md) · [统一设计图](docs/项目设计图.drawio) · [RBAC1 界面原型](docs/02-ui-design/RBAC1界面原型.html) |
 | 代码结构和阅读顺序 | [RBAC0 代码阅读指南](docs/04-development/代码阅读指南.md) · [RBAC1 结构化后端说明](rbac1-structured/README.md) · [RBAC1 DDD 分层](rbac1-ddd/README.md#分层) |
 | 后端配置、启动和测试 | [RBAC0 结构化后端](rbac0-structured/README.md#启动) · [RBAC1 结构化后端](rbac1-structured/README.md#启动) · [RBAC1 DDD 后端](rbac1-ddd/README.md#运行) |
+| JaCoCo 覆盖率测试（现场检查） | [JaCoCo 覆盖率测试操作指南](docs/04-development/JaCoCo覆盖率测试指南.md) |
 | 管理前端启动和构建 | [前端说明](frontend/README.md) |
 | HTTP 接口契约 | [RBAC0 OpenAPI](docs/03-api/openapi.yaml) · [RBAC1 结构化 OpenAPI](docs/03-api/RBAC1-api.yaml) · [RBAC1 DDD OpenAPI](docs/03-api/rbac1-ddd-api.yaml) |
 | 课程系统统一身份接入 | [应用登记、角色码映射和目录授权](rbac1-structured/README.md#课程系统统一身份接入) |

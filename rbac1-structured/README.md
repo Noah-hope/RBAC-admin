@@ -108,11 +108,13 @@ export RBAC1_CORS_ALLOWED_ORIGINS='https://course.example.edu,https://rbac.examp
 
 ## 测试
 
-```powershell
-mvn -f rbac1-structured/pom.xml verify
+在仓库根目录执行，清理旧构建、运行全部测试并自动打开最新 JaCoCo HTML 报告：
+
+```bash
+mvn -f rbac1-structured/pom.xml clean test && open rbac1-structured/target/site/jacoco/index.html
 ```
 
-运行测试的同时生成 Jacoco 覆盖率报告，用浏览器打开 `rbac1-structured/target/site/jacoco/index.html` 查看。
+报告文件位于 `rbac1-structured/target/site/jacoco/index.html`（完整现场操作见 [JaCoCo 覆盖率测试操作指南](../docs/04-development/JaCoCo覆盖率测试指南.md)）。
 
 日志统一由 `config/LayerLoggingAspect` 按层输出（接口层 controller、业务层 service、数据访问层 mapper），写到控制台和 `logs/rbac1-structured.log`；各层级别在 `application.yml` 的 `logging.level` 设置，部署时可用 `LOGGING_LEVEL_COM_RBAC_RBAC1_CONTROLLER` 等环境变量覆盖。代码按 [RBAC 代码规范](../.agents/skills/rbac-code-conventions/SKILL.md) 编写：请求放 `dto`（以 DTO 结尾），响应放 `vo`（以 VO 结尾），实体使用 Lombok，同名字段拷贝使用课程提供的 CloneFactory（首次构建前在课程代码 `clonefactory` 目录执行 `mvn install -Dmaven.test.skip=true`）。
 

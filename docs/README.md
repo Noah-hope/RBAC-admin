@@ -13,6 +13,7 @@
 | 4 | [RBAC1 OpenAPI](03-api/RBAC1-api.yaml) | RBAC1 结构化后端的完整接口契约 |
 | 4 | [RBAC1 DDD OpenAPI](03-api/rbac1-ddd-api.yaml) | 由 RBAC1 OpenAPI 生成的 DDD 后端契约（同样 47 个接口，服务地址 8082），在 Apifox 中单独建模块导入 |
 | 5 | [代码阅读指南](04-development/代码阅读指南.md) | 对照业务找到实现位置 |
-| 6 | [后端说明](../rbac0-structured/README.md) | 配置数据库、启动和测试 |
+| 6 | [JaCoCo 覆盖率测试操作指南](04-development/JaCoCo覆盖率测试指南.md) | 助教现场终端执行测试并打开 HTML 报告 |
+| 7 | [后端说明](../rbac0-structured/README.md) | 配置数据库、启动和测试 |
 
 [返回项目首页](../README.md)
