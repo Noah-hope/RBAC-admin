@@ -264,9 +264,13 @@
 <text x="1644.4" y="3527.9" text-anchor="start" font-size="22.0" font-weight="bold" fill="#000000" font-family="'Songti SC', 'SimSun', 'STSong', serif">name</text>
 <text x="1964.4" y="3527.9" text-anchor="start" font-size="22.0" font-weight="bold" fill="#000000" font-family="'Songti SC', 'SimSun', 'STSong', serif">VARCHAR(24)</text>
 <text x="2144.4" y="3527.9" text-anchor="start" font-size="22.0" font-weight="bold" fill="#000000" font-family="'Songti SC', 'SimSun', 'STSong', serif">非空</text>
-<rect x="1560.4" y="3542.2" width="800.0" height="112.0" fill="none" stroke="inherit" stroke-width="0.8"/>
-<text x="1568.4" y="3590.2" text-anchor="start" font-size="22.0" font-weight="bold" fill="#000000" font-family="'Songti SC', 'SimSun', 'STSong', serif">code 在登录 systems 和 JWT aud 中标识目标应用，保持固定。</text>
-<text x="1568.4" y="3617.5" text-anchor="start" font-size="22.0" font-weight="bold" fill="#000000" font-family="'Songti SC', 'SimSun', 'STSong', serif">本系统也登记为应用；不另存旧版应用令牌。</text>
+<rect x="1560.4" y="3542.2" width="800" height="40" fill="none" stroke="#000000" stroke-width="0.8"/>
+<text x="1644.4" y="3567.9" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">role_codes_enabled</text>
+<text x="1964.4" y="3567.9" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">BOOLEAN</text>
+<text x="2144.4" y="3567.9" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">非空，默认 FALSE</text>
+<rect x="1560.4" y="3582.2" width="800" height="72" fill="none" stroke="inherit" stroke-width="0.8"/>
+<text x="1568.4" y="3610.2" text-anchor="start" font-size="22.0" font-weight="bold" fill="#000000" font-family="'Songti SC', 'SimSun', 'STSong', serif">code 在登录 systems 和 JWT aud 中标识目标应用，保持固定。</text>
+<text x="1568.4" y="3637.5" text-anchor="start" font-size="22.0" font-weight="bold" fill="#000000" font-family="'Songti SC', 'SimSun', 'STSong', serif">权限中心也作为应用登记。</text>
 <rect x="3021.0" y="3731.0" width="772.8" height="280.0" fill="#FFFFFF" stroke="#000000" stroke-width="3"/>
 <rect x="3021.0" y="3731.0" width="772.8" height="52.0" fill="#FFFFFF" stroke="#000000" stroke-width="3"/>
 <text x="3407.4" y="3766.8" text-anchor="middle" font-size="28.0" font-weight="bold" fill="#000000" font-family="'Songti SC', 'SimSun', 'STSong', serif">API-权限关联表　sys_api_permission</text>
@@ -582,7 +586,7 @@
 <rect x="2050.0" y="2226.0" width="730.0" height="128.0" fill="none" stroke="inherit" stroke-width="0.8"/>
 <text x="2058.0" y="2254.8" text-anchor="start" font-size="22.0" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">联合主键 (role_id, inherited_role_id)。</text>
 <text x="2058.0" y="2282.1" text-anchor="start" font-size="22.0" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">两列外键 → sys_role.id，删除限制 RESTRICT。</text>
-<text x="2058.0" y="2309.4" text-anchor="start" font-size="22.0" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">反向索引 inherited_role_id；CHECK：两列不相等。</text>
+<text x="2058.0" y="2309.4" text-anchor="start" font-size="22.0" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">反向索引 inherited_role_id；业务层校验防环。</text>
 <text x="2058.0" y="2336.6" text-anchor="start" font-size="22.0" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">只记录直接继承，不保存传递闭包。</text>
 <polyline points="2977.0,2265.8 2780.0,2160.0" fill="none" stroke="#B91C1C" stroke-width="3" marker-start="url(#m-er-mand-one)" marker-end="url(#m-er-zero-many)"/>
 <rect x="2838.5" y="2187.5" width="80.0" height="30.0" fill="#FFFFFF"/>
@@ -630,4 +634,35 @@
 <polyline points="3777.0,2250.9 4668.0,1098.0" fill="none" stroke="#B91C1C" stroke-width="3" stroke-dasharray="8,6" marker-start="url(#m-er-zero-one)" marker-end="url(#m-er-zero-many)"/>
 <rect x="4158.5" y="1642.0" width="128.0" height="30.0" fill="#FFFFFF"/>
 <text x="4222.5" y="1668.4" text-anchor="middle" font-size="24.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', serif">父角色快照</text>
+<rect x="2470" y="3342" width="800" height="284" fill="#FFFFFF" stroke="#B91C1C" stroke-width="3"/>
+<rect x="2470" y="3342" width="800" height="52" fill="#FCECEC" stroke="#B91C1C" stroke-width="3"/>
+<text x="2870" y="3377.8" text-anchor="middle" font-size="28" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">应用角色码表　sys_application_role_code（新增）</text>
+<rect x="2470" y="3394" width="800" height="36" fill="none" stroke="#B91C1C" stroke-width="0.8"/>
+<text x="2478" y="3418.2" text-anchor="start" font-size="24" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">键</text>
+<text x="2586" y="3418.2" text-anchor="start" font-size="24" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">字段</text>
+<text x="2896" y="3418.2" text-anchor="start" font-size="24" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">类型</text>
+<text x="3074" y="3418.2" text-anchor="start" font-size="24" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">约束</text>
+<rect x="2470" y="3430" width="800" height="40" fill="none" stroke="#B91C1C" stroke-width="0.8"/>
+<text x="2478" y="3455.7" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">PK, FK</text>
+<text x="2586" y="3455.7" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">application_id</text>
+<text x="2896" y="3455.7" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">BIGINT</text>
+<text x="3074" y="3455.7" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">非空</text>
+<rect x="2470" y="3470" width="800" height="40" fill="none" stroke="#B91C1C" stroke-width="0.8"/>
+<text x="2478" y="3495.7" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">PK, FK</text>
+<text x="2586" y="3495.7" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">role_id</text>
+<text x="2896" y="3495.7" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">BIGINT</text>
+<text x="3074" y="3495.7" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">非空</text>
+<rect x="2470" y="3510" width="800" height="40" fill="none" stroke="#B91C1C" stroke-width="0.8"/>
+<text x="2478" y="3535.7" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">PK</text>
+<text x="2586" y="3535.7" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">role_code</text>
+<text x="2896" y="3535.7" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">VARCHAR(64)</text>
+<text x="3074" y="3535.7" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">非空、非纯空格</text>
+<text x="2478" y="3579" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">按应用给业务角色分配角色码，三列组成联合主键。</text>
+<text x="2478" y="3606" text-anchor="start" font-size="22" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">删除角色时级联删除映射；role_id 单独建索引。</text>
+<polyline points="2360.42,3484 2470,3484" fill="none" stroke="#B91C1C" stroke-width="3" marker-start="url(#m-er-mand-one)" marker-end="url(#m-er-zero-many)"/>
+<rect x="2394.21" y="3448.0" width="62" height="25" fill="#FFFFFF" stroke="none" stroke-width="0"/>
+<text x="2425.21" y="3468.0" text-anchor="middle" font-size="24" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">应用</text>
+<polyline points="2977,2485 2610,3342" fill="none" stroke="#B91C1C" stroke-width="3" marker-start="url(#m-er-mand-one)" marker-end="url(#m-er-zero-many)"/>
+<rect x="2736.5" y="2878.5" width="114" height="25" fill="#FFFFFF" stroke="none" stroke-width="0"/>
+<text x="2793.5" y="2898.5" text-anchor="middle" font-size="24" font-weight="bold" fill="#B91C1C" font-family="'Songti SC', 'SimSun', 'STSong', serif">业务角色</text>
 </svg>

@@ -51,7 +51,7 @@
 <rect x="1822.3" y="1252.0" width="18.0" height="32.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
 <rect x="2249.3" y="1546.4" width="18.0" height="32.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
 <polyline points="206.2,343.2 772.4,343.2" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
-<text x="489.3" y="331.8" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">1. appCode = resolveApplication(audience, headerCode)</text>
+<text x="489.3" y="331.8" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">1. appCode = applicationContext(audience, headerCode)</text>
 <polyline points="772.4,462.2 206.2,462.2" fill="none" stroke="#A61B29" stroke-width="1.8" stroke-dasharray="8,6" marker-end="url(#m-open-err)"/>
 <text x="489.3" y="450.8" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#A61B29" font-family="'Songti SC', 'SimSun', 'STSong', serif">ManagementFailure(APPLICATION_MISMATCH)</text>
 <polyline points="206.2,586.4 1181.8,586.4" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>

@@ -114,13 +114,16 @@
 <polyline points="787.0,2042.0 2347.0,2042.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
 <text x="1567.0" y="2029.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">12. save(assignment)</text>
 <polyline points="787.0,2206.0 833.0,2206.0 833.0,2232.0 796.0,2232.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
-<text x="805.0" y="2193.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">13. request.setStatus(REJECTED)（与 APPROVED 同靠 JPA 脏检查保存）</text>
+<text x="805.0" y="2193.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">14. request.setStatus(REJECTED)</text>
 <polyline points="787.0,2348.0 2726.0,2348.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
-<text x="1756.5" y="2335.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">14. recordGlobalChange(actor, &quot;审核权限申请&quot;, detail, PERMISSION_REQUEST, id, name)</text>
+<text x="1756.5" y="2335.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">15. recordGlobalChange(actor, &quot;审核权限申请&quot;, detail, PERMISSION_REQUEST, id, name)</text>
 <polyline points="787.0,2448.0 3123.0,2448.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
-<text x="1955.0" y="2435.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">15. settleUsers(List.of(applicantUserId))</text>
+<text x="1955.0" y="2435.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">16. settleUsers(List.of(applicantUserId))</text>
 <polyline points="769.0,2582.0 339.0,2582.0" fill="none" stroke="#17365D" stroke-width="1.8" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
 <text x="554.0" y="2569.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#17365D" font-family="'Songti SC', 'SimSun', 'STSong', serif">result（APPROVED / REJECTED）</text>
 <text x="50.0" y="2763.8" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">同步消息：实线实心箭头并编号；回复与异常：虚线空心箭头，不编号。«MetaClass» : ApprovalRules 表示静态纯计算方法 extraPermissions。</text>
 <text x="50.0" y="2797.8" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">与 DDD 版对比：没有 PermissionRequest.approve/reject/settleWith 和 ApprovalCandidates 领域对象，全部状态流转和候选计算集中在 PermissionRequestService；requireVisible 内部同时校验部门管理员审核范围。</text>
+<rect x="778" y="2118" width="18" height="20" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<polyline points="787,2092 833,2092 833,2118 796,2118" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="805" y="2079.6" text-anchor="start" font-size="19" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">13. request.setStatus(APPROVED) / setApprovedRoleId(roleId)</text>
 </svg>

@@ -2,50 +2,27 @@
 :toc: left
 :toclevels: 3
 :sectnums:
-:imagesdir: design-atlas/assets
-
-本文档描述权限管理系统（RBAC0 基线与 RBAC1 角色多继承扩展）的概念模型、物理表结构、完整性约束及全部 18 张表的数据字典。
-RBAC1 结构化后端（`rbac1-structured`）与面向对象 DDD 后端（`rbac1-ddd`）共用同一套 MySQL 8 数据库与 Flyway 迁移脚本（`V1__init_rbac1.sql`、`V2__application_role_codes.sql`）。
-
-TIP: 若需并排对比、拖拽缩放或按关键字实时检索表字段，也可在本地浏览器打开交互式图册 link:design-atlas/index.html[RBAC1 设计与架构图册（HTML）]，或用 diagrams.net 打开母本 link:项目设计图.drawio[项目设计图.drawio]。
-
-== 核心建模原则与演进说明
-
-* **保持标准 RBAC 核心关系**：严格保留 `User`（`sys_user`）、`Role`（`sys_role`）、`Permission`（`sys_permission`）及「用户—角色」（`sys_user_role`）、「角色—权限」（`sys_role_permission`）两组多对多核心关系。
-* **组织机构统一自引用**：公司、分公司与部门在模型上统一抽象为具有上下级树形关系的 `Department`（`sys_department.parent_id` 自外键），不拆分冗余层级表，也不引入冗余岗位实体。
-* **管理员身份由预置角色加部门范围表达**：不给用户表增加破坏 RBAC 的管理员布尔列；总管理员与部门管理员由预置管理角色（`TOTAL_ADMIN`、`DEPARTMENT_ADMIN`）表达，部门管理员的授权范围按所属部门子树动态限定。
-* **前端菜单/按钮树与后端 API 显式解耦映射**：权限具化为同一应用内的两级菜单—按钮树（由数据库 `chk_permission_parent` 强制约束菜单无上级、按钮必挂菜单）；新增独立 `sys_api` 实体并通过 `sys_api_permission` 建立多对多关联，解绑时保留 API 登记。
-* **RBAC1 多父多层无环继承（不存继承副本）**：`sys_role_inheritance` 仅存储直接父角色边（`role_id` 继承 `inherited_role_id`），数据库 `chk_role_not_self` 阻止自环，应用层/领域层阻止循环继承与后代按钮失去所属菜单；有效权限沿 DAG 按需计算，不写冗余继承权限副本。
-* **角色创建申请保存父角色快照**：`sys_role_creation_request_inheritance` 保存提交时的父角色 ID 与名称快照，不建立指向 `sys_role` 的阻塞外键，删除业务角色后历史申请仍可完整追溯。
-* **接入应用角色码映射扩展（V2 迁移）**：`sys_application.role_codes_enabled` 与 `sys_application_role_code` 支持将直接或继承的业务角色映射为课程管理系统等外部应用的身份角色码（如 `teacher`、`student`、`admin`）。
+:imagesdir: assets
 
 == 概念模型设计（ER 图）
 
-=== RBAC1 概念 ER 图（含角色继承与两类审批流）
+=== RBAC1 核心概念 ER 图（含角色继承）
 
-image::rbac1-conceptual-er.svg[RBAC1 概念 ER 图,width=100%]
-
-link:design-atlas/assets/rbac1-conceptual-er.svg[在新窗口打开原尺寸矢量图（RBAC1 概念 ER 图） ↗]
+image::rbac1-conceptual-er.svg[RBAC1 概念 ER 图,width=100%,link=assets/rbac1-conceptual-er.svg]
 
 === RBAC0 基线概念 ER 图
 
-image::rbac-conceptual-er.svg[RBAC0 概念 ER 图,width=100%]
-
-link:design-atlas/assets/rbac-conceptual-er.svg[在新窗口打开原尺寸矢量图（RBAC0 概念 ER 图） ↗]
+image::rbac-conceptual-er.svg[RBAC0 概念 ER 图,width=100%,link=assets/rbac-conceptual-er.svg]
 
 == 物理数据库表结构
 
 === RBAC1 数据库物理表关系图（18 张表）
 
-image::rbac1-database-tables.svg[RBAC1 数据库表结构,width=100%]
-
-link:design-atlas/assets/rbac1-database-tables.svg[在新窗口打开原尺寸矢量图（RBAC1 物理表结构图） ↗]
+image::rbac1-database-tables.svg[RBAC1 数据库表结构,width=100%,link=assets/rbac1-database-tables.svg]
 
 === RBAC0 基线数据库物理表关系图
 
-image::rbac-database-tables.svg[RBAC0 数据库表结构,width=100%]
-
-link:design-atlas/assets/rbac-database-tables.svg[在新窗口打开原尺寸矢量图（RBAC0 物理表结构图） ↗]
+image::rbac-database-tables.svg[RBAC0 数据库表结构,width=100%,link=assets/rbac-database-tables.svg]
 
 == 完整数据字典（Flyway V1–V2 共 18 张表）
 
@@ -415,5 +392,5 @@ CONSTRAINT fk_application_role_code_role FOREIGN KEY (role_id) REFERENCES sys_ro
 == 事务、并发控制与存储安全策略
 
 * **关键写操作悲观锁串行化**：修改/删除角色、审核权限申请、修改用户与批量变更角色关联时，通过 `SELECT ... FOR UPDATE` 按固定顺序锁定目标行，防止并发修改导致循环继承、菜单缺失或重复赋权。
-* **唯一约束异常翻译**：`uq_user_username`、`uq_role_name`、`uq_application_code`、`uq_application_name`、`uq_permission_application_code`、`uq_api_application_operation`、`uq_api_application_route` 等唯一键在数据库层兜底，持久化边界统一将其翻译为明确的 `409 DUPLICATE` 业务错误。
+* **唯一约束异常翻译**：`uq_user_username`、`uq_role_name`、`uq_application_code`、`uq_application_name`、`uq_permission_application_code`、`uq_api_operation`、`uq_api_route` 等唯一键在数据库层兜底，持久化边界统一将其翻译为明确的 `409 DUPLICATE` 业务错误。
 * **凭据不落明文**：`sys_user.password_hash` 保存 Argon2id 密码摘要；`sys_session.token_hash` 仅保存 JWT 的 SHA-256 二进制摘要（`BINARY(32)`），操作日志严禁记录密码与令牌原文。

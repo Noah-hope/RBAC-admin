@@ -1,0 +1,341 @@
+= RBAC1 权限管理系统 · 详细设计文档（结构化与 DDD 双实现对照）
+:toc: left
+:toc-title: 目录
+:toclevels: 2
+:sectnums:
+:imagesdir: assets
+
+[[oral-review]]
+== 第二轮口试检查索引
+
+<<backend-packages,两套后端包图>> · <<swarm-deployment,部署图>> · link:数据库设计文档.adoc[数据库图] · link:index.html[交互图册]
+
+[cols="3,2,2",options="header"]
+|===
+| API 与用例 | 结构化 | DDD
+| <<review-role,角色继承配置>> +
+pass:[<code>PUT /api/v1/<wbr>roles/<wbr>{roleId}</code>]
+| link:assets/rbac1-structured-class-role.svg[类图] · link:assets/rbac1-structured-seq-role.svg[顺序图] +
+link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/RoleService.java[源码]
+| link:assets/rbac1-ddd-class-role.svg[类图] · link:assets/rbac1-ddd-seq-role.svg[顺序图] +
+link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/role/RoleApplicationService.java[源码]
+| <<review-review,权限申请审核>> +
+pass:[<code>POST /api/v1/<wbr>permission-requests/<wbr>{requestId}/<wbr>reviews</code>]
+| link:assets/rbac1-structured-class-review.svg[类图] · link:assets/rbac1-structured-seq-review.svg[顺序图] +
+link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/PermissionRequestService.java[源码]
+| link:assets/rbac1-ddd-class-review.svg[类图] · link:assets/rbac1-ddd-seq-review.svg[顺序图] +
+link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/request/PermissionRequestApplicationService.java[源码]
+| <<review-creation,角色创建申请审批>> +
+pass:[<code>POST /api/v1/<wbr>role-creation-requests/<wbr>{requestId}/<wbr>reviews</code>]
+| link:assets/rbac1-structured-class-creation.svg[类图] · link:assets/rbac1-structured-seq-creation.svg[顺序图] +
+link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/RoleCreationRequestService.java[源码]
+| link:assets/rbac1-ddd-class-creation.svg[类图] · link:assets/rbac1-ddd-seq-creation.svg[顺序图] +
+link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/request/RoleCreationRequestApplicationService.java[源码]
+| <<review-user,用户调动与状态管理>> +
+pass:[<code>PATCH /api/v1/<wbr>users/<wbr>{userId}</code>]
+| link:assets/rbac1-structured-class-user.svg[类图] · link:assets/rbac1-structured-seq-user.svg[顺序图] +
+link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/UserService.java[源码]
+| link:assets/rbac1-ddd-class-user.svg[类图] · link:assets/rbac1-ddd-seq-user.svg[顺序图] +
+link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/user/UserApplicationService.java[源码]
+| <<review-permission,权限登记与接口关联>> +
+pass:[<code>POST /api/v1/<wbr>applications/<wbr>{applicationId}/<wbr>permissions</code>]
+| link:assets/rbac1-structured-class-permission.svg[类图] · link:assets/rbac1-structured-seq-permission.svg[顺序图] +
+link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/ApplicationService.java[源码]
+| link:assets/rbac1-ddd-class-permission.svg[类图] · link:assets/rbac1-ddd-seq-permission.svg[顺序图] +
+link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/app/PermissionApplicationService.java[源码]
+| <<review-department,部门调整与防环校验>> +
+pass:[<code>PATCH /api/v1/<wbr>departments/<wbr>{departmentId}</code>]
+| link:assets/rbac1-structured-class-department.svg[类图] · link:assets/rbac1-structured-seq-department.svg[顺序图] +
+link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/DepartmentService.java[源码]
+| link:assets/rbac1-ddd-class-department.svg[类图] · link:assets/rbac1-ddd-seq-department.svg[顺序图] +
+link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/department/DepartmentApplicationService.java[源码]
+| <<review-authme,统一身份与有效权限查询>> +
+`GET /auth/me`
+| link:assets/rbac1-structured-class-authme.svg[类图] · link:assets/rbac1-structured-seq-authme.svg[顺序图] +
+link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/PermissionCheckService.java[源码]
+| link:assets/rbac1-ddd-class-authme.svg[类图] · link:assets/rbac1-ddd-seq-authme.svg[顺序图] +
+link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/AccessApplicationService.java[源码]
+|===
+
+[[backend-packages]]
+== 后端系统分层包图
+
+=== 面向对象（DDD）后端包图（`com.rbac.rbac1ddd`）
+
+image::rbac1-ddd-package.svg[RBAC1-DDD-包图-后端分层,width=100%,link=assets/rbac1-ddd-package.svg]
+
+=== 面向功能（结构化）后端包图（`com.rbac.rbac1`）
+
+image::rbac1-structured-package.svg[RBAC1-结构化-包图-后端分层,width=100%,link=assets/rbac1-structured-package.svg]
+
+== DDD 领域模型全景图
+
+image::rbac1-ddd-domain-model.svg[RBAC1-DDD-类图-领域模型全景,width=100%,link=assets/rbac1-ddd-domain-model.svg]
+
+[[swarm-deployment]]
+== Docker Swarm 集群部署与课程系统统一身份接入
+
+image::rbac1-swarm-deployment.svg[RBAC1-部署图-DockerSwarm集群,width=100%,link=assets/rbac1-swarm-deployment.svg]
+
+== 核心 API 双实现详细设计（7 组代表性用例）
+
+[[review-role]]
+=== 用例 01：角色继承配置（`PUT /api/v1/roles/{roleId}`）
+
+==== 类图对照（角色继承配置）
+
+.DDD 类图 · 角色继承配置
+image::rbac1-ddd-class-role.svg[DDD 类图 · 角色继承配置,width=100%,link=assets/rbac1-ddd-class-role.svg]
+
+.结构化类图 · 角色继承配置
+image::rbac1-structured-class-role.svg[结构化类图 · 角色继承配置,width=100%,link=assets/rbac1-structured-class-role.svg]
+
+==== 顺序图对照（角色继承配置）
+
+.DDD 顺序图 · 角色继承配置
+image::rbac1-ddd-seq-role.svg[DDD 顺序图 · 角色继承配置,width=100%,link=assets/rbac1-ddd-seq-role.svg]
+
+.结构化顺序图 · 角色继承配置
+image::rbac1-structured-seq-role.svg[结构化顺序图 · 角色继承配置,width=100%,link=assets/rbac1-structured-seq-role.svg]
+
+.源码位置
+[%collapsible]
+====
+* DDD Controller：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleController.java[`RoleController.java`]
+* DDD 应用服务：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/role/RoleApplicationService.java[`RoleApplicationService.java`]
+* DDD 聚合根：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/role/Role.java[`Role.java`]
+* DDD 继承图服务：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/role/RoleHierarchy.java[`RoleHierarchy.java`]
+* DDD 仓储适配器：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/infrastructure/persistence/JpaRoleRepository.java[`JpaRoleRepository.java`]
+* 结构化 Service：link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/RoleService.java[`RoleService.java`]
+====
+
+[[review-review]]
+=== 用例 02：权限申请审核（`POST /api/v1/permission-requests/{requestId}/reviews`）
+
+==== 类图对照（权限申请审核）
+
+.DDD 类图 · 权限申请审核
+image::rbac1-ddd-class-review.svg[DDD 类图 · 权限申请审核,width=100%,link=assets/rbac1-ddd-class-review.svg]
+
+.结构化类图 · 权限申请审核
+image::rbac1-structured-class-review.svg[结构化类图 · 权限申请审核,width=100%,link=assets/rbac1-structured-class-review.svg]
+
+==== 顺序图对照（权限申请审核）
+
+.DDD 顺序图 · 权限申请审核
+image::rbac1-ddd-seq-review.svg[DDD 顺序图 · 权限申请审核,width=100%,link=assets/rbac1-ddd-seq-review.svg]
+
+.结构化顺序图 · 权限申请审核
+image::rbac1-structured-seq-review.svg[结构化顺序图 · 权限申请审核,width=100%,link=assets/rbac1-structured-seq-review.svg]
+
+.源码位置
+[%collapsible]
+====
+* DDD Controller：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java[`PermissionRequestController.java`]
+* DDD 应用服务：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/request/PermissionRequestApplicationService.java[`PermissionRequestApplicationService.java`]
+* DDD 申请聚合根：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/request/PermissionRequest.java[`PermissionRequest.java`]
+* DDD 候选评估服务：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/request/ApprovalCandidates.java[`ApprovalCandidates.java`]
+* 结构化 Service：link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/PermissionRequestService.java[`PermissionRequestService.java`]
+* 结构化筛选规则：link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/ApprovalRules.java[`ApprovalRules.java`]
+====
+
+[[review-creation]]
+=== 用例 03：角色创建申请审批（`POST /api/v1/role-creation-requests/{requestId}/reviews`）
+
+==== 类图对照（角色创建申请审批）
+
+.DDD 类图 · 角色创建申请审批
+image::rbac1-ddd-class-creation.svg[DDD 类图 · 角色创建申请审批,width=100%,link=assets/rbac1-ddd-class-creation.svg]
+
+.结构化类图 · 角色创建申请审批
+image::rbac1-structured-class-creation.svg[结构化类图 · 角色创建申请审批,width=100%,link=assets/rbac1-structured-class-creation.svg]
+
+==== 顺序图对照（角色创建申请审批）
+
+.DDD 顺序图 · 角色创建申请审批
+image::rbac1-ddd-seq-creation.svg[DDD 顺序图 · 角色创建申请审批,width=100%,link=assets/rbac1-ddd-seq-creation.svg]
+
+.结构化顺序图 · 角色创建申请审批
+image::rbac1-structured-seq-creation.svg[结构化顺序图 · 角色创建申请审批,width=100%,link=assets/rbac1-structured-seq-creation.svg]
+
+.源码位置
+[%collapsible]
+====
+* DDD Controller：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleCreationRequestController.java[`RoleCreationRequestController.java`]
+* DDD 应用服务：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/request/RoleCreationRequestApplicationService.java[`RoleCreationRequestApplicationService.java`]
+* DDD 聚合根：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/request/RoleCreationRequest.java[`RoleCreationRequest.java`]
+* 结构化 Service：link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/RoleCreationRequestService.java[`RoleCreationRequestService.java`]
+====
+
+[[review-user]]
+=== 用例 04：用户调动与状态管理（`PATCH /api/v1/users/{userId}`）
+
+==== 类图对照（用户调动与状态管理）
+
+.DDD 类图 · 用户调动与状态管理
+image::rbac1-ddd-class-user.svg[DDD 类图 · 用户调动与状态管理,width=100%,link=assets/rbac1-ddd-class-user.svg]
+
+.结构化类图 · 用户调动与状态管理
+image::rbac1-structured-class-user.svg[结构化类图 · 用户调动与状态管理,width=100%,link=assets/rbac1-structured-class-user.svg]
+
+==== 顺序图对照（用户调动与状态管理）
+
+.DDD 顺序图 · 用户调动与状态管理
+image::rbac1-ddd-seq-user.svg[DDD 顺序图 · 用户调动与状态管理,width=100%,link=assets/rbac1-ddd-seq-user.svg]
+
+.结构化顺序图 · 用户调动与状态管理
+image::rbac1-structured-seq-user.svg[结构化顺序图 · 用户调动与状态管理,width=100%,link=assets/rbac1-structured-seq-user.svg]
+
+.源码位置
+[%collapsible]
+====
+* DDD Controller：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserController.java[`UserController.java`]
+* DDD 应用服务：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/user/UserApplicationService.java[`UserApplicationService.java`]
+* DDD 用户聚合根：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/user/User.java[`User.java`]
+* DDD 权限守卫：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/Operator.java[`Operator.java`]
+* 结构化 Service：link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/UserService.java[`UserService.java`]
+====
+
+[[review-permission]]
+=== 用例 05：权限登记与接口关联（`POST /api/v1/applications/{applicationId}/permissions`）
+
+==== 类图对照（权限登记与接口关联）
+
+.DDD 类图 · 权限登记与接口关联
+image::rbac1-ddd-class-permission.svg[DDD 类图 · 权限登记与接口关联,width=100%,link=assets/rbac1-ddd-class-permission.svg]
+
+.结构化类图 · 权限登记与接口关联
+image::rbac1-structured-class-permission.svg[结构化类图 · 权限登记与接口关联,width=100%,link=assets/rbac1-structured-class-permission.svg]
+
+==== 顺序图对照（权限登记与接口关联）
+
+.DDD 顺序图 · 权限登记与接口关联
+image::rbac1-ddd-seq-permission.svg[DDD 顺序图 · 权限登记与接口关联,width=100%,link=assets/rbac1-ddd-seq-permission.svg]
+
+.结构化顺序图 · 权限登记与接口关联
+image::rbac1-structured-seq-permission.svg[结构化顺序图 · 权限登记与接口关联,width=100%,link=assets/rbac1-structured-seq-permission.svg]
+
+.源码位置
+[%collapsible]
+====
+* DDD Controller：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java[`ApplicationController.java`]
+* DDD 应用服务：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/app/PermissionApplicationService.java[`PermissionApplicationService.java`]
+* DDD 权限聚合根：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/permission/PermissionDefinition.java[`PermissionDefinition.java`]
+* 结构化应用服务：link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/ApplicationService.java[`ApplicationService.java`]
+* 结构化接口服务：link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/ApiService.java[`ApiService.java`]
+====
+
+[[review-department]]
+=== 用例 06：部门调整与防环校验（`PATCH /api/v1/departments/{departmentId}`）
+
+==== 类图对照（部门调整与防环校验）
+
+.DDD 类图 · 部门调整与防环校验
+image::rbac1-ddd-class-department.svg[DDD 类图 · 部门调整与防环校验,width=100%,link=assets/rbac1-ddd-class-department.svg]
+
+.结构化类图 · 部门调整与防环校验
+image::rbac1-structured-class-department.svg[结构化类图 · 部门调整与防环校验,width=100%,link=assets/rbac1-structured-class-department.svg]
+
+==== 顺序图对照（部门调整与防环校验）
+
+.DDD 顺序图 · 部门调整与防环校验
+image::rbac1-ddd-seq-department.svg[DDD 顺序图 · 部门调整与防环校验,width=100%,link=assets/rbac1-ddd-seq-department.svg]
+
+.结构化顺序图 · 部门调整与防环校验
+image::rbac1-structured-seq-department.svg[结构化顺序图 · 部门调整与防环校验,width=100%,link=assets/rbac1-structured-seq-department.svg]
+
+.源码位置
+[%collapsible]
+====
+* DDD Controller：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/DepartmentController.java[`DepartmentController.java`]
+* DDD 应用服务：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/department/DepartmentApplicationService.java[`DepartmentApplicationService.java`]
+* DDD 部门聚合根：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/department/Department.java[`Department.java`]
+* DDD 部门树服务：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/department/DepartmentTree.java[`DepartmentTree.java`]
+* 结构化 Service：link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/DepartmentService.java[`DepartmentService.java`]
+====
+
+[[review-authme]]
+=== 用例 07：统一身份与有效权限查询（`GET /auth/me`）
+
+==== 类图对照（统一身份与有效权限查询）
+
+.DDD 类图 · 统一身份与有效权限查询
+image::rbac1-ddd-class-authme.svg[DDD 类图 · 统一身份与有效权限查询,width=100%,link=assets/rbac1-ddd-class-authme.svg]
+
+.结构化类图 · 统一身份与有效权限查询
+image::rbac1-structured-class-authme.svg[结构化类图 · 统一身份与有效权限查询,width=100%,link=assets/rbac1-structured-class-authme.svg]
+
+==== 顺序图对照（统一身份与有效权限查询）
+
+.DDD 顺序图 · 统一身份与有效权限查询
+image::rbac1-ddd-seq-authme.svg[DDD 顺序图 · 统一身份与有效权限查询,width=100%,link=assets/rbac1-ddd-seq-authme.svg]
+
+.结构化顺序图 · 统一身份与有效权限查询
+image::rbac1-structured-seq-authme.svg[结构化顺序图 · 统一身份与有效权限查询,width=100%,link=assets/rbac1-structured-seq-authme.svg]
+
+.源码位置
+[%collapsible]
+====
+* DDD Controller：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SessionController.java[`SessionController.java`]
+* DDD 应用服务：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/AccessApplicationService.java[`AccessApplicationService.java`]
+* DDD 认证会话：link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/AuthenticatedSession.java[`AuthenticatedSession.java`]
+* 结构化 Controller：link:../../rbac1-structured/src/main/java/com/rbac/rbac1/controller/SessionController.java[`SessionController.java`]
+* 结构化权限检查：link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/PermissionCheckService.java[`PermissionCheckService.java`]
+* 结构化继承计算：link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/RolePermissionService.java[`RolePermissionService.java`]
+====
+
+== 统一 HTTP 接口与双后端源码映射总表（47 项）
+
+下表列出 `docs/03-api/RBAC1-api.yaml` 定义的全部 47 个接口及其在结构化后端与 DDD 后端中的入口位置，供代码走查快速定位：
+
+[cols="1,3,2,3,3,3",options="header"]
+|===
+|方法 |路径 |模块 |功能摘要 |结构化入口 |DDD 入口
+|`POST` |`/auth/login` |统一身份鉴权 |统一登录 |`controller/SessionController.java:47` |`interfaces/rest/SessionController.java:48`
+|`POST` |`/auth/logout` |统一身份鉴权 |统一退出登录 |`controller/SessionController.java:103` |`interfaces/rest/SessionController.java:98`
+|`GET` |`/auth/me` |统一身份鉴权 |当前用户、角色与权限  <<review-authme,设计图>> |`controller/SessionController.java:59` |`interfaces/rest/SessionController.java:62`
+|`GET` |`/auth/permissions/{permission}` |统一身份鉴权 |校验当前用户是否具备指定前端权限 |`controller/SessionController.java:71` |`interfaces/rest/SessionController.java:72`
+|`GET` |`/auth/api-permissions/{operationId}` |统一身份鉴权 |判断当前用户能否调用指定 API 接口 |`controller/SessionController.java:87` |`interfaces/rest/SessionController.java:85`
+|`GET` |`/auth/departments` |统一身份鉴权 |分页查询统一身份部门 |`controller/IdentityDirectoryController.java:38` |`interfaces/rest/IdentityDirectoryController.java:34`
+|`GET` |`/auth/departments/{departmentId}/users` |统一身份鉴权 |分页查询部门内的统一身份用户 |`controller/IdentityDirectoryController.java:67` |`interfaces/rest/IdentityDirectoryController.java:60`
+|`GET` |`/auth/users/{userId}` |统一身份鉴权 |按统一身份标识查询用户 |`controller/IdentityDirectoryController.java:96` |`interfaces/rest/IdentityDirectoryController.java:86`
+|`GET` |`/.well-known/jwks.json` |签名公钥 |获取 JWT 验签公钥 |`controller/SigningKeyController.java:16` |`interfaces/rest/SigningKeyController.java:17`
+|`GET` |`/api/v1/applications` |应用与权限 |查询应用列表 |`controller/ApplicationController.java:41` |`interfaces/rest/ApplicationController.java:42`
+|`POST` |`/api/v1/applications` |应用与权限 |新增应用 |`controller/ApplicationController.java:56` |`interfaces/rest/ApplicationController.java:57`
+|`PATCH` |`/api/v1/applications/{applicationId}` |应用与权限 |修改应用名称 |`controller/ApplicationController.java:68` |`interfaces/rest/ApplicationController.java:69`
+|`GET` |`/api/v1/applications/{applicationId}/permissions` |应用与权限 |查看应用权限树 |`controller/ApplicationController.java:83` |`interfaces/rest/ApplicationController.java:84`
+|`POST` |`/api/v1/applications/{applicationId}/permissions` |应用与权限 |登记菜单或按钮权限  <<review-permission,设计图>> |`controller/ApplicationController.java:95` |`interfaces/rest/ApplicationController.java:96`
+|`GET` |`/api/v1/applications/{applicationId}/permissions/{permissionId}` |应用与权限 |查看权限及关联接口 |`controller/ApplicationController.java:130` |`interfaces/rest/ApplicationController.java:145`
+|`PATCH` |`/api/v1/applications/{applicationId}/permissions/{permissionId}` |应用与权限 |保存权限资料和关联接口 |`controller/ApplicationController.java:111` |`interfaces/rest/ApplicationController.java:121`
+|`GET` |`/api/v1/roles` |角色管理 |查看或搜索角色 |`controller/RoleController.java:39` |`interfaces/rest/RoleController.java:32`
+|`POST` |`/api/v1/roles` |角色管理 |新增业务角色及继承配置 |`controller/RoleController.java:60` |`interfaces/rest/RoleController.java:56`
+|`GET` |`/api/v1/roles/{roleId}` |角色管理 |查看角色直接配置、继承关系及有效权限 |`controller/RoleController.java:72` |`interfaces/rest/RoleController.java:68`
+|`PUT` |`/api/v1/roles/{roleId}` |角色管理 |保存角色直接权限与继承关系  <<review-role,设计图>> |`controller/RoleController.java:84` |`interfaces/rest/RoleController.java:80`
+|`DELETE` |`/api/v1/roles/{roleId}` |角色管理 |删除未关联用户的业务角色 |`controller/RoleController.java:99` |`interfaces/rest/RoleController.java:95`
+|`GET` |`/api/v1/departments` |用户与部门 |查看部门结构 |`controller/DepartmentController.java:36` |`interfaces/rest/DepartmentController.java:29`
+|`POST` |`/api/v1/departments` |用户与部门 |新增部门 |`controller/DepartmentController.java:44` |`interfaces/rest/DepartmentController.java:37`
+|`PATCH` |`/api/v1/departments/{departmentId}` |用户与部门 |修改部门信息  <<review-department,设计图>> |`controller/DepartmentController.java:56` |`interfaces/rest/DepartmentController.java:49`
+|`GET` |`/api/v1/users` |用户与部门 |按管理范围查看或搜索用户 |`controller/UserController.java:40` |`interfaces/rest/UserController.java:35`
+|`POST` |`/api/v1/users` |用户与部门 |新增用户 |`controller/UserController.java:76` |`interfaces/rest/UserController.java:73`
+|`GET` |`/api/v1/users/{userId}` |用户与部门 |查看用户信息及已有角色 |`controller/UserController.java:64` |`interfaces/rest/UserController.java:61`
+|`PATCH` |`/api/v1/users/{userId}` |用户与部门 |修改用户、账号状态或所属部门  <<review-user,设计图>> |`controller/UserController.java:89` |`interfaces/rest/UserController.java:94`
+|`PUT` |`/api/v1/users/{userId}/roles` |用户授权 |保存单个用户的业务角色 |`controller/AuthorizationController.java:37` |`interfaces/rest/UserRoleController.java:28`
+|`PATCH` |`/api/v1/user-role-assignments` |用户授权 |批量分配或撤销业务角色 |`controller/AuthorizationController.java:52` |`interfaces/rest/UserRoleController.java:43`
+|`GET` |`/api/v1/me/permissions` |我的权限 |查看我的权限 |`controller/AuthorizationController.java:63` |`interfaces/rest/MyPermissionController.java:21`
+|`GET` |`/api/v1/operation-logs` |操作记录 |查看或搜索操作记录 |`controller/OperationLogController.java:26` |`interfaces/rest/OperationLogController.java:26`
+|`GET` |`/api/v1/applications/{applicationId}/apis` |API 登记 |查询应用 API 清单 |`controller/ApiController.java:26` |`interfaces/rest/ApiController.java:34`
+|`POST` |`/api/v1/applications/{applicationId}/apis` |API 登记 |登记 API |`controller/ApiController.java:47` |`interfaces/rest/ApiController.java:55`
+|`PATCH` |`/api/v1/applications/{applicationId}/apis/{apiId}` |API 登记 |编辑 API 登记 |`controller/ApiController.java:62` |`interfaces/rest/ApiController.java:74`
+|`DELETE` |`/api/v1/applications/{applicationId}/apis/{apiId}` |API 登记 |移除 API 登记 |`controller/ApiController.java:79` |`interfaces/rest/ApiController.java:96`
+|`GET` |`/api/v1/permission-catalog` |角色管理 |读取角色配置权限目录 |`controller/PermissionCatalogController.java:19` |`interfaces/rest/PermissionCatalogController.java:21`
+|`GET` |`/api/v1/me/requestable-permissions` |权限申请 |查询本人可申请的权限 |`controller/PermissionRequestController.java:27` |`interfaces/rest/PermissionRequestController.java:47`
+|`GET` |`/api/v1/permission-requests` |权限申请 |查询本人或待审核的权限申请 |`controller/PermissionRequestController.java:35` |`interfaces/rest/PermissionRequestController.java:55`
+|`POST` |`/api/v1/permission-requests` |权限申请 |提交本人权限申请 |`controller/PermissionRequestController.java:56` |`interfaces/rest/PermissionRequestController.java:83`
+|`GET` |`/api/v1/permission-requests/{requestId}` |权限申请 |查看权限申请及审核角色 |`controller/PermissionRequestController.java:68` |`interfaces/rest/PermissionRequestController.java:96`
+|`POST` |`/api/v1/permission-requests/{requestId}/withdrawals` |权限申请 |撤回本人待审核申请 |`controller/PermissionRequestController.java:79` |`interfaces/rest/PermissionRequestController.java:107`
+|`POST` |`/api/v1/permission-requests/{requestId}/reviews` |权限申请 |审核权限申请并分配业务角色  <<review-review,设计图>> |`controller/PermissionRequestController.java:90` |`interfaces/rest/PermissionRequestController.java:118`
+|`GET` |`/api/v1/role-creation-requests` |角色创建申请 |查询角色创建申请 |`controller/RoleCreationRequestController.java:27` |`interfaces/rest/RoleCreationRequestController.java:44`
+|`POST` |`/api/v1/role-creation-requests` |角色创建申请 |提交角色创建申请 |`controller/RoleCreationRequestController.java:45` |`interfaces/rest/RoleCreationRequestController.java:65`
+|`GET` |`/api/v1/role-creation-requests/{requestId}` |角色创建申请 |查看角色创建申请配置 |`controller/RoleCreationRequestController.java:57` |`interfaces/rest/RoleCreationRequestController.java:78`
+|`POST` |`/api/v1/role-creation-requests/{requestId}/reviews` |角色创建申请 |创建角色并通过或拒绝申请  <<review-creation,设计图>> |`controller/RoleCreationRequestController.java:68` |`interfaces/rest/RoleCreationRequestController.java:89`
+|===

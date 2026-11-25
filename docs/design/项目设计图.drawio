@@ -4311,31 +4311,54 @@
             <mxRectangle height="40" width="224" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="rbac1db-db-application-simple-row-4" parent="rbac1db-db-application" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;fillColor=none;collapsible=0;dropTarget=0;fixedHeader=1;" value="" vertex="1">
-          <mxGeometry height="112" width="800" y="208" as="geometry" />
+        <mxCell id="rbac1db-db-application-v2-field-row" parent="rbac1db-db-application" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;fillColor=none;collapsible=0;dropTarget=0;fixedHeader=1;" value="" vertex="1">
+          <mxGeometry height="40" width="800" y="208" as="geometry" />
         </mxCell>
-        <mxCell id="rbac1db-db-application-constraints" connectable="0" parent="rbac1db-db-application-simple-row-4" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;fontFamily=SimSun;fontStyle=1;fontColor=#000000;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;colspan=4;" value="code 在登录 systems 和 JWT aud 中标识目标应用，保持固定。&lt;br&gt;本系统也登记为应用；不另存旧版应用令牌。" vertex="1">
+        <mxCell id="rbac1db-db-application-v2-field-row-0" connectable="0" parent="rbac1db-db-application-v2-field-row" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;fontSize=22;" value="" vertex="1">
+          <mxGeometry height="40" width="76" as="geometry">
+            <mxRectangle height="40" width="76" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-v2-field-row-1" connectable="0" parent="rbac1db-db-application-v2-field-row" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;" value="role_codes_enabled" vertex="1">
+          <mxGeometry height="40" width="320" x="76" as="geometry">
+            <mxRectangle height="40" width="320" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-v2-field-row-2" connectable="0" parent="rbac1db-db-application-v2-field-row" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;" value="BOOLEAN" vertex="1">
+          <mxGeometry height="40" width="180" x="396" as="geometry">
+            <mxRectangle height="40" width="180" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-v2-field-row-3" connectable="0" parent="rbac1db-db-application-v2-field-row" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;" value="非空，默认 FALSE" vertex="1">
+          <mxGeometry height="40" width="224" x="576" as="geometry">
+            <mxRectangle height="40" width="224" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-simple-row-4" parent="rbac1db-db-application" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;fillColor=none;collapsible=0;dropTarget=0;fixedHeader=1;" value="" vertex="1">
+          <mxGeometry height="72" width="800" y="248" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac1db-db-application-constraints" connectable="0" parent="rbac1db-db-application-simple-row-4" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;fontFamily=SimSun;fontStyle=1;fontColor=#000000;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;colspan=4;" value="code 在登录 systems 和 JWT aud 中标识目标应用，保持固定。&lt;br&gt;权限中心也作为应用登记。" vertex="1">
           <mxGeometry height="112" width="800" as="geometry">
-            <mxRectangle height="112" width="76" as="alternateBounds" />
+            <mxRectangle height="72" width="76" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
         <mxCell id="rbac1db-db-application-simple-hidden-1" connectable="0" parent="rbac1db-db-application-simple-row-4" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;fontFamily=SimSun;fontStyle=1;fontColor=#000000;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=19;" value="" vertex="1" visible="0">
           <mxGeometry height="112" width="320" x="76" as="geometry">
-            <mxRectangle height="112" width="320" as="alternateBounds" />
+            <mxRectangle height="72" width="320" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
         <mxCell id="rbac1db-db-application-simple-hidden-2" connectable="0" parent="rbac1db-db-application-simple-row-4" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;fontFamily=SimSun;fontStyle=1;fontColor=#000000;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=19;" value="" vertex="1" visible="0">
           <mxGeometry height="112" width="180" x="396" as="geometry">
-            <mxRectangle height="112" width="180" as="alternateBounds" />
+            <mxRectangle height="72" width="180" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
         <mxCell id="rbac1db-db-application-simple-hidden-3" connectable="0" parent="rbac1db-db-application-simple-row-4" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;fontFamily=SimSun;fontStyle=1;fontColor=#000000;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=19;" value="" vertex="1" visible="0">
           <mxGeometry height="112" width="224" x="576" as="geometry">
-            <mxRectangle height="112" width="224" as="alternateBounds" />
+            <mxRectangle height="72" width="224" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
         <mxCell id="rbac1db-db-api-permission" parent="1" style="shape=table;html=1;whiteSpace=wrap;startSize=52;container=1;collapsible=0;childLayout=tableLayout;fixedHeader=1;rowLines=1;columnLines=1;resizeLast=0;recursiveResize=0;strokeColor=#000000;strokeWidth=3;fontFamily=SimSun;fontStyle=1;fontColor=#000000;fontSize=28;align=left;verticalAlign=top;spacingLeft=12;spacingTop=12;fillColor=#FFFFFF;swimlaneFillColor=#FFFFFF;" value="API-权限关联表　sys_api_permission" vertex="1">
-          <mxGeometry height="280" width="772.8335808515549" x="3021" y="3731" as="geometry" />
+          <mxGeometry height="72" width="772.8335808515549" x="3021" y="3731" as="geometry" />
         </mxCell>
         <mxCell id="rbac1db-db-api-permission-simple-row-0" parent="rbac1db-db-api-permission" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;fillColor=none;collapsible=0;dropTarget=0;fixedHeader=1;" value="" vertex="1">
           <mxGeometry height="36" width="772.8335808515549" y="52" as="geometry" />
@@ -5667,7 +5690,7 @@
         <mxCell id="rbac1db-role-inheritance-row-3" parent="rbac1db-role-inheritance" value="" vertex="1" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;fillColor=none;collapsible=0;dropTarget=0;fixedHeader=1;">
           <mxGeometry x="0" y="176" width="730" height="128" as="geometry" />
         </mxCell>
-        <mxCell id="rbac1db-role-inheritance-cell-3-0" parent="rbac1db-role-inheritance-row-3" value="联合主键 (role_id, inherited_role_id)。&lt;br&gt;两列外键 → sys_role.id，删除限制 RESTRICT。&lt;br&gt;反向索引 inherited_role_id；CHECK：两列不相等。&lt;br&gt;只记录直接继承，不保存传递闭包。" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;colspan=4;">
+        <mxCell id="rbac1db-role-inheritance-cell-3-0" parent="rbac1db-role-inheritance-row-3" value="联合主键 (role_id, inherited_role_id)。&lt;br&gt;两列外键 → sys_role.id，删除限制 RESTRICT。&lt;br&gt;反向索引 inherited_role_id；业务层校验防环。&lt;br&gt;只记录直接继承，不保存传递闭包。" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;colspan=4;">
           <mxGeometry x="0" y="0" width="730" height="128" as="geometry">
             <mxRectangle width="120" height="128" as="alternateBounds" />
           </mxGeometry>
@@ -5826,6 +5849,134 @@
         <mxCell id="rbac1db-role-create-request-inheritance-role-snapshot" parent="1" source="rbac1db-db-role" target="rbac1db-role-create-request-inheritance" edge="1" value="父角色快照" style="html=1;whiteSpace=nowrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;noEdgeStyle=1;edgeStyle=none;rounded=0;strokeWidth=3;strokeColor=#B91C1C;fontSize=24;startFill=0;endFill=0;startSize=15;endSize=15;labelBackgroundColor=#FFFFFF;exitPerimeter=0;entryPerimeter=0;align=center;verticalAlign=middle;startArrow=ERzeroToOne;endArrow=ERzeroToMany;dashed=1;dashPattern=8 5;exitX=1;exitY=0.2;entryX=0.18;entryY=1;labelWidth=150;">
           <mxGeometry relative="1" x="0" y="0" as="geometry">
             <mxPoint x="0" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code" parent="1" value="应用角色码表　sys_application_role_code（新增）" vertex="1" style="shape=table;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;startSize=52;container=1;collapsible=0;childLayout=tableLayout;fixedHeader=1;rowLines=1;columnLines=1;resizeLast=0;recursiveResize=0;fillColor=#FCECEC;swimlaneFillColor=#FFFFFF;strokeColor=#B91C1C;strokeWidth=3;fontSize=28;align=left;verticalAlign=top;spacingLeft=12;spacingTop=12;">
+          <mxGeometry x="2470" y="3342" width="800" height="284" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-0" parent="rbac1db-db-application-role-code" value="" vertex="1" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;fillColor=none;collapsible=0;dropTarget=0;fixedHeader=1;">
+          <mxGeometry x="0" y="52" width="800" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-0-0" parent="rbac1db-db-application-role-code-row-0" value="键" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=24;">
+          <mxGeometry x="0" y="0" width="108" height="36" as="geometry">
+            <mxRectangle width="108" height="36" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-0-1" parent="rbac1db-db-application-role-code-row-0" value="字段" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=24;">
+          <mxGeometry x="108" y="0" width="310" height="36" as="geometry">
+            <mxRectangle width="310" height="36" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-0-2" parent="rbac1db-db-application-role-code-row-0" value="类型" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=24;">
+          <mxGeometry x="418" y="0" width="178" height="36" as="geometry">
+            <mxRectangle width="178" height="36" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-0-3" parent="rbac1db-db-application-role-code-row-0" value="约束" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=24;">
+          <mxGeometry x="596" y="0" width="204" height="36" as="geometry">
+            <mxRectangle width="204" height="36" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-1" parent="rbac1db-db-application-role-code" value="" vertex="1" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;fillColor=none;collapsible=0;dropTarget=0;fixedHeader=1;">
+          <mxGeometry x="0" y="88" width="800" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-1-0" parent="rbac1db-db-application-role-code-row-1" value="PK, FK" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;">
+          <mxGeometry x="0" y="0" width="108" height="40" as="geometry">
+            <mxRectangle width="108" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-1-1" parent="rbac1db-db-application-role-code-row-1" value="application_id" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;">
+          <mxGeometry x="108" y="0" width="310" height="40" as="geometry">
+            <mxRectangle width="310" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-1-2" parent="rbac1db-db-application-role-code-row-1" value="BIGINT" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;">
+          <mxGeometry x="418" y="0" width="178" height="40" as="geometry">
+            <mxRectangle width="178" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-1-3" parent="rbac1db-db-application-role-code-row-1" value="非空" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;">
+          <mxGeometry x="596" y="0" width="204" height="40" as="geometry">
+            <mxRectangle width="204" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-2" parent="rbac1db-db-application-role-code" value="" vertex="1" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;fillColor=none;collapsible=0;dropTarget=0;fixedHeader=1;">
+          <mxGeometry x="0" y="128" width="800" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-2-0" parent="rbac1db-db-application-role-code-row-2" value="PK, FK" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;">
+          <mxGeometry x="0" y="0" width="108" height="40" as="geometry">
+            <mxRectangle width="108" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-2-1" parent="rbac1db-db-application-role-code-row-2" value="role_id" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;">
+          <mxGeometry x="108" y="0" width="310" height="40" as="geometry">
+            <mxRectangle width="310" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-2-2" parent="rbac1db-db-application-role-code-row-2" value="BIGINT" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;">
+          <mxGeometry x="418" y="0" width="178" height="40" as="geometry">
+            <mxRectangle width="178" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-2-3" parent="rbac1db-db-application-role-code-row-2" value="非空" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;">
+          <mxGeometry x="596" y="0" width="204" height="40" as="geometry">
+            <mxRectangle width="204" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-3" parent="rbac1db-db-application-role-code" value="" vertex="1" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;fillColor=none;collapsible=0;dropTarget=0;fixedHeader=1;">
+          <mxGeometry x="0" y="168" width="800" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-3-0" parent="rbac1db-db-application-role-code-row-3" value="PK" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;">
+          <mxGeometry x="0" y="0" width="108" height="40" as="geometry">
+            <mxRectangle width="108" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-3-1" parent="rbac1db-db-application-role-code-row-3" value="role_code" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;">
+          <mxGeometry x="108" y="0" width="310" height="40" as="geometry">
+            <mxRectangle width="310" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-3-2" parent="rbac1db-db-application-role-code-row-3" value="VARCHAR(64)" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;">
+          <mxGeometry x="418" y="0" width="178" height="40" as="geometry">
+            <mxRectangle width="178" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-3-3" parent="rbac1db-db-application-role-code-row-3" value="非空、非纯空格" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;">
+          <mxGeometry x="596" y="0" width="204" height="40" as="geometry">
+            <mxRectangle width="204" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-4" parent="rbac1db-db-application-role-code" value="" vertex="1" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;fillColor=none;collapsible=0;dropTarget=0;fixedHeader=1;">
+          <mxGeometry x="0" y="208" width="800" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-4-0" parent="rbac1db-db-application-role-code-row-4" value="按应用给业务角色分配角色码，三列组成联合主键。&lt;br&gt;删除角色时级联删除映射；role_id 单独建索引。" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;colspan=4;">
+          <mxGeometry x="0" y="0" width="800" height="76" as="geometry">
+            <mxRectangle width="108" height="76" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-4-1" parent="rbac1db-db-application-role-code-row-4" value="" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;" visible="0">
+          <mxGeometry x="108" y="0" width="310" height="76" as="geometry">
+            <mxRectangle width="310" height="76" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-4-2" parent="rbac1db-db-application-role-code-row-4" value="" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;" visible="0">
+          <mxGeometry x="418" y="0" width="178" height="76" as="geometry">
+            <mxRectangle width="178" height="76" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-row-4-3" parent="rbac1db-db-application-role-code-row-4" value="" vertex="1" connectable="0" style="shape=partialRectangle;html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;align=left;verticalAlign=middle;spacingLeft=8;spacingRight=6;fontSize=22;" visible="0">
+          <mxGeometry x="596" y="0" width="204" height="76" as="geometry">
+            <mxRectangle width="204" height="76" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-application" parent="1" source="rbac1db-db-application" target="rbac1db-db-application-role-code" edge="1" value="应用" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;whiteSpace=nowrap;noEdgeStyle=1;edgeStyle=none;rounded=0;strokeWidth=3;strokeColor=#B91C1C;fontSize=24;startArrow=ERmandOne;endArrow=ERzeroToMany;startFill=0;endFill=0;startSize=15;endSize=15;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.46825000000000044;entryX=0;entryY=0.5;exitPerimeter=0;entryPerimeter=0;align=center;verticalAlign=middle;">
+          <mxGeometry relative="1" x="0" y="0" as="geometry">
+            <mxPoint x="0" y="-16" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1db-db-application-role-code-role" parent="1" source="rbac1db-db-role" target="rbac1db-db-application-role-code" edge="1" value="业务角色" style="html=1;whiteSpace=wrap;fontFamily=SimSun;fontStyle=1;fontColor=#B91C1C;whiteSpace=nowrap;noEdgeStyle=1;edgeStyle=none;rounded=0;strokeWidth=3;strokeColor=#B91C1C;fontSize=24;startArrow=ERmandOne;endArrow=ERzeroToMany;startFill=0;endFill=0;startSize=15;endSize=15;labelBackgroundColor=#FFFFFF;exitX=0;exitY=0.825564156101473;entryX=0.175;entryY=0;exitPerimeter=0;entryPerimeter=0;align=center;verticalAlign=middle;">
+          <mxGeometry relative="1" x="0" y="0" as="geometry">
+            <mxPoint x="0" y="-15" as="offset" />
           </mxGeometry>
         </mxCell>
       </root>
@@ -5991,7 +6142,7 @@
         <mxCell id="rbac1-structured-package-c4" value="rbac1" style="shape=folder;html=1;tabWidth=110;tabHeight=44;tabPosition=left;align=left;verticalAlign=top;spacingLeft=14;spacingTop=6;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#17365D;strokeWidth=2.2;fontFamily=SimHei, Heiti SC, sans-serif;fontSize=26;fontStyle=1;fontColor=#14283D;" vertex="1" parent="1">
           <mxGeometry x="40.0" y="160.0" width="2380.0" height="1440.0" as="geometry" />
         </mxCell>
-        <mxCell id="rbac1-structured-package-c5" value="controller&lt;br&gt;&lt;font style=&quot;font-family:FangSong, STFangsong, serif;font-size:19px;color:#3A5570;&quot;&gt;RoleController、PermissionRequestController、RoleCreationRequestController、SessionInterceptor、RestExceptionHandler 等&lt;/font&gt;" style="shape=folder;html=1;tabWidth=148;tabHeight=34;tabPosition=left;align=left;verticalAlign=top;spacingLeft=14;spacingTop=4;whiteSpace=wrap;fillColor=#EAF2F8;strokeColor=#17365D;strokeWidth=1.6;fontFamily=SimHei, Heiti SC, sans-serif;fontSize=21;fontStyle=1;fontColor=#14283D;" vertex="1" parent="1">
+        <mxCell id="rbac1-structured-package-c5" value="controller&lt;br&gt;&lt;font style=&quot;font-family:FangSong, STFangsong, serif;font-size:19px;color:#3A5570;&quot;&gt;RoleController、PermissionRequestController、RoleCreationRequestController、SessionInterceptor、ApiExceptionHandler 等&lt;/font&gt;" style="shape=folder;html=1;tabWidth=148;tabHeight=34;tabPosition=left;align=left;verticalAlign=top;spacingLeft=14;spacingTop=4;whiteSpace=wrap;fillColor=#EAF2F8;strokeColor=#17365D;strokeWidth=1.6;fontFamily=SimHei, Heiti SC, sans-serif;fontSize=21;fontStyle=1;fontColor=#14283D;" vertex="1" parent="1">
           <mxGeometry x="90.0" y="240.0" width="1580.0" height="210.0" as="geometry" />
         </mxCell>
         <mxCell id="rbac1-structured-package-c6" value="dto&lt;br&gt;&lt;font style=&quot;font-family:FangSong, STFangsong, serif;font-size:19px;color:#3A5570;&quot;&gt;RoleDTO、PermissionReviewDTO、RoleCreationReviewDTO 等请求体与校验&lt;/font&gt;" style="shape=folder;html=1;tabWidth=110;tabHeight=34;tabPosition=left;align=left;verticalAlign=top;spacingLeft=14;spacingTop=4;whiteSpace=wrap;fillColor=#EAF2F8;strokeColor=#17365D;strokeWidth=1.6;fontFamily=SimHei, Heiti SC, sans-serif;fontSize=21;fontStyle=1;fontColor=#14283D;" vertex="1" parent="1">
@@ -6097,7 +6248,7 @@
             <mxPoint x="1670.0" y="795.0" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="rbac1-structured-package-c24" value="虚线空心箭头表示包依赖（与源码 import 方向一致）。结构化实现采用自上而下依赖：controller → service → mapper → entity。" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=nowrap;align=left;verticalAlign=middle;fontFamily=FangSong, STFangsong, serif;fontSize=20;fontColor=#3A5570;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="rbac1-structured-package-c24" value="虚线空心箭头表示包依赖（展示主要源码依赖）。结构化实现采用自上而下依赖：controller → service → mapper → entity。" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=nowrap;align=left;verticalAlign=middle;fontFamily=FangSong, STFangsong, serif;fontSize=20;fontColor=#3A5570;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="40.0" y="1640.0" width="1319.6" height="30.0" as="geometry" />
         </mxCell>
         <mxCell id="rbac1-structured-package-c25" value="与 DDD 版的差异：没有独立 domain 层和仓储端口，没有依赖倒置；Service 直接消费 DTO、返回 VO，并通过 JPA Mapper 操作贫血实体表记录。" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=nowrap;align=left;verticalAlign=middle;fontFamily=FangSong, STFangsong, serif;fontSize=20;fontColor=#3A5570;fontStyle=1;" vertex="1" parent="1">
@@ -10047,7 +10198,7 @@
         <mxCell id="rbac1-structured-class-authme-c37" value="CurrentUserVO" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=46;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#D9E6F2;swimlaneFillColor=#FFFFFF;strokeColor=#17365D;strokeWidth=1.8;fontFamily=SimHei, Heiti SC, sans-serif;fontSize=22;fontColor=#14283D;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="2897.7" y="1097.2" width="284.6" height="165.5" as="geometry" />
         </mxCell>
-        <mxCell id="rbac1-structured-class-authme-c38" value="- userId: String&lt;br&gt;- roles: List&amp;lt;String&amp;gt;&lt;br&gt;- permissions: List&amp;lt;String&amp;gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;fontFamily=FangSong, STFangsong, serif;fontSize=18;fontColor=#14283D;fontStyle=1;whiteSpace=nowrap;" vertex="1" parent="rbac1-structured-class-authme-c37">
+        <mxCell id="rbac1-structured-class-authme-c38" value="- subject: String&lt;br&gt;- roles: List&amp;lt;String&amp;gt;&lt;br&gt;- permissions: List&amp;lt;String&amp;gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;fontFamily=FangSong, STFangsong, serif;fontSize=18;fontColor=#14283D;fontStyle=1;whiteSpace=nowrap;" vertex="1" parent="rbac1-structured-class-authme-c37">
           <mxGeometry x="0.0" y="46.0" width="284.6" height="93.5" as="geometry" />
         </mxCell>
         <mxCell id="rbac1-structured-class-authme-c39" value="" style="line;strokeWidth=1.4;fillColor=none;strokeColor=#17365D;html=1;" vertex="1" parent="rbac1-structured-class-authme-c37">
@@ -10125,6 +10276,24 @@
         </mxCell>
         <mxCell id="rbac1-structured-class-authme-c55" value="结构化版通过 RolePermissionService.Graph 一次性加载角色、权限和继承边，在 Service 层静态集合上完成祖先遍历与编码筛选。" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=nowrap;align=left;verticalAlign=middle;fontFamily=FangSong, STFangsong, serif;fontSize=20;fontColor=#3A5570;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="40.0" y="1389.3" width="3200.0" height="30.0" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac1-structured-class-authme-session-5" value="SessionService" style="swimlane;html=1;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=46;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#D9E6F2;swimlaneFillColor=#FFFFFF;strokeColor=#17365D;strokeWidth=1.8;fontFamily=SimHei, Heiti SC, sans-serif;fontSize=22;fontColor=#14283D;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="2136" y="161" width="625" height="148" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac1-structured-class-authme-session-6" value="" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;fontFamily=FangSong, STFangsong, serif;fontSize=18;fontColor=#14283D;fontStyle=1;whiteSpace=nowrap;" vertex="1" parent="rbac1-structured-class-authme-session-5">
+          <mxGeometry x="0.0" y="46" width="625" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac1-structured-class-authme-session-7" value="" style="line;strokeWidth=1.4;fillColor=none;strokeColor=#17365D;html=1;" vertex="1" parent="rbac1-structured-class-authme-session-5">
+          <mxGeometry x="0.0" y="74" width="625" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac1-structured-class-authme-session-8" value="+ applicationContext(audience: List&amp;lt;String&amp;gt;, applicationCode: String): String" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=12;fontFamily=FangSong, STFangsong, serif;fontSize=18;fontColor=#14283D;fontStyle=1;whiteSpace=nowrap;" vertex="1" parent="rbac1-structured-class-authme-session-5">
+          <mxGeometry x="0.0" y="82" width="625" height="66" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac1-structured-class-authme-session-edge" value="" style="html=1;rounded=0;edgeStyle=none;strokeWidth=2.2;strokeColor=#17365D;startArrow=none;exitX=1;exitY=0.471;exitPerimeter=0;entryX=0;entryY=0.5;entryPerimeter=0;endArrow=open;endFill=0;endSize=14;" edge="1" parent="1" source="rbac1-structured-class-authme-c5" target="rbac1-structured-class-authme-session-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac1-structured-class-authme-session-label" value="sessions" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=SimHei, Heiti SC, sans-serif;fontSize=20;fontColor=#14283D;fontStyle=1;whiteSpace=nowrap;" vertex="1" parent="1">
+          <mxGeometry x="1955" y="207" width="135" height="22" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
@@ -13647,7 +13816,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="rbac1-structured-seq-review-c85" value="13. request.setStatus(REJECTED)（与 APPROVED 同靠 JPA 脏检查保存）" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=bottom;whiteSpace=nowrap;fontFamily=FangSong, STFangsong, serif;fontSize=19;fontColor=#14283D;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="rbac1-structured-seq-review-c85" value="14. request.setStatus(REJECTED)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=bottom;whiteSpace=nowrap;fontFamily=FangSong, STFangsong, serif;fontSize=19;fontColor=#14283D;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="795.0" y="2176.0" width="734.4" height="26.0" as="geometry" />
         </mxCell>
         <mxCell id="rbac1-structured-seq-review-e86" value="" style="html=1;endArrow=block;endFill=1;endSize=11;strokeWidth=2;strokeColor=#17365D;" edge="1" parent="1">
@@ -13656,7 +13825,7 @@
             <mxPoint x="2726.0" y="2348.0" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="rbac1-structured-seq-review-c87" value="14. recordGlobalChange(actor, &quot;审核权限申请&quot;, detail, PERMISSION_REQUEST, id, name)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=bottom;whiteSpace=nowrap;fontFamily=FangSong, STFangsong, serif;fontSize=19;fontColor=#14283D;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="rbac1-structured-seq-review-c87" value="15. recordGlobalChange(actor, &quot;审核权限申请&quot;, detail, PERMISSION_REQUEST, id, name)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=bottom;whiteSpace=nowrap;fontFamily=FangSong, STFangsong, serif;fontSize=19;fontColor=#14283D;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="1318.7" y="2318.0" width="875.5" height="26.0" as="geometry" />
         </mxCell>
         <mxCell id="rbac1-structured-seq-review-e88" value="" style="html=1;endArrow=block;endFill=1;endSize=11;strokeWidth=2;strokeColor=#17365D;" edge="1" parent="1">
@@ -13665,7 +13834,7 @@
             <mxPoint x="3123.0" y="2448.0" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="rbac1-structured-seq-review-c89" value="15. settleUsers(List.of(applicantUserId))" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=bottom;whiteSpace=nowrap;fontFamily=FangSong, STFangsong, serif;fontSize=19;fontColor=#14283D;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="rbac1-structured-seq-review-c89" value="16. settleUsers(List.of(applicantUserId))" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=bottom;whiteSpace=nowrap;fontFamily=FangSong, STFangsong, serif;fontSize=19;fontColor=#14283D;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="1741.7" y="2418.0" width="426.6" height="26.0" as="geometry" />
         </mxCell>
         <mxCell id="rbac1-structured-seq-review-e90" value="" style="html=1;endArrow=open;endFill=0;endSize=12;strokeWidth=1.8;strokeColor=#17365D;dashed=1;dashPattern=8 6;" edge="1" parent="1">
@@ -13682,6 +13851,22 @@
         </mxCell>
         <mxCell id="rbac1-structured-seq-review-c93" value="与 DDD 版对比：没有 PermissionRequest.approve/reject/settleWith 和 ApprovalCandidates 领域对象，全部状态流转和候选计算集中在 PermissionRequestService；requireVisible 内部同时校验部门管理员审核范围。" style="text;html=1;strokeColor=none;fillColor=none;whiteSpace=nowrap;align=left;verticalAlign=middle;fontFamily=FangSong, STFangsong, serif;fontSize=20;fontColor=#3A5570;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="40.0" y="2778.0" width="2204.4" height="30.0" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac1-structured-seq-review-approved-execution" value="" style="rounded=0;html=1;fillColor=#D9E6F2;strokeColor=#17365D;strokeWidth=1.6;" vertex="1" parent="1">
+          <mxGeometry x="778.0" y="2118" width="18.0" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac1-structured-seq-review-approved-edge" value="" style="html=1;endArrow=block;endFill=1;endSize=11;strokeWidth=2;strokeColor=#17365D;rounded=0;edgeStyle=none;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="787" y="2092" as="sourcePoint" />
+            <mxPoint x="796" y="2118" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="833" y="2092" />
+              <mxPoint x="833" y="2118" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rbac1-structured-seq-review-approved-status" value="13. request.setStatus(APPROVED) / setApprovedRoleId(roleId)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=bottom;whiteSpace=nowrap;fontFamily=FangSong, STFangsong, serif;fontSize=19;fontColor=#14283D;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="795" y="2062" width="658" height="26.0" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
@@ -15115,7 +15300,7 @@
             <mxPoint x="772.4" y="343.2" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="rbac1-structured-seq-authme-c34" value="1. appCode = resolveApplication(audience, headerCode)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=FangSong, STFangsong, serif;fontSize=19;fontColor=#14283D;fontStyle=1;whiteSpace=nowrap;" vertex="1" parent="1">
+        <mxCell id="rbac1-structured-seq-authme-c34" value="1. appCode = applicationContext(audience, headerCode)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=FangSong, STFangsong, serif;fontSize=19;fontColor=#14283D;fontStyle=1;whiteSpace=nowrap;" vertex="1" parent="1">
           <mxGeometry x="219.2" y="312.2" width="540.2" height="26.0" as="geometry" />
         </mxCell>
         <mxCell id="rbac1-structured-seq-authme-e35" value="" style="html=1;endArrow=open;endFill=0;endSize=12;strokeWidth=1.8;strokeColor=#A61B29;dashed=1;dashPattern=8 6;" edge="1" parent="1">

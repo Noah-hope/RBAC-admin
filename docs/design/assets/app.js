@@ -6,14 +6,23 @@
   /* 1. 章节面板秒切（彻底避免长滚动跳偏） */
   const panels = $$('main > section.panel');
   const tocLinks = $$('.toc a');
+  const caseLinks = $('#toc-cases');
+  const caseNav = $('.toc a[href="#cases"]');
   function navigate() {
-    const raw = location.hash.slice(1) || 'overview';
-    const targetId = raw.startsWith('sc-') ? 'cases' : (panels.some(p => p.id === raw) ? raw : 'overview');
+    const raw = location.hash.slice(1);
+    const target = document.getElementById(raw);
+    const currentCase = target?.matches('.scenario') ? target : null;
+    const targetId = currentCase ? 'cases' : (panels.includes(target) ? raw : 'overview');
     panels.forEach(p => { p.hidden = p.id !== targetId; });
-    tocLinks.forEach(a => a.classList.toggle('active', a.hash === '#' + raw || (!raw.startsWith('sc-') && a.hash === '#' + targetId)));
-    if (raw.startsWith('sc-')) {
-      const el = document.getElementById(raw);
-      if (el) el.scrollIntoView({ behavior: 'auto', block: 'start' });
+    caseLinks.hidden = targetId !== 'cases';
+    caseNav.setAttribute('aria-expanded', String(!caseLinks.hidden));
+    const currentHash = '#' + (currentCase?.id ?? targetId);
+    tocLinks.forEach(a => {
+      if (a.hash === currentHash) a.setAttribute('aria-current', currentCase ? 'location' : 'page');
+      else a.removeAttribute('aria-current');
+    });
+    if (currentCase) {
+      currentCase.scrollIntoView({ behavior: 'auto', block: 'start' });
     } else {
       window.scrollTo(0, 0);
     }
@@ -126,6 +135,8 @@
     const kindBtns = $$('[data-kind]', cmp);
     const layoutBtns = $$('.compare-bar button[data-layout]', cmp);
     const fullBtn = $('[data-compare-full]', cmp);
+    const fullLabel = fullBtn && $('.full-label', fullBtn);
+    const enterFullText = fullLabel?.textContent;
 
     const setKind = kind => {
       kindBtns.forEach(b => b.setAttribute('aria-checked', String(b.dataset.kind === kind)));
@@ -148,8 +159,7 @@
     const setFull = on => {
       cmp.classList.toggle('is-full', on);
       document.body.classList.toggle('has-full', on);
-      $('.full-label', fullBtn).textContent = on ? '退出对照（Esc）' : '全屏对照';
-      if (on && grid.dataset.layout === 'stack') setLayout('both');
+      fullLabel.textContent = on ? '退出全屏（Esc）' : enterFullText;
       requestAnimationFrame(() => figs.forEach(f => { if (!f.hidden) viewers.get(f.id).fit(); }));
     };
     kindBtns.forEach(b => b.addEventListener('click', () => setKind(b.dataset.kind)));
