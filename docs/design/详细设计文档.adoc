@@ -1,61 +1,38 @@
-= RBAC1 权限管理系统 · 详细设计文档（结构化与 DDD 双实现对照）
-:toc: left
-:toc-title: 目录
-:toclevels: 2
-:sectnums:
+= RBAC1 详细设计图
 :imagesdir: assets
 
 [[oral-review]]
-== 第二轮口试检查索引
+== 看图索引
 
-<<backend-packages,两套后端包图>> · <<swarm-deployment,部署图>> · link:数据库设计文档.adoc[数据库图] · link:index.html[交互图册]
+<<backend-packages,后端包图>> · <<domain-model,领域全景图>> · <<swarm-deployment,部署图>> · link:数据库设计文档.adoc[数据库图]
 
-[cols="3,2,2",options="header"]
+[cols="2,1,1",options="header"]
 |===
-| API 与用例 | 结构化 | DDD
-| <<review-role,角色继承配置>> +
-pass:[<code>PUT /api/v1/<wbr>roles/<wbr>{roleId}</code>]
-| link:assets/rbac1-structured-class-role.svg[类图] · link:assets/rbac1-structured-seq-role.svg[顺序图] +
-link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/RoleService.java[源码]
-| link:assets/rbac1-ddd-class-role.svg[类图] · link:assets/rbac1-ddd-seq-role.svg[顺序图] +
-link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/role/RoleApplicationService.java[源码]
-| <<review-review,权限申请审核>> +
-pass:[<code>POST /api/v1/<wbr>permission-requests/<wbr>{requestId}/<wbr>reviews</code>]
-| link:assets/rbac1-structured-class-review.svg[类图] · link:assets/rbac1-structured-seq-review.svg[顺序图] +
-link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/PermissionRequestService.java[源码]
-| link:assets/rbac1-ddd-class-review.svg[类图] · link:assets/rbac1-ddd-seq-review.svg[顺序图] +
-link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/request/PermissionRequestApplicationService.java[源码]
-| <<review-creation,角色创建申请审批>> +
-pass:[<code>POST /api/v1/<wbr>role-creation-requests/<wbr>{requestId}/<wbr>reviews</code>]
-| link:assets/rbac1-structured-class-creation.svg[类图] · link:assets/rbac1-structured-seq-creation.svg[顺序图] +
-link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/RoleCreationRequestService.java[源码]
-| link:assets/rbac1-ddd-class-creation.svg[类图] · link:assets/rbac1-ddd-seq-creation.svg[顺序图] +
-link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/request/RoleCreationRequestApplicationService.java[源码]
-| <<review-user,用户调动与状态管理>> +
-pass:[<code>PATCH /api/v1/<wbr>users/<wbr>{userId}</code>]
-| link:assets/rbac1-structured-class-user.svg[类图] · link:assets/rbac1-structured-seq-user.svg[顺序图] +
-link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/UserService.java[源码]
-| link:assets/rbac1-ddd-class-user.svg[类图] · link:assets/rbac1-ddd-seq-user.svg[顺序图] +
-link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/user/UserApplicationService.java[源码]
-| <<review-permission,权限登记与接口关联>> +
-pass:[<code>POST /api/v1/<wbr>applications/<wbr>{applicationId}/<wbr>permissions</code>]
-| link:assets/rbac1-structured-class-permission.svg[类图] · link:assets/rbac1-structured-seq-permission.svg[顺序图] +
-link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/ApplicationService.java[源码]
-| link:assets/rbac1-ddd-class-permission.svg[类图] · link:assets/rbac1-ddd-seq-permission.svg[顺序图] +
-link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/app/PermissionApplicationService.java[源码]
-| <<review-department,部门调整与防环校验>> +
-pass:[<code>PATCH /api/v1/<wbr>departments/<wbr>{departmentId}</code>]
-| link:assets/rbac1-structured-class-department.svg[类图] · link:assets/rbac1-structured-seq-department.svg[顺序图] +
-link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/DepartmentService.java[源码]
-| link:assets/rbac1-ddd-class-department.svg[类图] · link:assets/rbac1-ddd-seq-department.svg[顺序图] +
-link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/department/DepartmentApplicationService.java[源码]
-| <<review-authme,统一身份与有效权限查询>> +
-`GET /auth/me`
-| link:assets/rbac1-structured-class-authme.svg[类图] · link:assets/rbac1-structured-seq-authme.svg[顺序图] +
-link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/PermissionCheckService.java[源码]
-| link:assets/rbac1-ddd-class-authme.svg[类图] · link:assets/rbac1-ddd-seq-authme.svg[顺序图] +
-link:../../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/AccessApplicationService.java[源码]
+| 用例 | 结构化 | DDD
+| <<review-role,角色继承配置>>
+| link:assets/rbac1-structured-class-role.svg[类图] · link:assets/rbac1-structured-seq-role.svg[顺序图]
+| link:assets/rbac1-ddd-class-role.svg[类图] · link:assets/rbac1-ddd-seq-role.svg[顺序图]
+| <<review-review,权限申请审核>>
+| link:assets/rbac1-structured-class-review.svg[类图] · link:assets/rbac1-structured-seq-review.svg[顺序图]
+| link:assets/rbac1-ddd-class-review.svg[类图] · link:assets/rbac1-ddd-seq-review.svg[顺序图]
+| <<review-creation,角色创建申请审批>>
+| link:assets/rbac1-structured-class-creation.svg[类图] · link:assets/rbac1-structured-seq-creation.svg[顺序图]
+| link:assets/rbac1-ddd-class-creation.svg[类图] · link:assets/rbac1-ddd-seq-creation.svg[顺序图]
+| <<review-user,用户调动与状态管理>>
+| link:assets/rbac1-structured-class-user.svg[类图] · link:assets/rbac1-structured-seq-user.svg[顺序图]
+| link:assets/rbac1-ddd-class-user.svg[类图] · link:assets/rbac1-ddd-seq-user.svg[顺序图]
+| <<review-permission,权限登记与接口关联>>
+| link:assets/rbac1-structured-class-permission.svg[类图] · link:assets/rbac1-structured-seq-permission.svg[顺序图]
+| link:assets/rbac1-ddd-class-permission.svg[类图] · link:assets/rbac1-ddd-seq-permission.svg[顺序图]
+| <<review-department,部门调整与防环校验>>
+| link:assets/rbac1-structured-class-department.svg[类图] · link:assets/rbac1-structured-seq-department.svg[顺序图]
+| link:assets/rbac1-ddd-class-department.svg[类图] · link:assets/rbac1-ddd-seq-department.svg[顺序图]
+| <<review-authme,统一身份与有效权限查询>>
+| link:assets/rbac1-structured-class-authme.svg[类图] · link:assets/rbac1-structured-seq-authme.svg[顺序图]
+| link:assets/rbac1-ddd-class-authme.svg[类图] · link:assets/rbac1-ddd-seq-authme.svg[顺序图]
 |===
+
+<<api-source-index,按 API 查源码>>
 
 [[backend-packages]]
 == 后端系统分层包图
@@ -68,6 +45,7 @@ image::rbac1-ddd-package.svg[RBAC1-DDD-包图-后端分层,width=100%,link=asset
 
 image::rbac1-structured-package.svg[RBAC1-结构化-包图-后端分层,width=100%,link=assets/rbac1-structured-package.svg]
 
+[[domain-model]]
 == DDD 领域模型全景图
 
 image::rbac1-ddd-domain-model.svg[RBAC1-DDD-类图-领域模型全景,width=100%,link=assets/rbac1-ddd-domain-model.svg]
@@ -80,7 +58,9 @@ image::rbac1-swarm-deployment.svg[RBAC1-部署图-DockerSwarm集群,width=100%,l
 == 核心 API 双实现详细设计（7 组代表性用例）
 
 [[review-role]]
-=== 用例 01：角色继承配置（`PUT /api/v1/roles/{roleId}`）
+=== 角色继承配置
+
+`PUT /api/v1/roles/{roleId}`
 
 ==== 类图对照（角色继承配置）
 
@@ -110,7 +90,9 @@ image::rbac1-structured-seq-role.svg[结构化顺序图 · 角色继承配置,wi
 ====
 
 [[review-review]]
-=== 用例 02：权限申请审核（`POST /api/v1/permission-requests/{requestId}/reviews`）
+=== 权限申请审核
+
+`POST /api/v1/permission-requests/{requestId}/reviews`
 
 ==== 类图对照（权限申请审核）
 
@@ -140,7 +122,9 @@ image::rbac1-structured-seq-review.svg[结构化顺序图 · 权限申请审核,
 ====
 
 [[review-creation]]
-=== 用例 03：角色创建申请审批（`POST /api/v1/role-creation-requests/{requestId}/reviews`）
+=== 角色创建申请审批
+
+`POST /api/v1/role-creation-requests/{requestId}/reviews`
 
 ==== 类图对照（角色创建申请审批）
 
@@ -168,7 +152,9 @@ image::rbac1-structured-seq-creation.svg[结构化顺序图 · 角色创建申�
 ====
 
 [[review-user]]
-=== 用例 04：用户调动与状态管理（`PATCH /api/v1/users/{userId}`）
+=== 用户调动与状态管理
+
+`PATCH /api/v1/users/{userId}`
 
 ==== 类图对照（用户调动与状态管理）
 
@@ -197,7 +183,9 @@ image::rbac1-structured-seq-user.svg[结构化顺序图 · 用户调动与状态
 ====
 
 [[review-permission]]
-=== 用例 05：权限登记与接口关联（`POST /api/v1/applications/{applicationId}/permissions`）
+=== 权限登记与接口关联
+
+`POST /api/v1/applications/{applicationId}/permissions`
 
 ==== 类图对照（权限登记与接口关联）
 
@@ -226,7 +214,9 @@ image::rbac1-structured-seq-permission.svg[结构化顺序图 · 权限登记与
 ====
 
 [[review-department]]
-=== 用例 06：部门调整与防环校验（`PATCH /api/v1/departments/{departmentId}`）
+=== 部门调整与防环校验
+
+`PATCH /api/v1/departments/{departmentId}`
 
 ==== 类图对照（部门调整与防环校验）
 
@@ -255,7 +245,9 @@ image::rbac1-structured-seq-department.svg[结构化顺序图 · 部门调整与
 ====
 
 [[review-authme]]
-=== 用例 07：统一身份与有效权限查询（`GET /auth/me`）
+=== 统一身份与有效权限查询
+
+`GET /auth/me`
 
 ==== 类图对照（统一身份与有效权限查询）
 
@@ -284,6 +276,7 @@ image::rbac1-structured-seq-authme.svg[结构化顺序图 · 统一身份与有�
 * 结构化继承计算：link:../../rbac1-structured/src/main/java/com/rbac/rbac1/service/RolePermissionService.java[`RolePermissionService.java`]
 ====
 
+[[api-source-index]]
 == 统一 HTTP 接口与双后端源码映射总表（47 项）
 
 下表列出 `docs/03-api/RBAC1-api.yaml` 定义的全部 47 个接口及其在结构化后端与 DDD 后端中的入口位置，供代码走查快速定位：

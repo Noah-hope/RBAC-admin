@@ -1,9 +1,9 @@
 = RBAC 权限管理系统 · 数据库设计文档
-:toc: left
-:toclevels: 3
-:sectnums:
 :imagesdir: assets
 
+<<er-diagrams,概念 ER 图>> · <<physical-tables,物理表结构>> · <<data-dictionary,数据字典>>
+
+[[er-diagrams]]
 == 概念模型设计（ER 图）
 
 === RBAC1 核心概念 ER 图（含角色继承）
@@ -14,6 +14,7 @@ image::rbac1-conceptual-er.svg[RBAC1 概念 ER 图,width=100%,link=assets/rbac1-
 
 image::rbac-conceptual-er.svg[RBAC0 概念 ER 图,width=100%,link=assets/rbac-conceptual-er.svg]
 
+[[physical-tables]]
 == 物理数据库表结构
 
 === RBAC1 数据库物理表关系图（18 张表）
@@ -24,6 +25,7 @@ image::rbac1-database-tables.svg[RBAC1 数据库表结构,width=100%,link=assets
 
 image::rbac-database-tables.svg[RBAC0 数据库表结构,width=100%,link=assets/rbac-database-tables.svg]
 
+[[data-dictionary]]
 == 完整数据字典（Flyway V1–V2 共 18 张表）
 
 [cols="2,3,2",options="header"]
