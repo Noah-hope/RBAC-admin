@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2880 2370" width="2880" height="2370">
+<rect x="0" y="0" width="2880" height="2370" fill="#FFFFFF"/>
+<defs>
+<marker id="m-solid" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 z" fill="#17365D"/></marker>
+<marker id="m-open" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#17365D" stroke-width="1.9"/></marker>
+<marker id="m-open-err" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#A61B29" stroke-width="1.9"/></marker>
+<marker id="m-tri" markerWidth="16" markerHeight="14" refX="15" refY="7" orient="auto"><path d="M1,1 L15,7 L1,13 z" fill="#FFFFFF" stroke="#17365D" stroke-width="1.9"/></marker>
+</defs>
+<text x="50.0" y="69.6" text-anchor="start" font-size="40.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">RBAC1 面向对象顺序图 · 部门调整与防环校验</text>
+<text x="50.0" y="114.0" text-anchor="start" font-size="21.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">用例：PATCH /api/v1/departments/{departmentId}。Department.moveUnder 委托 DepartmentTree.ensureCanMove 防止自环与子树成环。</text>
+<line x1="40.0" y1="134.0" x2="2840.0" y2="134.0" stroke="#B3C5D4" stroke-width="1.5"/>
+<rect x="100.0" y="509.6" width="634.4" height="115.2" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="100.0,509.6 174.0,509.6 174.0,533.6 166.0,541.6 100.0,541.6" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="110.0" y="532.6" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<text x="234.0" y="532.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[command.isEmpty()]</text>
+<rect x="582.4" y="784.8" width="1319.6" height="115.2" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="582.4,784.8 656.4,784.8 656.4,808.8 648.4,816.8 582.4,816.8" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="592.4" y="807.8" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<text x="716.4" y="807.8" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[command.name() != null]</text>
+<rect x="100.0" y="957.6" width="2200.4" height="691.2" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="100.0,957.6 174.0,957.6 174.0,981.6 166.0,989.6 100.0,989.6" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="110.0" y="980.6" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<text x="234.0" y="980.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[command.parentProvided()]</text>
+<rect x="116.0" y="1264.8" width="2180.4" height="115.2" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="116.0,1264.8 190.0,1264.8 190.0,1288.8 182.0,1296.8 116.0,1296.8" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="126.0" y="1287.8" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<text x="234.0" y="1287.8" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[newParentId != null &amp;&amp; !contains(newParentId)]</text>
+<rect x="116.0" y="1424.8" width="2180.4" height="121.6" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="116.0,1424.8 190.0,1424.8 190.0,1448.8 182.0,1456.8 116.0,1456.8" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="126.0" y="1447.8" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<text x="234.0" y="1447.8" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[subtreeOf(id).contains(newParentId)]</text>
+<rect x="582.4" y="1821.6" width="2073.2" height="121.6" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="582.4,1821.6 656.4,1821.6 656.4,1845.6 648.4,1853.6 582.4,1853.6" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="592.4" y="1844.6" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<text x="716.4" y="1844.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[!changes.isEmpty()]</text>
+<rect x="60.0" y="180.0" width="312.0" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="216.0" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">obj: DepartmentController</text>
+<polyline points="216.0,244.0 216.0,2210.4" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="480.2" y="180.0" width="436.4" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="698.4" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">service: DepartmentApplicationService</text>
+<polyline points="698.4,244.0 698.4,2210.4" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="970.6" y="180.0" width="239.6" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="1090.4" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">operator: Operator</text>
+<polyline points="1090.4,244.0 1090.4,2210.4" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="1264.2" y="180.0" width="405.6" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="1467.0" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">departments: DepartmentRepository</text>
+<polyline points="1467.0,244.0 1467.0,2210.4" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="1723.8" y="180.0" width="284.4" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="1866.0" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">department: Department</text>
+<polyline points="1866.0,244.0 1866.0,2210.4" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="2132.4" y="180.0" width="264.0" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="2264.4" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">tree: DepartmentTree</text>
+<polyline points="2264.4,244.0 2264.4,2210.4" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="2450.4" y="180.0" width="338.4" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="2619.6" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">recorder: OperationRecorder</text>
+<polyline points="2619.6,244.0 2619.6,2210.4" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="207.0" y="285.6" width="18.0" height="1868.8" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="689.4" y="336.8" width="18.0" height="1753.6" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1081.4" y="420.0" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1458.0" y="695.2" width="18.0" height="32.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1857.0" y="842.4" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1458.0" y="1021.6" width="18.0" height="32.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1857.0" y="1117.6" width="18.0" height="492.8" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="2255.4" y="1200.8" width="18.0" height="377.6" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1458.0" y="1725.6" width="18.0" height="34.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="2610.6" y="1885.6" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<polyline points="225.0,336.8 689.4,336.8" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="457.2" y="325.4" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">1. update(operator, departmentId, command)</text>
+<polyline points="707.4,420.0 1081.4,420.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="894.4" y="408.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">2. requireTotalAdmin()</text>
+<polyline points="689.4,573.6 225.0,573.6" fill="none" stroke="#A61B29" stroke-width="1.8" stroke-dasharray="8,6" marker-end="url(#m-open-err)"/>
+<text x="457.2" y="562.2" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#A61B29" font-family="'Songti SC', 'SimSun', 'STSong', serif">DomainException(INVALID_REQUEST)</text>
+<polyline points="707.4,695.2 1458.0,695.2" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1082.7" y="683.8" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">3. department = findById(departmentId)</text>
+<polyline points="707.4,842.4 1857.0,842.4" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1282.2" y="831.0" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">4. renamed = rename(command.name())</text>
+<polyline points="707.4,1021.6 1458.0,1021.6" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1082.7" y="1010.2" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">5. tree = loadTree()</text>
+<polyline points="707.4,1117.6 1857.0,1117.6" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1282.2" y="1106.2" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">6. moved = moveUnder(command.parentId(), tree)</text>
+<polyline points="1875.0,1200.8 2255.4,1200.8" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="2065.2" y="1189.4" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">7. ensureCanMove(id, newParentId)</text>
+<polyline points="2255.4,1328.8 225.0,1328.8" fill="none" stroke="#A61B29" stroke-width="1.8" stroke-dasharray="8,6" marker-end="url(#m-open-err)"/>
+<text x="1240.2" y="1317.4" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#A61B29" font-family="'Songti SC', 'SimSun', 'STSong', serif">DomainException(NOT_FOUND：上级不存在)</text>
+<polyline points="2255.4,1488.8 225.0,1488.8" fill="none" stroke="#A61B29" stroke-width="1.8" stroke-dasharray="8,6" marker-end="url(#m-open-err)"/>
+<text x="1240.2" y="1477.4" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#A61B29" font-family="'Songti SC', 'SimSun', 'STSong', serif">DomainException(INVALID_REQUEST：形成循环)</text>
+<polyline points="707.4,1725.6 1458.0,1725.6" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1082.7" y="1714.2" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">8. save(department)</text>
+<polyline points="707.4,1885.6 2610.6,1885.6" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1659.0" y="1874.2" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">9. recordGlobal(operator, &quot;修改部门&quot;, detail, target)</text>
+<polyline points="689.4,2026.4 225.0,2026.4" fill="none" stroke="#17365D" stroke-width="1.8" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<text x="457.2" y="2015.0" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#17365D" font-family="'Songti SC', 'SimSun', 'STSong', serif">DepartmentResult</text>
+<text x="50.0" y="2276.4" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">实线实心箭头：同步消息（按序编号）　虚线空心箭头：返回或未捕获异常（红色直返调用方，不逐段转发）</text>
+<text x="50.0" y="2310.4" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">DepartmentTree.subtreeOf(departmentId) 广度优先算出全部下级部门，包含 newParentId 时立即抛出 DomainException 回滚事务。</text>
+</svg>

@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2880 1390" width="2880" height="1390">
+<rect x="0" y="0" width="2880" height="1390" fill="#FFFFFF"/>
+<defs>
+<marker id="m-solid" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 z" fill="#17365D"/></marker>
+<marker id="m-open" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#17365D" stroke-width="1.9"/></marker>
+<marker id="m-open-err" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#A61B29" stroke-width="1.9"/></marker>
+<marker id="m-tri" markerWidth="16" markerHeight="14" refX="15" refY="7" orient="auto"><path d="M1,1 L15,7 L1,13 z" fill="#FFFFFF" stroke="#17365D" stroke-width="1.9"/></marker>
+</defs>
+<text x="50.0" y="69.6" text-anchor="start" font-size="40.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">RBAC1 结构化类图 · 部门调整与防环校验</text>
+<text x="50.0" y="114.0" text-anchor="start" font-size="21.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">范围：修改部门（PATCH /api/v1/departments/{departmentId}）。DepartmentService 在方法内加载全表 Map 并沿 parentId 向上回溯防环。</text>
+<line x1="40.0" y1="134.0" x2="2840.0" y2="134.0" stroke="#B3C5D4" stroke-width="1.5"/>
+<rect x="1186.8" y="167.5" width="746.4" height="145.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="1186.8" y="167.5" width="746.4" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="1560.0" y="198.2" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">DepartmentController</text>
+<text x="1198.8" y="241.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- departments: DepartmentService</text>
+<line x1="1186.8" y1="262.0" x2="1933.2" y2="262.0" stroke="#17365D" stroke-width="1.4"/>
+<text x="1198.8" y="289.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ update(actor, departmentId, request: DepartmentUpdateDTO): DepartmentVO</text>
+<rect x="1153.1" y="518.5" width="813.8" height="243.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.4"/>
+<rect x="1153.1" y="518.5" width="813.8" height="46.0" fill="#17365D" stroke="#17365D" stroke-width="2.4"/>
+<text x="1560.0" y="549.2" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#FFFFFF" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">DepartmentService</text>
+<text x="1165.1" y="592.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- departments: DepartmentMapper</text>
+<text x="1165.1" y="616.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- operationLogs: OperationLogService</text>
+<line x1="1153.1" y1="637.5" x2="1966.9" y2="637.5" stroke="#17365D" stroke-width="1.4"/>
+<text x="1165.1" y="665.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ update(actor: SessionUser, id: long, request: DepartmentUpdateDTO): DepartmentVO</text>
+<text x="1165.1" y="689.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- requireDepartment(id: long): Department</text>
+<text x="1165.1" y="714.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">+ requireTotalAdmin(actor: SessionUser): void</text>
+<text x="1165.1" y="738.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">- parentName(department: Department): String</text>
+<rect x="435.3" y="500.5" width="449.4" height="159.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="435.3" y="500.5" width="449.4" height="64.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="660.0" y="527.5" text-anchor="middle" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">«interface»</text>
+<text x="660.0" y="551.5" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">DepartmentMapper</text>
+<line x1="435.3" y1="584.5" x2="884.7" y2="584.5" stroke="#17365D" stroke-width="1.4"/>
+<text x="447.3" y="612.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ findById(id: Long): Optional&lt;Department&gt;</text>
+<text x="447.3" y="636.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ findAllByOrderByIdAsc(): List&lt;Department&gt;</text>
+<rect x="2173.2" y="495.2" width="613.6" height="169.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="2173.2" y="495.2" width="613.6" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="2480.0" y="525.9" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">OperationLogService</text>
+<text x="2185.2" y="568.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- logs: OperationLogMapper</text>
+<text x="2185.2" y="593.2" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- targets: OperationLogTargetMapper</text>
+<line x1="2173.2" y1="614.2" x2="2786.8" y2="614.2" stroke="#17365D" stroke-width="1.4"/>
+<text x="2185.2" y="641.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ recordGlobalChange(actor, action, detail, type, id, name): void</text>
+<rect x="320.0" y="1037.2" width="280.0" height="165.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="320.0" y="1037.2" width="280.0" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="460.0" y="1067.9" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">SessionUser</text>
+<text x="332.0" y="1110.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: long</text>
+<text x="332.0" y="1135.2" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- departmentId: Long</text>
+<text x="332.0" y="1159.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- managementRole: String</text>
+<line x1="320.0" y1="1180.7" x2="600.0" y2="1180.7" stroke="#17365D" stroke-width="1.4"/>
+<rect x="895.5" y="1037.2" width="289.1" height="165.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="895.5" y="1037.2" width="289.1" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="1040.0" y="1067.9" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">DepartmentUpdateDTO</text>
+<text x="907.5" y="1110.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- name: String</text>
+<text x="907.5" y="1135.2" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- parentId: Long</text>
+<text x="907.5" y="1159.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- parentProvided: boolean</text>
+<line x1="895.5" y1="1180.7" x2="1184.6" y2="1180.7" stroke="#17365D" stroke-width="1.4"/>
+<rect x="1540.0" y="1037.2" width="280.0" height="165.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="1540.0" y="1037.2" width="280.0" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="1680.0" y="1067.9" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">Department</text>
+<text x="1552.0" y="1110.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: Long</text>
+<text x="1552.0" y="1135.2" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- parentId: Long</text>
+<text x="1552.0" y="1159.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- name: String</text>
+<line x1="1540.0" y1="1180.7" x2="1820.0" y2="1180.7" stroke="#17365D" stroke-width="1.4"/>
+<rect x="2180.0" y="1037.2" width="280.0" height="165.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="2180.0" y="1037.2" width="280.0" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="2320.0" y="1067.9" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">DepartmentVO</text>
+<text x="2192.0" y="1110.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: long</text>
+<text x="2192.0" y="1135.2" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- name: String</text>
+<text x="2192.0" y="1159.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- parentId: Long</text>
+<line x1="2180.0" y1="1180.7" x2="2460.0" y2="1180.7" stroke="#17365D" stroke-width="1.4"/>
+<polyline points="1560.0,312.5 1560.0,518.5" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="1477.4" y="421.5" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">departments</text>
+<polyline points="1153.1,627.9 884.7,580.0" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="1018.9" y="588.0" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">departments</text>
+<polyline points="1966.9,627.9 2173.2,580.0" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="2070.1" y="588.0" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">operationLogs</text>
+<polyline points="1267.0,761.5 1310.0,940.0 460.0,940.0 460.0,1037.2" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1446.1,761.5 1450.0,970.0 1040.0,970.0 1040.0,1037.2" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1625.1,761.5 1680.0,1037.2" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1853.0,761.5 1800.0,940.0 2320.0,940.0 2320.0,1037.2" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<text x="50.0" y="1292.7" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">实线空心箭头：关联（字段，箭头旁为 role name）　虚线空心箭头：依赖（参数、局部变量、返回值、静态调用）　虚线空心三角：接口实现</text>
+<text x="50.0" y="1326.7" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">结构化版没有 DepartmentTree 对象，Department 仅含 JPA 映射字段；防环回溯和字段更新全部写在 DepartmentService.update 内。</text>
+</svg>

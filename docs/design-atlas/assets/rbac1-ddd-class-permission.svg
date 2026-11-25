@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3180 1590" width="3180" height="1590">
+<rect x="0" y="0" width="3180" height="1590" fill="#FFFFFF"/>
+<defs>
+<marker id="m-solid" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 z" fill="#17365D"/></marker>
+<marker id="m-open" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#17365D" stroke-width="1.9"/></marker>
+<marker id="m-open-err" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#A61B29" stroke-width="1.9"/></marker>
+<marker id="m-tri" markerWidth="16" markerHeight="14" refX="15" refY="7" orient="auto"><path d="M1,1 L15,7 L1,13 z" fill="#FFFFFF" stroke="#17365D" stroke-width="1.9"/></marker>
+</defs>
+<text x="50.0" y="69.6" text-anchor="start" font-size="40.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">RBAC1 面向对象类图 · 权限登记与接口关联</text>
+<text x="50.0" y="114.0" text-anchor="start" font-size="21.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">范围：登记权限（POST /api/v1/applications/{applicationId}/permissions）。PermissionDefinition 校验上下级与同应用接口关联。</text>
+<line x1="40.0" y1="134.0" x2="3140.0" y2="134.0" stroke="#B3C5D4" stroke-width="1.5"/>
+<rect x="1526.5" y="167.5" width="787.1" height="145.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="1526.5" y="167.5" width="787.1" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="1920.0" y="198.2" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">ApplicationController</text>
+<text x="1538.5" y="241.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- permissions: PermissionApplicationService</text>
+<line x1="1526.5" y1="262.0" x2="2313.6" y2="262.0" stroke="#17365D" stroke-width="1.4"/>
+<text x="1538.5" y="289.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ createPermission(operator, appId, request: PermissionCreateDTO): PermissionVO</text>
+<rect x="1503.4" y="481.8" width="833.2" height="316.5" fill="#FFFFFF" stroke="#17365D" stroke-width="2.4"/>
+<rect x="1503.4" y="481.8" width="833.2" height="46.0" fill="#17365D" stroke="#17365D" stroke-width="2.4"/>
+<text x="1920.0" y="512.5" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#FFFFFF" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">PermissionApplicationService</text>
+<text x="1515.4" y="555.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- applications: BusinessApplicationRepository</text>
+<text x="1515.4" y="579.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- permissions: PermissionRepository</text>
+<text x="1515.4" y="604.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- apis: ApiRepository</text>
+<text x="1515.4" y="628.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- roles: RoleRepository</text>
+<text x="1515.4" y="653.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- apiResults: ApiResultAssembler</text>
+<text x="1515.4" y="677.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- recorder: OperationRecorder</text>
+<line x1="1503.4" y1="698.8" x2="2336.6" y2="698.8" stroke="#17365D" stroke-width="1.4"/>
+<text x="1515.4" y="726.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ create(operator, applicationId, command: PermissionCreateCommand): PermissionResult</text>
+<text x="1515.4" y="750.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- requireApplication(applicationId: long): BusinessApplication</text>
+<text x="1515.4" y="775.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- result(permission: PermissionDefinition): PermissionResult</text>
+<rect x="730.2" y="192.8" width="499.5" height="134.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="730.2" y="192.8" width="499.5" height="64.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="980.0" y="219.8" text-anchor="middle" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">«interface»</text>
+<text x="980.0" y="243.8" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">BusinessApplicationRepository</text>
+<line x1="730.2" y1="276.8" x2="1229.7" y2="276.8" stroke="#17365D" stroke-width="1.4"/>
+<text x="742.2" y="304.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ findById(id: long): Optional&lt;BusinessApplication&gt;</text>
+<rect x="727.0" y="500.5" width="506.0" height="159.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="727.0" y="500.5" width="506.0" height="64.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="980.0" y="527.5" text-anchor="middle" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">«interface»</text>
+<text x="980.0" y="551.5" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">PermissionRepository</text>
+<line x1="727.0" y1="584.5" x2="1233.0" y2="584.5" stroke="#17365D" stroke-width="1.4"/>
+<text x="739.0" y="612.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ findById(id: long): Optional&lt;PermissionDefinition&gt;</text>
+<text x="739.0" y="636.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ save(permission: PermissionDefinition): void</text>
+<rect x="77.0" y="483.0" width="506.0" height="194.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="77.0" y="483.0" width="506.0" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="330.0" y="513.7" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">JpaPermissionRepository</text>
+<text x="89.0" y="556.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- permissions: PermissionDao</text>
+<text x="89.0" y="581.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- links: ApiPermissionDao</text>
+<line x1="77.0" y1="602.0" x2="583.0" y2="602.0" stroke="#17365D" stroke-width="1.4"/>
+<text x="89.0" y="629.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ findById(id: long): Optional&lt;PermissionDefinition&gt;</text>
+<text x="89.0" y="654.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ save(permission: PermissionDefinition): void</text>
+<rect x="748.6" y="792.8" width="462.8" height="134.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="748.6" y="792.8" width="462.8" height="64.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="980.0" y="819.8" text-anchor="middle" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">«interface»</text>
+<text x="980.0" y="843.8" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">ApiRepository</text>
+<line x1="748.6" y1="876.8" x2="1211.4" y2="876.8" stroke="#17365D" stroke-width="1.4"/>
+<text x="760.6" y="904.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ findAllById(ids: Collection&lt;Long&gt;): List&lt;Api&gt;</text>
+<rect x="2617.4" y="180.5" width="445.1" height="159.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="2617.4" y="180.5" width="445.1" height="64.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="2840.0" y="207.5" text-anchor="middle" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">«interface»</text>
+<text x="2840.0" y="231.5" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">RoleRepository</text>
+<line x1="2617.4" y1="264.5" x2="3062.5" y2="264.5" stroke="#17365D" stroke-width="1.4"/>
+<text x="2629.4" y="292.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ findByType(type: RoleType): Optional&lt;Role&gt;</text>
+<text x="2629.4" y="316.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ save(role: Role): void</text>
+<rect x="2600.3" y="487.5" width="479.3" height="145.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="2600.3" y="487.5" width="479.3" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="2840.0" y="518.2" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">ApiResultAssembler</text>
+<text x="2612.3" y="561.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- permissions: PermissionRepository</text>
+<line x1="2600.3" y1="582.0" x2="3079.6" y2="582.0" stroke="#17365D" stroke-width="1.4"/>
+<text x="2612.3" y="609.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ results(apis: Collection&lt;Api&gt;): List&lt;ApiResult&gt;</text>
+<rect x="2595.7" y="762.8" width="488.7" height="134.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="2595.7" y="762.8" width="488.7" height="64.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="2840.0" y="789.8" text-anchor="middle" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">«interface»</text>
+<text x="2840.0" y="813.8" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">OperationRecorder</text>
+<line x1="2595.7" y1="846.8" x2="3084.4" y2="846.8" stroke="#17365D" stroke-width="1.4"/>
+<text x="2607.7" y="874.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ recordGlobal(actor, action, detail, target): void</text>
+<rect x="301.1" y="1143.0" width="317.7" height="194.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="301.1" y="1143.0" width="317.7" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="460.0" y="1173.7" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">BusinessApplication</text>
+<text x="313.1" y="1216.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: Long</text>
+<text x="313.1" y="1241.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- code: String</text>
+<text x="313.1" y="1265.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- name: String</text>
+<line x1="301.1" y1="1286.5" x2="618.8" y2="1286.5" stroke="#17365D" stroke-width="1.4"/>
+<text x="313.1" y="1314.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ isPermissionCenter(): boolean</text>
+<rect x="891.9" y="1143.0" width="456.3" height="194.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="891.9" y="1143.0" width="456.3" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="1120.0" y="1173.7" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">Api</text>
+<text x="903.9" y="1216.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: Long</text>
+<text x="903.9" y="1241.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- applicationId: Long</text>
+<text x="903.9" y="1265.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- operationId: String</text>
+<line x1="891.9" y1="1286.5" x2="1348.2" y2="1286.5" stroke="#17365D" stroke-width="1.4"/>
+<text x="903.9" y="1314.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ belongsTo(otherApplicationId: long): boolean</text>
+<rect x="1559.2" y="1091.8" width="721.6" height="316.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="1559.2" y="1091.8" width="721.6" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="1920.0" y="1122.5" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">PermissionDefinition</text>
+<text x="1571.2" y="1165.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: Long</text>
+<text x="1571.2" y="1189.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- applicationId: Long</text>
+<text x="1571.2" y="1214.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- parentId: Long</text>
+<text x="1571.2" y="1238.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- code: String</text>
+<text x="1571.2" y="1263.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- type: PermissionType</text>
+<text x="1571.2" y="1287.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- apiIds: Set&lt;Long&gt;</text>
+<line x1="1559.2" y1="1308.8" x2="2280.8" y2="1308.8" stroke="#17365D" stroke-width="1.4"/>
+<text x="1571.2" y="1336.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">+ register(appId, name, code, type, parentId, parent): PermissionDefinition</text>
+<text x="1571.2" y="1360.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ isMenu(): boolean</text>
+<text x="1571.2" y="1385.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ linkApis(requestedIds, found: Collection&lt;Api&gt;): void</text>
+<rect x="2474.1" y="1143.0" width="571.8" height="194.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="2474.1" y="1143.0" width="571.8" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="2760.0" y="1173.7" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">Role</text>
+<text x="2486.1" y="1216.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: Long</text>
+<text x="2486.1" y="1241.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- type: RoleType</text>
+<text x="2486.1" y="1265.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- directPermissionIds: Set&lt;Long&gt;</text>
+<line x1="2474.1" y1="1286.5" x2="3045.9" y2="1286.5" stroke="#17365D" stroke-width="1.4"/>
+<text x="2486.1" y="1314.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ grantNewlyRegisteredPermission(permissionId: long): void</text>
+<polyline points="1920.0,312.5 1920.0,481.8" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="1841.4" y="403.1" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">permissions</text>
+<polyline points="1503.4,532.4 1229.7,286.9" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="1366.6" y="387.6" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">applications</text>
+<polyline points="1503.4,633.7 1233.0,580.0" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="1368.2" y="590.9" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">permissions</text>
+<polyline points="1503.4,741.3 1211.4,839.9" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="1357.4" y="768.6" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">apis</text>
+<polyline points="2336.6,532.4 2617.4,291.8" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="2477.0" y="390.1" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">roles</text>
+<polyline points="2336.6,633.7 2600.3,560.0" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="2468.4" y="580.9" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">apiResults</text>
+<polyline points="2336.6,741.3 2595.7,809.9" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="2466.1" y="753.6" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">recorder</text>
+<polyline points="583.0,580.0 727.0,580.0" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-tri)"/>
+<polyline points="1628.4,798.3 1620.0,1020.0 460.0,1020.0 460.0,1143.0" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1795.0,798.3 1760.0,1050.0 1120.0,1050.0 1120.0,1143.0" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1920.0,798.3 1920.0,1091.8" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="2211.6,798.3 2200.0,1020.0 2760.0,1020.0 2760.0,1143.0" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1559.2,1265.9 1348.2,1249.7" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<text x="50.0" y="1498.3" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">实线空心箭头：关联（字段，箭头旁为 role name）　虚线空心箭头：依赖（参数、局部变量、返回值、静态调用）　虚线空心三角：接口实现</text>
+<text x="50.0" y="1532.3" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">权限中心（permission-center）登记新权限时，由 Role.grantNewlyRegisteredPermission 自动授予预置总管理员角色并同事务保存。</text>
+</svg>

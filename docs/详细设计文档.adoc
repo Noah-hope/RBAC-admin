@@ -1,0 +1,476 @@
+= RBAC1 权限管理系统 · 详细设计文档（结构化与 DDD 双实现对照）
+:toc: left
+:toclevels: 3
+:sectnums:
+:imagesdir: design-atlas/assets
+
+本文档对应课程第二阶段设计交付，完整呈现 RBAC1 权限管理系统的**面向功能（结构化）设计**与**面向对象（DDD）设计**两套后端架构、包依赖图、DDD 领域模型全景图、Docker Swarm 双系统集群部署拓扑，以及 **7 组核心差异 API 的类图、顺序图、GRASP 职责分配与全部 47 项接口代码索引**。
+
+TIP: 数据库 ER 图与 18 张表完整字段定义见同目录 link:数据库设计文档.adoc[数据库设计文档.adoc]。本地口试演示时可打开交互式对照网页 link:design-atlas/index.html[RBAC1 设计与架构图册（HTML）] 或可编辑图源 link:项目设计图.drawio[项目设计图.drawio（共 36 页）]。
+
+== 结构化设计与基于 DDD 的体系结构对比
+
+`rbac1-structured`（默认端口 8081）与 `rbac1-ddd`（默认端口 8082）严格实现同一份 OpenAPI 契约（47 个 HTTP 接口）并共享同一套 MySQL 数据库与 RSA/Argon2 安全参数，但在软件体系结构与职责分配上采用两种截然不同的设计范式：
+
+[cols="2,4,4",options="header"]
+|===
+|对比维度 |面向功能 / 结构化设计（`rbac1-structured`） |面向对象 / DDD 设计（`rbac1-ddd`）
+|分层与依赖方向 |`controller → service → mapper → entity` 自上而下直线依赖，业务层直接依赖数据访问层与表映射实体 |`interfaces → application → domain ← infrastructure`，基础设施层实现领域仓储端口与应用端口（**依赖倒置 DIP**），由 `LayerDependencyTest` 强制守护
+|核心模型形态 |**贫血模型（Anemic Model）**：`entity.*` 仅含 JPA 注解字段与 Lombok Getter/Setter，不包含任何业务方法 |**充血模型（Rich Domain Model）**：`domain.*` 为零框架依赖的纯 JDK 聚合根、值对象与领域服务，封装状态变更与业务不变式
+|业务规则归属 |集中在 `RoleService`、`UserService`、`PermissionRequestService` 等事务脚本式方法中，跨表逻辑靠静态工具或辅助 Service 编排 |单聚合规则归聚合根（如 `Role`、`User`、`PermissionRequest`），跨聚合规则归不可变领域服务（如 `RoleHierarchy`、`DepartmentTree`、`ApprovalCandidates`），应用服务仅做薄编排
+|持久化边界 |Service 直接注入并组合多个 Spring Data `JpaRepository`（`Mapper`），手动增删多张关联桥表行 |**一聚合一仓储端口**：领域层定义 `RoleRepository`、`UserRepository` 等接口，基础设施层 `Jpa*Repository` 封装主子表差量同步
+|对象转换与 CloneFactory |`DTO → CloneFactory.copy → JPA Entity`，Service 直接构造并返回 `VO` |`DTO → Command → Domain → Result → VO`；领域层禁用 CloneFactory（保护封装），`@CopyFrom/@CopyNotNullTo` 仅标注在基础设施层 `*Po` 上用于 PO↔Domain 拷贝
+|日志与异常处理 |`config/LayerLoggingAspect` 切入 `controller/service/mapper` 三层写 Logback 日志；`ManagementFailure` 由 `ApiExceptionHandler` 统一转 HTTP 状态码 |`infrastructure/logging/LayerLoggingAspect` 切入 `interfaces/application/infrastructure` 三层；领域层抛纯业务 `DomainException`、持久化适配器翻译唯一约束冲突，由 `RestExceptionHandler` 统一映射
+|可测试性 |业务规则与数据库访问紧耦合，主要依赖启动 Spring + H2 的 MVC 集成测试验证 |领域核心规则可直接用毫秒级纯 JUnit 单元测试验证，辅以架构依赖测试与完整契约集成测试
+|===
+
+== 后端系统分层包图
+
+包图箭头严格按 Java 源码真实 `import` 与 `implements` 方向绘制，虚线空心箭头表示包间依赖。
+
+=== 面向对象（DDD）后端包图（`com.rbac.rbac1ddd`）
+
+image::rbac1-ddd-package.svg[RBAC1-DDD-包图-后端分层,width=100%]
+
+link:design-atlas/assets/rbac1-ddd-package.svg[在新窗口打开原尺寸矢量图（DDD 后端分层包图） ↗]
+
+=== 面向功能（结构化）后端包图（`com.rbac.rbac1`）
+
+image::rbac1-structured-package.svg[RBAC1-结构化-包图-后端分层,width=100%]
+
+link:design-atlas/assets/rbac1-structured-package.svg[在新窗口打开原尺寸矢量图（结构化后端分层包图） ↗]
+
+== DDD 领域模型全景与 GRASP 原则总览
+
+=== DDD 领域模型全景类图（7 个领域子包）
+
+下图展示 `com.rbac.rbac1ddd.domain` 下全部核心聚合根与领域服务的职责边界。各聚合根之间严格通过 ID（如 `roleIds: Set<Long>`、`parentRoleIds: Set<Long>`、`apiIds: Set<Long>`）解耦引用，不跨聚合直接持有可变对象引用；Java 角色类之间绝不因业务角色继承而错误使用类泛化（Generalization），多父多层继承图由 `RoleHierarchy` 表达。
+
+image::rbac1-ddd-domain-model.svg[RBAC1-DDD-类图-领域模型全景,width=100%]
+
+link:design-atlas/assets/rbac1-ddd-domain-model.svg[在新窗口打开原尺寸矢量图（DDD 领域模型全景类图） ↗]
+
+=== GRASP 职责分配原则在 DDD 实现中的落地
+
+[cols="2,3,5",options="header"]
+|===
+|GRASP 原则 |代表性领域/应用类型 |职责分配理由与代码体现
+|信息专家（Information Expert） |`Role`、`User`、`Department`、`PermissionDefinition`、`PermissionRequest`、`Operator` |谁拥有完成校验与状态改变所需的数据，职责就分给谁：例如 `User` 持有 `roleIds` 与 `status`，因此由 `User` 自己计算有效角色、执行业务角色差量替换、跨部门调动与管理员任免；`Operator` 持有操作者身份与部门，因此由它在应用层判断管理范围。
+|创建者（Creator） |`Role.createBusiness`、`PermissionDefinition.register`、`PermissionRequest.submit`、`ApprovalCandidates.evaluate` |聚合与复杂值对象通过语义明确的静态工厂方法创建，创建时立即完成不变式校验（如菜单不能有父节点、按钮父节点必为同应用菜单），保证内存中不存在非法领域对象。
+|控制器（Controller） |`*ApplicationService`（如 `RoleApplicationService`、`UserApplicationService`） |应用服务充当用例控制器，承接 REST 层转换后的 Command，协调事务、锁、权限守卫、领域行为、仓储持久化与审计记录，自身不堆砌业务分支计算。
+|纯虚构（Pure Fabrication） |`RoleHierarchy`、`DepartmentTree`、`ApprovalCandidates`、`PermissionCatalog`、`RequestCatalog` |多角色 DAG 成环检测、后代按钮菜单完整性推演、组织子树遍历、审批最小权限候选筛选均跨越多个聚合实例，强塞进单个 `Role` 或 `Department` 会破坏低耦合，故提炼纯内存只读领域服务承担图算法。
+|低耦合与高内聚（Low Coupling / High Cohesion） |聚合间 ID 引用、`RoleCreationRequestApplicationService` 复用 `RoleApplicationService.create` |聚合间仅存 ID 避免级联加载大对象网；角色创建审批直接复用建角色应用服务共享事务，使申请域与角色域高内聚、低耦合。
+|间接与保护变化（Indirection / Protected Variations） |`RoleRepository` / `JpaRoleRepository`、`SessionStore` / `JpaSessionStore`、`ApplicationRoleCodeReader` |通过领域仓储端口与应用层端口隔离 JPA 多表操作、会话存储与外部系统角色码 SQL，数据库表或 ORM 细节变化不会波及领域层与应用层。
+|===
+
+== Docker Swarm 集群部署与课程系统统一身份接入
+
+权限管理系统与课程项目管理系统均部署在 Docker Swarm 集群上（编排定义见 `deploy/stack.yml`）。集群通过节点标签（`node.labels.rbac.role`）将网关前端、结构化后端、DDD 后端与 MySQL 8.4 隔离调度至对应 Worker 节点，经加密 Overlay 网络 `rbac-net` 内部通信，并通过 Swarm Secrets 安全挂载数据库密码与 RSA 签名密钥对。
+
+image::rbac1-swarm-deployment.svg[RBAC1-部署图-DockerSwarm集群,width=100%]
+
+link:design-atlas/assets/rbac1-swarm-deployment.svg[在新窗口打开原尺寸矢量图（Docker Swarm 集群部署拓扑图） ↗]
+
+* **双系统统一权限纳管**：权限管理后台（`permission-center`）与课程项目管理系统（`course-project-management`）均作为业务应用登记在权限中心。课程后端调用 `POST /auth/login` 签发多受众 RS256 JWT，使用 `/.well-known/jwks.json` 验签并调用 `GET /auth/api-permissions/{operationId}` 校验接口权限；课程前端携带同一令牌跨域调用 `GET /auth/me` 获取角色码（`teacher` / `student` / `admin`）与菜单许可，使菜单随 RBAC 授权动态变化。
+* **三层 Logback 日志核验**：前端切换菜单触发请求时，后端 AOP 切面 `LayerLoggingAspect` 在数据访问层、业务/应用层、接口层依次输出同一请求线程的 Logback 日志，可通过 `docker service logs --tail 0 --follow rbac_structured`（或 `rbac_ddd`）实时观察。
+
+== 核心 API 双实现详细设计（7 组代表性用例）
+
+以下精选覆盖角色继承、权限申请、角色创建申请、用户组织管理、权限与 API 登记、部门树防环、统一身份鉴权 **全部 7 个核心领域模块**的代表性 API，逐一展示面向对象（DDD）与面向功能（结构化）的真实类图与顺序图对照。
+
+=== 用例 01：角色继承配置（`PUT /api/v1/roles/{roleId}`）
+
+单事务替换业务角色的直接权限与直接父角色列表：校验预置管理角色只读、禁止将已继承权限重复勾选为新增直接权限、禁止自继承与多跳循环继承，并验证当前角色及全部直接/间接后代角色的按钮仍具备所属菜单；成功后同步结算受影响用户的待审核权限申请。
+
+==== 结构化 vs DDD 设计差异
+
+[cols="2,4,4",options="header"]
+|===
+|维度 |结构化实现（`rbac1-structured`） |面向对象 DDD 实现（`rbac1-ddd`）
+|业务规则位置 |全部集中在 `RoleService.update` 与 `validateConfiguration` 过程方法中 |聚合内部规则归 `Role.reconfigure`，跨角色图推演归 `RoleHierarchy`，菜单依赖归 `PermissionCatalog`
+|实体形态 |`entity.Role` 仅有数据库列与 Getter/Setter（贫血模型） |`domain.role.Role` 为纯 Java 充血聚合根，无任何 Spring/JPA 注解
+|持久化粒度 |`RoleService` 直接调用 `RoleMapper`、`RolePermissionMapper`、`RoleInheritanceMapper` 分别删增桥表 |应用服务仅调用一次 `RoleRepository.save(role)`，多表差量同步封装在基础设施层
+|对象拷贝 |Service 手动构造关联实体行并赋值 |基础设施层在 `RolePo` 上使用 `@CopyFrom/@CopyNotNullTo` 配合 `CloneFactory` 完成 PO 与领域对象转换
+|===
+
+==== GRASP 职责分配（DDD 版）
+
+* **信息专家（Information Expert）**：`Role.reconfigure` 持有自身直接权限与父角色集合，负责编辑资格校验与差量替换，并通过只读集合视图保护聚合不变式。
+* **纯虚构（Pure Fabrication）**：`RoleHierarchy` 将全量业务角色多继承 DAG 封装为不可变内存快照，提供 `withConfiguration` 推演修改后的祖先成环与后代菜单完整性，避免污染单个 `Role` 聚合。
+* **控制器（Controller）**：`RoleApplicationService.update` 仅协调权限守卫、加锁读取、领域规则调用、仓储保存、操作记录与申请自动结算，不包含图遍历细节。
+* **间接与保护变化（Indirection / Protected Variations）**：`JpaRoleRepository` 实现领域层 `RoleRepository` 端口，内部封装 `sys_role`、`sys_role_permission`、`sys_role_inheritance` 三张表的差量持久化与重名异常翻译。
+
+==== 对应源码文件
+
+* DDD Controller：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleController.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleController.java`]
+* DDD 应用服务：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/role/RoleApplicationService.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/role/RoleApplicationService.java`]
+* DDD 聚合根：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/role/Role.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/role/Role.java`]
+* DDD 继承图服务：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/role/RoleHierarchy.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/role/RoleHierarchy.java`]
+* DDD 仓储适配器：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/infrastructure/persistence/JpaRoleRepository.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/infrastructure/persistence/JpaRoleRepository.java`]
+* 结构化 Service：link:../rbac1-structured/src/main/java/com/rbac/rbac1/service/RoleService.java[`rbac1-structured/src/main/java/com/rbac/rbac1/service/RoleService.java`]
+
+==== 类图对照（角色继承配置）
+
+.DDD 类图 · 角色继承配置
+image::rbac1-ddd-class-role.svg[DDD 类图 · 角色继承配置,width=100%]
+link:design-atlas/assets/rbac1-ddd-class-role.svg[打开原尺寸矢量图：RBAC1-DDD-类图-角色继承配置 ↗]
+
+.结构化类图 · 角色继承配置
+image::rbac1-structured-class-role.svg[结构化类图 · 角色继承配置,width=100%]
+link:design-atlas/assets/rbac1-structured-class-role.svg[打开原尺寸矢量图：RBAC1-结构化-类图-角色继承配置 ↗]
+
+==== 顺序图对照（角色继承配置）
+
+.DDD 顺序图 · 角色继承配置
+image::rbac1-ddd-seq-role.svg[DDD 顺序图 · 角色继承配置,width=100%]
+link:design-atlas/assets/rbac1-ddd-seq-role.svg[打开原尺寸矢量图：RBAC1-DDD-顺序图-角色继承配置 ↗]
+
+.结构化顺序图 · 角色继承配置
+image::rbac1-structured-seq-role.svg[结构化顺序图 · 角色继承配置,width=100%]
+link:design-atlas/assets/rbac1-structured-seq-role.svg[打开原尺寸矢量图：RBAC1-结构化-顺序图-角色继承配置 ↗]
+
+=== 用例 02：权限申请审核（`POST /api/v1/permission-requests/{requestId}/reviews`）
+
+管理员在职责与部门范围内审核待处理权限申请：若申请人当前通过直接或继承角色已拥有目标权限，直接转为 `SATISFIED`；审批通过时按最新继承图筛选覆盖目标权限且不含无关权限的最小业务角色授予申请人，并联动结算该用户其余待审核申请。
+
+==== 结构化 vs DDD 设计差异
+
+[cols="2,4,4",options="header"]
+|===
+|维度 |结构化实现（`rbac1-structured`） |面向对象 DDD 实现（`rbac1-ddd`）
+|状态流转控制 |`PermissionRequestService` 直接 `request.setStatus(...)` 依赖 JPA 脏检查写库 |领域枚举 `RequestStatus` + `PermissionRequest.approve/reject/settleWith` 严格受控
+|最小角色筛选 |Service 循环调用静态工具 `ApprovalRules.extraPermissions` 过程式筛选 |独立领域对象 `ApprovalCandidates.evaluate` 建模候选资格与额外权限集合
+|赋权持久化 |Service 直接 `new UserRole()` 并调用 `UserRoleMapper.save` 插入关联行 |调用 `User.grantBusinessRoles(Set.of(roleId))` 后通过 `UserRepository.save(applicant)` 保存聚合
+|===
+
+==== GRASP 职责分配（DDD 版）
+
+* **信息专家（Information Expert）**：`PermissionRequest` 聚合根维护申请状态机（`PENDING → APPROVED / REJECTED / SATISFIED / WITHDRAWN`），确保终态不可逆转。
+* **纯虚构与创建者（Pure Fabrication / Creator）**：`ApprovalCandidates.evaluate` 静态工厂遍历 `RoleHierarchy` 计算每个业务角色的有效权限与多余权限，构造不可变候选角色集合。
+* **高内聚（High Cohesion）**：用户赋权委托给 `User.grantBusinessRoles` 聚合方法，申请状态流转归 `PermissionRequest.approve`，各自聚焦单一领域职责。
+* **控制器（Controller）**：`PermissionRequestApplicationService.review` 编排操作者管理范围核验、行锁加载、赋权落库、审计与 `PermissionRequestSettlement` 联动结算。
+
+==== 对应源码文件
+
+* DDD Controller：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java`]
+* DDD 应用服务：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/request/PermissionRequestApplicationService.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/request/PermissionRequestApplicationService.java`]
+* DDD 申请聚合根：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/request/PermissionRequest.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/request/PermissionRequest.java`]
+* DDD 候选评估服务：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/request/ApprovalCandidates.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/request/ApprovalCandidates.java`]
+* 结构化 Service：link:../rbac1-structured/src/main/java/com/rbac/rbac1/service/PermissionRequestService.java[`rbac1-structured/src/main/java/com/rbac/rbac1/service/PermissionRequestService.java`]
+* 结构化筛选规则：link:../rbac1-structured/src/main/java/com/rbac/rbac1/service/ApprovalRules.java[`rbac1-structured/src/main/java/com/rbac/rbac1/service/ApprovalRules.java`]
+
+==== 类图对照（权限申请审核）
+
+.DDD 类图 · 权限申请审核
+image::rbac1-ddd-class-review.svg[DDD 类图 · 权限申请审核,width=100%]
+link:design-atlas/assets/rbac1-ddd-class-review.svg[打开原尺寸矢量图：RBAC1-DDD-类图-权限申请审核 ↗]
+
+.结构化类图 · 权限申请审核
+image::rbac1-structured-class-review.svg[结构化类图 · 权限申请审核,width=100%]
+link:design-atlas/assets/rbac1-structured-class-review.svg[打开原尺寸矢量图：RBAC1-结构化-类图-权限申请审核 ↗]
+
+==== 顺序图对照（权限申请审核）
+
+.DDD 顺序图 · 权限申请审核
+image::rbac1-ddd-seq-review.svg[DDD 顺序图 · 权限申请审核,width=100%]
+link:design-atlas/assets/rbac1-ddd-seq-review.svg[打开原尺寸矢量图：RBAC1-DDD-顺序图-权限申请审核 ↗]
+
+.结构化顺序图 · 权限申请审核
+image::rbac1-structured-seq-review.svg[结构化顺序图 · 权限申请审核,width=100%]
+link:design-atlas/assets/rbac1-structured-seq-review.svg[打开原尺寸矢量图：RBAC1-结构化-顺序图-权限申请审核 ↗]
+
+=== 用例 03：角色创建申请审批（`POST /api/v1/role-creation-requests/{requestId}/reviews`）
+
+总管理员审核部门管理员提交的角色创建申请：驳回时直接更新状态；通过时可调整角色配置，并在同一事务中复用新建业务角色流程按最新父角色继承图完成校验与建角色，任何环路、重名或菜单缺失均使事务整体回滚，申请保持待审核。
+
+==== 结构化 vs DDD 设计差异
+
+[cols="2,4,4",options="header"]
+|===
+|维度 |结构化实现（`rbac1-structured`） |面向对象 DDD 实现（`rbac1-ddd`）
+|新建角色复用 |调用 `RoleService.create`：内部用 `CloneFactory.copy` + `DuplicateKeys.saveAndFlush` + 两张子表批量写入 |调用 `RoleApplicationService.create`：`Role.createBusiness` 构造聚合后经 `RoleRepository.save` 统一落库
+|父角色快照组装 |`RoleCreationRequestService` 手动查询 3 个 Mapper 按申请 ID 分组拼装 |`JpaRoleCreationRequestRepository` 重建完整包含 `ParentRoleSnapshot` 的领域聚合
+|审批回写 |Service 直接调用 `setCreatedRoleId`、`setStatus`、`setReviewedAt` |调用领域方法 `request.approve(created.id(), operator.id())` 后保存聚合
+|===
+
+==== GRASP 职责分配（DDD 版）
+
+* **创建者（Creator）**：`Role.createBusiness` 静态工厂同时被直接建角色、提交创建申请预校验和审批通过建角色三处复用，规则零重复。
+* **信息专家（Information Expert）**：`RoleCreationRequest` 保存父角色 ID 与名称快照（`ParentRoleSnapshot`），自行校验待审状态并在 `approve` 中绑定新建角色 ID。
+* **控制器与低耦合（Controller / Low Coupling）**：`RoleCreationRequestApplicationService` 直接复用 `RoleApplicationService.create` 共享同一 `@Transactional` 事务边界，不重复编写角色落库与日志逻辑。
+* **间接（Indirection）**：`JpaRoleCreationRequestRepository` 封装主表与直接权限、父角色快照两张子表的聚合重建与保存。
+
+==== 对应源码文件
+
+* DDD Controller：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleCreationRequestController.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleCreationRequestController.java`]
+* DDD 应用服务：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/request/RoleCreationRequestApplicationService.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/request/RoleCreationRequestApplicationService.java`]
+* DDD 聚合根：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/request/RoleCreationRequest.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/request/RoleCreationRequest.java`]
+* 结构化 Service：link:../rbac1-structured/src/main/java/com/rbac/rbac1/service/RoleCreationRequestService.java[`rbac1-structured/src/main/java/com/rbac/rbac1/service/RoleCreationRequestService.java`]
+
+==== 类图对照（角色创建申请审批）
+
+.DDD 类图 · 角色创建申请审批
+image::rbac1-ddd-class-creation.svg[DDD 类图 · 角色创建申请审批,width=100%]
+link:design-atlas/assets/rbac1-ddd-class-creation.svg[打开原尺寸矢量图：RBAC1-DDD-类图-角色创建申请审批 ↗]
+
+.结构化类图 · 角色创建申请审批
+image::rbac1-structured-class-creation.svg[结构化类图 · 角色创建申请审批,width=100%]
+link:design-atlas/assets/rbac1-structured-class-creation.svg[打开原尺寸矢量图：RBAC1-结构化-类图-角色创建申请审批 ↗]
+
+==== 顺序图对照（角色创建申请审批）
+
+.DDD 顺序图 · 角色创建申请审批
+image::rbac1-ddd-seq-creation.svg[DDD 顺序图 · 角色创建申请审批,width=100%]
+link:design-atlas/assets/rbac1-ddd-seq-creation.svg[打开原尺寸矢量图：RBAC1-DDD-顺序图-角色创建申请审批 ↗]
+
+.结构化顺序图 · 角色创建申请审批
+image::rbac1-structured-seq-creation.svg[结构化顺序图 · 角色创建申请审批,width=100%]
+link:design-atlas/assets/rbac1-structured-seq-creation.svg[打开原尺寸矢量图：RBAC1-结构化-顺序图-角色创建申请审批 ↗]
+
+=== 用例 04：用户调动与状态管理（`PATCH /api/v1/users/{userId}`）
+
+管理员在管理范围内修改用户登录名、姓名与启停状态；总管理员可同时办理跨部门调动（保留既有业务角色）与任免部门管理员角色。账号停用时立即撤销该用户的全部登录会话，并按变更前后的部门归属分别记录部门级或全局操作审计。
+
+==== 结构化 vs DDD 设计差异
+
+[cols="2,4,4",options="header"]
+|===
+|维度 |结构化实现（`rbac1-structured`） |面向对象 DDD 实现（`rbac1-ddd`）
+|权限与范围校验 |调用静态方法 `DepartmentService.requireAdministrator` 与 `isTotalAdmin` |由值对象 `Operator` 面向对象执行 `requireManagedDepartment` 与 `requireOrganizationAuthority`
+|部门管理员任免 |`UserService` 直接查 `UserRoleMapper.existsById` 并手动 `save` 或 `deleteById` |`User.changeDepartmentAdministrator` 修改聚合内部角色集合，由 `JpaUserRepository.save` 统一差量同步
+|用户名判重 |Service 在修改字段后显式调用 `DuplicateKeys.saveAndFlush` |领域层保持纯粹，唯一约束检查与异常翻译下沉至 `JpaUserRepository.saveCheckingUsername`
+|===
+
+==== GRASP 职责分配（DDD 版）
+
+* **信息专家（Information Expert）**：`User` 聚合根封装 `changeUsername`、`rename`、`changeStatus`、`transferTo` 与 `changeDepartmentAdministrator`，仅在状态真实改变时返回 `true` 驱动日志记录。
+* **信息专家（应用层权限守卫）**：`Operator` 持有当前操作者身份与所属部门，结合 `DepartmentTree` 执行 `requireManagedDepartment` 与 `requireOrganizationAuthority`。
+* **间接与保护变化（Indirection / Protected Variations）**：`SessionStore` 端口隔离会话存储机制，停用账号时由应用层调用 `revokeAllOf(userId)`；`JpaUserRepository` 统一同步用户行与 `sys_user_role` 差量。
+
+==== 对应源码文件
+
+* DDD Controller：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserController.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserController.java`]
+* DDD 应用服务：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/user/UserApplicationService.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/user/UserApplicationService.java`]
+* DDD 用户聚合根：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/user/User.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/user/User.java`]
+* DDD 权限守卫：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/Operator.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/Operator.java`]
+* 结构化 Service：link:../rbac1-structured/src/main/java/com/rbac/rbac1/service/UserService.java[`rbac1-structured/src/main/java/com/rbac/rbac1/service/UserService.java`]
+
+==== 类图对照（用户调动与状态管理）
+
+.DDD 类图 · 用户调动与状态管理
+image::rbac1-ddd-class-user.svg[DDD 类图 · 用户调动与状态管理,width=100%]
+link:design-atlas/assets/rbac1-ddd-class-user.svg[打开原尺寸矢量图：RBAC1-DDD-类图-用户调动与状态管理 ↗]
+
+.结构化类图 · 用户调动与状态管理
+image::rbac1-structured-class-user.svg[结构化类图 · 用户调动与状态管理,width=100%]
+link:design-atlas/assets/rbac1-structured-class-user.svg[打开原尺寸矢量图：RBAC1-结构化-类图-用户调动与状态管理 ↗]
+
+==== 顺序图对照（用户调动与状态管理）
+
+.DDD 顺序图 · 用户调动与状态管理
+image::rbac1-ddd-seq-user.svg[DDD 顺序图 · 用户调动与状态管理,width=100%]
+link:design-atlas/assets/rbac1-ddd-seq-user.svg[打开原尺寸矢量图：RBAC1-DDD-顺序图-用户调动与状态管理 ↗]
+
+.结构化顺序图 · 用户调动与状态管理
+image::rbac1-structured-seq-user.svg[结构化顺序图 · 用户调动与状态管理,width=100%]
+link:design-atlas/assets/rbac1-structured-seq-user.svg[打开原尺寸矢量图：RBAC1-结构化-顺序图-用户调动与状态管理 ↗]
+
+=== 用例 05：权限登记与接口关联（`POST /api/v1/applications/{applicationId}/permissions`）
+
+总管理员在指定应用下登记菜单或按钮权限并绑定同应用已登记的后端 API：菜单上级必须为空，按钮上级必须是同一应用的菜单；若目标应用为权限管理中心自身（`permission-center`），新权限在同一事务内自动授予预置总管理员角色。
+
+==== 结构化 vs DDD 设计差异
+
+[cols="2,4,4",options="header"]
+|===
+|维度 |结构化实现（`rbac1-structured`） |面向对象 DDD 实现（`rbac1-ddd`）
+|层级与接口校验 |`ApplicationService` 查 Mapper 判断父菜单，`ApiService.replaceLinks` 校验同应用并操作桥表 |`PermissionDefinition.register` 与 `linkApis` 在领域对象内完成全部业务规则校验
+|对象构造与拷贝 |使用 `CloneFactory.copy(new Permission(), request)` 从 DTO 直接生成 JPA 实体 |通过 `PermissionDefinition.register` 构造领域聚合，CloneFactory 仅限基础设施层 PO 转换使用
+|总管理员自动授权 |直接 `new RolePermission()` 并调用 `RolePermissionMapper.save` |加载 `Role` 聚合并调用 `totalAdmin.grantNewlyRegisteredPermission(permission.getId())`
+|===
+
+==== GRASP 职责分配（DDD 版）
+
+* **创建者与信息专家（Creator / Information Expert）**：`PermissionDefinition.register` 静态工厂校验菜单/按钮层级不变式，`linkApis` 校验全部关联接口均已登记且归属同一应用（`Api.belongsTo`）。
+* **高内聚（High Cohesion）**：系统自身判断封装在 `BusinessApplication.isPermissionCenter()`，总管理员赋权封装在 `Role.grantNewlyRegisteredPermission`，消除硬编码常量散落。
+* **间接（Indirection）**：`JpaPermissionRepository` 统一管理 `sys_permission` 主表与 `sys_api_permission` 关联桥表的同步及 `uq_permission_application_code` 冲突转换。
+
+==== 对应源码文件
+
+* DDD Controller：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java`]
+* DDD 应用服务：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/app/PermissionApplicationService.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/app/PermissionApplicationService.java`]
+* DDD 权限聚合根：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/permission/PermissionDefinition.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/permission/PermissionDefinition.java`]
+* 结构化应用服务：link:../rbac1-structured/src/main/java/com/rbac/rbac1/service/ApplicationService.java[`rbac1-structured/src/main/java/com/rbac/rbac1/service/ApplicationService.java`]
+* 结构化接口服务：link:../rbac1-structured/src/main/java/com/rbac/rbac1/service/ApiService.java[`rbac1-structured/src/main/java/com/rbac/rbac1/service/ApiService.java`]
+
+==== 类图对照（权限登记与接口关联）
+
+.DDD 类图 · 权限登记与接口关联
+image::rbac1-ddd-class-permission.svg[DDD 类图 · 权限登记与接口关联,width=100%]
+link:design-atlas/assets/rbac1-ddd-class-permission.svg[打开原尺寸矢量图：RBAC1-DDD-类图-权限登记与接口关联 ↗]
+
+.结构化类图 · 权限登记与接口关联
+image::rbac1-structured-class-permission.svg[结构化类图 · 权限登记与接口关联,width=100%]
+link:design-atlas/assets/rbac1-structured-class-permission.svg[打开原尺寸矢量图：RBAC1-结构化-类图-权限登记与接口关联 ↗]
+
+==== 顺序图对照（权限登记与接口关联）
+
+.DDD 顺序图 · 权限登记与接口关联
+image::rbac1-ddd-seq-permission.svg[DDD 顺序图 · 权限登记与接口关联,width=100%]
+link:design-atlas/assets/rbac1-ddd-seq-permission.svg[打开原尺寸矢量图：RBAC1-DDD-顺序图-权限登记与接口关联 ↗]
+
+.结构化顺序图 · 权限登记与接口关联
+image::rbac1-structured-seq-permission.svg[结构化顺序图 · 权限登记与接口关联,width=100%]
+link:design-atlas/assets/rbac1-structured-seq-permission.svg[打开原尺寸矢量图：RBAC1-结构化-顺序图-权限登记与接口关联 ↗]
+
+=== 用例 06：部门调整与防环校验（`PATCH /api/v1/departments/{departmentId}`）
+
+总管理员修改组织部门名称或调整其上级部门（`parentId = null` 表示移为顶层部门）：校验新上级存在且不能是当前部门自身或其任意层级的下级部门，防止组织树出现环路；有实际变更时写入全局操作日志。
+
+==== 结构化 vs DDD 设计差异
+
+[cols="2,4,4",options="header"]
+|===
+|维度 |结构化实现（`rbac1-structured`） |面向对象 DDD 实现（`rbac1-ddd`）
+|防环算法组织 |`DepartmentService.update` 在方法体内加载全表构造临时 `Map`，用 `for` 循环沿 `parentId` 向上回溯检查是否遇到当前部门 ID |抽离不可变领域服务 `DepartmentTree`，既复用于管理范围子树计算，又提供 `ensureCanMove` 防环断言
+|状态变更判断 |Service 方法直接比较新旧字符串/ID 后调用 `department.setName` / `setParentId` |由 `department.rename` 与 `department.moveUnder` 返回布尔值表征是否发生实质领域变更
+|===
+
+==== GRASP 职责分配（DDD 版）
+
+* **信息专家（Information Expert）**：`Department` 聚合根负责 `rename` 与 `moveUnder` 状态变更，相同名称或相同上级时幂等返回 `false`，避免无效写日志。
+* **纯虚构（Pure Fabrication）**：`DepartmentTree` 构造时将父指针反转为子邻接表，`ensureCanMove` 利用 `subtreeOf(departmentId)` 广度优先判断目标上级是否落在当前子树内。
+* **控制器（Controller）**：`DepartmentApplicationService.update` 编排总管理员校验、按需加载 `DepartmentTree`、保存聚合与记录前后上级名称变化。
+
+==== 对应源码文件
+
+* DDD Controller：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/DepartmentController.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/DepartmentController.java`]
+* DDD 应用服务：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/department/DepartmentApplicationService.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/department/DepartmentApplicationService.java`]
+* DDD 部门聚合根：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/department/Department.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/department/Department.java`]
+* DDD 部门树服务：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/department/DepartmentTree.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/department/DepartmentTree.java`]
+* 结构化 Service：link:../rbac1-structured/src/main/java/com/rbac/rbac1/service/DepartmentService.java[`rbac1-structured/src/main/java/com/rbac/rbac1/service/DepartmentService.java`]
+
+==== 类图对照（部门调整与防环校验）
+
+.DDD 类图 · 部门调整与防环校验
+image::rbac1-ddd-class-department.svg[DDD 类图 · 部门调整与防环校验,width=100%]
+link:design-atlas/assets/rbac1-ddd-class-department.svg[打开原尺寸矢量图：RBAC1-DDD-类图-部门调整与防环校验 ↗]
+
+.结构化类图 · 部门调整与防环校验
+image::rbac1-structured-class-department.svg[结构化类图 · 部门调整与防环校验,width=100%]
+link:design-atlas/assets/rbac1-structured-class-department.svg[打开原尺寸矢量图：RBAC1-结构化-类图-部门调整与防环校验 ↗]
+
+==== 顺序图对照（部门调整与防环校验）
+
+.DDD 顺序图 · 部门调整与防环校验
+image::rbac1-ddd-seq-department.svg[DDD 顺序图 · 部门调整与防环校验,width=100%]
+link:design-atlas/assets/rbac1-ddd-seq-department.svg[打开原尺寸矢量图：RBAC1-DDD-顺序图-部门调整与防环校验 ↗]
+
+.结构化顺序图 · 部门调整与防环校验
+image::rbac1-structured-seq-department.svg[结构化顺序图 · 部门调整与防环校验,width=100%]
+link:design-atlas/assets/rbac1-structured-seq-department.svg[打开原尺寸矢量图：RBAC1-结构化-顺序图-部门调整与防环校验 ↗]
+
+=== 用例 07：统一身份与有效权限查询（`GET /auth/me`）
+
+为权限管理前端与接入的课程项目管理系统返回当前登录用户在目标应用中的统一身份、角色列表及去重后的有效权限编码（含多父多层继承）。启用应用角色码映射时返回映射后的角色码（如 `teacher`/`student`/`admin`），未启用时返回在该应用提供有效权限的直接角色 ID。
+
+==== 结构化 vs DDD 设计差异
+
+[cols="2,4,4",options="header"]
+|===
+|维度 |结构化实现（`rbac1-structured`） |面向对象 DDD 实现（`rbac1-ddd`）
+|受众校验入口 |`SessionController` 先调 `SessionService.resolveApplication` 解析应用，再调 `PermissionCheckService.current` |认证会话封装为值对象 `AuthenticatedSession`，由 `session.applicationContext(requestedCode)` 内聚完成受众核验
+|继承权限计算 |`RolePermissionService` 加载五表构建 `Graph` 记录，在无状态 Service 方法中传参遍历 Map |`User`、`RoleHierarchy`、`PermissionCatalog` 三者按信息专家协作计算有效权限与角色列表
+|角色码映射查询 |`PermissionCheckService` 直接调用 `ApplicationMapper.findRoleCodes` |经应用层端口 `ApplicationRoleCodeReader` 解耦查询 `sys_application_role_code`
+|===
+
+==== GRASP 职责分配（DDD 版）
+
+* **信息专家（Information Expert）**：`AuthenticatedSession.applicationContext` 校验请求头 `X-Application-Code` 是否包含在 JWT 受众（`aud`）中；`User` 结合 `RoleHierarchy` 计算有效权限与可达业务角色。
+* **纯虚构与低耦合（Pure Fabrication / Low Coupling）**：`PermissionCatalog.codesIn` 负责按目标应用过滤并输出权限标识列表，`RoleHierarchy.ancestorsIncluding` 负责沿继承 DAG 聚合全部父角色。
+* **保护变化（Protected Variations）**：应用角色码查询通过应用层只读端口 `ApplicationRoleCodeReader`（`JdbcApplicationRoleCodeReader` 实现）隔离，使领域模型不耦合外部系统接入表结构。
+
+==== 对应源码文件
+
+* DDD Controller：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SessionController.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SessionController.java`]
+* DDD 应用服务：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/AccessApplicationService.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/AccessApplicationService.java`]
+* DDD 认证会话：link:../rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/AuthenticatedSession.java[`rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/AuthenticatedSession.java`]
+* 结构化 Controller：link:../rbac1-structured/src/main/java/com/rbac/rbac1/controller/SessionController.java[`rbac1-structured/src/main/java/com/rbac/rbac1/controller/SessionController.java`]
+* 结构化权限检查：link:../rbac1-structured/src/main/java/com/rbac/rbac1/service/PermissionCheckService.java[`rbac1-structured/src/main/java/com/rbac/rbac1/service/PermissionCheckService.java`]
+* 结构化继承计算：link:../rbac1-structured/src/main/java/com/rbac/rbac1/service/RolePermissionService.java[`rbac1-structured/src/main/java/com/rbac/rbac1/service/RolePermissionService.java`]
+
+==== 类图对照（统一身份与有效权限查询）
+
+.DDD 类图 · 统一身份与有效权限查询
+image::rbac1-ddd-class-authme.svg[DDD 类图 · 统一身份与有效权限查询,width=100%]
+link:design-atlas/assets/rbac1-ddd-class-authme.svg[打开原尺寸矢量图：RBAC1-DDD-类图-统一身份与有效权限查询 ↗]
+
+.结构化类图 · 统一身份与有效权限查询
+image::rbac1-structured-class-authme.svg[结构化类图 · 统一身份与有效权限查询,width=100%]
+link:design-atlas/assets/rbac1-structured-class-authme.svg[打开原尺寸矢量图：RBAC1-结构化-类图-统一身份与有效权限查询 ↗]
+
+==== 顺序图对照（统一身份与有效权限查询）
+
+.DDD 顺序图 · 统一身份与有效权限查询
+image::rbac1-ddd-seq-authme.svg[DDD 顺序图 · 统一身份与有效权限查询,width=100%]
+link:design-atlas/assets/rbac1-ddd-seq-authme.svg[打开原尺寸矢量图：RBAC1-DDD-顺序图-统一身份与有效权限查询 ↗]
+
+.结构化顺序图 · 统一身份与有效权限查询
+image::rbac1-structured-seq-authme.svg[结构化顺序图 · 统一身份与有效权限查询,width=100%]
+link:design-atlas/assets/rbac1-structured-seq-authme.svg[打开原尺寸矢量图：RBAC1-结构化-顺序图-统一身份与有效权限查询 ↗]
+
+== 统一 HTTP 接口与双后端源码映射总表（47 项）
+
+下表列出 `docs/03-api/RBAC1-api.yaml` 定义的全部 47 个接口及其在结构化后端与 DDD 后端中的入口位置，供代码走查快速定位：
+
+[cols="1,3,2,3,3,3",options="header"]
+|===
+|方法 |路径 |模块 |功能摘要 |结构化入口 |DDD 入口
+|`POST` |`/auth/login` |统一身份鉴权 |统一登录 |`controller/SessionController.java:47` |`interfaces/rest/SessionController.java:48`
+|`POST` |`/auth/logout` |统一身份鉴权 |统一退出登录 |`controller/SessionController.java:103` |`interfaces/rest/SessionController.java:98`
+|`GET` |`/auth/me` |统一身份鉴权 |当前用户、角色与权限 |`controller/SessionController.java:59` |`interfaces/rest/SessionController.java:62`
+|`GET` |`/auth/permissions/{permission}` |统一身份鉴权 |校验当前用户是否具备指定前端权限 |`controller/SessionController.java:71` |`interfaces/rest/SessionController.java:72`
+|`GET` |`/auth/api-permissions/{operationId}` |统一身份鉴权 |判断当前用户能否调用指定 API 接口 |`controller/SessionController.java:87` |`interfaces/rest/SessionController.java:85`
+|`GET` |`/auth/departments` |统一身份鉴权 |分页查询统一身份部门 |`controller/IdentityDirectoryController.java:38` |`interfaces/rest/IdentityDirectoryController.java:34`
+|`GET` |`/auth/departments/{departmentId}/users` |统一身份鉴权 |分页查询部门内的统一身份用户 |`controller/IdentityDirectoryController.java:67` |`interfaces/rest/IdentityDirectoryController.java:60`
+|`GET` |`/auth/users/{userId}` |统一身份鉴权 |按统一身份标识查询用户 |`controller/IdentityDirectoryController.java:96` |`interfaces/rest/IdentityDirectoryController.java:86`
+|`GET` |`/.well-known/jwks.json` |签名公钥 |获取 JWT 验签公钥 |`controller/SigningKeyController.java:16` |`interfaces/rest/SigningKeyController.java:17`
+|`GET` |`/api/v1/applications` |应用与权限 |查询应用列表 |`controller/ApplicationController.java:41` |`interfaces/rest/ApplicationController.java:42`
+|`POST` |`/api/v1/applications` |应用与权限 |新增应用 |`controller/ApplicationController.java:56` |`interfaces/rest/ApplicationController.java:57`
+|`PATCH` |`/api/v1/applications/{applicationId}` |应用与权限 |修改应用名称 |`controller/ApplicationController.java:68` |`interfaces/rest/ApplicationController.java:69`
+|`GET` |`/api/v1/applications/{applicationId}/permissions` |应用与权限 |查看应用权限树 |`controller/ApplicationController.java:83` |`interfaces/rest/ApplicationController.java:84`
+|`POST` |`/api/v1/applications/{applicationId}/permissions` |应用与权限 |登记菜单或按钮权限 |`controller/ApplicationController.java:95` |`interfaces/rest/ApplicationController.java:96`
+|`GET` |`/api/v1/applications/{applicationId}/permissions/{permissionId}` |应用与权限 |查看权限及关联接口 |`controller/ApplicationController.java:130` |`interfaces/rest/ApplicationController.java:145`
+|`PATCH` |`/api/v1/applications/{applicationId}/permissions/{permissionId}` |应用与权限 |保存权限资料和关联接口 |`controller/ApplicationController.java:111` |`interfaces/rest/ApplicationController.java:121`
+|`GET` |`/api/v1/roles` |角色管理 |查看或搜索角色 |`controller/RoleController.java:39` |`interfaces/rest/RoleController.java:32`
+|`POST` |`/api/v1/roles` |角色管理 |新增业务角色及继承配置 |`controller/RoleController.java:60` |`interfaces/rest/RoleController.java:56`
+|`GET` |`/api/v1/roles/{roleId}` |角色管理 |查看角色直接配置、继承关系及有效权限 |`controller/RoleController.java:72` |`interfaces/rest/RoleController.java:68`
+|`PUT` |`/api/v1/roles/{roleId}` |角色管理 |保存角色直接权限与继承关系 |`controller/RoleController.java:84` |`interfaces/rest/RoleController.java:80`
+|`DELETE` |`/api/v1/roles/{roleId}` |角色管理 |删除未关联用户的业务角色 |`controller/RoleController.java:99` |`interfaces/rest/RoleController.java:95`
+|`GET` |`/api/v1/departments` |用户与部门 |查看部门结构 |`controller/DepartmentController.java:36` |`interfaces/rest/DepartmentController.java:29`
+|`POST` |`/api/v1/departments` |用户与部门 |新增部门 |`controller/DepartmentController.java:44` |`interfaces/rest/DepartmentController.java:37`
+|`PATCH` |`/api/v1/departments/{departmentId}` |用户与部门 |修改部门信息 |`controller/DepartmentController.java:56` |`interfaces/rest/DepartmentController.java:49`
+|`GET` |`/api/v1/users` |用户与部门 |按管理范围查看或搜索用户 |`controller/UserController.java:40` |`interfaces/rest/UserController.java:35`
+|`POST` |`/api/v1/users` |用户与部门 |新增用户 |`controller/UserController.java:76` |`interfaces/rest/UserController.java:73`
+|`GET` |`/api/v1/users/{userId}` |用户与部门 |查看用户信息及已有角色 |`controller/UserController.java:64` |`interfaces/rest/UserController.java:61`
+|`PATCH` |`/api/v1/users/{userId}` |用户与部门 |修改用户、账号状态或所属部门 |`controller/UserController.java:89` |`interfaces/rest/UserController.java:94`
+|`PUT` |`/api/v1/users/{userId}/roles` |用户授权 |保存单个用户的业务角色 |`controller/AuthorizationController.java:37` |`interfaces/rest/UserRoleController.java:28`
+|`PATCH` |`/api/v1/user-role-assignments` |用户授权 |批量分配或撤销业务角色 |`controller/AuthorizationController.java:52` |`interfaces/rest/UserRoleController.java:43`
+|`GET` |`/api/v1/me/permissions` |我的权限 |查看我的权限 |`controller/AuthorizationController.java:63` |`interfaces/rest/MyPermissionController.java:21`
+|`GET` |`/api/v1/operation-logs` |操作记录 |查看或搜索操作记录 |`controller/OperationLogController.java:26` |`interfaces/rest/OperationLogController.java:26`
+|`GET` |`/api/v1/applications/{applicationId}/apis` |API 登记 |查询应用 API 清单 |`controller/ApiController.java:26` |`interfaces/rest/ApiController.java:34`
+|`POST` |`/api/v1/applications/{applicationId}/apis` |API 登记 |登记 API |`controller/ApiController.java:47` |`interfaces/rest/ApiController.java:55`
+|`PATCH` |`/api/v1/applications/{applicationId}/apis/{apiId}` |API 登记 |编辑 API 登记 |`controller/ApiController.java:62` |`interfaces/rest/ApiController.java:74`
+|`DELETE` |`/api/v1/applications/{applicationId}/apis/{apiId}` |API 登记 |移除 API 登记 |`controller/ApiController.java:79` |`interfaces/rest/ApiController.java:96`
+|`GET` |`/api/v1/permission-catalog` |角色管理 |读取角色配置权限目录 |`controller/PermissionCatalogController.java:19` |`interfaces/rest/PermissionCatalogController.java:21`
+|`GET` |`/api/v1/me/requestable-permissions` |权限申请 |查询本人可申请的权限 |`controller/PermissionRequestController.java:27` |`interfaces/rest/PermissionRequestController.java:47`
+|`GET` |`/api/v1/permission-requests` |权限申请 |查询本人或待审核的权限申请 |`controller/PermissionRequestController.java:35` |`interfaces/rest/PermissionRequestController.java:55`
+|`POST` |`/api/v1/permission-requests` |权限申请 |提交本人权限申请 |`controller/PermissionRequestController.java:56` |`interfaces/rest/PermissionRequestController.java:83`
+|`GET` |`/api/v1/permission-requests/{requestId}` |权限申请 |查看权限申请及审核角色 |`controller/PermissionRequestController.java:68` |`interfaces/rest/PermissionRequestController.java:96`
+|`POST` |`/api/v1/permission-requests/{requestId}/withdrawals` |权限申请 |撤回本人待审核申请 |`controller/PermissionRequestController.java:79` |`interfaces/rest/PermissionRequestController.java:107`
+|`POST` |`/api/v1/permission-requests/{requestId}/reviews` |权限申请 |审核权限申请并分配业务角色 |`controller/PermissionRequestController.java:90` |`interfaces/rest/PermissionRequestController.java:118`
+|`GET` |`/api/v1/role-creation-requests` |角色创建申请 |查询角色创建申请 |`controller/RoleCreationRequestController.java:27` |`interfaces/rest/RoleCreationRequestController.java:44`
+|`POST` |`/api/v1/role-creation-requests` |角色创建申请 |提交角色创建申请 |`controller/RoleCreationRequestController.java:45` |`interfaces/rest/RoleCreationRequestController.java:65`
+|`GET` |`/api/v1/role-creation-requests/{requestId}` |角色创建申请 |查看角色创建申请配置 |`controller/RoleCreationRequestController.java:57` |`interfaces/rest/RoleCreationRequestController.java:78`
+|`POST` |`/api/v1/role-creation-requests/{requestId}/reviews` |角色创建申请 |创建角色并通过或拒绝申请 |`controller/RoleCreationRequestController.java:68` |`interfaces/rest/RoleCreationRequestController.java:89`
+|===

@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3580 2860" width="3580" height="2860">
+<rect x="0" y="0" width="3580" height="2860" fill="#FFFFFF"/>
+<defs>
+<marker id="m-solid" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 z" fill="#17365D"/></marker>
+<marker id="m-open" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#17365D" stroke-width="1.9"/></marker>
+<marker id="m-open-err" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#A61B29" stroke-width="1.9"/></marker>
+<marker id="m-tri" markerWidth="16" markerHeight="14" refX="15" refY="7" orient="auto"><path d="M1,1 L15,7 L1,13 z" fill="#FFFFFF" stroke="#17365D" stroke-width="1.9"/></marker>
+</defs>
+<text x="50.0" y="69.6" text-anchor="start" font-size="40.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">RBAC1 面向对象顺序图 · 用户调动与状态管理</text>
+<text x="50.0" y="114.0" text-anchor="start" font-size="21.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">用例：PATCH /api/v1/users/{userId}。展示行级加锁、Operator 组织权限守卫、User 聚合状态流转与停用撤销会话。</text>
+<line x1="40.0" y1="134.0" x2="3540.0" y2="134.0" stroke="#B3C5D4" stroke-width="1.5"/>
+<rect x="66.4" y="624.8" width="570.5" height="121.6" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="66.4,624.8 140.4,624.8 140.4,648.8 132.4,656.8 66.4,656.8" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="76.4" y="647.8" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<text x="200.4" y="647.8" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[locked 为空：目标用户不存在]</text>
+<rect x="66.4" y="1008.8" width="1310.9" height="192.0" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="66.4,1008.8 140.4,1008.8 140.4,1032.8 132.4,1040.8 66.4,1040.8" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="76.4" y="1031.8" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<text x="200.4" y="1031.8" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[command.changesOrganization()]</text>
+<rect x="484.9" y="1373.6" width="2879.8" height="377.6" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="484.9,1373.6 558.9,1373.6 558.9,1397.6 550.9,1405.6 484.9,1405.6" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="494.9" y="1396.6" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<text x="618.9" y="1396.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[command.status() != null &amp;&amp; user.changeStatus(status)]</text>
+<rect x="500.9" y="1508.0" width="2180.2" height="119.0" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="500.9,1508.0 574.9,1508.0 574.9,1532.0 566.9,1540.0 500.9,1540.0" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="510.9" y="1531.0" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<text x="618.9" y="1531.0" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[!user.isActive()：账号被停用]</text>
+<rect x="484.9" y="1789.6" width="2879.8" height="204.8" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="484.9,1789.6 558.9,1789.6 558.9,1813.6 550.9,1821.6 484.9,1821.6" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="494.9" y="1812.6" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<text x="618.9" y="1812.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[user.transferTo(target.getId())：发生跨部门调动]</text>
+<rect x="484.9" y="2052.0" width="2879.8" height="294.4" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="484.9,2052.0 558.9,2052.0 558.9,2076.0 550.9,2084.0 484.9,2084.0" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="494.9" y="2075.0" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<text x="618.9" y="2075.0" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[command.departmentAdministrator() != null]</text>
+<rect x="60.0" y="180.0" width="244.8" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="182.4" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">obj: UserController</text>
+<polyline points="182.4,244.0 182.4,2696.8" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="416.3" y="180.0" width="369.2" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="600.9" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">service: UserApplicationService</text>
+<polyline points="600.9,244.0 600.9,2696.8" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="1221.5" y="180.0" width="239.6" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="1341.3" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">operator: Operator</text>
+<polyline points="1341.3,244.0 1341.3,2696.8" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="1515.1" y="180.0" width="271.2" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="1650.7" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">users: UserRepository</text>
+<polyline points="1650.7,244.0 1650.7,2696.8" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="1840.3" y="180.0" width="405.6" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="2043.1" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">departments: DepartmentRepository</text>
+<polyline points="2043.1,244.0 2043.1,2696.8" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="2299.9" y="180.0" width="156.0" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="2377.9" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">user: User</text>
+<polyline points="2377.9,244.0 2377.9,2696.8" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="2509.9" y="180.0" width="278.4" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="2649.1" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">sessions: SessionStore</text>
+<polyline points="2649.1,244.0 2649.1,2696.8" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="2842.3" y="180.0" width="263.2" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="2973.9" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">roles: RoleRepository</text>
+<polyline points="2973.9,244.0 2973.9,2696.8" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="3159.5" y="180.0" width="338.4" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="3328.7" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">recorder: OperationRecorder</text>
+<polyline points="3328.7,244.0 3328.7,2696.8" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="173.4" y="285.6" width="18.0" height="2355.2" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="591.9" y="336.8" width="18.0" height="2252.8" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1332.3" y="426.4" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1641.7" y="528.8" width="18.0" height="34.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="2034.1" y="810.4" width="18.0" height="32.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1332.3" y="912.8" width="18.0" height="34.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1332.3" y="1072.8" width="18.0" height="83.2" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="2368.9" y="1271.2" width="18.0" height="34.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="2368.9" y="1437.6" width="18.0" height="32.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="2640.1" y="1565.6" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="3319.7" y="1687.2" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="2368.9" y="1853.6" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="3319.7" y="1936.8" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="2964.9" y="2116.0" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="2368.9" y="2199.2" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="3319.7" y="2282.4" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1641.7" y="2416.8" width="18.0" height="34.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="2964.9" y="2506.4" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<polyline points="191.4,336.8 591.9,336.8" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="391.6" y="325.4" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">1. update(operator, userId, command)</text>
+<polyline points="609.9,426.4 1332.3,426.4" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="971.1" y="415.0" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">2. requireAdministrator()</text>
+<polyline points="609.9,528.8 1641.7,528.8" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1125.8" y="517.4" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">3. locked = findOrganizationUsersForUpdate(List.of(userId))</text>
+<polyline points="591.9,688.8 191.4,688.8" fill="none" stroke="#A61B29" stroke-width="1.8" stroke-dasharray="8,6" marker-end="url(#m-open-err)"/>
+<text x="391.6" y="677.4" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#A61B29" font-family="'Songti SC', 'SimSun', 'STSong', serif">DomainException(NOT_FOUND)</text>
+<polyline points="609.9,810.4 2034.1,810.4" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1322.0" y="799.0" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">4. tree = loadTree()</text>
+<polyline points="609.9,912.8 1332.3,912.8" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="971.1" y="901.4" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">5. original = requireManagedDepartment(tree, user.getDepartmentId())</text>
+<polyline points="609.9,1072.8 1332.3,1072.8" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="971.1" y="1061.4" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">6. requireOrganizationAuthority()</text>
+<polyline points="1332.3,1136.8 191.4,1136.8" fill="none" stroke="#A61B29" stroke-width="1.8" stroke-dasharray="8,6" marker-end="url(#m-open-err)"/>
+<text x="761.9" y="1125.4" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#A61B29" font-family="'Songti SC', 'SimSun', 'STSong', serif">DomainException(FORBIDDEN：非总管理员)</text>
+<polyline points="609.9,1271.2 2368.9,1271.2" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1489.4" y="1259.8" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">7. changed = changeUsername(username) / rename(name)</text>
+<polyline points="609.9,1437.6 2368.9,1437.6" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1489.4" y="1426.2" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">8. changeStatus(command.status())</text>
+<polyline points="609.9,1565.6 2640.1,1565.6" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1625.0" y="1554.2" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">9. revokeAllOf(userId)</text>
+<polyline points="609.9,1687.2 3319.7,1687.2" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1964.8" y="1675.8" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">10. recordUserScope(operator, action, detail, targets)</text>
+<polyline points="609.9,1853.6 2368.9,1853.6" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1489.4" y="1842.2" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">11. transferTo(target.getId())</text>
+<polyline points="609.9,1936.8 3319.7,1936.8" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1964.8" y="1925.4" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">12. recordGlobal(operator, &quot;跨部门调动&quot;, detail, target)</text>
+<polyline points="609.9,2116.0 2964.9,2116.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1787.4" y="2104.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">13. adminRole = findByType(DEPARTMENT_ADMIN)</text>
+<polyline points="609.9,2199.2 2368.9,2199.2" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1489.4" y="2187.8" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">14. changed = changeDepartmentAdministrator(appointed, roleId)</text>
+<polyline points="609.9,2282.4 3319.7,2282.4" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1964.8" y="2271.0" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">15. recordGlobal(operator, action, action, target)</text>
+<polyline points="609.9,2416.8 1641.7,2416.8" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1125.8" y="2405.4" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">16. save(user)</text>
+<polyline points="609.9,2506.4 2964.9,2506.4" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1787.4" y="2495.0" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">17. hierarchy = loadHierarchy()</text>
+<polyline points="591.9,2570.4 191.4,2570.4" fill="none" stroke="#17365D" stroke-width="1.8" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<text x="391.6" y="2559.0" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#17365D" font-family="'Songti SC', 'SimSun', 'STSong', serif">UserResult</text>
+<text x="50.0" y="2762.8" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">实线实心箭头：同步消息（按序编号）　虚线空心箭头：返回或未捕获异常（红色直返调用方，不逐段转发）</text>
+<text x="50.0" y="2796.8" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">未捕获的 DomainException 直接回到 UserController（由 RestExceptionHandler 统一翻译 HTTP 状态码），最后由 users.save(user) 一次性落库。</text>
+</svg>

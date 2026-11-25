@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.0 2.0 2468.0 1748.0" width="2468" height="1748">
+<rect x="-2.0" y="2.0" width="2468.0" height="1748.0" fill="#FFFFFF"/>
+<defs>
+<marker id="m-solid" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 z" fill="#17365D"/></marker>
+<marker id="m-open" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#17365D" stroke-width="1.9"/></marker>
+<marker id="m-open-err" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#A61B29" stroke-width="1.9"/></marker>
+<marker id="m-tri" markerWidth="16" markerHeight="14" refX="15" refY="7" orient="auto"><path d="M1,1 L15,7 L1,13 z" fill="#FFFFFF" stroke="#17365D" stroke-width="1.9"/></marker>
+<marker id="m-er-zero-many" markerWidth="20" markerHeight="16" refX="19" refY="8" orient="auto"><circle cx="4.5" cy="8" r="3.5" fill="#FFFFFF" stroke="#476581" stroke-width="1.6"/><path d="M19,2 L10,8 L19,14 M10,8 L19,8" fill="none" stroke="#476581" stroke-width="1.6"/></marker>
+<marker id="m-er-mand-one" markerWidth="14" markerHeight="14" refX="1" refY="7" orient="auto-start-reverse"><path d="M5,2 L5,12 M9,2 L9,12" fill="none" stroke="#476581" stroke-width="1.6"/></marker>
+<marker id="m-er-zero-one" markerWidth="18" markerHeight="14" refX="1" refY="7" orient="auto-start-reverse"><path d="M5,2 L5,12" fill="none" stroke="#476581" stroke-width="1.6"/><circle cx="12" cy="7" r="3.5" fill="#FFFFFF" stroke="#476581" stroke-width="1.6"/></marker>
+</defs>
+<text x="50.0" y="69.6" text-anchor="start" font-size="40.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">RBAC1 结构化包图 · rbac1-structured 后端分层</text>
+<text x="50.0" y="114.0" text-anchor="start" font-size="21.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">包 com.rbac.rbac1。面向功能的经典三层结构：controller 调 service，service 集中全部业务规则并直接依赖 mapper、entity、dto 与 vo；无独立领域层和仓储端口。</text>
+<line x1="40.0" y1="134.0" x2="2400.0" y2="134.0" stroke="#B3C5D4" stroke-width="1.5"/>
+<rect x="40.0" y="160.0" width="110.0" height="44.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.2"/>
+<rect x="40.0" y="204.0" width="2380.0" height="1396.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.2"/>
+<text x="52.0" y="191.7" text-anchor="start" font-size="26.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">rbac1</text>
+<rect x="90.0" y="240.0" width="148.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="90.0" y="274.0" width="1580.0" height="176.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="102.0" y="264.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">controller</text>
+<text x="104.0" y="302.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">RoleController、PermissionRequestController、RoleCreationRequestController、SessionInterceptor、RestExceptionHandler 等</text>
+<rect x="90.0" y="560.0" width="110.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="90.0" y="594.0" width="460.0" height="206.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="102.0" y="584.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">dto</text>
+<text x="104.0" y="622.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">RoleDTO、PermissionReviewDTO、RoleCreationR</text>
+<text x="104.0" y="648.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">eviewDTO 等请求体与校验</text>
+<rect x="90.0" y="900.0" width="110.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="90.0" y="934.0" width="460.0" height="206.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="102.0" y="924.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">vo</text>
+<text x="104.0" y="962.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">RoleDetailsVO、PermissionRequestVO、RoleCre</text>
+<text x="104.0" y="988.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">ationRequestVO 等响应体</text>
+<rect x="680.0" y="560.0" width="135.0" height="44.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.2"/>
+<rect x="680.0" y="604.0" width="990.0" height="426.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.2"/>
+<text x="692.0" y="591.7" text-anchor="start" font-size="26.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">service</text>
+<text x="694.0" y="632.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">RoleService、RolePermissionService、PermissionRequestService、RoleCreationRequestService、Reques</text>
+<text x="694.0" y="658.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">tStatusService、OperationLogService、ApprovalRules、DuplicateKeys（全部业务规则与事务）</text>
+<rect x="1840.0" y="560.0" width="110.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1840.0" y="594.0" width="520.0" height="436.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="1852.0" y="584.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">config</text>
+<text x="1854.0" y="622.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">LayerLoggingAspect 分层日志、JWT/Argon2 认证、WebCo</text>
+<text x="1854.0" y="648.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">nfig</text>
+<rect x="680.0" y="1150.0" width="110.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="680.0" y="1184.0" width="990.0" height="156.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="692.0" y="1174.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">mapper</text>
+<text x="694.0" y="1212.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">RoleMapper、RolePermissionMapper、RoleInheritanceMapper、UserRoleMapper、PermissionRequestMapper</text>
+<text x="694.0" y="1238.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">、RoleCreationRequestMapper 等 Spring Data JPA 接口</text>
+<rect x="90.0" y="1390.0" width="110.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="90.0" y="1424.0" width="2270.0" height="141.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="102.0" y="1414.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">entity</text>
+<text x="104.0" y="1452.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">Role、RolePermission、RoleInheritance、Permission、PermissionRequest、RoleCreationRequest、UserAccount、UserRole（贫血 JPA 实体 + 状态常量，无业务方法）</text>
+<polyline points="1175.0,450.0 1175.0,560.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="320.0,450.0 320.0,560.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="140.0,450.0 65.0,450.0 65.0,1020.0 90.0,1020.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="680.0,680.0 550.0,680.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="680.0,960.0 550.0,960.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1175.0,1030.0 1175.0,1150.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1670.0,960.0 1750.0,960.0 1750.0,1390.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1175.0,1340.0 1175.0,1390.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="550.0,760.0 615.0,760.0 615.0,1390.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="320.0,1140.0 320.0,1390.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="2100.0,560.0 2100.0,345.0 1670.0,345.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1840.0,795.0 1670.0,795.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<text x="50.0" y="1659.8" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">虚线空心箭头表示包依赖（与源码 import 方向一致）。结构化实现采用自上而下依赖：controller → service → mapper → entity。</text>
+<text x="50.0" y="1693.8" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">与 DDD 版的差异：没有独立 domain 层和仓储端口，没有依赖倒置；Service 直接消费 DTO、返回 VO，并通过 JPA Mapper 操作贫血实体表记录。</text>
+</svg>

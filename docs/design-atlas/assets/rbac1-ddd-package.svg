@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.0 2.0 2468.0 1898.0" width="2468" height="1898">
+<rect x="-2.0" y="2.0" width="2468.0" height="1898.0" fill="#FFFFFF"/>
+<defs>
+<marker id="m-solid" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 z" fill="#17365D"/></marker>
+<marker id="m-open" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#17365D" stroke-width="1.9"/></marker>
+<marker id="m-open-err" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#A61B29" stroke-width="1.9"/></marker>
+<marker id="m-tri" markerWidth="16" markerHeight="14" refX="15" refY="7" orient="auto"><path d="M1,1 L15,7 L1,13 z" fill="#FFFFFF" stroke="#17365D" stroke-width="1.9"/></marker>
+<marker id="m-er-zero-many" markerWidth="20" markerHeight="16" refX="19" refY="8" orient="auto"><circle cx="4.5" cy="8" r="3.5" fill="#FFFFFF" stroke="#476581" stroke-width="1.6"/><path d="M19,2 L10,8 L19,14 M10,8 L19,8" fill="none" stroke="#476581" stroke-width="1.6"/></marker>
+<marker id="m-er-mand-one" markerWidth="14" markerHeight="14" refX="1" refY="7" orient="auto-start-reverse"><path d="M5,2 L5,12 M9,2 L9,12" fill="none" stroke="#476581" stroke-width="1.6"/></marker>
+<marker id="m-er-zero-one" markerWidth="18" markerHeight="14" refX="1" refY="7" orient="auto-start-reverse"><path d="M5,2 L5,12" fill="none" stroke="#476581" stroke-width="1.6"/><circle cx="12" cy="7" r="3.5" fill="#FFFFFF" stroke="#476581" stroke-width="1.6"/></marker>
+</defs>
+<text x="50.0" y="69.6" text-anchor="start" font-size="40.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">RBAC1 面向对象包图 · rbac1-ddd 后端分层</text>
+<text x="50.0" y="114.0" text-anchor="start" font-size="21.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">包 com.rbac.rbac1ddd。接口层调用应用层，应用层编排领域层；基础设施层实现领域仓储端口和应用层端口（依赖倒置）。</text>
+<line x1="40.0" y1="134.0" x2="2400.0" y2="134.0" stroke="#B3C5D4" stroke-width="1.5"/>
+<rect x="40.0" y="160.0" width="150.0" height="44.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.2"/>
+<rect x="40.0" y="204.0" width="2380.0" height="1546.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.2"/>
+<text x="52.0" y="191.7" text-anchor="start" font-size="26.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">rbac1ddd</text>
+<rect x="80.0" y="230.0" width="180.0" height="44.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.2"/>
+<rect x="80.0" y="274.0" width="1620.0" height="256.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.2"/>
+<text x="92.0" y="261.7" text-anchor="start" font-size="26.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">interfaces</text>
+<rect x="120.0" y="300.0" width="81.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="120.0" y="334.0" width="980.0" height="166.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="132.0" y="324.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">rest</text>
+<text x="134.0" y="362.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">Controller、会话拦截器、统一异常处理</text>
+<rect x="150.0" y="400.0" width="69.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="150.0" y="434.0" width="300.0" height="50.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="162.0" y="424.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">dto</text>
+<text x="164.0" y="462.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">请求体</text>
+<rect x="480.0" y="400.0" width="58.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="480.0" y="434.0" width="300.0" height="50.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="492.0" y="424.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">vo</text>
+<text x="494.0" y="462.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">响应体</text>
+<rect x="1140.0" y="300.0" width="116.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1140.0" y="334.0" width="520.0" height="166.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="1152.0" y="324.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">startup</text>
+<text x="1154.0" y="362.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">首次启动创建总管理员</text>
+<rect x="300.0" y="640.0" width="194.0" height="44.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.2"/>
+<rect x="300.0" y="684.0" width="1400.0" height="426.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.2"/>
+<text x="312.0" y="671.7" text-anchor="start" font-size="26.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">application</text>
+<rect x="330.0" y="720.0" width="81.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="330.0" y="754.0" width="315.0" height="126.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="342.0" y="744.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">role</text>
+<text x="344.0" y="782.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">角色用例</text>
+<rect x="663.0" y="720.0" width="116.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="663.0" y="754.0" width="315.0" height="126.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="675.0" y="744.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">request</text>
+<text x="677.0" y="782.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">申请与审核用例</text>
+<rect x="996.0" y="720.0" width="81.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="996.0" y="754.0" width="315.0" height="126.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="1008.0" y="744.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">user</text>
+<text x="1010.0" y="782.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">用户与授权用例</text>
+<rect x="1329.0" y="720.0" width="81.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1329.0" y="754.0" width="315.0" height="126.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="1341.0" y="744.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">auth</text>
+<text x="1343.0" y="782.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">登录、令牌、权限检查</text>
+<rect x="330.0" y="910.0" width="69.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="330.0" y="944.0" width="315.0" height="126.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="342.0" y="934.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">app</text>
+<text x="344.0" y="972.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">应用、权限、接口</text>
+<rect x="663.0" y="910.0" width="152.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="663.0" y="944.0" width="315.0" height="126.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="675.0" y="934.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">department</text>
+<text x="677.0" y="972.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">部门用例</text>
+<rect x="996.0" y="910.0" width="93.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="996.0" y="944.0" width="315.0" height="126.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="1008.0" y="934.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">audit</text>
+<text x="1010.0" y="972.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">操作记录查询</text>
+<rect x="1329.0" y="910.0" width="105.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1329.0" y="944.0" width="315.0" height="126.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="1341.0" y="934.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">shared</text>
+<text x="1343.0" y="972.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">操作记录端口、分页</text>
+<rect x="80.0" y="1230.0" width="121.0" height="44.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.2"/>
+<rect x="80.0" y="1274.0" width="1620.0" height="426.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.2"/>
+<text x="92.0" y="1261.7" text-anchor="start" font-size="26.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">domain</text>
+<rect x="110.0" y="1310.0" width="81.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="110.0" y="1344.0" width="380.0" height="126.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="122.0" y="1334.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">role</text>
+<text x="124.0" y="1372.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">Role、RoleHierarchy</text>
+<rect x="510.0" y="1310.0" width="116.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="510.0" y="1344.0" width="380.0" height="126.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="522.0" y="1334.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">request</text>
+<text x="524.0" y="1372.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">PermissionRequest、ApprovalCandidat</text>
+<text x="524.0" y="1398.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">es</text>
+<rect x="910.0" y="1310.0" width="81.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="910.0" y="1344.0" width="380.0" height="126.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="922.0" y="1334.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">user</text>
+<text x="924.0" y="1372.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">User、ManagementRole</text>
+<rect x="1310.0" y="1310.0" width="152.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1310.0" y="1344.0" width="380.0" height="126.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="1322.0" y="1334.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">permission</text>
+<text x="1324.0" y="1372.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">PermissionCatalog、Permission</text>
+<rect x="110.0" y="1500.0" width="69.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="110.0" y="1534.0" width="380.0" height="126.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="122.0" y="1524.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">app</text>
+<text x="124.0" y="1562.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">BusinessApplication</text>
+<rect x="510.0" y="1500.0" width="69.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="510.0" y="1534.0" width="380.0" height="126.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="522.0" y="1524.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">api</text>
+<text x="524.0" y="1562.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">Api</text>
+<rect x="910.0" y="1500.0" width="152.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="910.0" y="1534.0" width="380.0" height="126.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="922.0" y="1524.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">department</text>
+<text x="924.0" y="1562.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">Department、DepartmentTree</text>
+<rect x="1310.0" y="1500.0" width="105.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1310.0" y="1534.0" width="380.0" height="126.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="1322.0" y="1524.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">shared</text>
+<text x="1324.0" y="1562.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">DomainException、DomainPage</text>
+<rect x="1840.0" y="640.0" width="238.0" height="44.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.2"/>
+<rect x="1840.0" y="684.0" width="540.0" height="1016.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.2"/>
+<text x="1852.0" y="671.7" text-anchor="start" font-size="26.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">infrastructure</text>
+<rect x="1870.0" y="720.0" width="163.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1870.0" y="754.0" width="480.0" height="346.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="1882.0" y="744.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">persistence</text>
+<text x="1884.0" y="782.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">Jpa 仓储实现、约束翻译</text>
+<rect x="1900.0" y="840.0" width="69.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1900.0" y="874.0" width="420.0" height="66.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="1912.0" y="864.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">dao</text>
+<text x="1914.0" y="902.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">Spring Data 接口</text>
+<rect x="1900.0" y="970.0" width="58.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1900.0" y="1004.0" width="420.0" height="66.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="1912.0" y="994.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">po</text>
+<text x="1914.0" y="1032.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">持久化对象</text>
+<rect x="1870.0" y="1140.0" width="128.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1870.0" y="1174.0" width="480.0" height="136.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="1882.0" y="1164.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">security</text>
+<text x="1884.0" y="1202.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">Argon2 密码、JWT 令牌</text>
+<rect x="1870.0" y="1350.0" width="116.0" height="34.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1870.0" y="1384.0" width="480.0" height="136.0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.6"/>
+<text x="1882.0" y="1374.5" text-anchor="start" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">logging</text>
+<text x="1884.0" y="1412.0" text-anchor="start" font-size="18.0" font-weight="normal" fill="#3A5570" font-family="'STFangsong', 'FangSong', 'Songti SC', serif">LayerLoggingAspect 分层日志</text>
+<polyline points="1000.0,530.0 1000.0,640.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1000.0,1110.0 1000.0,1230.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="190.0,530.0 190.0,1230.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1840.0,875.0 1700.0,875.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1840.0,1465.0 1700.0,1465.0" fill="none" stroke="#17365D" stroke-width="2.6" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<text x="50.0" y="1809.8" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">虚线空心箭头：包依赖（箭头指向被依赖的包）。domain 不依赖任何其他层，只在内部模块之间引用，例如 request → role、permission。</text>
+<text x="50.0" y="1843.8" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">infrastructure 实现 domain 中的 RoleRepository、UserRepository 等仓储接口，以及 application 中的 OperationRecorder、SessionStore、PasswordHasher、TokenIssuer 等端口。</text>
+</svg>

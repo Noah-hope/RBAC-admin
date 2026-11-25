@@ -9,7 +9,8 @@
 | 想了解什么 | 阅读入口 |
 | --- | --- |
 | 项目范围和业务规则 | [RBAC0 需求](docs/01-requirements/RBAC0需求说明.md) · [RBAC1 需求](docs/01-requirements/RBAC1需求说明.md) |
-| 设计资料和界面原型 | [文档索引](docs/README.md) · [统一设计图](docs/项目设计图.drawio) · [RBAC1 界面原型](docs/02-ui-design/RBAC1界面原型.html) |
+| 设计文档（Gitee 在线看图） | [数据库设计文档（.adoc）](docs/数据库设计文档.adoc) · [详细设计文档（.adoc）](docs/详细设计文档.adoc) |
+| 交互图册、图稿母本与原型 | [交互式设计图册（HTML）](docs/design-atlas/index.html) · [统一设计图（36 页 .drawio）](docs/项目设计图.drawio) · [RBAC1 界面原型](docs/02-ui-design/RBAC1界面原型.html) · [文档索引](docs/README.md) |
 | 代码结构和阅读顺序 | [RBAC0 代码阅读指南](docs/04-development/代码阅读指南.md) · [RBAC1 结构化后端说明](rbac1-structured/README.md) · [RBAC1 DDD 分层](rbac1-ddd/README.md#分层) |
 | 后端配置、启动和测试 | [RBAC0 结构化后端](rbac0-structured/README.md#启动) · [RBAC1 结构化后端](rbac1-structured/README.md#启动) · [RBAC1 DDD 后端](rbac1-ddd/README.md#运行) |
 | JaCoCo 覆盖率测试（现场检查） | [JaCoCo 覆盖率测试操作指南](docs/04-development/JaCoCo覆盖率测试指南.md) |
@@ -57,11 +58,14 @@ RBAC-admin/
 │   └── stack.yml             MySQL、两套后端和前端的 Swarm 配置
 └── docs/
     ├── README.md             文档索引
+    ├── 数据库设计文档.adoc     ER 图、物理表结构与 18 张表数据字典
+    ├── 详细设计文档.adoc       包图、DDD 全景图、Swarm 部署图与 7 组核心用例对照
+    ├── design-atlas/          交互式设计与架构图册（HTML + 36 张 SVG 矢量图）
     ├── 01-requirements/       RBAC0 和 RBAC1 需求
     ├── 02-ui-design/          界面操作清单和 HTML 原型
     ├── 03-api/                三个后端的 OpenAPI 契约
     ├── 04-development/        代码阅读指南和开发资料
-    └── 项目设计图.drawio       统一设计图源文件
+    └── 项目设计图.drawio       统一设计图源文件（36 页）
 ```
 
 两个 RBAC1 后端提供相同的 47 个 HTTP 接口，共用 RBAC1 数据库结构和 Flyway 迁移，首次构建均需先安装课程提供的 CloneFactory。RBAC0 使用独立数据库。

@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="702.0 1.0 1762.0 806.0" width="1762" height="806">
+<rect x="702.0" y="1.0" width="1762.0" height="806.0" fill="#FFFFFF"/>
+<defs>
+<marker id="m-solid" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 z" fill="#17365D"/></marker>
+<marker id="m-open" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#17365D" stroke-width="1.9"/></marker>
+<marker id="m-open-err" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#A61B29" stroke-width="1.9"/></marker>
+<marker id="m-tri" markerWidth="16" markerHeight="14" refX="15" refY="7" orient="auto"><path d="M1,1 L15,7 L1,13 z" fill="#FFFFFF" stroke="#17365D" stroke-width="1.9"/></marker>
+<marker id="m-er-zero-many" markerWidth="20" markerHeight="16" refX="19" refY="8" orient="auto"><circle cx="4.5" cy="8" r="3.5" fill="#FFFFFF" stroke="#476581" stroke-width="1.6"/><path d="M19,2 L10,8 L19,14 M10,8 L19,8" fill="none" stroke="#476581" stroke-width="1.6"/></marker>
+<marker id="m-er-mand-one" markerWidth="14" markerHeight="14" refX="1" refY="7" orient="auto-start-reverse"><path d="M5,2 L5,12 M9,2 L9,12" fill="none" stroke="#476581" stroke-width="1.6"/></marker>
+<marker id="m-er-zero-one" markerWidth="18" markerHeight="14" refX="1" refY="7" orient="auto-start-reverse"><path d="M5,2 L5,12" fill="none" stroke="#476581" stroke-width="1.6"/><circle cx="12" cy="7" r="3.5" fill="#FFFFFF" stroke="#476581" stroke-width="1.6"/></marker>
+</defs>
+<text x="802.0" y="67.2" text-anchor="start" font-size="32.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">RBAC1 权限管理系统概念 ER 图</text>
+<text x="804.0" y="111.3" text-anchor="start" font-size="16.0" font-weight="bold" fill="#39556F" font-family="'Songti SC', 'SimSun', 'STSong', serif">矩形表示实体　菱形表示联系　椭圆表示属性　下划线表示实体标识</text>
+<rect x="782.0" y="360.0" width="158.0" height="66.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="2"/>
+<text x="861.0" y="385.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">部门</text>
+<text x="861.0" y="411.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">Department</text>
+<ellipse cx="808.0" cy="520.0" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="808.0" y="524.4" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">部门编号</text>
+<polyline points="834.7,426.0 808.0,501.0" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<ellipse cx="934.0" cy="520.0" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="934.0" y="524.4" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">部门名称</text>
+<polyline points="887.3,426.0 934.0,501.0" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<rect x="1107.0" y="357.0" width="158.0" height="66.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="2"/>
+<text x="1186.0" y="382.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">用户</text>
+<text x="1186.0" y="408.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">User</text>
+<ellipse cx="1054.0" cy="520.0" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="1054.0" y="524.4" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">用户编号</text>
+<polyline points="1138.6,423.0 1054.0,501.0" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<ellipse cx="1142.0" cy="520.0" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="1142.0" y="524.4" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">用户名</text>
+<polyline points="1170.2,423.0 1142.0,501.0" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<ellipse cx="1230.0" cy="520.0" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="1230.0" y="524.4" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">密码摘要</text>
+<polyline points="1201.8,423.0 1230.0,501.0" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<ellipse cx="1318.0" cy="520.0" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="1318.0" y="524.4" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">账号状态</text>
+<polyline points="1233.4,423.0 1318.0,501.0" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<rect x="1447.0" y="359.0" width="125.0" height="66.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="2"/>
+<text x="1509.5" y="384.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">角色</text>
+<text x="1509.5" y="410.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">Role</text>
+<ellipse cx="1438.0" cy="520.0" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="1438.0" y="524.4" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">角色编号</text>
+<polyline points="1488.7,425.0 1438.0,501.0" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<ellipse cx="1530.0" cy="520.0" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="1530.0" y="524.4" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">角色名称</text>
+<polyline points="1530.3,425.0 1530.0,501.0" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<rect x="1842.0" y="361.5" width="158.0" height="66.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="2"/>
+<text x="1921.0" y="386.9" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">权限</text>
+<text x="1921.0" y="412.9" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">Permission</text>
+<ellipse cx="1789.0" cy="524.5" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="1789.0" y="528.9" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">权限编号</text>
+<polyline points="1873.6,427.5 1789.0,505.5" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<ellipse cx="1875.0" cy="524.5" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="1875.0" y="528.9" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">权限名称</text>
+<polyline points="1905.2,427.5 1875.0,505.5" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<ellipse cx="1961.0" cy="524.5" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="1961.0" y="528.9" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">权限类型</text>
+<polyline points="1936.8,427.5 1961.0,505.5" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<rect x="2140.0" y="361.5" width="158.0" height="66.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="2"/>
+<text x="2219.0" y="386.9" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">接口</text>
+<text x="2219.0" y="412.9" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">API</text>
+<ellipse cx="2145.0" cy="524.5" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="2145.0" y="528.9" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">接口编号</text>
+<polyline points="2179.5,427.5 2145.0,505.5" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<ellipse cx="2235.0" cy="524.5" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="2235.0" y="528.9" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">请求方法</text>
+<polyline points="2219.0,427.5 2235.0,505.5" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<ellipse cx="2325.0" cy="524.5" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="2325.0" y="528.9" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">请求路径</text>
+<polyline points="2258.5,427.5 2325.0,505.5" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<rect x="1993.0" y="103.0" width="158.0" height="66.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="2"/>
+<text x="2072.0" y="128.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">应用</text>
+<text x="2072.0" y="154.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">Application</text>
+<ellipse cx="2011.0" cy="48.0" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="2011.0" y="52.4" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">应用编号</text>
+<polyline points="2045.7,103.0 2011.0,67.0" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<ellipse cx="2105.0" cy="48.0" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="2105.0" y="52.4" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">应用名称</text>
+<polyline points="2098.3,103.0 2105.0,67.0" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<polygon points="1032.0,364.0 1080.0,390.0 1032.0,416.0 984.0,390.0" fill="#F1F6FB" stroke="#526E88" stroke-width="2"/>
+<text x="1032.0" y="394.7" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">隶属</text>
+<polyline points="940.0,393.0 984.0,390.0" fill="none" stroke="#476581" stroke-width="3"/>
+<polyline points="1080.0,390.0 1107.0,390.0" fill="none" stroke="#476581" stroke-width="3"/>
+<text x="968.0" y="374.4" text-anchor="middle" font-size="14.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">1</text>
+<text x="1086.0" y="374.4" text-anchor="middle" font-size="14.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">N</text>
+<polygon points="1356.0,364.0 1404.0,390.0 1356.0,416.0 1308.0,390.0" fill="#F1F6FB" stroke="#526E88" stroke-width="2"/>
+<text x="1356.0" y="394.7" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">分配角色</text>
+<polyline points="1265.0,390.0 1308.0,390.0" fill="none" stroke="#476581" stroke-width="3"/>
+<polyline points="1404.0,390.0 1447.0,392.0" fill="none" stroke="#476581" stroke-width="3"/>
+<text x="1275.0" y="374.4" text-anchor="middle" font-size="14.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">M</text>
+<text x="1421.0" y="374.4" text-anchor="middle" font-size="14.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">N</text>
+<polygon points="1703.0,367.0 1763.0,393.0 1703.0,419.0 1643.0,393.0" fill="#F1F6FB" stroke="#526E88" stroke-width="2"/>
+<text x="1703.0" y="397.7" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">直接授予权限</text>
+<polyline points="1763.0,393.0 1842.0,394.5" fill="none" stroke="#476581" stroke-width="3"/>
+<text x="1806.0" y="411.9" text-anchor="middle" font-size="14.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">N</text>
+<polygon points="2070.0,368.5 2118.0,394.5 2070.0,420.5 2022.0,394.5" fill="#F1F6FB" stroke="#526E88" stroke-width="2"/>
+<text x="2070.0" y="399.2" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">关联接口</text>
+<polyline points="2000.0,394.5 2022.0,394.5" fill="none" stroke="#476581" stroke-width="3"/>
+<polyline points="2118.0,394.5 2140.0,394.5" fill="none" stroke="#476581" stroke-width="3"/>
+<text x="2010.0" y="378.9" text-anchor="middle" font-size="14.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">M</text>
+<text x="2134.0" y="378.9" text-anchor="middle" font-size="14.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">N</text>
+<polygon points="2092.0,235.0 2140.0,261.0 2092.0,287.0 2044.0,261.0" fill="#F1F6FB" stroke="#526E88" stroke-width="2"/>
+<text x="2092.0" y="265.7" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">包含权限</text>
+<polyline points="2072.0,169.0 2092.0,235.0" fill="none" stroke="#476581" stroke-width="3"/>
+<polyline points="2092.0,287.0 1982.9,364.9" fill="none" stroke="#476581" stroke-width="3"/>
+<text x="2055.0" y="206.1" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">1</text>
+<text x="2037.0" y="301.1" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">N</text>
+<polygon points="861.0,209.0 920.0,238.0 861.0,267.0 802.0,238.0" fill="#F1F6FB" stroke="#526E88" stroke-width="2"/>
+<text x="861.0" y="242.7" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">组织上下级</text>
+<polyline points="823.1,360.0 831.5,252.5" fill="none" stroke="#476581" stroke-width="3"/>
+<polyline points="898.9,360.0 890.5,252.5" fill="none" stroke="#476581" stroke-width="3"/>
+<text x="789.0" y="289.4" text-anchor="middle" font-size="14.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">上级 1</text>
+<text x="941.0" y="307.4" text-anchor="middle" font-size="14.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">下级 N</text>
+<polygon points="1875.0,193.0 1955.0,225.0 1875.0,257.0 1795.0,225.0" fill="#F1F6FB" stroke="#526E88" stroke-width="2"/>
+<text x="1875.0" y="229.7" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">菜单包含按钮</text>
+<polyline points="1868.9,361.0 1795.0,225.0" fill="none" stroke="#476581" stroke-width="3"/>
+<polyline points="1940.1,357.7 1955.0,225.0" fill="none" stroke="#476581" stroke-width="3"/>
+<text x="1789.0" y="302.1" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">菜单 1</text>
+<text x="1910.0" y="299.4" text-anchor="middle" font-size="14.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">按钮 N</text>
+<text x="772.0" y="594.1" text-anchor="start" font-size="17.0" font-weight="bold" fill="#39556F" font-family="'Songti SC', 'SimSun', 'STSong', serif">总管理员管理全部用户；部门管理员管理本部门及下级部门用户。</text>
+<text x="1763.0" y="609.1" text-anchor="start" font-size="15.0" font-weight="bold" fill="#39556F" font-family="'Songti SC', 'SimSun', 'STSong', serif">权限与 API 必须属于同一应用；operationId 在应用内唯一。未关联权限的 API 不授予调用资格。</text>
+<rect x="1107.0" y="201.0" width="158.0" height="66.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="2"/>
+<text x="1186.0" y="226.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">操作记录</text>
+<text x="1186.0" y="252.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">AuditLog</text>
+<ellipse cx="1002.0" cy="160.0" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="1002.0" y="164.4" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">记录编号</text>
+<ellipse cx="1094.0" cy="160.0" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="1094.0" y="164.4" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">操作时间</text>
+<ellipse cx="1186.0" cy="160.0" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="1186.0" y="164.4" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">操作内容</text>
+<ellipse cx="1278.0" cy="160.0" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="1278.0" y="164.4" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">操作对象</text>
+<ellipse cx="1370.0" cy="160.0" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="1370.0" y="164.4" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">操作结果</text>
+<polyline points="1132.3,201.0 1002.0,179.0" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<polyline points="1159.1,201.0 1094.0,179.0" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<polyline points="1186.0,201.0 1186.0,179.0" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<polyline points="1212.9,201.0 1278.0,179.0" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<polyline points="1239.7,201.0 1370.0,179.0" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<polygon points="1186.0,286.0 1242.0,312.0 1186.0,338.0 1130.0,312.0" fill="#F1F6FB" stroke="#526E88" stroke-width="2"/>
+<text x="1186.0" y="316.7" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">产生记录</text>
+<polyline points="1186.0,357.0 1186.0,338.0" fill="none" stroke="#476581" stroke-width="3"/>
+<polyline points="1186.0,286.0 1186.0,267.0" fill="none" stroke="#476581" stroke-width="3"/>
+<text x="1206.0" y="351.1" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">1</text>
+<text x="1222.0" y="281.1" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">N</text>
+<polygon points="2370.0,161.0 2418.0,187.0 2370.0,213.0 2322.0,187.0" fill="#F1F6FB" stroke="#526E88" stroke-width="2"/>
+<text x="2370.0" y="191.7" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">包含接口</text>
+<polyline points="2151.0,136.0 2322.0,187.0" fill="none" stroke="#476581" stroke-width="3"/>
+<polyline points="2418.0,187.0 2282.2,361.5" fill="none" stroke="#476581" stroke-width="3"/>
+<text x="2188.0" y="120.1" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">1</text>
+<text x="2264.0" y="252.6" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">N</text>
+<text x="1757.0" y="656.3" text-anchor="start" font-size="16.0" font-weight="bold" fill="#39556F" font-family="'Songti SC', 'SimSun', 'STSong', serif">权限与 API 多对多；拥有任一关联权限即可通过功能检查</text>
+<ellipse cx="2047.0" cy="524.5" rx="42.0" ry="19.0" fill="#FFFFFF" stroke="#91A8BB" stroke-width="1.3"/>
+<text x="2047.0" y="528.9" text-anchor="middle" font-size="16.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">权限标识</text>
+<polyline points="1968.4,427.5 2047.0,505.5" fill="none" stroke="#91A8BB" stroke-width="1.4"/>
+<polyline points="1572.0,392.0 1643.0,393.0" fill="none" stroke="#476581" stroke-width="3"/>
+<text x="1599.0" y="410.4" text-anchor="middle" font-size="14.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">M</text>
+<polygon points="1574.0,149.0 1638.0,181.0 1574.0,213.0 1510.0,181.0" fill="#F1F6FB" stroke="#526E88" stroke-width="3"/>
+<text x="1574.0" y="185.7" text-anchor="middle" font-size="17.0" font-weight="bold" fill="#14283d" font-family="'Songti SC', 'SimSun', 'STSong', serif">继承</text>
+<polyline points="1467.0,359.0 1542.0,197.0" fill="none" stroke="#476581" stroke-width="3"/>
+<rect x="1471.1" y="266.1" width="66.8" height="17.5" fill="#FFFFFF"/>
+<text x="1504.5" y="281.5" text-anchor="middle" font-size="14.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', serif">继承方 M</text>
+<polyline points="1547.0,359.0 1606.0,197.0" fill="none" stroke="#476581" stroke-width="3"/>
+<rect x="1536.1" y="266.1" width="80.8" height="17.5" fill="#FFFFFF"/>
+<text x="1576.5" y="281.5" text-anchor="middle" font-size="14.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', serif">被继承方 N</text>
+<text x="774.0" y="706.1" text-anchor="start" font-size="16.0" font-weight="bold" fill="#39556F" font-family="'Songti SC', 'SimSun', 'STSong', serif">角色继承仅限业务角色；禁止自继承和循环继承（DAG）。</text>
+<text x="774.0" y="727.8" text-anchor="start" font-size="16.0" font-weight="bold" fill="#39556F" font-family="'Songti SC', 'SimSun', 'STSong', serif">有效权限＝直接权限 ∪ 全部可达父角色的直接权限；继承权限及配置来源按关系计算，不重复保存。</text>
+<text x="774.0" y="749.6" text-anchor="start" font-size="16.0" font-weight="bold" fill="#39556F" font-family="'Songti SC', 'SimSun', 'STSong', serif">角色作为继承方或被继承方仍有关联时，须先解除继承关系才能删除。</text>
+</svg>

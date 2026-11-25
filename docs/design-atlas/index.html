@@ -1,0 +1,1848 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>RBAC1 权限管理系统 · 设计与架构图册</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#overview">
+      <span class="brand-mark">R1</span>
+      <span class="brand-text"><b>RBAC1 设计图册</b><small>结构化 · DDD 双实现</small></span>
+    </a>
+    <nav class="toc" aria-label="章节导航">
+      <a href="#overview" class="active"><span>00</span>架构总览</a>
+      <a href="#packages"><span>01</span>包图与部署</a>
+      <a href="#cases"><span>02</span>类图与顺序图</a>
+      <a href="#data"><span>03</span>ER 与数据字典</a>
+      <a href="#api"><span>04</span>OpenAPI 目录</a>
+      <p class="toc-sub">核心用例</p>
+      <a class="sub" href="#sc-role"><span>01</span>角色继承配置</a>
+      <a class="sub" href="#sc-review"><span>02</span>权限申请审核</a>
+      <a class="sub" href="#sc-creation"><span>03</span>角色创建申请审批</a>
+      <a class="sub" href="#sc-user"><span>04</span>用户调动与状态管理</a>
+      <a class="sub" href="#sc-permission"><span>05</span>权限登记与接口关联</a>
+      <a class="sub" href="#sc-department"><span>06</span>部门调整与防环校验</a>
+      <a class="sub" href="#sc-authme"><span>07</span>统一身份与有效权限</a>
+    </nav>
+    <div class="side-foot">
+      项目设计图.drawio · 36 页<br>
+      RBAC1-api.yaml · 47 接口<br>
+      Flyway V1–V2 · 18 张表
+    </div>
+  </aside>
+
+  <main>
+    <!-- 00 总览（极简留白版） -->
+    <section id="overview" class="panel">
+      <p class="kicker"><span>00</span>架构总览</p>
+      <h1>RBAC1 权限管理系统</h1>
+      <p class="lead">同一份 API 契约与数据库结构，分别提供面向功能（结构化）与面向对象（DDD）两套独立后端实现。</p>
+
+      <div class="metrics">
+        <div class="metric"><strong>2</strong><span>独立后端实现</span></div>
+        <div class="metric"><strong>47</strong><span>统一 OpenAPI 接口</span></div>
+        <div class="metric"><strong>18</strong><span>共享数据表</span></div>
+        <div class="metric"><strong>36</strong><span>系统设计图</span></div>
+      </div>
+
+      <h3 class="sub-title" style="margin-top:0">结构化 vs DDD 核心差异</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>维度</th><th>结构化（rbac1-structured）</th><th>DDD（rbac1-ddd）</th></tr></thead>
+          <tbody>
+            <tr><td><b>依赖方向</b></td><td><code>controller → service → mapper → entity</code></td><td><code>interfaces → application → domain ← infrastructure</code></td></tr>
+            <tr><td><b>领域模型</b></td><td>贫血实体 + 字符串常量</td><td>充血聚合根 + 不可变快照 + 枚举</td></tr>
+            <tr><td><b>规则位置</b></td><td>集中在 Service 过程方法</td><td>聚合根 + 领域服务，应用层仅编排</td></tr>
+            <tr><td><b>对象转换</b></td><td><code>DTO → Service → VO</code></td><td><code>DTO → Command → Domain → Result → VO</code></td></tr>
+            <tr><td><b>持久化</b></td><td>Service 直接组合多个 Mapper</td><td>一聚合一仓储端口，JPA 适配器封装多表</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="evolution">
+        <div class="evo-card">
+          <h3>RBAC0 基线</h3>
+          <ul>
+            <li>仅角色直接权限，无继承</li>
+            <li>单套结构化后端</li>
+            <li>用户、部门、应用、权限与申请闭环</li>
+          </ul>
+        </div>
+        <div class="evo-card highlight">
+          <h3>RBAC1 扩展</h3>
+          <ul>
+            <li>角色多父多层 DAG 继承（禁环、保后代菜单）</li>
+            <li>新增独立 DDD 后端对照实现</li>
+            <li>接入系统统一身份鉴权与角色码映射</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01 包图 -->
+    <section id="packages" class="panel" hidden>
+      <p class="kicker"><span>01</span>后端包图</p>
+      <h2>依赖倒置 vs 自上而下分层</h2>
+      <p class="lead">箭头按源码 <code>import</code> 方向绘制。</p>
+
+      <div class="compare" id="cmp-pkg" data-compare>
+        <div class="compare-bar">
+          <div class="segmented" role="radiogroup" aria-label="布局">
+            <button type="button" role="radio" data-layout="both" aria-checked="true">左右并排</button>
+            <button type="button" role="radio" data-layout="ddd" aria-checked="false">仅 DDD</button>
+            <button type="button" role="radio" data-layout="str" aria-checked="false">仅结构化</button>
+          </div>
+          <button type="button" class="btn small ghost" data-compare-full><span class="i-full"></span><span class="full-label">全屏对照</span></button>
+        </div>
+        <div class="compare-grid" data-layout="both"><figure class="viewer" id="cmp-pkg-ddd" data-slot="ddd" data-main-src="assets/rbac1-ddd-package.svg" data-main-title="RBAC1-DDD-包图-后端分层" data-main-note="infrastructure 依赖倒置实现 domain 与 application 端口">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag ddd">DDD</span>
+      <h3>RBAC1-DDD-包图-后端分层</h3>
+      <p>infrastructure 依赖倒置实现 domain 与 application 端口</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-ddd-package.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-ddd-package.svg" alt="RBAC1-DDD-包图-后端分层" draggable="false"></div>
+  </div>
+</figure><figure class="viewer" id="cmp-pkg-str" data-slot="str" data-main-src="assets/rbac1-structured-package.svg" data-main-title="RBAC1-结构化-包图-后端分层" data-main-note="controller → service → mapper → entity 自上而下依赖">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag str">结构化</span>
+      <h3>RBAC1-结构化-包图-后端分层</h3>
+      <p>controller → service → mapper → entity 自上而下依赖</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-structured-package.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-structured-package.svg" alt="RBAC1-结构化-包图-后端分层" draggable="false"></div>
+  </div>
+</figure></div>
+      </div>
+
+      <ul class="notes">
+        <li><b>DDD 依赖倒置：</b><code>infrastructure</code> 实现 <code>domain</code> 仓储端口与 <code>application</code> 端口；<code>interfaces</code> 仅引用领域枚举与 <code>DomainException</code>。</li>
+        <li><b>结构化分层：</b><code>service</code> 直接依赖 <code>dto</code>、<code>vo</code>、<code>mapper</code> 与 <code>entity</code>，无独立领域层。</li>
+      </ul>
+      <h3 class="sub-title" style="margin-top:28px">DDD 领域模型全景与 Docker Swarm 集群部署拓扑</h3>
+      <div class="compare" id="cmp-arch-extra" data-compare>
+        <div class="compare-bar">
+          <div class="segmented" role="radiogroup" aria-label="布局">
+            <button type="button" role="radio" data-layout="stack" aria-checked="true">上下全宽</button>
+            <button type="button" role="radio" data-layout="both" aria-checked="false">左右并排</button>
+            <button type="button" role="radio" data-layout="domain" aria-checked="false">仅领域全景</button>
+            <button type="button" role="radio" data-layout="swarm" aria-checked="false">仅集群部署</button>
+          </div>
+          <button type="button" class="btn small ghost" data-compare-full><span class="i-full"></span><span class="full-label">全屏对照</span></button>
+        </div>
+        <div class="compare-grid" data-layout="stack"><figure class="viewer" id="cmp-arch-domain" data-slot="domain" data-main-src="assets/rbac1-ddd-domain-model.svg" data-main-title="RBAC1-DDD-类图-领域模型全景" data-main-note="7 个领域子包聚合根与不可变领域服务关系总览">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag ddd">DDD 全景</span>
+      <h3>RBAC1-DDD-类图-领域模型全景</h3>
+      <p>7 个领域子包聚合根与不可变领域服务关系总览</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-ddd-domain-model.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-ddd-domain-model.svg" alt="RBAC1-DDD-类图-领域模型全景" draggable="false"></div>
+  </div>
+</figure><figure class="viewer" id="cmp-arch-swarm" data-slot="swarm" data-main-src="assets/rbac1-swarm-deployment.svg" data-main-title="RBAC1-部署图-DockerSwarm集群" data-main-note="权限管理系统与课程管理系统在 Docker Swarm 上的节点隔离与统一身份联调拓扑">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag str">Swarm 部署</span>
+      <h3>RBAC1-部署图-DockerSwarm集群</h3>
+      <p>权限管理系统与课程管理系统在 Docker Swarm 上的节点隔离与统一身份联调拓扑</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-swarm-deployment.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-swarm-deployment.svg" alt="RBAC1-部署图-DockerSwarm集群" draggable="false"></div>
+  </div>
+</figure></div>
+      </div>
+    </section>
+
+    <!-- 02 核心用例 -->
+    <section id="cases" class="panel" hidden>
+      <p class="kicker"><span>02</span>类图与顺序图</p>
+      <h2>七组核心用例对照</h2>
+      <p class="lead">覆盖角色继承、两类审批、用户调动、权限登记、部门树防环与统一身份鉴权全部 7 大核心模块（共 28 张双实现 UML 类图与顺序图）。</p>
+      <article class="scenario" id="sc-role">
+  <div class="scenario-head">
+    <span class="scenario-num">01</span>
+    <h3>角色继承配置</h3>
+    <code class="endpoint-chip">PUT /api/v1/roles/{roleId}</code>
+  </div>
+  <p class="scenario-lead">单事务替换业务角色的直接权限与父角色：校验预置只读、禁重复直接配置、禁环及后代按钮菜单完整。</p>
+
+  <div class="compare" id="cmp-role" data-compare>
+    <div class="compare-bar">
+      <div class="segmented" role="radiogroup" aria-label="图类型">
+        <button type="button" role="radio" data-kind="class" aria-checked="true">类图</button>
+        <button type="button" role="radio" data-kind="seq" aria-checked="false">顺序图</button>
+      </div>
+      <div class="segmented" role="radiogroup" aria-label="布局">
+        <button type="button" role="radio" data-layout="stack" aria-checked="true">上下全宽</button>
+        <button type="button" role="radio" data-layout="both" aria-checked="false">左右并排</button>
+        <button type="button" role="radio" data-layout="ddd" aria-checked="false">仅 DDD</button>
+        <button type="button" role="radio" data-layout="str" aria-checked="false">仅结构化</button>
+      </div>
+      <button type="button" class="btn small ghost" data-compare-full><span class="i-full"></span><span class="full-label">全屏对照</span></button>
+    </div>
+    <div class="compare-grid" data-layout="stack"><figure class="viewer" id="cmp-role-ddd" data-slot="ddd" data-class-src="assets/rbac1-ddd-class-role.svg" data-class-title="DDD 类图 · 角色继承配置" data-class-note="应用服务编排，领域对象承载规则，仓储端口依赖倒置" data-seq-src="assets/rbac1-ddd-seq-role.svg" data-seq-title="DDD 顺序图 · 角色继承配置" data-seq-note="领域行为委托、«MetaClass» 静态工厂、异常直返调用方">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag ddd">DDD</span>
+      <h3>DDD 类图 · 角色继承配置</h3>
+      <p>应用服务编排，领域对象承载规则，仓储端口依赖倒置</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-ddd-class-role.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-ddd-class-role.svg" alt="DDD 类图 · 角色继承配置" draggable="false"></div>
+  </div>
+</figure><figure class="viewer" id="cmp-role-str" data-slot="str" data-class-src="assets/rbac1-structured-class-role.svg" data-class-title="结构化类图 · 角色继承配置" data-class-note="Service 集中校验与持久化，JPA 实体无业务方法" data-seq-src="assets/rbac1-structured-seq-role.svg" data-seq-title="结构化顺序图 · 角色继承配置" data-seq-note="Service 过程式校验并直接读写 Mapper 与实体字段">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag str">结构化</span>
+      <h3>结构化类图 · 角色继承配置</h3>
+      <p>Service 集中校验与持久化，JPA 实体无业务方法</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-structured-class-role.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-structured-class-role.svg" alt="结构化类图 · 角色继承配置" draggable="false"></div>
+  </div>
+</figure></div>
+  </div>
+
+  <div class="grasp-strip">
+    <h4>GRASP 职责分配（DDD 版）</h4>
+    <div class="grasp-grid"><div class="grasp-item"><b>信息专家</b><span>Role.reconfigure 负责自身校验与原子替换，只读集合 getter 保护不变式。</span></div><div class="grasp-item"><b>控制器</b><span>RoleApplicationService 编排鉴权、事务、持久化、日志与申请结算。</span></div><div class="grasp-item"><b>间接 / 保护变化</b><span>JpaRoleRepository 实现 RoleRepository，封装三表差量与重名异常翻译。</span></div><div class="grasp-item"><b>纯虚构</b><span>RoleHierarchy 将多继承 DAG 抽为不可变快照，推演后代影响。</span></div></div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="diff-table">
+      <thead><tr><th>维度</th><th>结构化（rbac1-structured）</th><th>DDD（rbac1-ddd）</th></tr></thead>
+      <tbody><tr><td><b>规则位置</b></td><td>集中在 RoleService 方法内</td><td>聚合规则归 Role，跨图推演归 RoleHierarchy</td></tr><tr><td><b>实体形态</b></td><td>贫血 JPA 实体（无业务方法）</td><td>充血聚合根（零框架依赖）</td></tr><tr><td><b>持久化</b></td><td>Service 直接操作 3 个 Mapper</td><td>仅调 RoleRepository.save(role)</td></tr><tr><td><b>数据对象</b></td><td>DTO → Service → VO</td><td>DTO → Command → Domain → Result → VO</td></tr></tbody>
+    </table>
+  </div>
+
+  <details class="source-box">
+    <summary>对应源码位置（点击路径复制）</summary>
+    <ul class="src-list"><li><span>DDD Controller</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleController.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleController.java</code></li><li><span>DDD 应用服务</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/role/RoleApplicationService.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/role/RoleApplicationService.java</code></li><li><span>DDD 聚合根</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/role/Role.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/role/Role.java</code></li><li><span>DDD 继承快照</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/role/RoleHierarchy.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/role/RoleHierarchy.java</code></li><li><span>DDD 仓储实现</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/infrastructure/persistence/JpaRoleRepository.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/infrastructure/persistence/JpaRoleRepository.java</code></li><li><span>结构化 Service</span><code class="copyable" title="点击复制路径" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/service/RoleService.java">rbac1-structured/src/main/java/com/rbac/rbac1/service/RoleService.java</code></li></ul>
+  </details>
+</article>
+      <article class="scenario" id="sc-review">
+  <div class="scenario-head">
+    <span class="scenario-num">02</span>
+    <h3>权限申请审核</h3>
+    <code class="endpoint-chip">POST /api/v1/permission-requests/{requestId}/reviews</code>
+  </div>
+  <p class="scenario-lead">申请人已有权限直接转 SATISFIED；审批通过按继承图筛选无多余权限的最小业务角色并赋权。</p>
+
+  <div class="compare" id="cmp-review" data-compare>
+    <div class="compare-bar">
+      <div class="segmented" role="radiogroup" aria-label="图类型">
+        <button type="button" role="radio" data-kind="class" aria-checked="true">类图</button>
+        <button type="button" role="radio" data-kind="seq" aria-checked="false">顺序图</button>
+      </div>
+      <div class="segmented" role="radiogroup" aria-label="布局">
+        <button type="button" role="radio" data-layout="stack" aria-checked="true">上下全宽</button>
+        <button type="button" role="radio" data-layout="both" aria-checked="false">左右并排</button>
+        <button type="button" role="radio" data-layout="ddd" aria-checked="false">仅 DDD</button>
+        <button type="button" role="radio" data-layout="str" aria-checked="false">仅结构化</button>
+      </div>
+      <button type="button" class="btn small ghost" data-compare-full><span class="i-full"></span><span class="full-label">全屏对照</span></button>
+    </div>
+    <div class="compare-grid" data-layout="stack"><figure class="viewer" id="cmp-review-ddd" data-slot="ddd" data-class-src="assets/rbac1-ddd-class-review.svg" data-class-title="DDD 类图 · 权限申请审核" data-class-note="应用服务编排，领域对象承载规则，仓储端口依赖倒置" data-seq-src="assets/rbac1-ddd-seq-review.svg" data-seq-title="DDD 顺序图 · 权限申请审核" data-seq-note="领域行为委托、«MetaClass» 静态工厂、异常直返调用方">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag ddd">DDD</span>
+      <h3>DDD 类图 · 权限申请审核</h3>
+      <p>应用服务编排，领域对象承载规则，仓储端口依赖倒置</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-ddd-class-review.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-ddd-class-review.svg" alt="DDD 类图 · 权限申请审核" draggable="false"></div>
+  </div>
+</figure><figure class="viewer" id="cmp-review-str" data-slot="str" data-class-src="assets/rbac1-structured-class-review.svg" data-class-title="结构化类图 · 权限申请审核" data-class-note="Service 集中校验与持久化，JPA 实体无业务方法" data-seq-src="assets/rbac1-structured-seq-review.svg" data-seq-title="结构化顺序图 · 权限申请审核" data-seq-note="Service 过程式校验并直接读写 Mapper 与实体字段">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag str">结构化</span>
+      <h3>结构化类图 · 权限申请审核</h3>
+      <p>Service 集中校验与持久化，JPA 实体无业务方法</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-structured-class-review.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-structured-class-review.svg" alt="结构化类图 · 权限申请审核" draggable="false"></div>
+  </div>
+</figure></div>
+  </div>
+
+  <div class="grasp-strip">
+    <h4>GRASP 职责分配（DDD 版）</h4>
+    <div class="grasp-grid"><div class="grasp-item"><b>信息专家</b><span>PermissionRequest 维护状态机流转，确保终态不可逆。</span></div><div class="grasp-item"><b>纯虚构</b><span>ApprovalCandidates 领域服务承担跨角色继承图的最小权限筛选。</span></div><div class="grasp-item"><b>创建者</b><span>ApprovalCandidates.evaluate 静态工厂计算并构造不可变候选集。</span></div><div class="grasp-item"><b>控制器</b><span>PermissionRequestApplicationService 编排范围校验、保存、日志与结算。</span></div></div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="diff-table">
+      <thead><tr><th>维度</th><th>结构化（rbac1-structured）</th><th>DDD（rbac1-ddd）</th></tr></thead>
+      <tbody><tr><td><b>状态流转</b></td><td>Service 直接 setStatus(...) 靠脏检查提交</td><td>领域枚举 RequestStatus，经 approve/reject/settleWith 迁徙</td></tr><tr><td><b>候选筛选</b></td><td>Service 循环调用 ApprovalRules.extraPermissions</td><td>独立领域服务 ApprovalCandidates.evaluate</td></tr><tr><td><b>用户赋权</b></td><td>Service 新建 UserRole 实体直接保存</td><td>调用 User.grantBusinessRoles(...) 后保存聚合</td></tr></tbody>
+    </table>
+  </div>
+
+  <details class="source-box">
+    <summary>对应源码位置（点击路径复制）</summary>
+    <ul class="src-list"><li><span>DDD Controller</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java</code></li><li><span>DDD 应用服务</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/request/PermissionRequestApplicationService.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/request/PermissionRequestApplicationService.java</code></li><li><span>DDD 聚合根</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/request/PermissionRequest.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/request/PermissionRequest.java</code></li><li><span>DDD 领域服务</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/request/ApprovalCandidates.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/request/ApprovalCandidates.java</code></li><li><span>结构化 Service</span><code class="copyable" title="点击复制路径" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/service/PermissionRequestService.java">rbac1-structured/src/main/java/com/rbac/rbac1/service/PermissionRequestService.java</code></li><li><span>结构化工具</span><code class="copyable" title="点击复制路径" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/service/ApprovalRules.java">rbac1-structured/src/main/java/com/rbac/rbac1/service/ApprovalRules.java</code></li></ul>
+  </details>
+</article>
+      <article class="scenario" id="sc-creation">
+  <div class="scenario-head">
+    <span class="scenario-num">03</span>
+    <h3>角色创建申请审批</h3>
+    <code class="endpoint-chip">POST /api/v1/role-creation-requests/{requestId}/reviews</code>
+  </div>
+  <p class="scenario-lead">审批通过按最终配置调用新建角色用例并共享同一事务，失败整体回滚、申请保持待审核。</p>
+
+  <div class="compare" id="cmp-creation" data-compare>
+    <div class="compare-bar">
+      <div class="segmented" role="radiogroup" aria-label="图类型">
+        <button type="button" role="radio" data-kind="class" aria-checked="true">类图</button>
+        <button type="button" role="radio" data-kind="seq" aria-checked="false">顺序图</button>
+      </div>
+      <div class="segmented" role="radiogroup" aria-label="布局">
+        <button type="button" role="radio" data-layout="stack" aria-checked="true">上下全宽</button>
+        <button type="button" role="radio" data-layout="both" aria-checked="false">左右并排</button>
+        <button type="button" role="radio" data-layout="ddd" aria-checked="false">仅 DDD</button>
+        <button type="button" role="radio" data-layout="str" aria-checked="false">仅结构化</button>
+      </div>
+      <button type="button" class="btn small ghost" data-compare-full><span class="i-full"></span><span class="full-label">全屏对照</span></button>
+    </div>
+    <div class="compare-grid" data-layout="stack"><figure class="viewer" id="cmp-creation-ddd" data-slot="ddd" data-class-src="assets/rbac1-ddd-class-creation.svg" data-class-title="DDD 类图 · 角色创建申请审批" data-class-note="应用服务编排，领域对象承载规则，仓储端口依赖倒置" data-seq-src="assets/rbac1-ddd-seq-creation.svg" data-seq-title="DDD 顺序图 · 角色创建申请审批" data-seq-note="领域行为委托、«MetaClass» 静态工厂、异常直返调用方">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag ddd">DDD</span>
+      <h3>DDD 类图 · 角色创建申请审批</h3>
+      <p>应用服务编排，领域对象承载规则，仓储端口依赖倒置</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-ddd-class-creation.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-ddd-class-creation.svg" alt="DDD 类图 · 角色创建申请审批" draggable="false"></div>
+  </div>
+</figure><figure class="viewer" id="cmp-creation-str" data-slot="str" data-class-src="assets/rbac1-structured-class-creation.svg" data-class-title="结构化类图 · 角色创建申请审批" data-class-note="Service 集中校验与持久化，JPA 实体无业务方法" data-seq-src="assets/rbac1-structured-seq-creation.svg" data-seq-title="结构化顺序图 · 角色创建申请审批" data-seq-note="Service 过程式校验并直接读写 Mapper 与实体字段">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag str">结构化</span>
+      <h3>结构化类图 · 角色创建申请审批</h3>
+      <p>Service 集中校验与持久化，JPA 实体无业务方法</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-structured-class-creation.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-structured-class-creation.svg" alt="结构化类图 · 角色创建申请审批" draggable="false"></div>
+  </div>
+</figure></div>
+  </div>
+
+  <div class="grasp-strip">
+    <h4>GRASP 职责分配（DDD 版）</h4>
+    <div class="grasp-grid"><div class="grasp-item"><b>创建者</b><span>Role.createBusiness 静态工厂同时被提交申请与审批建角色复用。</span></div><div class="grasp-item"><b>信息专家</b><span>RoleCreationRequest 维护待审状态与父角色快照，经 approve/reject 变更。</span></div><div class="grasp-item"><b>控制器</b><span>RoleCreationRequestApplicationService 复用 RoleApplicationService.create 共享事务。</span></div><div class="grasp-item"><b>间接</b><span>JpaRoleCreationRequestRepository 封装主表与两张子表读写。</span></div></div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="diff-table">
+      <thead><tr><th>维度</th><th>结构化（rbac1-structured）</th><th>DDD（rbac1-ddd）</th></tr></thead>
+      <tbody><tr><td><b>创建角色</b></td><td>CloneFactory 拷贝 + DuplicateKeys 判重 + 写两张子表</td><td>Role.createBusiness 构造聚合，RoleRepository.save 统一落库</td></tr><tr><td><b>父角色快照</b></td><td>Service 组合 3 个 Mapper 手动分组拼装</td><td>仓储整体重建含 ParentRoleSnapshot 的聚合</td></tr><tr><td><b>状态回写</b></td><td>Service 直接 setCreatedRoleId / setStatus</td><td>调用 request.approve(...) 经仓储保存</td></tr></tbody>
+    </table>
+  </div>
+
+  <details class="source-box">
+    <summary>对应源码位置（点击路径复制）</summary>
+    <ul class="src-list"><li><span>DDD Controller</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleCreationRequestController.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleCreationRequestController.java</code></li><li><span>DDD 应用服务</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/request/RoleCreationRequestApplicationService.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/request/RoleCreationRequestApplicationService.java</code></li><li><span>DDD 聚合根</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/request/RoleCreationRequest.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/request/RoleCreationRequest.java</code></li><li><span>结构化 Service</span><code class="copyable" title="点击复制路径" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/service/RoleCreationRequestService.java">rbac1-structured/src/main/java/com/rbac/rbac1/service/RoleCreationRequestService.java</code></li></ul>
+  </details>
+</article>
+      <article class="scenario" id="sc-user">
+  <div class="scenario-head">
+    <span class="scenario-num">04</span>
+    <h3>用户调动与状态管理</h3>
+    <code class="endpoint-chip">PATCH /api/v1/users/{userId}</code>
+  </div>
+  <p class="scenario-lead">管理范围内修改用户资料与启停状态；总管理员可跨部门调动并任免部门管理员，停用账号立即撤销全部会话。</p>
+
+  <div class="compare" id="cmp-user" data-compare>
+    <div class="compare-bar">
+      <div class="segmented" role="radiogroup" aria-label="图类型">
+        <button type="button" role="radio" data-kind="class" aria-checked="true">类图</button>
+        <button type="button" role="radio" data-kind="seq" aria-checked="false">顺序图</button>
+      </div>
+      <div class="segmented" role="radiogroup" aria-label="布局">
+        <button type="button" role="radio" data-layout="stack" aria-checked="true">上下全宽</button>
+        <button type="button" role="radio" data-layout="both" aria-checked="false">左右并排</button>
+        <button type="button" role="radio" data-layout="ddd" aria-checked="false">仅 DDD</button>
+        <button type="button" role="radio" data-layout="str" aria-checked="false">仅结构化</button>
+      </div>
+      <button type="button" class="btn small ghost" data-compare-full><span class="i-full"></span><span class="full-label">全屏对照</span></button>
+    </div>
+    <div class="compare-grid" data-layout="stack"><figure class="viewer" id="cmp-user-ddd" data-slot="ddd" data-class-src="assets/rbac1-ddd-class-user.svg" data-class-title="DDD 类图 · 用户调动与状态管理" data-class-note="应用服务编排，领域对象承载规则，仓储端口依赖倒置" data-seq-src="assets/rbac1-ddd-seq-user.svg" data-seq-title="DDD 顺序图 · 用户调动与状态管理" data-seq-note="领域行为委托、«MetaClass» 静态工厂、异常直返调用方">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag ddd">DDD</span>
+      <h3>DDD 类图 · 用户调动与状态管理</h3>
+      <p>应用服务编排，领域对象承载规则，仓储端口依赖倒置</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-ddd-class-user.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-ddd-class-user.svg" alt="DDD 类图 · 用户调动与状态管理" draggable="false"></div>
+  </div>
+</figure><figure class="viewer" id="cmp-user-str" data-slot="str" data-class-src="assets/rbac1-structured-class-user.svg" data-class-title="结构化类图 · 用户调动与状态管理" data-class-note="Service 集中校验与持久化，JPA 实体无业务方法" data-seq-src="assets/rbac1-structured-seq-user.svg" data-seq-title="结构化顺序图 · 用户调动与状态管理" data-seq-note="Service 过程式校验并直接读写 Mapper 与实体字段">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag str">结构化</span>
+      <h3>结构化类图 · 用户调动与状态管理</h3>
+      <p>Service 集中校验与持久化，JPA 实体无业务方法</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-structured-class-user.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-structured-class-user.svg" alt="结构化类图 · 用户调动与状态管理" draggable="false"></div>
+  </div>
+</figure></div>
+  </div>
+
+  <div class="grasp-strip">
+    <h4>GRASP 职责分配（DDD 版）</h4>
+    <div class="grasp-grid"><div class="grasp-item"><b>信息专家</b><span>User 聚合根封装改名、启停、调动与管理员任免，仅在真实变更时驱动审计。</span></div><div class="grasp-item"><b>信息专家（守卫）</b><span>Operator 结合 DepartmentTree 核验管理范围与组织调整权限。</span></div><div class="grasp-item"><b>间接</b><span>SessionStore 端口解耦会话清理，JpaUserRepository 统一同步用户与角色关联。</span></div><div class="grasp-item"><b>高内聚</b><span>调动仅改变所属部门并保留业务角色，职责清晰不越界。</span></div></div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="diff-table">
+      <thead><tr><th>维度</th><th>结构化（rbac1-structured）</th><th>DDD（rbac1-ddd）</th></tr></thead>
+      <tbody><tr><td><b>权限与范围校验</b></td><td>调用 DepartmentService 静态方法判断身份与子树</td><td>由值对象 Operator 面向对象核验管理范围与总管权限</td></tr><tr><td><b>管理员角色任免</b></td><td>UserService 直接查 UserRoleMapper 并手动增删关联行</td><td>User.changeDepartmentAdministrator 修改聚合集合后统一保存</td></tr><tr><td><b>唯一约束处理</b></td><td>Service 显式调用 DuplicateKeys.saveAndFlush</td><td>下沉至 JpaUserRepository 持久化边界转换冲突异常</td></tr></tbody>
+    </table>
+  </div>
+
+  <details class="source-box">
+    <summary>对应源码位置（点击路径复制）</summary>
+    <ul class="src-list"><li><span>DDD Controller</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserController.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserController.java</code></li><li><span>DDD 应用服务</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/user/UserApplicationService.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/user/UserApplicationService.java</code></li><li><span>DDD 聚合根</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/user/User.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/user/User.java</code></li><li><span>DDD 权限守卫</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/Operator.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/Operator.java</code></li><li><span>结构化 Service</span><code class="copyable" title="点击复制路径" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/service/UserService.java">rbac1-structured/src/main/java/com/rbac/rbac1/service/UserService.java</code></li></ul>
+  </details>
+</article>
+      <article class="scenario" id="sc-permission">
+  <div class="scenario-head">
+    <span class="scenario-num">05</span>
+    <h3>权限登记与接口关联</h3>
+    <code class="endpoint-chip">POST /api/v1/applications/{applicationId}/permissions</code>
+  </div>
+  <p class="scenario-lead">登记菜单或按钮权限并绑定同应用已登记 API；权限中心自身的新权限同事务自动授予总管理员角色。</p>
+
+  <div class="compare" id="cmp-permission" data-compare>
+    <div class="compare-bar">
+      <div class="segmented" role="radiogroup" aria-label="图类型">
+        <button type="button" role="radio" data-kind="class" aria-checked="true">类图</button>
+        <button type="button" role="radio" data-kind="seq" aria-checked="false">顺序图</button>
+      </div>
+      <div class="segmented" role="radiogroup" aria-label="布局">
+        <button type="button" role="radio" data-layout="stack" aria-checked="true">上下全宽</button>
+        <button type="button" role="radio" data-layout="both" aria-checked="false">左右并排</button>
+        <button type="button" role="radio" data-layout="ddd" aria-checked="false">仅 DDD</button>
+        <button type="button" role="radio" data-layout="str" aria-checked="false">仅结构化</button>
+      </div>
+      <button type="button" class="btn small ghost" data-compare-full><span class="i-full"></span><span class="full-label">全屏对照</span></button>
+    </div>
+    <div class="compare-grid" data-layout="stack"><figure class="viewer" id="cmp-permission-ddd" data-slot="ddd" data-class-src="assets/rbac1-ddd-class-permission.svg" data-class-title="DDD 类图 · 权限登记与接口关联" data-class-note="应用服务编排，领域对象承载规则，仓储端口依赖倒置" data-seq-src="assets/rbac1-ddd-seq-permission.svg" data-seq-title="DDD 顺序图 · 权限登记与接口关联" data-seq-note="领域行为委托、«MetaClass» 静态工厂、异常直返调用方">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag ddd">DDD</span>
+      <h3>DDD 类图 · 权限登记与接口关联</h3>
+      <p>应用服务编排，领域对象承载规则，仓储端口依赖倒置</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-ddd-class-permission.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-ddd-class-permission.svg" alt="DDD 类图 · 权限登记与接口关联" draggable="false"></div>
+  </div>
+</figure><figure class="viewer" id="cmp-permission-str" data-slot="str" data-class-src="assets/rbac1-structured-class-permission.svg" data-class-title="结构化类图 · 权限登记与接口关联" data-class-note="Service 集中校验与持久化，JPA 实体无业务方法" data-seq-src="assets/rbac1-structured-seq-permission.svg" data-seq-title="结构化顺序图 · 权限登记与接口关联" data-seq-note="Service 过程式校验并直接读写 Mapper 与实体字段">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag str">结构化</span>
+      <h3>结构化类图 · 权限登记与接口关联</h3>
+      <p>Service 集中校验与持久化，JPA 实体无业务方法</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-structured-class-permission.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-structured-class-permission.svg" alt="结构化类图 · 权限登记与接口关联" draggable="false"></div>
+  </div>
+</figure></div>
+  </div>
+
+  <div class="grasp-strip">
+    <h4>GRASP 职责分配（DDD 版）</h4>
+    <div class="grasp-grid"><div class="grasp-item"><b>创建者</b><span>PermissionDefinition.register 静态工厂校验菜单无上级、按钮必挂同应用菜单。</span></div><div class="grasp-item"><b>信息专家</b><span>PermissionDefinition.linkApis 结合 Api.belongsTo 保证不跨应用关联接口。</span></div><div class="grasp-item"><b>高内聚</b><span>BusinessApplication.isPermissionCenter 与 Role.grantNewlyRegisteredPermission 协作自动赋权。</span></div><div class="grasp-item"><b>间接</b><span>JpaPermissionRepository 封装权限主表与 sys_api_permission 桥表同步。</span></div></div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="diff-table">
+      <thead><tr><th>维度</th><th>结构化（rbac1-structured）</th><th>DDD（rbac1-ddd）</th></tr></thead>
+      <tbody><tr><td><b>层级与接口校验</b></td><td>ApplicationService 查 Mapper 判菜单，ApiService.replaceLinks 操作桥表</td><td>PermissionDefinition.register 与 linkApis 内聚完成校验</td></tr><tr><td><b>对象构造拷贝</b></td><td>CloneFactory.copy 从 DTO 直接拷贝构造 Permission 实体</td><td>领域静态工厂构造聚合，CloneFactory 仅在基础设施层 PO 使用</td></tr><tr><td><b>总管自动授权</b></td><td>直接新建 RolePermission 实体写入 RolePermissionMapper</td><td>调用 Role.grantNewlyRegisteredPermission 后经 RoleRepository 保存</td></tr></tbody>
+    </table>
+  </div>
+
+  <details class="source-box">
+    <summary>对应源码位置（点击路径复制）</summary>
+    <ul class="src-list"><li><span>DDD Controller</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java</code></li><li><span>DDD 应用服务</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/app/PermissionApplicationService.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/app/PermissionApplicationService.java</code></li><li><span>DDD 聚合根</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/permission/PermissionDefinition.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/permission/PermissionDefinition.java</code></li><li><span>结构化应用服务</span><code class="copyable" title="点击复制路径" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/service/ApplicationService.java">rbac1-structured/src/main/java/com/rbac/rbac1/service/ApplicationService.java</code></li><li><span>结构化接口服务</span><code class="copyable" title="点击复制路径" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/service/ApiService.java">rbac1-structured/src/main/java/com/rbac/rbac1/service/ApiService.java</code></li></ul>
+  </details>
+</article>
+      <article class="scenario" id="sc-department">
+  <div class="scenario-head">
+    <span class="scenario-num">06</span>
+    <h3>部门调整与防环校验</h3>
+    <code class="endpoint-chip">PATCH /api/v1/departments/{departmentId}</code>
+  </div>
+  <p class="scenario-lead">修改部门名称或调整上级部门（null 为顶层），校验上级存在且不在当前部门子树中，防止组织结构成环。</p>
+
+  <div class="compare" id="cmp-department" data-compare>
+    <div class="compare-bar">
+      <div class="segmented" role="radiogroup" aria-label="图类型">
+        <button type="button" role="radio" data-kind="class" aria-checked="true">类图</button>
+        <button type="button" role="radio" data-kind="seq" aria-checked="false">顺序图</button>
+      </div>
+      <div class="segmented" role="radiogroup" aria-label="布局">
+        <button type="button" role="radio" data-layout="stack" aria-checked="true">上下全宽</button>
+        <button type="button" role="radio" data-layout="both" aria-checked="false">左右并排</button>
+        <button type="button" role="radio" data-layout="ddd" aria-checked="false">仅 DDD</button>
+        <button type="button" role="radio" data-layout="str" aria-checked="false">仅结构化</button>
+      </div>
+      <button type="button" class="btn small ghost" data-compare-full><span class="i-full"></span><span class="full-label">全屏对照</span></button>
+    </div>
+    <div class="compare-grid" data-layout="stack"><figure class="viewer" id="cmp-department-ddd" data-slot="ddd" data-class-src="assets/rbac1-ddd-class-department.svg" data-class-title="DDD 类图 · 部门调整与防环校验" data-class-note="应用服务编排，领域对象承载规则，仓储端口依赖倒置" data-seq-src="assets/rbac1-ddd-seq-department.svg" data-seq-title="DDD 顺序图 · 部门调整与防环校验" data-seq-note="领域行为委托、«MetaClass» 静态工厂、异常直返调用方">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag ddd">DDD</span>
+      <h3>DDD 类图 · 部门调整与防环校验</h3>
+      <p>应用服务编排，领域对象承载规则，仓储端口依赖倒置</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-ddd-class-department.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-ddd-class-department.svg" alt="DDD 类图 · 部门调整与防环校验" draggable="false"></div>
+  </div>
+</figure><figure class="viewer" id="cmp-department-str" data-slot="str" data-class-src="assets/rbac1-structured-class-department.svg" data-class-title="结构化类图 · 部门调整与防环校验" data-class-note="Service 集中校验与持久化，JPA 实体无业务方法" data-seq-src="assets/rbac1-structured-seq-department.svg" data-seq-title="结构化顺序图 · 部门调整与防环校验" data-seq-note="Service 过程式校验并直接读写 Mapper 与实体字段">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag str">结构化</span>
+      <h3>结构化类图 · 部门调整与防环校验</h3>
+      <p>Service 集中校验与持久化，JPA 实体无业务方法</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-structured-class-department.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-structured-class-department.svg" alt="结构化类图 · 部门调整与防环校验" draggable="false"></div>
+  </div>
+</figure></div>
+  </div>
+
+  <div class="grasp-strip">
+    <h4>GRASP 职责分配（DDD 版）</h4>
+    <div class="grasp-grid"><div class="grasp-item"><b>信息专家</b><span>Department 维护 rename 与 moveUnder，幂等返回是否发生实质变更。</span></div><div class="grasp-item"><b>纯虚构</b><span>DepartmentTree 反转构建子邻接表，ensureCanMove 基于广度优先子树防环。</span></div><div class="grasp-item"><b>控制器</b><span>DepartmentApplicationService 编排权限核验、树快照加载、保存与审计。</span></div><div class="grasp-item"><b>间接</b><span>JpaDepartmentRepository 实现 DepartmentRepository 屏蔽 DAO 细节。</span></div></div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="diff-table">
+      <thead><tr><th>维度</th><th>结构化（rbac1-structured）</th><th>DDD（rbac1-ddd）</th></tr></thead>
+      <tbody><tr><td><b>防环检测方式</b></td><td>DepartmentService 方法内加载全表构建临时 Map，循环沿 parentId 向上回溯</td><td>独立不可变领域服务 DepartmentTree.ensureCanMove 统一子树防环</td></tr><tr><td><b>字段更新方式</b></td><td>Service 比较新旧值后直接调用 setName / setParentId 靠脏检查写库</td><td>调用领域方法 rename / moveUnder 后显式经仓储保存</td></tr></tbody>
+    </table>
+  </div>
+
+  <details class="source-box">
+    <summary>对应源码位置（点击路径复制）</summary>
+    <ul class="src-list"><li><span>DDD Controller</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/DepartmentController.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/DepartmentController.java</code></li><li><span>DDD 应用服务</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/department/DepartmentApplicationService.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/department/DepartmentApplicationService.java</code></li><li><span>DDD 聚合根</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/department/Department.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/department/Department.java</code></li><li><span>DDD 领域服务</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/department/DepartmentTree.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/department/DepartmentTree.java</code></li><li><span>结构化 Service</span><code class="copyable" title="点击复制路径" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/service/DepartmentService.java">rbac1-structured/src/main/java/com/rbac/rbac1/service/DepartmentService.java</code></li></ul>
+  </details>
+</article>
+      <article class="scenario" id="sc-authme">
+  <div class="scenario-head">
+    <span class="scenario-num">07</span>
+    <h3>统一身份与有效权限查询</h3>
+    <code class="endpoint-chip">GET /auth/me</code>
+  </div>
+  <p class="scenario-lead">校验 JWT 受众并返回目标应用中的角色与去重继承权限编码；支持课程管理系统启用应用角色码映射（teacher/student/admin）。</p>
+
+  <div class="compare" id="cmp-authme" data-compare>
+    <div class="compare-bar">
+      <div class="segmented" role="radiogroup" aria-label="图类型">
+        <button type="button" role="radio" data-kind="class" aria-checked="true">类图</button>
+        <button type="button" role="radio" data-kind="seq" aria-checked="false">顺序图</button>
+      </div>
+      <div class="segmented" role="radiogroup" aria-label="布局">
+        <button type="button" role="radio" data-layout="stack" aria-checked="true">上下全宽</button>
+        <button type="button" role="radio" data-layout="both" aria-checked="false">左右并排</button>
+        <button type="button" role="radio" data-layout="ddd" aria-checked="false">仅 DDD</button>
+        <button type="button" role="radio" data-layout="str" aria-checked="false">仅结构化</button>
+      </div>
+      <button type="button" class="btn small ghost" data-compare-full><span class="i-full"></span><span class="full-label">全屏对照</span></button>
+    </div>
+    <div class="compare-grid" data-layout="stack"><figure class="viewer" id="cmp-authme-ddd" data-slot="ddd" data-class-src="assets/rbac1-ddd-class-authme.svg" data-class-title="DDD 类图 · 统一身份与有效权限查询" data-class-note="应用服务编排，领域对象承载规则，仓储端口依赖倒置" data-seq-src="assets/rbac1-ddd-seq-authme.svg" data-seq-title="DDD 顺序图 · 统一身份与有效权限查询" data-seq-note="领域行为委托、«MetaClass» 静态工厂、异常直返调用方">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag ddd">DDD</span>
+      <h3>DDD 类图 · 统一身份与有效权限查询</h3>
+      <p>应用服务编排，领域对象承载规则，仓储端口依赖倒置</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-ddd-class-authme.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-ddd-class-authme.svg" alt="DDD 类图 · 统一身份与有效权限查询" draggable="false"></div>
+  </div>
+</figure><figure class="viewer" id="cmp-authme-str" data-slot="str" data-class-src="assets/rbac1-structured-class-authme.svg" data-class-title="结构化类图 · 统一身份与有效权限查询" data-class-note="Service 集中校验与持久化，JPA 实体无业务方法" data-seq-src="assets/rbac1-structured-seq-authme.svg" data-seq-title="结构化顺序图 · 统一身份与有效权限查询" data-seq-note="Service 过程式校验并直接读写 Mapper 与实体字段">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag str">结构化</span>
+      <h3>结构化类图 · 统一身份与有效权限查询</h3>
+      <p>Service 集中校验与持久化，JPA 实体无业务方法</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-structured-class-authme.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-structured-class-authme.svg" alt="结构化类图 · 统一身份与有效权限查询" draggable="false"></div>
+  </div>
+</figure></div>
+  </div>
+
+  <div class="grasp-strip">
+    <h4>GRASP 职责分配（DDD 版）</h4>
+    <div class="grasp-grid"><div class="grasp-item"><b>信息专家</b><span>AuthenticatedSession 核验目标应用受众；User 结合 RoleHierarchy 聚合有效权限与业务角色。</span></div><div class="grasp-item"><b>纯虚构</b><span>PermissionCatalog.codesIn 按应用过滤权限码，RoleHierarchy 遍历多继承祖先。</span></div><div class="grasp-item"><b>保护变化</b><span>ApplicationRoleCodeReader 只读端口隔离外部应用角色码映射表查询。</span></div><div class="grasp-item"><b>控制器</b><span>AccessApplicationService 编排会话上下文、快照加载与双模式角色组装。</span></div></div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="diff-table">
+      <thead><tr><th>维度</th><th>结构化（rbac1-structured）</th><th>DDD（rbac1-ddd）</th></tr></thead>
+      <tbody><tr><td><b>受众解析核验</b></td><td>SessionController 先调 SessionService.resolveApplication 再进权限服务</td><td>值对象 AuthenticatedSession.applicationContext 内聚校验受众</td></tr><tr><td><b>继承图遍历</b></td><td>RolePermissionService 构建 Graph 记录并在静态集合方法上传参遍历</td><td>User、RoleHierarchy、PermissionCatalog 按领域职责协作计算</td></tr><tr><td><b>角色码查询</b></td><td>PermissionCheckService 直接调 ApplicationMapper.findRoleCodes</td><td>通过端口 ApplicationRoleCodeReader（JdbcClient 实现）解耦查询</td></tr></tbody>
+    </table>
+  </div>
+
+  <details class="source-box">
+    <summary>对应源码位置（点击路径复制）</summary>
+    <ul class="src-list"><li><span>DDD Controller</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SessionController.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SessionController.java</code></li><li><span>DDD 应用服务</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/AccessApplicationService.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/AccessApplicationService.java</code></li><li><span>DDD 认证会话</span><code class="copyable" title="点击复制路径" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/AuthenticatedSession.java">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/application/auth/AuthenticatedSession.java</code></li><li><span>结构化 Controller</span><code class="copyable" title="点击复制路径" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/SessionController.java">rbac1-structured/src/main/java/com/rbac/rbac1/controller/SessionController.java</code></li><li><span>结构化权限检查</span><code class="copyable" title="点击复制路径" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/service/PermissionCheckService.java">rbac1-structured/src/main/java/com/rbac/rbac1/service/PermissionCheckService.java</code></li><li><span>结构化继承计算</span><code class="copyable" title="点击复制路径" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/service/RolePermissionService.java">rbac1-structured/src/main/java/com/rbac/rbac1/service/RolePermissionService.java</code></li></ul>
+  </details>
+</article>
+    </section>
+
+    <!-- 03 ER 与数据字典 -->
+    <section id="data" class="panel" hidden>
+      <p class="kicker"><span>03</span>ER 与数据字典</p>
+      <h2>概念 ER、物理表结构与数据字典</h2>
+      <p class="lead">两套后端共享 Flyway 迁移（<code>V1__init_rbac1.sql</code>、<code>V2__application_role_codes.sql</code>）与同一数据库。</p>
+
+      <div class="compare" id="cmp-er" data-compare>
+        <div class="compare-bar">
+          <div class="segmented" role="radiogroup" aria-label="图类型">
+            <button type="button" role="radio" data-kind="concept" aria-checked="true">概念 ER 图</button>
+            <button type="button" role="radio" data-kind="tables" aria-checked="false">物理表结构</button>
+          </div>
+          <div class="segmented" role="radiogroup" aria-label="版本">
+            <button type="button" role="radio" data-layout="r1" aria-checked="true">仅 RBAC1</button>
+            <button type="button" role="radio" data-layout="both" aria-checked="false">RBAC1 ↔ RBAC0 对比</button>
+          </div>
+          <button type="button" class="btn small ghost" data-compare-full><span class="i-full"></span><span class="full-label">全屏对照</span></button>
+        </div>
+        <div class="compare-grid" data-layout="r1"><figure class="viewer" id="cmp-er-r1" data-slot="r1" data-concept-src="assets/rbac1-conceptual-er.svg" data-concept-title="RBAC1 概念 ER 图" data-concept-note="核心 User–Role–Permission 关系与角色多继承扩展" data-tables-src="assets/rbac1-database-tables.svg" data-tables-title="RBAC1 数据库表结构" data-tables-note="物理表主键、外键与关联约束">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag ddd">RBAC1</span>
+      <h3>RBAC1 概念 ER 图</h3>
+      <p>核心 User–Role–Permission 关系与角色多继承扩展</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac1-conceptual-er.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac1-conceptual-er.svg" alt="RBAC1 概念 ER 图" draggable="false"></div>
+  </div>
+</figure><figure class="viewer" id="cmp-er-r0" data-slot="r0" data-concept-src="assets/rbac-conceptual-er.svg" data-concept-title="RBAC0 概念 ER 图" data-concept-note="基线概念模型" data-tables-src="assets/rbac-database-tables.svg" data-tables-title="RBAC0 数据库表结构" data-tables-note="基线物理表结构">
+  <div class="viewer-bar">
+    <div class="viewer-title">
+      <span class="impl-tag r0">RBAC0</span>
+      <h3>RBAC0 概念 ER 图</h3>
+      <p>基线概念模型</p>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" data-act="out" title="缩小（-）">−</button>
+      <output class="zoom">100%</output>
+      <button type="button" data-act="in" title="放大（+）">+</button>
+      <button type="button" data-act="fit" title="适应宽度（0）">适应</button>
+      <button type="button" data-act="full" title="全屏查看（F，Esc 退出）"><span class="i-full"></span><span class="full-label">全屏</span></button>
+      <a href="assets/rbac-conceptual-er.svg" target="_blank" rel="noopener" data-role="raw" title="新标签页打开矢量原图">原图 ↗</a>
+    </div>
+  </div>
+  <div class="viewer-stage" tabindex="0" title="左键拖动平移，Ctrl/⌘+滚轮缩放，双击放大">
+    <div class="viewer-canvas"><img src="assets/rbac-conceptual-er.svg" alt="RBAC0 概念 ER 图" draggable="false"></div>
+  </div>
+</figure></div>
+      </div>
+
+      <ul class="notes">
+        <li><b>不冗余继承副本：</b>仅存直接权限与直接父角色，有效权限沿 DAG 动态计算。</li>
+        <li><b>快照不阻塞删除：</b>角色创建申请仅存父角色 ID 与名称快照；唯一键与 CHECK 在 DB 层兜底。</li>
+      </ul>
+
+      <h3 class="sub-title">数据字典（18 张表）</h3>
+      <div class="dict-tools">
+        <input id="dict-search" type="search" placeholder="搜索表名、说明或字段">
+        <button type="button" class="btn small" data-dict="open">全部展开</button>
+        <button type="button" class="btn small ghost" data-dict="close">全部收起</button>
+        <span id="dict-count" class="count"></span>
+      </div>
+      <div class="dictionary-list"><details class="dictionary">
+  <summary><code>sys_department</code><span>组织部门（树形自引用）</span><small>3 列 · 1 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>id</code></td><td>BIGINT</td><td>否</td><td>PK</td><td><code>id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY</code></td></tr><tr><td><code>parent_id</code></td><td>BIGINT</td><td>是</td><td>→ sys_department.id</td><td><code>parent_id BIGINT</code></td></tr><tr><td><code>name</code></td><td>VARCHAR(24)</td><td>否</td><td>—</td><td><code>name VARCHAR(24) NOT NULL</code></td></tr></tbody></table></div><pre>INDEX idx_department_parent (parent_id)
+CONSTRAINT fk_department_parent FOREIGN KEY (parent_id) REFERENCES sys_department (id)</pre></details>
+<details class="dictionary">
+  <summary><code>sys_user</code><span>统一身份用户账号</span><small>6 列 · 1 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>id</code></td><td>BIGINT</td><td>否</td><td>PK</td><td><code>id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY</code></td></tr><tr><td><code>department_id</code></td><td>BIGINT</td><td>是</td><td>→ sys_department.id</td><td><code>department_id BIGINT</code></td></tr><tr><td><code>username</code></td><td>VARCHAR(32)</td><td>否</td><td>—</td><td><code>username VARCHAR(32) NOT NULL</code></td></tr><tr><td><code>name</code></td><td>VARCHAR(24)</td><td>否</td><td>—</td><td><code>name VARCHAR(24) NOT NULL</code></td></tr><tr><td><code>password_hash</code></td><td>VARCHAR(255)</td><td>否</td><td>—</td><td><code>password_hash VARCHAR(255) NOT NULL</code></td></tr><tr><td><code>status</code></td><td>VARCHAR(8)</td><td>否</td><td>—</td><td><code>status VARCHAR(8) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT &#x27;ACTIVE&#x27;</code></td></tr></tbody></table></div><pre>UNIQUE KEY uq_user_username (username)
+INDEX idx_user_department (department_id)
+CONSTRAINT chk_user_status CHECK (status IN (&#x27;ACTIVE&#x27;, &#x27;DISABLED&#x27;))
+CONSTRAINT fk_user_department FOREIGN KEY (department_id) REFERENCES sys_department (id)</pre></details>
+<details class="dictionary">
+  <summary><code>sys_session</code><span>登录会话（令牌 SHA-256 摘要）</span><small>3 列 · 1 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>token_hash</code></td><td>BINARY(32)</td><td>否</td><td>PK</td><td><code>token_hash BINARY(32) NOT NULL PRIMARY KEY</code></td></tr><tr><td><code>user_id</code></td><td>BIGINT</td><td>否</td><td>→ sys_user.id</td><td><code>user_id BIGINT NOT NULL</code></td></tr><tr><td><code>expires_at</code></td><td>DATETIME(6)</td><td>否</td><td>—</td><td><code>expires_at DATETIME(6) NOT NULL</code></td></tr></tbody></table></div><pre>INDEX idx_session_user (user_id)
+INDEX idx_session_expires_at (expires_at)
+CONSTRAINT fk_session_user FOREIGN KEY (user_id) REFERENCES sys_user (id)</pre></details>
+<details class="dictionary">
+  <summary><code>sys_application</code><span>接入业务应用</span><small>4 列 · 0 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>id</code></td><td>BIGINT</td><td>否</td><td>PK</td><td><code>id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY</code></td></tr><tr><td><code>code</code></td><td>VARCHAR(64)</td><td>否</td><td>—</td><td><code>code VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL</code></td></tr><tr><td><code>name</code></td><td>VARCHAR(24)</td><td>否</td><td>—</td><td><code>name VARCHAR(24) NOT NULL</code></td></tr><tr><td><code>role_codes_enabled</code></td><td>BOOLEAN</td><td>否</td><td>—</td><td><code>role_codes_enabled BOOLEAN NOT NULL DEFAULT FALSE</code></td></tr></tbody></table></div><pre>UNIQUE KEY uq_application_code (code)
+UNIQUE KEY uq_application_name (name)</pre></details>
+<details class="dictionary">
+  <summary><code>sys_permission</code><span>菜单与按钮权限树</span><small>6 列 · 2 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>id</code></td><td>BIGINT</td><td>否</td><td>PK</td><td><code>id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY</code></td></tr><tr><td><code>application_id</code></td><td>BIGINT</td><td>否</td><td>→ sys_application.id</td><td><code>application_id BIGINT NOT NULL</code></td></tr><tr><td><code>parent_id</code></td><td>BIGINT</td><td>是</td><td>→ sys_permission.id</td><td><code>parent_id BIGINT</code></td></tr><tr><td><code>name</code></td><td>VARCHAR(24)</td><td>否</td><td>—</td><td><code>name VARCHAR(24) NOT NULL</code></td></tr><tr><td><code>code</code></td><td>VARCHAR(64)</td><td>否</td><td>—</td><td><code>code VARCHAR(64) COLLATE utf8mb4_0900_bin NOT NULL</code></td></tr><tr><td><code>type</code></td><td>VARCHAR(6)</td><td>否</td><td>—</td><td><code>type VARCHAR(6) CHARACTER SET ascii COLLATE ascii_bin NOT NULL</code></td></tr></tbody></table></div><pre>UNIQUE KEY uq_permission_application_code (application_id, code)
+INDEX idx_permission_parent (parent_id)
+CONSTRAINT chk_permission_parent CHECK ( (type = &#x27;MENU&#x27; AND parent_id IS NULL) OR (type = &#x27;BUTTON&#x27; AND parent_id IS NOT NULL) )
+CONSTRAINT fk_permission_application FOREIGN KEY (application_id) REFERENCES sys_application (id)
+CONSTRAINT fk_permission_parent FOREIGN KEY (parent_id) REFERENCES sys_permission (id)</pre></details>
+<details class="dictionary">
+  <summary><code>sys_role</code><span>业务角色与预置管理角色</span><small>4 列 · 0 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>id</code></td><td>BIGINT</td><td>否</td><td>PK</td><td><code>id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY</code></td></tr><tr><td><code>name</code></td><td>VARCHAR(24)</td><td>否</td><td>—</td><td><code>name VARCHAR(24) NOT NULL</code></td></tr><tr><td><code>description</code></td><td>VARCHAR(48)</td><td>否</td><td>—</td><td><code>description VARCHAR(48) NOT NULL DEFAULT &#x27;&#x27;</code></td></tr><tr><td><code>role_type</code></td><td>VARCHAR(16)</td><td>否</td><td>—</td><td><code>role_type VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL</code></td></tr></tbody></table></div><pre>UNIQUE KEY uq_role_name (name)
+CONSTRAINT chk_role_type CHECK (role_type IN (&#x27;BUSINESS&#x27;, &#x27;TOTAL_ADMIN&#x27;, &#x27;DEPARTMENT_ADMIN&#x27;))</pre></details>
+<details class="dictionary">
+  <summary><code>sys_user_role</code><span>用户直接角色分配</span><small>2 列 · 2 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>user_id</code></td><td>BIGINT</td><td>否</td><td>PK / → sys_user.id</td><td><code>user_id BIGINT NOT NULL</code></td></tr><tr><td><code>role_id</code></td><td>BIGINT</td><td>否</td><td>PK / → sys_role.id</td><td><code>role_id BIGINT NOT NULL</code></td></tr></tbody></table></div><pre>PRIMARY KEY (user_id, role_id)
+INDEX idx_user_role_role (role_id)
+CONSTRAINT fk_user_role_user FOREIGN KEY (user_id) REFERENCES sys_user (id)
+CONSTRAINT fk_user_role_role FOREIGN KEY (role_id) REFERENCES sys_role (id)</pre></details>
+<details class="dictionary">
+  <summary><code>sys_role_permission</code><span>角色直接配置权限</span><small>2 列 · 2 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>role_id</code></td><td>BIGINT</td><td>否</td><td>PK / → sys_role.id</td><td><code>role_id BIGINT NOT NULL</code></td></tr><tr><td><code>permission_id</code></td><td>BIGINT</td><td>否</td><td>PK / → sys_permission.id</td><td><code>permission_id BIGINT NOT NULL</code></td></tr></tbody></table></div><pre>PRIMARY KEY (role_id, permission_id)
+INDEX idx_role_permission_permission (permission_id)
+CONSTRAINT fk_role_permission_role FOREIGN KEY (role_id) REFERENCES sys_role (id)
+CONSTRAINT fk_role_permission_permission FOREIGN KEY (permission_id) REFERENCES sys_permission (id)</pre></details>
+<details class="dictionary">
+  <summary><code>sys_operation_log</code><span>审计操作记录主体</span><small>8 列 · 0 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>id</code></td><td>BIGINT</td><td>否</td><td>PK</td><td><code>id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY</code></td></tr><tr><td><code>occurred_at</code></td><td>DATETIME(6)</td><td>否</td><td>—</td><td><code>occurred_at DATETIME(6) NOT NULL</code></td></tr><tr><td><code>actor_user_id</code></td><td>BIGINT</td><td>否</td><td>—</td><td><code>actor_user_id BIGINT NOT NULL</code></td></tr><tr><td><code>actor_name</code></td><td>VARCHAR(24)</td><td>否</td><td>—</td><td><code>actor_name VARCHAR(24) NOT NULL</code></td></tr><tr><td><code>action</code></td><td>VARCHAR(64)</td><td>否</td><td>—</td><td><code>action VARCHAR(64) NOT NULL</code></td></tr><tr><td><code>scope</code></td><td>VARCHAR(10)</td><td>否</td><td>—</td><td><code>scope VARCHAR(10) CHARACTER SET ascii COLLATE ascii_bin NOT NULL</code></td></tr><tr><td><code>detail</code></td><td>TEXT</td><td>否</td><td>—</td><td><code>detail TEXT NOT NULL</code></td></tr><tr><td><code>result</code></td><td>VARCHAR(7)</td><td>否</td><td>—</td><td><code>result VARCHAR(7) CHARACTER SET ascii COLLATE ascii_bin NOT NULL</code></td></tr></tbody></table></div><pre>INDEX idx_operation_log_time (occurred_at, id)
+CONSTRAINT chk_operation_log_scope CHECK (scope IN (&#x27;GLOBAL&#x27;, &#x27;USER_SCOPE&#x27;))
+CONSTRAINT chk_operation_log_result CHECK (result IN (&#x27;SUCCESS&#x27;, &#x27;FAILURE&#x27;))</pre></details>
+<details class="dictionary">
+  <summary><code>sys_operation_log_target</code><span>审计对象历史快照</span><small>6 列 · 1 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>operation_log_id</code></td><td>BIGINT</td><td>否</td><td>PK / → sys_operation_log.id</td><td><code>operation_log_id BIGINT NOT NULL</code></td></tr><tr><td><code>target_no</code></td><td>INT</td><td>否</td><td>PK</td><td><code>target_no INT NOT NULL</code></td></tr><tr><td><code>target_type</code></td><td>VARCHAR(16)</td><td>否</td><td>—</td><td><code>target_type VARCHAR(16) NOT NULL</code></td></tr><tr><td><code>target_id</code></td><td>BIGINT</td><td>是</td><td>—</td><td><code>target_id BIGINT</code></td></tr><tr><td><code>target_name</code></td><td>VARCHAR(128)</td><td>否</td><td>—</td><td><code>target_name VARCHAR(128) NOT NULL</code></td></tr><tr><td><code>department_id_at_event</code></td><td>BIGINT</td><td>是</td><td>—</td><td><code>department_id_at_event BIGINT</code></td></tr></tbody></table></div><pre>PRIMARY KEY (operation_log_id, target_no)
+INDEX idx_operation_target_department (department_id_at_event, operation_log_id)
+CONSTRAINT fk_operation_target_log FOREIGN KEY (operation_log_id) REFERENCES sys_operation_log (id)</pre></details>
+<details class="dictionary">
+  <summary><code>sys_api</code><span>后端受保护 API 登记</span><small>5 列 · 1 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>id</code></td><td>BIGINT</td><td>否</td><td>PK</td><td><code>id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY</code></td></tr><tr><td><code>application_id</code></td><td>BIGINT</td><td>否</td><td>→ sys_application.id</td><td><code>application_id BIGINT NOT NULL</code></td></tr><tr><td><code>operation_id</code></td><td>VARCHAR(128)</td><td>否</td><td>—</td><td><code>operation_id VARCHAR(128) COLLATE utf8mb4_0900_bin NOT NULL</code></td></tr><tr><td><code>http_method</code></td><td>VARCHAR(10)</td><td>否</td><td>—</td><td><code>http_method VARCHAR(10) CHARACTER SET ascii COLLATE ascii_bin NOT NULL</code></td></tr><tr><td><code>path</code></td><td>VARCHAR(255)</td><td>否</td><td>—</td><td><code>path VARCHAR(255) COLLATE utf8mb4_0900_bin NOT NULL</code></td></tr></tbody></table></div><pre>UNIQUE KEY uq_api_operation (application_id, operation_id)
+UNIQUE KEY uq_api_route (application_id, http_method, path)
+FOREIGN KEY (application_id) REFERENCES sys_application(id)</pre></details>
+<details class="dictionary">
+  <summary><code>sys_api_permission</code><span>API 与权限关联</span><small>2 列 · 2 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>permission_id</code></td><td>BIGINT</td><td>否</td><td>PK / → sys_permission.id</td><td><code>permission_id BIGINT NOT NULL</code></td></tr><tr><td><code>api_id</code></td><td>BIGINT</td><td>否</td><td>PK / → sys_api.id</td><td><code>api_id BIGINT NOT NULL</code></td></tr></tbody></table></div><pre>PRIMARY KEY (permission_id, api_id)
+INDEX idx_api_permission_api (api_id)
+FOREIGN KEY (permission_id) REFERENCES sys_permission(id)
+FOREIGN KEY (api_id) REFERENCES sys_api(id)</pre></details>
+<details class="dictionary">
+  <summary><code>sys_permission_request</code><span>用户权限申请及审核结果</span><small>9 列 · 4 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>id</code></td><td>BIGINT</td><td>否</td><td>PK</td><td><code>id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY</code></td></tr><tr><td><code>applicant_user_id</code></td><td>BIGINT</td><td>否</td><td>→ sys_user.id</td><td><code>applicant_user_id BIGINT NOT NULL</code></td></tr><tr><td><code>permission_id</code></td><td>BIGINT</td><td>否</td><td>→ sys_permission.id</td><td><code>permission_id BIGINT NOT NULL</code></td></tr><tr><td><code>reason</code></td><td>VARCHAR(500)</td><td>否</td><td>—</td><td><code>reason VARCHAR(500) NOT NULL</code></td></tr><tr><td><code>status</code></td><td>VARCHAR(12)</td><td>否</td><td>—</td><td><code>status VARCHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL</code></td></tr><tr><td><code>reviewer_user_id</code></td><td>BIGINT</td><td>是</td><td>→ sys_user.id</td><td><code>reviewer_user_id BIGINT</code></td></tr><tr><td><code>approved_role_id</code></td><td>BIGINT</td><td>是</td><td>→ sys_role.id</td><td><code>approved_role_id BIGINT</code></td></tr><tr><td><code>created_at</code></td><td>DATETIME(6)</td><td>否</td><td>—</td><td><code>created_at DATETIME(6) NOT NULL</code></td></tr><tr><td><code>reviewed_at</code></td><td>DATETIME(6)</td><td>是</td><td>—</td><td><code>reviewed_at DATETIME(6)</code></td></tr></tbody></table></div><pre>FOREIGN KEY (applicant_user_id) REFERENCES sys_user(id)
+FOREIGN KEY (permission_id) REFERENCES sys_permission(id)
+FOREIGN KEY (reviewer_user_id) REFERENCES sys_user(id)
+FOREIGN KEY (approved_role_id) REFERENCES sys_role(id) ON DELETE SET NULL
+CHECK (status IN (&#x27;PENDING&#x27;,&#x27;APPROVED&#x27;,&#x27;REJECTED&#x27;,&#x27;SATISFIED&#x27;,&#x27;WITHDRAWN&#x27;))</pre></details>
+<details class="dictionary">
+  <summary><code>sys_role_create_request</code><span>角色创建申请</span><small>9 列 · 3 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>id</code></td><td>BIGINT</td><td>否</td><td>PK</td><td><code>id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY</code></td></tr><tr><td><code>applicant_user_id</code></td><td>BIGINT</td><td>否</td><td>→ sys_user.id</td><td><code>applicant_user_id BIGINT NOT NULL</code></td></tr><tr><td><code>role_name</code></td><td>VARCHAR(24)</td><td>否</td><td>—</td><td><code>role_name VARCHAR(24) NOT NULL</code></td></tr><tr><td><code>role_description</code></td><td>VARCHAR(48)</td><td>否</td><td>—</td><td><code>role_description VARCHAR(48) NOT NULL DEFAULT &#x27;&#x27;</code></td></tr><tr><td><code>status</code></td><td>VARCHAR(8)</td><td>否</td><td>—</td><td><code>status VARCHAR(8) CHARACTER SET ascii COLLATE ascii_bin NOT NULL</code></td></tr><tr><td><code>reviewer_user_id</code></td><td>BIGINT</td><td>是</td><td>→ sys_user.id</td><td><code>reviewer_user_id BIGINT</code></td></tr><tr><td><code>created_role_id</code></td><td>BIGINT</td><td>是</td><td>→ sys_role.id</td><td><code>created_role_id BIGINT</code></td></tr><tr><td><code>created_at</code></td><td>DATETIME(6)</td><td>否</td><td>—</td><td><code>created_at DATETIME(6) NOT NULL</code></td></tr><tr><td><code>reviewed_at</code></td><td>DATETIME(6)</td><td>是</td><td>—</td><td><code>reviewed_at DATETIME(6)</code></td></tr></tbody></table></div><pre>FOREIGN KEY (applicant_user_id) REFERENCES sys_user(id)
+FOREIGN KEY (reviewer_user_id) REFERENCES sys_user(id)
+FOREIGN KEY (created_role_id) REFERENCES sys_role(id) ON DELETE SET NULL
+CHECK (status IN (&#x27;PENDING&#x27;,&#x27;APPROVED&#x27;,&#x27;REJECTED&#x27;))</pre></details>
+<details class="dictionary">
+  <summary><code>sys_role_create_request_permission</code><span>角色创建申请直接权限</span><small>2 列 · 2 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>request_id</code></td><td>BIGINT</td><td>否</td><td>PK / → sys_role_create_request.id</td><td><code>request_id BIGINT NOT NULL</code></td></tr><tr><td><code>permission_id</code></td><td>BIGINT</td><td>否</td><td>PK / → sys_permission.id</td><td><code>permission_id BIGINT NOT NULL</code></td></tr></tbody></table></div><pre>PRIMARY KEY (request_id, permission_id)
+INDEX idx_role_request_permission (permission_id)
+FOREIGN KEY (request_id) REFERENCES sys_role_create_request(id)
+FOREIGN KEY (permission_id) REFERENCES sys_permission(id)</pre></details>
+<details class="dictionary">
+  <summary><code>sys_role_inheritance</code><span>业务角色直接继承关系（DAG）</span><small>2 列 · 2 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>role_id</code></td><td>BIGINT</td><td>否</td><td>PK / → sys_role.id</td><td><code>role_id BIGINT NOT NULL</code></td></tr><tr><td><code>inherited_role_id</code></td><td>BIGINT</td><td>否</td><td>PK / → sys_role.id</td><td><code>inherited_role_id BIGINT NOT NULL</code></td></tr></tbody></table></div><pre>PRIMARY KEY (role_id, inherited_role_id)
+INDEX idx_role_inheritance_parent (inherited_role_id)
+FOREIGN KEY (role_id) REFERENCES sys_role(id)
+FOREIGN KEY (inherited_role_id) REFERENCES sys_role(id)</pre></details>
+<details class="dictionary">
+  <summary><code>sys_role_create_request_inheritance</code><span>角色创建申请父角色快照</span><small>3 列 · 1 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>request_id</code></td><td>BIGINT</td><td>否</td><td>PK / → sys_role_create_request.id</td><td><code>request_id BIGINT NOT NULL</code></td></tr><tr><td><code>inherited_role_id</code></td><td>BIGINT</td><td>否</td><td>PK</td><td><code>inherited_role_id BIGINT NOT NULL</code></td></tr><tr><td><code>inherited_role_name</code></td><td>VARCHAR(24)</td><td>否</td><td>—</td><td><code>inherited_role_name VARCHAR(24) NOT NULL</code></td></tr></tbody></table></div><pre>PRIMARY KEY (request_id, inherited_role_id)
+FOREIGN KEY (request_id) REFERENCES sys_role_create_request(id)</pre></details>
+<details class="dictionary">
+  <summary><code>sys_application_role_code</code><span>按应用映射统一身份角色码</span><small>3 列 · 2 外键</small></summary>
+  <div class="table-wrap"><table><thead><tr><th>字段</th><th>类型</th><th>可空</th><th>键 / 关系</th><th>DDL 定义</th></tr></thead><tbody><tr><td><code>application_id</code></td><td>BIGINT</td><td>否</td><td>PK / → sys_application.id</td><td><code>application_id BIGINT NOT NULL</code></td></tr><tr><td><code>role_id</code></td><td>BIGINT</td><td>否</td><td>PK / → sys_role.id</td><td><code>role_id BIGINT NOT NULL</code></td></tr><tr><td><code>role_code</code></td><td>VARCHAR(64)</td><td>否</td><td>PK</td><td><code>role_code VARCHAR(64) NOT NULL</code></td></tr></tbody></table></div><pre>PRIMARY KEY (application_id, role_id, role_code)
+INDEX idx_application_role_code_role (role_id)
+CONSTRAINT chk_application_role_code CHECK (CHAR_LENGTH(TRIM(role_code)) &gt; 0)
+CONSTRAINT fk_application_role_code_app FOREIGN KEY (application_id) REFERENCES sys_application (id)
+CONSTRAINT fk_application_role_code_role FOREIGN KEY (role_id) REFERENCES sys_role (id) ON DELETE CASCADE</pre></details></div>
+    </section>
+
+    <!-- 04 OpenAPI 目录 -->
+    <section id="api" class="panel" hidden>
+      <p class="kicker"><span>04</span>OpenAPI 目录</p>
+      <h2>47 个接口与双后端实现位置</h2>
+      <p class="lead">来源：<code>docs/03-api/RBAC1-api.yaml</code>，结构化与 DDD 契约完全一致。</p>
+
+      <div class="explorer">
+        <div class="filters">
+          <div class="search-box">
+            <input id="api-search" type="search" placeholder="搜索路径、名称或说明（按 / 聚焦）">
+            <kbd>/</kbd>
+          </div>
+          <div class="method-chips" aria-label="HTTP 方法筛选">
+            <button type="button" class="method GET" data-method="GET" aria-pressed="false">GET</button>
+            <button type="button" class="method POST" data-method="POST" aria-pressed="false">POST</button>
+            <button type="button" class="method PUT" data-method="PUT" aria-pressed="false">PUT</button>
+            <button type="button" class="method PATCH" data-method="PATCH" aria-pressed="false">PATCH</button>
+            <button type="button" class="method DELETE" data-method="DELETE" aria-pressed="false">DELETE</button>
+          </div>
+          <select id="api-tag" aria-label="功能分组">
+            <option value="all">全部分组（11）</option>
+            <option value="统一身份鉴权">统一身份鉴权</option><option value="签名公钥">签名公钥</option><option value="应用与权限">应用与权限</option><option value="角色管理">角色管理</option><option value="用户与部门">用户与部门</option><option value="用户授权">用户授权</option><option value="我的权限">我的权限</option><option value="操作记录">操作记录</option><option value="API 登记">API 登记</option><option value="权限申请">权限申请</option><option value="角色创建申请">角色创建申请</option>
+          </select>
+          <div class="filter-end">
+            <span id="api-count" class="count"></span>
+            <button type="button" class="btn small" id="api-expand">展开结果</button>
+            <button type="button" class="btn small ghost" id="api-reset">重置</button>
+          </div>
+        </div>
+        <div id="api-list">
+          <details class="endpoint" data-method="POST" data-tag="统一身份鉴权" data-search="post /auth/login 统一身份鉴权 统一登录 login 使用统一用户名和密码登录。systems 填目标应用 code：课程系统为 course-project-management，本系统为 permission-center。所有 code 必须已登记，返回 jwt 的 aud 与此列表一致。aud 表示目标应用，不代表自动拥有该应用权限。凭据错误或账号停用均返回 401。">
+  <summary>
+    <span class="method POST">POST</span>
+    <code>/auth/login</code>
+    <span class="op-tag">统一身份鉴权</span>
+    <span class="op-summary">统一登录</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">使用统一用户名和密码登录。systems 填目标应用 code：课程系统为 course-project-management，本系统为 permission-center。所有 code 必须已登记，返回 JWT 的 aud 与此列表一致。aud 表示目标应用，不代表自动拥有该应用权限。凭据错误或账号停用均返回 401。</p>
+    <h4>参数</h4><p style="color:#556677;margin:0">无路径 / 查询参数</p><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>LoginRequest</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 登录成功 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>429</code> 登录尝试过于频繁 · <code>503</code> 统一身份或权限检查暂不可用，调用方不能继续受保护操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/SessionController.java:47">rbac1-structured/src/main/java/com/rbac/rbac1/controller/SessionController.java:47</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SessionController.java:48">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SessionController.java:48</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="POST" data-tag="统一身份鉴权" data-search="post /auth/logout 统一身份鉴权 统一退出登录 logout 使用当前 bearer 令牌退出，不提交用户 id。中心使当前令牌失效，所有使用它的接入系统后续检查均返回 401。">
+  <summary>
+    <span class="method POST">POST</span>
+    <code>/auth/logout</code>
+    <span class="op-tag">统一身份鉴权</span>
+    <span class="op-summary">统一退出登录</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">使用当前 Bearer 令牌退出，不提交用户 ID。中心使当前令牌失效，所有使用它的接入系统后续检查均返回 401。</p>
+    <h4>参数</h4><p style="color:#556677;margin:0">无路径 / 查询参数</p><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>204</code> 当前令牌已失效，无响应正文 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>503</code> 统一身份或权限检查暂不可用，调用方不能继续受保护操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/SessionController.java:103">rbac1-structured/src/main/java/com/rbac/rbac1/controller/SessionController.java:103</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SessionController.java:98">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SessionController.java:98</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="统一身份鉴权" data-search="get /auth/me 统一身份鉴权 当前用户、角色与权限 getcurrentuserandpermissions 从令牌识别当前用户与目标应用。启用角色码映射的应用，从用户直接分配的业务角色及其所有父角色中查找该应用配置的角色码， 去重后返回，不要求角色拥有该应用权限。没有匹配的映射时返回空数组。其他应用沿用数字角色 id 字符串， 只列出直接分配且为目标应用提供有效权限的角色。permissions 始终返回目标应用内去重的直接和继承权限。 subject 为用户 id 字符串，no 为统一账号用户名。id、departmentid、managementrole 供权限中心页面使用。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/auth/me</code>
+    <span class="op-tag">统一身份鉴权</span>
+    <span class="op-summary">当前用户、角色与权限</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">从令牌识别当前用户与目标应用。启用角色码映射的应用，从用户直接分配的业务角色及其所有父角色中查找该应用配置的角色码， 去重后返回，不要求角色拥有该应用权限。没有匹配的映射时返回空数组。其他应用沿用数字角色 ID 字符串， 只列出直接分配且为目标应用提供有效权限的角色。permissions 始终返回目标应用内去重的直接和继承权限。 subject 为用户 ID 字符串，no 为统一账号用户名。id、departmentId、managementRole 供权限中心页面使用。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>header</td><td><code>X-Application-Code</code></td><td>否</td><td>JWT aud 仅含一个应用时可省略，多个应用时必须填本次目标 code。省略且目标不明确返回 400；指定 aud 外的应用返回 403。管理接口固定属于 permission-center，无需此头。</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 当前用户在目标应用中的身份、角色和权限 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>503</code> 统一身份或权限检查暂不可用，调用方不能继续受保护操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/SessionController.java:59">rbac1-structured/src/main/java/com/rbac/rbac1/controller/SessionController.java:59</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SessionController.java:62">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SessionController.java:62</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="统一身份鉴权" data-search="get /auth/permissions/{permission} 统一身份鉴权 校验当前用户是否具备指定前端权限 checkcurrentfrontendpermission 检查当前用户在目标应用中的一项菜单或按钮权限，只返回 allowed。不接受 userid。权限未登记或未获授权返回 200、allowed=false；令牌无效或账号停用返回 401。 rbac1 使用直接权限与全部可达祖先权限的并集；移除一条继承路径后仍有其他来源时继续允许。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/auth/permissions/{permission}</code>
+    <span class="op-tag">统一身份鉴权</span>
+    <span class="op-summary">校验当前用户是否具备指定前端权限</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">检查当前用户在目标应用中的一项菜单或按钮权限，只返回 allowed。不接受 userId。权限未登记或未获授权返回 200、allowed=false；令牌无效或账号停用返回 401。 RBAC1 使用直接权限与全部可达祖先权限的并集；移除一条继承路径后仍有其他来源时继续允许。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>permission</code></td><td>是</td><td>当前应用内菜单或按钮的权限标识，与 operationId 不同。编码格式由接入系统决定（如 course:review、CV、course.view），未登记的编码返回 allowed=false。</td></tr><tr><td>header</td><td><code>X-Application-Code</code></td><td>否</td><td>JWT aud 仅含一个应用时可省略，多个应用时必须填本次目标 code。省略且目标不明确返回 400；指定 aud 外的应用返回 403。管理接口固定属于 permission-center，无需此头。</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 单项前端权限检查结果 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>503</code> 统一身份或权限检查暂不可用，调用方不能继续受保护操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/SessionController.java:71">rbac1-structured/src/main/java/com/rbac/rbac1/controller/SessionController.java:71</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SessionController.java:72">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SessionController.java:72</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="统一身份鉴权" data-search="get /auth/api-permissions/{operationid} 统一身份鉴权 判断当前用户能否调用指定 api 接口 checkcurrentapipermission 业务后端转交当前用户的 bearer 令牌，并从实际请求确定 operationid，不信任前端自行声明的目标接口。按目标应用查找 api，读取其全部关联权限；当前有效角色拥有其中任意一项即 allowed=true（or），没有关联权限则 allowed=false。api 未登记返回 404；未获授权返回 200、allowed=false；无效令牌、退出或停用账号返回 401；检查不可用返回 503，均不得执行操作。只检查功能权限，固定管理员职责、部门范围及业务对象范围仍由目标后端落实。 rbac1 的任一关联权限判断包含角色继承得到的权限，仍按目标应用隔离。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/auth/api-permissions/{operationId}</code>
+    <span class="op-tag">统一身份鉴权</span>
+    <span class="op-summary">判断当前用户能否调用指定 API 接口</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">业务后端转交当前用户的 Bearer 令牌，并从实际请求确定 operationId，不信任前端自行声明的目标接口。按目标应用查找 API，读取其全部关联权限；当前有效角色拥有其中任意一项即 allowed=true（OR），没有关联权限则 allowed=false。API 未登记返回 404；未获授权返回 200、allowed=false；无效令牌、退出或停用账号返回 401；检查不可用返回 503，均不得执行操作。只检查功能权限，固定管理员职责、部门范围及业务对象范围仍由目标后端落实。 RBAC1 的任一关联权限判断包含角色继承得到的权限，仍按目标应用隔离。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>operationId</code></td><td>是</td><td>业务系统 API 文档的接口标识，在目标应用内唯一。</td></tr><tr><td>header</td><td><code>X-Application-Code</code></td><td>否</td><td>JWT aud 仅含一个应用时可省略，多个应用时必须填本次目标 code。省略且目标不明确返回 400；指定 aud 外的应用返回 403。管理接口固定属于 permission-center，无需此头。</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 当前用户调用目标 API 的权限 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>503</code> 统一身份或权限检查暂不可用，调用方不能继续受保护操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/SessionController.java:87">rbac1-structured/src/main/java/com/rbac/rbac1/controller/SessionController.java:87</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SessionController.java:85">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SessionController.java:85</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="统一身份鉴权" data-search="get /auth/departments 统一身份鉴权 分页查询统一身份部门 listidentitydepartments 不传 parentid 查询根部门，传入时只查询该部门的直接子部门。keyword 匹配本层部门名称或代码，haschildren 表示是否有直接子部门。目标应用须登记此 api 并为调用人授权。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/auth/departments</code>
+    <span class="op-tag">统一身份鉴权</span>
+    <span class="op-summary">分页查询统一身份部门</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">不传 parentId 查询根部门，传入时只查询该部门的直接子部门。keyword 匹配本层部门名称或代码，hasChildren 表示是否有直接子部门。目标应用须登记此 API 并为调用人授权。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>header</td><td><code>X-Application-Code</code></td><td>否</td><td>JWT aud 仅含一个应用时可省略，多个应用时必须填本次目标 code。省略且目标不明确返回 400；指定 aud 外的应用返回 403。管理接口固定属于 permission-center，无需此头。</td></tr><tr><td>query</td><td><code>keyword</code></td><td>否</td><td>可选的搜索关键词</td></tr><tr><td>query</td><td><code>parentId</code></td><td>否</td><td>上级部门 ID，省略时查询根部门</td></tr><tr><td>query</td><td><code>page</code></td><td>否</td><td>页码，从 1 开始</td></tr><tr><td>query</td><td><code>pageSize</code></td><td>否</td><td>每页条数</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 部门分页列表 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>503</code> 统一身份或权限检查暂不可用，调用方不能继续受保护操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/IdentityDirectoryController.java:38">rbac1-structured/src/main/java/com/rbac/rbac1/controller/IdentityDirectoryController.java:38</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/IdentityDirectoryController.java:34">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/IdentityDirectoryController.java:34</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="统一身份鉴权" data-search="get /auth/departments/{departmentid}/users 统一身份鉴权 分页查询部门内的统一身份用户 listidentitydepartmentusers 按姓名或账号查询指定部门的启用用户。目标应用须登记此 api 并为调用人授权。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/auth/departments/{departmentId}/users</code>
+    <span class="op-tag">统一身份鉴权</span>
+    <span class="op-summary">分页查询部门内的统一身份用户</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">按姓名或账号查询指定部门的启用用户。目标应用须登记此 API 并为调用人授权。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>header</td><td><code>X-Application-Code</code></td><td>否</td><td>JWT aud 仅含一个应用时可省略，多个应用时必须填本次目标 code。省略且目标不明确返回 400；指定 aud 外的应用返回 403。管理接口固定属于 permission-center，无需此头。</td></tr><tr><td>path</td><td><code>departmentId</code></td><td>是</td><td>部门 ID</td></tr><tr><td>query</td><td><code>keyword</code></td><td>否</td><td>可选的搜索关键词</td></tr><tr><td>query</td><td><code>page</code></td><td>否</td><td>页码，从 1 开始</td></tr><tr><td>query</td><td><code>pageSize</code></td><td>否</td><td>每页条数</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 部门用户分页列表 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>503</code> 统一身份或权限检查暂不可用，调用方不能继续受保护操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/IdentityDirectoryController.java:67">rbac1-structured/src/main/java/com/rbac/rbac1/controller/IdentityDirectoryController.java:67</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/IdentityDirectoryController.java:60">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/IdentityDirectoryController.java:60</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="统一身份鉴权" data-search="get /auth/users/{userid} 统一身份鉴权 按统一身份标识查询用户 lookupidentityuser 用目录返回的 userid 查询启用的组织用户，返回姓名和账号。目标应用须登记此 api 并为调用人授权。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/auth/users/{userId}</code>
+    <span class="op-tag">统一身份鉴权</span>
+    <span class="op-summary">按统一身份标识查询用户</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">用目录返回的 userId 查询启用的组织用户，返回姓名和账号。目标应用须登记此 API 并为调用人授权。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>header</td><td><code>X-Application-Code</code></td><td>否</td><td>JWT aud 仅含一个应用时可省略，多个应用时必须填本次目标 code。省略且目标不明确返回 400；指定 aud 外的应用返回 403。管理接口固定属于 permission-center，无需此头。</td></tr><tr><td>path</td><td><code>userId</code></td><td>是</td><td>统一身份标识，与 JWT sub 一致，使用用户 ID 的十进制字符串</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 统一身份用户 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>503</code> 统一身份或权限检查暂不可用，调用方不能继续受保护操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/IdentityDirectoryController.java:96">rbac1-structured/src/main/java/com/rbac/rbac1/controller/IdentityDirectoryController.java:96</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/IdentityDirectoryController.java:86">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/IdentityDirectoryController.java:86</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="签名公钥" data-search="get /.well-known/jwks.json 签名公钥 获取 jwt 验签公钥 getsigningpublickeys 公开 rsa 公钥。业务系统根据 jwt 头部 kid 选择公钥，并检查签名、签发者、时效及目标应用。只提供公钥，不返回私钥。验签不替代权限与退出失效检查。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/.well-known/jwks.json</code>
+    <span class="op-tag">签名公钥</span>
+    <span class="op-summary">获取 JWT 验签公钥</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">公开 RSA 公钥。业务系统根据 JWT 头部 kid 选择公钥，并检查签名、签发者、时效及目标应用。只提供公钥，不返回私钥。验签不替代权限与退出失效检查。</p>
+    <h4>参数</h4><p style="color:#556677;margin:0">无路径 / 查询参数</p><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> JWT 签名公钥集合 · <code>503</code> 统一身份或权限检查暂不可用，调用方不能继续受保护操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/SigningKeyController.java:16">rbac1-structured/src/main/java/com/rbac/rbac1/controller/SigningKeyController.java:16</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SigningKeyController.java:17">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SigningKeyController.java:17</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="应用与权限" data-search="get /api/v1/applications 应用与权限 查询应用列表 listapplications 总管理员查询应用。本系统 code 为 permission-center，课程系统为 course-project-management。数字 id 用于管理接口，code 用于统一登录 systems 和 jwt aud。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/applications</code>
+    <span class="op-tag">应用与权限</span>
+    <span class="op-summary">查询应用列表</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">总管理员查询应用。本系统 code 为 permission-center，课程系统为 course-project-management。数字 id 用于管理接口，code 用于统一登录 systems 和 JWT aud。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>query</td><td><code>page</code></td><td>否</td><td>页码，从 1 开始</td></tr><tr><td>query</td><td><code>pageSize</code></td><td>否</td><td>每页条数</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 已登记应用分页结果 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApplicationController.java:41">rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApplicationController.java:41</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java:42">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java:42</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="POST" data-tag="应用与权限" data-search="post /api/v1/applications 应用与权限 新增应用 createapplication 总管理员登记应用。name 必填；code 可填业务系统约定标识，省略时系统生成 app-{id}。code 全局唯一，创建后固定，不随显示名称变化。">
+  <summary>
+    <span class="method POST">POST</span>
+    <code>/api/v1/applications</code>
+    <span class="op-tag">应用与权限</span>
+    <span class="op-summary">新增应用</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">总管理员登记应用。name 必填；code 可填业务系统约定标识，省略时系统生成 app-{id}。code 全局唯一，创建后固定，不随显示名称变化。</p>
+    <h4>参数</h4><p style="color:#556677;margin:0">无路径 / 查询参数</p><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>ApplicationCreate</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>201</code> 应用已创建 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>409</code> 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApplicationController.java:56">rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApplicationController.java:56</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java:57">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java:57</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="PATCH" data-tag="应用与权限" data-search="patch /api/v1/applications/{applicationid} 应用与权限 修改应用名称 updateapplication 总管理员修改显示名称，应用数字 id 和对接 code 保持固定。">
+  <summary>
+    <span class="method PATCH">PATCH</span>
+    <code>/api/v1/applications/{applicationId}</code>
+    <span class="op-tag">应用与权限</span>
+    <span class="op-summary">修改应用名称</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">总管理员修改显示名称，应用数字 ID 和对接 code 保持固定。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>applicationId</code></td><td>是</td><td>应用 ID</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>ApplicationInput</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 应用名称已更新 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>409</code> 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApplicationController.java:68">rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApplicationController.java:68</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java:69">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java:69</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="应用与权限" data-search="get /api/v1/applications/{applicationid}/permissions 应用与权限 查看应用权限树 getapplicationpermissiontree 总管理员查看应用的菜单和按钮，每项的 apicount 表示关联接口数量。编辑时通过权限详情接口读取完整 api。应用目录与角色配置共用此树，角色仍按权限 id 勾选。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/applications/{applicationId}/permissions</code>
+    <span class="op-tag">应用与权限</span>
+    <span class="op-summary">查看应用权限树</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">总管理员查看应用的菜单和按钮，每项的 apiCount 表示关联接口数量。编辑时通过权限详情接口读取完整 API。应用目录与角色配置共用此树，角色仍按权限 ID 勾选。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>applicationId</code></td><td>是</td><td>应用 ID</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 应用内的完整权限树 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApplicationController.java:83">rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApplicationController.java:83</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java:84">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java:84</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="POST" data-tag="应用与权限" data-search="post /api/v1/applications/{applicationid}/permissions 应用与权限 登记菜单或按钮权限 createpermission 仅总管理员。登记应用内唯一的资源:操作权限标识。菜单 parentid 省略或为 null；按钮必须指向同应用菜单。apiids 为已登记 api 的完整关联 id 列表，可为空；不存在或属于其他应用则 400。同一 api 可关联多项权限。权限、关联和成功记录在同一事务保存。需要新增 api 时先调用 api 登记接口，再将返回的 id 提交本接口。">
+  <summary>
+    <span class="method POST">POST</span>
+    <code>/api/v1/applications/{applicationId}/permissions</code>
+    <span class="op-tag">应用与权限</span>
+    <span class="op-summary">登记菜单或按钮权限</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">仅总管理员。登记应用内唯一的资源:操作权限标识。菜单 parentId 省略或为 null；按钮必须指向同应用菜单。apiIds 为已登记 API 的完整关联 ID 列表，可为空；不存在或属于其他应用则 400。同一 API 可关联多项权限。权限、关联和成功记录在同一事务保存。需要新增 API 时先调用 API 登记接口，再将返回的 ID 提交本接口。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>applicationId</code></td><td>是</td><td>应用 ID</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>PermissionCreate</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>201</code> 权限及 API 关联已保存，API 登记由独立接口维护 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>409</code> 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApplicationController.java:95">rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApplicationController.java:95</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java:96">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java:96</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="应用与权限" data-search="get /api/v1/applications/{applicationid}/permissions/{permissionid} 应用与权限 查看权限及关联接口 getpermission 总管理员打开权限编辑或关联接口配置时读取完整资料，只返回指定应用下的权限。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/applications/{applicationId}/permissions/{permissionId}</code>
+    <span class="op-tag">应用与权限</span>
+    <span class="op-summary">查看权限及关联接口</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">总管理员打开权限编辑或关联接口配置时读取完整资料，只返回指定应用下的权限。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>applicationId</code></td><td>是</td><td>应用 ID</td></tr><tr><td>path</td><td><code>permissionId</code></td><td>是</td><td>权限 ID</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 权限资料和完整关联接口 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApplicationController.java:130">rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApplicationController.java:130</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java:145">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java:145</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="PATCH" data-tag="应用与权限" data-search="patch /api/v1/applications/{applicationid}/permissions/{permissionid} 应用与权限 保存权限资料和关联接口 updatepermission 仅总管理员。修改名称、标识和 apiids；权限 id、所属应用、类型和所属菜单固定，角色授权保留。apiids 省略则保留，提供则完整替换，[] 只清空本权限的关联，不删除任何 api 登记或其他权限关联。未登记或跨应用 api 返回 400。资料、关联及成功记录一起保存，下次检查使用新配置；用户仍可通过其他关联权限获得接口权限。">
+  <summary>
+    <span class="method PATCH">PATCH</span>
+    <code>/api/v1/applications/{applicationId}/permissions/{permissionId}</code>
+    <span class="op-tag">应用与权限</span>
+    <span class="op-summary">保存权限资料和关联接口</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">仅总管理员。修改名称、标识和 apiIds；权限 ID、所属应用、类型和所属菜单固定，角色授权保留。apiIds 省略则保留，提供则完整替换，[] 只清空本权限的关联，不删除任何 API 登记或其他权限关联。未登记或跨应用 API 返回 400。资料、关联及成功记录一起保存，下次检查使用新配置；用户仍可通过其他关联权限获得接口权限。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>applicationId</code></td><td>是</td><td>应用 ID</td></tr><tr><td>path</td><td><code>permissionId</code></td><td>是</td><td>权限 ID</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>PermissionUpdate</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 权限资料和关联 API 已保存 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>409</code> 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApplicationController.java:111">rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApplicationController.java:111</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java:121">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApplicationController.java:121</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="角色管理" data-search="get /api/v1/roles 角色管理 查看或搜索角色 listroles 总管理员默认查询全部角色（含只读的预置管理角色）；部门管理员只读查询 business 角色。可用 roletype 筛选，部门管理员请求预置管理角色类型返回 403。列表返回角色类型、直接父角色 inheritedroles、直接子角色 inheritedbyroles、直接及有效权限数量和应用统计，不需要逐条请求详情。选择父角色或为用户分配业务角色时使用 roletype=business，并排除当前角色；循环继承仍由保存接口校验。读取不会修改继承关系。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/roles</code>
+    <span class="op-tag">角色管理</span>
+    <span class="op-summary">查看或搜索角色</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">总管理员默认查询全部角色（含只读的预置管理角色）；部门管理员只读查询 BUSINESS 角色。可用 roleType 筛选，部门管理员请求预置管理角色类型返回 403。列表返回角色类型、直接父角色 inheritedRoles、直接子角色 inheritedByRoles、直接及有效权限数量和应用统计，不需要逐条请求详情。选择父角色或为用户分配业务角色时使用 roleType=BUSINESS，并排除当前角色；循环继承仍由保存接口校验。读取不会修改继承关系。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>query</td><td><code>page</code></td><td>否</td><td>页码，从 1 开始</td></tr><tr><td>query</td><td><code>pageSize</code></td><td>否</td><td>每页条数</td></tr><tr><td>query</td><td><code>keyword</code></td><td>否</td><td>按角色名称搜索</td></tr><tr><td>query</td><td><code>roleType</code></td><td>否</td><td>省略时按调用者范围返回；父角色选择与用户授权固定传 BUSINESS。</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 按调用者范围与 roleType 筛选后的角色分页结果 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleController.java:39">rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleController.java:39</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleController.java:32">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleController.java:32</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="POST" data-tag="角色管理" data-search="post /api/v1/roles 角色管理 新增业务角色及继承配置 createrole 仅总管理员。permissionids 为最终直接权限，inheritedroleids 为最终直接父角色，两者必须提交，可同时为空。创建前按全部父角色的有效权限合并、去重；禁止在创建时将已继承的权限重复配置为直接权限。按钮所属菜单可由最终直接或继承权限满足。校验父角色存在、均为 business，且关系无自继承或循环；无效配置返回 400。角色、直接授权、继承关联和成功日志在一个事务内保存。返回有效权限与全部配置来源；不为用户自动分配角色。 返回的 roletype、父子关系、权限数量和 assignedusercount 均为服务端计算字段，不接受客户端提交。">
+  <summary>
+    <span class="method POST">POST</span>
+    <code>/api/v1/roles</code>
+    <span class="op-tag">角色管理</span>
+    <span class="op-summary">新增业务角色及继承配置</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">仅总管理员。permissionIds 为最终直接权限，inheritedRoleIds 为最终直接父角色，两者必须提交，可同时为空。创建前按全部父角色的有效权限合并、去重；禁止在创建时将已继承的权限重复配置为直接权限。按钮所属菜单可由最终直接或继承权限满足。校验父角色存在、均为 BUSINESS，且关系无自继承或循环；无效配置返回 400。角色、直接授权、继承关联和成功日志在一个事务内保存。返回有效权限与全部配置来源；不为用户自动分配角色。 返回的 roleType、父子关系、权限数量和 assignedUserCount 均为服务端计算字段，不接受客户端提交。</p>
+    <h4>参数</h4><p style="color:#556677;margin:0">无路径 / 查询参数</p><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>RoleConfigurationInput</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>201</code> 角色、直接权限与继承配置已提交 · <code>400</code> 请求字段无效，父角色不存在或不是业务角色、自继承、循环、无效新增直接权限或最终缺少按钮所属菜单。均不保存任何修改。 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>409</code> 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleController.java:60">rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleController.java:60</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleController.java:56">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleController.java:56</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="角色管理" data-search="get /api/v1/roles/{roleid} 角色管理 查看角色直接配置、继承关系及有效权限 getrole 总管理员查询业务或预置管理角色；部门管理员只读查询业务角色，查询预置管理角色返回 403。roletype 为 total_admin 或 department_admin 时界面只读，不允许作为父角色，也不能创建、修改或删除这类角色。permissionids 仅含直接配置；inheritedroles、inheritedbyroles 分别列直接父角色和直接子角色；effectivepermissions 返回去重的全部有效权限、获得方式和实际直接配置来源。中间传递角色不算来源，多条路径指向同一来源只返回一次。assignedusercount 包含停用用户，用于删除前提示；delete 仍执行最终校验。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/roles/{roleId}</code>
+    <span class="op-tag">角色管理</span>
+    <span class="op-summary">查看角色直接配置、继承关系及有效权限</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">总管理员查询业务或预置管理角色；部门管理员只读查询业务角色，查询预置管理角色返回 403。roleType 为 TOTAL_ADMIN 或 DEPARTMENT_ADMIN 时界面只读，不允许作为父角色，也不能创建、修改或删除这类角色。permissionIds 仅含直接配置；inheritedRoles、inheritedByRoles 分别列直接父角色和直接子角色；effectivePermissions 返回去重的全部有效权限、获得方式和实际直接配置来源。中间传递角色不算来源，多条路径指向同一来源只返回一次。assignedUserCount 包含停用用户，用于删除前提示；DELETE 仍执行最终校验。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>roleId</code></td><td>是</td><td>业务角色 ID</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 直接配置、继承关系及去重有效权限 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleController.java:72">rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleController.java:72</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleController.java:68">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleController.java:68</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="PUT" data-tag="角色管理" data-search="put /api/v1/roles/{roleid} 角色管理 保存角色直接权限与继承关系 updaterole 仅总管理员。提交名称、说明、最终直接权限 permissionids 和最终直接父角色 inheritedroleids，一次替换该角色在所有应用中的配置；[] 清空相应关联，省略必需列表返回 400。新增直接权限按本次最终继承关系判断，不允许重复配置已继承权限。保存前已经存在的直接权限，即使本次与继承重叠，也允许保留；取消直接勾选只移除直接关联，其他来源仍在则权限继续有效。按钮所属菜单按本次最终有效权限判断，菜单已继承时不要求加入直接权限。校验全部业务父角色及自继承、循环继承，失败整次回滚。成功时同步保存直接授权、继承关系和日志；所有受影响角色、用户下次查询或检查反映结果，不保存继承权限副本。 返回的 roletype、父子关系、权限数量和 assignedusercount 均为服务端计算字段，不接受客户端提交。 预置管理角色仅可查看，对其提交修改返回 403。 修改权限或继承关系时，按拟保存的配置检查当前角色及全部直接、间接子角色。若修改后某个角色仍拥有按钮，却不再拥有其所属菜单，返回 400，提示受影响角色、按钮和菜单，整次修改不保存。其他直接或继承来源仍提供菜单时，不因该菜单依赖拒绝修改。前端预览用于提示，后端保存时执行同一校验。 同一授权变更流程按受影响角色及其后代所关联用户的当前有效权限检查待审核申请，权限已满足则转 satisfied，已结束申请状态不变。">
+  <summary>
+    <span class="method PUT">PUT</span>
+    <code>/api/v1/roles/{roleId}</code>
+    <span class="op-tag">角色管理</span>
+    <span class="op-summary">保存角色直接权限与继承关系</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">仅总管理员。提交名称、说明、最终直接权限 permissionIds 和最终直接父角色 inheritedRoleIds，一次替换该角色在所有应用中的配置；[] 清空相应关联，省略必需列表返回 400。新增直接权限按本次最终继承关系判断，不允许重复配置已继承权限。保存前已经存在的直接权限，即使本次与继承重叠，也允许保留；取消直接勾选只移除直接关联，其他来源仍在则权限继续有效。按钮所属菜单按本次最终有效权限判断，菜单已继承时不要求加入直接权限。校验全部业务父角色及自继承、循环继承，失败整次回滚。成功时同步保存直接授权、继承关系和日志；所有受影响角色、用户下次查询或检查反映结果，不保存继承权限副本。 返回的 roleType、父子关系、权限数量和 assignedUserCount 均为服务端计算字段，不接受客户端提交。 预置管理角色仅可查看，对其提交修改返回 403。 修改权限或继承关系时，按拟保存的配置检查当前角色及全部直接、间接子角色。若修改后某个角色仍拥有按钮，却不再拥有其所属菜单，返回 400，提示受影响角色、按钮和菜单，整次修改不保存。其他直接或继承来源仍提供菜单时，不因该菜单依赖拒绝修改。前端预览用于提示，后端保存时执行同一校验。 同一授权变更流程按受影响角色及其后代所关联用户的当前有效权限检查待审核申请，权限已满足则转 SATISFIED，已结束申请状态不变。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>roleId</code></td><td>是</td><td>业务角色 ID</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>RoleConfigurationInput</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 全部配置已保存并立即生效 · <code>400</code> 请求字段、父角色或权限配置无效，或最终配置使当前角色、直接或间接子角色的按钮缺少所属菜单。整次修改不保存，原配置不变。 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>409</code> 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleController.java:84">rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleController.java:84</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleController.java:80">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleController.java:80</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="DELETE" data-tag="角色管理" data-search="delete /api/v1/roles/{roleid} 角色管理 删除未关联用户的业务角色 deleterole 仅总管理员删除 business 角色，预置管理角色不可删除。沿用 rbac0 用户关联检查，停用用户同样计入。增加两个方向的继承检查：当前角色仍继承其他角色，或仍被其他角色继承时返回 409，提示先解除对应关联；不得静默级联解除继承。全部关联解除后，角色、直接权限关联和成功日志在同一事务内处理，保留权限定义和历史日志。 前端可先读取角色详情展示关联人数和父子角色，无需单独的删除检查接口；即使详情显示可删除，也以本次删除时的关联状态为准。 角色创建申请中的父角色只保存历史快照，不作为阻止删除的正式继承关联。删除后申请仍可查看，审批创建时须调整已删除的父角色。">
+  <summary>
+    <span class="method DELETE">DELETE</span>
+    <code>/api/v1/roles/{roleId}</code>
+    <span class="op-tag">角色管理</span>
+    <span class="op-summary">删除未关联用户的业务角色</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">仅总管理员删除 BUSINESS 角色，预置管理角色不可删除。沿用 RBAC0 用户关联检查，停用用户同样计入。增加两个方向的继承检查：当前角色仍继承其他角色，或仍被其他角色继承时返回 409，提示先解除对应关联；不得静默级联解除继承。全部关联解除后，角色、直接权限关联和成功日志在同一事务内处理，保留权限定义和历史日志。 前端可先读取角色详情展示关联人数和父子角色，无需单独的删除检查接口；即使详情显示可删除，也以本次删除时的关联状态为准。 角色创建申请中的父角色只保存历史快照，不作为阻止删除的正式继承关联。删除后申请仍可查看，审批创建时须调整已删除的父角色。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>roleId</code></td><td>是</td><td>业务角色 ID</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>204</code> 角色已删除，无响应正文 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>409</code> 仍有关联用户、父角色或继承本角色的其他角色，拒绝删除。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleController.java:99">rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleController.java:99</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleController.java:95">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleController.java:95</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="用户与部门" data-search="get /api/v1/departments 用户与部门 查看部门结构 getdepartmenttree 总管理员查看完整组织树。部门管理员以本部门为根查看可管理的组织树。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/departments</code>
+    <span class="op-tag">用户与部门</span>
+    <span class="op-summary">查看部门结构</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">总管理员查看完整组织树。部门管理员以本部门为根查看可管理的组织树。</p>
+    <h4>参数</h4><p style="color:#556677;margin:0">无路径 / 查询参数</p><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 管理范围内的部门树 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/DepartmentController.java:36">rbac1-structured/src/main/java/com/rbac/rbac1/controller/DepartmentController.java:36</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/DepartmentController.java:29">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/DepartmentController.java:29</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="POST" data-tag="用户与部门" data-search="post /api/v1/departments 用户与部门 新增部门 createdepartment 总管理员在组织树中新增公司、分公司或部门节点。parentid 为 null 时创建顶层节点。">
+  <summary>
+    <span class="method POST">POST</span>
+    <code>/api/v1/departments</code>
+    <span class="op-tag">用户与部门</span>
+    <span class="op-summary">新增部门</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">总管理员在组织树中新增公司、分公司或部门节点。parentId 为 null 时创建顶层节点。</p>
+    <h4>参数</h4><p style="color:#556677;margin:0">无路径 / 查询参数</p><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>DepartmentInput</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>201</code> 部门已创建 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/DepartmentController.java:44">rbac1-structured/src/main/java/com/rbac/rbac1/controller/DepartmentController.java:44</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/DepartmentController.java:37">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/DepartmentController.java:37</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="PATCH" data-tag="用户与部门" data-search="patch /api/v1/departments/{departmentid} 用户与部门 修改部门信息 updatedepartment 总管理员可修改部门名称或上级。上级须为已有部门且不得形成组织循环，parentid 为 null 表示改为顶层节点。">
+  <summary>
+    <span class="method PATCH">PATCH</span>
+    <code>/api/v1/departments/{departmentId}</code>
+    <span class="op-tag">用户与部门</span>
+    <span class="op-summary">修改部门信息</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">总管理员可修改部门名称或上级。上级须为已有部门且不得形成组织循环，parentId 为 null 表示改为顶层节点。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>departmentId</code></td><td>是</td><td>部门 ID</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>DepartmentUpdate</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 部门已更新 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/DepartmentController.java:56">rbac1-structured/src/main/java/com/rbac/rbac1/controller/DepartmentController.java:56</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/DepartmentController.java:49">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/DepartmentController.java:49</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="用户与部门" data-search="get /api/v1/users 用户与部门 按管理范围查看或搜索用户 listusers 总管理员可查询组织树中的全部用户，部门管理员可查询本部门及下级部门的用户。
+用户与部门页和用户授权页共用此列表。指定 departmentid 时，查询该部门及下级部门中的用户。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/users</code>
+    <span class="op-tag">用户与部门</span>
+    <span class="op-summary">按管理范围查看或搜索用户</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">总管理员可查询组织树中的全部用户，部门管理员可查询本部门及下级部门的用户。
+用户与部门页和用户授权页共用此列表。指定 departmentId 时，查询该部门及下级部门中的用户。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>query</td><td><code>page</code></td><td>否</td><td>页码，从 1 开始</td></tr><tr><td>query</td><td><code>pageSize</code></td><td>否</td><td>每页条数</td></tr><tr><td>query</td><td><code>keyword</code></td><td>否</td><td>按姓名、用户名搜索，用户授权页可一并按所属部门名称搜索</td></tr><tr><td>query</td><td><code>includeDepartmentName</code></td><td>否</td><td>为 true 时，keyword 也匹配所属部门名称</td></tr><tr><td>query</td><td><code>departmentId</code></td><td>否</td><td>所选部门 ID，必须位于调用者的管理范围</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 管理范围内的用户分页结果 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/UserController.java:40">rbac1-structured/src/main/java/com/rbac/rbac1/controller/UserController.java:40</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserController.java:35">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserController.java:35</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="POST" data-tag="用户与部门" data-search="post /api/v1/users 用户与部门 新增用户 createuser 管理员在其管理范围内新增用户，用户名全局唯一，默认 active。初始密码由管理员在新增用户表单填写，数据库只保存密码摘要；响应只返回用户，不回显密码。仅总管理员可以提交 departmentadministrator。编辑用户不修改密码，密码不得写入日志。">
+  <summary>
+    <span class="method POST">POST</span>
+    <code>/api/v1/users</code>
+    <span class="op-tag">用户与部门</span>
+    <span class="op-summary">新增用户</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">管理员在其管理范围内新增用户，用户名全局唯一，默认 ACTIVE。初始密码由管理员在新增用户表单填写，数据库只保存密码摘要；响应只返回用户，不回显密码。仅总管理员可以提交 departmentAdministrator。编辑用户不修改密码，密码不得写入日志。</p>
+    <h4>参数</h4><p style="color:#556677;margin:0">无路径 / 查询参数</p><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>UserCreate</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>201</code> 用户已创建 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>409</code> 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/UserController.java:76">rbac1-structured/src/main/java/com/rbac/rbac1/controller/UserController.java:76</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserController.java:73">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserController.java:73</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="用户与部门" data-search="get /api/v1/users/{userid} 用户与部门 查看用户信息及已有角色 getuser 管理员可查询管理范围内的用户信息。编辑用户和分配角色弹窗共用该结果。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/users/{userId}</code>
+    <span class="op-tag">用户与部门</span>
+    <span class="op-summary">查看用户信息及已有角色</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">管理员可查询管理范围内的用户信息。编辑用户和分配角色弹窗共用该结果。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>userId</code></td><td>是</td><td>用户 ID</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 用户信息及其已有的业务角色 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/UserController.java:64">rbac1-structured/src/main/java/com/rbac/rbac1/controller/UserController.java:64</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserController.java:61">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserController.java:61</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="PATCH" data-tag="用户与部门" data-search="patch /api/v1/users/{userid} 用户与部门 修改用户、账号状态或所属部门 updateuser 管理员可修改管理范围内用户的姓名、用户名和账号状态。
+仅总管理员可提交 departmentid 办理跨部门调动，或提交 departmentadministrator 任命、撤销部门管理员角色。
+调动后保留用户已有的业务角色。新部门决定后续管理范围。
+账号停用后撤销其会话，后续登录和受保护的权限检查均不通过。重要操作写入操作记录。">
+  <summary>
+    <span class="method PATCH">PATCH</span>
+    <code>/api/v1/users/{userId}</code>
+    <span class="op-tag">用户与部门</span>
+    <span class="op-summary">修改用户、账号状态或所属部门</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">管理员可修改管理范围内用户的姓名、用户名和账号状态。
+仅总管理员可提交 departmentId 办理跨部门调动，或提交 departmentAdministrator 任命、撤销部门管理员角色。
+调动后保留用户已有的业务角色。新部门决定后续管理范围。
+账号停用后撤销其会话，后续登录和受保护的权限检查均不通过。重要操作写入操作记录。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>userId</code></td><td>是</td><td>用户 ID</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>UserUpdate</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 保存后的用户信息 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>409</code> 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/UserController.java:89">rbac1-structured/src/main/java/com/rbac/rbac1/controller/UserController.java:89</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserController.java:94">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserController.java:94</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="PUT" data-tag="用户授权" data-search="put /api/v1/users/{userid}/roles 用户授权 保存单个用户的业务角色 replaceuserbusinessroles 管理员提交管理范围内该用户最终应拥有的业务角色 id 列表。空列表表示撤销全部业务角色。
+管理角色不在本接口的修改范围。保存成功后直接生效，记录发生的分配和撤销。
+ 获得新权限后，将该用户同权限的待审核申请标记 satisfied；仅处理 pending，保留其他历史状态，不因撤销角色恢复已结束申请。授权、状态变更及成功记录一起保存。 rbac1 用户关联只保存显式选择的业务角色，祖先权限由继承计算，不自动添加祖先用户角色关联。 申请是否已满足按受影响用户全部有效权限计算，包含角色继承来源；仅更新 pending，其他历史状态保持不变。">
+  <summary>
+    <span class="method PUT">PUT</span>
+    <code>/api/v1/users/{userId}/roles</code>
+    <span class="op-tag">用户授权</span>
+    <span class="op-summary">保存单个用户的业务角色</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">管理员提交管理范围内该用户最终应拥有的业务角色 ID 列表。空列表表示撤销全部业务角色。
+管理角色不在本接口的修改范围。保存成功后直接生效，记录发生的分配和撤销。
+ 获得新权限后，将该用户同权限的待审核申请标记 SATISFIED；仅处理 PENDING，保留其他历史状态，不因撤销角色恢复已结束申请。授权、状态变更及成功记录一起保存。 RBAC1 用户关联只保存显式选择的业务角色，祖先权限由继承计算，不自动添加祖先用户角色关联。 申请是否已满足按受影响用户全部有效权限计算，包含角色继承来源；仅更新 PENDING，其他历史状态保持不变。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>userId</code></td><td>是</td><td>用户 ID</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>ReplaceUserRoles</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 已保存的业务角色 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/AuthorizationController.java:37">rbac1-structured/src/main/java/com/rbac/rbac1/controller/AuthorizationController.java:37</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserRoleController.java:28">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserRoleController.java:28</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="PATCH" data-tag="用户授权" data-search="patch /api/v1/user-role-assignments 用户授权 批量分配或撤销业务角色 changeuserrolesinbatch 管理员提交所选用户、所选业务角色，以及分配或撤销动作。所有用户都必须位于管理范围。
+先校验整批，成功后一起保存并立即生效。用户的其他角色保留。
+同一角色已分配时重复分配、未分配时重复撤销，均保持该用户现状。
+ 获得新权限后，将该用户同权限的待审核申请标记 satisfied；仅处理 pending，保留其他历史状态，不因撤销角色恢复已结束申请。授权、状态变更及成功记录一起保存。 rbac1 用户关联只保存显式选择的业务角色，祖先权限由继承计算，不自动添加祖先用户角色关联。 申请是否已满足按受影响用户全部有效权限计算，包含角色继承来源；仅更新 pending，其他历史状态保持不变。">
+  <summary>
+    <span class="method PATCH">PATCH</span>
+    <code>/api/v1/user-role-assignments</code>
+    <span class="op-tag">用户授权</span>
+    <span class="op-summary">批量分配或撤销业务角色</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">管理员提交所选用户、所选业务角色，以及分配或撤销动作。所有用户都必须位于管理范围。
+先校验整批，成功后一起保存并立即生效。用户的其他角色保留。
+同一角色已分配时重复分配、未分配时重复撤销，均保持该用户现状。
+ 获得新权限后，将该用户同权限的待审核申请标记 SATISFIED；仅处理 PENDING，保留其他历史状态，不因撤销角色恢复已结束申请。授权、状态变更及成功记录一起保存。 RBAC1 用户关联只保存显式选择的业务角色，祖先权限由继承计算，不自动添加祖先用户角色关联。 申请是否已满足按受影响用户全部有效权限计算，包含角色继承来源；仅更新 PENDING，其他历史状态保持不变。</p>
+    <h4>参数</h4><p style="color:#556677;margin:0">无路径 / 查询参数</p><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>BatchRoleChange</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 批量操作已保存 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/AuthorizationController.java:52">rbac1-structured/src/main/java/com/rbac/rbac1/controller/AuthorizationController.java:52</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserRoleController.java:43">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/UserRoleController.java:43</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="我的权限" data-search="get /api/v1/me/permissions 我的权限 查看我的权限 getmypermissions 按全部已登记应用汇总当前用户已获菜单、按钮及实际配置来源，aud 必须包含 permission-center。businessroles 只返回显式分配的业务角色，祖先角色不作为额外用户角色关联。每项菜单、按钮的 sourceroles 列出实际直接配置该权限的角色；预置管理权限可列对应管理角色。相同权限和相同来源均去重，不返回继承路径；内置基础功能没有角色来源时返回 []。普通用户可直接读取本人来源，无需访问管理员的角色详情接口。无权限的应用返回空菜单。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/me/permissions</code>
+    <span class="op-tag">我的权限</span>
+    <span class="op-summary">查看我的权限</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">按全部已登记应用汇总当前用户已获菜单、按钮及实际配置来源，aud 必须包含 permission-center。businessRoles 只返回显式分配的业务角色，祖先角色不作为额外用户角色关联。每项菜单、按钮的 sourceRoles 列出实际直接配置该权限的角色；预置管理权限可列对应管理角色。相同权限和相同来源均去重，不返回继承路径；内置基础功能没有角色来源时返回 []。普通用户可直接读取本人来源，无需访问管理员的角色详情接口。无权限的应用返回空菜单。</p>
+    <h4>参数</h4><p style="color:#556677;margin:0">无路径 / 查询参数</p><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 当前用户的有效业务权限 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/AuthorizationController.java:63">rbac1-structured/src/main/java/com/rbac/rbac1/controller/AuthorizationController.java:63</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/MyPermissionController.java:21">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/MyPermissionController.java:21</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="操作记录" data-search="get /api/v1/operation-logs 操作记录 查看或搜索操作记录 listoperationlogs 总管理员查看全部记录。部门管理员查看本部门及下级部门用户的管理记录，
+以操作发生时用户所属的部门判断。同一批次涉及多部门时，只返回管理范围内的对象，
+搜索和分页同样基于筛选后的记录和对象。
+应用登记、角色权限配置、部门结构维护、跨部门调动等全局记录仅总管理员可见。
+ 包含 api 登记/编辑/移除、权限 api 关联变更、权限申请提交/撤回/审核，以及角色创建申请提交/通过/拒绝。申请和角色创建处理为 global，只有总管理员查询；不记录读取、打开编辑或取消行为。密码与完整登录令牌不得写入 detail。 rbac1 增加角色继承关系新增、解除和变更记录，属于 global，仅总管理员查看。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/operation-logs</code>
+    <span class="op-tag">操作记录</span>
+    <span class="op-summary">查看或搜索操作记录</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">总管理员查看全部记录。部门管理员查看本部门及下级部门用户的管理记录，
+以操作发生时用户所属的部门判断。同一批次涉及多部门时，只返回管理范围内的对象，
+搜索和分页同样基于筛选后的记录和对象。
+应用登记、角色权限配置、部门结构维护、跨部门调动等全局记录仅总管理员可见。
+ 包含 API 登记/编辑/移除、权限 API 关联变更、权限申请提交/撤回/审核，以及角色创建申请提交/通过/拒绝。申请和角色创建处理为 GLOBAL，只有总管理员查询；不记录读取、打开编辑或取消行为。密码与完整登录令牌不得写入 detail。 RBAC1 增加角色继承关系新增、解除和变更记录，属于 GLOBAL，仅总管理员查看。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>query</td><td><code>page</code></td><td>否</td><td>页码，从 1 开始</td></tr><tr><td>query</td><td><code>pageSize</code></td><td>否</td><td>每页条数</td></tr><tr><td>query</td><td><code>keyword</code></td><td>否</td><td>搜索操作人、可见对象或操作内容</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 可查看的操作记录分页结果 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/OperationLogController.java:26">rbac1-structured/src/main/java/com/rbac/rbac1/controller/OperationLogController.java:26</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/OperationLogController.java:26">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/OperationLogController.java:26</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="API 登记" data-search="get /api/v1/applications/{applicationid}/apis api 登记 查询应用 api 清单 listapis 仅总管理员。返回独立 api 登记及全部关联权限 id，包含尚未关联权限的 api；按 id 升序分页。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/applications/{applicationId}/apis</code>
+    <span class="op-tag">API 登记</span>
+    <span class="op-summary">查询应用 API 清单</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">仅总管理员。返回独立 API 登记及全部关联权限 ID，包含尚未关联权限的 API；按 ID 升序分页。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>applicationId</code></td><td>是</td><td>应用 ID</td></tr><tr><td>query</td><td><code>page</code></td><td>否</td><td>页码，从 1 开始</td></tr><tr><td>query</td><td><code>pageSize</code></td><td>否</td><td>每页条数</td></tr><tr><td>query</td><td><code>keyword</code></td><td>否</td><td>按接口标识或请求路径搜索</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 操作成功 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApiController.java:26">rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApiController.java:26</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApiController.java:34">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApiController.java:34</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="POST" data-tag="API 登记" data-search="post /api/v1/applications/{applicationid}/apis api 登记 登记 api registerapi 仅总管理员。从业务系统 api 文档填写 operationid、httpmethod、path；不创建业务代码。接口标识及方法、路径组合各自在应用内唯一，区分大小写，方法使用大写。允许先登记而不关联权限；无关联时 api 检查拒绝。登记及成功操作记录在一个事务提交。">
+  <summary>
+    <span class="method POST">POST</span>
+    <code>/api/v1/applications/{applicationId}/apis</code>
+    <span class="op-tag">API 登记</span>
+    <span class="op-summary">登记 API</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">仅总管理员。从业务系统 API 文档填写 operationId、httpMethod、path；不创建业务代码。接口标识及方法、路径组合各自在应用内唯一，区分大小写，方法使用大写。允许先登记而不关联权限；无关联时 API 检查拒绝。登记及成功操作记录在一个事务提交。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>applicationId</code></td><td>是</td><td>应用 ID</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>ApiInput</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>201</code> 操作成功 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>409</code> 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApiController.java:47">rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApiController.java:47</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApiController.java:55">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApiController.java:55</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="PATCH" data-tag="API 登记" data-search="patch /api/v1/applications/{applicationid}/apis/{apiid} api 登记 编辑 api 登记 updateapi 仅总管理员。按 api 数字 id 修改接口标识、方法或路径，所属应用固定，所有权限关联保留并共同引用新资料。唯一约束冲突 409；不存在或不属于应用 404。operationid 变更须与业务系统实际标识一起调整；旧标识检查返回 404，不保留隐式别名。变更及成功记录同一事务保存。">
+  <summary>
+    <span class="method PATCH">PATCH</span>
+    <code>/api/v1/applications/{applicationId}/apis/{apiId}</code>
+    <span class="op-tag">API 登记</span>
+    <span class="op-summary">编辑 API 登记</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">仅总管理员。按 API 数字 ID 修改接口标识、方法或路径，所属应用固定，所有权限关联保留并共同引用新资料。唯一约束冲突 409；不存在或不属于应用 404。operationId 变更须与业务系统实际标识一起调整；旧标识检查返回 404，不保留隐式别名。变更及成功记录同一事务保存。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>applicationId</code></td><td>是</td><td>应用 ID</td></tr><tr><td>path</td><td><code>apiId</code></td><td>是</td><td></td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>ApiUpdate</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 操作成功 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>409</code> 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApiController.java:62">rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApiController.java:62</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApiController.java:74">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApiController.java:74</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="DELETE" data-tag="API 登记" data-search="delete /api/v1/applications/{applicationid}/apis/{apiid} api 登记 移除 api 登记 deleteapi 仅总管理员。删除 api 及其全部权限关联，不删除权限、角色和历史操作记录。成功后对应 operationid 检查返回 404 并拒绝执行。与只解除某项权限的关联不同；删除和成功记录同一事务提交。">
+  <summary>
+    <span class="method DELETE">DELETE</span>
+    <code>/api/v1/applications/{applicationId}/apis/{apiId}</code>
+    <span class="op-tag">API 登记</span>
+    <span class="op-summary">移除 API 登记</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">仅总管理员。删除 API 及其全部权限关联，不删除权限、角色和历史操作记录。成功后对应 operationId 检查返回 404 并拒绝执行。与只解除某项权限的关联不同；删除和成功记录同一事务提交。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>applicationId</code></td><td>是</td><td>应用 ID</td></tr><tr><td>path</td><td><code>apiId</code></td><td>是</td><td></td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>204</code> 操作成功，无响应正文 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>409</code> 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApiController.java:79">rbac1-structured/src/main/java/com/rbac/rbac1/controller/ApiController.java:79</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApiController.java:96">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/ApiController.java:96</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="角色管理" data-search="get /api/v1/permission-catalog 角色管理 读取角色配置权限目录 getpermissioncatalog 仅总管理员与部门管理员只读访问，用于创建角色、角色创建申请和查看角色全部权限。按应用返回菜单、按钮和 parentid，不返回 api 清单。读取不意味着有权配置角色或调用对应 api；部门管理员仍不能新增或修改角色。树形目录完整返回。 rbac1 中该接口仍返回原始登记目录，不是某角色的有效授权；编辑时结合所选父角色详情预览继承权限，最终由角色保存接口校验。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/permission-catalog</code>
+    <span class="op-tag">角色管理</span>
+    <span class="op-summary">读取角色配置权限目录</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">仅总管理员与部门管理员只读访问，用于创建角色、角色创建申请和查看角色全部权限。按应用返回菜单、按钮和 parentId，不返回 API 清单。读取不意味着有权配置角色或调用对应 API；部门管理员仍不能新增或修改角色。树形目录完整返回。 RBAC1 中该接口仍返回原始登记目录，不是某角色的有效授权；编辑时结合所选父角色详情预览继承权限，最终由角色保存接口校验。</p>
+    <h4>参数</h4><p style="color:#556677;margin:0">无路径 / 查询参数</p><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 操作成功 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/PermissionCatalogController.java:19">rbac1-structured/src/main/java/com/rbac/rbac1/controller/PermissionCatalogController.java:19</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionCatalogController.java:21">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionCatalogController.java:21</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="权限申请" data-search="get /api/v1/me/requestable-permissions 权限申请 查询本人可申请的权限 getrequestablepermissions 正常登录账号使用，aud 包含 permission-center。不接收 userid。按应用和菜单分组：未获得菜单时只列菜单，已获得菜单后只列其下未获得按钮；已获权限不作为申请选项。menu 可作为按钮分组的上下文标题。明确返回 menu/button，空目录合法。不开放通过业务角色申请总管理员专属职责，包括部门维护；普通授权不得绕过管理职责。历史申请不因目录过滤而隐藏。完整返回目录。 已拥有权限及菜单前提均按用户全部有效权限判断，包含直接及多层继承来源；继承获得菜单后可申请其下未获得按钮。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/me/requestable-permissions</code>
+    <span class="op-tag">权限申请</span>
+    <span class="op-summary">查询本人可申请的权限</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">正常登录账号使用，aud 包含 permission-center。不接收 userId。按应用和菜单分组：未获得菜单时只列菜单，已获得菜单后只列其下未获得按钮；已获权限不作为申请选项。menu 可作为按钮分组的上下文标题。明确返回 MENU/BUTTON，空目录合法。不开放通过业务角色申请总管理员专属职责，包括部门维护；普通授权不得绕过管理职责。历史申请不因目录过滤而隐藏。完整返回目录。 已拥有权限及菜单前提均按用户全部有效权限判断，包含直接及多层继承来源；继承获得菜单后可申请其下未获得按钮。</p>
+    <h4>参数</h4><p style="color:#556677;margin:0">无路径 / 查询参数</p><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 操作成功 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/PermissionRequestController.java:27">rbac1-structured/src/main/java/com/rbac/rbac1/controller/PermissionRequestController.java:27</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java:47">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java:47</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="权限申请" data-search="get /api/v1/permission-requests 权限申请 查询本人或待审核的权限申请 listpermissionrequests view=mine 默认只看本人；view=review 仅管理员可用，总管理员看全部、部门管理员仅看本部门及下级部门员工。先按当前权限和部门范围过滤，再按状态筛选和分页，createdat、id 降序。已获权限不删除或隐藏历史记录。 直接权限、继承关系或用户角色变化后，写入流程按受影响用户当前有效权限更新仍为 pending 的申请；已满足则转为 satisfied，其他历史状态不变。查询不删除历史记录。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/permission-requests</code>
+    <span class="op-tag">权限申请</span>
+    <span class="op-summary">查询本人或待审核的权限申请</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">view=MINE 默认只看本人；view=REVIEW 仅管理员可用，总管理员看全部、部门管理员仅看本部门及下级部门员工。先按当前权限和部门范围过滤，再按状态筛选和分页，createdAt、id 降序。已获权限不删除或隐藏历史记录。 直接权限、继承关系或用户角色变化后，写入流程按受影响用户当前有效权限更新仍为 PENDING 的申请；已满足则转为 SATISFIED，其他历史状态不变。查询不删除历史记录。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>query</td><td><code>page</code></td><td>否</td><td>页码，从 1 开始</td></tr><tr><td>query</td><td><code>pageSize</code></td><td>否</td><td>每页条数</td></tr><tr><td>query</td><td><code>view</code></td><td>否</td><td>本人记录或管理员审核记录</td></tr><tr><td>query</td><td><code>status</code></td><td>否</td><td>省略查询全部状态</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 操作成功 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/PermissionRequestController.java:35">rbac1-structured/src/main/java/com/rbac/rbac1/controller/PermissionRequestController.java:35</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java:55">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java:55</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="POST" data-tag="权限申请" data-search="post /api/v1/permission-requests 权限申请 提交本人权限申请 createpermissionrequest 从令牌取申请人，不允许提交他人 id。必须为正常账号，理由去除首尾空格后非空；权限必须属于当前本人可申请目录。已拥有、同项已有待审核申请或按钮所属菜单尚未获得返回 409。固定管理员职责不能通过申请业务权限绕过。创建 pending 记录，记录操作；不授予权限。 已拥有权限及按钮菜单前提均包含继承来源；审批授予的仍是业务角色，不建立用户与单项权限的直接授权。">
+  <summary>
+    <span class="method POST">POST</span>
+    <code>/api/v1/permission-requests</code>
+    <span class="op-tag">权限申请</span>
+    <span class="op-summary">提交本人权限申请</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">从令牌取申请人，不允许提交他人 ID。必须为正常账号，理由去除首尾空格后非空；权限必须属于当前本人可申请目录。已拥有、同项已有待审核申请或按钮所属菜单尚未获得返回 409。固定管理员职责不能通过申请业务权限绕过。创建 PENDING 记录，记录操作；不授予权限。 已拥有权限及按钮菜单前提均包含继承来源；审批授予的仍是业务角色，不建立用户与单项权限的直接授权。</p>
+    <h4>参数</h4><p style="color:#556677;margin:0">无路径 / 查询参数</p><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>PermissionRequestInput</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>201</code> 操作成功 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>409</code> 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/PermissionRequestController.java:56">rbac1-structured/src/main/java/com/rbac/rbac1/controller/PermissionRequestController.java:56</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java:83">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java:83</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="权限申请" data-search="get /api/v1/permission-requests/{requestid} 权限申请 查看权限申请及审核角色 getpermissionrequest 本人可读自己的记录，管理员按审核范围只读；越界或不存在返回 404。有权审核者的 approvalroles 列出有效权限包含目标权限的业务角色。role 返回直接权限、直接父角色及完整 effectivepermissions 和实际配置来源，覆盖所有应用。extrapermissionids 按候选角色全部有效权限扣除申请人已有有效权限、申请权限及必要所属菜单计算；非空则 selectable=false。审批提交时按最新权限重新校验，无合适角色时返回空数组。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/permission-requests/{requestId}</code>
+    <span class="op-tag">权限申请</span>
+    <span class="op-summary">查看权限申请及审核角色</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">本人可读自己的记录，管理员按审核范围只读；越界或不存在返回 404。有权审核者的 approvalRoles 列出有效权限包含目标权限的业务角色。role 返回直接权限、直接父角色及完整 effectivePermissions 和实际配置来源，覆盖所有应用。extraPermissionIds 按候选角色全部有效权限扣除申请人已有有效权限、申请权限及必要所属菜单计算；非空则 selectable=false。审批提交时按最新权限重新校验，无合适角色时返回空数组。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>requestId</code></td><td>是</td><td></td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 操作成功 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/PermissionRequestController.java:68">rbac1-structured/src/main/java/com/rbac/rbac1/controller/PermissionRequestController.java:68</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java:96">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java:96</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="POST" data-tag="权限申请" data-search="post /api/v1/permission-requests/{requestid}/withdrawals 权限申请 撤回本人待审核申请 withdrawpermissionrequest 仅申请人本人可以撤回 pending。其他状态返回 409，非本人或不存在返回 404。保留申请记录，状态改 withdrawn；记录撤回，不解除任何角色关联。">
+  <summary>
+    <span class="method POST">POST</span>
+    <code>/api/v1/permission-requests/{requestId}/withdrawals</code>
+    <span class="op-tag">权限申请</span>
+    <span class="op-summary">撤回本人待审核申请</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">仅申请人本人可以撤回 PENDING。其他状态返回 409，非本人或不存在返回 404。保留申请记录，状态改 WITHDRAWN；记录撤回，不解除任何角色关联。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>requestId</code></td><td>是</td><td></td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 操作成功 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>409</code> 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/PermissionRequestController.java:79">rbac1-structured/src/main/java/com/rbac/rbac1/controller/PermissionRequestController.java:79</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java:107">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java:107</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="POST" data-tag="权限申请" data-search="post /api/v1/permission-requests/{requestid}/reviews 权限申请 审核权限申请并分配业务角色 reviewpermissionrequest 仅管理范围内管理员审核 pending；越界返回 404，已处理返回 409。approve 仅提交 roleid，服务端按申请人及候选角色当前全部有效权限重新校验，包含所有应用中的直接和继承权限；候选角色须包含申请权限，且不附带无关权限。通过时仅建立用户与选中角色的关联，祖先权限由继承计算，原有其他角色保留。用户角色关联、approved 及审批人/时间/角色和成功日志在同一事务保存。reject 不分配角色。待审核期间若权限已由直接或继承来源满足，则转 satisfied，不重复审批或分配。">
+  <summary>
+    <span class="method POST">POST</span>
+    <code>/api/v1/permission-requests/{requestId}/reviews</code>
+    <span class="op-tag">权限申请</span>
+    <span class="op-summary">审核权限申请并分配业务角色</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">仅管理范围内管理员审核 PENDING；越界返回 404，已处理返回 409。APPROVE 仅提交 roleId，服务端按申请人及候选角色当前全部有效权限重新校验，包含所有应用中的直接和继承权限；候选角色须包含申请权限，且不附带无关权限。通过时仅建立用户与选中角色的关联，祖先权限由继承计算，原有其他角色保留。用户角色关联、APPROVED 及审批人/时间/角色和成功日志在同一事务保存。REJECT 不分配角色。待审核期间若权限已由直接或继承来源满足，则转 SATISFIED，不重复审批或分配。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>requestId</code></td><td>是</td><td></td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>PermissionRequestReview</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 操作成功 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>409</code> 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/PermissionRequestController.java:90">rbac1-structured/src/main/java/com/rbac/rbac1/controller/PermissionRequestController.java:90</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java:118">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/PermissionRequestController.java:118</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="角色创建申请" data-search="get /api/v1/role-creation-requests 角色创建申请 查询角色创建申请 listrolecreationrequests 仅部门管理员和总管理员。部门管理员只看本人提交的记录，总管理员看全部。支持状态筛选，先限定可见范围再分页，按 createdat、id 降序。 返回申请保存的直接权限和父角色名称快照，exists 为父角色当前存在状态。已删除的父角色不删除历史申请；有效权限预览从详情接口读取。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/role-creation-requests</code>
+    <span class="op-tag">角色创建申请</span>
+    <span class="op-summary">查询角色创建申请</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">仅部门管理员和总管理员。部门管理员只看本人提交的记录，总管理员看全部。支持状态筛选，先限定可见范围再分页，按 createdAt、id 降序。 返回申请保存的直接权限和父角色名称快照，exists 为父角色当前存在状态。已删除的父角色不删除历史申请；有效权限预览从详情接口读取。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>query</td><td><code>page</code></td><td>否</td><td>页码，从 1 开始</td></tr><tr><td>query</td><td><code>pageSize</code></td><td>否</td><td>每页条数</td></tr><tr><td>query</td><td><code>status</code></td><td>否</td><td>省略返回全部状态</td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 操作成功 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleCreationRequestController.java:27">rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleCreationRequestController.java:27</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleCreationRequestController.java:44">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleCreationRequestController.java:44</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="POST" data-tag="角色创建申请" data-search="post /api/v1/role-creation-requests 角色创建申请 提交角色创建申请 createrolecreationrequest 仅部门管理员提交，申请人由令牌确定。使用 roleconfigurationinput：名称、说明、直接权限 permissionids、父角色完整列表 inheritedroleids；两个列表均必填，可为空。父角色只能选择存在的 business 角色。按新建角色规则计算全部有效权限，禁止新增直接权限与继承重复，按钮所属菜单可由继承满足。服务端查询并保存父角色 id、名称快照，不接收客户端名称快照或申请人 id。创建 pending 申请、直接权限关联、父角色快照及成功日志一起保存，不提前创建角色或改变用户权限。">
+  <summary>
+    <span class="method POST">POST</span>
+    <code>/api/v1/role-creation-requests</code>
+    <span class="op-tag">角色创建申请</span>
+    <span class="op-summary">提交角色创建申请</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">仅部门管理员提交，申请人由令牌确定。使用 RoleConfigurationInput：名称、说明、直接权限 permissionIds、父角色完整列表 inheritedRoleIds；两个列表均必填，可为空。父角色只能选择存在的 BUSINESS 角色。按新建角色规则计算全部有效权限，禁止新增直接权限与继承重复，按钮所属菜单可由继承满足。服务端查询并保存父角色 ID、名称快照，不接收客户端名称快照或申请人 ID。创建 PENDING 申请、直接权限关联、父角色快照及成功日志一起保存，不提前创建角色或改变用户权限。</p>
+    <h4>参数</h4><p style="color:#556677;margin:0">无路径 / 查询参数</p><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>RoleConfigurationInput</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>201</code> 操作成功 · <code>400</code> 字段、父角色或权限配置不符合新建角色规则，不保存申请。 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>409</code> 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleCreationRequestController.java:45">rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleCreationRequestController.java:45</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleCreationRequestController.java:65">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleCreationRequestController.java:65</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="GET" data-tag="角色创建申请" data-search="get /api/v1/role-creation-requests/{requestid} 角色创建申请 查看角色创建申请配置 getrolecreationrequest 提交者或总管理员可查看，其他人及不存在返回 404。返回原申请直接权限、父角色 id 和名称快照及父角色当前存在状态；按父角色当前配置计算 effectivepermissions 并去重，展示直接/继承获得方式和实际配置来源。拟创建角色尚无角色 id，直接配置项的 sourceroles=[]，界面显示“本次申请直接配置”；继承来源仅列实际直接配置该权限的已有角色。任一父角色已删除时仍返回 200 和快照，但 effectivepermissions=null，提示审核时重新选择。父角色后续增加权限导致原申请直接权限与继承重叠时，返回 both 供调整；申请尚未创建角色，审批按新建规则拒绝重复直接配置。读取及打开受理表单不改变申请状态，取消编辑申请仍为 pending。审批调整不覆盖原申请，创建结果由 createdroleid 查询。">
+  <summary>
+    <span class="method GET">GET</span>
+    <code>/api/v1/role-creation-requests/{requestId}</code>
+    <span class="op-tag">角色创建申请</span>
+    <span class="op-summary">查看角色创建申请配置</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">提交者或总管理员可查看，其他人及不存在返回 404。返回原申请直接权限、父角色 ID 和名称快照及父角色当前存在状态；按父角色当前配置计算 effectivePermissions 并去重，展示直接/继承获得方式和实际配置来源。拟创建角色尚无角色 ID，直接配置项的 sourceRoles=[]，界面显示“本次申请直接配置”；继承来源仅列实际直接配置该权限的已有角色。任一父角色已删除时仍返回 200 和快照，但 effectivePermissions=null，提示审核时重新选择。父角色后续增加权限导致原申请直接权限与继承重叠时，返回 BOTH 供调整；申请尚未创建角色，审批按新建规则拒绝重复直接配置。读取及打开受理表单不改变申请状态，取消编辑申请仍为 PENDING。审批调整不覆盖原申请，创建结果由 createdRoleId 查询。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>requestId</code></td><td>是</td><td></td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b>无</p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 操作成功 · <code>400</code> 请求格式、字段或关联不符合要求 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleCreationRequestController.java:57">rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleCreationRequestController.java:57</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleCreationRequestController.java:78">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleCreationRequestController.java:78</code></div>
+    </div>
+  </div>
+</details>
+<details class="endpoint" data-method="POST" data-tag="角色创建申请" data-search="post /api/v1/role-creation-requests/{requestid}/reviews 角色创建申请 创建角色并通过或拒绝申请 reviewrolecreationrequest 仅总管理员处理 pending，已处理返回 409。approve 在 role 中提交审核调整后的完整 roleconfigurationinput，含直接权限和父角色完整列表；可以改选父角色。按父角色最新配置重新计算有效权限，执行正常新建角色的业务角色、重复直接权限、菜单依赖和继承规则校验。父角色已删除、配置失效等返回 400；重名等冲突返回 409，整次回滚，申请保持 pending。校验通过后，角色、直接授权、正式继承关系、申请 approved 及审批人/时间/createdroleid 和成功日志在同一事务保存。申请原直接权限和父角色快照保留，不被审批调整覆盖；通过 createdroleid 读取实际创建配置。reject 只更新申请和成功日志，不创建角色。创建成功后按正常流程另行给员工分配角色。读取、打开或取消编辑均不改变申请状态，无独立受理状态。">
+  <summary>
+    <span class="method POST">POST</span>
+    <code>/api/v1/role-creation-requests/{requestId}/reviews</code>
+    <span class="op-tag">角色创建申请</span>
+    <span class="op-summary">创建角色并通过或拒绝申请</span>
+  </summary>
+  <div class="op-detail">
+    <p style="margin:0 0 8px">仅总管理员处理 PENDING，已处理返回 409。APPROVE 在 role 中提交审核调整后的完整 RoleConfigurationInput，含直接权限和父角色完整列表；可以改选父角色。按父角色最新配置重新计算有效权限，执行正常新建角色的业务角色、重复直接权限、菜单依赖和继承规则校验。父角色已删除、配置失效等返回 400；重名等冲突返回 409，整次回滚，申请保持 PENDING。校验通过后，角色、直接授权、正式继承关系、申请 APPROVED 及审批人/时间/createdRoleId 和成功日志在同一事务保存。申请原直接权限和父角色快照保留，不被审批调整覆盖；通过 createdRoleId 读取实际创建配置。REJECT 只更新申请和成功日志，不创建角色。创建成功后按正常流程另行给员工分配角色。读取、打开或取消编辑均不改变申请状态，无独立受理状态。</p>
+    <h4>参数</h4><table><thead><tr><th>位置</th><th>参数名</th><th>必填</th><th>说明</th></tr></thead><tbody><tr><td>path</td><td><code>requestId</code></td><td>是</td><td></td></tr></tbody></table><h4>请求与响应</h4>
+    <p style="margin:4px 0"><b>请求体：</b><code>RoleCreationReview</code></p>
+    <p style="margin:4px 0"><b>状态码：</b><code>200</code> 操作成功 · <code>400</code> 最终角色配置无效，申请保持待审核。 · <code>401</code> 登录凭据无效，或访问凭据缺失、过期或已撤销 · <code>403</code> 角色无权操作、对象超出管理范围，或令牌不包含目标应用。 · <code>404</code> 目标资源或必需的关联资源不存在 · <code>409</code> 应用名称或 code、用户名、应用内权限标识、API 标识或方法与路径组合重复，或待删除角色仍关联用户。 · <code>500</code> 系统暂时无法完成操作</p>
+    <div class="op-impls">
+      <div class="op-impl-card"><b>结构化实现</b><code class="copyable" data-copy="rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleCreationRequestController.java:68">rbac1-structured/src/main/java/com/rbac/rbac1/controller/RoleCreationRequestController.java:68</code></div>
+      <div class="op-impl-card"><b>DDD 实现</b><code class="copyable" data-copy="rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleCreationRequestController.java:89">rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/RoleCreationRequestController.java:89</code></div>
+    </div>
+  </div>
+</details>
+          <p class="empty" id="api-empty" hidden>没有匹配的接口。</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="assets/app.js"></script>
+</body>
+</html>

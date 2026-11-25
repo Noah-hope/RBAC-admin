@@ -1,0 +1,419 @@
+= RBAC 权限管理系统 · 数据库设计文档
+:toc: left
+:toclevels: 3
+:sectnums:
+:imagesdir: design-atlas/assets
+
+本文档描述权限管理系统（RBAC0 基线与 RBAC1 角色多继承扩展）的概念模型、物理表结构、完整性约束及全部 18 张表的数据字典。
+RBAC1 结构化后端（`rbac1-structured`）与面向对象 DDD 后端（`rbac1-ddd`）共用同一套 MySQL 8 数据库与 Flyway 迁移脚本（`V1__init_rbac1.sql`、`V2__application_role_codes.sql`）。
+
+TIP: 若需并排对比、拖拽缩放或按关键字实时检索表字段，也可在本地浏览器打开交互式图册 link:design-atlas/index.html[RBAC1 设计与架构图册（HTML）]，或用 diagrams.net 打开母本 link:项目设计图.drawio[项目设计图.drawio]。
+
+== 核心建模原则与演进说明
+
+* **保持标准 RBAC 核心关系**：严格保留 `User`（`sys_user`）、`Role`（`sys_role`）、`Permission`（`sys_permission`）及「用户—角色」（`sys_user_role`）、「角色—权限」（`sys_role_permission`）两组多对多核心关系。
+* **组织机构统一自引用**：公司、分公司与部门在模型上统一抽象为具有上下级树形关系的 `Department`（`sys_department.parent_id` 自外键），不拆分冗余层级表，也不引入冗余岗位实体。
+* **管理员身份由预置角色加部门范围表达**：不给用户表增加破坏 RBAC 的管理员布尔列；总管理员与部门管理员由预置管理角色（`TOTAL_ADMIN`、`DEPARTMENT_ADMIN`）表达，部门管理员的授权范围按所属部门子树动态限定。
+* **前端菜单/按钮树与后端 API 显式解耦映射**：权限具化为同一应用内的两级菜单—按钮树（由数据库 `chk_permission_parent` 强制约束菜单无上级、按钮必挂菜单）；新增独立 `sys_api` 实体并通过 `sys_api_permission` 建立多对多关联，解绑时保留 API 登记。
+* **RBAC1 多父多层无环继承（不存继承副本）**：`sys_role_inheritance` 仅存储直接父角色边（`role_id` 继承 `inherited_role_id`），数据库 `chk_role_not_self` 阻止自环，应用层/领域层阻止循环继承与后代按钮失去所属菜单；有效权限沿 DAG 按需计算，不写冗余继承权限副本。
+* **角色创建申请保存父角色快照**：`sys_role_creation_request_inheritance` 保存提交时的父角色 ID 与名称快照，不建立指向 `sys_role` 的阻塞外键，删除业务角色后历史申请仍可完整追溯。
+* **接入应用角色码映射扩展（V2 迁移）**：`sys_application.role_codes_enabled` 与 `sys_application_role_code` 支持将直接或继承的业务角色映射为课程管理系统等外部应用的身份角色码（如 `teacher`、`student`、`admin`）。
+
+== 概念模型设计（ER 图）
+
+=== RBAC1 概念 ER 图（含角色继承与两类审批流）
+
+image::rbac1-conceptual-er.svg[RBAC1 概念 ER 图,width=100%]
+
+link:design-atlas/assets/rbac1-conceptual-er.svg[在新窗口打开原尺寸矢量图（RBAC1 概念 ER 图） ↗]
+
+=== RBAC0 基线概念 ER 图
+
+image::rbac-conceptual-er.svg[RBAC0 概念 ER 图,width=100%]
+
+link:design-atlas/assets/rbac-conceptual-er.svg[在新窗口打开原尺寸矢量图（RBAC0 概念 ER 图） ↗]
+
+== 物理数据库表结构
+
+=== RBAC1 数据库物理表关系图（18 张表）
+
+image::rbac1-database-tables.svg[RBAC1 数据库表结构,width=100%]
+
+link:design-atlas/assets/rbac1-database-tables.svg[在新窗口打开原尺寸矢量图（RBAC1 物理表结构图） ↗]
+
+=== RBAC0 基线数据库物理表关系图
+
+image::rbac-database-tables.svg[RBAC0 数据库表结构,width=100%]
+
+link:design-atlas/assets/rbac-database-tables.svg[在新窗口打开原尺寸矢量图（RBAC0 物理表结构图） ↗]
+
+== 完整数据字典（Flyway V1–V2 共 18 张表）
+
+[cols="2,3,2",options="header"]
+|===
+|表名 |业务职责 |列与外键规模
+|`sys_department` |组织部门（树形自引用） |3 列 · 1 外键
+|`sys_user` |统一身份用户账号 |6 列 · 1 外键
+|`sys_session` |登录会话（令牌 SHA-256 摘要） |3 列 · 1 外键
+|`sys_application` |接入业务应用 |4 列 · 0 外键
+|`sys_permission` |菜单与按钮权限树 |6 列 · 2 外键
+|`sys_role` |业务角色与预置管理角色 |4 列 · 0 外键
+|`sys_user_role` |用户直接角色分配 |2 列 · 2 外键
+|`sys_role_permission` |角色直接配置权限 |2 列 · 2 外键
+|`sys_operation_log` |审计操作记录主体 |8 列 · 0 外键
+|`sys_operation_log_target` |审计对象历史快照 |6 列 · 1 外键
+|`sys_api` |后端受保护 API 登记 |5 列 · 1 外键
+|`sys_api_permission` |API 与权限关联 |2 列 · 2 外键
+|`sys_permission_request` |用户权限申请及审核结果 |9 列 · 4 外键
+|`sys_role_create_request` |角色创建申请 |9 列 · 3 外键
+|`sys_role_create_request_permission` |角色创建申请直接权限 |2 列 · 2 外键
+|`sys_role_inheritance` |业务角色直接继承关系（DAG） |2 列 · 2 外键
+|`sys_role_create_request_inheritance` |角色创建申请父角色快照 |3 列 · 1 外键
+|`sys_application_role_code` |按应用映射统一身份角色码 |3 列 · 2 外键
+|===
+
+=== `sys_department` — 组织部门（树形自引用）（3 列 · 1 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`id` |`BIGINT` |否 |PK |`id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY`
+|`parent_id` |`BIGINT` |是 |→ sys_department.id |`parent_id BIGINT`
+|`name` |`VARCHAR(24)` |否 |— |`name VARCHAR(24) NOT NULL`
+|===
+
+[source,sql]
+----
+INDEX idx_department_parent (parent_id)
+CONSTRAINT fk_department_parent FOREIGN KEY (parent_id) REFERENCES sys_department (id)
+----
+
+=== `sys_user` — 统一身份用户账号（6 列 · 1 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`id` |`BIGINT` |否 |PK |`id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY`
+|`department_id` |`BIGINT` |是 |→ sys_department.id |`department_id BIGINT`
+|`username` |`VARCHAR(32)` |否 |— |`username VARCHAR(32) NOT NULL`
+|`name` |`VARCHAR(24)` |否 |— |`name VARCHAR(24) NOT NULL`
+|`password_hash` |`VARCHAR(255)` |否 |— |`password_hash VARCHAR(255) NOT NULL`
+|`status` |`VARCHAR(8)` |否 |— |`status VARCHAR(8) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT 'ACTIVE'`
+|===
+
+[source,sql]
+----
+UNIQUE KEY uq_user_username (username)
+INDEX idx_user_department (department_id)
+CONSTRAINT chk_user_status CHECK (status IN ('ACTIVE', 'DISABLED'))
+CONSTRAINT fk_user_department FOREIGN KEY (department_id) REFERENCES sys_department (id)
+----
+
+=== `sys_session` — 登录会话（令牌 SHA-256 摘要）（3 列 · 1 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`token_hash` |`BINARY(32)` |否 |PK |`token_hash BINARY(32) NOT NULL PRIMARY KEY`
+|`user_id` |`BIGINT` |否 |→ sys_user.id |`user_id BIGINT NOT NULL`
+|`expires_at` |`DATETIME(6)` |否 |— |`expires_at DATETIME(6) NOT NULL`
+|===
+
+[source,sql]
+----
+INDEX idx_session_user (user_id)
+INDEX idx_session_expires_at (expires_at)
+CONSTRAINT fk_session_user FOREIGN KEY (user_id) REFERENCES sys_user (id)
+----
+
+=== `sys_application` — 接入业务应用（4 列 · 0 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`id` |`BIGINT` |否 |PK |`id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY`
+|`code` |`VARCHAR(64)` |否 |— |`code VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL`
+|`name` |`VARCHAR(24)` |否 |— |`name VARCHAR(24) NOT NULL`
+|`role_codes_enabled` |`BOOLEAN` |否 |— |`role_codes_enabled BOOLEAN NOT NULL DEFAULT FALSE`
+|===
+
+[source,sql]
+----
+UNIQUE KEY uq_application_code (code)
+UNIQUE KEY uq_application_name (name)
+----
+
+=== `sys_permission` — 菜单与按钮权限树（6 列 · 2 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`id` |`BIGINT` |否 |PK |`id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY`
+|`application_id` |`BIGINT` |否 |→ sys_application.id |`application_id BIGINT NOT NULL`
+|`parent_id` |`BIGINT` |是 |→ sys_permission.id |`parent_id BIGINT`
+|`name` |`VARCHAR(24)` |否 |— |`name VARCHAR(24) NOT NULL`
+|`code` |`VARCHAR(64)` |否 |— |`code VARCHAR(64) COLLATE utf8mb4_0900_bin NOT NULL`
+|`type` |`VARCHAR(6)` |否 |— |`type VARCHAR(6) CHARACTER SET ascii COLLATE ascii_bin NOT NULL`
+|===
+
+[source,sql]
+----
+UNIQUE KEY uq_permission_application_code (application_id, code)
+INDEX idx_permission_parent (parent_id)
+CONSTRAINT chk_permission_parent CHECK ( (type = 'MENU' AND parent_id IS NULL) OR (type = 'BUTTON' AND parent_id IS NOT NULL) )
+CONSTRAINT fk_permission_application FOREIGN KEY (application_id) REFERENCES sys_application (id)
+CONSTRAINT fk_permission_parent FOREIGN KEY (parent_id) REFERENCES sys_permission (id)
+----
+
+=== `sys_role` — 业务角色与预置管理角色（4 列 · 0 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`id` |`BIGINT` |否 |PK |`id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY`
+|`name` |`VARCHAR(24)` |否 |— |`name VARCHAR(24) NOT NULL`
+|`description` |`VARCHAR(48)` |否 |— |`description VARCHAR(48) NOT NULL DEFAULT ''`
+|`role_type` |`VARCHAR(16)` |否 |— |`role_type VARCHAR(16) CHARACTER SET ascii COLLATE ascii_bin NOT NULL`
+|===
+
+[source,sql]
+----
+UNIQUE KEY uq_role_name (name)
+CONSTRAINT chk_role_type CHECK (role_type IN ('BUSINESS', 'TOTAL_ADMIN', 'DEPARTMENT_ADMIN'))
+----
+
+=== `sys_user_role` — 用户直接角色分配（2 列 · 2 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`user_id` |`BIGINT` |否 |PK / → sys_user.id |`user_id BIGINT NOT NULL`
+|`role_id` |`BIGINT` |否 |PK / → sys_role.id |`role_id BIGINT NOT NULL`
+|===
+
+[source,sql]
+----
+PRIMARY KEY (user_id, role_id)
+INDEX idx_user_role_role (role_id)
+CONSTRAINT fk_user_role_user FOREIGN KEY (user_id) REFERENCES sys_user (id)
+CONSTRAINT fk_user_role_role FOREIGN KEY (role_id) REFERENCES sys_role (id)
+----
+
+=== `sys_role_permission` — 角色直接配置权限（2 列 · 2 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`role_id` |`BIGINT` |否 |PK / → sys_role.id |`role_id BIGINT NOT NULL`
+|`permission_id` |`BIGINT` |否 |PK / → sys_permission.id |`permission_id BIGINT NOT NULL`
+|===
+
+[source,sql]
+----
+PRIMARY KEY (role_id, permission_id)
+INDEX idx_role_permission_permission (permission_id)
+CONSTRAINT fk_role_permission_role FOREIGN KEY (role_id) REFERENCES sys_role (id)
+CONSTRAINT fk_role_permission_permission FOREIGN KEY (permission_id) REFERENCES sys_permission (id)
+----
+
+=== `sys_operation_log` — 审计操作记录主体（8 列 · 0 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`id` |`BIGINT` |否 |PK |`id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY`
+|`occurred_at` |`DATETIME(6)` |否 |— |`occurred_at DATETIME(6) NOT NULL`
+|`actor_user_id` |`BIGINT` |否 |— |`actor_user_id BIGINT NOT NULL`
+|`actor_name` |`VARCHAR(24)` |否 |— |`actor_name VARCHAR(24) NOT NULL`
+|`action` |`VARCHAR(64)` |否 |— |`action VARCHAR(64) NOT NULL`
+|`scope` |`VARCHAR(10)` |否 |— |`scope VARCHAR(10) CHARACTER SET ascii COLLATE ascii_bin NOT NULL`
+|`detail` |`TEXT` |否 |— |`detail TEXT NOT NULL`
+|`result` |`VARCHAR(7)` |否 |— |`result VARCHAR(7) CHARACTER SET ascii COLLATE ascii_bin NOT NULL`
+|===
+
+[source,sql]
+----
+INDEX idx_operation_log_time (occurred_at, id)
+CONSTRAINT chk_operation_log_scope CHECK (scope IN ('GLOBAL', 'USER_SCOPE'))
+CONSTRAINT chk_operation_log_result CHECK (result IN ('SUCCESS', 'FAILURE'))
+----
+
+=== `sys_operation_log_target` — 审计对象历史快照（6 列 · 1 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`operation_log_id` |`BIGINT` |否 |PK / → sys_operation_log.id |`operation_log_id BIGINT NOT NULL`
+|`target_no` |`INT` |否 |PK |`target_no INT NOT NULL`
+|`target_type` |`VARCHAR(16)` |否 |— |`target_type VARCHAR(16) NOT NULL`
+|`target_id` |`BIGINT` |是 |— |`target_id BIGINT`
+|`target_name` |`VARCHAR(128)` |否 |— |`target_name VARCHAR(128) NOT NULL`
+|`department_id_at_event` |`BIGINT` |是 |— |`department_id_at_event BIGINT`
+|===
+
+[source,sql]
+----
+PRIMARY KEY (operation_log_id, target_no)
+INDEX idx_operation_target_department (department_id_at_event, operation_log_id)
+CONSTRAINT fk_operation_target_log FOREIGN KEY (operation_log_id) REFERENCES sys_operation_log (id)
+----
+
+=== `sys_api` — 后端受保护 API 登记（5 列 · 1 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`id` |`BIGINT` |否 |PK |`id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY`
+|`application_id` |`BIGINT` |否 |→ sys_application.id |`application_id BIGINT NOT NULL`
+|`operation_id` |`VARCHAR(128)` |否 |— |`operation_id VARCHAR(128) COLLATE utf8mb4_0900_bin NOT NULL`
+|`http_method` |`VARCHAR(10)` |否 |— |`http_method VARCHAR(10) CHARACTER SET ascii COLLATE ascii_bin NOT NULL`
+|`path` |`VARCHAR(255)` |否 |— |`path VARCHAR(255) COLLATE utf8mb4_0900_bin NOT NULL`
+|===
+
+[source,sql]
+----
+UNIQUE KEY uq_api_operation (application_id, operation_id)
+UNIQUE KEY uq_api_route (application_id, http_method, path)
+FOREIGN KEY (application_id) REFERENCES sys_application(id)
+----
+
+=== `sys_api_permission` — API 与权限关联（2 列 · 2 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`permission_id` |`BIGINT` |否 |PK / → sys_permission.id |`permission_id BIGINT NOT NULL`
+|`api_id` |`BIGINT` |否 |PK / → sys_api.id |`api_id BIGINT NOT NULL`
+|===
+
+[source,sql]
+----
+PRIMARY KEY (permission_id, api_id)
+INDEX idx_api_permission_api (api_id)
+FOREIGN KEY (permission_id) REFERENCES sys_permission(id)
+FOREIGN KEY (api_id) REFERENCES sys_api(id)
+----
+
+=== `sys_permission_request` — 用户权限申请及审核结果（9 列 · 4 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`id` |`BIGINT` |否 |PK |`id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY`
+|`applicant_user_id` |`BIGINT` |否 |→ sys_user.id |`applicant_user_id BIGINT NOT NULL`
+|`permission_id` |`BIGINT` |否 |→ sys_permission.id |`permission_id BIGINT NOT NULL`
+|`reason` |`VARCHAR(500)` |否 |— |`reason VARCHAR(500) NOT NULL`
+|`status` |`VARCHAR(12)` |否 |— |`status VARCHAR(12) CHARACTER SET ascii COLLATE ascii_bin NOT NULL`
+|`reviewer_user_id` |`BIGINT` |是 |→ sys_user.id |`reviewer_user_id BIGINT`
+|`approved_role_id` |`BIGINT` |是 |→ sys_role.id |`approved_role_id BIGINT`
+|`created_at` |`DATETIME(6)` |否 |— |`created_at DATETIME(6) NOT NULL`
+|`reviewed_at` |`DATETIME(6)` |是 |— |`reviewed_at DATETIME(6)`
+|===
+
+[source,sql]
+----
+FOREIGN KEY (applicant_user_id) REFERENCES sys_user(id)
+FOREIGN KEY (permission_id) REFERENCES sys_permission(id)
+FOREIGN KEY (reviewer_user_id) REFERENCES sys_user(id)
+FOREIGN KEY (approved_role_id) REFERENCES sys_role(id) ON DELETE SET NULL
+CHECK (status IN ('PENDING','APPROVED','REJECTED','SATISFIED','WITHDRAWN'))
+----
+
+=== `sys_role_create_request` — 角色创建申请（9 列 · 3 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`id` |`BIGINT` |否 |PK |`id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY`
+|`applicant_user_id` |`BIGINT` |否 |→ sys_user.id |`applicant_user_id BIGINT NOT NULL`
+|`role_name` |`VARCHAR(24)` |否 |— |`role_name VARCHAR(24) NOT NULL`
+|`role_description` |`VARCHAR(48)` |否 |— |`role_description VARCHAR(48) NOT NULL DEFAULT ''`
+|`status` |`VARCHAR(8)` |否 |— |`status VARCHAR(8) CHARACTER SET ascii COLLATE ascii_bin NOT NULL`
+|`reviewer_user_id` |`BIGINT` |是 |→ sys_user.id |`reviewer_user_id BIGINT`
+|`created_role_id` |`BIGINT` |是 |→ sys_role.id |`created_role_id BIGINT`
+|`created_at` |`DATETIME(6)` |否 |— |`created_at DATETIME(6) NOT NULL`
+|`reviewed_at` |`DATETIME(6)` |是 |— |`reviewed_at DATETIME(6)`
+|===
+
+[source,sql]
+----
+FOREIGN KEY (applicant_user_id) REFERENCES sys_user(id)
+FOREIGN KEY (reviewer_user_id) REFERENCES sys_user(id)
+FOREIGN KEY (created_role_id) REFERENCES sys_role(id) ON DELETE SET NULL
+CHECK (status IN ('PENDING','APPROVED','REJECTED'))
+----
+
+=== `sys_role_create_request_permission` — 角色创建申请直接权限（2 列 · 2 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`request_id` |`BIGINT` |否 |PK / → sys_role_create_request.id |`request_id BIGINT NOT NULL`
+|`permission_id` |`BIGINT` |否 |PK / → sys_permission.id |`permission_id BIGINT NOT NULL`
+|===
+
+[source,sql]
+----
+PRIMARY KEY (request_id, permission_id)
+INDEX idx_role_request_permission (permission_id)
+FOREIGN KEY (request_id) REFERENCES sys_role_create_request(id)
+FOREIGN KEY (permission_id) REFERENCES sys_permission(id)
+----
+
+=== `sys_role_inheritance` — 业务角色直接继承关系（DAG）（2 列 · 2 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`role_id` |`BIGINT` |否 |PK / → sys_role.id |`role_id BIGINT NOT NULL`
+|`inherited_role_id` |`BIGINT` |否 |PK / → sys_role.id |`inherited_role_id BIGINT NOT NULL`
+|===
+
+[source,sql]
+----
+PRIMARY KEY (role_id, inherited_role_id)
+INDEX idx_role_inheritance_parent (inherited_role_id)
+FOREIGN KEY (role_id) REFERENCES sys_role(id)
+FOREIGN KEY (inherited_role_id) REFERENCES sys_role(id)
+----
+
+=== `sys_role_create_request_inheritance` — 角色创建申请父角色快照（3 列 · 1 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`request_id` |`BIGINT` |否 |PK / → sys_role_create_request.id |`request_id BIGINT NOT NULL`
+|`inherited_role_id` |`BIGINT` |否 |PK |`inherited_role_id BIGINT NOT NULL`
+|`inherited_role_name` |`VARCHAR(24)` |否 |— |`inherited_role_name VARCHAR(24) NOT NULL`
+|===
+
+[source,sql]
+----
+PRIMARY KEY (request_id, inherited_role_id)
+FOREIGN KEY (request_id) REFERENCES sys_role_create_request(id)
+----
+
+=== `sys_application_role_code` — 按应用映射统一身份角色码（3 列 · 2 外键）
+
+[cols="2,2,1,2,4",options="header"]
+|===
+|字段 |类型 |可空 |键 / 关系 |DDL 定义
+|`application_id` |`BIGINT` |否 |PK / → sys_application.id |`application_id BIGINT NOT NULL`
+|`role_id` |`BIGINT` |否 |PK / → sys_role.id |`role_id BIGINT NOT NULL`
+|`role_code` |`VARCHAR(64)` |否 |PK |`role_code VARCHAR(64) NOT NULL`
+|===
+
+[source,sql]
+----
+PRIMARY KEY (application_id, role_id, role_code)
+INDEX idx_application_role_code_role (role_id)
+CONSTRAINT chk_application_role_code CHECK (CHAR_LENGTH(TRIM(role_code)) > 0)
+CONSTRAINT fk_application_role_code_app FOREIGN KEY (application_id) REFERENCES sys_application (id)
+CONSTRAINT fk_application_role_code_role FOREIGN KEY (role_id) REFERENCES sys_role (id) ON DELETE CASCADE
+----
+
+== 事务、并发控制与存储安全策略
+
+* **关键写操作悲观锁串行化**：修改/删除角色、审核权限申请、修改用户与批量变更角色关联时，通过 `SELECT ... FOR UPDATE` 按固定顺序锁定目标行，防止并发修改导致循环继承、菜单缺失或重复赋权。
+* **唯一约束异常翻译**：`uq_user_username`、`uq_role_name`、`uq_application_code`、`uq_application_name`、`uq_permission_application_code`、`uq_api_application_operation`、`uq_api_application_route` 等唯一键在数据库层兜底，持久化边界统一将其翻译为明确的 `409 DUPLICATE` 业务错误。
+* **凭据不落明文**：`sys_user.password_hash` 保存 Argon2id 密码摘要；`sys_session.token_hash` 仅保存 JWT 的 SHA-256 二进制摘要（`BINARY(32)`），操作日志严禁记录密码与令牌原文。

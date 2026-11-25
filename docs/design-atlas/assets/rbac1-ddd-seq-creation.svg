@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2.0 2.0 4837.0 3122.0" width="4837" height="3122">
+<rect x="-2.0" y="2.0" width="4837.0" height="3122.0" fill="#FFFFFF"/>
+<defs>
+<marker id="m-solid" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 z" fill="#17365D"/></marker>
+<marker id="m-open" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#17365D" stroke-width="1.9"/></marker>
+<marker id="m-open-err" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#A61B29" stroke-width="1.9"/></marker>
+<marker id="m-tri" markerWidth="16" markerHeight="14" refX="15" refY="7" orient="auto"><path d="M1,1 L15,7 L1,13 z" fill="#FFFFFF" stroke="#17365D" stroke-width="1.9"/></marker>
+<marker id="m-er-zero-many" markerWidth="20" markerHeight="16" refX="19" refY="8" orient="auto"><circle cx="4.5" cy="8" r="3.5" fill="#FFFFFF" stroke="#476581" stroke-width="1.6"/><path d="M19,2 L10,8 L19,14 M10,8 L19,8" fill="none" stroke="#476581" stroke-width="1.6"/></marker>
+<marker id="m-er-mand-one" markerWidth="14" markerHeight="14" refX="1" refY="7" orient="auto-start-reverse"><path d="M5,2 L5,12 M9,2 L9,12" fill="none" stroke="#476581" stroke-width="1.6"/></marker>
+<marker id="m-er-zero-one" markerWidth="18" markerHeight="14" refX="1" refY="7" orient="auto-start-reverse"><path d="M5,2 L5,12" fill="none" stroke="#476581" stroke-width="1.6"/><circle cx="12" cy="7" r="3.5" fill="#FFFFFF" stroke="#476581" stroke-width="1.6"/></marker>
+</defs>
+<rect x="148.4" y="440.0" width="1256.0" height="110.0" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="148.4,440.0 222.4,440.0 222.4,464.0 214.4,472.0 148.4,472.0" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="158.4" y="463.0" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<rect x="156.4" y="628.0" width="1699.2" height="110.0" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="156.4,628.0 230.4,628.0 230.4,652.0 222.4,660.0 156.4,660.0" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="166.4" y="651.0" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<rect x="138.4" y="788.0" width="4571.4" height="1800.0" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="138.4,788.0 212.4,788.0 212.4,812.0 204.4,820.0 138.4,820.0" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="148.4" y="811.0" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">alt</text>
+<rect x="156.4" y="1204.0" width="3293.3" height="110.0" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="156.4,1204.0 230.4,1204.0 230.4,1228.0 222.4,1236.0 156.4,1236.0" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="166.4" y="1227.0" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<rect x="156.4" y="1510.0" width="3909.0" height="110.0" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="156.4,1510.0 230.4,1510.0 230.4,1534.0 222.4,1542.0 156.4,1542.0" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="166.4" y="1533.0" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<rect x="156.4" y="1860.0" width="2548.8" height="110.0" fill="none" stroke="#54718C" stroke-width="1.8"/>
+<polygon points="156.4,1860.0 230.4,1860.0 230.4,1884.0 222.4,1892.0 156.4,1892.0" fill="#FFFFFF" stroke="#54718C" stroke-width="1.8"/>
+<text x="166.4" y="1883.0" text-anchor="start" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">opt</text>
+<rect x="60.0" y="180.0" width="416.8" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="268.4" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">obj: RoleCreationRequestController</text>
+<polyline points="268.4,244.0 268.4,2984.0" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="516.8" y="180.0" width="551.2" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="792.4" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">service: RoleCreationRequestApplicationService</text>
+<polyline points="792.4,244.0 792.4,2984.0" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="1108.0" y="180.0" width="472.8" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="1344.4" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">requests: RoleCreationRequestRepository</text>
+<polyline points="1344.4,244.0 1344.4,2984.0" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="1620.8" y="180.0" width="349.6" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="1795.6" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">request: RoleCreationRequest</text>
+<polyline points="1795.6,244.0 1795.6,2984.0" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="2010.4" y="180.0" width="439.2" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="2230.0" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">roleCreation: RoleApplicationService</text>
+<polyline points="2230.0,244.0 2230.0,2984.0" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="2489.6" y="180.0" width="271.2" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="2625.2" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">roles: RoleRepository</text>
+<polyline points="2625.2,244.0 2625.2,2984.0" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="2800.8" y="180.0" width="405.6" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="3003.6" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">permissions: PermissionRepository</text>
+<polyline points="3003.6,244.0 3003.6,2984.0" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="3246.4" y="180.0" width="180.0" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="3336.4" y="204.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">«MetaClass»</text>
+<text x="3336.4" y="230.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">: Role</text>
+<polyline points="3336.4,244.0 3336.4,2984.0" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="3477.0" y="180.0" width="304.8" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="3629.4" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">hierarchy: RoleHierarchy</text>
+<polyline points="3629.4,244.0 3629.4,2984.0" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="3821.8" y="180.0" width="327.2" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="3985.4" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">catalog: PermissionCatalog</text>
+<polyline points="3985.4,244.0 3985.4,2984.0" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="4189.0" y="1694.0" width="181.6" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="4279.8" y="1731.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">newRole: Role</text>
+<polyline points="4279.8,1758.0 4279.8,2984.0" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="4410.6" y="180.0" width="338.4" height="64.0" rx="0" fill="#EAF2F8" stroke="#17365D" stroke-width="1.8"/>
+<text x="4579.8" y="217.4" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">recorder: OperationRecorder</text>
+<polyline points="4579.8,244.0 4579.8,2984.0" fill="none" stroke="#8CA4B9" stroke-width="1.5" stroke-dasharray="8,6"/>
+<rect x="1335.4" y="396.0" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1786.6" y="614.0" width="18.0" height="160.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="2616.2" y="930.0" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="2994.6" y="1018.0" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="3620.4" y="1408.0" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="3976.4" y="1496.0" width="18.0" height="160.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="3327.4" y="1106.0" width="18.0" height="682.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="4270.8" y="2034.0" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="2616.2" y="1846.0" width="18.0" height="248.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="4570.8" y="2152.0" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="2221.0" y="872.0" width="18.0" height="1454.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1786.6" y="2384.0" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1786.6" y="2524.0" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="1335.4" y="2652.0" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="4570.8" y="2740.0" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="783.4" y="338.0" width="18.0" height="2586.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="259.4" y="270.0" width="18.0" height="2684.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="3336.4" y="1190.0" width="18.0" height="160.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="2230.0" y="2266.0" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<rect x="792.4" y="2854.0" width="18.0" height="30.0" rx="0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.6"/>
+<text x="242.0" y="459.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[申请不存在]</text>
+<text x="250.0" y="647.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[申请已处理]</text>
+<text x="232.0" y="807.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[decision == APPROVE]</text>
+<polyline points="138.4,2444.0 4709.8,2444.0" fill="none" stroke="#54718C" stroke-width="1.6" stroke-dasharray="8,6"/>
+<text x="232.0" y="2463.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[decision == REJECT]</text>
+<text x="250.0" y="1223.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[权限不存在、父角色非业务角色或新增了已继承的权限]</text>
+<text x="250.0" y="1529.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[按钮缺少所属菜单]</text>
+<text x="250.0" y="1879.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">[角色名称已存在]</text>
+<polyline points="277.4,338.0 783.4,338.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="539.1" y="326.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">1. review(operator, requestId, decision, role)</text>
+<polyline points="801.4,396.0 1335.4,396.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1068.5" y="384.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">2. request = findById(requestId)</text>
+<polyline points="783.4,516.0 277.4,516.0" fill="none" stroke="#A61B29" stroke-width="1.8" stroke-dasharray="8,6" marker-end="url(#m-open-err)"/>
+<text x="530.4" y="504.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#A61B29" font-family="'Songti SC', 'SimSun', 'STSong', serif">DomainException(NOT_FOUND)</text>
+<polyline points="801.4,614.0 1786.6,614.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1294.0" y="602.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">3. ensurePending()</text>
+<polyline points="1786.6,704.0 277.4,704.0" fill="none" stroke="#A61B29" stroke-width="1.8" stroke-dasharray="8,6" marker-end="url(#m-open-err)"/>
+<text x="1032.0" y="692.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#A61B29" font-family="'Songti SC', 'SimSun', 'STSong', serif">DomainException(CONFLICT)</text>
+<polyline points="801.4,872.0 2221.0,872.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1511.2" y="860.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">4. created = create(operator, role)</text>
+<polyline points="2239.0,930.0 2616.2,930.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="2427.6" y="918.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">5. hierarchy = loadHierarchy()</text>
+<polyline points="2239.0,1018.0 2994.6,1018.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="2616.8" y="1006.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">6. catalog = loadCatalog()</text>
+<polyline points="2239.0,1106.0 3327.4,1106.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="2771.8" y="1094.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">7. newRole = createBusiness(role.toConfiguration(), hierarchy, catalog)</text>
+<polyline points="3345.4,1164.0 3391.4,1164.0 3391.4,1190.0 3354.4,1190.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="3361.4" y="1152.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">8. validateSelection(config, Set.of(), hierarchy, catalog)</text>
+<polyline points="3336.4,1280.0 277.4,1280.0" fill="none" stroke="#A61B29" stroke-width="1.8" stroke-dasharray="8,6" marker-end="url(#m-open-err)"/>
+<text x="1795.5" y="1268.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#A61B29" font-family="'Songti SC', 'SimSun', 'STSong', serif">DomainException(INVALID_REQUEST)</text>
+<polyline points="3345.4,1408.0 3620.4,1408.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="3660.3" y="1396.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">9. inherited = permissionSources(config.parentRoleIds())</text>
+<polyline points="3345.4,1496.0 3976.4,1496.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="3671.0" y="1484.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">10. ensureMenusIncluded(direct ∪ inherited, config.name())</text>
+<polyline points="3976.4,1586.0 277.4,1586.0" fill="none" stroke="#A61B29" stroke-width="1.8" stroke-dasharray="8,6" marker-end="url(#m-open-err)"/>
+<text x="2098.8" y="1574.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#A61B29" font-family="'Songti SC', 'SimSun', 'STSong', serif">DomainException(INVALID_REQUEST)</text>
+<polyline points="3345.4,1726.0 4189.0,1726.0" fill="none" stroke="#17365D" stroke-width="2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<text x="3783.8" y="1714.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">11. «create»</text>
+<polyline points="2239.0,1846.0 2616.2,1846.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="2427.6" y="1834.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">12. save(newRole)</text>
+<polyline points="2616.2,1936.0 277.4,1936.0" fill="none" stroke="#A61B29" stroke-width="1.8" stroke-dasharray="8,6" marker-end="url(#m-open-err)"/>
+<text x="1446.8" y="1924.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#A61B29" font-family="'Songti SC', 'SimSun', 'STSong', serif">DomainException(DUPLICATE)</text>
+<polyline points="2634.2,2034.0 4270.8,2034.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="3452.5" y="2022.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">13. assignId(generatedId)</text>
+<polyline points="2239.0,2152.0 4570.8,2152.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="3404.9" y="2140.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">14. recordGlobal(operator, &quot;新增角色&quot;, detail, target)</text>
+<polyline points="2239.0,2240.0 2285.0,2240.0 2285.0,2266.0 2248.0,2266.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="2255.0" y="2228.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">15. result = details(newRole)</text>
+<polyline points="801.4,2384.0 1786.6,2384.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1294.0" y="2372.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">16. approve(created.id(), operator.id())</text>
+<polyline points="801.4,2524.0 1786.6,2524.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1294.0" y="2512.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">17. reject(operator.id())</text>
+<polyline points="801.4,2652.0 1335.4,2652.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="1068.5" y="2640.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">18. save(request)</text>
+<polyline points="801.4,2740.0 4570.8,2740.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="2658.1" y="2728.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">19. recordGlobal(operator, &quot;审核角色创建申请&quot;, detail, target)</text>
+<polyline points="801.4,2828.0 847.4,2828.0 847.4,2854.0 810.4,2854.0" fill="none" stroke="#17365D" stroke-width="2" marker-end="url(#m-solid)"/>
+<text x="817.4" y="2816.6" text-anchor="start" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">20. result = views(List.of(request), hierarchy).getFirst()</text>
+<polyline points="783.4,2924.0 277.4,2924.0" fill="none" stroke="#17365D" stroke-width="1.8" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<text x="530.4" y="2912.6" text-anchor="middle" font-size="19.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">result: RoleCreationRequestResult</text>
+<text x="50.0" y="69.6" text-anchor="start" font-size="40.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">RBAC1 面向对象顺序图 · 审批角色创建申请</text>
+<text x="50.0" y="114.0" text-anchor="start" font-size="21.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">范围：RoleCreationRequestApplicationService.review（@Transactional）。审批通过时调用 RoleApplicationService.create，按父角色最新配置重新校验。</text>
+<line x1="40.0" y1="134.0" x2="4789.0" y2="134.0" stroke="#B3C5D4" stroke-width="1.5"/>
+<text x="50.0" y="3033.8" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">同步消息：实线实心箭头并编号；回复与异常：虚线空心箭头，不编号；«create» 为创建消息。«MetaClass» : Role 表示静态工厂方法 createBusiness。</text>
+<text x="50.0" y="3067.8" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">create 加入同一事务：任一异常都使事务回滚，申请保持“待审核”；成功时角色、直接权限、继承关系、审批结果和操作记录一起提交，不给员工分配角色。</text>
+</svg>

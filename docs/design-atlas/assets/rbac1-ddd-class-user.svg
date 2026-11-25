@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3380 1640" width="3380" height="1640">
+<rect x="0" y="0" width="3380" height="1640" fill="#FFFFFF"/>
+<defs>
+<marker id="m-solid" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 z" fill="#17365D"/></marker>
+<marker id="m-open" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#17365D" stroke-width="1.9"/></marker>
+<marker id="m-open-err" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#A61B29" stroke-width="1.9"/></marker>
+<marker id="m-tri" markerWidth="16" markerHeight="14" refX="15" refY="7" orient="auto"><path d="M1,1 L15,7 L1,13 z" fill="#FFFFFF" stroke="#17365D" stroke-width="1.9"/></marker>
+</defs>
+<text x="50.0" y="69.6" text-anchor="start" font-size="40.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">RBAC1 面向对象类图 · 用户调动与状态管理</text>
+<text x="50.0" y="114.0" text-anchor="start" font-size="21.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">范围：修改用户（PATCH /api/v1/users/{userId}）。Operator 守卫组织范围，User 聚合根维护资料、状态、调动与管理员任免。</text>
+<line x1="40.0" y1="134.0" x2="3340.0" y2="134.0" stroke="#B3C5D4" stroke-width="1.5"/>
+<rect x="1452.4" y="177.5" width="595.2" height="145.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="1452.4" y="177.5" width="595.2" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="1750.0" y="208.2" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">UserController</text>
+<text x="1464.4" y="251.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- users: UserApplicationService</text>
+<line x1="1452.4" y1="272.0" x2="2047.6" y2="272.0" stroke="#17365D" stroke-width="1.4"/>
+<text x="1464.4" y="299.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ update(operator, userId, request: UserUpdateDTO): UserVO</text>
+<rect x="1416.5" y="504.0" width="666.9" height="292.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.4"/>
+<rect x="1416.5" y="504.0" width="666.9" height="46.0" fill="#17365D" stroke="#17365D" stroke-width="2.4"/>
+<text x="1750.0" y="534.7" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#FFFFFF" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">UserApplicationService</text>
+<text x="1428.5" y="577.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- users: UserRepository</text>
+<text x="1428.5" y="602.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- departments: DepartmentRepository</text>
+<text x="1428.5" y="626.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- roles: RoleRepository</text>
+<text x="1428.5" y="651.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- sessions: SessionStore</text>
+<text x="1428.5" y="675.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- recorder: OperationRecorder</text>
+<line x1="1416.5" y1="696.5" x2="2083.4" y2="696.5" stroke="#17365D" stroke-width="1.4"/>
+<text x="1428.5" y="724.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ update(operator, userId, command: UserUpdateCommand): UserResult</text>
+<text x="1428.5" y="748.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- changeDepartmentAdministrator(operator, user, appointed): void</text>
+<text x="1428.5" y="773.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">- view(user, tree, hierarchy): UserResult</text>
+<rect x="890.0" y="192.8" width="300.0" height="134.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="890.0" y="192.8" width="300.0" height="64.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="1040.0" y="219.8" text-anchor="middle" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">«interface»</text>
+<text x="1040.0" y="243.8" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">DepartmentRepository</text>
+<line x1="890.0" y1="276.8" x2="1190.0" y2="276.8" stroke="#17365D" stroke-width="1.4"/>
+<text x="902.0" y="304.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ loadTree(): DepartmentTree</text>
+<rect x="788.6" y="480.5" width="502.7" height="159.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="788.6" y="480.5" width="502.7" height="64.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="1040.0" y="507.5" text-anchor="middle" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">«interface»</text>
+<text x="1040.0" y="531.5" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">UserRepository</text>
+<line x1="788.6" y1="564.5" x2="1291.3" y2="564.5" stroke="#17365D" stroke-width="1.4"/>
+<text x="800.6" y="592.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ findOrganizationUsersForUpdate(ids): List&lt;User&gt;</text>
+<text x="800.6" y="616.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ save(user: User): void</text>
+<rect x="78.7" y="463.0" width="502.7" height="194.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="78.7" y="463.0" width="502.7" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="330.0" y="493.7" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">JpaUserRepository</text>
+<text x="90.7" y="536.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- users: UserDao</text>
+<text x="90.7" y="561.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- assignments: UserRoleDao</text>
+<line x1="78.7" y1="582.0" x2="581.4" y2="582.0" stroke="#17365D" stroke-width="1.4"/>
+<text x="90.7" y="609.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ findOrganizationUsersForUpdate(ids): List&lt;User&gt;</text>
+<text x="90.7" y="634.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ save(user: User): void</text>
+<rect x="817.5" y="750.5" width="445.1" height="159.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="817.5" y="750.5" width="445.1" height="64.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="1040.0" y="777.5" text-anchor="middle" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">«interface»</text>
+<text x="1040.0" y="801.5" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">RoleRepository</text>
+<line x1="817.5" y1="834.5" x2="1262.6" y2="834.5" stroke="#17365D" stroke-width="1.4"/>
+<text x="829.5" y="862.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ findByType(type: RoleType): Optional&lt;Role&gt;</text>
+<text x="829.5" y="886.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ loadHierarchy(): RoleHierarchy</text>
+<rect x="2251.0" y="210.5" width="538.0" height="159.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="2251.0" y="210.5" width="538.0" height="64.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="2520.0" y="237.5" text-anchor="middle" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">«interface»</text>
+<text x="2520.0" y="261.5" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">OperationRecorder</text>
+<line x1="2251.0" y1="294.5" x2="2789.0" y2="294.5" stroke="#17365D" stroke-width="1.4"/>
+<text x="2263.0" y="322.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ recordUserScope(actor, action, detail, targets): void</text>
+<text x="2263.0" y="346.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ recordGlobal(actor, action, detail, target): void</text>
+<rect x="2293.8" y="572.8" width="332.4" height="134.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="2293.8" y="572.8" width="332.4" height="64.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="2460.0" y="599.8" text-anchor="middle" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">«interface»</text>
+<text x="2460.0" y="623.8" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">SessionStore</text>
+<line x1="2293.8" y1="656.8" x2="2626.2" y2="656.8" stroke="#17365D" stroke-width="1.4"/>
+<text x="2305.8" y="684.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ revokeAllOf(userId: long): void</text>
+<rect x="2953.8" y="567.5" width="332.4" height="145.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="2953.8" y="567.5" width="332.4" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="3120.0" y="598.2" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">JpaSessionStore</text>
+<text x="2965.8" y="641.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- sessions: SessionDao</text>
+<line x1="2953.8" y1="662.0" x2="3286.2" y2="662.0" stroke="#17365D" stroke-width="1.4"/>
+<text x="2965.8" y="689.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ revokeAllOf(userId: long): void</text>
+<rect x="170.7" y="1046.2" width="358.7" height="267.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="170.7" y="1046.2" width="358.7" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="350.0" y="1076.9" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">UserUpdateCommand</text>
+<text x="182.7" y="1119.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- username: String</text>
+<text x="182.7" y="1144.2" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- name: String</text>
+<text x="182.7" y="1168.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- status: UserStatus</text>
+<text x="182.7" y="1193.2" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- departmentId: Long</text>
+<text x="182.7" y="1217.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- departmentAdministrator: Boolean</text>
+<line x1="170.7" y1="1238.7" x2="529.4" y2="1238.7" stroke="#17365D" stroke-width="1.4"/>
+<text x="182.7" y="1266.2" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ changesOrganization(): boolean</text>
+<text x="182.7" y="1290.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ isEmpty(): boolean</text>
+<rect x="770.6" y="1088.5" width="538.7" height="243.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="770.6" y="1088.5" width="538.7" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="1040.0" y="1119.2" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">Operator</text>
+<text x="782.6" y="1162.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: long</text>
+<text x="782.6" y="1186.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- departmentId: Long</text>
+<text x="782.6" y="1211.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- managementRole: ManagementRole</text>
+<line x1="770.6" y1="1232.0" x2="1309.3" y2="1232.0" stroke="#17365D" stroke-width="1.4"/>
+<text x="782.6" y="1259.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ requireAdministrator(): void</text>
+<text x="782.6" y="1284.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ requireOrganizationAuthority(): void</text>
+<text x="782.6" y="1308.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ requireManagedDepartment(tree, deptId): Department</text>
+<rect x="1484.5" y="1045.0" width="590.9" height="390.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="1484.5" y="1045.0" width="590.9" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="1780.0" y="1075.7" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">User</text>
+<text x="1496.5" y="1118.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: Long</text>
+<text x="1496.5" y="1143.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- username: String</text>
+<text x="1496.5" y="1167.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- name: String</text>
+<text x="1496.5" y="1192.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- departmentId: Long</text>
+<text x="1496.5" y="1216.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- status: UserStatus</text>
+<text x="1496.5" y="1241.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- roleIds: Set&lt;Long&gt;</text>
+<line x1="1484.5" y1="1262.0" x2="2075.4" y2="1262.0" stroke="#17365D" stroke-width="1.4"/>
+<text x="1496.5" y="1289.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ changeUsername(newUsername): boolean</text>
+<text x="1496.5" y="1314.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ rename(newName): boolean</text>
+<text x="1496.5" y="1338.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ changeStatus(newStatus): boolean</text>
+<text x="1496.5" y="1363.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ isActive(): boolean</text>
+<text x="1496.5" y="1387.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ transferTo(newDepartmentId): boolean</text>
+<text x="1496.5" y="1412.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ changeDepartmentAdministrator(appointed, roleId): boolean</text>
+<rect x="2318.2" y="1080.8" width="483.6" height="218.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="2318.2" y="1080.8" width="483.6" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="2560.0" y="1111.5" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">DepartmentTree</text>
+<text x="2330.2" y="1154.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- departments: Map&lt;Long, Department&gt;</text>
+<text x="2330.2" y="1178.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- children: Map&lt;Long, Set&lt;Long&gt;&gt;</text>
+<line x1="2318.2" y1="1199.8" x2="2801.8" y2="1199.8" stroke="#17365D" stroke-width="1.4"/>
+<text x="2330.2" y="1227.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ contains(departmentId: long): boolean</text>
+<text x="2330.2" y="1251.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ subtreeOf(rootId: long): Set&lt;Long&gt;</text>
+<text x="2330.2" y="1276.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ find(departmentId: long): Optional&lt;Department&gt;</text>
+<polyline points="1750.0,322.5 1750.0,504.0" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="1701.0" y="419.2" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">users</text>
+<polyline points="1416.5,556.6 1190.0,289.6" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="1246.9" y="470.9" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">departments</text>
+<polyline points="1416.5,635.4 1291.3,560.0" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="1353.9" y="581.7" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">users</text>
+<polyline points="1416.5,743.4 1262.6,806.1" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="1339.5" y="752.8" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">roles</text>
+<polyline points="2083.4,562.4 2251.0,325.0" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="2115.9" y="407.5" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">recorder</text>
+<polyline points="2083.4,664.6 2293.8,640.0" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="2188.6" y="636.3" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">sessions</text>
+<polyline points="581.4,560.0 788.6,560.0" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-tri)"/>
+<polyline points="2953.8,640.0 2626.2,640.0" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-tri)"/>
+<polyline points="1496.5,796.0 1490.0,960.0 490.0,960.0 439.7,1046.2" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1629.9,796.0 1120.8,1088.5" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1763.3,796.0 1768.1,1045.0" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1983.4,796.0 2487.5,1080.8" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1309.3,1302.3 1390.0,1460.0 2260.0,1460.0 2318.2,1273.1" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<text x="50.0" y="1550.0" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">实线空心箭头：关联（字段，箭头旁为 role name）　虚线空心箭头：依赖（参数、局部变量、返回值、静态调用）　虚线空心三角：接口实现</text>
+<text x="50.0" y="1584.0" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">成员按本用例裁剪。停用账号后由应用层调用 SessionStore 撤销会话，JpaUserRepository 统一同步用户表与角色关联表。</text>
+</svg>

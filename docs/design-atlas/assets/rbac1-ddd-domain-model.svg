@@ -1,0 +1,178 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4200 1830" width="4200" height="1830">
+<rect x="0" y="0" width="4200" height="1830" fill="#FFFFFF"/>
+<defs>
+<marker id="m-solid" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 z" fill="#17365D"/></marker>
+<marker id="m-open" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#17365D" stroke-width="1.9"/></marker>
+<marker id="m-open-err" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#A61B29" stroke-width="1.9"/></marker>
+<marker id="m-tri" markerWidth="16" markerHeight="14" refX="15" refY="7" orient="auto"><path d="M1,1 L15,7 L1,13 z" fill="#FFFFFF" stroke="#17365D" stroke-width="1.9"/></marker>
+</defs>
+<text x="50.0" y="69.6" text-anchor="start" font-size="40.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">RBAC1 面向对象类图 · DDD 领域模型全景（7 领域子包）</text>
+<text x="50.0" y="114.0" text-anchor="start" font-size="21.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">范围：com.rbac.rbac1ddd.domain。聚合间通过 ID 解耦引用，跨聚合图遍历与最小权限筛选由不可变领域服务承载，零 Spring/JPA 依赖。</text>
+<line x1="40.0" y1="134.0" x2="4160.0" y2="134.0" stroke="#B3C5D4" stroke-width="1.5"/>
+<rect x="159.3" y="228.5" width="561.4" height="243.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="159.3" y="228.5" width="561.4" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="440.0" y="259.2" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">Department</text>
+<text x="171.3" y="302.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: Long</text>
+<text x="171.3" y="326.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- name: String</text>
+<text x="171.3" y="351.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- parentId: Long</text>
+<line x1="159.3" y1="372.0" x2="720.7" y2="372.0" stroke="#17365D" stroke-width="1.4"/>
+<text x="171.3" y="399.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">+ create(name, parentId): Department</text>
+<text x="171.3" y="424.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ rename(newName): boolean</text>
+<text x="171.3" y="448.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ moveUnder(newParentId, tree: DepartmentTree): boolean</text>
+<rect x="969.9" y="240.8" width="500.2" height="218.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="969.9" y="240.8" width="500.2" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="1220.0" y="271.5" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">DepartmentTree</text>
+<text x="981.9" y="314.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- departments: Map&lt;Long, Department&gt;</text>
+<text x="981.9" y="338.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- children: Map&lt;Long, Set&lt;Long&gt;&gt;</text>
+<text x="981.9" y="363.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- roots: Set&lt;Long&gt;</text>
+<line x1="969.9" y1="384.3" x2="1470.1" y2="384.3" stroke="#17365D" stroke-width="1.4"/>
+<text x="981.9" y="411.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ subtreeOf(rootId: long): Set&lt;Long&gt;</text>
+<text x="981.9" y="436.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ ensureCanMove(departmentId, newParentId): void</text>
+<rect x="1740.2" y="189.5" width="639.5" height="341.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="1740.2" y="189.5" width="639.5" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="2060.0" y="220.2" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">User</text>
+<text x="1752.2" y="263.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: Long</text>
+<text x="1752.2" y="287.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- username: String</text>
+<text x="1752.2" y="312.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- departmentId: Long</text>
+<text x="1752.2" y="336.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- status: UserStatus</text>
+<text x="1752.2" y="361.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- roleIds: Set&lt;Long&gt;</text>
+<line x1="1740.2" y1="382.0" x2="2379.7" y2="382.0" stroke="#17365D" stroke-width="1.4"/>
+<text x="1752.2" y="409.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">+ create(username, name, deptId, hash, status): User</text>
+<text x="1752.2" y="434.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ replaceBusinessRoles(roleIds, hierarchy): RoleAssignmentChange</text>
+<text x="1752.2" y="458.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ effectivePermissionIds(hierarchy: RoleHierarchy): Set&lt;Long&gt;</text>
+<text x="1752.2" y="483.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ effectiveBusinessRoleIds(hierarchy: RoleHierarchy): Set&lt;Long&gt;</text>
+<text x="1752.2" y="507.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ transferTo(newDepartmentId: long): boolean</text>
+<rect x="2746.1" y="204.0" width="427.8" height="292.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="2746.1" y="204.0" width="427.8" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="2960.0" y="234.7" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">BusinessApplication</text>
+<text x="2758.1" y="277.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: Long</text>
+<text x="2758.1" y="302.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- code: String</text>
+<text x="2758.1" y="326.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- name: String</text>
+<text x="2758.1" y="351.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- roleCodesEnabled: boolean</text>
+<line x1="2746.1" y1="372.0" x2="3173.9" y2="372.0" stroke="#17365D" stroke-width="1.4"/>
+<text x="2758.1" y="399.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">+ register(name, code): BusinessApplication</text>
+<text x="2758.1" y="424.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ rename(newName): boolean</text>
+<text x="2758.1" y="448.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ isPermissionCenter(): boolean</text>
+<text x="2758.1" y="473.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ isRoleCodesEnabled(): boolean</text>
+<rect x="654.1" y="721.8" width="571.8" height="316.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="654.1" y="721.8" width="571.8" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="940.0" y="752.5" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">Role</text>
+<text x="666.1" y="795.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: Long</text>
+<text x="666.1" y="819.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- type: RoleType</text>
+<text x="666.1" y="844.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- name: String</text>
+<text x="666.1" y="868.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- directPermissionIds: Set&lt;Long&gt;</text>
+<text x="666.1" y="893.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- parentRoleIds: Set&lt;Long&gt;</text>
+<line x1="654.1" y1="914.3" x2="1225.9" y2="914.3" stroke="#17365D" stroke-width="1.4"/>
+<text x="666.1" y="941.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">+ createBusiness(config, hierarchy, catalog): Role</text>
+<text x="666.1" y="966.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ reconfigure(config, hierarchy, catalog): RoleChange</text>
+<text x="666.1" y="990.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ grantNewlyRegisteredPermission(permissionId: long): void</text>
+<text x="666.1" y="1015.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ ensureDeletable(assignedUserCount, hierarchy): void</text>
+<rect x="1610.8" y="746.2" width="578.3" height="267.5" fill="#FFFFFF" stroke="#17365D" stroke-width="2.4"/>
+<rect x="1610.8" y="746.2" width="578.3" height="46.0" fill="#17365D" stroke="#17365D" stroke-width="2.4"/>
+<text x="1900.0" y="776.9" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#FFFFFF" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">RoleHierarchy</text>
+<text x="1622.8" y="819.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- nodes: Map&lt;Long, Node&gt;</text>
+<text x="1622.8" y="844.2" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- children: Map&lt;Long, Set&lt;Long&gt;&gt;</text>
+<line x1="1610.8" y1="865.2" x2="2189.1" y2="865.2" stroke="#17365D" stroke-width="1.4"/>
+<text x="1622.8" y="892.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">+ of(roles: Collection&lt;Role&gt;): RoleHierarchy</text>
+<text x="1622.8" y="917.2" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ withConfiguration(roleId, direct, parents): RoleHierarchy</text>
+<text x="1622.8" y="941.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ ancestorsIncluding(roleIds): Set&lt;Long&gt;</text>
+<text x="1622.8" y="966.2" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ descendantsIncluding(roleId): Set&lt;Long&gt;</text>
+<text x="1622.8" y="990.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ effectivePermissionIds(roleId): Set&lt;Long&gt;</text>
+<rect x="2561.1" y="770.8" width="517.8" height="218.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="2561.1" y="770.8" width="517.8" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="2820.0" y="801.5" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">PermissionCatalog</text>
+<text x="2573.1" y="844.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- permissions: Map&lt;Long, Permission&gt;</text>
+<line x1="2561.1" y1="865.3" x2="3078.9" y2="865.3" stroke="#17365D" stroke-width="1.4"/>
+<text x="2573.1" y="892.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ ensureAllExist(ids: Collection&lt;Long&gt;): void</text>
+<text x="2573.1" y="917.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ ensureMenusIncluded(effectiveIds, roleName): void</text>
+<text x="2573.1" y="941.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ codesIn(appId, permissionIds): List&lt;String&gt;</text>
+<text x="2573.1" y="966.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ anyIn(appId, permissionIds): boolean</text>
+<rect x="3379.2" y="514.0" width="721.6" height="292.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="3379.2" y="514.0" width="721.6" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="3740.0" y="544.7" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">PermissionDefinition</text>
+<text x="3391.2" y="587.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: Long</text>
+<text x="3391.2" y="612.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- applicationId: Long</text>
+<text x="3391.2" y="636.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- parentId: Long</text>
+<text x="3391.2" y="661.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- code: String</text>
+<text x="3391.2" y="685.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- type: PermissionType</text>
+<text x="3391.2" y="710.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- apiIds: Set&lt;Long&gt;</text>
+<line x1="3379.2" y1="731.0" x2="4100.8" y2="731.0" stroke="#17365D" stroke-width="1.4"/>
+<text x="3391.2" y="758.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">+ register(appId, name, code, type, parentId, parent): PermissionDefinition</text>
+<text x="3391.2" y="783.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ linkApis(requestedIds, found: Collection&lt;Api&gt;): void</text>
+<rect x="3498.6" y="916.2" width="482.9" height="267.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="3498.6" y="916.2" width="482.9" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="3740.0" y="946.9" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">Api</text>
+<text x="3510.6" y="989.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: Long</text>
+<text x="3510.6" y="1014.2" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- applicationId: Long</text>
+<text x="3510.6" y="1038.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- operationId: String</text>
+<text x="3510.6" y="1063.2" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- httpMethod: String</text>
+<text x="3510.6" y="1087.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- path: String</text>
+<line x1="3498.6" y1="1108.7" x2="3981.5" y2="1108.7" stroke="#17365D" stroke-width="1.4"/>
+<text x="3510.6" y="1136.2" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">+ register(appId, operationId, method, path): Api</text>
+<text x="3510.6" y="1160.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ belongsTo(otherApplicationId: long): boolean</text>
+<rect x="174.4" y="1281.8" width="731.3" height="316.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="174.4" y="1281.8" width="731.3" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="540.0" y="1312.5" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">RoleCreationRequest</text>
+<text x="186.4" y="1355.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: Long</text>
+<text x="186.4" y="1379.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- applicantUserId: long</text>
+<text x="186.4" y="1404.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- roleName: String</text>
+<text x="186.4" y="1428.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- permissionIds: Set&lt;Long&gt;</text>
+<text x="186.4" y="1453.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- parentRoles: List&lt;ParentRoleSnapshot&gt;</text>
+<text x="186.4" y="1477.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- status: RequestStatus</text>
+<line x1="174.4" y1="1498.8" x2="905.7" y2="1498.8" stroke="#17365D" stroke-width="1.4"/>
+<text x="186.4" y="1526.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">+ submit(applicantId, config, hierarchy, catalog): RoleCreationRequest</text>
+<text x="186.4" y="1550.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ approve(roleId, reviewerUserId): void</text>
+<text x="186.4" y="1575.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ previewIn(hierarchy: RoleHierarchy): Optional&lt;List&lt;EffectivePermission&gt;&gt;</text>
+<rect x="1095.8" y="1294.0" width="688.5" height="292.0" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="1095.8" y="1294.0" width="688.5" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="1440.0" y="1324.7" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">PermissionRequest</text>
+<text x="1107.8" y="1367.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- id: Long</text>
+<text x="1107.8" y="1392.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- applicantUserId: long</text>
+<text x="1107.8" y="1416.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- permissionId: long</text>
+<text x="1107.8" y="1441.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- status: RequestStatus</text>
+<text x="1107.8" y="1465.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- approvedRoleId: Long</text>
+<line x1="1095.8" y1="1486.5" x2="1784.3" y2="1486.5" stroke="#17365D" stroke-width="1.4"/>
+<text x="1107.8" y="1514.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">+ submit(applicantId, permissionId, reason, catalog): PermissionRequest</text>
+<text x="1107.8" y="1538.5" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ approve(roleId, reviewerId, candidates: ApprovalCandidates): void</text>
+<text x="1107.8" y="1563.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ settleWith(grantedPermissionIds: Set&lt;Long&gt;): boolean</text>
+<rect x="1908.7" y="1355.2" width="662.6" height="169.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="1908.7" y="1355.2" width="662.6" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="2240.0" y="1385.9" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">ApprovalCandidates</text>
+<text x="1920.7" y="1428.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- candidates: List&lt;Candidate&gt;</text>
+<line x1="1908.7" y1="1449.7" x2="2571.3" y2="1449.7" stroke="#17365D" stroke-width="1.4"/>
+<text x="1920.7" y="1477.2" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif" text-decoration="underline">+ evaluate(permissionId, grantedIds, hierarchy): ApprovalCandidates</text>
+<text x="1920.7" y="1501.7" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ requireSelectable(roleId: long): Candidate</text>
+<rect x="2673.9" y="1330.8" width="612.2" height="218.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="2673.9" y="1330.8" width="612.2" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="2980.0" y="1361.5" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">RequestCatalog</text>
+<text x="2685.9" y="1404.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- permissions: PermissionCatalog</text>
+<text x="2685.9" y="1428.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- applications: Map&lt;Long, BusinessApplication&gt;</text>
+<text x="2685.9" y="1453.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- ownedPermissionIds: Set&lt;Long&gt;</text>
+<line x1="2673.9" y1="1474.3" x2="3286.1" y2="1474.3" stroke="#17365D" stroke-width="1.4"/>
+<text x="2685.9" y="1501.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ groupsIn(applicationId: long): List&lt;MenuGroup&gt;</text>
+<text x="2685.9" y="1526.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ requireRequestable(permissionId, alreadyPending): Permission</text>
+<rect x="3489.0" y="1330.8" width="502.0" height="218.5" fill="#FFFFFF" stroke="#17365D" stroke-width="1.8"/>
+<rect x="3489.0" y="1330.8" width="502.0" height="46.0" fill="#D9E6F2" stroke="#17365D" stroke-width="1.8"/>
+<text x="3740.0" y="1361.5" text-anchor="middle" font-size="22.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">ManagementApi</text>
+<text x="3501.0" y="1404.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- operationId: String</text>
+<text x="3501.0" y="1428.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- selfService: boolean</text>
+<text x="3501.0" y="1453.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">- requiredPermissionIds: Set&lt;Long&gt;</text>
+<line x1="3489.0" y1="1474.3" x2="3991.0" y2="1474.3" stroke="#17365D" stroke-width="1.4"/>
+<text x="3501.0" y="1501.8" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ isSelfService(): boolean</text>
+<text x="3501.0" y="1526.3" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">+ allows(grantedPermissionIds: Set&lt;Long&gt;): boolean</text>
+<polyline points="720.7,350.0 969.9,350.1" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="2008.8,530.5 1946.2,746.2" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="2283.8,530.5 2742.3,770.8" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1225.9,854.7 1610.8,858.6" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1610.8,928.1 1225.9,937.0" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="940.0,721.8 940.0,610.0 2820.0,610.0 2820.0,770.8" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="3740.0,806.0 3740.0,916.2" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="649.7,1281.8 680.0,1180.0 1700.0,1180.0 1726.5,1013.7" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1784.3,1440.0 1908.7,1440.0" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="1440.0,1586.0 1440.0,1650.0 2980.0,1650.0 2980.0,1549.3" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="2173.7,1355.2 2044.5,1013.7" fill="none" stroke="#17365D" stroke-width="2.2" stroke-dasharray="8,6" marker-end="url(#m-open)"/>
+<polyline points="2931.0,1330.8 2871.8,989.3" fill="none" stroke="#17365D" stroke-width="2.2" marker-end="url(#m-open)"/>
+<text x="2822.8" y="1166.0" text-anchor="middle" font-size="20.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">permissions</text>
+<text x="50.0" y="1740.0" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">实线空心箭头：对象字段关联（箭头旁为 role name）　虚线空心箭头：领域方法参数/返回值依赖　深蓝表头：核心继承快照枢纽</text>
+<text x="50.0" y="1774.0" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">聚合边界：User、Role、Department、BusinessApplication、PermissionDefinition、Api、PermissionRequest、RoleCreationRequest 各自作为独立聚合根存取。</text>
+</svg>

@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2680 1620" width="2680" height="1620">
+<rect x="0" y="0" width="2680" height="1620" fill="#FFFFFF"/>
+<defs>
+<marker id="m-solid" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 z" fill="#17365D"/></marker>
+<marker id="m-open" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#17365D" stroke-width="1.9"/></marker>
+<marker id="m-open-err" markerWidth="14" markerHeight="12" refX="12" refY="6" orient="auto"><path d="M1,1 L12,6 L1,11" fill="none" stroke="#A61B29" stroke-width="1.9"/></marker>
+<marker id="m-tri" markerWidth="16" markerHeight="14" refX="15" refY="7" orient="auto"><path d="M1,1 L15,7 L1,13 z" fill="#FFFFFF" stroke="#17365D" stroke-width="1.9"/></marker>
+</defs>
+<text x="50.0" y="69.6" text-anchor="start" font-size="40.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">RBAC1 部署架构图 · Docker Swarm 双系统统一身份集群拓扑</text>
+<text x="50.0" y="114.0" text-anchor="start" font-size="21.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">范围：deploy/stack.yml 与课程项目管理系统联调。Swarm 按节点标签隔离部署，经加密 Overlay 网络 rbac-net 与 Secrets 通信。</text>
+<line x1="40.0" y1="134.0" x2="2640.0" y2="134.0" stroke="#B3C5D4" stroke-width="1.5"/>
+<rect x="80.0" y="185.0" width="2520.0" height="225.0" fill="#F7FAFC" stroke="#8CA4B9" stroke-width="2.2" stroke-dasharray="10,6"/>
+<text x="104.0" y="221.0" text-anchor="start" font-size="23.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">客户端浏览器层（外部访问）</text>
+<text x="2576.0" y="221.0" text-anchor="end" font-size="18.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">管理员 / 普通员工 / 课程师生</text>
+<rect x="80.0" y="475.0" width="2520.0" height="975.0" fill="#F4F8FB" stroke="#17365D" stroke-width="2.2" stroke-dasharray="10,6"/>
+<text x="104.0" y="511.0" text-anchor="start" font-size="23.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">Docker Swarm 集群（Manager 编排调度 · Overlay 网络 rbac-net · Swarm Secrets 凭据注入）</text>
+<text x="2576.0" y="511.0" text-anchor="end" font-size="18.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">docker stack deploy -c deploy/stack.yml rbac</text>
+<rect x="220.0" y="232.0" width="580.0" height="158.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.0"/>
+<rect x="220.0" y="232.0" width="580.0" height="62.0" fill="#D9E6F2" stroke="#17365D" stroke-width="2.0"/>
+<text x="510.0" y="256.0" text-anchor="middle" font-size="16.5" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">«device»</text>
+<text x="510.0" y="282.0" text-anchor="middle" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">权限中心浏览器端</text>
+<text x="238.0" y="323.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">入口：http://&lt;前端节点IP&gt;:8088</text>
+<text x="238.0" y="351.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">SPA：Vue 3 + Element Plus 管理台</text>
+<text x="238.0" y="379.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">携带：Bearer JWT + X-Application-Code</text>
+<rect x="1860.0" y="232.0" width="620.0" height="158.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.0"/>
+<rect x="1860.0" y="232.0" width="620.0" height="62.0" fill="#D9E6F2" stroke="#17365D" stroke-width="2.0"/>
+<text x="2170.0" y="256.0" text-anchor="middle" font-size="16.5" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">«device»</text>
+<text x="2170.0" y="282.0" text-anchor="middle" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">课程管理系统浏览器端</text>
+<text x="1878.0" y="323.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">入口：http://&lt;课程节点IP&gt;:8089</text>
+<text x="1878.0" y="351.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">师生工作台与课程管理菜单</text>
+<text x="1878.0" y="379.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">跨域直连权限中心查菜单许可与选人目录</text>
+<rect x="150.0" y="560.0" width="680.0" height="185.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.0"/>
+<rect x="150.0" y="560.0" width="680.0" height="62.0" fill="#17365D" stroke="#17365D" stroke-width="2.0"/>
+<text x="490.0" y="584.0" text-anchor="middle" font-size="16.5" font-weight="bold" fill="#FFFFFF" font-family="'Songti SC', 'SimSun', 'STSong', serif">«node» worker (rbac.role=frontend)</text>
+<text x="490.0" y="610.0" text-anchor="middle" font-size="21.0" font-weight="bold" fill="#FFFFFF" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">rbac_frontend · Nginx 网关容器</text>
+<text x="168.0" y="651.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">公网发布：8088 -&gt; 容器 80</text>
+<text x="168.0" y="679.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">静态托管：权限管理前端 dist / 设计图册</text>
+<text x="168.0" y="707.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">反向代理：/api/v1/* 与 /auth/* -&gt; RBAC_API_UPSTREAM</text>
+<rect x="1790.0" y="560.0" width="730.0" height="185.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.0"/>
+<rect x="1790.0" y="560.0" width="730.0" height="62.0" fill="#D9E6F2" stroke="#17365D" stroke-width="2.0"/>
+<text x="2155.0" y="584.0" text-anchor="middle" font-size="16.5" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">«node» worker (课程系统节点)</text>
+<text x="2155.0" y="610.0" text-anchor="middle" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">course-project-management 前后端</text>
+<text x="1808.0" y="651.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">课程前端 Nginx (:8089) + 课程后端 (:8080)</text>
+<text x="1808.0" y="679.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">登录委托：POST /auth/login 签发多受众 JWT</text>
+<text x="1808.0" y="707.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">验签与鉴权：/.well-known/jwks.json · /auth/api-permissions/*</text>
+<rect x="150.0" y="880.0" width="680.0" height="185.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.0"/>
+<rect x="150.0" y="880.0" width="680.0" height="62.0" fill="#D9E6F2" stroke="#17365D" stroke-width="2.0"/>
+<text x="490.0" y="904.0" text-anchor="middle" font-size="16.5" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">«node» worker (rbac.role=structured)</text>
+<text x="490.0" y="930.0" text-anchor="middle" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">rbac_structured · 结构化后端 (:8080)</text>
+<text x="168.0" y="971.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">镜像：rbac1-structured:1.0.0（Java 21 / Spring Boot）</text>
+<text x="168.0" y="999.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">日志挂载：/root/rbac/logs/structured -&gt; /app/logs</text>
+<text x="168.0" y="1027.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">职责：47 项统一接口 · Flyway V1–V2 建表迁移</text>
+<rect x="980.0" y="880.0" width="680.0" height="185.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.0"/>
+<rect x="980.0" y="880.0" width="680.0" height="62.0" fill="#D9E6F2" stroke="#17365D" stroke-width="2.0"/>
+<text x="1320.0" y="904.0" text-anchor="middle" font-size="16.5" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">«node» worker (rbac.role=ddd)</text>
+<text x="1320.0" y="930.0" text-anchor="middle" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">rbac_ddd · 面向对象 DDD 后端 (:8080)</text>
+<text x="998.0" y="971.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">镜像：rbac1-ddd:1.0.0（纯 JDK 领域层 + JPA 适配器）</text>
+<text x="998.0" y="999.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">日志挂载：/root/rbac/logs/ddd -&gt; /app/logs</text>
+<text x="998.0" y="1027.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">职责：与结构化版等价的 47 项契约 · 按需热切换</text>
+<rect x="1790.0" y="880.0" width="730.0" height="185.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.0"/>
+<rect x="1790.0" y="880.0" width="730.0" height="62.0" fill="#FFF2CC" stroke="#17365D" stroke-width="2.0"/>
+<text x="2155.0" y="904.0" text-anchor="middle" font-size="16.5" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">«executionEnvironment» Swarm 控制面</text>
+<text x="2155.0" y="930.0" text-anchor="middle" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">Course-Manager &amp; Swarm Secrets</text>
+<text x="1808.0" y="971.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">密钥挂载：/run/secrets/jwt_private.pem &amp; jwt_public.pem</text>
+<text x="1808.0" y="999.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">口令挂载：db_password · mysql_root_password · admin_password</text>
+<text x="1808.0" y="1027.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">滚动策略：stop-first · failure_action=rollback</text>
+<rect x="420.0" y="1195.0" width="1240.0" height="175.0" fill="#FFFFFF" stroke="#17365D" stroke-width="2.0"/>
+<rect x="420.0" y="1195.0" width="1240.0" height="62.0" fill="#EAF2F8" stroke="#17365D" stroke-width="2.0"/>
+<text x="1040.0" y="1219.0" text-anchor="middle" font-size="16.5" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">«node» worker (rbac.role=database)</text>
+<text x="1040.0" y="1245.0" text-anchor="middle" font-size="21.0" font-weight="bold" fill="#14283D" font-family="'PingFang SC', 'Heiti SC', 'SimHei', 'Microsoft YaHei', sans-serif">rbac_mysql · MySQL 8.4.8 数据库容器 (:3306)</text>
+<text x="438.0" y="1286.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">仅内网 rbac-net 可达（不映射公网 3306 端口）　数据卷：/root/rbac/mysql/data -&gt; /var/lib/mysql</text>
+<text x="438.0" y="1314.0" text-anchor="start" font-size="18.0" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">共享库 rbac1（18 张业务与会话表）：两套 RBAC1 后端共用同一套表结构、RSA 公私钥与 Argon2 密码摘要</text>
+<polyline points="510.0,390.0 510.0,560.0" fill="none" stroke="#17365D" stroke-width="2.4" marker-end="url(#m-solid)"/>
+<rect x="375.2" y="425.0" width="119.6" height="26.0" fill="#FFFFFF" opacity="0.92"/>
+<text x="435.0" y="445.0" text-anchor="middle" font-size="18.5" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">HTTP :8088</text>
+<polyline points="2170.0,390.0 2170.0,560.0" fill="none" stroke="#17365D" stroke-width="2.4" marker-end="url(#m-solid)"/>
+<rect x="2185.2" y="425.0" width="119.6" height="26.0" fill="#FFFFFF" opacity="0.92"/>
+<text x="2245.0" y="445.0" text-anchor="middle" font-size="18.5" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">HTTP :8089</text>
+<polyline points="1860.0,310.0 1240.0,310.0 1240.0,620.0 830.0,620.0" fill="none" stroke="#17365D" stroke-width="2.4" stroke-dasharray="8,6" marker-end="url(#m-solid)"/>
+<rect x="1324.8" y="274.0" width="430.4" height="26.0" fill="#FFFFFF" opacity="0.92"/>
+<text x="1540.0" y="294.0" text-anchor="middle" font-size="18.5" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">CORS 跨域：/auth/me · /auth/departments*</text>
+<polyline points="1790.0,675.0 830.0,675.0" fill="none" stroke="#17365D" stroke-width="2.4" marker-end="url(#m-solid)"/>
+<rect x="1049.6" y="640.0" width="560.8" height="26.0" fill="#FFFFFF" opacity="0.92"/>
+<text x="1330.0" y="660.0" text-anchor="middle" font-size="18.5" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">统一身份：/auth/login · /auth/api-permissions/* · JWKS</text>
+<polyline points="420.0,745.0 420.0,880.0" fill="none" stroke="#17365D" stroke-width="2.4" marker-end="url(#m-solid)"/>
+<rect x="139.9" y="800.0" width="280.2" height="26.0" fill="#FFFFFF" opacity="0.92"/>
+<text x="280.0" y="820.0" text-anchor="middle" font-size="18.5" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">RBAC_API_UPSTREAM (默认)</text>
+<polyline points="680.0,745.0 680.0,815.0 1260.0,815.0 1260.0,880.0" fill="none" stroke="#17365D" stroke-width="2.4" stroke-dasharray="8,6" marker-end="url(#m-solid)"/>
+<rect x="828.3" y="780.0" width="323.5" height="26.0" fill="#FFFFFF" opacity="0.92"/>
+<text x="990.0" y="800.0" text-anchor="middle" font-size="18.5" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">RBAC_API_UPSTREAM (切换 DDD)</text>
+<polyline points="560.0,1065.0 560.0,1195.0" fill="none" stroke="#17365D" stroke-width="2.4" marker-end="url(#m-solid)"/>
+<rect x="323.8" y="1118.0" width="222.5" height="26.0" fill="#FFFFFF" opacity="0.92"/>
+<text x="435.0" y="1138.0" text-anchor="middle" font-size="18.5" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">JDBC :3306 (rbac-net)</text>
+<polyline points="1320.0,1065.0 1320.0,1195.0" fill="none" stroke="#17365D" stroke-width="2.4" marker-end="url(#m-solid)"/>
+<rect x="1338.8" y="1118.0" width="222.5" height="26.0" fill="#FFFFFF" opacity="0.92"/>
+<text x="1450.0" y="1138.0" text-anchor="middle" font-size="18.5" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">JDBC :3306 (rbac-net)</text>
+<polyline points="1790.0,972.0 1660.0,972.0" fill="none" stroke="#17365D" stroke-width="2.4" stroke-dasharray="8,6" marker-end="url(#m-solid)"/>
+<rect x="1679.8" y="936.0" width="90.4" height="26.0" fill="#FFFFFF" opacity="0.92"/>
+<text x="1725.0" y="956.0" text-anchor="middle" font-size="18.5" font-weight="bold" fill="#14283D" font-family="'Songti SC', 'SimSun', 'STSong', serif">Secrets</text>
+<text x="50.0" y="1507.0" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">实线箭头：默认运行期 HTTP / JDBC 调用流　虚线箭头：CORS 浏览器直连、后端策略切换与 Swarm Secrets 挂载</text>
+<text x="50.0" y="1541.0" text-anchor="start" font-size="20.0" font-weight="bold" fill="#3A5570" font-family="'Songti SC', 'SimSun', 'STSong', serif">验证命令：docker node ls · docker stack services rbac · docker service logs -f rbac_structured（切换前端菜单实时输出三层 Logback 日志）</text>
+</svg>
