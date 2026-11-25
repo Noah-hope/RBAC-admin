@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="RBAC 权限管理系统与课程项目管理系统的课程验收导航">
+  <title>RBAC 项目验收导航</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#systems">跳到验收内容</a>
+  <header class="masthead">
+    <div class="wrap masthead-inner">
+      <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">R</span> RBAC 项目验收</a>
+      <nav aria-label="本页导航">
+        <a href="#systems">系统</a>
+        <a href="#accounts">账号</a>
+        <a href="#inspection">检查资料</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="wrap hero-inner">
+        <div>
+          <p class="project">RBAC 权限管理系统</p>
+          <h1 id="page-title">课程项目<br>验收导航</h1>
+          <p class="hero-summary">用同一套身份联调两个系统。从需求和测试出发，现场验证权限，再对照结构化与 DDD 的图和代码。</p>
+          <div class="hero-actions">
+            <a class="button button-gold" href="#systems">进入演示系统</a>
+            <a class="hero-link" href="atlas/#packages">打开后端包图 <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+        <nav class="route-card" aria-labelledby="route-title">
+          <h2 id="route-title">老师的检查顺序</h2>
+          <ol>
+            <li><a href="#requirements"><span class="route-number">01</span><span>需求文档与测试<span class="route-detail">对照规则和测试用例</span></span></a></li>
+            <li><a href="#systems"><span class="route-number">02</span><span>运行两个系统<span class="route-detail">按账号验证实际效果</span></span></a></li>
+            <li><a href="#design"><span class="route-number">03</span><span>包图、接口与源码<span class="route-detail">对照两套后端实现</span></span></a></li>
+            <li><a href="#discussion"><span class="route-number">04</span><span>设计与技术问答<span class="route-detail">DDD、GRASP 和 JavaEE</span></span></a></li>
+          </ol>
+        </nav>
+      </div>
+    </section>
+
+    <div class="wrap content">
+      <section id="systems" aria-labelledby="systems-title">
+        <div class="section-heading">
+          <h2 id="systems-title">线上演示</h2>
+          <p>两个系统分别登录，使用下方对应账号。</p>
+        </div>
+        <div class="systems-grid">
+          <article class="system">
+            <div class="system-code">RBAC</div>
+            <div>
+              <h3>权限管理系统</h3>
+              <p>查看应用、角色继承、用户授权和操作日志。</p>
+              <span class="endpoint">113.44.137.160:8088</span>
+            </div>
+            <a class="button button-blue" href="http://113.44.137.160:8088/" target="_blank" rel="noopener">打开权限系统 <span aria-hidden="true">↗</span></a>
+          </article>
+          <article class="system system-course">
+            <div class="system-code">课程</div>
+            <div>
+              <h3>课程项目管理系统</h3>
+              <p>以管理员、教师、学生查看同一门课的不同操作。</p>
+              <span class="endpoint">120.46.76.13:8089</span>
+            </div>
+            <a class="button button-blue" href="http://120.46.76.13:8089/" target="_blank" rel="noopener">打开课程系统 <span aria-hidden="true">↗</span></a>
+          </article>
+        </div>
+      </section>
+
+      <section id="accounts" aria-labelledby="accounts-title">
+        <div class="section-heading">
+          <h2 id="accounts-title">演示账号与权限</h2>
+          <p>账号密码由小组在验收时单独提供。切换账号前先退出，或使用独立的浏览器窗口。</p>
+        </div>
+        <div class="account-list">
+          <article class="account">
+            <div class="account-id">
+              <h3>权限系统总管理员</h3>
+              <div class="account-copy"><code>admin</code><button type="button" data-copy="admin" aria-label="复制权限系统总管理员账号">复制账号</button></div>
+              <p>权限管理系统</p>
+            </div>
+            <div><h4>可演示</h4><p>管理应用和权限目录，创建业务角色、配置继承、给用户分配角色并查阅审计日志。</p></div>
+            <div><h4>课程权限边界</h4><p>权限中心的管理身份只适用于权限管理系统。课程端登录要求有课程教师或学生身份。</p></div>
+          </article>
+          <article class="account">
+            <div class="account-id">
+              <h3>课程管理员</h3>
+              <div class="account-copy"><code>SG000001</code><button type="button" data-copy="SG000001" aria-label="复制课程管理员账号">复制账号</button></div>
+              <p>课程系统 · 教师入口</p>
+            </div>
+            <div><h4>可演示</h4><p>管理学期与教师目录，查看全局课程列表，审核并开放课程。在权限中心可演示部门管理权限。</p></div>
+            <div><h4>课程权限边界</h4><p>任课班级的批改、评分和学生名单维护仍按课程系统的班级任命检查。</p></div>
+          </article>
+          <article class="account">
+            <div class="account-id">
+              <h3>教学组长</h3>
+              <div class="account-copy"><code>SG000011</code><button type="button" data-copy="SG000011" aria-label="复制教学组长账号">复制账号</button></div>
+              <p>课程系统 · 教师入口</p>
+            </div>
+            <div><h4>可演示</h4><p>在「市政工程项目管理」查看课程组长身份，设置里程碑、建立教学班、指派任课教师和维护课程分组规则。</p></div>
+            <div><h4>课程权限边界</h4><p>课程级配置限于实际担任组长的课程。课程审核和全局管理入口由课程管理员使用。</p></div>
+          </article>
+          <article class="account">
+            <div class="account-id">
+              <h3>任课教师</h3>
+              <div class="account-copy"><code>SG000019</code><button type="button" data-copy="SG000019" aria-label="复制任课教师账号">复制账号</button></div>
+              <p>课程系统 · 教师入口</p>
+            </div>
+            <div><h4>可演示</h4><p>进入「市政养护项目班」，查看里程碑和本班学生。依课程和里程碑状态维护名单、安排口试、批阅、评分和导出成绩。</p></div>
+            <div><h4>课程权限边界</h4><p>名单、材料和成绩操作限于本人任教的班级。课程级里程碑编辑和任课教师指派由该课程的教学组长执行。</p></div>
+          </article>
+          <article class="account">
+            <div class="account-id">
+              <h3>学生</h3>
+              <div class="account-copy"><code>SG000191</code><button type="button" data-copy="SG000191" aria-label="复制学生账号">复制账号</button></div>
+              <p>课程系统 · 学生入口</p>
+            </div>
+            <div><h4>可演示</h4><p>在「我的课程」打开「市政工程项目管理」，查看里程碑和本人成绩。提交、组队和口试预约依课程规则开放。</p></div>
+            <div><h4>课程权限边界</h4><p>课程可见范围限本人已选且已开放的课程。成绩限本人，里程碑维护和评分需要相应教师身份。</p></div>
+          </article>
+        </div>
+        <div class="demo-strip">
+          <div><strong>同课对照</strong><p>先用学生查看里程碑，再用任课教师查看本班，最后用教学组长查看课程级设置。</p></div>
+          <a href="http://120.46.76.13:8089/student/courses/35505/milestones?termId=38480" target="_blank" rel="noopener">登录后打开学生里程碑 <span aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+
+      <section id="inspection" aria-labelledby="inspection-title">
+        <div class="section-heading">
+          <h2 id="inspection-title">检查资料</h2>
+          <p>按验收问题打开对应文档、图和源码。</p>
+        </div>
+        <div class="inspection-grid">
+          <article class="inspection-item" id="requirements">
+            <h3>需求与测试</h3>
+            <p>核对角色继承、统一身份、授权范围和审批规则，再看同一接口的两套测试。</p>
+            <ul class="link-list">
+              <li><a href="https://github.com/Noah-hope/RBAC-admin/blob/main/docs/01-requirements/%E9%9C%80%E6%B1%82%E8%A7%84%E6%A0%BC%E8%AF%B4%E6%98%8E%E4%B9%A6.md">需求规格说明书</a></li>
+              <li><a href="https://github.com/Noah-hope/RBAC-admin/blob/main/rbac1-structured/src/test/java/com/rbac/rbac1/RbacApiTest.java#L600">结构化接口测试</a> <span>角色码映射</span></li>
+              <li><a href="https://github.com/Noah-hope/RBAC-admin/blob/main/rbac1-ddd/src/test/java/com/rbac/rbac1ddd/interfaces/SessionApiTest.java">DDD 会话接口测试</a></li>
+              <li><a href="https://github.com/Noah-hope/RBAC-admin/blob/main/docs/04-development/JaCoCo%E8%A6%86%E7%9B%96%E7%8E%87%E6%B5%8B%E8%AF%95%E6%8C%87%E5%8D%97.md">JaCoCo 覆盖率查看指南</a></li>
+            </ul>
+          </article>
+          <article class="inspection-item" id="design">
+            <h3>包图与 API 对照</h3>
+            <p>先看两套后端包图，再用 <code>GET /auth/me</code> 对照类图、顺序图和源码。</p>
+            <ul class="link-list">
+              <li><a href="atlas/#packages">结构化与 DDD 包图</a></li>
+              <li><a href="atlas/#sc-authme">统一身份与有效权限查询</a></li>
+              <li><a href="atlas/#sc-role">角色继承配置</a></li>
+              <li><a href="atlas/#api">API 目录</a></li>
+            </ul>
+          </article>
+          <article class="inspection-item" id="discussion">
+            <h3>设计与技术问答</h3>
+            <p>从同一个接口入口出发，解释规则放在哪一层，以及为什么放在那里。</p>
+            <details open>
+              <summary>结构化与 DDD 的职责分配</summary>
+              <p>结构化由两个 Service 按步骤查询、遍历关系并组装结果。DDD 的应用服务编排流程，<code>User</code> 和 <code>RoleHierarchy</code> 负责各自的数据与权限规则。</p>
+            </details>
+            <details>
+              <summary>GRASP 中的信息专家</summary>
+              <p>用户持有已分配的角色 ID，关系图持有继承边和权限。沿这两个对象的职责说明有效权限如何得出。</p>
+              <a href="https://github.com/Noah-hope/RBAC-admin/blob/main/rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/user/User.java#L183">看有效权限计算源码</a>
+            </details>
+            <details>
+              <summary>JavaEE 技术与运行证据</summary>
+              <p>沿 Spring MVC 接口、Service、Spring Data JPA 到 MySQL 跟一次请求，再看两套后端的部署和请求日志。</p>
+              <a href="https://github.com/Noah-hope/RBAC-admin/blob/main/deploy/README.md">Swarm 部署与后端切换</a>
+            </details>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner"><span>RBAC 权限管理系统 · 课程验收</span><a href="https://github.com/Noah-hope/RBAC-admin">项目仓库</a></div>
+  </footer>
+  <p id="copy-status" class="copy-status" role="status" aria-live="polite" hidden></p>
+</body>
+</html>

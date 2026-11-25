@@ -1,0 +1,141 @@
+:root {
+  color-scheme: light;
+  --navy: #152747;
+  --blue: #203e69;
+  --paper: #f2f6fa;
+  --surface: #fff;
+  --line: #d7e2eb;
+  --muted: #4d6179;
+  --gold: #f5bc61;
+  --ink: #152747;
+  --max-width: 1120px;
+  font-family: "Source Han Sans SC", "Microsoft YaHei UI", "PingFang SC", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 280px; }
+h1, h2, h3, h4, p { margin: 0; }
+a { color: var(--blue); text-underline-offset: .18em; }
+button { font: inherit; cursor: pointer; }
+code { font-family: "Cascadia Code", Consolas, monospace; }
+:focus-visible { outline: 3px solid #be761b; outline-offset: 4px; }
+[id] { scroll-margin-top: 24px; }
+.wrap { width: min(var(--max-width), calc(100% - 64px)); margin-inline: auto; }
+.skip-link { position: fixed; z-index: 2; top: 10px; left: 10px; transform: translateY(-150%); padding: .75rem; background: white; }
+.skip-link:focus { transform: none; }
+
+.masthead { background: var(--surface); border-bottom: 1px solid var(--line); }
+.masthead-inner, .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.masthead-inner { min-height: 66px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-size: .98rem; font-weight: 750; }
+.brand-mark { display: grid; place-items: center; width: 31px; height: 31px; border-radius: 7px 7px 7px 2px; background: var(--navy); color: var(--gold); }
+.masthead nav { display: flex; gap: clamp(12px, 3vw, 32px); }
+.masthead nav a { font-size: .9rem; text-decoration: none; color: var(--muted); }
+.masthead nav a:hover { text-decoration: underline; color: var(--navy); }
+
+.hero {
+  color: white;
+  background: var(--navy);
+  background-image: linear-gradient(100deg, var(--navy) 26%, #1a3358f0 76%),
+    repeating-linear-gradient(0deg, transparent 0 39px, #45739a 39px 40px);
+  border-bottom: 5px solid var(--gold);
+}
+.hero-inner { min-height: 480px; display: grid; grid-template-columns: 1.14fr .86fr; align-items: center; gap: clamp(25px, 7vw, 100px); padding-block: 56px; }
+.project { color: #b8d0e4; font-weight: 700; letter-spacing: .08em; }
+h1 { margin-top: 12px; font-size: clamp(3rem, 7.9vw, 6rem); line-height: 1.04; letter-spacing: -.06em; }
+.hero-summary { max-width: 420px; font-size: 1.04rem; line-height: 1.75; color: #e3ecf5; margin-top: 24px; }
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 27px; }
+.hero-link { color: #e3ecf5; font-size: .92rem; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-size: .92rem; font-weight: 700; text-decoration: none; padding: .72rem .95rem; border-radius: 7px; min-height: 44px; }
+.button-gold { background: var(--gold); color: #232837; }
+.button-gold:hover { background: #ffcf81; }
+.button-blue { background: var(--blue); color: white; }
+.button-blue:hover { background: #305483; }
+
+.route-card { align-self: center; padding: 23px 26px 12px; background: #263f66; border: 1px solid #55729a; border-radius: 12px; box-shadow: 0 14px 34px #07152752; }
+.route-card h2 { font-size: 1.12rem; padding-bottom: 12px; border-bottom: 1px solid #55729a; }
+.route-card ol { list-style: none; padding: 0; margin: 0; }
+.route-card li + li { border-top: 1px solid #55729a; }
+.route-card a { display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: center; min-height: 66px; padding: 9px 0; color: white; font-size: .97rem; font-weight: 680; text-decoration: none; }
+.route-card a:hover { color: var(--gold); }
+.route-number { color: var(--gold); font: 700 1rem "Cascadia Code", Consolas, monospace; }
+.route-detail { display: block; margin-top: 3px; color: #d0def0; font-size: .84rem; font-weight: 400; }
+
+.content { padding-block: 51px 64px; }
+.content section + section { margin-top: 57px; }
+.section-heading { margin-bottom: 18px; }
+.section-heading h2 { font-size: clamp(1.6rem, 4vw, 2.1rem); }
+.section-heading p { color: var(--muted); line-height: 1.65; margin-top: 5px; }
+.systems-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px; }
+.system {
+  display: grid; grid-template-columns: auto 1fr; align-items: start; gap: 10px 16px;
+  padding: 22px; border: 1px solid var(--line); border-top: 3px solid #476285; border-radius: 11px; background: var(--surface);
+}
+.system-course { border-top-color: #2b7774; }
+.system-code { min-width: 47px; padding: 5px 8px; border-radius: 6px; background: #e5edf7; color: var(--blue); text-align: center; font: 750 .81rem system-ui, sans-serif; }
+.system-course .system-code { background: #d9efeb; color: #255d5b; }
+.system h3 { font-size: 1.18rem; }
+.system p { margin-block: 7px 9px; line-height: 1.6; color: var(--muted); }
+.system .button { grid-column: 2; justify-self: start; }
+.endpoint { display: block; font: .83rem "Cascadia Code", Consolas, monospace; color: var(--muted); }
+
+.account-list { overflow: hidden; border-radius: 11px; border: 1px solid var(--line); background: var(--surface); }
+.account { display: grid; grid-template-columns: minmax(178px, .83fr) 1.12fr 1.05fr; gap: clamp(15px, 2.5vw, 33px); padding: 21px 24px; }
+.account:nth-child(even) { background: #f9fbfd; }
+.account + .account { border-top: 1px solid var(--line); }
+.account h3 { font-size: 1.05rem; }
+.account h4 { font-size: .86rem; margin-bottom: 5px; color: #34537a; }
+.account p { color: var(--muted); line-height: 1.65; font-size: .92rem; }
+.account-id > p { font-size: .81rem; }
+.account-copy { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-block: 5px; }
+.account-copy code { background: #e9f0f8; border-radius: 5px; padding: 4px 7px; font-weight: 700; font-size: .88rem; }
+.account-copy button { color: var(--blue); border: 1px solid #b5c7dc; border-radius: 5px; background: white; font-size: .8rem; min-height: 31px; padding: 4px 7px; }
+.account-copy button:hover { background: #eaf2fa; }
+.demo-strip { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-top: 14px; padding: 15px 18px; background: #e3edf7; border-left: 3px solid #5080a8; border-radius: 2px 8px 8px 2px; }
+.demo-strip p { margin-top: 4px; color: var(--muted); line-height: 1.5; font-size: .91rem; }
+.demo-strip a { font-size: .89rem; font-weight: 700; }
+
+.inspection-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 17px; }
+.inspection-item { background: white; border: 1px solid var(--line); border-radius: 11px; padding: 21px; }
+.inspection-item h3 { font-size: 1.13rem; }
+.inspection-item p { color: var(--muted); line-height: 1.65; font-size: .92rem; margin-top: 8px; }
+.link-list { list-style: none; margin: 13px 0 0; padding: 0; }
+.link-list li { border-top: 1px solid var(--line); padding-block: 10px; font-size: .91rem; }
+.link-list span { color: var(--muted); font-size: .81rem; }
+.link-list a { font-weight: 650; }
+details { margin-top: 10px; padding-top: 9px; border-top: 1px solid var(--line); font-size: .88rem; }
+summary { cursor: pointer; font-weight: 700; }
+details a { display: inline-block; margin-top: 6px; }
+.footer { border-top: 1px solid var(--line); background: white; padding-block: 20px; font-size: .87rem; color: var(--muted); }
+.copy-status { position: fixed; right: 24px; bottom: 24px; z-index: 3; padding: 12px 16px; background: var(--navy); color: white; border-radius: 7px; font-size: .89rem; }
+
+@media (max-width: 850px) {
+  .wrap { width: calc(100% - 42px); }
+  .hero-inner { gap: 28px; min-height: auto; padding-block: 46px; }
+  .inspection-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #discussion { grid-column: 1 / -1; }
+}
+@media (max-width: 640px) {
+  .wrap { width: calc(100% - 32px); }
+  .hero-inner, .systems-grid, .account, .inspection-grid { grid-template-columns: 1fr; }
+  .hero-inner { padding-block: 36px; }
+  .masthead-inner { gap: 10px; min-height: 58px; }
+  .masthead nav { gap: 12px; }
+  .masthead nav a { font-size: .77rem; }
+  .brand { font-size: .81rem; gap: 6px; }
+  .brand-mark { width: 24px; height: 24px; }
+  .route-card { padding: 17px 18px 8px; }
+  .route-card a { min-height: 56px; }
+  .content { padding-block: 34px 42px; }
+  .content section + section { margin-top: 35px; }
+  .account { padding: 17px; gap: 11px; }
+  .account-id { border-bottom: 1px solid var(--line); padding-bottom: 9px; }
+  .demo-strip { align-items: start; flex-direction: column; }
+}
+
+@media (max-width: 350px) {
+  .masthead-inner { flex-wrap: wrap; padding-block: 10px; }
+  .masthead nav { width: 100%; }
+}
