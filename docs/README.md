@@ -19,6 +19,7 @@
 | 5 | [RBAC0 代码阅读指南](04-development/代码阅读指南.md) | 对照业务找到实现位置 |
 | 6 | [JaCoCo 覆盖率测试操作指南](04-development/JaCoCo覆盖率测试指南.md) | 助教现场终端执行测试并打开 HTML 报告 |
 | 6 | [Logback 日志查看操作指南](04-development/Logback日志查看指南.md) | 助教现场切换菜单时查看服务器实时分层日志 |
+| 6 | [Swarm 部署与后端切换](../deploy/README.md) | 在服务器上部署集群并一键切换结构化与 DDD 后端 |
 | 7 | [RBAC1 结构化](../rbac1-structured/README.md) · [RBAC1 DDD](../rbac1-ddd/README.md) · [RBAC0 基线](../rbac0-structured/README.md) | 配置数据库、启动和测试 |
 
 [返回项目首页](../README.md)

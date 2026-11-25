@@ -4,6 +4,8 @@
 
 前端当前连接哪套后端，切换菜单或调用接口时就会在哪套后端产生日志；任选以下一种方式即可实时查看。
 
+> 现场如需切换后端实现，先在 `Course-Manager` 执行 `/root/rbac/deploy/switch-backend.sh ddd`（或 `structured`，详见 [Swarm 部署与后端切换](../../deploy/README.md)），再按对应服务查看实时日志。
+
 ## 方法一：在 Swarm 管理节点统一查看（无需切换服务器）
 
 SSH 登录管理节点 `Course-Manager`，按当前启用的后端服务名实时跟踪输出（`--since 2m` 仅展示最近 2 分钟及后续新增日志，过滤历史旧容器记录）：

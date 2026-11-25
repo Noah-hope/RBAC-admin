@@ -151,8 +151,8 @@ services:
     logging: *logging
     deploy:
       <<: *backend-deploy
-      # 首次部署保持为 0，等结构化后端完成迁移和管理员初始化后再设为 1。
-      replicas: 0
+      # 与结构化后端同时常驻热备，通过 deploy/switch-backend.sh 切换前端网关上游。
+      replicas: 1
       placement:
         constraints:
           - node.role == worker
@@ -161,7 +161,7 @@ services:
   frontend:
     image: swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac-frontend:1.0.0
     environment:
-      # 切换至 rbac_ddd:8080 前，先将上方 ddd.deploy.replicas 改为 1 并确认服务正常。
+      # 默认连接结构化后端；执行 ./deploy/switch-backend.sh ddd|structured 可秒级切换。
       RBAC_API_UPSTREAM: rbac_structured:8080
     ports:
       - target: 80

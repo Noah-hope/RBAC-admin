@@ -17,7 +17,7 @@
 | 后端配置、启动和测试 | [RBAC0 结构化后端](rbac0-structured/README.md#启动) · [RBAC1 结构化后端](rbac1-structured/README.md#启动) · [RBAC1 DDD 后端](rbac1-ddd/README.md#运行) |
 | JaCoCo 覆盖率测试（现场检查） | [JaCoCo 覆盖率测试操作指南](docs/04-development/JaCoCo覆盖率测试指南.md) |
 | 管理前端启动和构建 | [前端说明](frontend/README.md) |
-| Docker 镜像构建和 Swarm 部署 | [Swarm 部署配置](deploy/stack.yml) · 各前后端目录中的 Dockerfile |
+| Docker 镜像构建、Swarm 部署与后端切换 | [Swarm 部署与后端切换](deploy/README.md) · [Swarm 编排配置](deploy/stack.yml) |
 | 服务器 Logback 日志查看（现场检查） | [Logback 日志查看操作指南](docs/04-development/Logback日志查看指南.md) |
 | HTTP 接口契约 | [RBAC0 OpenAPI](docs/03-api/openapi.yaml) · [RBAC1 结构化 OpenAPI](docs/03-api/RBAC1-api.yaml) · [RBAC1 DDD OpenAPI](docs/03-api/rbac1-ddd-api.yaml) |
 | 课程系统统一身份接入 | [应用登记、角色码映射和目录授权](rbac1-structured/README.md#课程系统统一身份接入) |
@@ -57,7 +57,9 @@ RBAC-admin/
 │   ├── src/                  页面、组件、路由和 API 客户端
 │   └── e2e/                  浏览器流程测试
 ├── deploy/
-│   └── stack.yml             MySQL、两套后端和前端的 Swarm 配置
+│   ├── README.md             Swarm 部署与双后端切换说明
+│   ├── stack.yml             MySQL、双后端常驻和前端的 Swarm 配置
+│   └── switch-backend.sh     结构化与 DDD 后端一键切换脚本
 └── docs/
     ├── README.md             文档索引
     ├── design/               口试图册与设计资料
@@ -76,7 +78,7 @@ RBAC-admin/
 
 正式管理界面位于 `frontend/`，开发代理默认连接 RBAC1 结构化后端。改为连接 DDD 后端（默认端口 8082）时，参照 [`frontend/.env.example`](frontend/.env.example) 在 `frontend/.env.local` 中设置 `RBAC_API_TARGET=http://127.0.0.1:8082`，再重启前端开发服务。
 
-后端集成测试使用 H2。仓库已提供前后端 Dockerfile，由 `deploy/stack.yml` 统一管理 MySQL、两个后端和前端；所有正式服务运行在服务器的 Docker Swarm 中，数据库数据和后端日志挂载到对应节点的宿主机目录。真实镜像运行、MySQL Flyway 迁移、Docker Swarm 部署和课程系统联调仍待验收。
+后端集成测试使用 H2。仓库已提供前后端 Dockerfile，由 `deploy/stack.yml` 在服务器 Docker Swarm 中统一管理 MySQL、常驻运行的结构化与 DDD 两套后端及前端，可通过 `deploy/switch-backend.sh` 一键切换前端网关所连后端；数据库数据和后端日志分别挂载到对应节点的宿主机目录。
 
 ## 已实现的功能
 
