@@ -4,4 +4,3 @@ Dockerfile text eol=lf
 *.dockerignore text eol=lf
 *.template text eol=lf
 /deploy/*.yml text eol=lf
-/deploy/.env.example text eol=lf

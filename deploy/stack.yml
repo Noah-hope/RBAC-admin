@@ -1,18 +1,22 @@
 version: "3.8"
 
+# 在 Manager 直接部署：docker stack deploy --with-registry-auth -c deploy/stack.yml rbac
+# 一个 Stack 管理 MySQL、结构化后端、DDD 后端和前端。
+# 镜像推送、各节点挂载目录和 Secret 准备完成后才能部署。
+# 当前通过前端节点公网入口 http://113.44.137.160:8088 访问。
 x-backend-environment: &backend-environment
   SERVER_PORT: "8080"
   SERVER_SHUTDOWN: graceful
   SPRING_LIFECYCLE_TIMEOUT_PER_SHUTDOWN_PHASE: 30s
   SPRING_CONFIG_IMPORT: configtree:/run/secrets/
-  RBAC1_DB_URL: ${RBAC1_DB_URL:?Set RBAC1_DB_URL}
-  RBAC1_DB_USERNAME: ${RBAC1_DB_USERNAME:?Set RBAC1_DB_USERNAME}
-  RBAC1_ADMIN_USERNAME: ${RBAC1_ADMIN_USERNAME:-admin}
-  RBAC1_JWT_ISSUER: ${RBAC1_JWT_ISSUER:?Set RBAC1_JWT_ISSUER}
+  RBAC1_DB_URL: "jdbc:mysql://rbac_mysql:3306/rbac1?serverTimezone=Asia/Shanghai"
+  RBAC1_DB_USERNAME: rbac1_app
+  RBAC1_ADMIN_USERNAME: admin
+  RBAC1_JWT_ISSUER: http://113.44.137.160:8088
   RBAC1_JWT_PRIVATE_KEY: file:/run/secrets/jwt_private.pem
   RBAC1_JWT_PUBLIC_KEY: file:/run/secrets/jwt_public.pem
-  RBAC1_CORS_ALLOWED_ORIGINS: ${RBAC1_CORS_ALLOWED_ORIGINS:?Set RBAC1_CORS_ALLOWED_ORIGINS}
-  JAVA_TOOL_OPTIONS: ${JAVA_TOOL_OPTIONS:--XX:MaxRAMPercentage=70}
+  RBAC1_CORS_ALLOWED_ORIGINS: http://113.44.137.160:8088,http://120.46.76.13:8089
+  JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=70"
 
 x-backend-secrets: &backend-secrets
   - source: db_password
@@ -53,61 +57,121 @@ x-backend-deploy: &backend-deploy
     parallelism: 1
   resources:
     limits:
-      memory: ${BACKEND_MEMORY_LIMIT:-1024M}
+      memory: 1024M
     reservations:
-      memory: ${BACKEND_MEMORY_RESERVATION:-512M}
+      memory: 512M
 
 services:
+  mysql:
+    image: swr.cn-north-4.myhuaweicloud.com/javaee-adgn/mysql:8.4.8
+    environment:
+      MYSQL_DATABASE: rbac1
+      MYSQL_USER: rbac1_app
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql_app_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      TZ: Asia/Shanghai
+    secrets:
+      - source: db_password
+        target: mysql_app_password
+      - source: mysql_root_password
+        target: mysql_root_password
+    volumes:
+      - type: bind
+        source: /root/rbac/mysql/data
+        target: /var/lib/mysql
+    networks: [rbac]
+    # 不发布公网 3306 端口；临时初始化阶段不开 TCP，完成后此检查才能成功。
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'MYSQL_PWD="$$(cat /run/secrets/mysql_root_password)" mysql --protocol=TCP --host=127.0.0.1 --user=root --execute="SELECT 1" --silent > /dev/null'
+      interval: 30s
+      timeout: 5s
+      start_period: 120s
+      retries: 5
+    stop_grace_period: 60s
+    logging: *logging
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.rbac.role == database
+      # 数据目录同一时间只由一个 MySQL 容器使用。
+      update_config:
+        order: stop-first
+        parallelism: 1
+      rollback_config:
+        order: stop-first
+        parallelism: 1
+      resources:
+        limits:
+          memory: 1024M
+        reservations:
+          memory: 512M
+
   structured:
-    image: ${STRUCTURED_IMAGE:?Set STRUCTURED_IMAGE}
+    image: swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac1-structured:1.0.0
     environment:
       <<: *backend-environment
-      LOGGING_LEVEL_COM_RBAC_RBAC1_CONTROLLER: ${BACKEND_LOG_LEVEL:-INFO}
-      LOGGING_LEVEL_COM_RBAC_RBAC1_SERVICE: ${BACKEND_LOG_LEVEL:-INFO}
-      LOGGING_LEVEL_COM_RBAC_RBAC1_MAPPER: ${BACKEND_LOG_LEVEL:-INFO}
+      LOGGING_LEVEL_COM_RBAC_RBAC1_CONTROLLER: INFO
+      LOGGING_LEVEL_COM_RBAC_RBAC1_SERVICE: INFO
+      LOGGING_LEVEL_COM_RBAC_RBAC1_MAPPER: INFO
     secrets: *backend-secrets
+    volumes:
+      - type: bind
+        source: /root/rbac/logs/structured
+        target: /app/logs
     networks: [rbac]
     stop_grace_period: 40s
     logging: *logging
     deploy:
       <<: *backend-deploy
+      # 首次可先设为 0，待 MySQL 初始化完成后再改为 1。
+      replicas: 1
       placement:
         constraints:
           - node.role == worker
           - node.labels.rbac.role == structured
 
   ddd:
-    image: ${DDD_IMAGE:?Set DDD_IMAGE}
+    image: swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac1-ddd:1.0.0
     environment:
       <<: *backend-environment
-      LOGGING_LEVEL_COM_RBAC_RBAC1DDD_INTERFACES: ${BACKEND_LOG_LEVEL:-INFO}
-      LOGGING_LEVEL_COM_RBAC_RBAC1DDD_APPLICATION: ${BACKEND_LOG_LEVEL:-INFO}
-      LOGGING_LEVEL_COM_RBAC_RBAC1DDD_INFRASTRUCTURE: ${BACKEND_LOG_LEVEL:-INFO}
+      LOGGING_LEVEL_COM_RBAC_RBAC1DDD_INTERFACES: INFO
+      LOGGING_LEVEL_COM_RBAC_RBAC1DDD_APPLICATION: INFO
+      LOGGING_LEVEL_COM_RBAC_RBAC1DDD_INFRASTRUCTURE: INFO
     secrets: *backend-secrets
+    volumes:
+      - type: bind
+        source: /root/rbac/logs/ddd
+        target: /app/logs
     networks: [rbac]
     stop_grace_period: 40s
     logging: *logging
     deploy:
       <<: *backend-deploy
       # 首次部署保持为 0，等结构化后端完成迁移和管理员初始化后再设为 1。
-      replicas: ${DDD_REPLICAS:-0}
+      replicas: 0
       placement:
         constraints:
           - node.role == worker
           - node.labels.rbac.role == ddd
 
   frontend:
-    image: ${FRONTEND_IMAGE:?Set FRONTEND_IMAGE}
+    image: swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac-frontend:1.0.0
     environment:
-      RBAC_API_UPSTREAM: ${RBAC_API_UPSTREAM:?Use deploy.sh to select backend}
+      # 切换至 rbac_ddd:8080 前，先将上方 ddd.deploy.replicas 改为 1 并确认服务正常。
+      RBAC_API_UPSTREAM: rbac_structured:8080
     ports:
       - target: 80
-        published: ${FRONTEND_PORT:-8088}
+        published: 8088
         protocol: tcp
         mode: ingress
     networks: [rbac]
     logging: *logging
     deploy:
+      # 首次可先设为 0，待结构化后端启动成功后再改为 1。
       replicas: 1
       placement:
         constraints:
@@ -118,23 +182,26 @@ services:
         failure_action: rollback
       resources:
         limits:
-          memory: ${FRONTEND_MEMORY_LIMIT:-128M}
+          memory: 128M
 
 networks:
   rbac:
     external: true
-    name: ${RBAC_NETWORK:-javaee-proxy}
+    name: rbac-net
 
 secrets:
   db_password:
     external: true
-    name: ${DB_PASSWORD_SECRET:-rbac_db_password_v1}
+    name: rbac_db_password_v1
+  mysql_root_password:
+    external: true
+    name: rbac_mysql_root_password_v1
   admin_password:
     external: true
-    name: ${ADMIN_PASSWORD_SECRET:-rbac_admin_password_v1}
+    name: rbac_admin_password_v1
   jwt_private:
     external: true
-    name: ${JWT_PRIVATE_SECRET:-rbac_jwt_private_v1}
+    name: rbac_jwt_private_v1
   jwt_public:
     external: true
-    name: ${JWT_PUBLIC_SECRET:-rbac_jwt_public_v1}
+    name: rbac_jwt_public_v1
