@@ -10,7 +10,7 @@
 
 | 想了解什么 | 阅读入口 |
 | --- | --- |
-| 项目范围和业务规则 | [RBAC0 需求](docs/01-requirements/RBAC0需求说明.md) · [RBAC1 需求](docs/01-requirements/RBAC1需求说明.md) |
+| 项目范围和业务规则 | [需求规格说明书（RBAC0 & RBAC1）](docs/01-requirements/需求规格说明书.md) · [RBAC0 原稿](docs/01-requirements/RBAC0需求说明.md) · [RBAC1 原稿](docs/01-requirements/RBAC1需求说明.md) |
 | 数据库设计与图稿 | [数据库设计文档](docs/design/数据库设计文档.adoc) · [统一设计图（36 页 .drawio）](docs/design/项目设计图.drawio) |
 | 界面原型与其他文档 | [RBAC1 界面原型](docs/02-ui-design/RBAC1界面原型.html) · [文档索引](docs/README.md) |
 | 代码结构和阅读顺序 | [RBAC0 代码阅读指南](docs/04-development/代码阅读指南.md) · [RBAC1 结构化后端说明](rbac1-structured/README.md) · [RBAC1 DDD 分层](rbac1-ddd/README.md#分层) |

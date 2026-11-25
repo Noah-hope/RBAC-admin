@@ -8,7 +8,7 @@
 
 | 顺序 | 资料 | 用途 |
 | --- | --- | --- |
-| 1 | [RBAC0 需求文档](01-requirements/RBAC0需求说明.md) · [RBAC1 需求文档](01-requirements/RBAC1需求说明.md) | 确认角色、管理范围、角色继承和统一身份规则 |
+| 1 | [需求规格说明书](01-requirements/需求规格说明书.md)（整合 [RBAC0](01-requirements/RBAC0需求说明.md) · [RBAC1](01-requirements/RBAC1需求说明.md)） | 确认角色、管理范围、角色继承和统一身份规则 |
 | 2 | [数据库设计文档](design/数据库设计文档.adoc) · [项目设计图（36 页原图）](design/项目设计图.drawio) | 查看数据库设计细节，或用 Draw.io 打开原图 |
 | 3 | [界面操作清单](02-ui-design/界面操作清单.md) | 按页面理解用户操作 |
 | 3 | [RBAC0 多系统权限配置示例](02-ui-design/多系统权限配置示例.html) | 下载后用浏览器打开基础界面示例 |
