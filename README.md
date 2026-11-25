@@ -15,6 +15,7 @@
 | JaCoCo 覆盖率测试（现场检查） | [JaCoCo 覆盖率测试操作指南](docs/04-development/JaCoCo覆盖率测试指南.md) |
 | 管理前端启动和构建 | [前端说明](frontend/README.md) |
 | Docker 镜像构建和 Swarm 部署 | [Swarm 部署配置](deploy/stack.yml) · 各前后端目录中的 Dockerfile |
+| 服务器 Logback 日志查看（现场检查） | [服务器日志查看](#服务器日志查看) |
 | HTTP 接口契约 | [RBAC0 OpenAPI](docs/03-api/openapi.yaml) · [RBAC1 结构化 OpenAPI](docs/03-api/RBAC1-api.yaml) · [RBAC1 DDD OpenAPI](docs/03-api/rbac1-ddd-api.yaml) |
 | 课程系统统一身份接入 | [应用登记、角色码映射和目录授权](rbac1-structured/README.md#课程系统统一身份接入) |
 
@@ -68,6 +69,31 @@ RBAC-admin/
 正式管理界面位于 `frontend/`，开发代理默认连接 RBAC1 结构化后端。改为连接 DDD 后端（默认端口 8082）时，参照 [`frontend/.env.example`](frontend/.env.example) 在 `frontend/.env.local` 中设置 `RBAC_API_TARGET=http://127.0.0.1:8082`，再重启前端开发服务。
 
 后端集成测试使用 H2。仓库已提供前后端 Dockerfile，由 `deploy/stack.yml` 统一管理 MySQL、两个后端和前端；所有正式服务运行在服务器的 Docker Swarm 中，数据库数据和后端日志挂载到对应节点的宿主机目录。真实镜像运行、MySQL Flyway 迁移、Docker Swarm 部署和课程系统联调仍待验收。
+
+## 服务器日志查看
+
+两套 RBAC1 后端均使用 Logback 配合 AOP 分层切面（`DEBUG` 级别）同时向容器控制台和宿主机滚动文件输出日志。前端当前连接哪套后端，操作菜单时就会在哪套后端产生日志；可通过以下任一方式实时查看：
+
+### 方法一：在 Swarm 管理节点统一查看（无需切换服务器）
+
+SSH 登录管理节点 `Course-Manager`，按当前启用的后端服务名实时跟踪输出：
+
+```bash
+# 当前使用结构化后端时
+docker service logs -f --since 2m rbac_structured
+
+# 切换到面向对象（DDD）后端后
+docker service logs -f --since 2m rbac_ddd
+```
+
+### 方法二：在对应工作节点查看宿主机 `.log` 文件
+
+容器内的 `/app/logs` 已挂载至对应工作节点的宿主机目录（按天滚动归档，保留 7 天）：
+
+| 当前启用后端 | 所在节点 | 宿主机实时查看命令 | 日志分层标识 |
+| --- | --- | --- | --- |
+| 结构化后端（`rbac_structured`） | `Course-Node2` | `tail -f /root/rbac/logs/structured/rbac1-structured.log` | `[接口层]`、`[业务层]`、`[数据访问层]` |
+| 面向对象后端（`rbac_ddd`） | `Course-Node3` | `tail -f /root/rbac/logs/ddd/rbac1-ddd.log` | `[接口层]`、`[应用层]`、`[基础设施层]` |
 
 ## 已实现的功能
 

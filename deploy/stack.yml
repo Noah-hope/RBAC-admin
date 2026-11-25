@@ -114,9 +114,9 @@ services:
     image: swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac1-structured:1.0.0
     environment:
       <<: *backend-environment
-      LOGGING_LEVEL_COM_RBAC_RBAC1_CONTROLLER: INFO
-      LOGGING_LEVEL_COM_RBAC_RBAC1_SERVICE: INFO
-      LOGGING_LEVEL_COM_RBAC_RBAC1_MAPPER: INFO
+      LOGGING_LEVEL_COM_RBAC_RBAC1_CONTROLLER: DEBUG
+      LOGGING_LEVEL_COM_RBAC_RBAC1_SERVICE: DEBUG
+      LOGGING_LEVEL_COM_RBAC_RBAC1_MAPPER: DEBUG
     secrets: *backend-secrets
     volumes:
       - type: bind
@@ -138,9 +138,9 @@ services:
     image: swr.cn-north-4.myhuaweicloud.com/javaee-adgn/rbac1-ddd:1.0.0
     environment:
       <<: *backend-environment
-      LOGGING_LEVEL_COM_RBAC_RBAC1DDD_INTERFACES: INFO
-      LOGGING_LEVEL_COM_RBAC_RBAC1DDD_APPLICATION: INFO
-      LOGGING_LEVEL_COM_RBAC_RBAC1DDD_INFRASTRUCTURE: INFO
+      LOGGING_LEVEL_COM_RBAC_RBAC1DDD_INTERFACES: DEBUG
+      LOGGING_LEVEL_COM_RBAC_RBAC1DDD_APPLICATION: DEBUG
+      LOGGING_LEVEL_COM_RBAC_RBAC1DDD_INFRASTRUCTURE: DEBUG
     secrets: *backend-secrets
     volumes:
       - type: bind
