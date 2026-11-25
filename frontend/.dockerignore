@@ -1,0 +1,6 @@
+**
+!Dockerfile
+!dist/
+!dist/**
+!nginx/
+!nginx/default.conf.template

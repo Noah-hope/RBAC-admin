@@ -1,0 +1,6 @@
+# 部署脚本和容器配置保持 LF，避免 Windows 检出后在 Linux 上出现 CRLF 错误。
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.dockerignore text eol=lf
+*.template text eol=lf
+/deploy/*.yml text eol=lf
