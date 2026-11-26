@@ -1,9 +1,7 @@
-## 导航
-
-- [需求规格说明书](docs/01-requirements/需求规格说明书.md) · [需求说明](#需求说明)
-- [演示系统与账号](#演示系统) · [权限管理系统](http://113.44.137.160:8088/) · [课程管理系统](http://120.46.76.13:8089/)
-- [项目设计图](#项目设计图) · [详细设计文档](docs/design/详细设计文档.adoc) · [GitHub Pages 图册导航](https://noah-hope.github.io/RBAC-admin/#design) · [两种后端设计](#两种后端设计)
-- [测试代码](#测试代码) · [RBAC1 结构化版测试](rbac1-structured/src/test/java) · [RBAC1 DDD 版测试](rbac1-ddd/src/test/java) · [测试方法](#测试方法)
+- [需求规格说明书](docs/01-requirements/需求规格说明书.md)
+- [权限管理系统](http://113.44.137.160:8088/) · [课程管理系统](http://120.46.76.13:8089/)
+- [详细设计文档](docs/design/详细设计文档.adoc) · [GitHub Pages 图册导航](https://noah-hope.github.io/RBAC-admin/#design)
+- [RBAC1 结构化版测试](rbac1-structured/src/test/java) · [RBAC1 DDD 版测试](rbac1-ddd/src/test/java)
 - [结构化版用例](rbac1-structured/src/test/java/com/rbac/rbac1/RbacApiTest.java#L600) · [DDD 版用例](rbac1-ddd/src/test/java/com/rbac/rbac1ddd/acceptance/SharedAcceptanceTest.java#L607) · [构建准备说明](rbac1-ddd/README.md) · [覆盖率查看指南](docs/04-development/JaCoCo覆盖率测试指南.md)
 
 ## 需求说明
