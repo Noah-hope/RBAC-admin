@@ -1,98 +1,50 @@
 # RBAC 权限管理中心
 
-本项目为多个业务系统统一管理用户、业务角色、菜单、按钮和 API 权限。管理员先把权限授予业务角色，再把角色分配给用户。用户可以拥有多个角色，同一项权限只计算一次。
+为业务系统统一管理用户、角色以及菜单、按钮和 API 权限。仓库包含 RBAC0 结构化后端、RBAC1 结构化与 DDD 后端，以及 RBAC1 管理前端。RBAC1 支持角色继承和课程系统统一身份接入。
 
-仓库包含 RBAC0 结构化后端、RBAC1 结构化后端和 RBAC1 面向对象（DDD）后端，以及配套的 RBAC1 管理前端。RBAC1 在基础授权上增加业务角色继承，并为课程系统提供统一身份接入。
+[现场检查](#现场检查) · [线上演示](#线上演示) · [项目导航](#项目导航)
 
-## 从这里开始
+## 现场检查
 
-**第二轮口试**　[打开设计图册](docs/design/index.html) · [仓库在线看图](docs/design/详细设计文档.adoc#oral-review)
+| 顺序 | 检查项 | 现场对照 |
+| --- | --- | --- |
+| 1. 需求与测试 | 核对角色继承、按应用映射角色码、授权范围和审批规则。运行两套 RBAC1 测试，查看 JaCoCo 指令和分支覆盖率。 | [需求规格说明书](docs/01-requirements/需求规格说明书.md) · [结构化角色码映射测试](rbac1-structured/src/test/java/com/rbac/rbac1/RbacApiTest.java#L596) · [DDD 会话与有效权限测试](rbac1-ddd/src/test/java/com/rbac/rbac1ddd/interfaces/SessionApiTest.java#L206) · [JaCoCo 现场命令与报告说明](docs/04-development/JaCoCo覆盖率测试指南.md) |
+| 2. 运行两个系统 | 在 RBAC 查看角色继承来源、用户授权和操作记录。用课程管理员、教学组长、任课教师和学生账号核对课程操作范围。 | [线上演示与账号](#线上演示) |
+| 3. 包图、接口与源码 | 对照两套后端包图，以 `GET /auth/me` 和角色继承配置为例，沿类图、顺序图和 API 映射表定位代码。 | [结构化包图](docs/design/assets/rbac1-structured-package.svg) · [DDD 包图](docs/design/assets/rbac1-ddd-package.svg) · [两套后端的类图、顺序图与源码索引](docs/design/详细设计文档.adoc#oral-review) |
+| 4. 设计与技术问答 | 解释结构化与 DDD 的职责分配、GRASP 信息专家，以及 Spring MVC、持久化和 MySQL 在一次请求中的分工。切换后端后在前端打开菜单，对照两套实现的 Logback 分层日志。 | [职责对照](#设计问答) · [Swarm 部署与后端切换](deploy/README.md) · [Logback 实时日志命令](docs/04-development/Logback日志查看指南.md) |
 
-| 想了解什么 | 阅读入口 |
+### 设计问答
+
+- **结构化与 DDD 如何分工？** 从同一个 `GET /auth/me` 入口开始。结构化版由 Service 查询、遍历角色关系并组装响应。DDD 版由应用服务编排，领域对象计算有效权限。[结构化接口入口](rbac1-structured/src/main/java/com/rbac/rbac1/controller/SessionController.java#L59) · [DDD 接口入口](rbac1-ddd/src/main/java/com/rbac/rbac1ddd/interfaces/rest/SessionController.java#L62) · [两套实现的职责对照](rbac1-ddd/README.md#与结构化实现的主要区别)
+- **GRASP 的信息专家体现在哪里？** `User` 持有用户被分配的角色，`RoleHierarchy` 持有角色继承关系和权限配置。沿这两个对象查看有效权限和来源角色的计算。[User](rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/user/User.java) · [RoleHierarchy](rbac1-ddd/src/main/java/com/rbac/rbac1ddd/domain/role/RoleHierarchy.java)
+- **一次请求经过哪些层？** 从 Spring MVC 的 Controller 跟到应用服务，再到 Spring Data JPA 和 MySQL。用部署图定位对应服务，用 Logback 查看实际调用。[DDD 分层](rbac1-ddd/README.md#分层) · [Swarm 部署图](docs/design/assets/rbac1-swarm-deployment.svg) · [分层日志说明](docs/04-development/Logback日志查看指南.md#日志输出对照说明)
+
+## 线上演示
+
+| 系统 | 演示入口 |
 | --- | --- |
-| 项目范围和业务规则 | [需求规格说明书（RBAC0 & RBAC1）](docs/01-requirements/需求规格说明书.md) · [RBAC0 原稿](docs/01-requirements/RBAC0需求说明.md) · [RBAC1 原稿](docs/01-requirements/RBAC1需求说明.md) |
-| 数据库设计与图稿 | [数据库设计文档](docs/design/数据库设计文档.adoc) · [统一设计图（36 页 .drawio）](docs/design/项目设计图.drawio) |
-| 界面原型与其他文档 | [RBAC1 界面原型](docs/02-ui-design/RBAC1界面原型.html) · [文档索引](docs/README.md) |
-| 代码结构和阅读顺序 | [RBAC0 代码阅读指南](docs/04-development/代码阅读指南.md) · [RBAC1 结构化后端说明](rbac1-structured/README.md) · [RBAC1 DDD 分层](rbac1-ddd/README.md#分层) |
-| 后端配置、启动和测试 | [RBAC0 结构化后端](rbac0-structured/README.md#启动) · [RBAC1 结构化后端](rbac1-structured/README.md#启动) · [RBAC1 DDD 后端](rbac1-ddd/README.md#运行) |
-| JaCoCo 覆盖率测试（现场检查） | [JaCoCo 覆盖率测试操作指南](docs/04-development/JaCoCo覆盖率测试指南.md) |
-| 管理前端启动和构建 | [前端说明](frontend/README.md) |
-| Docker 镜像构建、Swarm 部署与后端切换 | [Swarm 部署与后端切换](deploy/README.md) · [Swarm 编排配置](deploy/stack.yml) |
-| 服务器 Logback 日志查看（现场检查） | [Logback 日志查看操作指南](docs/04-development/Logback日志查看指南.md) |
-| HTTP 接口契约 | [RBAC0 OpenAPI](docs/03-api/openapi.yaml) · [RBAC1 结构化 OpenAPI](docs/03-api/RBAC1-api.yaml) · [RBAC1 DDD OpenAPI](docs/03-api/rbac1-ddd-api.yaml) |
-| 课程系统统一身份接入 | [应用登记、角色码映射和目录授权](rbac1-structured/README.md#课程系统统一身份接入) |
+| RBAC 权限管理中心 | [打开权限管理系统](http://113.44.137.160:8088/) |
+| 课程项目管理系统 | [打开课程项目管理系统](http://120.46.76.13:8089/) |
 
-## 目录结构
+演示密码由小组在现场提供。切换账号前先退出，或使用独立的浏览器会话。
 
-```text
-RBAC-admin/
-├── README.md                 项目入口
-├── AGENTS.md                 协作约定
-├── rbac0-structured/          RBAC0 结构化 Java 后端（默认 8080）
-│   ├── README.md             运行和测试说明
-│   ├── pom.xml               依赖和构建配置
-│   ├── tools/                JWT 密钥生成工具
-│   └── src/
-│       ├── main/java/        接口、业务、持久化代码
-│       ├── main/resources/   应用配置和 RBAC0 数据库迁移
-│       └── test/java/        API 集成测试
-├── rbac1-structured/          RBAC1 结构化 Java 后端（默认 8081）
-│   ├── README.md             运行、测试和接入说明
-│   ├── pom.xml               依赖和构建配置
-│   ├── tools/                JWT 密钥生成工具
-│   └── src/
-│       ├── main/java/        Controller、Service 和 Mapper
-│       ├── main/resources/   应用配置和两套 RBAC1 共用的数据库迁移
-│       └── test/java/        API 集成与数据库迁移测试
-├── rbac1-ddd/                 RBAC1 面向对象 Java 后端（默认 8082）
-│   ├── README.md             分层、接口和运行说明
-│   ├── pom.xml               构建配置，引用结构化版的迁移脚本
-│   └── src/
-│       ├── main/java/        接口、应用、领域和基础设施代码
-│       ├── main/resources/   应用配置
-│       └── test/java/        领域单元、架构和 API 集成测试
-├── frontend/                  Vue 3 + TypeScript 管理前端（默认 5173）
-│   ├── README.md             启动、构建和测试说明
-│   ├── .env.example          开发代理配置示例
-│   ├── src/                  页面、组件、路由和 API 客户端
-│   └── e2e/                  浏览器流程测试
-├── deploy/
-│   ├── README.md             Swarm 部署与双后端切换说明
-│   ├── stack.yml             MySQL、双后端常驻和前端的 Swarm 配置
-│   └── switch-backend.sh     结构化与 DDD 后端一键切换脚本
-└── docs/
-    ├── README.md             文档索引
-    ├── design/               口试图册与设计资料
-    │   ├── index.html        交互图册入口
-    │   ├── 详细设计文档.adoc   包图、部署图与 7 组核心用例对照
-    │   ├── 数据库设计文档.adoc  ER 图、物理表结构与数据字典
-    │   ├── 项目设计图.drawio   36 页可编辑原图
-    │   └── assets/           SVG、样式和脚本
-    ├── 01-requirements/       RBAC0 和 RBAC1 需求
-    ├── 02-ui-design/          界面操作清单和 HTML 原型
-    ├── 03-api/                三个后端的 OpenAPI 契约
-    └── 04-development/       代码阅读指南和开发资料
-```
+| 账号 | 登录入口 | 检查内容 |
+| --- | --- | --- |
+| `admin` 总管理员 | RBAC | 查看应用权限目录、角色继承来源、用户授权和操作记录。 |
+| `SG000001` 课程管理员 | 课程系统教师入口 | 查看学期、教师目录和全局课程，检查课程审核与开放。 |
+| `SG000011` 教学组长 | 课程系统教师入口 | 打开「市政工程项目管理」，查看里程碑、教学班和任课教师配置。 |
+| `SG000019` 任课教师 | 课程系统教师入口 | 打开「市政养护项目班」，查看本班名单、里程碑和评分入口。 |
+| `SG000191` 学生 | 课程系统学生入口 | 打开「我的课程」中的「市政工程项目管理」，查看里程碑和本人成绩。 |
 
-两个 RBAC1 后端提供相同的 47 个 HTTP 接口，共用 RBAC1 数据库结构和 Flyway 迁移，首次构建均需先安装课程提供的 CloneFactory。RBAC0 使用独立数据库。
+## 项目导航
 
-正式管理界面位于 `frontend/`，开发代理默认连接 RBAC1 结构化后端。改为连接 DDD 后端（默认端口 8082）时，参照 [`frontend/.env.example`](frontend/.env.example) 在 `frontend/.env.local` 中设置 `RBAC_API_TARGET=http://127.0.0.1:8082`，再重启前端开发服务。
+| 资料 | 入口 |
+| --- | --- |
+| 需求与界面 | [需求规格说明书](docs/01-requirements/需求规格说明书.md) · [界面操作清单](docs/02-ui-design/界面操作清单.md) · [RBAC1 界面原型 HTML](docs/02-ui-design/RBAC1界面原型.html) |
+| 设计与数据库 | [交互设计图册 HTML](docs/design/index.html) · [数据库设计与 ER 图](docs/design/数据库设计文档.adoc) · [可编辑的 Draw.io 原图](docs/design/项目设计图.drawio) · [RBAC1 Flyway 迁移](rbac1-structured/src/main/resources/db/migration) |
+| API 契约 | [RBAC0 OpenAPI](docs/03-api/openapi.yaml) · [RBAC1 结构化 OpenAPI](docs/03-api/RBAC1-api.yaml) · [RBAC1 DDD OpenAPI](docs/03-api/rbac1-ddd-api.yaml) |
+| 后端代码、启动与测试 | [RBAC0 结构化](rbac0-structured/README.md) · [RBAC0 代码阅读指南](docs/04-development/代码阅读指南.md) · [RBAC1 结构化](rbac1-structured/README.md) · [RBAC1 DDD](rbac1-ddd/README.md) |
+| 前端、部署与统一身份 | [管理前端](frontend/README.md) · [Swarm 部署与后端切换](deploy/README.md) · [课程系统统一身份接入](rbac1-structured/README.md#课程系统统一身份接入) |
+| 全部文档 | [文档索引](docs/README.md) |
 
-后端集成测试使用 H2。仓库已提供前后端 Dockerfile，由 `deploy/stack.yml` 在服务器 Docker Swarm 中统一管理 MySQL、常驻运行的结构化与 DDD 两套后端及前端，可通过 `deploy/switch-backend.sh` 一键切换前端网关所连后端；数据库数据和后端日志分别挂载到对应节点的宿主机目录。
-
-## 已实现的功能
-
-- 用户可以**登录、查询当前身份和退出**。接入应用使用统一账号登录，权限中心签发 JWT 并提供验签公钥。退出后当前会话立即失效。
-- 管理员可以**查看部门树，搜索、新增和修改用户**。总管理员可以维护部门结构、调动员工并任免部门管理员。员工调动时保留原有业务角色，账号停用时撤销已有会话。
-- 总管理员可以**登记应用、菜单和按钮权限，并维护 API**。按钮归属同一应用的菜单。权限标识在应用内唯一，采用 `资源:操作` 格式，RBAC1 也接受 `CV` 这样的课程权限短码。菜单或按钮可以关联同一应用的多个 API，解除关联时保留 API 登记。
-- 总管理员可以**创建和修改业务角色**，为同一个角色配置多个应用的权限。配置按钮权限时，角色须同时拥有所属菜单。删除业务角色前须解除用户关联，RBAC1 还须解除两个方向的继承关系。预置管理角色无法删除。
-- RBAC1 支持**业务角色多父、多层继承**。角色详情区分直接权限和继承权限，并列出实际配置权限的来源角色。系统合并重复权限，禁止循环继承。修改角色时，系统校验当前角色及直接、间接子角色的按钮都具备所属菜单。
-- 管理员可以**单独或批量分配、撤销业务角色**。批量操作先校验全部用户是否在管理范围内，整批保存后生效。
-- 用户可以按应用**查询自己的菜单和按钮权限**。业务系统使用面向该应用的令牌检查菜单、按钮或已登记 API 的权限，授权变更在下一次检查时生效。
-- 用户可以**申请菜单或按钮权限，撤回待审核申请**。管理员在职责和部门范围内审核，从符合权限要求的现有业务角色中选择一个授予申请人。RBAC1 在计算可申请权限和审核候选角色时纳入继承权限。
-- 部门管理员可以**提交角色创建申请**。总管理员受理后可调整角色配置，实际创建成功后申请通过。员工之后通过正常授权流程获得该角色。
-- RBAC1 支持**按应用返回角色码**。部署方在数据库启用映射后，`GET /auth/me` 返回直接分配或继承的业务角色所对应的应用角色码。未启用映射时，该接口返回直接分配且在目标应用提供有效权限的角色 ID 字符串。
-- 课程系统可以接入 RBAC1 的**统一身份和选人目录**。角色映射配置完成后，课程应用可识别 `teacher`、`student` 和 `admin`，具体操作仍按课程应用的权限码校验。登记目录 API 并授予关联权限后，调用人可以逐层查询部门、按部门分页选人，以及按统一身份 ID 查询姓名和账号。
-- 系统记录角色配置、授权变更、员工调动等操作及其结果，**支持搜索和分页**。总管理员可查看全部记录，应用登记、API 配置、角色配置和跨部门调动等全局记录仅总管理员可见。部门管理员可查看分配角色、撤销角色、停用账号等用户管理记录，按操作发生时被操作用户的所属部门判断范围，批量记录只显示范围内的用户。
-
-总管理员负责全局配置。部门管理员负责本部门及下级部门的用户维护和业务角色分配。
+下载仓库后，可在浏览器中打开 HTML 图册和界面原型。两套 RBAC1 后端共用数据库迁移，对外提供同样的 47 个 HTTP 接口。
